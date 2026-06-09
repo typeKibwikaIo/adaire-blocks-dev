@@ -1,0 +1,135 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/reader-block",
+  "version": "0.1.0",
+  "title": "Reader",
+  "category": "adaire-blog-publishing",
+  "description": "Reader block for Adaire Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "textdomain": "reader-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Reader"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Featured reading"
+    },
+    "text": {
+      "type": "string",
+      "default": "Create a focused reader card for articles, notes, or resources."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Read more"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "cards": {
+      "type": "object",
+      "default": [
+        {
+          "title": "Designing better digital products",
+          "excerpt": "A short guide to product clarity, systems, and conversion.",
+          "author": "Adaire Team",
+          "date": "2026-06-06",
+          "readingTime": "5 min read",
+          "category": "Design",
+          "url": "#",
+          "imageUrl": "",
+          "avatarUrl": ""
+        }
+      ]
+    },
+    "columns": {
+      "type": "number",
+      "default": 3
+    },
+    "imageRatio": {
+      "type": "string",
+      "default": "16 / 9"
+    },
+    "hoverEffect": {
+      "type": "boolean",
+      "default": true
+    },
+    "showLoadMore": {
+      "type": "boolean",
+      "default": false
+    },
+    "cardBackground": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "cardBorder": {
+      "type": "string",
+      "default": "#e5e7eb"
+    },
+    "cardRadius": {
+      "type": "number",
+      "default": 22
+    },
+    "buttonStyle": {
+      "type": "string",
+      "default": "filled"
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHeight": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    }
+  }
+}

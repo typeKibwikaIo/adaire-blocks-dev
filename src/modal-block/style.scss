@@ -1,0 +1,201 @@
+// Breakpoint Mixins (standard breakpoints - see misc/docs/BREAKPOINTS.md)
+@mixin phone {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 601px) and (max-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin small-laptop {
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 1301px) and (max-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin big-desktop {
+    @media (min-width: 1921px) {
+        @content;
+    }
+}
+
+.adaire-modal-block {
+    position: relative;
+    display: inline-block;
+    width: auto;
+    max-width: 100%;
+    border: none;
+    &[data-modal-open="true"] {
+        pointer-events: auto;
+    }
+
+    // Hide the content block in its original position (it will be shown in the modal)
+    & [data-modal-role="content"] {
+        display: none;
+    }
+
+    // Ensure trigger is visible
+    & [data-modal-role="trigger"] {
+        display: inline-block;
+        visibility: visible;
+        opacity: 1;
+    }
+
+    &__overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--modal-overlay-color, rgba(0, 0, 0, 0.6));
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+        z-index: 99998;
+    }
+
+    &.is-open &__overlay {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &__modal {
+        position: fixed;
+        z-index: 99999;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.98);
+        width: fit-content;
+     
+        max-width: min(96vw, var(--modal-width-big-desktop, var(--modal-width-desktop, 600px)));
+        max-height: 92vh;
+        background: var(--modal-background, #ffffff);
+        border-radius: var(--modal-border-radius, 16px);
+        border: var(--modal-border-width, 1px) solid var(--modal-border-color, #e0e0e0);
+        box-shadow: 0 32px 80px rgba(15, 23, 42, 0.35);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        overflow: hidden;
+    }
+
+    &.is-open &__modal {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    &__content {
+        padding: var(--modal-padding, 24px);
+        overflow: auto;
+        width: var(--modal-width-big-desktop, var(--modal-width-desktop, 600px));
+        height: var(--modal-height-big-desktop, var(--modal-height-desktop, 400px));
+        max-width: 100%;
+        max-height: 100%;
+        flex: 0 1 auto;
+        box-sizing: border-box;
+        
+        // Show the content when it's inside the modal
+        [data-modal-role="content"] {
+            display: block;
+        }
+    }
+
+    &__close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: var(--modal-close-size, 36px);
+        height: var(--modal-close-size, 36px);
+        border-radius: 999px;
+        background: var(--modal-close-bg, rgba(255, 255, 255, 0.9));
+        color: var(--modal-close-color, #111111);
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        display: grid;
+        place-items: center;
+        font-size: calc(var(--modal-close-size, 36px) * 0.55);
+        line-height: 1;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    &__close:hover,
+    &__close:focus {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+    }
+
+    // Responsive styles using standard breakpoints
+    @include big-desktop {
+        &__modal {
+            max-width: min(96vw, var(--modal-width-big-desktop, var(--modal-width-desktop, 600px)));
+        }
+
+        &__content {
+            width: var(--modal-width-big-desktop, var(--modal-width-desktop, 600px));
+            height: var(--modal-height-big-desktop, var(--modal-height-desktop, 400px));
+        }
+    }
+
+    @include desktop {
+        &__modal {
+            max-width: min(96vw, var(--modal-width-desktop, 600px));
+        }
+
+        &__content {
+            width: var(--modal-width-desktop, 600px);
+            height: var(--modal-height-desktop, 400px);
+        }
+    }
+
+    @include small-laptop {
+        &__modal {
+            max-width: min(96vw, var(--modal-width-small-laptop, var(--modal-width-desktop, 600px)));
+        }
+
+        &__content {
+            width: var(--modal-width-small-laptop, var(--modal-width-desktop, 600px));
+            height: var(--modal-height-small-laptop, var(--modal-height-desktop, 400px));
+        }
+    }
+
+    @include tablet {
+        &__modal {
+            max-width: min(96vw, var(--modal-width-tablet, 90vw));
+        }
+
+        &__content {
+            width: var(--modal-width-tablet, 90vw);
+            height: var(--modal-height-tablet, 400px);
+        }
+    }
+
+    @include phone {
+        &__modal {
+            border-radius: calc(var(--modal-border-radius, 16px) * 0.75);
+            max-width: min(96vw, var(--modal-width-mobile, 90vw));
+        }
+
+        &__content {
+            width: var(--modal-width-mobile, 90vw);
+            height: var(--modal-height-mobile, 360px);
+            padding: clamp(16px, 4vw, var(--modal-padding, 24px));
+        }
+    }
+}
+
+body.adaire-modal-open {
+    overflow: hidden;
+}
+

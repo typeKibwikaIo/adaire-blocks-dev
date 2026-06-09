@@ -1,0 +1,33 @@
+{
+  "name": "adaire-blocks-free",
+  "version": "1.2.2",
+  "description": "Free version of Adaire Blocks - Professional WordPress blocks for Gutenberg editor",
+  "main": "src/index.js",
+  "scripts": {
+    "prebuild": "node scripts/apply-new-icons.js && node scripts/update-block-icons.js",
+    "build": "wp-scripts build --blocks-manifest",
+    "start": "wp-scripts start --blocks-manifest",
+    "plugin-zip": "wp-scripts plugin-zip",
+    "deploy:free": "npm run build && npm run plugin-zip",
+    "test": "wp-scripts test-unit-js"
+  },
+  "dependencies": {
+    "@splidejs/splide": "^4.1.4",
+    "@splidejs/splide-extension-auto-scroll": "^0.5.3",
+    "@wordpress/icons": "^10.32.0",
+    "bootstrap-icons": "^1.13.1",
+    "gsap": "^3.13.0",
+    "lucide": "^0.552.0",
+    "split-type": "^0.3.4",
+    "swiper": "^12.0.1"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^30.20.0"
+  },
+  "keywords": [],
+  "author": "Adaire Digital",
+  "license": "GPL-3.0",
+  "repository": {},
+  "bugs": {},
+  "homepage": "https://adaire.digital/"
+}

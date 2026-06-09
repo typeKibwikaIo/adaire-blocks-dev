@@ -1,0 +1,124 @@
+.ad-particles-block {
+  position: relative;
+  overflow: hidden;
+  
+  .ad-particles-block__particles-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    
+    .ad-particles-block__particle {
+      position: absolute;
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  // Dynamic particles styling
+  .ad-particles-block__dynamic-particle {
+    z-index: 6 !important;
+    position: absolute !important;
+    
+    .ad-particles-block__dynamic-particle-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+  }
+
+
+  
+  .ad-particles-block__gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+  }
+
+  .ad-particles-block__text-content-wrapper {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    
+    .ad-particles-block__text-content-overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      text-align: left;
+      max-width: 80%;
+      visibility: hidden;
+      opacity: 0;
+      
+      &.active {
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+      
+      .ad-particles-block__text-section {
+        h2 {
+          font-size: clamp(2rem, 5vw, 4rem);
+          margin-bottom: 1rem;
+          font-weight: bold;
+        }
+        
+        p {
+          font-size: clamp(1rem, 2vw, 1.5rem);
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: 900px) {
+  .ad-particles-block .ad-particles-block__text-content-wrapper .ad-particles-block__text-content-overlay{
+		width: 80vw;
+	}
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .ad-particles-block {
+    .ad-particles-block__particle-item {
+      // Use custom mobile sizes if set, otherwise fallback to smaller size
+      width: var(--mobile-size, 60px) !important;
+      height: var(--mobile-size, 60px) !important;
+    }
+  }
+
+  .ad-particles-block__text-section {
+    h2 {
+      font-size: 40px !important;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+    
+    p {
+      font-size: 16px !important;
+      line-height: 1.6;
+    }
+  }
+}
+

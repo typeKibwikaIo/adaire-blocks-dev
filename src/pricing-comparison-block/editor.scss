@@ -1,0 +1,46 @@
+.adaire-pricing-compare--editor {
+	.pc-sticky {
+		position: static;
+	}
+}
+
+.pc-panel-card,
+.pc-panel-section {
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	padding: 12px;
+	margin-bottom: 16px;
+	display: grid;
+	gap: 12px;
+}
+
+.pc-panel-row {
+	display: grid;
+	gap: 8px;
+	margin-bottom: 12px;
+}
+
+.pc-panel-inline {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+	align-items: end;
+}
+
+.pc-panel-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 12px;
+}
+
+.pc-panel-cell {
+	background: #f9fafb;
+	padding: 8px;
+	border-radius: 6px;
+}
+
+.pc-panel-actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}

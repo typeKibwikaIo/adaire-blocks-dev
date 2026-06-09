@@ -1,0 +1,258 @@
+.ad-case-studies-block {
+    // Editor-specific styles
+    
+    .ad-case-studies__filters {
+        pointer-events: none;
+        opacity: 0.8;
+        
+        .ad-case-studies__filter-select {
+            background-color: #f9fafb;
+        }
+    }
+    
+    .ad-case-studies__card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        &:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+    }
+    
+    .ad-case-studies__card-placeholder {
+        z-index: 1;
+        
+        span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    }
+    
+    .ad-case-studies__load-more-btn {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+    
+    .ad-case-studies__empty {
+        background: #f3f4f6;
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+// Dimension controls for container width settings
+.ad-case-studies__dimension-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .ad-case-studies__dimension-row {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        strong {
+            font-weight: 600;
+        }
+
+        .ad-case-studies__dimension-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+    }
+}
+
+// Inspector Controls styling
+.components-panel__body {
+    .ad-case-studies-study-item {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        
+        &__header {
+            padding: 12px;
+            background: #f7f7f7;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+            &:hover {
+                background: #f0f0f0;
+            }
+        }
+        
+        &__content {
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        &__title {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+    }
+}
+
+// Tag styling in inspector
+.ad-case-studies-capability-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background-color: #7c3aed;
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+    
+    button {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 0;
+        line-height: 1;
+        
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+// Industry suggestion buttons
+.ad-case-studies-industry-suggestions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    
+    .components-button {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+}
+
+// Capability suggestion buttons
+.ad-case-studies-capability-suggestions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    
+    .components-button {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+}
+
+// Media upload preview in inspector
+.ad-case-studies-image-preview {
+    width: 100px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+// Grid preview in editor
+.editor-styles-wrapper .ad-case-studies-block {
+    .ad-case-studies__grid {
+        // Ensure grid looks good in editor
+        min-height: 200px;
+    }
+    
+    .ad-case-studies__card {
+        min-height: 200px;
+    }
+}
+
+// Carousel mode styles in editor
+.ad-case-studies-block.is-carousel-mode {
+    position: relative;
+    
+    .ad-case-studies__carousel {
+        display: flex !important;
+        grid-template-columns: none !important;
+        flex-wrap: nowrap;
+        gap: var(--cs-gap);
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 16px;
+        scrollbar-width: thin;
+        scrollbar-color: #9ca3af #f3f4f6;
+        
+        &::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: #f3f4f6;
+            border-radius: 4px;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: #9ca3af;
+            border-radius: 4px;
+            
+            &:hover {
+                background: #6b7280;
+            }
+        }
+        
+        .ad-case-studies__card {
+            flex: 0 0 var(--cs-carousel-card-width, 400px);
+            width: var(--cs-carousel-card-width, 400px);
+            min-width: var(--cs-carousel-card-width, 400px);
+        }
+    }
+}
+
+// Drag cursor preview in editor
+.ad-case-studies__drag-cursor-preview {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: var(--cs-drag-cursor-size, 80px);
+    height: var(--cs-drag-cursor-size, 80px);
+    border-radius: 50%;
+    background-color: var(--cs-drag-cursor-bg, #ffffff);
+    color: var(--cs-drag-cursor-color, #1f2937);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    pointer-events: none;
+    z-index: 10;
+    
+    span {
+        font-size: var(--cs-drag-cursor-font-size, 14px);
+        font-weight: var(--cs-drag-cursor-font-weight, 500);
+        text-transform: var(--cs-drag-cursor-text-transform, none);
+        letter-spacing: 0.03em;
+    }
+    
+    &::after {
+        content: 'Cursor Preview';
+        position: absolute;
+        bottom: -24px;
+        font-size: 10px;
+        color: #6b7280;
+        white-space: nowrap;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 2px 8px;
+        border-radius: 4px;
+    }
+}
+

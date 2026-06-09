@@ -1,0 +1,654 @@
+.ad-case-studies-block {
+    --cs-columns: 4;
+    --cs-columns-big-desktop: 5;
+    --cs-columns-small-laptop: 3;
+    --cs-columns-tablet: 2;
+    --cs-columns-mobile: 1;
+    --cs-gap: 24px;
+    --cs-card-height-big-desktop: 340px;
+    --cs-card-height: 320px;
+    --cs-card-height-small-laptop: 300px;
+    --cs-card-height-tablet: 280px;
+    --cs-card-height-mobile: 240px;
+    --cs-card-border-radius: 8px;
+    --cs-card-bg-color: #374151;
+    --cs-card-shadow: none;
+    --cs-card-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    --cs-overlay-color: rgba(0, 0, 0, 0.4);
+    --cs-overlay-hover-color: rgba(0, 0, 0, 0.6);
+    --cs-title-color: #ffffff;
+    --cs-title-font-size-big-desktop: 22px;
+    --cs-title-font-size: 20px;
+    --cs-title-font-size-small-laptop: 19px;
+    --cs-title-font-size-tablet: 18px;
+    --cs-title-font-size-mobile: 16px;
+    --cs-title-font-weight: 600;
+    --cs-title-line-height: 1.3;
+    --cs-title-letter-spacing: 0px;
+    --cs-description-color: #ffffff;
+    --cs-description-font-size-big-desktop: 14px;
+    --cs-description-font-size: 14px;
+    --cs-description-font-size-small-laptop: 13px;
+    --cs-description-font-size-tablet: 13px;
+    --cs-description-font-size-mobile: 12px;
+    --cs-description-font-weight: 400;
+    --cs-description-line-height: 1.5;
+    --cs-description-letter-spacing: 0px;
+    --cs-description-max-lines: 3;
+    --cs-filter-label-color: #6b7280;
+    --cs-filter-label-font-size: 14px;
+    --cs-filter-border-color: #e5e7eb;
+    --cs-filter-bg-color: #ffffff;
+    --cs-filter-border-radius: 4px;
+    --cs-load-more-color: #1f2937;
+    --cs-load-more-bg-color: transparent;
+    --cs-load-more-hover-color: #7c3aed;
+    --cs-load-more-font-size: 16px;
+    --cs-load-more-font-weight: 500;
+    --cs-hover-scale: 1.02;
+    --cs-hover-transition: 0.3s;
+    --cs-content-padding: 24px;
+    --container-max-width-big-desktop: 1400px;
+    --container-max-width: 1200px;
+    --container-max-width-small-laptop: 1200px;
+    --container-max-width-tablet: 100%;
+    --container-max-width-mobile: 100%;
+
+    width: 100%;
+}
+
+// Container
+.ad-case-studies__container {
+    width: 100%;
+
+    &.is-constrained {
+        max-width: var(--container-max-width);
+        margin-left: auto;
+        margin-right: auto;
+
+        // Big Desktop (>= 1921px)
+        @media (min-width: 1921px) {
+            max-width: var(--container-max-width-big-desktop);
+        }
+
+        // Small Laptop (1025px - 1300px)
+        @media (min-width: 1025px) and (max-width: 1300px) {
+            max-width: var(--container-max-width-small-laptop, var(--container-max-width));
+        }
+
+        // Tablet (601px - 1024px)
+        @media (min-width: 601px) and (max-width: 1024px) {
+            max-width: var(--container-max-width-tablet);
+        }
+
+        // Mobile (<= 600px)
+        @media (max-width: 600px) {
+            max-width: var(--container-max-width-mobile);
+        }
+    }
+}
+
+// Filters
+.ad-case-studies__filters {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.ad-case-studies__filter-group {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.ad-case-studies__filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--cs-filter-bg-color);
+    border: 1px solid var(--cs-filter-border-color);
+    border-radius: var(--cs-filter-border-radius);
+    padding: 10px 36px 10px 14px;
+    font-size: var(--cs-filter-label-font-size);
+    color: var(--cs-filter-label-color);
+    cursor: pointer;
+    min-width: 160px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        border-color: #9ca3af;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+}
+
+.ad-case-studies__filter-icon {
+    position: absolute;
+    right: 12px;
+    pointer-events: none;
+    color: var(--cs-filter-label-color);
+    transition: transform 0.2s ease;
+}
+
+.ad-case-studies__filter-select:focus + .ad-case-studies__filter-icon {
+    transform: rotate(180deg);
+}
+
+// Grid
+.ad-case-studies__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--cs-columns), 1fr);
+    gap: var(--cs-gap);
+    position: relative;
+    // Allow FLIP to calculate and animate height properly
+    overflow: visible;
+    // Smooth height transitions
+    will-change: height;
+    
+    // Big Desktop (>= 1921px)
+    @media (min-width: 1921px) {
+            grid-template-columns: repeat(var(--cs-columns-big-desktop, var(--cs-columns)), 1fr);
+    }
+
+    // Small Laptop (1025px - 1300px)
+    @media (min-width: 1025px) and (max-width: 1300px) {
+            grid-template-columns: repeat(var(--cs-columns-small-laptop, var(--cs-columns)), 1fr);
+    }
+    
+    // Tablet (601px - 1024px)
+    @media (min-width: 601px) and (max-width: 1024px) {
+        grid-template-columns: repeat(var(--cs-columns-tablet), 1fr);
+    }
+    
+    // Mobile (<= 600px)
+    @media (max-width: 600px) {
+        grid-template-columns: repeat(var(--cs-columns-mobile), 1fr);
+    }
+
+    // During FLIP animations
+    &.is-animating {
+        // Prevent content from overflowing during animation
+        overflow: hidden;
+    }
+}
+
+// Card
+.ad-case-studies__card {
+    position: relative;
+    height: var(--cs-card-height);
+    border-radius: var(--cs-card-border-radius);
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--cs-card-bg-color);
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    transform-origin: center;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow: var(--cs-card-shadow);
+    transition: transform var(--cs-hover-transition) ease, box-shadow var(--cs-hover-transition) ease;
+
+    // Disable CSS transitions during GSAP/FLIP animations to prevent double animations
+    &.is-flipping {
+        transition: none !important;
+    }
+
+    &:hover:not(.is-flipping) {
+        transform: scale(var(--cs-hover-scale));
+        box-shadow: var(--cs-card-hover-shadow);
+    }
+
+    // Hidden state - controlled by JS, not CSS
+    &--hidden {
+        // Initial hidden state before JS takes over
+        display: none;
+    }
+
+    // Big Desktop (>= 1921px)
+    @media (min-width: 1921px) {
+        height: var(--cs-card-height-big-desktop);
+    }
+
+    // Small Laptop (1025px - 1300px)
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        height: var(--cs-card-height-small-laptop, var(--cs-card-height));
+    }
+
+    // Tablet (601px - 1024px)
+    @media (min-width: 601px) and (max-width: 1024px) {
+        height: var(--cs-card-height-tablet);
+    }
+
+    // Mobile (<= 600px)
+    @media (max-width: 600px) {
+        height: var(--cs-card-height-mobile);
+    }
+}
+
+// FLIP animation states - these are applied during animations
+.ad-case-studies__card.is-leaving {
+    pointer-events: none;
+}
+
+.ad-case-studies__card.is-entering {
+    pointer-events: none;
+}
+
+.ad-case-studies__card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        var(--cs-overlay-hover-color) 0%,
+        var(--cs-overlay-color) 50%,
+        transparent 100%
+    );
+    display: flex;
+    align-items: flex-end;
+    transition: background var(--cs-hover-transition) ease;
+}
+
+.ad-case-studies__card:hover .ad-case-studies__card-overlay {
+    background: linear-gradient(
+        to top,
+        var(--cs-overlay-hover-color) 0%,
+        var(--cs-overlay-hover-color) 40%,
+        rgba(0, 0, 0, 0.2) 100%
+    );
+}
+
+.ad-case-studies__card-content {
+    padding: var(--cs-content-padding);
+    width: 100%;
+    transform: translateY(0);
+    transition: transform var(--cs-hover-transition) ease;
+}
+
+.ad-case-studies__card:hover .ad-case-studies__card-content {
+    transform: translateY(-5px);
+}
+
+.ad-case-studies__card-title {
+    color: var(--cs-title-color);
+    font-size: var(--cs-title-font-size);
+    font-weight: var(--cs-title-font-weight);
+    margin: 0 0 8px 0;
+    line-height: var(--cs-title-line-height);
+    letter-spacing: var(--cs-title-letter-spacing);
+
+    // Big Desktop (>= 1921px)
+    @media (min-width: 1921px) {
+        font-size: var(--cs-title-font-size-big-desktop, var(--cs-title-font-size));
+    }
+
+    // Small Laptop (1025px - 1300px)
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        font-size: var(--cs-title-font-size-small-laptop, var(--cs-title-font-size));
+    }
+
+    // Tablet (601px - 1024px)
+    @media (min-width: 601px) and (max-width: 1024px) {
+        font-size: var(--cs-title-font-size-tablet);
+    }
+
+    // Mobile (<= 600px)
+    @media (max-width: 600px) {
+        font-size: var(--cs-title-font-size-mobile);
+    }
+}
+
+.ad-case-studies__card-description {
+    color: var(--cs-description-color);
+    font-size: var(--cs-description-font-size);
+    font-weight: var(--cs-description-font-weight);
+    margin: 0;
+    line-height: var(--cs-description-line-height);
+    letter-spacing: var(--cs-description-letter-spacing);
+    opacity: 0.9;
+    display: -webkit-box;
+    -webkit-line-clamp: var(--cs-description-max-lines);
+    line-clamp: var(--cs-description-max-lines);
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    // Big Desktop (>= 1921px)
+    @media (min-width: 1921px) {
+        font-size: var(--cs-description-font-size-big-desktop, var(--cs-description-font-size));
+    }
+
+    // Small Laptop (1025px - 1300px)
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        font-size: var(--cs-description-font-size-small-laptop, var(--cs-description-font-size));
+    }
+
+    // Tablet (601px - 1024px)
+    @media (min-width: 601px) and (max-width: 1024px) {
+        font-size: var(--cs-description-font-size-tablet);
+    }
+
+    // Mobile (<= 600px)
+    @media (max-width: 600px) {
+        font-size: var(--cs-description-font-size-mobile);
+    }
+}
+
+// Card placeholder (when no image)
+.ad-case-studies__card-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+    color: #9ca3af;
+    font-size: 14px;
+    z-index: -1;
+}
+
+// Load More
+.ad-case-studies__load-more-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 48px;
+    gap: 16px;
+}
+
+.ad-case-studies__load-more-btn {
+    background: var(--cs-load-more-bg-color);
+    color: var(--cs-load-more-color);
+    border: none;
+    padding: 12px 24px;
+    font-size: var(--cs-load-more-font-size);
+    font-weight: var(--cs-load-more-font-weight);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s ease;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: currentColor;
+        transform: scaleX(1);
+        transform-origin: left;
+        transition: transform 0.3s ease, background-color 0.2s ease;
+    }
+
+    &:hover {
+        color: var(--cs-load-more-hover-color);
+
+        &::after {
+            transform: scaleX(1);
+            background-color: var(--cs-load-more-hover-color);
+        }
+    }
+
+    &:focus {
+        outline: none;
+        color: var(--cs-load-more-hover-color);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+// Loading Spinner
+.ad-case-studies__loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ad-case-studies__spinner-svg {
+    width: 32px;
+    height: 32px;
+    animation: cs-spin 1s linear infinite;
+}
+
+.ad-case-studies__spinner-circle {
+    stroke: var(--cs-load-more-hover-color);
+    stroke-linecap: round;
+    animation: cs-dash 1.5s ease-in-out infinite;
+}
+
+@keyframes cs-spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes cs-dash {
+    0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+    }
+}
+
+// FLIP animation helper classes
+.ad-case-studies__card[data-flip-id] {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+// During FLIP animations, ensure block contains animated elements
+.ad-case-studies-block {
+    position: relative;
+    
+    // During active animations, clip overflow
+    &.is-animating {
+        overflow: hidden;
+    }
+}
+
+// GSAP Flip specific - elements being animated
+[data-flip-id].flip-leaving {
+    pointer-events: none;
+}
+
+// Cards during animation should not interfere with others
+.ad-case-studies__card.is-leaving {
+    pointer-events: none;
+    z-index: 0;
+}
+
+.ad-case-studies__card.is-entering {
+    pointer-events: none;
+    z-index: 1;
+}
+
+// Empty state
+.ad-case-studies__empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: #6b7280;
+    
+    p {
+        margin-bottom: 16px;
+    }
+}
+
+// Responsive adjustments
+// Mobile (<= 600px)
+@media (max-width: 600px) {
+    .ad-case-studies__filters {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .ad-case-studies__filter-select {
+        width: 100%;
+    }
+
+    .ad-case-studies__load-more-wrapper {
+        margin-top: 32px;
+    }
+}
+
+// ========================================
+// CAROUSEL MODE STYLES
+// ========================================
+
+.ad-case-studies-block.is-carousel-mode {
+    --cs-carousel-card-width-big-desktop: 440px;
+    --cs-carousel-card-width: 400px;
+    --cs-carousel-card-width-small-laptop: 360px;
+    --cs-carousel-card-width-tablet: 320px;
+    --cs-carousel-card-width-mobile: 280px;
+    --cs-drag-cursor-size: 80px;
+    --cs-drag-cursor-bg: #ffffff;
+    --cs-drag-cursor-color: #1f2937;
+    --cs-drag-cursor-font-size: 14px;
+    --cs-drag-cursor-font-weight: 500;
+    --cs-drag-cursor-text-transform: none;
+    
+    position: relative;
+    
+    .ad-case-studies__container {
+        overflow: visible;
+    }
+}
+
+// Carousel Track
+.ad-case-studies__carousel {
+    display: flex !important;
+    grid-template-columns: none !important;
+    flex-wrap: nowrap;
+    gap: var(--cs-gap);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    
+    // Hide scrollbar but keep functionality
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    
+    &.is-grabbing,
+    &.is-dragging {
+        cursor: grabbing;
+    }
+    
+    &.is-dragging {
+        .ad-case-studies__card {
+            pointer-events: none;
+            
+            &:hover {
+                transform: none !important;
+                box-shadow: var(--cs-card-shadow) !important;
+            }
+        }
+    }
+    
+    // In carousel mode, cards have fixed width instead of grid columns
+    .ad-case-studies__card {
+        flex: 0 0 var(--cs-carousel-card-width);
+        width: var(--cs-carousel-card-width);
+        min-width: var(--cs-carousel-card-width);
+        -webkit-user-drag: none;
+
+        // Big Desktop (>= 1921px)
+        @media (min-width: 1921px) {
+            flex: 0 0 var(--cs-carousel-card-width-big-desktop, var(--cs-carousel-card-width));
+            width: var(--cs-carousel-card-width-big-desktop, var(--cs-carousel-card-width));
+            min-width: var(--cs-carousel-card-width-big-desktop, var(--cs-carousel-card-width));
+        }
+
+        // Small Laptop (1025px - 1300px)
+        @media (min-width: 1025px) and (max-width: 1300px) {
+            flex: 0 0 var(--cs-carousel-card-width-small-laptop, var(--cs-carousel-card-width));
+            width: var(--cs-carousel-card-width-small-laptop, var(--cs-carousel-card-width));
+            min-width: var(--cs-carousel-card-width-small-laptop, var(--cs-carousel-card-width));
+        }
+        
+        // Tablet (601px - 1024px)
+        @media (min-width: 601px) and (max-width: 1024px) {
+            flex: 0 0 var(--cs-carousel-card-width-tablet);
+            width: var(--cs-carousel-card-width-tablet);
+            min-width: var(--cs-carousel-card-width-tablet);
+        }
+        
+        // Mobile (<= 600px)
+        @media (max-width: 600px) {
+            flex: 0 0 var(--cs-carousel-card-width-mobile);
+            width: var(--cs-carousel-card-width-mobile);
+            min-width: var(--cs-carousel-card-width-mobile);
+        }
+    }
+    
+    // Prevent image dragging
+    img {
+        -webkit-user-drag: none;
+        user-select: none;
+        pointer-events: none;
+    }
+}
+
+// Drag Cursor Indicator
+.ad-case-studies__drag-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--cs-drag-cursor-size);
+    height: var(--cs-drag-cursor-size);
+    border-radius: 50%;
+    background-color: var(--cs-drag-cursor-bg);
+    color: var(--cs-drag-cursor-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-origin: center center;
+    
+    span {
+        font-size: var(--cs-drag-cursor-font-size);
+        font-weight: var(--cs-drag-cursor-font-weight);
+        text-transform: var(--cs-drag-cursor-text-transform);
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+    }
+}
+
+// Hide drag cursor on touch devices
+@media (hover: none) and (pointer: coarse) {
+    .ad-case-studies__drag-cursor {
+        display: none !important;
+    }
+}
+

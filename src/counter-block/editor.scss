@@ -1,0 +1,246 @@
+/**
+ * Block Template - Editor Styles
+ * 
+ * These styles ensure the editor preview matches the frontend appearance
+ * for container width, margins, and padding.
+ */
+
+.ab-counter-block {
+    // width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    
+    /**
+     * Constrained Container Mode
+     * Apply max-width and center the container when in constrained mode
+     */
+    &__container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px) !important;
+            width: unset;
+        }
+    }
+    
+    // Responsive container max-width for tablet
+    @media (max-width: 1024px) {
+        &__container.is-constrained {
+            max-width: var(--container-max-width-tablet, var(--container-max-width, 100%)) !important;
+        }
+    }
+    
+    // Responsive container max-width for mobile
+    @media (max-width: 768px) {
+        &__container.is-constrained {
+            max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%)) !important;
+        }
+    }
+    
+    /**
+     * Responsive Margins
+     * Apply margin overrides for tablet and mobile in editor
+     */
+    @media (max-width: 1024px) {
+        margin-top: var(--margin-top-tablet, 0) !important;
+        margin-right: var(--margin-right-tablet, 0) !important;
+        margin-bottom: var(--margin-bottom-tablet, 0) !important;
+        margin-left: var(--margin-left-tablet, 0) !important;
+    }
+    
+    @media (max-width: 768px) {
+        margin-top: var(--margin-top-mobile, 0) !important;
+        margin-right: var(--margin-right-mobile, 0) !important;
+        margin-bottom: var(--margin-bottom-mobile, 0) !important;
+        margin-left: var(--margin-left-mobile, 0) !important;
+    }
+    
+    /**
+     * Responsive Padding
+     * Apply padding overrides for tablet and mobile in editor
+     */
+    @media (max-width: 1024px) {
+        padding-top: var(--padding-top-tablet, 0) !important;
+        padding-right: var(--padding-right-tablet, 0) !important;
+        padding-bottom: var(--padding-bottom-tablet, 0) !important;
+        padding-left: var(--padding-left-tablet, 0) !important;
+    }
+    
+    @media (max-width: 768px) {
+        padding-top: var(--padding-top-mobile, 0) !important;
+        padding-right: var(--padding-right-mobile, 0) !important;
+        padding-bottom: var(--padding-bottom-mobile, 0) !important;
+        padding-left: var(--padding-left-mobile, 0) !important;
+    }
+    
+    /**
+     * WordPress Alignment Classes Support
+     * Handle alignwide and alignfull classes in the editor
+     */
+    &.alignwide {
+        .ab-counter-block__container.is-constrained {
+            max-width: var(--wp--style--global--wide-size, 1280px) !important;
+        }
+    }
+    
+    &.alignfull {
+        width: 100vw;
+        max-width: none;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        
+        .ab-counter-block__container.is-constrained {
+            // Still respect the constrained max-width
+            max-width: var(--container-max-width, 1200px) !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        // For full-width without constraint
+        .ab-counter-block__container:not(.is-constrained) {
+            max-width: 100%;
+        }
+    }
+    
+    /**
+     * Editor-specific adjustments
+     * Add visual aids for better editing experience
+     */
+    
+    // Add subtle border in editor to show block boundaries
+	&.is-selected {
+		outline: none;
+		box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
+		border-radius: inherit;
+	}
+    
+    // Ensure block appender is visible
+    .block-list-appender {
+        margin-top: 1em;
+    }
+    
+    // Nested blocks wrapper
+    .block-editor-inner-blocks {
+        > .block-editor-block-list__layout {
+            > .wp-block {
+                // Reset margins for nested blocks
+                &:first-child {
+                    margin-top: 0;
+                }
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Alternative Pattern: Container Padding Instead of Root Padding
+ * Use this if you prefer to apply padding to the container rather than the root element
+ */
+
+/*
+.ab-counter-block-alt {
+    &__container {
+        // Desktop padding
+        padding-top: var(--padding-top-desktop, 0);
+        padding-right: var(--padding-right-desktop, 0);
+        padding-bottom: var(--padding-bottom-desktop, 0);
+        padding-left: var(--padding-left-desktop, 0);
+        
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px) !important;
+            margin-left: auto;
+            margin-right: auto;
+            
+            @media (max-width: 1024px) {
+                max-width: var(--container-max-width-tablet, 100%) !important;
+                padding-top: var(--padding-top-tablet, 0);
+                padding-right: var(--padding-right-tablet, 0);
+                padding-bottom: var(--padding-bottom-tablet, 0);
+                padding-left: var(--padding-left-tablet, 0);
+            }
+            
+            @media (max-width: 768px) {
+                max-width: var(--container-max-width-mobile, 100%) !important;
+                padding-top: var(--padding-top-mobile, 0);
+                padding-right: var(--padding-right-mobile, 0);
+                padding-bottom: var(--padding-bottom-mobile, 0);
+                padding-left: var(--padding-left-mobile, 0);
+            }
+        }
+    }
+}
+*/
+
+/**
+ * WordPress Editor Canvas Responsive Preview Support
+ * These styles help the block respond correctly in WordPress responsive preview mode
+ */
+
+// Tablet preview mode
+.is-tablet-preview {
+    .ab-counter-block {
+        margin-top: var(--margin-top-tablet, 0) !important;
+        margin-right: var(--margin-right-tablet, 0) !important;
+        margin-bottom: var(--margin-bottom-tablet, 0) !important;
+        margin-left: var(--margin-left-tablet, 0) !important;
+        
+        padding-top: var(--padding-top-tablet, 0) !important;
+        padding-right: var(--padding-right-tablet, 0) !important;
+        padding-bottom: var(--padding-bottom-tablet, 0) !important;
+        padding-left: var(--padding-left-tablet, 0) !important;
+        
+        &__container.is-constrained {
+            max-width: var(--container-max-width-tablet, 100%) !important;
+        }
+    }
+}
+
+// Mobile preview mode
+.is-mobile-preview {
+    .ab-counter-block {
+        margin-top: var(--margin-top-mobile, 0) !important;
+        margin-right: var(--margin-right-mobile, 0) !important;
+        margin-bottom: var(--margin-bottom-mobile, 0) !important;
+        margin-left: var(--margin-left-mobile, 0) !important;
+        
+        padding-top: var(--padding-top-mobile, 0) !important;
+        padding-right: var(--padding-right-mobile, 0) !important;
+        padding-bottom: var(--padding-bottom-mobile, 0) !important;
+        padding-left: var(--padding-left-mobile, 0) !important;
+        
+        &__container.is-constrained {
+            max-width: var(--container-max-width-mobile, 100%) !important;
+        }
+    }
+}
+
+/**
+ * Debugging Helpers (optional - comment out in production)
+ * Uncomment these to visualize container boundaries during development
+ */
+
+/*
+.ab-counter-block {
+    &__container.is-constrained {
+        background-color: rgba(59, 130, 246, 0.05);
+        border: 1px dashed rgba(59, 130, 246, 0.3);
+        
+        &::before {
+            content: 'Constrained Container (Max: ' attr(data-max-width) ')';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            font-size: 11px;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+    }
+}
+*/
+

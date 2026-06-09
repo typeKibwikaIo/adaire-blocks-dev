@@ -1,0 +1,642 @@
+// Breakpoint Mixins
+@mixin phone {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 601px) and (max-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin small-laptop {
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 1301px) and (max-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin big-desktop {
+    @media (min-width: 1921px) {
+        @content;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.adaire-hero-1-container {
+    background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-desktop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
+    background-size: var(--hero-bg-size, cover), auto;
+    background-position: var(--hero-bg-position, center), center;
+    background-repeat: var(--hero-bg-repeat, no-repeat), no-repeat;
+
+    min-height: var(--hero-min-height-desktop, 100vh);
+    width: var(--hero-width-desktop, 100vw);
+    display: flex;
+    flex-direction: var(--hero-flex-direction-desktop, row);
+    align-items: var(--hero-align-items-desktop, center);
+    justify-content: var(--hero-justify-content-desktop, flex-start);
+    padding-top: var(--hero-padding-top-desktop, 60px);
+    padding-bottom: var(--hero-padding-bottom-desktop, 60px);
+    padding-left: var(--hero-padding-left-desktop, 200px);
+    padding-right: var(--hero-padding-right-desktop, 150px);
+    position: relative;
+    overflow: hidden;
+
+    @include big-desktop {
+        background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-big-desktop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
+        min-height: var(--hero-min-height-big-desktop, 100vh);
+        width: var(--hero-width-big-desktop, 100vw);
+        flex-direction: var(--hero-flex-direction-big-desktop, row);
+        align-items: var(--hero-align-items-big-desktop, center);
+        justify-content: var(--hero-justify-content-big-desktop, flex-start);
+        padding-top: var(--hero-padding-top-big-desktop, 60px);
+        padding-bottom: var(--hero-padding-bottom-big-desktop, 60px);
+        padding-left: var(--hero-padding-left-big-desktop, 200px);
+        padding-right: var(--hero-padding-right-big-desktop, 150px);
+    }
+
+    @include desktop {
+        background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-desktop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
+        min-height: var(--hero-min-height-desktop, 100vh);
+        width: var(--hero-width-desktop, 100vw);
+        flex-direction: var(--hero-flex-direction-desktop, row);
+        align-items: var(--hero-align-items-desktop, center);
+        justify-content: var(--hero-justify-content-desktop, flex-start);
+        padding-top: var(--hero-padding-top-desktop, 60px);
+        padding-bottom: var(--hero-padding-bottom-desktop, 60px);
+        padding-left: var(--hero-padding-left-desktop, 200px);
+        padding-right: var(--hero-padding-right-desktop, 150px);
+    }
+
+    @include small-laptop {
+        background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-small-laptop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
+        min-height: var(--hero-min-height-small-laptop, auto);
+        width: var(--hero-width-small-laptop, 100%);
+        flex-direction: var(--hero-flex-direction-small-laptop, row);
+        align-items: var(--hero-align-items-small-laptop, center);
+        justify-content: var(--hero-justify-content-small-laptop, flex-start);
+        padding-top: var(--hero-padding-top-small-laptop, 40px);
+        padding-bottom: var(--hero-padding-bottom-small-laptop, 40px);
+        padding-left: var(--hero-padding-left-small-laptop, 80px);
+        padding-right: var(--hero-padding-right-small-laptop, 60px);
+    }
+
+    @include tablet {
+        background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-tablet, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
+        min-height: var(--hero-min-height-tablet, auto);
+        width: var(--hero-width-tablet, 100%);
+        flex-direction: var(--hero-flex-direction-tablet, row);
+        align-items: var(--hero-align-items-tablet, center);
+        justify-content: var(--hero-justify-content-tablet, flex-start);
+        padding-top: var(--hero-padding-top-tablet, 40px);
+        padding-bottom: var(--hero-padding-bottom-tablet, 40px);
+        padding-left: var(--hero-padding-left-tablet, 40px);
+        padding-right: var(--hero-padding-right-tablet, 30px);
+    }
+
+    @include phone {
+        background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-mobile, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
+        min-height: var(--hero-min-height-mobile, auto);
+        width: var(--hero-width-mobile, 100%);
+        flex-direction: var(--hero-flex-direction-mobile, column);
+        align-items: var(--hero-align-items-mobile, flex-start);
+        justify-content: var(--hero-justify-content-mobile, center);
+        padding-top: var(--hero-padding-top-mobile, 20px);
+        padding-bottom: var(--hero-padding-bottom-mobile, 20px);
+        padding-left: var(--hero-padding-left-mobile, 16px);
+        padding-right: var(--hero-padding-right-mobile, 16px);
+    }
+}
+
+.adaire-hero-1-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: var(--hero-overlay-opacity, 0.5);
+
+    &.is-type-solid {
+        background-color: var(--hero-overlay-bg-solid, transparent);
+    }
+
+    &.is-type-gradient {
+        background: var(--hero-overlay-bg-gradient, transparent);
+        opacity: 1;
+    }
+}
+
+.adaire-hero-1__breadcrumbs {
+    color: var(--hero-breadcrumbs-color, #ffffff);
+    position: absolute;
+    top: var(--hero-breadcrumb-top-offset-desktop, 90px);
+    left: var(--hero-breadcrumb-left-offset-desktop, 200px);
+    z-index: 2;
+
+    @include big-desktop {
+        top: var(--hero-breadcrumb-top-offset-big-desktop, 90px);
+        left: var(--hero-breadcrumb-left-offset-big-desktop, 200px);
+    }
+
+    @include small-laptop {
+        top: var(--hero-breadcrumb-top-offset-small-laptop, 60px);
+        left: var(--hero-breadcrumb-left-offset-small-laptop, 80px);
+    }
+
+    @include tablet {
+        top: var(--hero-breadcrumb-top-offset-tablet, 40px);
+        left: var(--hero-breadcrumb-left-offset-tablet, 40px);
+    }
+
+    @include phone {
+        top: var(--hero-breadcrumb-top-offset-mobile, 20px);
+        left: var(--hero-breadcrumb-left-offset-mobile, 16px);
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.adaire-hero-1__cta-container {
+    width: var(--hero-cta-width-desktop, 45%);
+    position: relative;
+    z-index: 1;
+    text-align: var(--hero-text-alignment-desktop, left);
+    margin-top: var(--hero-cta-margin-top-desktop, 0px);
+    margin-right: var(--hero-cta-margin-right-desktop, 0px);
+    margin-bottom: var(--hero-cta-margin-bottom-desktop, 0px);
+    margin-left: var(--hero-cta-margin-left-desktop, 0px);
+
+    @include big-desktop {
+        width: var(--hero-cta-width-big-desktop, 45%);
+        text-align: var(--hero-text-alignment-big-desktop, left);
+        margin-top: var(--hero-cta-margin-top-big-desktop, 0px);
+        margin-right: var(--hero-cta-margin-right-big-desktop, 0px);
+        margin-bottom: var(--hero-cta-margin-bottom-big-desktop, 0px);
+        margin-left: var(--hero-cta-margin-left-big-desktop, 0px);
+    }
+
+    @include desktop {
+        width: var(--hero-cta-width-desktop, 45%);
+        text-align: var(--hero-text-alignment-desktop, left);
+        margin-top: var(--hero-cta-margin-top-desktop, 0px);
+        margin-right: var(--hero-cta-margin-right-desktop, 0px);
+        margin-bottom: var(--hero-cta-margin-bottom-desktop, 0px);
+        margin-left: var(--hero-cta-margin-left-desktop, 0px);
+    }
+
+    @include small-laptop {
+        width: var(--hero-cta-width-small-laptop, 60%);
+        text-align: var(--hero-text-alignment-small-laptop, left);
+        margin-top: var(--hero-cta-margin-top-small-laptop, 0px);
+        margin-right: var(--hero-cta-margin-right-small-laptop, 0px);
+        margin-bottom: var(--hero-cta-margin-bottom-small-laptop, 0px);
+        margin-left: var(--hero-cta-margin-left-small-laptop, 0px);
+    }
+
+    @include tablet {
+        width: var(--hero-cta-width-tablet, 100%);
+        text-align: var(--hero-text-alignment-tablet, left);
+        margin-top: var(--hero-cta-margin-top-tablet, 0px);
+        margin-right: var(--hero-cta-margin-right-tablet, 0px);
+        margin-bottom: var(--hero-cta-margin-bottom-tablet, 0px);
+        margin-left: var(--hero-cta-margin-left-tablet, 0px);
+    }
+
+    @include phone {
+        width: var(--hero-cta-width-mobile, 100%);
+        text-align: var(--hero-text-alignment-mobile, left);
+        margin-top: var(--hero-cta-margin-top-mobile, 0px);
+        margin-right: var(--hero-cta-margin-right-mobile, 0px);
+        margin-bottom: var(--hero-cta-margin-bottom-mobile, 0px);
+        margin-left: var(--hero-cta-margin-left-mobile, 0px);
+    }
+}
+
+.adaire-hero-1__preheader {
+    color: var(--hero-preheader-color, #ffffff);
+    font-size: var(--hero-preheader-font-size-desktop, 18px);
+    font-weight: var(--hero-preheader-font-weight, 500);
+    line-height: var(--hero-preheader-line-height-desktop, 28px);
+    margin-bottom: var(--hero-preheader-margin-bottom-desktop, 12px);
+
+    @include big-desktop {
+        font-size: var(--hero-preheader-font-size-big-desktop, 18px);
+        line-height: var(--hero-preheader-line-height-big-desktop, 28px);
+        margin-bottom: var(--hero-preheader-margin-bottom-big-desktop, 12px);
+    }
+
+    @include small-laptop {
+        font-size: var(--hero-preheader-font-size-small-laptop, 18px);
+        line-height: var(--hero-preheader-line-height-small-laptop, 28px);
+        margin-bottom: var(--hero-preheader-margin-bottom-small-laptop, 12px);
+    }
+
+    @include tablet {
+        font-size: var(--hero-preheader-font-size-tablet, 16px);
+        line-height: var(--hero-preheader-line-height-tablet, 24px);
+        margin-bottom: var(--hero-preheader-margin-bottom-tablet, 12px);
+    }
+
+    @include phone {
+        font-size: var(--hero-preheader-font-size-mobile, 14px);
+        line-height: var(--hero-preheader-line-height-mobile, 20px);
+        margin-bottom: var(--hero-preheader-margin-bottom-mobile, 8px);
+    }
+}
+
+.adaire-hero-1__heading {
+    color: var(--hero-heading-color, #ffffff);
+    font-size: var(--hero-heading-font-size-desktop, 72px);
+    font-weight: var(--hero-heading-font-weight, 500);
+    line-height: var(--hero-heading-line-height-desktop, 92px);
+    margin-top: var(--hero-heading-margin-top-desktop, 0px);
+    margin-bottom: var(--hero-heading-margin-bottom-desktop, 24px);
+
+    @include big-desktop {
+        font-size: var(--hero-heading-font-size-big-desktop, 72px);
+        line-height: var(--hero-heading-line-height-big-desktop, 92px);
+        margin-top: var(--hero-heading-margin-top-big-desktop, 0px);
+        margin-bottom: var(--hero-heading-margin-bottom-big-desktop, 24px);
+    }
+
+    @include desktop {
+        font-size: var(--hero-heading-font-size-desktop, 72px);
+        line-height: var(--hero-heading-line-height-desktop, 92px);
+        margin-top: var(--hero-heading-margin-top-desktop, 0px);
+        margin-bottom: var(--hero-heading-margin-bottom-desktop, 24px);
+    }
+
+    @include small-laptop {
+        font-size: var(--hero-heading-font-size-small-laptop, 52px);
+        line-height: var(--hero-heading-line-height-small-laptop, 68px);
+        margin-top: var(--hero-heading-margin-top-small-laptop, 0px);
+        margin-bottom: var(--hero-heading-margin-bottom-small-laptop, 20px);
+    }
+
+    @include tablet {
+        font-size: var(--hero-heading-font-size-tablet, 42px);
+        line-height: var(--hero-heading-line-height-tablet, 54px);
+        margin-top: var(--hero-heading-margin-top-tablet, 0px);
+        margin-bottom: var(--hero-heading-margin-bottom-tablet, 18px);
+    }
+
+    @include phone {
+        font-size: var(--hero-heading-font-size-mobile, 28px);
+        line-height: var(--hero-heading-line-height-mobile, 36px);
+        margin-top: var(--hero-heading-margin-top-mobile, 0px);
+        margin-bottom: var(--hero-heading-margin-bottom-mobile, 12px);
+    }
+}
+
+.adaire-hero-1__text {
+    color: var(--hero-text-color, #ffffff);
+    font-size: var(--hero-text-font-size-desktop, 26px);
+    font-weight: var(--hero-text-font-weight, 300);
+    margin-top: var(--hero-text-margin-top-desktop, 0px);
+    margin-bottom: var(--hero-text-margin-bottom-desktop, 24px);
+
+    @include big-desktop {
+        font-size: var(--hero-text-font-size-big-desktop, 26px);
+        margin-top: var(--hero-text-margin-top-big-desktop, 0px);
+        margin-bottom: var(--hero-text-margin-bottom-big-desktop, 24px);
+    }
+
+    @include desktop {
+        font-size: var(--hero-text-font-size-desktop, 26px);
+        margin-top: var(--hero-text-margin-top-desktop, 0px);
+        margin-bottom: var(--hero-text-margin-bottom-desktop, 24px);
+    }
+
+    @include small-laptop {
+        font-size: var(--hero-text-font-size-small-laptop, 20px);
+        margin-top: var(--hero-text-margin-top-small-laptop, 0px);
+        margin-bottom: var(--hero-text-margin-bottom-small-laptop, 20px);
+    }
+
+    @include tablet {
+        font-size: var(--hero-text-font-size-tablet, 18px);
+        margin-top: var(--hero-text-margin-top-tablet, 0px);
+        margin-bottom: var(--hero-text-margin-bottom-tablet, 20px);
+    }
+
+    @include phone {
+        font-size: var(--hero-text-font-size-mobile, 14px);
+        margin-top: var(--hero-text-margin-top-mobile, 0px);
+        margin-bottom: var(--hero-text-margin-bottom-mobile, 16px);
+    }
+}
+
+.adaire-hero-1__button-container {
+    display: flex;
+    flex-direction: var(--hero-button-container-flex-direction-desktop, row);
+    gap: var(--hero-button-container-gap-desktop, 35px);
+    justify-content: var(--hero-button-alignment-desktop, flex-start);
+    align-items: center;
+    margin-top: var(--hero-button-container-margin-top-desktop, 0px);
+
+    @include big-desktop {
+        flex-direction: var(--hero-button-container-flex-direction-big-desktop, row);
+        gap: var(--hero-button-container-gap-big-desktop, 35px);
+        justify-content: var(--hero-button-alignment-big-desktop, flex-start);
+        margin-top: var(--hero-button-container-margin-top-big-desktop, 0px);
+    }
+
+    @include desktop {
+        flex-direction: var(--hero-button-container-flex-direction-desktop, row);
+        gap: var(--hero-button-container-gap-desktop, 35px);
+        justify-content: var(--hero-button-alignment-desktop, flex-start);
+        margin-top: var(--hero-button-container-margin-top-desktop, 0px);
+    }
+
+    @include small-laptop {
+        flex-direction: var(--hero-button-container-flex-direction-small-laptop, row);
+        gap: var(--hero-button-container-gap-small-laptop, 25px);
+        justify-content: var(--hero-button-alignment-small-laptop, flex-start);
+        margin-top: var(--hero-button-container-margin-top-small-laptop, 0px);
+    }
+
+    @include tablet {
+        flex-direction: var(--hero-button-container-flex-direction-tablet, row);
+        gap: var(--hero-button-container-gap-tablet, 20px);
+        justify-content: var(--hero-button-alignment-tablet, flex-start);
+        margin-top: var(--hero-button-container-margin-top-tablet, 0px);
+    }
+
+    @include phone {
+        flex-direction: var(--hero-button-container-flex-direction-mobile, column);
+        gap: var(--hero-button-container-gap-mobile, 12px);
+        justify-content: center;
+        align-items: var(--hero-button-alignment-mobile, flex-start);
+        margin-top: var(--hero-button-container-margin-top-mobile, 0px);
+    }
+}
+
+// Buttons are handled by the button block via InnerBlocks
+// No custom button styles needed here
+
+.adaire-hero-1__icon {
+    position: absolute;
+    width: var(--hero-icon-width-desktop, 700px);
+    transform: var(--hero-icon-transform-desktop, translateY(-50%));
+    z-index: 1;
+
+    // Vertical positioning: top or bottom based on iconVerticalPosition
+    &[data-icon-vertical-position="top"] {
+        top: var(--hero-icon-vertical-offset-desktop, 0px);
+        bottom: auto;
+    }
+
+    &[data-icon-vertical-position="bottom"] {
+        bottom: var(--hero-icon-vertical-offset-desktop, 0px);
+        top: auto;
+    }
+
+    // Horizontal positioning: left or right based on iconPosition
+    &[data-icon-position="left"] {
+        left: var(--hero-icon-horizontal-offset-desktop, 0px);
+        right: auto;
+    }
+
+    &[data-icon-position="right"] {
+        right: var(--hero-icon-horizontal-offset-desktop, 0px);
+        left: auto;
+    }
+
+    @include big-desktop {
+        width: var(--hero-icon-width-big-desktop, 700px);
+        transform: var(--hero-icon-transform-big-desktop, translateY(-50%));
+
+        &[data-icon-vertical-position="top"] {
+            top: var(--hero-icon-vertical-offset-big-desktop, 0px);
+            bottom: auto;
+        }
+
+        &[data-icon-vertical-position="bottom"] {
+            bottom: var(--hero-icon-vertical-offset-big-desktop, 0px);
+            top: auto;
+        }
+
+        &[data-icon-position="left"] {
+            left: var(--hero-icon-horizontal-offset-big-desktop, 0px);
+            right: auto;
+        }
+
+        &[data-icon-position="right"] {
+            right: var(--hero-icon-horizontal-offset-big-desktop, 0px);
+            left: auto;
+        }
+    }
+
+    @include desktop {
+        width: var(--hero-icon-width-desktop, 700px);
+        transform: var(--hero-icon-transform-desktop, translateY(-50%));
+
+        &[data-icon-vertical-position="top"] {
+            top: var(--hero-icon-vertical-offset-desktop, 0px);
+            bottom: auto;
+        }
+
+        &[data-icon-vertical-position="bottom"] {
+            bottom: var(--hero-icon-vertical-offset-desktop, 0px);
+            top: auto;
+        }
+
+        &[data-icon-position="left"] {
+            left: var(--hero-icon-horizontal-offset-desktop, 0px);
+            right: auto;
+        }
+
+        &[data-icon-position="right"] {
+            right: var(--hero-icon-horizontal-offset-desktop, 0px);
+            left: auto;
+        }
+    }
+
+    @include small-laptop {
+        width: var(--hero-icon-width-small-laptop, 500px);
+        transform: var(--hero-icon-transform-small-laptop, translateY(-50%));
+
+        &[data-icon-vertical-position="top"] {
+            top: var(--hero-icon-vertical-offset-small-laptop, 0px);
+            bottom: auto;
+        }
+
+        &[data-icon-vertical-position="bottom"] {
+            bottom: var(--hero-icon-vertical-offset-small-laptop, 0px);
+            top: auto;
+        }
+
+        &[data-icon-position="left"] {
+            left: var(--hero-icon-horizontal-offset-small-laptop, 0px);
+            right: auto;
+        }
+
+        &[data-icon-position="right"] {
+            right: var(--hero-icon-horizontal-offset-small-laptop, 0px);
+            left: auto;
+        }
+    }
+
+    @include tablet {
+        width: var(--hero-icon-width-tablet, 0px);
+        transform: var(--hero-icon-transform-tablet, none);
+
+        &[data-icon-vertical-position="top"] {
+            top: var(--hero-icon-vertical-offset-tablet, 0px);
+            bottom: auto;
+        }
+
+        &[data-icon-vertical-position="bottom"] {
+            bottom: var(--hero-icon-vertical-offset-tablet, 0px);
+            top: auto;
+        }
+
+        &[data-icon-position="left"] {
+            left: var(--hero-icon-horizontal-offset-tablet, 0px);
+            right: auto;
+        }
+
+        &[data-icon-position="right"] {
+            right: var(--hero-icon-horizontal-offset-tablet, 0px);
+            left: auto;
+        }
+    }
+
+    @include phone {
+        width: var(--hero-icon-width-mobile, 0px);
+        transform: var(--hero-icon-transform-mobile, none);
+
+        &[data-icon-vertical-position="top"] {
+            top: var(--hero-icon-vertical-offset-mobile, 0px);
+            bottom: auto;
+        }
+
+        &[data-icon-vertical-position="bottom"] {
+            bottom: var(--hero-icon-vertical-offset-mobile, 0px);
+            top: auto;
+        }
+
+        &[data-icon-position="left"] {
+            left: var(--hero-icon-horizontal-offset-mobile, 0px);
+            right: auto;
+        }
+
+        &[data-icon-position="right"] {
+            right: var(--hero-icon-horizontal-offset-mobile, 0px);
+            left: auto;
+        }
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+.adaire-hero-1__content-video-wrapper {
+    display: flex;
+    flex-direction: inherit;
+    width: 100%;
+    justify-content: var(--hero-content-video-justify-desktop, space-between);
+    align-items: var(--hero-content-video-align-desktop, center);
+    gap: 40px;
+
+    @include big-desktop {
+        justify-content: var(--hero-content-video-justify-big-desktop, space-between);
+        align-items: var(--hero-content-video-align-big-desktop, center);
+    }
+
+    @include desktop {
+        justify-content: var(--hero-content-video-justify-desktop, space-between);
+        align-items: var(--hero-content-video-align-desktop, center);
+    }
+
+    @include small-laptop {
+        justify-content: var(--hero-content-video-justify-small-laptop, space-between);
+        align-items: var(--hero-content-video-align-small-laptop, center);
+    }
+
+    @include tablet {
+        flex-direction: column;
+        justify-content: var(--hero-content-video-justify-tablet, flex-start);
+        align-items: var(--hero-content-video-align-tablet, center);
+        gap: 30px;
+    }
+
+    @include phone {
+        flex-direction: column;
+        justify-content: var(--hero-content-video-justify-mobile, flex-start);
+        align-items: var(--hero-content-video-align-mobile, flex-start);
+        gap: 20px;
+    }
+}
+
+.adaire-hero-1__video-player {
+    width: var(--hero-video-width-desktop, 50%);
+    height: var(--hero-video-height-desktop, 600px);
+    border-radius: var(--hero-video-border-radius-desktop, 16px);
+    overflow: hidden;
+    flex-shrink: 0;
+
+    iframe,
+    video,
+    img {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+        object-fit: cover;
+    }
+
+    @include big-desktop {
+        width: var(--hero-video-width-big-desktop, 50%);
+        height: var(--hero-video-height-big-desktop, 600px);
+        border-radius: var(--hero-video-border-radius-big-desktop, 16px);
+    }
+
+    @include desktop {
+        width: var(--hero-video-width-desktop, 50%);
+        height: var(--hero-video-height-desktop, 600px);
+        border-radius: var(--hero-video-border-radius-desktop, 16px);
+    }
+
+    @include small-laptop {
+        width: var(--hero-video-width-small-laptop, 50%);
+        height: var(--hero-video-height-small-laptop, 500px);
+        border-radius: var(--hero-video-border-radius-small-laptop, 12px);
+    }
+
+    @include tablet {
+        width: var(--hero-video-width-tablet, 100%);
+        height: var(--hero-video-height-tablet, 400px);
+        border-radius: var(--hero-video-border-radius-tablet, 8px);
+    }
+
+    @include phone {
+        width: var(--hero-video-width-mobile, 100%);
+        height: var(--hero-video-height-mobile, 300px);
+        border-radius: var(--hero-video-border-radius-mobile, 8px);
+    }
+}
+
+// Import button block styles
+@import '../button-block/style.scss';

@@ -1,0 +1,348 @@
+/* Adaire Blocks Admin Settings Styles */
+
+.adaire-blocks-settings-container {
+    max-width: 1200px;
+    margin: 20px 0;
+}
+
+/* Main menu icon styling */
+#adminmenu .toplevel_page_adaire-blocks-settings .wp-menu-image:before,
+#adminmenu .current .toplevel_page_adaire-blocks-settings div.wp-menu-image:before,
+#adminmenu .wp-has-current-submenu .toplevel_page_adaire-blocks-settings div.wp-menu-image:before,
+#adminmenu a.current:hover .toplevel_page_adaire-blocks-settings div.wp-menu-image:before,
+#adminmenu a.wp-has-current-submenu:hover .toplevel_page_adaire-blocks-settings div.wp-menu-image:before,
+#adminmenu li.wp-has-current-submenu a:focus .toplevel_page_adaire-blocks-settings div.wp-menu-image:before,
+#adminmenu li.wp-has-current-submenu.opensub .toplevel_page_adaire-blocks-settings div.wp-menu-image:before,
+#adminmenu li.wp-has-current-submenu:hover .toplevel_page_adaire-blocks-settings div.wp-menu-image:before {
+    display: none !important;
+}
+
+/* Page header styling */
+.wrap h1 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.wrap h1 .dashicons {
+    color: #0073aa;
+}
+
+.adaire-blocks-header {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.adaire-blocks-logo h2 {
+    margin: 0 0 10px 0;
+    color: #23282d;
+    font-size: 24px;
+}
+
+.adaire-blocks-logo .description {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.adaire-blocks-controls {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.adaire-blocks-bulk-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.adaire-blocks-bulk-actions .button {
+    margin-right: 10px;
+}
+
+.adaire-blocks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.adaire-block-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.adaire-block-premium {
+    opacity: 0.6;
+    position: relative;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px dashed #dee2e6;
+}
+
+.adaire-block-premium-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.adaire-block-premium-badge .dashicons {
+    font-size: 12px;
+    margin-right: 2px;
+    vertical-align: middle;
+}
+
+.adaire-block-upgrade-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+}
+
+.adaire-upgrade-button {
+    background: linear-gradient(135deg, #0073aa 0%, #005177 100%);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,115,170,0.2);
+}
+
+.adaire-upgrade-button:hover {
+    background: linear-gradient(135deg, #005177 0%, #003d5c 100%);
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,115,170,0.3);
+}
+
+.adaire-upgrade-button .dashicons {
+    font-size: 12px;
+}
+
+.adaire-block-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    transform: translateY(-2px);
+}
+
+.adaire-block-card.disabled {
+    opacity: 0.6;
+    background: #f9f9f9;
+}
+
+.adaire-block-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.adaire-block-icon {
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f1;
+    border-radius: 8px;
+}
+
+.adaire-block-icon .dashicons {
+    font-size: 20px;
+    color: #50575e;
+}
+
+.adaire-block-icon svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+.adaire-block-info {
+    flex: 1;
+}
+
+.adaire-block-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+.adaire-block-category {
+    font-size: 12px;
+    color: #666;
+    background: #f0f0f1;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.adaire-block-toggle {
+    margin-left: 15px;
+}
+
+.adaire-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.adaire-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.adaire-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.adaire-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.adaire-toggle-switch input:checked + .adaire-toggle-slider {
+    background-color: #0073aa;
+}
+
+.adaire-toggle-switch input:checked + .adaire-toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.adaire-block-description {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.adaire-block-description p {
+    margin: 0;
+}
+
+.adaire-blocks-footer {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.adaire-blocks-status {
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.adaire-blocks-status .dashicons {
+    margin-right: 5px;
+    color: #0073aa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .adaire-blocks-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .adaire-blocks-bulk-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .adaire-blocks-bulk-actions .button {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .adaire-blocks-footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
+
+/* Animation for toggles */
+.adaire-toggle-slider {
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.adaire-toggle-switch input:focus + .adaire-toggle-slider {
+    box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.2);
+}
+
+/* Status indicators */
+.adaire-block-card.enabled {
+    border-left: 4px solid #00a32a;
+}
+
+.adaire-block-card.disabled {
+    border-left: 4px solid #d63638;
+}
+
+/* Loading state */
+.adaire-blocks-form.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.adaire-blocks-form.loading::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+}

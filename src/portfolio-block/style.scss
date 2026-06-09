@@ -1,0 +1,995 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+.ad-portfolio-block * {
+  box-sizing: border-box;
+}
+
+.ad-portfolio-block {
+  font-family: "Outfit", sans-serif;
+  /* background-color: white; */
+  line-height: 1.6;
+}
+
+.ad-portfolio-block .slide-img-element,
+.ad-portfolio-block .ad-portfolio-block__gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slide-title-text{
+	font-weight: 500;
+}
+
+// Colors are now controlled via CSS variables in the styles below
+.ad-portfolio-block .slide-title-text {
+  font-size: var(--slide-title-font-size, 7rem);
+  color: var(--modal-title-color, #ffffff);
+  font-weight: var(--modal-title-font-weight, 700);
+  letter-spacing: -0.1rem;
+}
+
+.ad-portfolio-block .slide-description-text,
+.ad-portfolio-block .slide-link-text {
+  text-decoration: none;
+  font-size: var(--slide-description-font-size, 20px);
+  color: var(--modal-description-color, #ffffff);
+  font-weight: var(--modal-description-font-weight, 400);
+  letter-spacing: -0.01rem;
+}
+
+.ad-portfolio-block .slide-tag-text {
+  text-decoration: none;
+  font-size: var(--slide-tag-font-size, 20px);
+  color: var(--modal-tag-color, #ffffff);
+  font-weight: var(--modal-tag-font-weight, 400);
+  letter-spacing: -0.01rem;
+}
+
+.ad-portfolio-block .slide-link{
+  cursor: pointer;
+}
+
+.ad-portfolio-block .slide-header{
+  z-index: 100;
+  position: relative;
+}
+
+.ad-portfolio-block .ad-portfolio-block__slider{
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  overflow: hidden;
+  background-color: black;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+.ad-portfolio-block .slide, 
+.ad-portfolio-block .slide-img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100svh;
+}
+
+.ad-portfolio-block .slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  z-index: 1;
+}
+
+.ad-portfolio-block .slide{
+  will-change: transform
+}
+
+.ad-portfolio-block .slide-header{
+  position: absolute;
+  bottom: 8rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 75%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 2;
+
+
+  @media (max-width: 700px) {
+    top: 50% !important;
+    bottom: unset !important;
+    transform: translateY(-50%);
+    width: 100%;
+  }
+}
+
+
+.ad-portfolio-block .slide-description{
+  width: 60%;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+
+.ad-portfolio-block .slide-info{
+  position: absolute;
+  left: 0;
+  bottom: 8rem;
+  /* width: 100vw; */
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  z-index: 2;
+
+  @media (max-width: 700px) {
+    // bottom: 93vh;
+    // position: relative;
+  }
+
+}
+
+
+.ad-portfolio-block .slide-tags{
+  display: flex;
+  flex-direction: column;
+}
+
+
+.ad-portfolio-block .slide-index-wrapper{
+  display: flex;
+}
+
+
+.ad-portfolio-block .slide-index-wrapper p{
+  text-align: center;
+  width: 2rem;
+}
+
+
+.ad-portfolio-block .line,
+.ad-portfolio-block .word{
+  position: relative;
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Agency Section Styles */
+.ad-portfolio-block .ad-portfolio-block__agency-section {
+  min-height: 100vh;
+  color: white;
+  padding: 4rem 2rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Removed the ::before pseudo-element that was adding unwanted gradient overlays */
+
+.ad-portfolio-block .ad-portfolio-block__agency-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-title {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #fff, #f0f0f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-subtitle {
+  font-size: 1.2rem;
+  font-weight: 400;
+  opacity: 0.9;
+  text-transform: none;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+  align-items: start;
+  position: relative;
+  z-index: 1;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-text {
+  display: flex;
+  flex-direction: column;
+  // gap: 3rem;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-description h2 {
+  font-size: var(--title-font-size, 2.5rem);
+  font-weight: var(--agency-title-font-weight, 600);
+  margin-bottom: 1.5rem;
+  color: var(--agency-title-color, #ffffff);
+  will-change: transform, opacity;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-description h2 .char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-description p {
+  font-size: var(--text-font-size, 1.1rem);
+  font-weight: var(--agency-description-font-weight, 400);
+  margin-bottom: 1.5rem;
+  text-transform: none;
+  color: var(--agency-description-color, #ffffff);
+  opacity: 0.9;
+  line-height: 1.8;
+  will-change: transform, opacity;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.ad-portfolio-block .stat {
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.ad-portfolio-block .stat:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ad-portfolio-block .stat-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.ad-portfolio-block .stat-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.8;
+  text-transform: none;
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-gallery {
+  position: relative;
+}
+
+/* Gallery grid enhancements */
+.ad-portfolio-block .ad-portfolio-block__gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  height: 500px;
+  perspective: 1000px;
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  will-change: transform, opacity, filter;
+  min-height: 200px; /* Ensure minimum height */
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-item:hover {
+  transform: scale(1.05);
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(4) {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(5) {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-item img {
+  transition: transform 0.4s ease, filter 0.4s ease;
+  will-change: transform, filter;
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 14px;
+  border: 2px dashed #ccc;
+}
+
+// Hide editor preview modal in frontend
+.editor-preview-modal {
+  display: none !important;
+}
+
+// Ensure modal overlay is properly positioned
+.ad-portfolio-block .ad-portfolio-block__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 15000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 1.5rem;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(100%);
+  will-change: transform, opacity;
+}
+
+.ad-portfolio-block .ad-portfolio-block__gallery-item:hover .ad-portfolio-block__gallery-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ad-portfolio-block .ad-portfolio-block__agency-cta {
+  /* text-align: center; */
+  margin-top: 2rem;
+}
+
+
+
+/* Modal button styles - for dynamically created buttons in slides */
+.ad-portfolio-block .ad-portfolio-block__modal-button,
+.ad-portfolio-block__modal-content .ad-portfolio-block__modal-button {
+  display: inline-flex;
+  align-items: center;
+  color: var(--button-color, #ffffff);
+  font-size: var(--button-font-size, 1.1rem);
+  font-weight: var(--button-font-weight, 500);
+  font-family: "Outfit", sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: var(--button-padding, 0.2em 0);
+  margin: var(--button-margin, 20px 0);
+  overflow: hidden;
+  background: var(--button-bg-color, none);
+  border: none;
+  text-transform: none;
+  border-radius: var(--button-border-radius, 0px);
+  z-index: var(--button-z-index, 1);
+
+  /* Underline styles */
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--button-underline-color, #ff4242);
+    opacity: 1;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover::after,
+  &:focus::after {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .ad-portfolio-block__button-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .ad-portfolio-block__button-arrow {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    color: var(--button-hover-color, #ffffff);
+    background: var(--button-hover-bg-color, transparent);
+    text-decoration: none;
+
+    .ad-portfolio-block__button-arrow {
+      transform: translateX(4px);
+    }
+  }
+
+  &:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 4px;
+  }
+
+  // Style variations
+  &--fill {
+    background-color: var(--button-bg-color, #ff4242);
+    padding: 0.5em 1.5em;
+    border-radius: var(--button-border-radius, 4px);
+    
+    &:hover {
+      background-color: var(--button-hover-bg-color, #e63939);
+      color: var(--button-hover-color, #ffffff);
+    }
+  }
+
+  &--border {
+    border: 2px solid var(--button-color, #ff4242);
+    padding: 0.5em 1.5em;
+    border-radius: var(--button-border-radius, 4px);
+    
+    &:hover {
+      background-color: var(--button-color, #ff4242);
+      color: var(--button-hover-color, #ffffff);
+    }
+  }
+
+  &--gradient {
+    background: linear-gradient(45deg, var(--button-bg-color, #ff4242), var(--button-hover-bg-color, #e63939));
+    padding: 0.5em 1.5em;
+    border-radius: var(--button-border-radius, 4px);
+    
+    &:hover {
+      background: linear-gradient(45deg, var(--button-hover-bg-color, #e63939), var(--button-bg-color, #ff4242));
+      color: var(--button-hover-color, #ffffff);
+    }
+  }
+
+  &--glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(var(--button-blur));
+    -webkit-backdrop-filter: blur(var(--button-blur));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.5em 1.5em;
+    border-radius: var(--button-border-radius, 8px);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--button-hover-color, #ffffff);
+    }
+  }
+
+  // Hover animation variations
+  &--scale {
+    &:hover {
+      transform: scale(1.05);
+      color: var(--button-hover-color, #ffffff);
+    }
+  }
+
+  &--bounce {
+    &:hover {
+      animation: bounce 0.6s ease;
+      color: var(--button-hover-color, #ffffff);
+    }
+  }
+
+  &--glow {
+    &:hover {
+      box-shadow: 0 0 20px var(--button-color, #ff4242);
+      color: var(--button-hover-color, #ffffff);
+    }
+  }
+
+  &--shake {
+    &:hover {
+      animation: shake 0.5s ease-in-out;
+      color: var(--button-hover-color, #ffffff);
+    }
+  }
+
+  &--none {
+    // No hover animation
+    &:hover {
+      color: var(--button-hover-color, #ffffff);
+    }
+  }
+}
+
+/* InnerBlocks button block - let it manage its own padding/margin */
+.ad-portfolio-block .ad-portfolio-block__agency-cta .adaire-button-block {
+  /* Only apply font-family if needed, but don't override padding/margin */
+  .adaire-button-block__link {
+    font-family: "Outfit", sans-serif;
+    /* All other styles (padding, margin, colors, etc.) are handled by the button block itself */
+  }
+}
+
+/* Modal Styles */
+.ad-portfolio-block .ad-portfolio-block__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.ad-portfolio-block .ad-portfolio-block__modal-overlay.modal-closing {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.ad-portfolio-block .ad-portfolio-block__modal-content {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: modalSlideIn 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.ad-portfolio-block .ad-portfolio-block__modal-content.modal-closing {
+  transform: scale(0.95);
+  opacity: 0;
+}
+
+.ad-portfolio-block .ad-portfolio-block__modal-close-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.ad-portfolio-block .ad-portfolio-block__modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1000px) {
+  .ad-portfolio-block .slide-title-text{
+    font-size: 5rem;
+    letter-spacing: 0;
+  }
+
+  .ad-portfolio-block .slide-description-text,
+  .ad-portfolio-block .slide-link-text,
+  .ad-portfolio-block .slide-tag-text{
+    font-size: 0.8rem;
+  }
+
+  .ad-portfolio-block .slide-header{
+    top: 50%;
+    bottom: unset;
+    transform: translate(-50%, -50%);
+    width: 90%;
+  }
+
+  .ad-portfolio-block .slide-description{
+    width: 100%;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-content {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-title {
+    font-size: 3rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-description h2 {
+    font-size: 2rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__gallery-grid {
+    height: 300px;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .ad-portfolio-block .stat-number {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .ad-portfolio-block .slide-title-text{
+    font-size: 2.5rem;
+    line-height: 40px;
+    letter-spacing: 0;
+  }
+
+  .ad-portfolio-block .slide-description-text,
+  .ad-portfolio-block .slide-link-text,
+  .ad-portfolio-block .slide-tag-text{
+    font-size: 1rem;
+  }
+
+  .ad-portfolio-block .slide-tag-text{
+    font-size: 0.7rem;
+  }
+
+  .ad-portfolio-block .slide-info{
+    width: 100vw;
+    justify-content: center;
+    bottom: 4rem !important;
+    // bottom: unset !important;
+    top: unset !important;
+  }
+
+
+
+  .ad-portfolio-block .slide-header{
+    top: unset;
+    bottom: 0px;
+    /* transform: translate(-50%, -50%); */
+    width: 90%;
+    justify-content: flex-end;
+  }
+
+  .ad-portfolio-block .slide-description{
+    width: 100%;
+  }
+  
+
+  .ad-portfolio-block .slide-tags{
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .ad-portfolio-block .slide-tags p:first-child{
+    margin-bottom: 0;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-section {
+    padding: 2rem 1rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-title {
+    font-size: 2.5rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-subtitle {
+    font-size: 1rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-description h2 {
+    font-size: 1.8rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-description p {
+    font-size: 1rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__agency-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__gallery-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 0.5rem;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(1),
+  .ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(2),
+  .ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(3),
+  .ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(4),
+  .ad-portfolio-block .ad-portfolio-block__gallery-item:nth-child(5) {
+    grid-column: 1;
+    grid-row: auto;
+    height: 200px;
+  }
+
+  .ad-portfolio-block .ad-portfolio-block__modal-close-btn {
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+
+
+.ad-portfolio-block__modal-button .ad-portfolio-block__button-arrow{
+  position: relative;
+  
+  path {
+    stroke-width: 2 !important;
+  }
+}
+
+/* More specific rule for modal buttons */
+.ad-portfolio-block__modal-content .ad-portfolio-block__modal-button .ad-portfolio-block__button-arrow path {
+  stroke-width: 2 !important;
+}
+
+/* Ensure modal button SVG has correct stroke width */
+.ad-portfolio-block__modal-content .ad-portfolio-block__modal-button svg path {
+  stroke-width: 2 !important;
+}
+
+/* Ensure modal button has same underline stroke width */
+.ad-portfolio-block__modal-content .ad-portfolio-block__modal-button::after {
+  height: 2px !important;
+}
+
+/* Ensure modal buttons have hover animation */
+.ad-portfolio-block__modal-content .ad-portfolio-block__modal-button {
+  display: inline-flex;
+  align-items: center;
+  color: var(--button-color, #ffffff);
+  font-size: var(--button-font-size, 1.1rem);
+  font-weight: var(--button-font-weight, 500);
+  font-family: "Outfit", sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  /* Padding removed - let button block manage its own padding */
+  padding: var(--button-padding, 0.2em 0);
+  margin: var(--button-margin, 20px 0);
+  overflow: hidden;
+  background: var(--button-bg-color, none);
+  border: none;
+  text-transform: none;
+  border-radius: var(--button-border-radius, 0px);
+  z-index: var(--button-z-index, 1);
+
+  /* Underline styles */
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--button-underline-color, #ff4242);
+    opacity: 1;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover::after,
+  &:focus::after {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .ad-portfolio-block__button-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .ad-portfolio-block__button-arrow {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    color: var(--button-hover-color, #ffffff);
+    background: var(--button-hover-bg-color, transparent);
+    text-decoration: none;
+
+    .ad-portfolio-block__button-arrow {
+      transform: translateX(4px);
+    }
+  }
+
+  &:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 4px;
+  }
+}
+
+/* Scroll indicator */
+.ad-portfolio-block .scroll-indicator {
+  position: absolute;
+  right: 2rem;
+  bottom: 50px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+  color: white;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.ad-portfolio-block .scroll-indicator:hover {
+  opacity: 1;
+}
+
+.ad-portfolio-block .scroll-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transform: rotate(180deg);
+}
+
+.ad-portfolio-block .scroll-arrow {
+  width: 2px;
+  height: 40px;
+  background: white;
+  position: relative;
+  border-radius: 1px;
+}
+
+.ad-portfolio-block .scroll-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid white;
+}
+
+@media (max-width: 768px) {
+  .ad-portfolio-block .scroll-indicator {
+    right: 1rem;
+  }
+  
+  .ad-portfolio-block .scroll-text {
+    font-size: 0.8rem;
+  }
+  
+  .ad-portfolio-block .scroll-arrow {
+    height: 30px;
+  }
+}
+@media (max-width: 600px) {
+	.ad-portfolio-block .ad-portfolio-block__modal-close-btn{
+    top: 5rem;
+  }
+}
+
+// Keyframe animations for button hover effects
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}

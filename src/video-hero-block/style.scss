@@ -1,0 +1,488 @@
+
+.ad-video-hero-block {
+  width: 100%;
+  height: 100vh;
+  font-family: inherit;
+  background: #000;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+
+  @media(max-width: 600px){
+    height: 110vh;
+  }
+}
+
+.ad-video-hero-block__container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: visible; // Default: allow scrolling text to extend on larger screens
+}
+
+.ad-video-hero-block__video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.ad-video-hero-block__video-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateY(0);
+  
+  &.active {
+    z-index: 2;
+  }
+
+
+  
+  
+  iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw;
+    min-height: 100vh;
+    min-width: 177.77vh;
+    transform: translate(-50%, -50%);
+    border: none;
+    pointer-events: none;
+  }
+}
+
+.ad-video-hero-block__video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--overlay-background, rgba(0, 0, 0, 0.3));
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ad-video-hero-block__video-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px;
+  z-index: 3;
+  color: #fff;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(0);
+  
+  &.active {
+    opacity: 1;
+  }
+  
+  
+  @media(min-width: 2000px){
+    padding-left: 80px;
+  }
+}
+
+.ad-video-hero-block__video-info {
+  // max-width: 600px;
+  margin-bottom: 145px;
+
+
+}
+
+.ad-video-hero-block__video-title {
+  font-size: var(--title-font-size, 48px);
+  font-weight: var(--title-font-weight, 700);
+  color: var(--text-color, #ffffff);
+  margin: 0 0 15px 0;
+  line-height: 1.2;
+  cursor: pointer;
+  -webkit-text-stroke: 1px transparent;
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
+  
+  @media (max-width: 768px) {
+    font-size: var(--title-font-size-tablet, 36px);
+  }
+  
+  @media (max-width: 480px) {
+    font-size: var(--title-font-size-mobile, 28px);
+  }
+}
+
+.ad-video-hero-block__video-title-scroller {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: visible; // Default: marquee can extend beyond container
+  white-space: nowrap;
+  pointer-events: auto;
+  
+  .scrolling-text {
+    display: inline-block;
+    white-space: nowrap;
+    will-change: transform;
+    // Padding for nicer marquee spacing on larger screens
+    padding: 0 50px;
+    pointer-events: auto;
+  }
+  
+  // Responsive scrolling gap is controlled by JavaScript based on screen size
+}
+
+.ad-video-hero-block__video-description {
+  font-size: var(--description-font-size, 18px);
+  font-weight: 400;
+  color: var(--text-color, #ffffff);
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.5;
+  margin-bottom: 5px;
+  
+  @media (max-width: 768px) {
+    font-size: var(--description-font-size-tablet, 16px);
+  }
+  
+  @media (max-width: 480px) {
+    font-size: var(--description-font-size-mobile, 14px);
+  }
+}
+
+.ad-video-hero-block__video-indicators {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  z-index: 3;
+  pointer-events: auto;
+  
+  // @media (max-width: 768px) {
+  //   bottom: 15px;
+  //   right: 20px;
+  // }
+}
+
+.ad-video-hero-block__navigation-arrows {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  
+  .ad-video-hero-block__nav-arrow {
+    background: var(--nav-arrow-left-bg-color, rgba(255, 255, 255, 0.1));
+    backdrop-filter: blur(var(--nav-arrow-left-bg-blur, 0px));
+    border: none;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    outline: none;
+    
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    
+    svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--nav-arrow-left-color, rgba(255, 255, 255, 0.7));
+      transition: fill 0.3s ease;
+    }
+    
+    &:hover {
+      background: var(--nav-arrow-left-bg-color-hover, rgba(255, 255, 255, 0.2));
+      backdrop-filter: blur(var(--nav-arrow-left-bg-blur-hover, 0px));
+      transform: scale(1.1);
+      
+      svg {
+        fill: var(--nav-arrow-left-color-hover, rgba(255, 255, 255, 1));
+      }
+    }
+    
+    &.ad-video-hero-block__nav-arrow-left {
+      background: var(--nav-arrow-left-bg-color, rgba(255, 255, 255, 0.1));
+      backdrop-filter: blur(var(--nav-arrow-left-bg-blur, 0px));
+      
+      svg {
+        fill: var(--nav-arrow-left-color, rgba(255, 255, 255, 0.7));
+      }
+      
+      &:hover {
+        background: var(--nav-arrow-left-bg-color-hover, rgba(255, 255, 255, 0.2));
+        backdrop-filter: blur(var(--nav-arrow-left-bg-blur-hover, 0px));
+        svg {
+          fill: var(--nav-arrow-left-color-hover, rgba(255, 255, 255, 1));
+        }
+      }
+    }
+    
+    &.ad-video-hero-block__nav-arrow-right {
+      background: var(--nav-arrow-right-bg-color, rgba(255, 255, 255, 0.1));
+      backdrop-filter: blur(var(--nav-arrow-right-bg-blur, 0px));
+      
+      svg {
+        fill: var(--nav-arrow-right-color, rgba(138, 43, 226, 0.8));
+      }
+      
+      &:hover {
+        background: var(--nav-arrow-right-bg-color-hover, rgba(255, 255, 255, 0.2));
+        backdrop-filter: blur(var(--nav-arrow-right-bg-blur-hover, 0px));
+        svg {
+          fill: var(--nav-arrow-right-color-hover, rgba(138, 43, 226, 1));
+        }
+      }
+    }
+  }
+
+
+  
+}
+
+.ad-video-hero-block__progress-indicators {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  // transform: translateX(-50%);
+
+}
+
+.ad-video-hero-block__video-indicator {
+  position: relative;
+  width: 31vw;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  overflow: hidden;
+  
+  .ad-video-hero-block__progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #fff;
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.1s linear;
+  }
+  
+  .chevron-icon {
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    fill: #fff;
+    opacity: 0.7;
+  }
+  
+  &.active {
+    .chevron-icon {
+      opacity: 1;
+    }
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+    
+    .chevron-icon {
+      opacity: 1;
+    }
+  }
+}
+
+.ad-video-hero-block__video-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .ad-video-hero-block__cursor-text {
+    color: white;
+    font-size: 30px;
+    font-weight: 400;
+    text-align: center;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+
+// Responsive design
+@media (max-width: 1024px) {
+  .ad-video-hero-block {
+    height: 80vh;
+  }
+  
+  .ad-video-hero-block__video-content {
+    padding: 30px;
+  }
+  
+  .ad-video-hero-block__video-title {
+    font-size: var(--title-font-size, 48px);
+  }
+  
+  .ad-video-hero-block__video-description {
+    font-size: var(--description-font-size, 18px);
+  }
+}
+
+@media (max-width: 768px) {
+  .ad-video-hero-block {
+    height: 70vh;
+    cursor: default;
+  }
+  
+  .ad-video-hero-block__video-content {
+    padding: 20px;
+  }
+
+  .ad-video-hero-block__video-title {
+    font-size: var(--title-font-size-tablet, 36px);
+    margin-bottom: 10px;
+  }
+  
+  .ad-video-hero-block__video-description {
+    font-size: var(--description-font-size-tablet, 16px);
+  }
+  
+  // .ad-video-hero-block__video-cursor {
+  //   display: none;
+  // }
+  
+  // .ad-video-hero-block__video-indicators {
+  //   bottom: 15px;
+  //   right: 20px;
+  // }
+}
+
+@media (max-width: 480px) {
+  .ad-video-hero-block {
+    height: 110vh;
+    overflow-x: hidden; // prevent horizontal scroll on smallest screens
+  }
+  
+  .ad-video-hero-block__video-content {
+    padding: 15px;
+  }
+
+  // Constrain scrolling title only on mobile
+  .ad-video-hero-block__container {
+    overflow-x: hidden;
+  }
+
+  .ad-video-hero-block__video-title-scroller {
+    overflow: hidden;
+  }
+  
+  .ad-video-hero-block__video-title {
+    font-size: var(--title-font-size-mobile, 28px);
+  }
+  
+  .ad-video-hero-block__video-description {
+    font-size: var(--description-font-size-mobile, 14px);
+  }
+  
+  // .ad-video-hero-block__video-indicators {
+  //   bottom: 10px;
+  //   right: 15px;
+  //   gap: 8px;
+  // }
+  
+  // .ad-video-hero-block__video-indicator {
+  //   width: 6px;
+  //   height: 6px;
+  // }
+}
+
+// Animation classes for GSAP
+.ad-video-hero-block__video-slide {
+  &.transitioning {
+    pointer-events: none;
+  }
+}
+
+// Loading state
+.ad-video-hero-block__video-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #333, #666);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+// Video content placeholder
+.ad-video-hero-block__video-content-placeholder {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+@media (max-width: 480px) {
+  .ad-video-hero-block__navigation-arrows{
+    position: relative;
+    left: 27px
+  }
+  .ad-video-hero-block {
+    height: 110vh;
+    overflow-x: hidden; // prevent horizontal scroll on smallest screens
+  }
+  
+  .ad-video-hero-block__video-content {
+    padding: 15px;
+  }
+
+  // Constrain scrolling title only on mobile
+  .ad-video-hero-block__container {
+    overflow-x: hidden;
+  }
+
+  .ad-video-hero-block__video-title-scroller {
+    overflow: hidden;
+  }
+}

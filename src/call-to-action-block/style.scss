@@ -1,0 +1,612 @@
+/**
+ * Frontend styles for the call-to-action block.
+ * These styles should match the editor styles exactly.
+ */
+
+* {
+	box-sizing: border-box;
+}
+
+.cta-block {
+	position: relative;
+	height: auto;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	
+	// Default Desktop Padding
+	padding-top: var(--cta-padding-top-desktop, 100px);
+	padding-right: var(--cta-padding-right-desktop, 80px);
+	padding-bottom: var(--cta-padding-bottom-desktop, 100px);
+	padding-left: var(--cta-padding-left-desktop, 80px);
+
+	// Container wrapper
+	&__container {
+		width: 100%;
+		max-width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: var(--margin-top-desktop, 0);
+		margin-bottom: var(--margin-bottom-desktop, 0);
+		padding-left: var(--margin-left-desktop, 0);
+		padding-right: var(--margin-right-desktop, 0);
+
+		&.is-constrained {
+			max-width: var(--container-max-width, 1200px);
+		}
+	}
+
+	// Breakpoint Mixins (aligned with hero1 block)
+	@mixin phone {
+		@media (max-width: 600px) {
+			@content;
+		}
+	}
+
+	@mixin tablet {
+		@media (min-width: 601px) and (max-width: 1024px) {
+			@content;
+		}
+	}
+
+	@mixin small-laptop {
+		@media (min-width: 1025px) and (max-width: 1300px) {
+			@content;
+		}
+	}
+
+	@mixin desktop {
+		@media (min-width: 1301px) and (max-width: 1920px) {
+			@content;
+		}
+	}
+
+	@mixin big-desktop {
+		@media (min-width: 1921px) {
+			@content;
+		}
+	}
+
+	// Responsive container max-width and padding
+	@include phone {
+		padding-top: var(--cta-padding-top-mobile, 40px);
+		padding-right: var(--cta-padding-right-mobile, 20px);
+		padding-bottom: var(--cta-padding-bottom-mobile, 40px);
+		padding-left: var(--cta-padding-left-mobile, 20px);
+		
+		&__container.is-constrained {
+			max-width: var(
+				--container-max-width-mobile,
+				var(--container-max-width-tablet, 100%)
+			);
+		}
+		
+		&__container {
+			margin-top: var(--margin-top-mobile, var(--margin-top-tablet, var(--margin-top-desktop, 0)));
+			margin-bottom: var(--margin-bottom-mobile, var(--margin-bottom-tablet, var(--margin-bottom-desktop, 0)));
+			padding-left: var(--margin-left-mobile, var(--margin-left-tablet, var(--margin-left-desktop, 0)));
+			padding-right: var(--margin-right-mobile, var(--margin-right-tablet, var(--margin-right-desktop, 0)));
+		}
+	}
+
+	@include tablet {
+		padding-top: var(--cta-padding-top-tablet, 60px);
+		padding-right: var(--cta-padding-right-tablet, 40px);
+		padding-bottom: var(--cta-padding-bottom-tablet, 60px);
+		padding-left: var(--cta-padding-left-tablet, 40px);
+		
+		&__container.is-constrained {
+			max-width: var(
+				--container-max-width-tablet,
+				var(--container-max-width, 100%)
+			);
+		}
+		
+		&__container {
+			margin-top: var(--margin-top-tablet, var(--margin-top-desktop, 0));
+			margin-bottom: var(--margin-bottom-tablet, var(--margin-bottom-desktop, 0));
+			padding-left: var(--margin-left-tablet, var(--margin-left-desktop, 0));
+			padding-right: var(--margin-right-tablet, var(--margin-right-desktop, 0));
+		}
+	}
+
+	@include small-laptop {
+		padding-top: var(--cta-padding-top-small-laptop, 80px);
+		padding-right: var(--cta-padding-right-small-laptop, 60px);
+		padding-bottom: var(--cta-padding-bottom-small-laptop, 80px);
+		padding-left: var(--cta-padding-left-small-laptop, 60px);
+		
+		&__container.is-constrained {
+			max-width: var(
+				--container-max-width-small-laptop,
+				var(--container-max-width, 1200px)
+			);
+		}
+	}
+
+	@include desktop {
+		padding-top: var(--cta-padding-top-desktop, 100px);
+		padding-right: var(--cta-padding-right-desktop, 80px);
+		padding-bottom: var(--cta-padding-bottom-desktop, 100px);
+		padding-left: var(--cta-padding-left-desktop, 80px);
+		
+		&__container.is-constrained {
+			max-width: var(
+				--container-max-width-desktop,
+				var(--container-max-width, 1200px)
+			);
+		}
+	}
+
+	@include big-desktop {
+		padding-top: var(--cta-padding-top-big-desktop, 100px);
+		padding-right: var(--cta-padding-right-big-desktop, 80px);
+		padding-bottom: var(--cta-padding-bottom-big-desktop, 100px);
+		padding-left: var(--cta-padding-left-big-desktop, 80px);
+		
+		&__container.is-constrained {
+			max-width: var(
+				--container-max-width-big-desktop,
+				var(--container-max-width, 1200px)
+			);
+		}
+	}
+
+	.ad-cta2-container {
+		min-height: var(--min-height, 400);
+		position: relative;
+		border-radius: var(--content-border-radius, 0px);
+		overflow: hidden;
+
+		// Removed container-wide gradient; gradients are applied to content/overlay
+	}
+
+	.ad-split {
+		display: flex;
+		flex-direction: row; //must be column on tab-port below
+
+		&__image {
+			background-image: var(--background-image, none);
+			background-size: var(--background-size, cover);
+			background-position: var(--background-position, center);
+			width: var(--image-width, 50%);
+			position: relative;
+			.ad-image-overlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: var(
+					--overlay-background,
+					var(--overlay-background-color, #000000)
+				);
+				opacity: var(--overlay-opacity, 0.5);
+			}
+		}
+
+		&__content {
+			width: calc(
+				100% - var(--image-width, 50%)
+			); //THIS MUST BE 100 - WIDTH OF IMAGE //must be 100 on tab-port below
+			display: flex;
+			flex-direction: column;
+			justify-content: var(--content-justify, center); //config //responsive
+			align-items: var(--content-align, flex-start); //config //responsive
+			padding-left: var(--content-padding-left, 20px); //config //responsive
+			padding-right: var(--content-padding-right, 20px); //config //responsive
+			padding-top: var(--content-padding-top, 20px); //config //responsive
+			padding-bottom: var(--content-padding-bottom, 20px); //config //responsive
+			background: var(
+				--content-background,
+				var(--content-background-color, #f5f5f5)
+			); //config
+			&__header {
+				font-size: var(--header-font-size-desktop, 40px); //config //responsive
+				color: var(--header-color, #333333); //config
+				margin-bottom: var(
+					--header-margin-bottom-desktop,
+					20px
+				); //config //responsive
+				text-align: var(--header-text-align, left); //config //responsive
+				font-weight: var(--header-font-weight, 300); //config //responsive
+			}
+
+			&__text {
+				font-size: var(--body-font-size-desktop, 16px); //responsive
+				color: var(--body-color, #666666); //config
+				margin-bottom: var(
+					--body-margin-bottom-desktop,
+					20px
+				); //config //responsive
+				text-align: var(--body-text-align, left); //config //responsive
+				font-weight: var(--body-font-weight, 300); //config //responsive
+			}
+
+			&__button {
+				// Style the nested custom Button block
+				.wp-block-create-block-button-block {
+					margin-bottom: 0;
+
+					button {
+						background-color: var(--button-background-color, #000000);
+						color: var(--button-text-color, #ffffff);
+						transition: all 0.3s ease;
+
+						&:hover {
+							opacity: 0.9;
+							transform: translateY(-1px);
+						}
+					}
+				}
+			}
+		}
+	}
+	.ad-stacked {
+		display: flex;
+		flex-direction: column;
+
+		&__image {
+			background-image: var(--background-image, none);
+			background-size: var(--background-size, cover);
+			background-position: var(--background-position, center);
+			width: 100%;
+			height: var(--stacked-image-height-desktop, 500px); //config //responsive
+			position: relative;
+			.ad-image-overlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: var(
+					--overlay-background,
+					var(--overlay-background-color, #000000)
+				);
+				opacity: var(--overlay-opacity, 0.5);
+			}
+		}
+
+		&__content-container {
+			background: var(
+				--content-background,
+				var(--content-background-color, #f5f5f5)
+			); //config
+			display: flex;
+			justify-content: var(--content-justify, center); //config
+			border-radius: var(--content-border-radius, 0px);
+		}
+
+		&__content {
+			width: var(--stacked-content-width-desktop, 50%); //config //responsive
+			display: flex;
+			flex-direction: column;
+			justify-content: var(--content-justify, center); //config //responsive
+			align-items: var(--content-align, center); //config //responsive
+			padding-left: var(--content-padding-left, 20px); //config //responsive
+			padding-right: var(--content-padding-right, 20px); //config //responsive
+			padding-top: var(--content-padding-top, 20px); //config //responsive
+			padding-bottom: var(--content-padding-bottom, 20px); //config //responsive
+			&__header {
+				font-size: var(--header-font-size-desktop, 40px); //config //responsive
+				color: var(--header-color, #333333); //config
+				margin-bottom: var(
+					--header-margin-bottom-desktop,
+					20px
+				); //config //responsive
+				text-align: var(--header-text-align, left); //config //responsive
+				font-weight: var(--header-font-weight, 300); //config //responsive
+			}
+
+			&__text {
+				font-size: var(--body-font-size-desktop, 16px); //responsive
+				color: var(--body-color, #666666); //config
+				margin-bottom: var(
+					--body-margin-bottom-desktop,
+					20px
+				); //config //responsive
+				text-align: var(--body-text-align, left); //config //responsive
+				font-weight: var(--body-font-weight, 300); //config //responsive
+			}
+
+			&__button {
+				// Style the nested custom Button block
+				.wp-block-create-block-button-block {
+					margin-bottom: 0;
+
+					button {
+						background-color: var(--button-background-color, #000000);
+						color: var(--button-text-color, #ffffff);
+						transition: all 0.3s ease;
+
+						&:hover {
+							opacity: 0.9;
+							transform: translateY(-1px);
+						}
+					}
+				}
+			}
+		}
+	}
+	.ad-overlay {
+		background-image: var(--background-image, none);
+		background-size: var(--background-size, cover);
+		background-position: var(--background-position, center);
+		width: 100%;
+		height: var(--overlay-height-desktop, 500px); //config //responsive
+
+		&__overlay {
+			display: flex;
+			flex-direction: column;
+			background: var(
+				--overlay-background,
+				var(--overlay-background-color, #000000)
+			); //config
+			width: 100%;
+			height: 100%;
+			top: 0;
+			right: 0;
+			position: absolute;
+			opacity: var(--overlay-opacity, 0.5);
+		}
+
+		&__content {
+			position: absolute;
+			z-index: 10;
+			width: var(--overlay-content-width-desktop, 50%); //config //responsive
+			display: flex;
+			flex-direction: column;
+			justify-content: var(--content-justify, center); //config //responsive
+			padding-left: var(--content-padding-left, 20px); //config //responsive
+			padding-right: var(--content-padding-right, 20px); //config //responsive
+			padding-top: var(--content-padding-top, 20px); //config //responsive
+			padding-bottom: var(--content-padding-bottom, 20px); //config //responsive
+			&__header {
+				font-size: var(--header-font-size-desktop, 40px); //config //responsive
+				color: var(--overlay-header-color, #ffffff); //config
+				margin-bottom: var(
+					--header-margin-bottom-desktop,
+					20px
+				); //config //responsive
+				text-align: var(--header-text-align, left); //config //responsive
+				font-weight: var(--header-font-weight, 300); //config //responsive
+			}
+
+			&__text {
+				font-size: var(--body-font-size-desktop, 16px); //responsive
+				color: var(--overlay-body-color, #ffffff); //config
+				margin-bottom: var(
+					--body-margin-bottom-desktop,
+					20px
+				); //config //responsive
+				text-align: var(--body-text-align, left); //config //responsive
+				font-weight: var(--body-font-weight, 300); //config //responsive
+			}
+
+			&__button {
+				// Style the nested custom Button block
+				.wp-block-create-block-button-block {
+					margin-bottom: 0;
+
+					button {
+						transition: all 0.3s ease;
+
+						&:hover {
+							opacity: 0.9;
+							transform: translateY(-1px);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.ad-overlay-top-left {
+		justify-content: flex-start; //center on tab-port below
+		align-items: flex-start; //center on tab-port below
+		&__content {
+			top: 0;
+			left: 0;
+		}
+		&__text,
+		&__header {
+			text-align: left;
+		}
+	}
+	.ad-overlay-top-right {
+		justify-content: flex-start; //center on tab-port below
+		align-items: flex-end; //center on tab-port below
+		&__content {
+			top: 0;
+			right: 0;
+			text-align: right;
+		}
+		&__text,
+		&__header {
+			text-align: right;
+		}
+	}
+	.ad-overlay-bottom-left {
+		justify-content: flex-end; //center on tab-port below
+		align-items: flex-start; //center on tab-port below
+		&__content {
+			bottom: 0;
+			left: 0;
+			text-align: left;
+		}
+		&__text,
+		&__header {
+			text-align: left;
+		}
+	}
+	.ad-overlay-bottom-right {
+		justify-content: flex-end; //center on tab-port below
+		align-items: flex-end; //center on tab-port below
+		&__content {
+			bottom: 0;
+			right: 0;
+			text-align: right;
+		}
+		&__text,
+		&__header {
+			text-align: right;
+		}
+	}
+	.ad-overlay-center {
+		justify-content: center; //center on tab-port below
+		align-items: center; //center on tab-port below
+		&__content {
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+		}
+		&__text,
+		&__header {
+			text-align: center;
+		}
+	}
+
+	// Responsive breakpoints
+	@media (max-width: 1024px) {
+
+		.ad-split {
+			flex-direction: column; //must be column on tab-port below
+
+			&__image {
+				width: 100% !important;
+				height: var(
+					--stacked-image-height-tablet,
+					400px
+				); // ensure visibility when stacked on tablet
+			}
+
+			&__content {
+				width: 100% !important; //must be 100 on tab-port below
+				padding-left: var(--content-padding-left, 20px);
+				padding-right: var(--content-padding-right, 20px);
+				padding-top: var(--content-padding-top, 20px);
+				padding-bottom: var(--content-padding-bottom, 20px);
+				&__header {
+					font-size: var(--header-font-size-tablet, 32px);
+					margin-bottom: var(--header-margin-bottom-tablet, 16px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-tablet, 14px);
+					margin-bottom: var(--body-margin-bottom-tablet, 16px);
+				}
+			}
+		}
+
+		.ad-stacked {
+			&__image {
+				height: var(--stacked-image-height-tablet, 400px);
+			}
+
+			&__content {
+				width: var(--stacked-content-width-tablet, 70%) !important;
+				&__header {
+					font-size: var(--header-font-size-tablet, 32px);
+					margin-bottom: var(--header-margin-bottom-tablet, 16px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-tablet, 14px);
+					margin-bottom: var(--body-margin-bottom-tablet, 16px);
+				}
+			}
+		}
+
+		.ad-overlay {
+			height: var(--overlay-height-tablet, 400px);
+
+			&__content {
+				width: var(--overlay-content-width-tablet, 70%) !important;
+				&__header {
+					font-size: var(--header-font-size-tablet, 32px);
+					margin-bottom: var(--header-margin-bottom-tablet, 16px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-tablet, 14px);
+					margin-bottom: var(--body-margin-bottom-tablet, 16px);
+				}
+			}
+		}
+
+		.ad-overlay-top-left,
+		.ad-overlay-top-right,
+		.ad-overlay-bottom-left,
+		.ad-overlay-bottom-right {
+			justify-content: center; //center on tab-port below
+			align-items: center; //center on tab-port below
+		}
+	}
+
+	@media (max-width: 768px) {
+
+		.ad-split {
+			flex-direction: column; // ensure stacked on mobile
+			&__image {
+				width: 100% !important;
+				height: var(
+					--stacked-image-height-mobile,
+					300px
+				); // ensure visibility on mobile
+			}
+			&__content {
+				width: 100% !important;
+				padding-left: var(--content-padding-left, 20px);
+				padding-right: var(--content-padding-right, 20px);
+				padding-top: var(--content-padding-top, 20px);
+				padding-bottom: var(--content-padding-bottom, 20px);
+				&__header {
+					font-size: var(--header-font-size-mobile, 24px);
+					margin-bottom: var(--header-margin-bottom-mobile, 12px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-mobile, 12px);
+					margin-bottom: var(--body-margin-bottom-mobile, 12px);
+				}
+			}
+		}
+
+		.ad-stacked {
+			&__image {
+				height: var(--stacked-image-height-mobile, 300px);
+			}
+
+			&__content {
+				width: var(--stacked-content-width-mobile, 90%) !important;
+				&__header {
+					font-size: var(--header-font-size-mobile, 24px);
+					margin-bottom: var(--header-margin-bottom-mobile, 12px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-mobile, 12px);
+					margin-bottom: var(--body-margin-bottom-mobile, 12px);
+				}
+			}
+		}
+
+		.ad-overlay {
+			height: var(--overlay-height-mobile, 300px);
+
+			&__content {
+				width: var(--overlay-content-width-mobile, 90%) !important;
+				&__header {
+					font-size: var(--header-font-size-mobile, 24px);
+					margin-bottom: var(--header-margin-bottom-mobile, 12px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-mobile, 12px);
+					margin-bottom: var(--body-margin-bottom-mobile, 12px);
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,42 @@
+{
+	"name": "adaire-blocks",
+	"version": "0.1.0",
+	"description": "Adaire Blocks is a powerful WordPress plugin that empowers developers and designers to craft visually stunning, high-performance websites with ease. Seamlessly integrating GSAP animations and advanced layout controls, it lets you bring your creative vision to life with smooth, professional-grade motion effects — all within the familiar Gutenberg editor.",
+	"author": "Adaire Digital",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"scripts": {
+		"prebuild": "node scripts/apply-new-icons.js && node scripts/update-block-icons.js",
+		"build": "wp-scripts build --blocks-manifest",
+		"build:free": "node scripts/generate-free-version.js",
+		"build:plus": "npm run build",
+		"build:premium": "npm run build",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"plugin-zip:free": "npm --prefix ../adaire-blocks-free run plugin-zip",
+		"plugin-zip:plus": "npm run plugin-zip",
+		"plugin-zip:premium": "npm run plugin-zip",
+		"start": "wp-scripts start --blocks-manifest",
+		"generate:free": "npm run build:free",
+		"deploy:free": "npm run build:free && npm run plugin-zip:free",
+		"deploy:plus": "npm run build:plus && npm run plugin-zip:plus",
+		"deploy:premium": "npm run build:premium && npm run plugin-zip:premium"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.27.0"
+	},
+	"dependencies": {
+		"@splidejs/splide": "^4.1.4",
+		"@splidejs/splide-extension-auto-scroll": "^0.5.3",
+		"@wordpress/components": "^35.0.0",
+		"@wordpress/icons": "^10.32.0",
+		"bootstrap-icons": "^1.13.1",
+		"gsap": "^3.13.0",
+		"lucide": "^0.552.0",
+		"split-type": "^0.3.4",
+		"swiper": "^12.0.1"
+	}
+}

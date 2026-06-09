@@ -1,0 +1,100 @@
+.adaire-flipcard {
+	min-height: calc(var(--flipcard-height-desktop, 300px) * 2);
+	@media (max-width: 1024px) {
+		min-height: calc(var(--flipcard-height-tablet, 300px) * 2);
+	}
+	@media (max-width: 768px) {
+		min-height: calc(var(--flipcard-height-mobile, 250px) * 2);
+	}
+	&__container {
+		border: 2px dashed #ccc;
+		border-radius: 8px;
+		min-height: calc(var(--flipcard-height-desktop, 300px) * 2);
+		max-width: 100%;
+		box-sizing: border-box;
+		border: none;
+
+		@media (max-width: 1024px) {
+			min-height: calc(var(--flipcard-height-tablet, 300px) * 2);
+		}
+
+		@media (max-width: 768px) {
+			min-height: calc(var(--flipcard-height-mobile, 250px) * 2);
+		}
+	}
+
+	&__inner,
+	&__inner-blocks {
+		min-height: calc(var(--flipcard-height-desktop, 300px) * 2);
+		max-width: 100%;
+		box-sizing: border-box;
+
+		@media (max-width: 1024px) {
+			min-height: calc(var(--flipcard-height-tablet, 300px) * 2);
+		}
+
+		@media (max-width: 768px) {
+			min-height: calc(var(--flipcard-height-mobile, 250px) * 2);
+		}
+	}
+
+	// Show labels in editor
+	.adaire-flipcard-front,
+	.adaire-flipcard-back {
+		position: relative;
+		margin-bottom: 10px;
+
+		&::before {
+			content: attr(data-label);
+			position: absolute;
+			top: 8px;
+			right: 8px;
+			background: rgba(0, 0, 0, 0.7);
+			color: white;
+			padding: 4px 8px;
+			border-radius: 4px;
+			font-size: 11px;
+			font-weight: 600;
+			z-index: 10;
+			pointer-events: none;
+			text-transform: uppercase;
+		}
+	}
+
+	// Apply styling in editor preview
+	.adaire-flipcard-front {
+		background-color: var(--flipcard-front-bg, #ffffff) !important;
+	}
+
+	.adaire-flipcard-back {
+		background-color: var(--flipcard-back-bg, #f5f5f5) !important;
+	}
+
+	.adaire-flipcard-front::before {
+		content: "Front";
+	}
+
+	.adaire-flipcard-back::before {
+		content: "Back";
+	}
+
+	// Prevent flip animation in editor - show both sides stacked
+	&__inner-blocks {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.adaire-flipcard-front,
+	.adaire-flipcard-back {
+		position: relative !important;
+		transform: none !important;
+		backface-visibility: visible !important;
+		opacity: 1 !important;
+	}
+
+	// Prevent hover flip in editor
+	&:hover &__container {
+		transform: none !important;
+	}
+}

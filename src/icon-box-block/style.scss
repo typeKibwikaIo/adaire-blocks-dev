@@ -1,0 +1,164 @@
+// Bootstrap Icons CSS is loaded via WordPress enqueue from CDN
+// See adaire-blocks.php: enqueue_bootstrap_icons_assets()
+
+// Override WordPress block wrapper classes - Target all possible WordPress wrappers
+.wp-block-create-block-icon-box-block,
+[class*="wp-block-create-block-icon-box-block"],
+[class*="icon-box-block"] {
+    outline: none !important;
+    border: none !important;
+    border-style: none !important;
+    border-width: 0 !important;
+    box-shadow: none !important;
+    
+    // Override WordPress core rule: html :where([style*=border-width]) { border-style: solid }
+    &[style*="border-width"],
+    &[style*="borderWidth"] {
+        border: none !important;
+        border-style: none !important;
+        border-width: 0 !important;
+    }
+}
+
+.adaire-icon-box {
+    display: inline-block;
+    width: auto;
+    outline: none !important;
+    border: none !important;
+    border-style: none !important;
+    box-shadow: none !important;
+    
+    // Override WordPress core rule: html :where([style*=border-width]) { border-style: solid }
+    &[style*="border-width"],
+    &[style*="borderWidth"] {
+        border-style: none !important;
+    }
+
+    &--align-left {
+        text-align: left;
+    }
+
+    &--align-center {
+        text-align: center;
+    }
+
+    &--align-right {
+        text-align: right;
+    }
+
+    &__wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease;
+        background-color: var(--icon-bg, transparent);
+        padding: var(--icon-padding-top, 20px) var(--icon-padding-right, 20px) var(--icon-padding-bottom, 20px) var(--icon-padding-left, 20px);
+        border-radius: var(--icon-border-radius, 0);
+        border: var(--icon-border-width, 0) solid var(--icon-border-color, #333333);
+        box-sizing: border-box;
+
+        &:hover {
+            background-color: var(--icon-bg-hover, transparent);
+        }
+    }
+
+    // Responsive padding
+    @media (max-width: 1024px) {
+        &__wrapper {
+            padding: var(--icon-padding-top-tablet, var(--icon-padding-top, 20px)) 
+                     var(--icon-padding-right-tablet, var(--icon-padding-right, 20px)) 
+                     var(--icon-padding-bottom-tablet, var(--icon-padding-bottom, 20px)) 
+                     var(--icon-padding-left-tablet, var(--icon-padding-left, 20px));
+        }
+    }
+
+    @media (max-width: 768px) {
+        &__wrapper {
+            padding: var(--icon-padding-top-mobile, var(--icon-padding-top-tablet, var(--icon-padding-top, 20px))) 
+                     var(--icon-padding-right-mobile, var(--icon-padding-right-tablet, var(--icon-padding-right, 20px))) 
+                     var(--icon-padding-bottom-mobile, var(--icon-padding-bottom-tablet, var(--icon-padding-bottom, 20px))) 
+                     var(--icon-padding-left-mobile, var(--icon-padding-left-tablet, var(--icon-padding-left, 20px)));
+        }
+    }
+
+    &__icon {
+        color: var(--icon-color, #333333);
+        transition: color 0.3s ease;
+        box-sizing: border-box;
+
+        // SVG icons (default)
+        &:not([class*="bi"]):not(.bi) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--icon-size, 48px);
+            height: var(--icon-size, 48px);
+            min-width: var(--icon-size, 48px);
+            min-height: var(--icon-size, 48px);
+            max-width: var(--icon-size, 48px);
+            max-height: var(--icon-size, 48px);
+            flex-shrink: 0;
+
+            svg {
+                width: 100% !important;
+                height: 100% !important;
+                min-width: 100% !important;
+                min-height: 100% !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+                display: block !important;
+                fill: currentColor;
+                stroke: currentColor;
+                box-sizing: border-box;
+                
+                &[width],
+                &[height] {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+            }
+        }
+
+        // Bootstrap Icons are font-based, so use font-size instead of width/height
+        &.bi,
+        &[class*="bi-"],
+        i.bi,
+        i[class*="bi-"] {
+            display: inline-block !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: 0 !important;
+            min-height: 0 !important;
+            max-width: none !important;
+            max-height: none !important;
+            font-size: var(--icon-size, 48px) !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
+            flex-shrink: 0 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        // Icon hover color - applies when wrapper is hovered
+        .adaire-icon-box__wrapper:hover & {
+            color: var(--icon-hover-color, #000000) !important;
+        }
+    }
+
+    &__placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        border: 2px dashed #ccc;
+        border-radius: 4px;
+        text-align: center;
+        color: #666;
+
+        p {
+            margin: 0;
+        }
+    }
+}

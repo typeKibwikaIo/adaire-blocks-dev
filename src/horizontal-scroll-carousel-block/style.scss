@@ -1,0 +1,329 @@
+// Horizontal Scroll Carousel — frontend & editor shared styles
+// Breakpoints match BREAKPOINTS.md (project standard).
+
+// ─── Breakpoint Mixins ────────────────────────────────────────────────────────
+@mixin phone {
+	@media (max-width: 600px) { @content; }
+}
+@mixin tablet {
+	@media (min-width: 601px) and (max-width: 1024px) { @content; }
+}
+@mixin small-laptop {
+	@media (min-width: 1025px) and (max-width: 1300px) { @content; }
+}
+@mixin desktop {
+	@media (min-width: 1301px) and (max-width: 1920px) { @content; }
+}
+@mixin big-desktop {
+	@media (min-width: 1921px) { @content; }
+}
+
+// ─── Section ─────────────────────────────────────────────────────────────────
+
+.adaire-hsc {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+	box-sizing: border-box;
+
+	// Mobile (default / no media query)
+	padding-top:    var( --hsc-pt-mobile, 40px );
+	padding-right:  var( --hsc-pr-mobile, 0px );
+	padding-bottom: var( --hsc-pb-mobile, 40px );
+	padding-left:   var( --hsc-pl-mobile, 0px );
+
+	@include tablet {
+		padding-top:    var( --hsc-pt-tablet, 60px );
+		padding-right:  var( --hsc-pr-tablet, 0px );
+		padding-bottom: var( --hsc-pb-tablet, 60px );
+		padding-left:   var( --hsc-pl-tablet, 0px );
+	}
+
+	@include small-laptop {
+		padding-top:    var( --hsc-pt-small-laptop, 80px );
+		padding-right:  var( --hsc-pr-small-laptop, 0px );
+		padding-bottom: var( --hsc-pb-small-laptop, 80px );
+		padding-left:   var( --hsc-pl-small-laptop, 0px );
+	}
+
+	@include desktop {
+		padding-top:    var( --hsc-pt-desktop, 80px );
+		padding-right:  var( --hsc-pr-desktop, 0px );
+		padding-bottom: var( --hsc-pb-desktop, 80px );
+		padding-left:   var( --hsc-pl-desktop, 0px );
+	}
+
+	@include big-desktop {
+		padding-top:    var( --hsc-pt-big-desktop, 80px );
+		padding-right:  var( --hsc-pr-big-desktop, 0px );
+		padding-bottom: var( --hsc-pb-big-desktop, 80px );
+		padding-left:   var( --hsc-pl-big-desktop, 0px );
+	}
+}
+
+// ─── Heading ──────────────────────────────────────────────────────────────────
+// Left/right padding intentionally mirrors the track's side-padding variables
+// so the heading always aligns flush with the left edge of the first card.
+
+.adaire-hsc__heading {
+	display: block;
+	margin: 0 0 24px;
+	line-height: 1.2;
+	padding-left:  var( --hsc-track-px-mobile, 16px );
+	padding-right: var( --hsc-track-px-mobile, 16px );
+
+	@include tablet {
+		padding-left:  var( --hsc-track-px-tablet, 30px );
+		padding-right: var( --hsc-track-px-tablet, 30px );
+		margin-bottom: 28px;
+	}
+
+	@include small-laptop {
+		padding-left:  var( --hsc-track-px-small-laptop, 60px );
+		padding-right: var( --hsc-track-px-small-laptop, 60px );
+		margin-bottom: 32px;
+	}
+
+	@include desktop {
+		padding-left:  var( --hsc-track-px-desktop, 80px );
+		padding-right: var( --hsc-track-px-desktop, 80px );
+		margin-bottom: 32px;
+	}
+
+	@include big-desktop {
+		padding-left:  var( --hsc-track-px-big-desktop, 80px );
+		padding-right: var( --hsc-track-px-big-desktop, 80px );
+		margin-bottom: 40px;
+	}
+}
+
+// ─── Track ────────────────────────────────────────────────────────────────────
+
+.adaire-hsc__track {
+	display: grid;
+	grid-auto-flow: column;
+	// Card width — responsive via CSS variable
+	grid-auto-columns: var( --hsc-card-width-mobile, 85vw );
+	// Equal-height cards: CSS Grid stretches all cells in the same row
+	align-items: stretch;
+	// Track side padding — responsive
+	padding-left:  var( --hsc-track-px-mobile, 16px );
+	padding-right: var( --hsc-track-px-mobile, 16px );
+	gap: var( --hsc-gap-mobile, 16px );
+	width: max-content;
+	will-change: transform;
+
+	@include tablet {
+		grid-auto-columns: var( --hsc-card-width-tablet, 60vw );
+		padding-left:  var( --hsc-track-px-tablet, 30px );
+		padding-right: var( --hsc-track-px-tablet, 30px );
+		gap: var( --hsc-gap-tablet, 20px );
+	}
+
+	@include small-laptop {
+		grid-auto-columns: var( --hsc-card-width-small-laptop, 480px );
+		padding-left:  var( --hsc-track-px-small-laptop, 60px );
+		padding-right: var( --hsc-track-px-small-laptop, 60px );
+		gap: var( --hsc-gap-small-laptop, 24px );
+	}
+
+	@include desktop {
+		grid-auto-columns: var( --hsc-card-width-desktop, 560px );
+		padding-left:  var( --hsc-track-px-desktop, 80px );
+		padding-right: var( --hsc-track-px-desktop, 80px );
+		gap: var( --hsc-gap-desktop, 24px );
+	}
+
+	@include big-desktop {
+		grid-auto-columns: var( --hsc-card-width-big-desktop, 600px );
+		padding-left:  var( --hsc-track-px-big-desktop, 80px );
+		padding-right: var( --hsc-track-px-big-desktop, 80px );
+		gap: var( --hsc-gap-big-desktop, 32px );
+	}
+
+	// ── Editor-only: scrollable preview ──
+	&--editor {
+		width: 100%;
+		max-width: 100%;
+		overflow-x: auto;
+		overflow-y: visible;
+
+		// Neat scrollbar so it doesn't feel like a browser default
+		&::-webkit-scrollbar       { height: 5px; }
+		&::-webkit-scrollbar-track { background: rgba( 0, 0, 0, 0.06 ); border-radius: 3px; }
+		&::-webkit-scrollbar-thumb { background: rgba( 124, 58, 237, 0.35 ); border-radius: 3px; }
+	}
+}
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+
+.adaire-hsc__card {
+	position: relative;
+	overflow: hidden;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	transition: box-shadow 0.3s ease;
+
+	.adaire-hsc__card-inner {
+		display: flex;
+		flex-direction: row;
+		height: 100%;
+		gap: 32px; // fallback — overridden by inline style from cardInnerGap attr
+		box-sizing: border-box;
+
+		// Responsive inner padding — driven by CSS vars on the card element
+		padding: var( --hsc-card-pt-mobile,  32px )
+		         var( --hsc-card-pr-mobile,  24px )
+		         var( --hsc-card-pb-mobile,  32px )
+		         var( --hsc-card-pl-mobile,  24px );
+
+		@include tablet {
+			padding: var( --hsc-card-pt-tablet,  40px )
+			         var( --hsc-card-pr-tablet,  32px )
+			         var( --hsc-card-pb-tablet,  40px )
+			         var( --hsc-card-pl-tablet,  32px );
+		}
+
+		@include small-laptop {
+			padding: var( --hsc-card-pt-small-laptop,  48px )
+			         var( --hsc-card-pr-small-laptop,  40px )
+			         var( --hsc-card-pb-small-laptop,  48px )
+			         var( --hsc-card-pl-small-laptop,  40px );
+		}
+
+		@include desktop {
+			padding: var( --hsc-card-pt-desktop,  48px )
+			         var( --hsc-card-pr-desktop,  48px )
+			         var( --hsc-card-pb-desktop,  48px )
+			         var( --hsc-card-pl-desktop,  48px );
+		}
+
+		@include big-desktop {
+			padding: var( --hsc-card-pt-big-desktop, 60px )
+			         var( --hsc-card-pr-big-desktop, 60px )
+			         var( --hsc-card-pb-big-desktop, 60px )
+			         var( --hsc-card-pl-big-desktop, 60px );
+		}
+
+		@include phone {
+			flex-direction: column;
+			gap: 24px;
+		}
+	}
+
+	// ── Left: text content ──
+	// justify-content and gap are overridden by inline styles from the block attributes.
+	.adaire-hsc__card-left {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		min-width: 0;
+
+		@include phone {
+			width: 100%;
+		}
+	}
+
+	.adaire-hsc__card-title {
+		margin: 0 0 14px;
+		font-size: 1.75rem;
+		font-weight: 700;
+		line-height: 1.25;
+		word-break: break-word;
+	}
+
+	p.adaire-hsc__card-text {
+		margin: 0 0 24px;
+		font-size: 0.9375rem;
+		line-height: 1.65;
+		word-break: break-word;
+	}
+
+	.adaire-hsc__card-cta {
+		// margin-top is now 0 (set inline) so justify-content on the parent governs spacing.
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+	}
+
+	// ── Right: image ──
+	// The column width is set by --hsc-img-w-* CSS variables (from the sidebar
+	// image-width controls). The image fills 100% of that column width at its
+	// natural aspect ratio (height: auto), so:
+	//   • the column is exactly as wide as the image — no empty space beside it
+	//   • the image is never cropped (no fixed height forcing a clip)
+	//   • the image is vertically centred if the card is taller than the image
+	.adaire-hsc__card-right {
+		flex: 0 0 var( --hsc-img-w-mobile, 45% );
+		align-self: stretch;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+		border-radius: 12px;
+		min-height: 200px;
+
+		@include tablet {
+			flex-basis: var( --hsc-img-w-tablet, 45% );
+		}
+
+		@include small-laptop {
+			flex-basis: var( --hsc-img-w-small-laptop, 45% );
+		}
+
+		@include desktop {
+			flex-basis: var( --hsc-img-w-desktop, 45% );
+		}
+
+		@include big-desktop {
+			flex-basis: var( --hsc-img-w-big-desktop, 45% );
+		}
+
+		@include phone {
+			// In column direction, flex-basis = height (not width).
+			// Use width:100% + flex:0 0 auto so the column spans the full card
+			// width and the height is driven only by the explicit height property.
+			width: 100%;
+			flex: 0 0 auto;
+			height: 250px;
+			min-height: 0;
+
+			img.adaire-hsc__card-image {
+				width: 100%;
+				height: 100%;
+				object-fit: cover; // fill the fixed phone thumbnail area cleanly
+			}
+		}
+
+		img.adaire-hsc__card-image {
+			display: block;
+			width: 100%;   // fills the column — column width = image rendered width
+			height: auto;  // natural aspect ratio, no cropping, no pillarboxing
+		}
+
+		.adaire-hsc__card-image-placeholder {
+			position: absolute;
+			inset: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			background: rgba( 0, 0, 0, 0.04 );
+			border: 2px dashed rgba( 0, 0, 0, 0.15 );
+			border-radius: 12px;
+			color: rgba( 0, 0, 0, 0.4 );
+			font-size: 0.8125rem;
+			cursor: pointer;
+			transition: background 0.2s ease, border-color 0.2s ease;
+
+			&:hover {
+				background: rgba( 0, 0, 0, 0.07 );
+				border-color: rgba( 124, 58, 237, 0.4 );
+			}
+
+			svg { opacity: 0.5; }
+		}
+	}
+}

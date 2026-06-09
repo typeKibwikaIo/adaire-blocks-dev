@@ -1,0 +1,16 @@
+{
+    "name": "Adaire Blocks",
+    "version": "1.2.1",
+    "download_url": "https://github.com/helloadaire/Adaire-Blocks/releases/download/v1.2.1.alpha/adaire-blocks.1.2.1.alpha.zip",
+    "sections": {
+      "description": "Adaire Blocks is a premium collection of Gutenberg blocks built with GSAP, React, and obsessive attention to responsive detail. Create modal dialogs, hero sliders, testimonial layouts, industry grids, process timelines, and CTA sections without building custom patterns.\n\nNew in 1.2.1\n• Unified icon mapping system – centralized configuration file for easier icon management and maintenance.\n• Improved build scripts – enhanced icon processing with centralized mapping configuration.\n• Icon path corrections – fixed Progress Block icon to use correct Plus tier icon.",
+      "changelog": "<h4>1.2.1</h4><ul><li>Improved icon management system with unified mapping configuration for easier maintenance.</li><li>Fixed Progress Block icon path to use correct Plus tier icon.</li><li>Enhanced build scripts to use centralized icon mapping configuration.</li><li>Improved developer experience with editable icon mapping file.</li></ul><h4>1.2.0</h4><ul><li>Added Flip Card Block with interactive front/back content areas and smooth 3D transitions.</li><li>Added Pricing Table Block with monthly/yearly toggle and customizable cards.</li><li>Added Progress Block with scroll-based indicators in bar and ring variants.</li><li>Added Animation on Scroll Block with 12 animation types and live editor preview.</li><li>Added Social Share Block with customizable platform selection and tooltip interface.</li><li>Added Testimonial 3 Block with draggable interface and premium styling.</li><li>Enhanced block management interface with tier-based organization.</li><li>Updated all block icons with consistent SVG artwork.</li></ul>",
+      "installation": "<ol><li>Upload the plugin files to the <code>/wp-content/plugins/adaire-blocks</code> directory or install via the WordPress admin.</li><li>Activate the plugin through the 'Plugins' menu.</li><li>Navigate to Adaire Blocks → Block Management to enable/disable blocks.</li><li>All blocks from previous versions remain available with improved icon management.</li></ol>",
+      "screenshots": "<ol><li>Accordion Block</li><li>Call-to-Action Block</li><li>Animation on Scroll Block</li><li>Social Share Block</li></ol>"
+    },
+    "banners": {
+      "high": "",
+      "low": ""
+    }
+  }
+

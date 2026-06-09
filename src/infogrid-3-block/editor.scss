@@ -1,0 +1,48 @@
+.wp-block-adaire-blocks-dev2-infogrid-3-block {
+    // Ensure the block expands to full width in editor if needed
+    width: 100%;
+
+    // Padding for the device toggle in sidebar
+    .adaire-device-toggle {
+        background: #f0f0f0;
+        padding: 15px;
+        margin: -16px -16px 20px -16px;
+        border-bottom: 1px solid #ddd;
+
+        .adaire-device-toggle-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .adaire-device-toggle-group {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+
+            button {
+                flex: 1;
+                justify-content: center;
+                min-width: 40px;
+            }
+        }
+    }
+
+    // RichText placeholder styling
+    [data-rich-text-placeholder]::after {
+        opacity: 0.5;
+        color: #fff;
+    }
+
+    // Grid item borders in editor
+    .adaire-infogrid-3__cell {
+        position: relative;
+
+        &:hover {
+            outline: 1px dashed rgba(255, 255, 255, 0.3);
+            outline-offset: -1px;
+        }
+    }
+}

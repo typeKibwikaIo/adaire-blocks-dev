@@ -1,0 +1,67 @@
+.ad-animation-scroll {
+	width: 100%;
+	position: relative;
+	display: flex;
+	justify-content: center;
+
+	&__content {
+		// Content inherits animation from JavaScript
+	}
+
+	// Container wrapper
+	&__container {
+		width: 100%;
+		max-width: 100%;
+		margin: 0 auto;
+
+		// Constrained mode styles
+		&.is-constrained {
+			max-width: var(--container-max-width, 1200px);
+		}
+	}
+
+	// Responsive container max-width for tablet
+	@media (max-width: 1024px) {
+		&__container.is-constrained {
+			max-width: var(--container-max-width-tablet, var(--container-max-width, 100%)) !important;
+		}
+	}
+
+	// Responsive container max-width for mobile
+	@media (max-width: 768px) {
+		&__container.is-constrained {
+			max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%)) !important;
+		}
+	}
+
+	// Responsive margins
+	@media (max-width: 1024px) {
+		margin-top: var(--margin-top-tablet, 0) !important;
+		margin-right: var(--margin-right-tablet, 0) !important;
+		margin-bottom: var(--margin-bottom-tablet, 0) !important;
+		margin-left: var(--margin-left-tablet, 0) !important;
+	}
+
+	@media (max-width: 768px) {
+		margin-top: var(--margin-top-mobile, 0) !important;
+		margin-right: var(--margin-right-mobile, 0) !important;
+		margin-bottom: var(--margin-bottom-mobile, 0) !important;
+		margin-left: var(--margin-left-mobile, 0) !important;
+	}
+
+	// Responsive padding
+	@media (max-width: 1024px) {
+		padding-top: var(--padding-top-tablet, 0) !important;
+		padding-right: var(--padding-right-tablet, 0) !important;
+		padding-bottom: var(--padding-bottom-tablet, 0) !important;
+		padding-left: var(--padding-left-tablet, 0) !important;
+	}
+
+	@media (max-width: 768px) {
+		padding-top: var(--padding-top-mobile, 0) !important;
+		padding-right: var(--padding-right-mobile, 0) !important;
+		padding-bottom: var(--padding-bottom-mobile, 0) !important;
+		padding-left: var(--padding-left-mobile, 0) !important;
+	}
+}
+

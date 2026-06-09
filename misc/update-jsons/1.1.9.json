@@ -1,0 +1,16 @@
+{
+    "name": "Adaire Blocks",
+    "version": "1.1.9",
+    "download_url": "https://github.com/helloadaire/Adaire-Blocks/releases/download/v1.1.9.alpha/adaire-blocks.1.1.9.alpha.zip",
+    "sections": {
+      "description": "Adaire Blocks is a premium collection of Gutenberg blocks built with GSAP, React, and obsessive attention to responsive detail. Create modal dialogs, hero sliders, testimonial layouts, industry grids, process timelines, and CTA sections without building custom patterns.\n\nNew in 1.1.9\n• Our Process Block – responsive multi-column process layout with per-step icons, optional links, and device-specific spacing controls.\n• Content Toggle Block – pill-style toggle navigation powered by GSAP animations for switching between rich content panels.\n• Swiper Carousel + Swiper Slide – native Swiper.js integration with autoplay, loop, draggable cursor overlay, and per-slide overlays.\n• Testimonial 2 Block – hero-style testimonials with portrait photography, company logos, and accessible carousel navigation.\n• Unified icon system – refreshed SVG artwork across Free, Plus, and Premium tiers so Gutenberg, block management, and readmes display consistent visuals.",
+      "changelog": "<h4>1.1.9</h4><ul><li>Added Our Process Block with responsive multi-column layouts, step icon picker, clickable links, and device-aware container controls.</li><li>Added Content Toggle Block featuring pill navigation, GSAP-powered transitions, and comprehensive styling options.</li><li>Added Swiper Carousel & Swiper Slide blocks for draggable Swiper.js heroes with autoplay, loop, and per-slide overlay controls.</li><li>Added Testimonial 2 Block with portrait imagery, company logos, keyboard-friendly nav arrows, and responsive typography.</li><li>Refreshed every block icon (Free, Plus, Premium tiers) and automated SVG ingestion so Gutenberg + admin UI display the same polished artwork.</li></ul><h4>1.1.8</h4><ul><li>Added Modal Block with trigger/content blocks, responsive dimension controls, and accessibility improvements.</li><li>Added Industries Block with icon picker, industry management UI, and responsive layouts.</li></ul>",
+      "installation": "<ol><li>Upload the plugin files to the <code>/wp-content/plugins/adaire-blocks</code> directory or install via the WordPress admin.</li><li>Activate the plugin through the 'Plugins' menu.</li><li>Navigate to Adaire Blocks → Block Management to enable/disable blocks.</li><li>Add the new blocks (Process, Content Toggle, Swiper, Testimonial 2) from the Gutenberg inserter.</li></ol>",
+      "screenshots": "<ol><li>Our Process Block with responsive grid tiles.</li><li>Content Toggle Block with pill-style navigation.</li><li>Swiper Carousel hero with gradient overlay.</li><li>Testimonial 2 Block featuring portrait + company logo.</li></ol>"
+    },
+    "banners": {
+      "high": "",
+      "low": ""
+    }
+  }
+

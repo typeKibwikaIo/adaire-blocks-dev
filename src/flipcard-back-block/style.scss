@@ -1,0 +1,16 @@
+.adaire-flipcard-back {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--flipcard-padding, 20px);
+    box-sizing: border-box;
+
+    &__content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+}
+

@@ -1,0 +1,58 @@
+.adaire-content-toggle {
+
+    /* Editor-specific styles */
+    .adaire-content-toggle-panel {
+        /* Show all panels in editor for easier editing */
+        position: relative;
+    }
+}
+
+/* Inspector Controls Styling */
+.adaire-content-toggle__dimension-controls {
+    margin-top: 16px;
+}
+
+.adaire-content-toggle__dimension-row {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f0f0f1;
+    border-radius: 4px;
+
+    strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #1e1e1e;
+    }
+}
+
+.adaire-content-toggle__dimension-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .components-button-group {
+        justify-content: flex-start;
+    }
+}
+
+.adaire-content-toggle__toggle-control {
+    padding: 16px;
+    margin-bottom: 16px;
+    background: #f0f0f1;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.adaire-content-toggle__panel-help {
+    font-size: 13px;
+    color: #757575;
+    margin-bottom: 16px;
+    font-style: italic;
+}
+
+/* Make active toggle more visible in editor */
+.adaire-content-toggle__pill.is-active {
+    box-shadow: 0 0 0 2px var(--pill-active-bg, #3b82f6);
+}

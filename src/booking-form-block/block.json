@@ -1,0 +1,203 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/booking-form-block",
+  "version": "0.1.0",
+  "title": "Booking Form",
+  "category": "adaire-business",
+  "description": "Booking Form block for Adaire Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "textdomain": "booking-form-block",
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Booking"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Book a consultation"
+    },
+    "text": {
+      "type": "string",
+      "default": "Collect visitor details and preferred appointment dates."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Book now"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "destinationEmail": {
+      "type": "string",
+      "default": ""
+    },
+    "services": {
+      "type": "string",
+      "default": "Consultation, Demo, Support"
+    },
+    "calendarEmbedUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "successMessage": {
+      "type": "string",
+      "default": "Thanks, your booking request was received."
+    },
+    "redirectUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "layout": {
+      "type": "string",
+      "default": "two"
+    },
+    "mobileFullButton": {
+      "type": "boolean",
+      "default": true
+    },
+    "inputColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "inputBorderColor": {
+      "type": "string",
+      "default": "#d1d5db"
+    },
+    "inputRadius": {
+      "type": "number",
+      "default": 12
+    },
+    "labelFontSize": {
+      "type": "number",
+      "default": 14
+    },
+    "labelFontWeight": {
+      "type": "string",
+      "default": "700"
+    },
+    "headingColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "subheadingColor": {
+      "type": "string",
+      "default": "#d1d5db"
+    },
+    "honeypot": {
+      "type": "boolean",
+      "default": true
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHeight": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    },
+    "fields": {
+      "type": "object",
+      "default": [
+        {
+          "label": "Name",
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "width": "half"
+        },
+        {
+          "label": "Email",
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "width": "half"
+        },
+        {
+          "label": "Phone",
+          "name": "phone",
+          "type": "tel",
+          "required": false,
+          "width": "half"
+        },
+        {
+          "label": "Date",
+          "name": "date",
+          "type": "date",
+          "required": true,
+          "width": "half"
+        },
+        {
+          "label": "Time",
+          "name": "time",
+          "type": "time",
+          "required": true,
+          "width": "half"
+        },
+        {
+          "label": "Service",
+          "name": "service",
+          "type": "select",
+          "required": false,
+          "width": "half",
+          "options": "Consultation, Demo, Support"
+        },
+        {
+          "label": "Notes",
+          "name": "notes",
+          "type": "textarea",
+          "required": false,
+          "width": "full"
+        }
+      ]
+    }
+  }
+}

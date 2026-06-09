@@ -1,0 +1,271 @@
+*{
+    padding: 0;
+    margin: 0;
+  }
+  body{
+    font-family: "Manrope", sans-serif; //this will just inherit from the font that is used on the site
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+
+// Breakpoint Mixins
+@mixin phone {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 601px) and (max-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin small-laptop {
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 1301px) and (max-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin big-desktop {
+    @media (min-width: 1921px) {
+        @content;
+    }
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.ad-hero{
+    &-container{
+        background: linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%); //config
+        min-height: 100vh; //config responsive
+        width: 100vw;
+        display: flex;
+        flex-direction: row; //config responsive
+        align-items: center; //config responsive
+        justify-content: flex-start;
+        padding-top: 60px; //config responsive
+        padding-bottom: 60px; //config responsive
+        padding-left: 200px; //config responsive
+        padding-right: 150px;
+
+        @include desktop {
+            padding: 40px 100px;
+            padding-left: 150px; //config responsive
+        }
+
+        @include small-laptop {
+            padding: 40px 60px;
+            padding-left: 80px;
+        }
+
+        @include tablet {
+            padding: 40px 30px;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 40px;
+        }
+
+        @include phone {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px 16px;
+            justify-content: center;
+            // min-height: auto;
+        }
+    }
+    &__breadcrumbs{
+        color: white; //config
+        position: absolute;
+        top: 90px;
+    }
+    &__cta-container{
+        width: 45%; //config responsive
+
+        @include desktop {
+            width: 50%;
+        }
+
+        @include small-laptop {
+            width: 60%;
+        }
+
+        @include tablet {
+            width: 100%;
+        }
+
+        @include phone {
+            width: 100%;
+        }
+    }
+    &__heading{
+        color: white; //config
+        font-size: 72px; //config responsive
+        font-weight: 500; //config
+        line-height: 92px; //config responsive
+        margin-bottom: 24px; //config responsive
+
+        @include desktop {
+            font-size: 62px; 
+            line-height: 80px;
+            margin-bottom: 20px;
+        }
+
+        @include small-laptop {
+            font-size: 52px;
+            line-height: 68px;
+            margin-bottom: 20px;
+        }
+
+        @include tablet {
+            font-size: 42px;
+            line-height: 54px;
+            margin-bottom: 18px;
+        }
+
+        @include phone {
+            font-size: 28px;
+            line-height: 36px;
+            margin-bottom: 12px;
+        }
+    }
+
+    &__text{
+        color: white; //config
+        font-size: 26px; //config responsive
+        font-weight: 300; //config responsive
+        margin-bottom: 24px;
+
+        @include desktop {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        @include small-laptop {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        @include tablet {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        @include phone {
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+    }
+
+    &__button-container{
+        display: flex;
+        flex-direction: row; //config responsive
+        gap: 35px; //config responsive
+
+        @include desktop {
+            flex-direction: row;
+            gap: 30px;
+        }
+
+        @include small-laptop {
+            flex-direction: row;
+            gap: 25px;
+        }
+
+        @include tablet {
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        @include phone {
+            flex-direction: column;
+            gap: 12px;
+        }
+    }
+    &__button{ //the buttons are configurable, they will just be a copy of the Adaire Blocks button block
+        padding: 18px 24px; //config responsive
+        font-family: "Manrope", sans-serif;
+        font-weight: 500;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all .3s;
+
+        @include desktop {
+            padding: 16px 20px;
+            font-size: 18px;
+        }
+
+        @include small-laptop {
+            padding: 15px 19px;
+            font-size: 17px;
+        }
+
+        @include tablet {
+            padding: 14px 18px;
+            font-size: 16px;
+        }
+
+        @include phone {
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+
+        &-1{
+            background-color: white;
+            border: none;
+            &:hover{
+                background-color: black;
+                color: white;
+            }
+        }
+
+        &-2{
+            background: none;
+            border: 1px solid white;
+            color: white;
+            &:hover{
+                background-color: red;
+                color: white;
+                border: 1px solid red;
+            }
+        }
+    }
+    
+    &__icon{
+        position: absolute;
+        right: 0; //offset can be configured as either left/right (can be one or the other, not both)
+        top: 50%; //offset can be configured as either top/bottom (can be one or the other, not both)
+        transform: translateY(-50%); //config responsive
+        width: 700px;
+
+        @include desktop {
+            width: 700px;
+        }
+
+        @include small-laptop {
+            width: 500px;
+        }
+
+        @include tablet {
+           display: none;
+        } 
+
+        
+        @include phone {
+            display: none;
+         } 
+
+        
+    }
+}

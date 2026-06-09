@@ -1,0 +1,144 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/cookie-consent-block",
+  "version": "0.1.0",
+  "title": "Cookie Consent",
+  "category": "adaire-social-engagement",
+  "description": "Cookie Consent block for Adaire Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "textdomain": "cookie-consent-block",
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Privacy"
+    },
+    "heading": {
+      "type": "string",
+      "default": "We value your privacy"
+    },
+    "text": {
+      "type": "string",
+      "default": "This site uses cookies to improve your browsing experience."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Accept all"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "rejectText": {
+      "type": "string",
+      "default": "Reject all"
+    },
+    "manageText": {
+      "type": "string",
+      "default": "Manage preferences"
+    },
+    "policyUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "consentVersion": {
+      "type": "string",
+      "default": "1"
+    },
+    "durationDays": {
+      "type": "number",
+      "default": 180
+    },
+    "position": {
+      "type": "string",
+      "default": "bottom"
+    },
+    "displayMode": {
+      "type": "string",
+      "default": "bar"
+    },
+    "googleConsentMode": {
+      "type": "boolean",
+      "default": false
+    },
+    "auditTrail": {
+      "type": "boolean",
+      "default": false
+    },
+    "autoHideDelay": {
+      "type": "number",
+      "default": 250
+    },
+    "backdropBlur": {
+      "type": "boolean",
+      "default": true
+    },
+    "buttonStyle": {
+      "type": "string",
+      "default": "pill"
+    },
+    "maxWidth": {
+      "type": "number",
+      "default": 980
+    },
+    "fontSize": {
+      "type": "number",
+      "default": 15
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHeight": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    }
+  }
+}

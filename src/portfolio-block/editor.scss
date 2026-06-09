@@ -1,0 +1,210 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+ .wp-block-create-block-portfolio-block {
+	// Editor-specific styles
+	cursor: pointer;
+	position: relative;
+	z-index: 1;
+	
+	.animation-component {
+		// Ensure the block is visible in editor
+		min-height: 400px;
+		position: relative;
+		cursor: pointer;
+		z-index: 1;
+		
+		// Preview modal styling in editor
+		.ad-portfolio-block__modal-overlay {
+			position: fixed !important;
+			z-index: 999999;
+		}
+	}
+	
+	// Agency section styling in editor
+	.ad-portfolio-block__agency-section {
+		min-height: 400px;
+		position: relative;
+		display: flex;
+		align-items: center;
+		padding: 2rem;
+	}
+	
+	.ad-portfolio-block__agency-container {
+		width: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+	
+	.ad-portfolio-block__agency-content {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2rem;
+		align-items: start;
+	}
+	
+	.ad-portfolio-block__agency-text {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+	
+	.ad-portfolio-block__agency-description-title {
+		font-size: 2rem;
+		font-weight: 600;
+		margin: 0;
+		color: white;
+	}
+	
+	.ad-portfolio-block__agency-description-text {
+		font-size: 1rem;
+		line-height: 1.6;
+		margin: 0;
+		color: white;
+		opacity: 0.9;
+	}
+	
+	.ad-portfolio-block__agency-cta {
+		margin-top: 1rem;
+	}
+	
+	.ad-portfolio-block__modal-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--button-color, #ffffff);
+		font-size: var(--button-font-size, 1.1rem);
+		font-weight: var(--button-font-weight, 500);
+		text-decoration: none;
+		cursor: pointer;
+		background: var(--button-bg-color, transparent);
+		border: none;
+		padding: var(--button-padding, 0.2em 0);
+		margin: var(--button-margin, 20px 0);
+		border-radius: var(--button-border-radius, 0px);
+		position: relative;
+		overflow: hidden;
+		transition: all 0.3s ease;
+		z-index: var(--button-z-index, 1);
+		
+		// Underline effect
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 2px;
+			background-color: var(--button-underline-color, #ff4242);
+			opacity: 1;
+			transform: translate3d(-100%, 0, 0);
+			transition: transform 0.3s ease;
+		}
+		
+		&:hover {
+			color: var(--button-hover-color, #ffffff);
+			background: var(--button-hover-bg-color, transparent);
+			opacity: 0.8;
+			
+			&::after {
+				transform: translate3d(0, 0, 0);
+			}
+		}
+		
+		.ad-portfolio-block__button-text {
+			position: relative;
+			z-index: 1;
+		}
+		
+		.ad-portfolio-block__button-arrow {
+			position: relative;
+			z-index: 1;
+			transition: transform 0.3s ease;
+		}
+		
+		&:hover .ad-portfolio-block__button-arrow {
+			transform: translateX(4px);
+		}
+	}
+	
+	.ad-portfolio-block__agency-gallery {
+		position: relative;
+	}
+	
+	.ad-portfolio-block__gallery-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1rem;
+		height: 300px;
+	}
+	
+	.ad-portfolio-block__gallery-item {
+		position: relative;
+		border-radius: 8px;
+		overflow: hidden;
+		cursor: pointer;
+		background: #f0f0f0;
+		min-height: 100px;
+	}
+	
+	.ad-portfolio-block__gallery-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	
+	// Gallery placeholder styling
+	.ad-portfolio-block__gallery-placeholder {
+		width: 100%;
+		height: 100%;
+		background-color: #f0f0f0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #666;
+		font-size: 14px;
+		border: 2px dashed #ccc;
+	}
+	
+	.ad-portfolio-block__gallery-overlay {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+		padding: 1rem;
+		color: white;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+	
+	.ad-portfolio-block__gallery-overlay-text {
+		display: block;
+	}
+	
+	// Show editor preview modal only in editor
+	.editor-preview-modal {
+		display: block !important;
+	}
+	
+	// Responsive adjustments for editor
+	@media (max-width: 768px) {
+		.ad-portfolio-block__agency-content {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+		
+		.ad-portfolio-block__gallery-grid {
+			grid-template-columns: 1fr;
+			height: auto;
+			gap: 0.5rem;
+		}
+		
+		.ad-portfolio-block__gallery-item {
+			height: 150px;
+		}
+	}
+}

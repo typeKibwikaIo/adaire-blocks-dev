@@ -1,0 +1,366 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+* {
+	box-sizing: border-box;
+}
+
+.ad-services-block-body {
+	width: 100%;
+	height: 100%;
+	font-family: "Outfit", sans-serif;
+	background: #000;
+	cursor: none;
+	position: relative;
+}
+
+.story-image,
+.profile-image {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.profile-text,
+.ad-services-block-cursor-text,
+.link-text {
+	color: #fff;
+	text-decoration: none;
+	font-weight: 400;
+}
+
+.profile-text,
+.ad-services-block-cursor-text,
+.link-text {
+	font-size: 16px;
+}
+
+.ad-services-block-container {
+	width: 100%;
+	height: var(--container-height, 70vh);
+	overflow: hidden;
+
+	// Tablet responsive
+	@media (max-width: 1024px) {
+		height: var(--container-height-tablet, 60vh);
+	}
+
+	// Mobile responsive
+	@media (max-width: 768px) {
+		height: var(--container-height-mobile, 55vh);
+	}
+
+	// Smartwatch responsive
+	@media (max-width: 320px) {
+		height: var(--container-height-watch, 50vh);
+	}
+}
+
+.ad-services-block-cursor {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100px;
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(10px);
+	border-radius: 100%;
+	pointer-events: none;
+	z-index: 2;
+}
+
+.ad-services-block-cursor-text {
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+.ad-services-block-story-img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: var(--container-height, 70vh);
+	overflow: hidden;
+	opacity: 0.5;
+
+	// Tablet responsive
+	@media (max-width: 1024px) {
+		height: var(--container-height-tablet, 60vh);
+	}
+
+	// Mobile responsive
+	@media (max-width: 768px) {
+		height: var(--container-height-mobile, 55vh);
+	}
+
+	// Smartwatch responsive
+	@media (max-width: 320px) {
+		height: var(--container-height-watch, 50vh);
+	}
+}
+
+.ad-services-block-story-img img {
+	width: 100%;
+	height: var(--container-height, 70vh);
+	object-fit: cover;
+
+	// Tablet responsive
+	@media (max-width: 1024px) {
+		height: var(--container-height-tablet, 60vh);
+	}
+
+	// Mobile responsive
+	@media (max-width: 768px) {
+		height: var(--container-height-mobile, 55vh);
+	}
+
+	// Smartwatch responsive
+	@media (max-width: 320px) {
+		height: var(--container-height-watch, 50vh);
+	}
+}
+
+.ad-services-block-story-img .img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.ad-services-block-story-content {
+	position: absolute;
+	padding: 4em 0;
+	top: 50%;
+	left: 55%;
+	transform: translate(-50%, -50%);
+	width: 40%;
+	height: 70%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.ad-services-block-indices {
+	width: 100%;
+	height: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.25em;
+}
+
+.index {
+	position: relative;
+	width: 100%;
+	height: 1px;
+	background: rgba(255, 255, 255, 0.25);
+}
+
+.index-highlight {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0%;
+	height: 100%;
+	background: #fff;
+	transform: scaleX(100%);
+}
+
+.profile {
+	width: 100%;
+	height: 60px;
+	display: flex;
+	gap: 1em;
+	align-items: center;
+}
+
+.profile-icon {
+	position: relative;
+	width: 40px;
+	height: 40px;
+	border-radius: 100%;
+	overflow: hidden;
+	display: none;
+}
+
+.profile-name {
+	position: relative;
+	width: 200px;
+	height: 25px;
+	// clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.profile-name .profile-text {
+	font-size: 30px;
+	position: absolute;
+	top: -6px;
+	margin-top: 0px;
+	font-weight: 400;
+}
+
+.title-row {
+	position: relative;
+	width: 100%;
+	height: 30px;
+	clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.title-row h1 {
+	font-size: 24px !important;
+	font-weight: 300;
+	@media (max-width: 600px) {
+		font-size: 16px !important;
+	}
+}
+
+.title-heading {
+	font-size: 24px !important;
+}
+
+.link {
+	position: relative;
+	width: max-content;
+	margin: 2em 0;
+	padding: 0.25em 0;
+	display: none;
+}
+
+.link::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	height: 1px;
+	background: #fff;
+}
+
+.title-heading {
+	position: absolute;
+	top: 0;
+}
+
+@media (min-width: 1700px) {
+	.ad-services-block-services-overview {
+		left: 20% !important;
+	}
+
+	.ad-services-block-story-content {
+		width: 40%;
+		left: 55%;
+	}
+}
+@media (min-width: 2000px) {
+	.ad-services-block-services-overview {
+		left: 27% !important;
+	}
+
+	.ad-services-block-story-content {
+		width: 30%;
+		left: 60%;
+	}
+}
+@media (max-width: 1400px) {
+	.ad-services-block-services-overview {
+		left: 4% !important;
+	}
+}
+
+@media (max-width: 900px) {
+	.services-block-html,
+	.ad-services-block-body {
+		cursor: default;
+	}
+
+	.ad-services-block-story-content {
+		width: 95%;
+		left: 51%;
+		padding: 0px;
+		box-sizing: border-box;
+	}
+
+	.ad-services-block-cursor {
+		display: none;
+	}
+
+	.overview-placeholder {
+		box-sizing: border-box;
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+	}
+	// .ad-services-block-container,.ad-services-block-story-img,.ad-services-block-story-img img{
+	//   height: 100vh;
+	// }
+}
+
+.ad-services-block-services-overview {
+	display: flex;
+	flex-direction: column;
+	/* height: 100%; */
+	position: absolute;
+	top: 50%;
+	left: 11%;
+	transform: translateY(-50%);
+
+	@media (max-width: 900px) {
+		flex-direction: row;
+		justify-content: space-between;
+		top: 10px;
+		transform: translateY(0%);
+		left: 0px !important;
+		width: 100% !important;
+		padding: 10px 30px !important;
+	}
+	@media (max-width: 600px) {
+		top: 24px;
+		padding: 10px 12px !important;
+		justify-content: space-evenly;
+	}
+
+	& h1 {
+		margin-bottom: 20px;
+		@media (max-width: 900px) {
+			display: none;
+		}
+	}
+
+	& p:not(:last-child) {
+		margin-bottom: 15px;
+	}
+}
+
+.overview__item {
+	opacity: 0.5;
+	transition: all 0.5s ease-in-out;
+	cursor: pointer;
+	user-select: none;
+
+	&:hover {
+		opacity: 0.8;
+	}
+
+	@media (max-width: 600px) {
+		font-size: 16px;
+		margin-bottom: 0px !important;
+		flex-direction: row;
+	}
+}
+
+.overview__item.active {
+	opacity: 1;
+	transform: scale(1.3) translateX(18px);
+
+	@media (max-width: 900px) {
+		transform: scale(1) translateX(0px);
+	}
+}
+
+// Responsive height breakpoints are now handled inline with media queries
+

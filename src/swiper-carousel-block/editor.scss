@@ -1,0 +1,164 @@
+// Editor-only layout helpers for the Swiper Carousel block.
+// The block uses Swiper markup, but in the editor the InnerBlocks wrapper would otherwise stack vertically.
+.editor-styles-wrapper .wp-block-adaire-swiper-carousel,
+.editor-styles-wrapper .wp-block-adaire-swiper-carousel.is-selected,
+.editor-styles-wrapper .wp-block-adaire-swiper-carousel.is-highlighted {
+	.adaire-swiper-carousel {
+		border: 1px dashed #ccc;
+		padding: 10px;
+		position: relative;
+		min-height: 300px;
+		overflow: hidden;
+		background: #f9f9f9;
+		border-radius: 4px;
+	}
+
+	// Make the Swiper track scroll horizontally in-editor (preview).
+	.adaire-swiper-carousel__list {
+		display: flex;
+		flex-direction: row;
+		gap: var(--adaire-swiper-carousel-gap, 20px);
+		padding: 10px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		scroll-snap-type: x mandatory;
+	}
+
+	// Gutenberg wraps InnerBlocks; make that wrapper behave like Swiper slides in a row.
+	.adaire-swiper-carousel__list > .block-editor-inner-blocks {
+		display: contents;
+	}
+
+	.adaire-swiper-carousel__list
+		> .block-editor-inner-blocks
+		> .block-editor-block-list__layout {
+		display: flex;
+		flex-direction: row;
+		gap: var(--adaire-swiper-carousel-gap, 20px);
+		margin: 0;
+		padding: 0;
+	}
+
+	// Make the appender appear inline at the end of the slides (not absolutely positioned).
+	// Gutenberg versions vary in class names, so we cover the common ones.
+	// Also target when it has the wp-block class (user mentioned: "block-list-appender wp-block")
+	.adaire-swiper-carousel__list
+		> .block-editor-inner-blocks
+		> .block-editor-block-list__layout
+		> .block-editor-button-block-appender,
+	.adaire-swiper-carousel__list
+		> .block-editor-inner-blocks
+		> .block-editor-block-list__layout
+		> .block-editor-default-block-appender,
+	.adaire-swiper-carousel__list
+		> .block-editor-inner-blocks
+		> .block-editor-block-list__layout
+		> .block-list-appender,
+	.adaire-swiper-carousel__list
+		> .block-editor-inner-blocks
+		> .block-editor-block-list__layout
+		> .block-list-appender.wp-block {
+		position: static !important; // Override any absolute positioning
+		flex: 0 0 auto !important;
+		min-width: 220px;
+		max-width: 520px;
+		width: 220px; // Fixed width so it takes up space
+		margin: 0 !important;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		// Apply responsive slide height from CSS variables
+		min-height: var(--slide-height-mobile, 300px);
+		order: 999; // Ensure it appears at the end
+
+		// Responsive height breakpoints
+		@media (min-width: 601px) and (max-width: 1024px) {
+			min-height: var(--slide-height-tablet, var(--slide-height-mobile, 400px));
+		}
+
+		@media (min-width: 1025px) and (max-width: 1300px) {
+			min-height: var(--slide-height-small-laptop, var(--slide-height-desktop, 450px));
+		}
+
+		@media (min-width: 1301px) and (max-width: 1920px) {
+			min-height: var(--slide-height-desktop, 500px);
+		}
+
+		@media (min-width: 1921px) {
+			min-height: var(--slide-height-big-desktop, var(--slide-height-desktop, 500px));
+		}
+	}
+
+	// Ensure the appender button itself is styled properly.
+	.adaire-swiper-carousel__list
+		.block-editor-button-block-appender
+		button,
+	.adaire-swiper-carousel__list
+		.block-editor-default-block-appender
+		button,
+	.adaire-swiper-carousel__list
+		.block-list-appender
+		button,
+	.adaire-swiper-carousel__list
+		.block-list-appender.wp-block
+		button {
+		margin: 0 !important;
+		width: 100%;
+		height: 100%;
+		min-height: inherit;
+		border: 2px dashed #ccc;
+		border-radius: 4px;
+		background: transparent;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	// Each slide block should behave like a swiper-slide (fixed width, no stacking).
+	.adaire-swiper-carousel__list
+		> .block-editor-inner-blocks
+		> .block-editor-block-list__layout
+		> .wp-block {
+		flex: 0 0 auto;
+		min-width: 220px;
+		max-width: 520px;
+		width: 100%;
+		scroll-snap-align: start;
+		margin: 0;
+		// Apply responsive slide height from CSS variables
+		min-height: var(--slide-height-mobile, 300px);
+
+		// Responsive height breakpoints
+		@media (min-width: 601px) and (max-width: 1024px) {
+			min-height: var(--slide-height-tablet, var(--slide-height-mobile, 400px));
+		}
+
+		@media (min-width: 1025px) and (max-width: 1300px) {
+			min-height: var(--slide-height-small-laptop, var(--slide-height-desktop, 450px));
+		}
+
+		@media (min-width: 1301px) and (max-width: 1920px) {
+			min-height: var(--slide-height-desktop, 500px);
+		}
+
+		@media (min-width: 1921px) {
+			min-height: var(--slide-height-big-desktop, var(--slide-height-desktop, 500px));
+		}
+	}
+
+	// Editor scrollbar polish
+	.adaire-swiper-carousel__list::-webkit-scrollbar {
+		height: 8px;
+	}
+	.adaire-swiper-carousel__list::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	.adaire-swiper-carousel__list::-webkit-scrollbar-thumb {
+		background: rgba(0, 0, 0, 0.2);
+		border-radius: 4px;
+	}
+	.adaire-swiper-carousel__list::-webkit-scrollbar-thumb:hover {
+		background: rgba(0, 0, 0, 0.3);
+	}
+}

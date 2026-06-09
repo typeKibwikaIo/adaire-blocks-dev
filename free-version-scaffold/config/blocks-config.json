@@ -1,0 +1,818 @@
+{
+	"free": {
+		"accordion-block": {
+			"enabled": true,
+			"upgradeMessage": "Go pro to add more accordion items."
+		},
+		"accordion-item-block": {
+			"enabled": true,
+			"upgradeMessage": "Accordion Item Block works with the Accordion Block for creating accordion interfaces."
+		},
+		"button-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for unlimited button styles and animations."
+		},
+		"video-player-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced video player features."
+		},
+		"icon-box-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced icon box features."
+		},
+		"social-banner-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced social banner features."
+		},
+		"testimonial-block": {
+			"enabled": true,
+			"upgradeMessage": "Go pro to add more testimonial items."
+		},
+		"posts-grid-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced filtering and custom templates."
+		},
+		"posts-carousel-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced carousel features."
+		},
+		"tabs-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for unlimited tabs and advanced features."
+		},
+		"tab-panel-block": {
+			"enabled": true,
+			"upgradeMessage": "Tab Panel Block works with the Tabs Block for creating tabbed interfaces."
+		},
+		"video-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced video features."
+		},
+		"animation-scroll-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced animation features."
+		},
+		"content-toggle-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced content toggle features."
+		},
+		"content-toggle-panel-block": {
+			"enabled": true,
+			"upgradeMessage": "Content Toggle Panel Block works with the Content Toggle Block."
+		},
+		"social-share-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced social sharing features."
+		},
+		"infogrid-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced grid layouts and features."
+		},
+		"container-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced container features and unlimited custom breakpoints."
+		},
+		"hero-1-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for advanced hero block features and layouts."
+		},
+		"infogrid-2-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for even more advanced grid features."
+		},
+		"image-composition-block": {
+			"enabled": true,
+			"upgradeMessage": "Create beautiful collage layouts with your favourite images."
+		}
+	},
+	"premium": {
+		"accordion-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-items",
+				"advanced-styling",
+				"custom-animations",
+				"conditional-logic"
+			]
+		},
+		"accordion-item-block": {
+			"enabled": true,
+			"features": [
+				"advanced-panels",
+				"conditional-logic",
+				"custom-animations",
+				"responsive-behavior"
+			]
+		},
+		"button-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-styles",
+				"animations",
+				"conditional-logic",
+				"advanced-effects"
+			]
+		},
+		"case-studies-block": {
+			"enabled": true,
+			"upgradeMessage": "Upgrade to Premium for additional layouts and animations."
+		},
+		"call-to-action-block": {
+			"enabled": true,
+			"features": [
+				"all-layouts",
+				"vertical-layout",
+				"stacked-layout",
+				"advanced-styling"
+			]
+		},
+		"counter-block": {
+			"enabled": true,
+			"features": [
+				"count-up",
+				"count-down",
+				"advanced-animations",
+				"custom-easing"
+			]
+		},
+		"map-block": {
+			"enabled": true,
+			"features": [
+				"interactive-maps",
+				"flying-animations",
+				"multiple-locations",
+				"custom-markers"
+			]
+		},
+		"video-player-block": {
+			"enabled": true,
+			"features": [
+				"advanced-controls",
+				"custom-styling",
+				"playlist-support"
+			]
+		},
+		"icon-box-block": {
+			"enabled": true,
+			"features": [
+				"advanced-styling",
+				"custom-animations",
+				"hover-effects"
+			]
+		},
+		"social-banner-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-social-links",
+				"custom-styling",
+				"advanced-layouts"
+			]
+		},
+		"testimonial-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-testimonials",
+				"advanced-carousel",
+				"filtering",
+				"custom-templates"
+			]
+		},
+		"testimonial2-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-testimonials",
+				"advanced-carousel",
+				"filtering",
+				"custom-templates"
+			]
+		},
+		"testimonial3-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-testimonials",
+				"advanced-carousel",
+				"filtering",
+				"custom-templates"
+			]
+		},
+		"posts-grid-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-posts",
+				"advanced-filtering",
+				"custom-templates",
+				"infinite-scroll"
+			]
+		},
+		"posts-carousel-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-posts",
+				"advanced-carousel",
+				"filtering",
+				"custom-templates"
+			]
+		},
+		"tabs-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-tabs",
+				"advanced-animations",
+				"conditional-content",
+				"custom-styling"
+			]
+		},
+		"tab-panel-block": {
+			"enabled": true,
+			"features": [
+				"advanced-panels",
+				"conditional-logic",
+				"custom-animations",
+				"responsive-behavior"
+			]
+		},
+		"particles-block": {
+			"enabled": true,
+			"features": [
+				"custom-particles",
+				"interactive-effects",
+				"performance-optimization",
+				"custom-shapes"
+			]
+		},
+		"project-block": {
+			"enabled": true,
+			"features": [
+				"unlimited-projects",
+				"advanced-layouts",
+				"custom-galleries",
+				"interactive-effects"
+			]
+		},
+		"industries-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"industry-tiles",
+				"icon-picker",
+				"responsive-layouts",
+				"advanced-styling"
+			]
+		},
+		"modal-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"nested-trigger-and-content-blocks",
+				"device-specific-dimensions",
+				"custom-overlay-and-close-button",
+				"accessibility-controls"
+			]
+		},
+		"modal-trigger-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-triggers",
+				"advanced-styling"
+			]
+		},
+		"modal-content-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-content",
+				"advanced-styling"
+			]
+		},
+		"video-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-video-features"
+			]
+		},
+		"questions-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-questions",
+				"advanced-animations",
+				"conditional-logic",
+				"custom-styling"
+			]
+		},
+		"portfolio-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-projects",
+				"advanced-filtering",
+				"lightbox-effects",
+				"custom-layouts"
+			]
+		},
+		"services-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-services",
+				"advanced-animations",
+				"custom-icons",
+				"conditional-display"
+			]
+		},
+		"logos-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-logos",
+				"advanced-animations",
+				"hover-effects",
+				"custom-styling"
+			]
+		},
+		"video-hero-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"multiple-videos",
+				"advanced-controls",
+				"overlay-effects",
+				"responsive-optimization"
+			]
+		},
+		"scroll-text-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-animations",
+				"multiple-texts",
+				"advanced-timing",
+				"responsive-controls"
+			]
+		},
+		"mega-menu-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-menu-items",
+				"advanced-styling",
+				"mobile-optimization"
+			]
+		},
+		"mega-menu-panel-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"canvas-content",
+				"inner-blocks-support"
+			]
+		},
+		"animation-scroll-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-animations",
+				"custom-timing",
+				"responsive-controls"
+			]
+		},
+		"content-toggle-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-toggles",
+				"advanced-animations",
+				"custom-styling"
+			]
+		},
+		"content-toggle-panel-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-panels",
+				"custom-animations"
+			]
+		},
+		"flipcard-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-flip-animations",
+				"advanced-styling",
+				"hover-effects"
+			]
+		},
+		"flipcard-front-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-content",
+				"advanced-styling"
+			]
+		},
+		"flipcard-back-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-content",
+				"advanced-styling"
+			]
+		},
+		"swiper-carousel-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-slides",
+				"advanced-animations",
+				"custom-effects"
+			]
+		},
+		"swiper-slide-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-content",
+				"advanced-styling"
+			]
+		},
+		"our-process-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-steps",
+				"advanced-layouts",
+				"custom-icons",
+				"responsive-design"
+			]
+		},
+		"social-share-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-social-sharing",
+				"custom-platforms",
+				"analytics-tracking"
+			]
+		},
+		"infogrid-3-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"two-row-case-study-layout",
+				"headline-and-summary-area",
+				"three-column-outcomes-row",
+				"responsive-spacing-and-typography"
+			]
+		},
+		"infogrid-4-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"2x2-difference-grid",
+				"full-color-and-typography-controls",
+				"background-svg-icon-support",
+				"responsive-layout-configuration"
+			]
+		}
+	},
+	"plus": {
+		"accordion-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-items",
+				"advanced-styling",
+				"custom-animations"
+			]
+		},
+		"accordion-item-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-panels",
+				"custom-animations"
+			]
+		},
+		"button-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-styles",
+				"animations",
+				"advanced-effects"
+			]
+		},
+		"video-player-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-controls",
+				"custom-styling"
+			]
+		},
+		"icon-box-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-styling",
+				"custom-animations",
+				"hover-effects"
+			]
+		},
+		"social-banner-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-social-links",
+				"custom-styling",
+				"advanced-layouts"
+			]
+		},
+		"testimonial-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-testimonials",
+				"advanced-carousel",
+				"custom-templates"
+			]
+		},
+		"testimonial2-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-testimonials",
+				"advanced-carousel",
+				"custom-templates"
+			]
+		},
+		"posts-grid-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-posts",
+				"advanced-filtering",
+				"custom-templates"
+			]
+		},
+		"posts-carousel-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-posts",
+				"advanced-carousel",
+				"custom-templates"
+			]
+		},
+		"tabs-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-tabs",
+				"advanced-animations",
+				"custom-styling"
+			]
+		},
+		"tab-panel-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-panels",
+				"custom-animations"
+			]
+		},
+		"video-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-video-features"
+			]
+		},
+		"animation-scroll-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-animations",
+				"custom-timing",
+				"responsive-controls"
+			]
+		},
+		"content-toggle-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-toggles",
+				"advanced-animations",
+				"custom-styling"
+			]
+		},
+		"content-toggle-panel-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-panels",
+				"custom-animations"
+			]
+		},
+		"flipcard-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-flip-animations",
+				"advanced-styling",
+				"hover-effects"
+			]
+		},
+		"flipcard-front-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-content",
+				"advanced-styling"
+			]
+		},
+		"flipcard-back-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-content",
+				"advanced-styling"
+			]
+		},
+		"swiper-carousel-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-slides",
+				"advanced-animations",
+				"custom-effects"
+			]
+		},
+		"swiper-slide-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-content",
+				"advanced-styling"
+			]
+		},
+		"our-process-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-steps",
+				"advanced-layouts",
+				"custom-icons",
+				"responsive-design"
+			]
+		},
+		"call-to-action-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"all-layouts",
+				"vertical-layout",
+				"stacked-layout",
+				"advanced-styling"
+			]
+		},
+		"counter-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"count-up",
+				"count-down",
+				"advanced-animations",
+				"custom-easing"
+			]
+		},
+		"map-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"interactive-maps",
+				"flying-animations",
+				"multiple-locations",
+				"custom-markers"
+			]
+		},
+		"questions-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-questions",
+				"advanced-animations",
+				"conditional-logic",
+				"custom-styling"
+			]
+		},
+		"portfolio-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-projects",
+				"advanced-filtering",
+				"lightbox-effects",
+				"custom-layouts"
+			]
+		},
+		"services-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-services",
+				"advanced-animations",
+				"custom-icons",
+				"conditional-display"
+			]
+		},
+		"logos-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-logos",
+				"advanced-animations",
+				"hover-effects",
+				"custom-styling"
+			]
+		},
+		"video-hero-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"multiple-videos",
+				"advanced-controls",
+				"overlay-effects",
+				"responsive-optimization"
+			]
+		},
+		"scroll-text-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"custom-animations",
+				"multiple-texts",
+				"advanced-timing",
+				"responsive-controls"
+			]
+		},
+		"mega-menu-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"unlimited-menu-items",
+				"advanced-styling",
+				"mobile-optimization"
+			]
+		},
+		"mega-menu-panel-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"canvas-content",
+				"inner-blocks-support"
+			]
+		},
+		"social-share-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"advanced-social-sharing",
+				"custom-platforms",
+				"analytics-tracking"
+			]
+		},
+		"infogrid-3-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"two-row-case-study-layout",
+				"headline-and-summary-area",
+				"three-column-outcomes-row",
+				"responsive-spacing-and-typography"
+			]
+		},
+		"infogrid-4-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"2x2-difference-grid",
+				"full-color-and-typography-controls",
+				"background-svg-icon-support",
+				"responsive-layout-configuration"
+			]
+		},
+		"video-carousel-block": {
+			"enabled": true,
+			"limits": {},
+			"features": [
+				"draggable-video-cards",
+				"custom-drag-cursor",
+				"consistent-card-sizing",
+				"single-video-playback"
+			]
+		}
+	}
+}

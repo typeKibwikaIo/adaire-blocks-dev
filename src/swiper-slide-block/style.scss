@@ -1,0 +1,195 @@
+// Scope styles to only apply within swiper carousel context
+// This prevents interference with video carousel which also uses .swiper-slide
+.adaire-swiper-carousel {
+    .splide__slide,
+    .swiper-slide {
+        position: relative;
+        // Use responsive height from carousel, fallback to min-height
+        min-height: var(--slide-height-mobile, var(--slide-min-height, 400px));
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 30px;
+        box-sizing: border-box;
+        transition: border-radius 0.3s ease;
+        overflow: hidden;
+        // Don't set width - let Swiper control it based on slidesPerView
+        height: 100%;
+
+        // Responsive height breakpoints (from carousel CSS variables)
+        @media (min-width: 601px) and (max-width: 1024px) {
+            min-height: var(--slide-height-tablet, var(--slide-height-mobile, var(--slide-min-height, 400px)));
+        }
+
+        @media (min-width: 1025px) and (max-width: 1300px) {
+            min-height: var(--slide-height-small-laptop, var(--slide-height-desktop, var(--slide-min-height, 450px)));
+        }
+
+        @media (min-width: 1301px) and (max-width: 1920px) {
+            min-height: var(--slide-height-desktop, var(--slide-min-height, 500px));
+        }
+
+        @media (min-width: 1921px) {
+            min-height: var(--slide-height-big-desktop, var(--slide-height-desktop, var(--slide-min-height, 500px)));
+        }
+
+        // Background image as pseudo-element for zoom effect
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: inherit;
+            background-size: inherit;
+            background-position: inherit;
+            background-repeat: inherit;
+            z-index: 0;
+            transition: transform 0.5s ease;
+        }
+
+        &:hover {
+            border-radius: var(--hover-border-radius, inherit) !important;
+
+            &::before {
+                transform: scale(1.1);
+            }
+        }
+
+        .splide-slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .splide-slide-content {
+            position: relative;
+            z-index: 2;
+
+            h3 {
+                // Mobile (base, up to 600px)
+                font-size: var(--header-font-size-mobile, 28px);
+                font-weight: var(--header-font-weight-mobile, 700);
+                line-height: var(--header-line-height-mobile, 1.2);
+                letter-spacing: var(--header-letter-spacing-mobile, 0px);
+                text-transform: var(--header-text-transform-mobile, none);
+                color: var(--header-color-mobile, #ffffff);
+                margin-bottom: var(--header-margin-bottom-mobile, 10px);
+
+                // Tablet: 601px - 1024px
+                @media (min-width: 601px) and (max-width: 1024px) {
+                    font-size: var(--header-font-size-tablet, var(--header-font-size-mobile, 30px));
+                    font-weight: var(--header-font-weight-tablet, var(--header-font-weight-mobile, 700));
+                    line-height: var(--header-line-height-tablet, var(--header-line-height-mobile, 1.2));
+                    letter-spacing: var(--header-letter-spacing-tablet, var(--header-letter-spacing-mobile, 0px));
+                    text-transform: var(--header-text-transform-tablet, var(--header-text-transform-mobile, none));
+                    color: var(--header-color-tablet, var(--header-color-mobile, #ffffff));
+                    margin-bottom: var(--header-margin-bottom-tablet, var(--header-margin-bottom-mobile, 10px));
+                }
+
+                // Small Laptop: 1025px - 1300px
+                @media (min-width: 1025px) and (max-width: 1300px) {
+                    font-size: var(--header-font-size-small-laptop, var(--header-font-size-desktop, 32px));
+                    font-weight: var(--header-font-weight-small-laptop, var(--header-font-weight-desktop, 700));
+                    line-height: var(--header-line-height-small-laptop, var(--header-line-height-desktop, 1.2));
+                    letter-spacing: var(--header-letter-spacing-small-laptop, var(--header-letter-spacing-desktop, 0px));
+                    text-transform: var(--header-text-transform-small-laptop, var(--header-text-transform-desktop, none));
+                    color: var(--header-color-small-laptop, var(--header-color-desktop, #ffffff));
+                    margin-bottom: var(--header-margin-bottom-small-laptop, var(--header-margin-bottom-desktop, 10px));
+                }
+
+                // Desktop: 1301px - 1920px
+                @media (min-width: 1301px) and (max-width: 1920px) {
+                    font-size: var(--header-font-size-desktop, 32px);
+                    font-weight: var(--header-font-weight-desktop, 700);
+                    line-height: var(--header-line-height-desktop, 1.2);
+                    letter-spacing: var(--header-letter-spacing-desktop, 0px);
+                    text-transform: var(--header-text-transform-desktop, none);
+                    color: var(--header-color-desktop, #ffffff);
+                    margin-bottom: var(--header-margin-bottom-desktop, 10px);
+                }
+
+                // Big Desktop: ≥ 1921px
+                @media (min-width: 1921px) {
+                    font-size: var(--header-font-size-big-desktop, var(--header-font-size-desktop, 32px));
+                    font-weight: var(--header-font-weight-big-desktop, var(--header-font-weight-desktop, 700));
+                    line-height: var(--header-line-height-big-desktop, var(--header-line-height-desktop, 1.2));
+                    letter-spacing: var(--header-letter-spacing-big-desktop, var(--header-letter-spacing-desktop, 0px));
+                    text-transform: var(--header-text-transform-big-desktop, var(--header-text-transform-desktop, none));
+                    color: var(--header-color-big-desktop, var(--header-color-desktop, #ffffff));
+                    margin-bottom: var(--header-margin-bottom-big-desktop, var(--header-margin-bottom-desktop, 10px));
+                }
+            }
+
+            p {
+                // Mobile (base, up to 600px)
+                font-size: var(--text-font-size-mobile, 16px);
+                font-weight: var(--text-font-weight-mobile, 400);
+                line-height: var(--text-line-height-mobile, 1.5);
+                letter-spacing: var(--text-letter-spacing-mobile, 0px);
+                text-transform: var(--text-text-transform-mobile, none);
+                color: var(--text-color-mobile, #ffffff);
+                margin: 0;
+                margin-bottom: var(--text-margin-bottom-mobile, 0px);
+
+                // Tablet: 601px - 1024px
+                @media (min-width: 601px) and (max-width: 1024px) {
+                    font-size: var(--text-font-size-tablet, var(--text-font-size-mobile, 17px));
+                    font-weight: var(--text-font-weight-tablet, var(--text-font-weight-mobile, 400));
+                    line-height: var(--text-line-height-tablet, var(--text-line-height-mobile, 1.5));
+                    letter-spacing: var(--text-letter-spacing-tablet, var(--text-letter-spacing-mobile, 0px));
+                    text-transform: var(--text-text-transform-tablet, var(--text-text-transform-mobile, none));
+                    color: var(--text-color-tablet, var(--text-color-mobile, #ffffff));
+                    margin-bottom: var(--text-margin-bottom-tablet, var(--text-margin-bottom-mobile, 0px));
+                }
+
+                // Small Laptop: 1025px - 1300px
+                @media (min-width: 1025px) and (max-width: 1300px) {
+                    font-size: var(--text-font-size-small-laptop, var(--text-font-size-desktop, 18px));
+                    font-weight: var(--text-font-weight-small-laptop, var(--text-font-weight-desktop, 400));
+                    line-height: var(--text-line-height-small-laptop, var(--text-line-height-desktop, 1.5));
+                    letter-spacing: var(--text-letter-spacing-small-laptop, var(--text-letter-spacing-desktop, 0px));
+                    text-transform: var(--text-text-transform-small-laptop, var(--text-text-transform-desktop, none));
+                    color: var(--text-color-small-laptop, var(--text-color-desktop, #ffffff));
+                    margin-bottom: var(--text-margin-bottom-small-laptop, var(--text-margin-bottom-desktop, 0px));
+                }
+
+                // Desktop: 1301px - 1920px
+                @media (min-width: 1301px) and (max-width: 1920px) {
+                    font-size: var(--text-font-size-desktop, 18px);
+                    font-weight: var(--text-font-weight-desktop, 400);
+                    line-height: var(--text-line-height-desktop, 1.5);
+                    letter-spacing: var(--text-letter-spacing-desktop, 0px);
+                    text-transform: var(--text-text-transform-desktop, none);
+                    color: var(--text-color-desktop, #ffffff);
+                    margin-bottom: var(--text-margin-bottom-desktop, 0px);
+                }
+
+                // Big Desktop: ≥ 1921px
+                @media (min-width: 1921px) {
+                    font-size: var(--text-font-size-big-desktop, var(--text-font-size-desktop, 18px));
+                    font-weight: var(--text-font-weight-big-desktop, var(--text-font-weight-desktop, 400));
+                    line-height: var(--text-line-height-big-desktop, var(--text-line-height-desktop, 1.5));
+                    letter-spacing: var(--text-letter-spacing-big-desktop, var(--text-letter-spacing-desktop, 0px));
+                    text-transform: var(--text-text-transform-big-desktop, var(--text-text-transform-desktop, none));
+                    color: var(--text-color-big-desktop, var(--text-color-desktop, #ffffff));
+                    margin-bottom: var(--text-margin-bottom-big-desktop, var(--text-margin-bottom-desktop, 0px));
+                }
+            }
+        }
+
+        // Button innerblocks container
+        .swiper-slide-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 3;
+        }
+    }
+}

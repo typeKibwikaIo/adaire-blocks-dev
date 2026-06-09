@@ -1,0 +1,150 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/skill-bar-block",
+  "version": "0.1.0",
+  "title": "Skill Bar",
+  "category": "adaire-information-blocks",
+  "description": "Skill Bar block for Adaire Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "textdomain": "skill-bar-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Skills"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Design systems"
+    },
+    "text": {
+      "type": "string",
+      "default": "Showcase progress, expertise, or completion using a clean animated bar."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "85%"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "skills": {
+      "type": "object",
+      "default": [
+        {
+          "label": "Design",
+          "value": 92,
+          "icon": "✦",
+          "category": "Creative",
+          "description": "Product and brand design"
+        },
+        {
+          "label": "Development",
+          "value": 86,
+          "icon": "⌘",
+          "category": "Engineering",
+          "description": "Frontend and WordPress"
+        }
+      ]
+    },
+    "animationTrigger": {
+      "type": "string",
+      "default": "scroll"
+    },
+    "animationDuration": {
+      "type": "number",
+      "default": 1200
+    },
+    "tooltip": {
+      "type": "boolean",
+      "default": true
+    },
+    "orientation": {
+      "type": "string",
+      "default": "horizontal"
+    },
+    "fillColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "trackColor": {
+      "type": "string",
+      "default": "#f3f4f6"
+    },
+    "barHeight": {
+      "type": "number",
+      "default": 14
+    },
+    "barRadius": {
+      "type": "number",
+      "default": 999
+    },
+    "labelPosition": {
+      "type": "string",
+      "default": "above"
+    },
+    "labelFontSize": {
+      "type": "number",
+      "default": 16
+    },
+    "labelColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHeight": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    }
+  }
+}

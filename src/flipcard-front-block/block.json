@@ -1,0 +1,23 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "create-block/flipcard-front-block",
+    "version": "0.1.0",
+    "title": "Flip Card Front",
+    "category": "adaire-interactive",
+    "parent": [
+        "create-block/flipcard-block"
+    ],
+    "description": "Front side of a Flip Card with customizable content and styling.",
+    "supports": {
+        "html": false,
+        "reusable": false,
+        "inserter": false,
+        "anchor": false
+    },
+    "textdomain": "flipcard-front-block",
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "attributes": {},
+    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_77_2)\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#D52940\"/>\n<g clip-path=\"url(#clip1_77_2)\">\n<rect x=\"3.5\" y=\"3.5\" width=\"11\" height=\"13\" stroke=\"white\"/>\n<rect x=\"9.5\" y=\"8.5\" width=\"11\" height=\"13\" stroke=\"white\"/>\n</g>\n</g>\n<defs>\n<clipPath id=\"clip0_77_2\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"white\"/>\n</clipPath>\n<clipPath id=\"clip1_77_2\">\n<rect width=\"24\" height=\"24\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>"
+}

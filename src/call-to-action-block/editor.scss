@@ -1,0 +1,509 @@
+/**
+ * The following styles get applied inside the editor only.
+ */
+
+///everything with config must be configurable on wordpress editor, so it needs an attribute, will also mark whether it should be configurable on different device breakpoits by marking "responsive"
+
+*{
+  box-sizing: border-box;
+ }
+
+.call-to-action-block-editor {
+	position: relative;
+	height: auto;
+	cursor: pointer;
+
+
+	.ad-cta2-container {
+		min-height: var(--min-height, 400);
+		position: relative;
+		margin-top: var(--margin-top-desktop, 0);
+		margin-right: var(--margin-right-desktop, 0);
+		margin-bottom: var(--margin-bottom-desktop, 0);
+		margin-left: var(--margin-left-desktop, 0);
+	border-radius: var(--content-border-radius, 0px);
+	overflow: hidden;
+
+		
+		// Removed container-wide gradient; gradients are applied to content/overlay
+	}
+
+	.ad-split {
+		display: flex;
+		flex-direction: row; //must be column on tab-port below
+
+		&__image {
+			background-image: var(--background-image, none);
+			background-size: var(--background-size, cover);
+			background-position: var(--background-position, center);
+			width: var(--image-width, 50%);
+			position: relative;
+			.ad-image-overlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: var(--overlay-background, var(--overlay-background-color, #000000));
+				opacity: var(--overlay-opacity, 0.5);
+			}
+		}
+
+		&__content {
+			width: calc(100% - var(--image-width, 50%)); //THIS MUST BE 100 - WIDTH OF IMAGE //must be 100 on tab-port below
+			display: flex;
+			flex-direction: column;
+			justify-content: var(--content-justify, center); //config //responsive
+			align-items: var(--content-align, flex-start); //config //responsive
+			padding-left: var(--content-padding-left, 20px); //config //responsive
+			padding-right: var(--content-padding-right, 20px); //config //responsive
+			padding-top: var(--content-padding-top, 20px); //config //responsive
+			padding-bottom: var(--content-padding-bottom, 20px); //config //responsive
+			background: var(--content-background, var(--content-background-color, #f5f5f5)); //config
+			&__header {
+				font-size: var(--header-font-size-desktop, 40px); //config //responsive
+				color: var(--header-color, #333333); //config
+				margin-bottom: var(--header-margin-bottom-desktop, 20px); //config //responsive
+				text-align: var(--header-text-align, left); //config //responsive
+				font-weight: var(--header-font-weight, 300); //config //responsive
+			}
+
+			&__text {
+				font-size: var(--body-font-size-desktop, 16px); //responsive
+				color: var(--body-color, #666666); //config
+				margin-bottom: var(--body-margin-bottom-desktop, 20px); //config //responsive
+				text-align: var(--body-text-align, left); //config //responsive
+				font-weight: var(--body-font-weight, 300); //config //responsive
+			}
+
+			&__button {
+				margin-bottom: var(--button-margin-bottom-desktop, 10px); //config //responsive
+				
+				button {
+					background-color: var(--button-background-color, #007cba);
+					color: var(--button-text-color, #ffffff);
+					border-radius: var(--button-border-radius, 4px);
+					padding-top: var(--button-padding-top, 12px);
+					padding-right: var(--button-padding-right, 24px);
+					padding-bottom: var(--button-padding-bottom, 12px);
+					padding-left: var(--button-padding-left, 24px);
+					font-size: var(--button-font-size-desktop, 16px);
+					font-weight: var(--button-font-weight, 500);
+					border: none;
+					cursor: pointer;
+					transition: all 0.3s ease;
+					
+					&:hover {
+						opacity: 0.9;
+						transform: translateY(-1px);
+					}
+				}
+			}
+		}
+	}
+	.ad-stacked {
+		display: flex;
+		flex-direction: column;
+
+		&__image {
+			background-image: var(--background-image, none);
+			background-size: var(--background-size, cover);
+			background-position: var(--background-position, center);
+			width: 100%;
+			height: var(--stacked-image-height-desktop, 500px); //config //responsive
+			position: relative;
+			.ad-image-overlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: var(--overlay-background, var(--overlay-background-color, #000000));
+				opacity: var(--overlay-opacity, 0.5);
+			}
+		}
+
+		&__content-container {
+			background: var(--content-background, var(--content-background-color, #f5f5f5)); //config
+			display: flex;
+			justify-content: var(--content-justify, center); //config
+		}
+
+		&__content {
+			width: var(--stacked-content-width-desktop, 50%); //config //responsive
+			display: flex;
+			flex-direction: column;
+			justify-content: var(--content-justify, center); //config //responsive
+			align-items: var(--content-align, center); //config //responsive
+			padding-left: var(--content-padding-left, 20px); //config //responsive
+			padding-right: var(--content-padding-right, 20px); //config //responsive
+			padding-top: var(--content-padding-top, 20px); //config //responsive
+			padding-bottom: var(--content-padding-bottom, 20px); //config //responsive
+			&__header {
+				font-size: var(--header-font-size-desktop, 40px); //config //responsive
+				color: var(--header-color, #333333); //config
+				margin-bottom: var(--header-margin-bottom-desktop, 20px); //config //responsive
+				text-align: var(--header-text-align, left); //config //responsive
+				font-weight: var(--header-font-weight, 300); //config //responsive
+			}
+
+			&__text {
+				font-size: var(--body-font-size-desktop, 16px); //responsive
+				color: var(--body-color, #666666); //config
+				margin-bottom: var(--body-margin-bottom-desktop, 20px); //config //responsive
+				text-align: var(--body-text-align, left); //config //responsive
+				font-weight: var(--body-font-weight, 300); //config //responsive
+			}
+
+			&__button {
+				margin-bottom: var(--button-margin-bottom-desktop, 10px); //config //responsive
+				
+				button {
+					background-color: var(--button-background-color, #007cba);
+					color: var(--button-text-color, #ffffff);
+					border-radius: var(--button-border-radius, 4px);
+					padding-top: var(--button-padding-top, 12px);
+					padding-right: var(--button-padding-right, 24px);
+					padding-bottom: var(--button-padding-bottom, 12px);
+					padding-left: var(--button-padding-left, 24px);
+					font-size: var(--button-font-size-desktop, 16px);
+					font-weight: var(--button-font-weight, 500);
+					border: none;
+					cursor: pointer;
+					transition: all 0.3s ease;
+					
+					&:hover {
+						opacity: 0.9;
+						transform: translateY(-1px);
+					}
+				}
+			}
+		}
+	}
+	.ad-overlay {
+		background-image: var(--background-image, none);
+		background-size: var(--background-size, cover);
+		background-position: var(--background-position, center);
+		width: 100%;
+
+		&__overlay {
+			display: flex;
+			flex-direction: column;
+			background: var(--overlay-background, var(--overlay-background-color, #000000)); //config
+			width: 100%;
+			height: 100%;
+			top: 0;
+			right: 0;
+			position: absolute;
+			opacity: var(--overlay-opacity, 0.5);
+		}
+
+		&__content {
+			position: absolute;
+			z-index: 10;
+			width: var(--overlay-content-width-desktop, 50%); //config //responsive
+			display: flex;
+			flex-direction: column;
+			justify-content: var(--content-justify, center); //config //responsive
+			padding-left: var(--content-padding-left, 20px); //config //responsive
+			padding-right: var(--content-padding-right, 20px); //config //responsive
+			padding-top: var(--content-padding-top, 20px); //config //responsive
+			padding-bottom: var(--content-padding-bottom, 20px); //config //responsive
+			&__header {
+				font-size: var(--header-font-size-desktop, 40px); //config //responsive
+				color: var(--overlay-header-color, #ffffff); //config
+				margin-bottom: var(--header-margin-bottom-desktop, 20px); //config //responsive
+				text-align: var(--header-text-align, left); //config //responsive
+				font-weight: var(--header-font-weight, 300); //config //responsive
+			}
+
+			&__text {
+				font-size: var(--body-font-size-desktop, 16px); //responsive
+				color: var(--overlay-body-color, #ffffff); //config
+				margin-bottom: var(--body-margin-bottom-desktop, 20px); //config //responsive
+				text-align: var(--body-text-align, left); //config //responsive
+				font-weight: var(--body-font-weight, 300); //config //responsive
+			}
+
+			&__button {
+				margin-bottom: var(--button-margin-bottom-desktop, 10px); //config //responsive
+				
+				button {
+					background-color: var(--button-background-color, #007cba);
+					color: var(--button-text-color, #ffffff);
+					border-radius: var(--button-border-radius, 4px);
+					padding-top: var(--button-padding-top, 12px);
+					padding-right: var(--button-padding-right, 24px);
+					padding-bottom: var(--button-padding-bottom, 12px);
+					padding-left: var(--button-padding-left, 24px);
+					font-size: var(--button-font-size-desktop, 16px);
+					font-weight: var(--button-font-weight, 500);
+					border: none;
+					cursor: pointer;
+					transition: all 0.3s ease;
+					
+					&:hover {
+						opacity: 0.9;
+						transform: translateY(-1px);
+					}
+				}
+			}
+		}
+	}
+
+	.ad-overlay-top-left {
+		justify-content: flex-start; //center on tab-port below
+		align-items: flex-start; //center on tab-port below
+		&__content {
+			top: 0;
+			left: 0;
+		}
+		&__text, &__header {
+			text-align: left;
+		}
+	}
+	.ad-overlay-top-right {
+		justify-content: flex-start; //center on tab-port below
+		align-items: flex-end; //center on tab-port below
+		&__content {
+			top: 0;
+			right: 0;
+			text-align: right;
+		}
+    &__text, &__header {
+			text-align: right;
+		}
+	}
+	.ad-overlay-bottom-left {
+		justify-content: flex-end; //center on tab-port below
+		align-items: flex-start; //center on tab-port below
+		&__content {
+			bottom: 0;
+			left: 0;
+			text-align: left;
+		}
+    &__text, &__header {
+			text-align: left;
+		}
+	}
+	.ad-overlay-bottom-right {
+		justify-content: flex-end; //center on tab-port below
+		align-items: flex-end; //center on tab-port below
+		&__content {
+			bottom: 0;
+			right: 0;
+			text-align: right;
+		}
+    &__text, &__header {
+			text-align: right;
+		}
+	}
+	.ad-overlay-center {
+		justify-content: center; //center on tab-port below
+		align-items: center; //center on tab-port below
+		&__content {
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+		}
+    &__text, &__header {
+			text-align: center;
+		}
+	}
+
+	// Responsive breakpoints
+	@media (max-width: 1024px) {
+		.ad-cta2-container {
+			margin-top: var(--margin-top-tablet) !important;
+			margin-right: var(--margin-right-tablet) !important;
+			margin-bottom: var(--margin-bottom-tablet) !important;
+			margin-left: var(--margin-left-tablet) !important;
+		}
+
+		.ad-split {
+			flex-direction: column; //must be column on tab-port below
+
+			&__image {
+				width: 100% !important;
+				height: var(--stacked-image-height-tablet, 400px); // ensure visibility when stacked on tablet
+			}
+
+			&__content {
+				width: 100% !important; //must be 100 on tab-port below
+				padding-left: var(--content-padding-left, 20px);
+				padding-right: var(--content-padding-right, 20px);
+				padding-top: var(--content-padding-top, 20px);
+				padding-bottom: var(--content-padding-bottom, 20px);
+				&__header {
+					font-size: var(--header-font-size-tablet, 32px);
+					margin-bottom: var(--header-margin-bottom-tablet, 16px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-tablet, 14px);
+					margin-bottom: var(--body-margin-bottom-tablet, 16px);
+				}
+
+				&__button {
+					margin-bottom: var(--button-margin-bottom-tablet, 8px);
+					
+					button {
+						font-size: var(--button-font-size-tablet, 14px);
+					}
+				}
+			}
+		}
+
+		.ad-stacked {
+			&__image {
+				height: var(--stacked-image-height-tablet, 400px);
+			}
+
+			&__content {
+				width: var(--stacked-content-width-tablet, 70%) !important;
+				&__header {
+					font-size: var(--header-font-size-tablet, 32px);
+					margin-bottom: var(--header-margin-bottom-tablet, 16px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-tablet, 14px);
+					margin-bottom: var(--body-margin-bottom-tablet, 16px);
+				}
+
+				&__button {
+					margin-bottom: var(--button-margin-bottom-tablet, 8px);
+					
+					button {
+						font-size: var(--button-font-size-tablet, 14px);
+					}
+				}
+			}
+		}
+
+		.ad-overlay {
+
+			&__content {
+				width: var(--overlay-content-width-tablet, 70%) !important;
+				&__header {
+					font-size: var(--header-font-size-tablet, 32px);
+					margin-bottom: var(--header-margin-bottom-tablet, 16px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-tablet, 14px);
+					margin-bottom: var(--body-margin-bottom-tablet, 16px);
+				}
+
+				&__button {
+					margin-bottom: var(--button-margin-bottom-tablet, 8px);
+					
+					button {
+						font-size: var(--button-font-size-tablet, 14px);
+					}
+				}
+			}
+		}
+
+		.ad-overlay-top-left,
+		.ad-overlay-top-right,
+		.ad-overlay-bottom-left,
+		.ad-overlay-bottom-right {
+			justify-content: center; //center on tab-port below
+			align-items: center; //center on tab-port below
+		}
+	}
+
+	@media (max-width: 768px) {
+		.ad-cta2-container {
+			margin-top: var(--margin-top-mobile) !important;
+			margin-right: var(--margin-right-mobile) !important;
+			margin-bottom: var(--margin-bottom-mobile) !important;
+			margin-left: var(--margin-left-mobile) !important;
+		}
+
+		.ad-split {
+			flex-direction: column; // ensure stacked on mobile
+			&__image {
+				width: 100% !important;
+				height: var(--stacked-image-height-mobile, 300px); // ensure visibility on mobile
+			}
+			&__content {
+				width: 100% !important;
+				padding-left: var(--content-padding-left, 20px);
+				padding-right: var(--content-padding-right, 20px);
+				padding-top: var(--content-padding-top, 20px);
+				padding-bottom: var(--content-padding-bottom, 20px);
+				&__header {
+					font-size: var(--header-font-size-mobile, 24px);
+					margin-bottom: var(--header-margin-bottom-mobile, 12px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-mobile, 12px);
+					margin-bottom: var(--body-margin-bottom-mobile, 12px);
+				}
+
+				&__button {
+					margin-bottom: var(--button-margin-bottom-mobile, 6px);
+					
+					button {
+						font-size: var(--button-font-size-mobile, 14px);
+					}
+				}
+			}
+		}
+
+		.ad-stacked {
+			&__image {
+				height: var(--stacked-image-height-mobile, 300px);
+			}
+
+			&__content {
+				width: var(--stacked-content-width-mobile, 90%) !important;
+				&__header {
+					font-size: var(--header-font-size-mobile, 24px);
+					margin-bottom: var(--header-margin-bottom-mobile, 12px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-mobile, 12px);
+					margin-bottom: var(--body-margin-bottom-mobile, 12px);
+				}
+
+				&__button {
+					margin-bottom: var(--button-margin-bottom-mobile, 6px);
+					
+					button {
+						font-size: var(--button-font-size-mobile, 14px);
+					}
+				}
+			}
+		}
+
+		.ad-overlay {
+
+			&__content {
+				width: var(--overlay-content-width-mobile, 90%) !important;
+				&__header {
+					font-size: var(--header-font-size-mobile, 24px);
+					margin-bottom: var(--header-margin-bottom-mobile, 12px);
+				}
+
+				&__text {
+					font-size: var(--body-font-size-mobile, 12px);
+					margin-bottom: var(--body-margin-bottom-mobile, 12px);
+				}
+
+				&__button {
+					margin-bottom: var(--button-margin-bottom-mobile, 6px);
+					
+					button {
+						font-size: var(--button-font-size-mobile, 14px);
+					}
+				}
+			}
+		}
+	}
+}

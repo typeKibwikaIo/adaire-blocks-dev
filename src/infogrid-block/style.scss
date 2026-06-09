@@ -1,0 +1,432 @@
+// Info Grid Block Styles
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// Breakpoint Mixins (aligned with hero1 block)
+@mixin phone {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 601px) and (max-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin small-laptop {
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 1301px) and (max-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin big-desktop {
+    @media (min-width: 1921px) {
+        @content;
+    }
+}
+
+// Override WordPress core rule: html :where([style*=border-width]) { border-style: solid }
+// This prevents WordPress from automatically applying borders when border-width is detected in inline styles
+.wp-block-create-block-infogrid-block,
+[class*="wp-block-create-block-infogrid-block"] {
+    outline: none !important;
+    border: none !important;
+    border-style: none !important;
+    border-width: 0 !important;
+    box-shadow: none !important;
+    
+    &[style*="border-width"],
+    &[style*="borderWidth"] {
+        border: none !important;
+        border-style: none !important;
+        border-width: 0 !important;
+    }
+}
+
+.adaire-infogrid {
+    --infogrid-bg: #1a1a2e;
+    --infogrid-title-color: #8b7cf7;
+    --infogrid-tagline-color: #ffffff;
+    --infogrid-description-color: #1a1a2e;
+    --infogrid-hover-bg: #8b7cf7;
+    --infogrid-hover-title-color: #1a1a2e;
+    --infogrid-hover-tagline-color: #1a1a2e;
+    --infogrid-hover-description-color: #1a1a2e;
+    --infogrid-icon-color: #8b7cf7;
+    --infogrid-hover-icon-color: #1a1a2e;
+    --infogrid-border-color: #2a2a4e;
+    --infogrid-container-bg: #2a2a4e;
+    --infogrid-title-font-size: 12px;
+    --infogrid-tagline-font-size: 24px;
+    --infogrid-description-font-size: 16px;
+    --infogrid-item-padding: 32px;
+    --infogrid-gap: 1px;
+    box-sizing: border-box;
+    
+    width: 100%;
+    background-color: var(--infogrid-container-bg);
+    
+    // Override WordPress core rule: html :where([style*=border-width]) { border-style: solid }
+    &[style*="border-width"],
+    &[style*="borderWidth"] {
+        border: none !important;
+        border-style: none !important;
+        border-width: 0 !important;
+    }
+    
+    // Default padding (mobile)
+    padding-top: var(--infogrid-padding-top-mobile, 40px);
+    padding-right: var(--infogrid-padding-right-mobile, 20px);
+    padding-bottom: var(--infogrid-padding-bottom-mobile, 40px);
+    padding-left: var(--infogrid-padding-left-mobile, 20px);
+    
+    &__container {
+        width: 100%;
+        margin: 0 auto;
+        
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px);
+        }
+    }
+    
+    // Responsive container max-width
+    @include phone {
+        &__container.is-constrained {
+            max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%));
+        }
+    }
+    
+    @include tablet {
+        padding-top: var(--infogrid-padding-top-tablet, var(--infogrid-padding-top-mobile, 60px));
+        padding-right: var(--infogrid-padding-right-tablet, var(--infogrid-padding-right-mobile, 40px));
+        padding-bottom: var(--infogrid-padding-bottom-tablet, var(--infogrid-padding-bottom-mobile, 60px));
+        padding-left: var(--infogrid-padding-left-tablet, var(--infogrid-padding-left-mobile, 40px));
+
+        &__container.is-constrained {
+            max-width: var(--container-max-width-tablet, var(--container-max-width, 100%));
+        }
+    }
+
+    @include small-laptop {
+        padding-top: var(--infogrid-padding-top-small-laptop, var(--infogrid-padding-top-tablet, 80px));
+        padding-right: var(--infogrid-padding-right-small-laptop, var(--infogrid-padding-right-tablet, 60px));
+        padding-bottom: var(--infogrid-padding-bottom-small-laptop, var(--infogrid-padding-bottom-tablet, 80px));
+        padding-left: var(--infogrid-padding-left-small-laptop, var(--infogrid-padding-left-tablet, 60px));
+        &__container.is-constrained {
+            max-width: var(--container-max-width-small-laptop, var(--container-max-width, 1200px));
+        }
+    }
+
+    @include desktop {
+        padding-top: var(--infogrid-padding-top-desktop, var(--infogrid-padding-top-small-laptop, 100px));
+        padding-right: var(--infogrid-padding-right-desktop, var(--infogrid-padding-right-small-laptop, 80px));
+        padding-bottom: var(--infogrid-padding-bottom-desktop, var(--infogrid-padding-bottom-small-laptop, 100px));
+        padding-left: var(--infogrid-padding-left-desktop, var(--infogrid-padding-left-small-laptop, 80px));
+
+        &__container.is-constrained {
+            max-width: var(--container-max-width-desktop, var(--container-max-width, 1200px));
+        }
+    }
+
+    @include big-desktop {
+        padding-top: var(--infogrid-padding-top-big-desktop, var(--infogrid-padding-top-desktop, 100px));
+        padding-right: var(--infogrid-padding-right-big-desktop, var(--infogrid-padding-right-desktop, 80px));
+        padding-bottom: var(--infogrid-padding-bottom-big-desktop, var(--infogrid-padding-bottom-desktop, 100px));
+        padding-left: var(--infogrid-padding-left-big-desktop, var(--infogrid-padding-left-desktop, 80px));
+        &__container.is-constrained {
+            max-width: var(--container-max-width-big-desktop, var(--container-max-width, 1200px));
+        }
+    }
+    
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto auto auto;
+        gap: var(--infogrid-gap);
+        background-color: var(--infogrid-border-color);
+        
+        // Specific layout pattern from the design
+        // Row 1: 3 items
+        // Row 2: 2 items (1st and 3rd column), middle empty
+        // Row 3: 3 items
+    }
+    
+    &__item {
+        background-color: var(--infogrid-bg);
+        padding: var(--infogrid-item-padding);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 200px;
+        cursor: pointer;
+        transition: background-color 0.4s ease, color 0.4s ease;
+        position: relative;
+        
+        // Default layout positioning
+        &--1 { grid-column: 1; grid-row: 1; }
+        &--2 { grid-column: 2; grid-row: 1 / 4; } // Spans entire height (3 rows)
+        &--3 { grid-column: 3; grid-row: 1; }
+        &--4 { grid-column: 1; grid-row: 2; }
+        &--5 { grid-column: 3; grid-row: 2; }
+        &--6 { grid-column: 1; grid-row: 3; }
+        &--7 { grid-column: 3; grid-row: 3; }
+        &--8 { grid-column: 1; grid-row: 4; }
+        &--9 { grid-column: 2; grid-row: 4 / 7; } // Next middle item spans 3 rows
+        &--10 { grid-column: 3; grid-row: 4; }
+        &--11 { grid-column: 1; grid-row: 5; }
+        &--12 { grid-column: 3; grid-row: 5; }
+
+        // Expanded state
+        &.is-expanded {
+            background-color: var(--infogrid-hover-bg);
+            z-index: 10;
+            
+            .adaire-infogrid__item-title {
+                color: var(--infogrid-hover-title-color);
+            }
+            
+            .adaire-infogrid__item-tagline {
+                color: var(--infogrid-hover-tagline-color);
+            }
+            
+            .adaire-infogrid__item-icon {
+                color: var(--infogrid-hover-icon-color);
+            }
+            
+            .adaire-infogrid__item-description {
+                color: var(--infogrid-hover-description-color);
+            }
+
+            .adaire-infogrid__item-title--icon i {
+                color: var(--infogrid-hover-icon-color);
+            }
+        }
+    }
+    
+    &__item-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    
+    &__item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+    
+    &__item-title {
+        font-size: var(--infogrid-title-font-size);
+        font-weight: 600;
+        color: var(--infogrid-title-color);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        transition: color 0.4s ease;
+    }
+
+    &__item-title--icon {
+        font-size: 0; // hide text spacing while keeping element for layout
+
+        i {
+            font-size: var(--infogrid-icon-size, 28px);
+            color: var(--infogrid-icon-color);
+        }
+    }
+    
+    &__item-toggle {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    &__item-icon {
+        font-size: calc(var(--infogrid-icon-size, 28px) * 0.85);
+        font-weight: 300;
+        color: var(--infogrid-icon-color);
+        transition: color 0.4s ease, transform 0.3s ease;
+        display: inline-block;
+        line-height: 1;
+    }
+    
+    &__item-tagline {
+        font-size: var(--infogrid-tagline-font-size);
+        font-weight: 400;
+        color: var(--infogrid-tagline-color);
+        margin: 0;
+        margin-top: auto;
+        line-height: 1.3;
+        transition: color 0.4s ease;
+    }
+    
+    &__item-description-wrapper {
+        overflow: hidden;
+    }
+    
+    &__item-description {
+        font-size: var(--infogrid-description-font-size);
+        font-weight: 400;
+        color: var(--infogrid-description-color);
+        margin: 0;
+        margin-top: 16px;
+        line-height: 1.6;
+        transition: color 0.4s ease;
+        white-space: pre-line; // Preserve line breaks
+    }
+    
+    // Responsive Design
+    @include tablet {
+        &__grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        &__item {
+            // Reset grid positions for tablet - no spanning
+            &--1 { grid-column: 1; grid-row: 1; }
+            &--2 { grid-column: 2; grid-row: 1; }
+            &--3 { grid-column: 1; grid-row: 2; }
+            &--4 { grid-column: 2; grid-row: 2; }
+            &--5 { grid-column: 1; grid-row: 3; }
+            &--6 { grid-column: 2; grid-row: 3; }
+            &--7 { grid-column: 1; grid-row: 4; }
+            &--8 { grid-column: 2; grid-row: 4; }
+            &--9 { grid-column: 1; grid-row: 5; }
+            &--10 { grid-column: 2; grid-row: 5; }
+            &--11 { grid-column: 1; grid-row: 6; }
+            &--12 { grid-column: 2; grid-row: 6; }
+
+            min-height: 180px;
+        }
+        
+        &__item-tagline {
+            font-size: calc(var(--infogrid-tagline-font-size) * 0.85);
+        }
+    }
+    
+    @include phone {
+        &__grid {
+            grid-template-columns: 1fr;
+        }
+        
+        &__item {
+            // Single column on mobile
+            &--1, &--2, &--3, &--4, &--5, &--6, 
+            &--7, &--8, &--9, &--10, &--11, &--12 {
+                grid-column: 1;
+                grid-row: auto;
+            }
+            
+            min-height: 160px;
+            padding: 24px;
+        }
+        
+        &__item-tagline {
+            font-size: calc(var(--infogrid-tagline-font-size) * 0.75);
+        }
+        
+        &__item-description {
+            font-size: calc(var(--infogrid-description-font-size) * 0.9);
+        }
+    }
+}
+
+// Alternate layout variant – approximates marketing card layout
+.adaire-infogrid--layout-alt {
+    .adaire-infogrid__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: minmax(200px, auto);
+        gap: var(--infogrid-gap);
+    }
+
+    .adaire-infogrid__item {
+        // Base reset – items flow into grid
+        grid-column: auto;
+        grid-row: auto;
+
+        &--1 {
+            grid-column: 1 / span 2;
+            grid-row: 1 / span 2;
+        }
+
+        &--2 {
+            grid-column: 3;
+            grid-row: 1;
+        }
+
+        &--3 {
+            grid-column: 3;
+            grid-row: 2;
+        }
+
+        &--4 {
+            grid-column: 1;
+            grid-row: 3;
+        }
+
+        &--5 {
+            grid-column: 2;
+            grid-row: 3;
+        }
+
+        &--6 {
+            grid-column: 3;
+            grid-row: 3;
+        }
+    }
+
+    @include tablet {
+        .adaire-infogrid__grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .adaire-infogrid__item {
+            grid-column: auto;
+            grid-row: auto;
+        }
+    }
+
+    @include phone {
+        .adaire-infogrid__grid {
+            grid-template-columns: 1fr;
+        }
+
+        .adaire-infogrid__item {
+            grid-column: 1;
+            grid-row: auto;
+        }
+    }
+}
+
+
+// Editor-specific styles
+.wp-block-create-block-infogrid-block {
+    .adaire-infogrid {
+        &__item {
+            cursor: pointer;
+            
+            &:hover:not(.is-expanded) {
+                opacity: 0.9;
+            }
+        }
+        
+        // Show description in editor when expanded
+        &__item.is-expanded {
+            .adaire-infogrid__item-description {
+                display: block;
+            }
+        }
+    }
+}
+

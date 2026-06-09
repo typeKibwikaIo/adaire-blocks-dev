@@ -1,0 +1,28 @@
+// Horizontal Scroll Carousel — editor-only overrides
+
+// Allow horizontal scrolling in the editor preview.
+// style.scss sets overflow:hidden for the frontend; we undo that here.
+.adaire-hsc {
+	overflow: visible !important;
+	min-height: 200px;
+
+	// Editor notice
+	.adaire-hsc__editor-notice {
+		font-size: 0.8125rem !important;
+		padding: 8px 12px !important;
+		margin: 0 0 12px !important;
+		border-radius: 4px !important;
+	}
+
+	// Scrollable track — full width of the editor canvas
+	.adaire-hsc__track--editor {
+		width: 100%;
+		overflow-x: auto;
+		overflow-y: visible;
+
+		// Give inner blocks a minimum width so the grid renders cards at full size
+		.wp-block {
+			min-width: var( --hsc-card-width-desktop, 540px );
+		}
+	}
+}

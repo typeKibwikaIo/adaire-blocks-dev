@@ -1,0 +1,14 @@
+// Minimal editor style for Project Block
+.wp-block-create-block-project-block {
+  min-height: 300px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 10px;
+  padding: 16px;
+  outline: none;
+  box-shadow: none;
+
+  &.is-selected {
+    border-color: rgba(99, 102, 241, 0.45);
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/app-download-block",
+  "version": "0.1.0",
+  "title": "App Download",
+  "category": "adaire-marketing-conversion",
+  "description": "App Download block for Adaire Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "textdomain": "app-download-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Mobile app"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Download our app"
+    },
+    "text": {
+      "type": "string",
+      "default": "Promote app store links with a polished conversion section."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Download app"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "appName": {
+      "type": "string",
+      "default": "Adaire App"
+    },
+    "tagline": {
+      "type": "string",
+      "default": "Work anywhere"
+    },
+    "appStoreUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "googlePlayUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "screenshotUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "qrUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "platform": {
+      "type": "string",
+      "default": "both"
+    },
+    "mockup": {
+      "type": "boolean",
+      "default": true
+    },
+    "rating": {
+      "type": "string",
+      "default": "4.9"
+    },
+    "downloadCount": {
+      "type": "string",
+      "default": "50k+"
+    },
+    "badgeSize": {
+      "type": "string",
+      "default": "medium"
+    },
+    "layout": {
+      "type": "string",
+      "default": "image-right"
+    },
+    "badgeStyle": {
+      "type": "string",
+      "default": "official"
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHeight": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    }
+  }
+}

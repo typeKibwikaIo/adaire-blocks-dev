@@ -1,0 +1,18 @@
+// Horizontal Scroll Card — card-specific style overrides
+// Card inner padding is handled by the parent block's style.scss via CSS variables.
+
+.adaire-hsc__card {
+	// CTA inner block wrappers
+	.adaire-hsc__card-cta {
+		.wp-block-create-block-button-block,
+		.wp-block-buttons,
+		.wp-block-button {
+			flex-shrink: 0;
+		}
+	}
+
+	// Ensure no browser-default paragraph margins
+	p.adaire-hsc__card-text {
+		margin-top: 0;
+	}
+}

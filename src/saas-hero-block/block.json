@@ -1,0 +1,159 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/saas-hero-block",
+  "version": "0.1.0",
+  "title": "SaaS Hero",
+  "category": "adaire-layout-hero",
+  "description": "SaaS Hero block for Adaire Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "textdomain": "saas-hero-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Scale faster"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Launch your SaaS faster"
+    },
+    "text": {
+      "type": "string",
+      "default": "A modern hero section for software products, startups, and landing pages."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Start free trial"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "secondaryButtonText": {
+      "type": "string",
+      "default": "Watch demo"
+    },
+    "secondaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "heroImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "videoUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "gradient"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "gradient": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    },
+    "alignment": {
+      "type": "string",
+      "default": "left"
+    },
+    "socialProof": {
+      "type": "string",
+      "default": "Trusted by 2,000+ teams"
+    },
+    "trustLogos": {
+      "type": "string",
+      "default": "Acme, Velocity, Atlas"
+    },
+    "announcementText": {
+      "type": "string",
+      "default": "New: AI workflow builder"
+    },
+    "announcementUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "showScrollArrow": {
+      "type": "boolean",
+      "default": true
+    },
+    "variantLabel": {
+      "type": "string",
+      "default": "Variant A"
+    },
+    "typewriter": {
+      "type": "boolean",
+      "default": false
+    },
+    "headlineSize": {
+      "type": "number",
+      "default": 64
+    },
+    "headlineWeight": {
+      "type": "string",
+      "default": "800"
+    },
+    "subheadlineMaxWidth": {
+      "type": "number",
+      "default": 680
+    },
+    "minHeight": {
+      "type": "number",
+      "default": 78
+    },
+    "overlayOpacity": {
+      "type": "number",
+      "default": 35
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHeight": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    }
+  }
+}

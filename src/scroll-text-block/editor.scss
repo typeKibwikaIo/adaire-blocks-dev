@@ -1,0 +1,183 @@
+/**
+ * Editor styles for scroll text block
+ */
+
+.ad-scroll-text-block {
+	// CRITICAL: Override absolute positioning in editor
+	position: relative !important;
+	z-index: 1 !important;
+	
+	// Disable animations in editor
+	* {
+		animation: none !important;
+		transform: none !important;
+		transition: none !important;
+	}
+	
+	// Make sure the block wrapper is clickable
+	&.wp-block {
+		pointer-events: auto !important;
+		cursor: pointer;
+		position: relative !important;
+		
+		&:hover {
+			box-shadow: 0 0 0 1px rgba(0, 124, 186, 0.35);
+		}
+	}
+	
+	// Ensure content is selectable
+	.ad-scroll-text-block__content {
+		pointer-events: auto !important;
+		position: relative !important;
+		z-index: 2 !important;
+	}
+	
+	// Disable any GSAP transforms in editor
+	&.is-selected,
+	&.is-focused {
+		* {
+			transform: none !important;
+		}
+	}
+}
+
+// Additional editor-specific styles
+.ad-scroll-text-block-editor {
+	// Ensure the editor version is always selectable
+	position: relative !important;
+	z-index: 1 !important;
+	pointer-events: auto !important;
+	
+	// Disable all animations in editor
+	* {
+		animation: none !important;
+		transform: none !important;
+		transition: none !important;
+	}
+	
+	// Make sure the block wrapper is properly styled for selection
+	&.wp-block {
+		min-height: 50px;
+		border: 1px dashed transparent;
+		position: relative !important;
+		
+		&:hover {
+			border-color: #007cba;
+		}
+		
+		&.is-selected {
+			border-color: #007cba;
+			box-shadow: 0 0 0 1px #007cba;
+		}
+	}
+	
+	// Allow parent block selection by not capturing all events
+	&:not(.is-selected) {
+		pointer-events: auto;
+		// Don't prevent parent selection
+	}
+}
+
+// Force override for any absolute positioning in editor
+.wp-block-create-block-scroll-text-block {
+	position: relative !important;
+	z-index: 1 !important;
+	pointer-events: auto !important;
+	
+	.ad-scroll-text-block {
+		position: relative !important;
+		z-index: 1 !important;
+	}
+}
+
+// Additional overrides for group containers
+.wp-block-group .wp-block-create-block-scroll-text-block {
+	position: relative !important;
+	z-index: 1 !important;
+	pointer-events: auto !important;
+	
+	.ad-scroll-text-block {
+		position: relative !important;
+		z-index: 1 !important;
+	}
+}
+
+// Critical: Override any absolute positioning that interferes with sidebar selection
+.wp-block-create-block-scroll-text-block {
+	// Force relative positioning in editor to prevent sidebar selection issues
+	position: relative !important;
+	z-index: 1 !important;
+	pointer-events: auto !important;
+	
+	// Ensure the block wrapper doesn't interfere with sidebar
+	&.wp-block {
+		position: relative !important;
+		z-index: 1 !important;
+		pointer-events: auto !important;
+	}
+	
+	// Override any problematic styles that might interfere with selection
+	.ad-scroll-text-block {
+		position: relative !important;
+		z-index: 1 !important;
+		pointer-events: auto !important;
+		
+		// Disable any transforms that might interfere with selection
+		transform: none !important;
+	}
+}
+
+// Ensure sidebar selection works by overriding any absolute positioning
+.block-editor-block-list__layout .wp-block-create-block-scroll-text-block {
+	position: relative !important;
+	z-index: 1 !important;
+	pointer-events: auto !important;
+}
+
+// Additional overrides for editor iframe and sidebar
+.block-editor-block-list__layout,
+.block-editor-block-list__layout * {
+	.wp-block-create-block-scroll-text-block {
+		position: relative !important;
+		z-index: 1 !important;
+		pointer-events: auto !important;
+		
+		.ad-scroll-text-block {
+			position: relative !important;
+			z-index: 1 !important;
+			pointer-events: auto !important;
+			transform: none !important;
+		}
+	}
+}
+
+// Ensure the block doesn't interfere with WordPress editor selection
+.wp-block[data-type="create-block/scroll-text-block"] {
+	position: relative !important;
+	z-index: 1 !important;
+	pointer-events: auto !important;
+	
+	// Make sure it's selectable in the editor
+	&.is-selected {
+		position: relative !important;
+		z-index: 1 !important;
+	}
+}
+
+// CRITICAL: Override the problematic absolute positioning from main styles
+.ad-scroll-text-block {
+	// Override the absolute positioning that breaks Group selection
+	position: relative !important;
+	z-index: 1 !important;
+	
+	// Ensure it doesn't escape the document flow
+	display: flex !important;
+	justify-content: center !important;
+	
+	// Override the 100vh min-height that might interfere
+	min-height: auto !important;
+	
+	// Ensure proper containment within parent blocks
+	width: 100% !important;
+	max-width: 100% !important;
+}

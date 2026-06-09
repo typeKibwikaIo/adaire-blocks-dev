@@ -1,0 +1,53 @@
+/**
+ * Editor-specific styles for the Logos Block
+ */
+
+// Editor wrapper
+.logos-block-editor {
+  // Apply same container structure in editor
+  .logos-block__container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    
+    &.is-constrained {
+      max-width: var(--container-max-width, 1200px);
+    }
+  }
+
+  // Responsive container max-width for tablet in editor
+  @media (max-width: 1024px) {
+    .logos-block__container.is-constrained {
+      max-width: var(--container-max-width-tablet, var(--container-max-width, 100%));
+    }
+  }
+  
+  // Responsive container max-width for mobile in editor
+  @media (max-width: 768px) {
+    .logos-block__container.is-constrained {
+      max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%));
+    }
+  }
+  
+  h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .logos-preview {
+    .wp-block {
+      margin: 0;
+    }
+  }
+  
+  // Show cursor in editor preview
+  .logos-block-preview {
+    cursor: default;
+    background: #f9f9f9;
+    
+    * {
+      cursor: default;
+    }
+  }
+}

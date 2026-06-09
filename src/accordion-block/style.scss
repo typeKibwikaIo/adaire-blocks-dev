@@ -1,0 +1,378 @@
+.adaire-accordion {
+  /* Constrained container support - apply to inner container */
+  .adaire-accordion__container.is-constrained {
+    max-width: var(--acc-container-max-width, 1200px);
+    margin-left: auto;
+    margin-right: auto;
+
+    /* Responsive container max-width for tablet */
+    @media (max-width: 1024px) {
+      max-width: var(--acc-container-max-width-tablet, var(--acc-container-max-width, 100%));
+    }
+
+    /* Responsive container max-width for mobile */
+    @media (max-width: 768px) {
+      max-width: var(--acc-container-max-width-mobile, var(--acc-container-max-width-tablet, 100%));
+    }
+
+    /* Responsive container max-width for smartwatch */
+    @media (max-width: 320px) {
+      max-width: var(--acc-container-max-width-watch, var(--acc-container-max-width-mobile, 100%));
+    }
+  }
+  --acc-title-color: #111;
+  --acc-content-color: #444;
+  --acc-bg: #fff;
+  --acc-chevron: #111;
+  --acc-chevron-size: 16px;
+  --acc-title-size: 18px;
+  --acc-content-size: 16px;
+  --acc-gap: 8px;
+  --acc-radius: 8px;
+  --acc-padding-top: 20px;
+  --acc-padding-right: 20px;
+  --acc-padding-bottom: 20px;
+  --acc-padding-left: 20px;
+  --acc-duration: 300ms;
+  --acc-easing: ease;
+  --acc-margin-top: 0px;
+  --acc-margin-right: 0px;
+  --acc-margin-bottom: 0px;
+  --acc-margin-left: 0px;
+  --acc-title-weight: 600;
+  --acc-content-weight: 400;
+  --acc-shadow-intensity: 0.08;
+  --acc-content-bg: #f8fafc;
+
+  display: block;
+  font-family: inherit;
+  .adaire-accordion__container {
+    margin: var(--acc-margin-top) var(--acc-margin-right) var(--acc-margin-bottom) var(--acc-margin-left);
+    font-family: inherit;
+  }
+
+  /* Responsive horizontal margins */
+  @media (max-width: 1024px) {
+    .adaire-accordion__container {
+      margin-left: var(--acc-margin-h-tablet, var(--acc-margin-left));
+      margin-right: var(--acc-margin-h-tablet, var(--acc-margin-right));
+    }
+  }
+  @media (max-width: 768px) {
+    .adaire-accordion__container {
+      margin-left: var(--acc-margin-h-mobile, var(--acc-margin-left));
+      margin-right: var(--acc-margin-h-mobile, var(--acc-margin-right));
+    }
+  }
+  @media (max-width: 320px) {
+    .adaire-accordion__container {
+      margin-left: var(--acc-margin-h-watch, var(--acc-margin-left));
+      margin-right: var(--acc-margin-h-watch, var(--acc-margin-right));
+    }
+  }
+
+  /* When block is wide/full aligned, themes often neutralize margins.
+     Use padding as a fallback so horizontal spacing still shows. */
+  &.alignfull,
+  &.alignwide {
+    .adaire-accordion__container {
+      padding-left: var(--acc-margin-h-desktop, var(--acc-margin-left));
+      padding-right: var(--acc-margin-h-desktop, var(--acc-margin-right));
+    }
+
+    @media (max-width: 1024px) {
+      .adaire-accordion__container {
+        padding-left: var(--acc-margin-h-tablet, var(--acc-margin-left));
+        padding-right: var(--acc-margin-h-tablet, var(--acc-margin-right));
+      }
+    }
+    @media (max-width: 768px) {
+      .adaire-accordion__container {
+        padding-left: var(--acc-margin-h-mobile, var(--acc-margin-left));
+        padding-right: var(--acc-margin-h-mobile, var(--acc-margin-right));
+      }
+    }
+    @media (max-width: 320px) {
+      .adaire-accordion__container {
+        padding-left: var(--acc-margin-h-watch, var(--acc-margin-left));
+        padding-right: var(--acc-margin-h-watch, var(--acc-margin-right));
+      }
+    }
+  }
+  
+  .adaire-accordion__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--acc-gap);
+
+    /* Responsive gap - tablet */
+    @media (max-width: 1024px) {
+      gap: var(--acc-gap-tablet, var(--acc-gap));
+    }
+
+    /* Responsive gap - mobile */
+    @media (max-width: 768px) {
+      gap: var(--acc-gap-mobile, var(--acc-gap-tablet, var(--acc-gap)));
+    }
+
+    /* Responsive gap - smartwatch */
+    @media (max-width: 320px) {
+      gap: var(--acc-gap-watch, var(--acc-gap-mobile, var(--acc-gap-tablet, var(--acc-gap))));
+    }
+  }
+
+  .adaire-accordion__item {
+    background: var(--acc-bg);
+    border-radius: var(--acc-radius);
+    overflow: hidden;
+    transition: all var(--acc-duration) var(--acc-easing);
+    position: relative;
+    /* Base shadow: alpha driven by intensity */
+    box-shadow: 0 1px 4px rgba(0,0,0,var(--acc-shadow-intensity, 0.08));
+
+    /* Responsive border radius - tablet */
+    @media (max-width: 1024px) {
+      border-radius: var(--acc-radius-tablet, var(--acc-radius));
+    }
+
+    /* Responsive border radius - mobile */
+    @media (max-width: 768px) {
+      border-radius: var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius)));
+    }
+
+    /* Responsive border radius - smartwatch */
+    @media (max-width: 320px) {
+      border-radius: var(--acc-radius-watch, var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius))));
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      /* Hover shadow: alpha driven by intensity */
+      box-shadow: 0 4px 12px rgba(0,0,0,var(--acc-shadow-intensity, 0.12));
+    }
+
+    &.is-open {
+      /* Open shadow: alpha driven by intensity */
+      box-shadow: 0 8px 25px rgba(0,0,0,var(--acc-shadow-intensity, 0.16));
+      transform: translateY(-2px);
+    }
+  }
+
+  .adaire-accordion__header {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: var(--acc-padding-top, 20px) var(--acc-padding-right, 20px) var(--acc-padding-bottom, 20px) var(--acc-padding-left, 20px) !important;
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--acc-duration) var(--acc-easing);
+    position: relative;
+    font-family: inherit;
+
+    &:hover {
+      background: rgba(0,0,0,0.02);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--acc-chevron);
+      outline-offset: 2px;
+    }
+
+    /* Responsive header padding - tablet */
+    @media (max-width: 1024px) {
+      padding:
+        var(--acc-padding-top-tablet, var(--acc-padding-top, 20px))
+        var(--acc-padding-right-tablet, var(--acc-padding-right, 20px))
+        var(--acc-padding-bottom-tablet, var(--acc-padding-bottom, 20px))
+        var(--acc-padding-left-tablet, var(--acc-padding-left, 20px)) !important;
+    }
+
+    /* Responsive header padding - mobile */
+    @media (max-width: 768px) {
+      padding:
+        var(--acc-padding-top-mobile, var(--acc-padding-top-tablet, var(--acc-padding-top, 20px)))
+        var(--acc-padding-right-mobile, var(--acc-padding-right-tablet, var(--acc-padding-right, 20px)))
+        var(--acc-padding-bottom-mobile, var(--acc-padding-bottom-tablet, var(--acc-padding-bottom, 20px)))
+        var(--acc-padding-left-mobile, var(--acc-padding-left-tablet, var(--acc-padding-left, 20px))) !important;
+    }
+
+    /* Responsive header padding - smartwatch */
+    @media (max-width: 320px) {
+      padding:
+        var(--acc-padding-top-watch, var(--acc-padding-top-mobile, var(--acc-padding-top-tablet, var(--acc-padding-top, 20px))))
+        var(--acc-padding-right-watch, var(--acc-padding-right-mobile, var(--acc-padding-right-tablet, var(--acc-padding-right, 20px))))
+        var(--acc-padding-bottom-watch, var(--acc-padding-bottom-mobile, var(--acc-padding-bottom-tablet, var(--acc-padding-bottom, 20px))))
+        var(--acc-padding-left-watch, var(--acc-padding-left-mobile, var(--acc-padding-left-tablet, var(--acc-padding-left, 20px)))) !important;
+    }
+  }
+
+  .adaire-accordion__title {
+    color: var(--acc-title-color);
+    font-size: var(--acc-title-size);
+    line-height: 1.4;
+    font-weight: var(--acc-title-weight);
+    font-family: inherit;
+    margin: 0;
+    flex: 1;
+
+    // Ensure same font family as content
+    * {
+      font-family: inherit;
+    }
+
+    /* Responsive title font size - tablet */
+    @media (max-width: 1024px) {
+      font-size: var(--acc-title-size-tablet, var(--acc-title-size));
+    }
+
+    /* Responsive title font size - mobile */
+    @media (max-width: 768px) {
+      font-size: var(--acc-title-size-mobile, var(--acc-title-size-tablet, var(--acc-title-size)));
+    }
+
+    /* Responsive title font size - smartwatch */
+    @media (max-width: 320px) {
+      font-size: var(--acc-title-size-watch, var(--acc-title-size-mobile, var(--acc-title-size-tablet, var(--acc-title-size))));
+    }
+  }
+
+  .adaire-accordion__chevron {
+    color: var(--acc-chevron);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(0deg);
+    transition: all var(--acc-duration) var(--acc-easing);
+    flex-shrink: 0;
+
+    svg {
+      width: var(--acc-chevron-size, 16px) !important;
+      height: var(--acc-chevron-size, 16px) !important;
+      transition: transform var(--acc-duration) var(--acc-easing);
+      display: block;
+
+      /* Responsive chevron size - tablet */
+      @media (max-width: 1024px) {
+        width: var(--acc-chevron-size-tablet, var(--acc-chevron-size, 16px)) !important;
+        height: var(--acc-chevron-size-tablet, var(--acc-chevron-size, 16px)) !important;
+      }
+
+      /* Responsive chevron size - mobile */
+      @media (max-width: 768px) {
+        width: var(--acc-chevron-size-mobile, var(--acc-chevron-size-tablet, var(--acc-chevron-size, 16px))) !important;
+        height: var(--acc-chevron-size-mobile, var(--acc-chevron-size-tablet, var(--acc-chevron-size, 16px))) !important;
+      }
+
+      /* Responsive chevron size - smartwatch */
+      @media (max-width: 320px) {
+        width: var(--acc-chevron-size-watch, var(--acc-chevron-size-mobile, var(--acc-chevron-size-tablet, var(--acc-chevron-size, 16px)))) !important;
+        height: var(--acc-chevron-size-watch, var(--acc-chevron-size-mobile, var(--acc-chevron-size-tablet, var(--acc-chevron-size, 16px)))) !important;
+      }
+    }
+  }
+  
+  // Explicit selector to ensure chevron size control works for all accordion items
+  .adaire-accordion__item .adaire-accordion__chevron svg {
+    width: var(--acc-chevron-size, 16px) !important;
+    height: var(--acc-chevron-size, 16px) !important;
+  }
+
+  .adaire-accordion__item.is-open .adaire-accordion__chevron {
+    transform: rotate(180deg);
+  }
+
+  .adaire-accordion__panel {
+    will-change: height;
+    height: 0;
+    overflow: hidden;
+    transition: height var(--acc-duration) var(--acc-easing);
+  }
+
+  // In the editor, use auto height for open items (no JS)
+  .editor-styles-wrapper & .adaire-accordion__item.is-open .adaire-accordion__panel {
+    height: auto;
+  }
+
+  .adaire-accordion__content {
+    color: var(--acc-content-color);
+    font-size: var(--acc-content-size);
+    font-weight: var(--acc-content-weight);
+    font-family: inherit;
+    line-height: 1.6;
+    padding: var(--acc-padding);
+    margin: 0;
+    background: var(--acc-content-bg);
+    border-radius: 0 0 var(--acc-radius) var(--acc-radius);
+    border-top: var(--acc-divider-thickness, 1px) solid var(--acc-divider-color, #e2e8f0);
+
+    // Ensure same font family as title
+    * {
+      font-family: inherit;
+    }
+
+    /* Responsive content font size - tablet */
+    @media (max-width: 1024px) {
+      font-size: var(--acc-content-size-tablet, var(--acc-content-size));
+      border-radius: 0 0 var(--acc-radius-tablet, var(--acc-radius)) var(--acc-radius-tablet, var(--acc-radius));
+    }
+
+    /* Responsive content font size - mobile */
+    @media (max-width: 768px) {
+      font-size: var(--acc-content-size-mobile, var(--acc-content-size-tablet, var(--acc-content-size)));
+      border-radius: 0 0 var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius))) var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius)));
+    }
+
+    /* Responsive content font size - smartwatch */
+    @media (max-width: 320px) {
+      font-size: var(--acc-content-size-watch, var(--acc-content-size-mobile, var(--acc-content-size-tablet, var(--acc-content-size))));
+      border-radius: 0 0 var(--acc-radius-watch, var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius)))) var(--acc-radius-watch, var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius))));
+    }
+    
+    p {
+      margin: 0 0 1em 0;
+      font-family: inherit;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    
+    strong, b {
+      font-weight: 700;
+      font-family: inherit;
+    }
+    
+    em, i {
+      font-style: italic;
+      font-family: inherit;
+    }
+    
+    a {
+      color: inherit;
+      text-decoration: underline;
+      font-family: inherit;
+      
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+/* Explicit root-level selector to ensure chevron size control works */
+.adaire-accordion .adaire-accordion__chevron svg,
+.adaire-accordion__item .adaire-accordion__chevron svg {
+  width: var(--acc-chevron-size, 16px) !important;
+  height: var(--acc-chevron-size, 16px) !important;
+}
+
+

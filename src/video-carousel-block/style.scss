@@ -1,0 +1,493 @@
+// Swiper base CSS
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+
+// Breakpoint Mixins (standard breakpoints for all blocks)
+@mixin tablet {
+  @media (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin smartwatch {
+  @media (max-width: 320px) {
+    @content;
+  }
+}
+
+.adaire-video-carousel {
+  // Card width is intentionally not user-configurable; Swiper + slidesPerView controls sizing.
+  --adaire-video-carousel-card-width: 260px;
+  --adaire-video-carousel-card-height: 460px;
+  --adaire-video-carousel-gap: 24px;
+  --adaire-video-carousel-slides-per-view-desktop: 4;
+  --adaire-video-carousel-drag-cursor-size: 80px;
+  --adaire-video-carousel-drag-cursor-font-size: 16px;
+  --adaire-video-carousel-drag-cursor-font-weight: 500;
+  --adaire-video-carousel-drag-cursor-color: #ffffff;
+  --adaire-video-carousel-drag-cursor-bg: #7c3aed;
+  --adaire-video-carousel-drag-cursor-text-transform: uppercase;
+
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  &__container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+
+    &.is-constrained {
+      max-width: var(--container-max-width, 1200px);
+    }
+  }
+
+  // Responsive container max-width - tablet (up to 1024px)
+  @include tablet {
+    &__container.is-constrained {
+      max-width: var(--container-max-width-tablet, var(--container-max-width, 100%));
+    }
+  }
+
+  // Responsive container max-width - mobile (up to 768px)
+  @include mobile {
+    &__container.is-constrained {
+      max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%));
+    }
+  }
+
+  // Responsive container max-width - smartwatch (up to 320px)
+  @include smartwatch {
+    &__container.is-constrained {
+      max-width: var(--container-max-width-watch, var(--container-max-width-mobile, 100%));
+    }
+  }
+
+  &__wrapper {
+    position: relative;
+    width: 100%;
+    // Only clip horizontally so we don't show empty space past last slide,
+    // but keep vertical overflow visible so meta/pagination aren't cut off.
+    overflow-x: hidden;
+    overflow-y: visible;
+    cursor: grab;
+
+    &.is-grabbing {
+      cursor: grabbing;
+    }
+  }
+
+  // Swiper container
+  &__swiper {
+    // padding-left: 10px; //config, responsive
+    width: 100%;
+    padding-bottom: 24px;
+    // Clip only horizontally (prevents empty space past last slide) without cutting off meta/pagination.
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  // Pagination (simple + minimal)
+  &__pagination {
+    position: relative;
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+
+    .swiper-pagination-bullet {
+      width: 10px;
+      height: 10px;
+      opacity: 0.4;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .swiper-pagination-bullet-active {
+      opacity: 1;
+      background: rgba(255, 255, 255, 1);
+    }
+  }
+
+  // Swiper wrapper (track)
+  &__list {
+    align-items: stretch;
+    // Responsive padding-left
+    padding-left: var(--list-padding-left, 10px);
+
+    // Tablet (up to 1024px)
+    @include tablet {
+      padding-left: var(--list-padding-left-tablet, var(--list-padding-left, 10px));
+    }
+
+    // Mobile (up to 768px)
+    @include mobile {
+      padding-left: var(--list-padding-left-mobile, var(--list-padding-left-tablet, 10px));
+    }
+
+    // Smartwatch (up to 320px)
+    @include smartwatch {
+      padding-left: var(--list-padding-left-watch, var(--list-padding-left-mobile, 5px));
+    }
+  }
+
+  &__slide {
+    user-select: none;
+  }
+
+  &__card {
+    width: 100%;
+    height: var(--adaire-video-carousel-card-height);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__video {
+    // Let the video area take remaining space, but always leave room for meta below.
+    flex: 1 1 auto;
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    background: #000;
+
+    video,
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+
+    .adaire-video-carousel__video-overlay-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.25);
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: default;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      opacity: 1;
+      z-index: 2;
+      pointer-events: none;
+
+      &.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      &-icon {
+        width: 62px;
+        height: 62px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: auto;
+        cursor: pointer;
+
+        &::before {
+          content: "";
+          width: 0;
+          height: 0;
+          border-top: 10px solid transparent;
+          border-bottom: 10px solid transparent;
+          border-left: 16px solid #ffffff;
+          margin-left: 2px;
+        }
+      }
+    }
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 14px;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 10px 12px 12px;
+    background: var(--adaire-video-carousel-meta-bg, rgba(15, 23, 42, 0.9));
+    text-align: var(--adaire-video-carousel-meta-align-desktop, left);
+    gap: 8px;
+  }
+
+  &__meta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--adaire-video-carousel-name-font-size-desktop, 20px);
+    font-weight: 600;
+    color: var(--adaire-video-carousel-name-color, #ffffff);
+    line-height: 1.4;
+  }
+
+  &__position {
+    margin: 0;
+    font-size: var(--adaire-video-carousel-position-font-size-desktop, 18px);
+    color: var(--adaire-video-carousel-position-color, #d1d5db);
+    line-height: 1.4;
+    opacity: 0.9;
+  }
+
+  &__meta-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+
+    a,
+    span {
+      color: var(--adaire-video-carousel-social-icon-color, #ffffff);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--adaire-video-carousel-social-icon-size-desktop, 20px);
+      transition: color 0.2s ease, transform 0.2s ease;
+
+      &:hover {
+        color: var(--adaire-video-carousel-social-icon-hover-color, #e5e7eb);
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  // Drag cursor
+  &__drag-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--adaire-video-carousel-drag-cursor-size);
+    height: var(--adaire-video-carousel-drag-cursor-size);
+    border-radius: 50%;
+    background-color: var(--adaire-video-carousel-drag-cursor-bg);
+    color: var(--adaire-video-carousel-drag-cursor-color);
+    font-size: var(--adaire-video-carousel-drag-cursor-font-size);
+    font-weight: var(--adaire-video-carousel-drag-cursor-font-weight);
+    text-transform: var(--adaire-video-carousel-drag-cursor-text-transform);
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: center center;
+
+    @media (hover: none) {
+      display: none !important;
+    }
+
+    &--preview {
+      position: absolute;
+      top: auto;
+      left: auto;
+      right: 24px;
+      bottom: 24px;
+      opacity: 0.85;
+      transform: none;
+    }
+  }
+}
+
+
+// Swiper specifics
+.adaire-video-carousel {
+  .swiper-wrapper {
+    align-items: stretch;
+  }
+
+  .swiper-slide {
+    height: auto;
+  }
+}
+
+
+// Editor-only preview layout so videos don't stack vertically
+// IMPORTANT: scope to editor only, since `.wp-block-create-block-video-carousel-block` also exists on the frontend.
+.editor-styles-wrapper .wp-block-create-block-video-carousel-block {
+  .adaire-video-carousel {
+    &__wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    &__track {
+      display: flex;
+      gap: var(--adaire-video-carousel-gap);
+      padding-bottom: 24px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar {
+        height: 4px;
+      }
+    }
+
+    &__slide {
+      flex: 0 0 auto;
+      width: calc(
+        (100% - (var(--adaire-video-carousel-gap) * (var(--adaire-video-carousel-slides-per-view-desktop) - 1))) /
+          var(--adaire-video-carousel-slides-per-view-desktop)
+      );
+      max-width: var(--adaire-video-carousel-card-width);
+      user-select: none;
+
+      @media (min-width: 601px) and (max-width: 1024px) {
+        width: calc(
+          (100% - (var(--adaire-video-carousel-gap) * (var(--adaire-video-carousel-slides-per-view-tablet) - 1))) /
+            var(--adaire-video-carousel-slides-per-view-tablet)
+        );
+      }
+
+      @media (max-width: 600px) {
+        width: calc(
+          (100% - (var(--adaire-video-carousel-gap) * (var(--adaire-video-carousel-slides-per-view-mobile) - 1))) /
+            var(--adaire-video-carousel-slides-per-view-mobile)
+        );
+        min-width: 220px;
+      }
+    }
+  }
+}
+
+// Responsive typography overrides for meta section
+@include tablet {
+  .adaire-video-carousel {
+    &__meta {
+      text-align: var(
+        --adaire-video-carousel-meta-align-tablet,
+        var(--adaire-video-carousel-meta-align-desktop, left)
+      );
+    }
+
+    &__title {
+      font-size: var(
+        --adaire-video-carousel-name-font-size-tablet,
+        var(--adaire-video-carousel-name-font-size-desktop, 18px)
+      );
+    }
+
+    &__position {
+      font-size: var(
+        --adaire-video-carousel-position-font-size-tablet,
+        var(--adaire-video-carousel-position-font-size-desktop, 16px)
+      );
+    }
+
+    &__meta-icons {
+      a,
+      span {
+        font-size: var(
+          --adaire-video-carousel-social-icon-size-tablet,
+          var(--adaire-video-carousel-social-icon-size-desktop, 18px)
+        );
+      }
+    }
+  }
+}
+
+@include mobile {
+  .adaire-video-carousel {
+    &__meta {
+      text-align: var(
+        --adaire-video-carousel-meta-align-mobile,
+        var(--adaire-video-carousel-meta-align-tablet, left)
+      );
+    }
+
+    &__title {
+      font-size: var(
+        --adaire-video-carousel-name-font-size-mobile,
+        var(--adaire-video-carousel-name-font-size-tablet, 16px)
+      );
+    }
+
+    &__position {
+      font-size: var(
+        --adaire-video-carousel-position-font-size-mobile,
+        var(--adaire-video-carousel-position-font-size-tablet, 14px)
+      );
+    }
+
+    &__meta-icons {
+      a,
+      span {
+        font-size: var(
+          --adaire-video-carousel-social-icon-size-mobile,
+          var(--adaire-video-carousel-social-icon-size-tablet, 18px)
+        );
+      }
+    }
+  }
+}
+
+@include smartwatch {
+  .adaire-video-carousel {
+    &__meta {
+      text-align: var(
+        --adaire-video-carousel-meta-align-watch,
+        var(--adaire-video-carousel-meta-align-mobile, left)
+      );
+    }
+
+    &__title {
+      font-size: var(
+        --adaire-video-carousel-name-font-size-watch,
+        var(--adaire-video-carousel-name-font-size-mobile, 14px)
+      );
+    }
+
+    &__position {
+      font-size: var(
+        --adaire-video-carousel-position-font-size-watch,
+        var(--adaire-video-carousel-position-font-size-mobile, 12px)
+      );
+    }
+
+    &__meta-icons {
+      a,
+      span {
+        font-size: var(
+          --adaire-video-carousel-social-icon-size-watch,
+          var(--adaire-video-carousel-social-icon-size-mobile, 16px)
+        );
+      }
+    }
+  }
+}
+
+

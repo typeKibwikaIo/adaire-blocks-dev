@@ -1,0 +1,17 @@
+// Horizontal Scroll Card — editor-only styles
+
+.adaire-hsc__card {
+	// Ensure cards are visible and have minimum dimensions in the editor
+	min-height: 300px;
+	cursor: default;
+
+	.adaire-hsc__card-right {
+		// Force relative positioning so the placeholder fills correctly in editor
+		position: relative;
+	}
+
+	// Image placeholder button appearance in editor
+	.adaire-hsc__card-image-placeholder {
+		min-height: 180px;
+	}
+}

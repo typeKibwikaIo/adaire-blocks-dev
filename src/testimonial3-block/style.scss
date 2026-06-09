@@ -1,0 +1,365 @@
+* {
+    box-sizing: border-box;
+}
+
+.adaire-testimonial3 {
+    --testimonial3-bg-color: #6B46C1;
+    --testimonial3-card-bg: #ffffff;
+    --testimonial3-card-radius: 16px;
+    --testimonial3-card-gap: 24px;
+    --testimonial3-card-padding-desktop: 40px;
+    --testimonial3-card-padding-tablet: 30px;
+    --testimonial3-card-padding-mobile: 20px;
+    --testimonial3-quote-icon-size: 60px;
+    --testimonial3-quote-icon-color: #6B46C1;
+    --testimonial3-quote-color: #1f2937;
+    --testimonial3-quote-font-size-desktop: 16px;
+    --testimonial3-quote-font-size-tablet: 15px;
+    --testimonial3-quote-font-size-mobile: 14px;
+    --testimonial3-quote-font-weight: 400;
+    --testimonial3-name-color: #6B46C1;
+    --testimonial3-name-font-size-desktop: 18px;
+    --testimonial3-name-font-size-tablet: 17px;
+    --testimonial3-name-font-size-mobile: 16px;
+    --testimonial3-name-font-weight: 600;
+    --testimonial3-title-color: #1f2937;
+    --testimonial3-title-font-size-desktop: 14px;
+    --testimonial3-title-font-size-tablet: 13px;
+    --testimonial3-title-font-size-mobile: 12px;
+    --testimonial3-title-font-weight: 400;
+    --testimonial3-profile-size: 60px;
+    --testimonial3-slides-per-view-desktop: 3;
+    --testimonial3-slides-per-view-tablet: 2;
+    --testimonial3-slides-per-view-mobile: 1;
+
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    background-color: var(--testimonial3-bg-color);
+    padding: 60px 0;
+
+    &__container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        padding-top: var(--padding-top, 0);
+        padding-right: var(--padding-right, 0);
+        padding-bottom: var(--padding-bottom, 0);
+        padding-left: var(--padding-left, 0);
+
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px);
+        }
+    }
+
+    // Responsive container max-width - mobile (base, up to 600px)
+    @media (max-width: 600px) {
+        &__container {
+            &.is-constrained {
+                max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%));
+            }
+            padding-top: var(--padding-top-mobile, var(--padding-top-tablet, var(--padding-top, 0)));
+            padding-right: var(--padding-right-mobile, var(--padding-right-tablet, var(--padding-right, 0)));
+            padding-bottom: var(--padding-bottom-mobile, var(--padding-bottom-tablet, var(--padding-bottom, 0)));
+            padding-left: var(--padding-left-mobile, var(--padding-left-tablet, var(--padding-left, 0)));
+        }
+    }
+
+    // Responsive container max-width - tablet (601px to 1024px)
+    @media (min-width: 601px) and (max-width: 1024px) {
+        &__container {
+            &.is-constrained {
+                max-width: var(--container-max-width-tablet, var(--container-max-width-small-laptop, 100%));
+            }
+            padding-top: var(--padding-top-tablet, var(--padding-top, 0));
+            padding-right: var(--padding-right-tablet, var(--padding-right, 0));
+            padding-bottom: var(--padding-bottom-tablet, var(--padding-bottom, 0));
+            padding-left: var(--padding-left-tablet, var(--padding-left, 0));
+        }
+    }
+
+    // Responsive container max-width - small laptop (1025px to 1300px)
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        &__container {
+            &.is-constrained {
+                max-width: var(--container-max-width-small-laptop, var(--container-max-width, 1200px));
+            }
+        }
+    }
+
+    // Responsive container max-width - desktop (1301px to 1920px)
+    @media (min-width: 1301px) and (max-width: 1920px) {
+        &__container {
+            &.is-constrained {
+                max-width: var(--container-max-width, 1200px);
+            }
+        }
+    }
+
+    // Responsive container max-width - big desktop (≥ 1921px)
+    @media (min-width: 1921px) {
+        &__container {
+            &.is-constrained {
+                max-width: var(--container-max-width-big-desktop, var(--container-max-width, 1200px));
+            }
+        }
+    }
+
+    // Responsive margins
+    @media (min-width: 601px) and (max-width: 1024px) {
+        margin-top: var(--margin-top-tablet, 0) !important;
+        margin-right: var(--margin-right-tablet, 0) !important;
+        margin-bottom: var(--margin-bottom-tablet, 0) !important;
+        margin-left: var(--margin-left-tablet, 0) !important;
+    }
+
+    @media (max-width: 600px) {
+        margin-top: var(--margin-top-mobile, 0) !important;
+        margin-right: var(--margin-right-mobile, 0) !important;
+        margin-bottom: var(--margin-bottom-mobile, 0) !important;
+        margin-left: var(--margin-left-mobile, 0) !important;
+    }
+
+    // Wrapper
+    &__wrapper {
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
+    // Track (scrollable container)
+    &__track {
+        display: flex;
+        gap: var(--testimonial3-card-gap);
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: none;
+        scroll-behavior: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        will-change: scroll-position;
+        padding: 20px 0;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    // Individual slide
+    &__slide {
+        flex: 0 0 auto;
+        scroll-snap-align: none;
+        width: calc((100% - (var(--testimonial3-card-gap) * (var(--testimonial3-slides-per-view-desktop) - 1))) / var(--testimonial3-slides-per-view-desktop));
+        min-width: 280px;
+        max-width: 400px;
+
+        @media (min-width: 601px) and (max-width: 1024px) {
+            width: calc((100% - (var(--testimonial3-card-gap) * (var(--testimonial3-slides-per-view-tablet) - 1))) / var(--testimonial3-slides-per-view-tablet));
+        }
+
+        @media (max-width: 600px) {
+            width: calc((100% - (var(--testimonial3-card-gap) * (var(--testimonial3-slides-per-view-mobile) - 1))) / var(--testimonial3-slides-per-view-mobile));
+            min-width: 250px;
+        }
+    }
+
+    // Card
+    &__card {
+        background: var(--testimonial3-card-bg);
+        border-radius: var(--testimonial3-card-radius);
+        padding: var(--testimonial3-card-padding-desktop);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: none;
+        transform: translateX(10px);
+
+        @media (min-width: 601px) and (max-width: 1024px) {
+            padding: var(--testimonial3-card-padding-tablet);
+        }
+
+        @media (max-width: 600px) {
+            padding: var(--testimonial3-card-padding-mobile);
+        }
+    }
+
+    // Quote icon
+    &__quote-icon {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: flex-start;
+
+        svg {
+            width: var(--testimonial3-quote-icon-size);
+            height: var(--testimonial3-quote-icon-size);
+        }
+    }
+
+    // Quote text
+    &__quote {
+        color: var(--testimonial3-quote-color);
+        font-size: var(--testimonial3-quote-font-size-desktop);
+        font-weight: var(--testimonial3-quote-font-weight);
+        line-height: 1.6;
+        margin-bottom: 24px;
+        flex-grow: 1;
+
+        @media (min-width: 601px) and (max-width: 1024px) {
+            font-size: var(--testimonial3-quote-font-size-tablet);
+        }
+
+        @media (max-width: 600px) {
+            font-size: var(--testimonial3-quote-font-size-mobile);
+        }
+    }
+
+    // Author section
+    &__author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: auto;
+    }
+
+    // Profile image
+    &__profile-image {
+        width: var(--testimonial3-profile-size);
+        height: var(--testimonial3-profile-size);
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    // Author info
+    &__author-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    // Name
+    &__name {
+        color: var(--testimonial3-name-color);
+        font-size: var(--testimonial3-name-font-size-desktop);
+        font-weight: var(--testimonial3-name-font-weight);
+        line-height: 1.2;
+
+        @media (min-width: 601px) and (max-width: 1024px) {
+            font-size: var(--testimonial3-name-font-size-tablet);
+        }
+
+        @media (max-width: 600px) {
+            font-size: var(--testimonial3-name-font-size-mobile);
+        }
+    }
+
+    // Title
+    &__title {
+        color: var(--testimonial3-title-color);
+        font-size: var(--testimonial3-title-font-size-desktop);
+        font-weight: var(--testimonial3-title-font-weight);
+        line-height: 1.2;
+
+        @media (min-width: 601px) and (max-width: 1024px) {
+            font-size: var(--testimonial3-title-font-size-tablet);
+        }
+
+        @media (max-width: 600px) {
+            font-size: var(--testimonial3-title-font-size-mobile);
+        }
+    }
+
+    // Pagination
+    &__pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 30px;
+        padding: 0 20px;
+    }
+
+    // Drag cursor
+    &__drag-cursor {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 20;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--testimonial3-drag-cursor-size-desktop, 80px);
+        height: var(--testimonial3-drag-cursor-size-desktop, 80px);
+        border-radius: 50%;
+        background-color: var(--testimonial3-drag-cursor-bg-desktop, #7c3aed);
+        color: var(--testimonial3-drag-cursor-color-desktop, #ffffff);
+        font-size: var(--testimonial3-drag-cursor-font-size-desktop, 16px);
+        font-weight: var(--testimonial3-drag-cursor-font-weight-desktop, 500);
+        text-transform: var(--testimonial3-drag-cursor-text-transform-desktop, uppercase);
+        transform-origin: center;
+        transform: translate(-50%, -50%) scale(0);
+        transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        user-select: none;
+        white-space: nowrap;
+        
+        @media (min-width: 1921px) {
+            width: var(--testimonial3-drag-cursor-size-big-desktop, var(--testimonial3-drag-cursor-size-desktop, 80px));
+            height: var(--testimonial3-drag-cursor-size-big-desktop, var(--testimonial3-drag-cursor-size-desktop, 80px));
+            font-size: var(--testimonial3-drag-cursor-font-size-big-desktop, var(--testimonial3-drag-cursor-font-size-desktop, 16px));
+            font-weight: var(--testimonial3-drag-cursor-font-weight-big-desktop, var(--testimonial3-drag-cursor-font-weight-desktop, 500));
+            color: var(--testimonial3-drag-cursor-color-big-desktop, var(--testimonial3-drag-cursor-color-desktop, #ffffff));
+            background-color: var(--testimonial3-drag-cursor-bg-big-desktop, var(--testimonial3-drag-cursor-bg-desktop, #7c3aed));
+            text-transform: var(--testimonial3-drag-cursor-text-transform-big-desktop, var(--testimonial3-drag-cursor-text-transform-desktop, uppercase));
+        }
+        
+        @media (min-width: 1025px) and (max-width: 1300px) {
+            width: var(--testimonial3-drag-cursor-size-small-laptop, var(--testimonial3-drag-cursor-size-desktop, 80px));
+            height: var(--testimonial3-drag-cursor-size-small-laptop, var(--testimonial3-drag-cursor-size-desktop, 80px));
+            font-size: var(--testimonial3-drag-cursor-font-size-small-laptop, var(--testimonial3-drag-cursor-font-size-desktop, 16px));
+            font-weight: var(--testimonial3-drag-cursor-font-weight-small-laptop, var(--testimonial3-drag-cursor-font-weight-desktop, 500));
+            color: var(--testimonial3-drag-cursor-color-small-laptop, var(--testimonial3-drag-cursor-color-desktop, #ffffff));
+            background-color: var(--testimonial3-drag-cursor-bg-small-laptop, var(--testimonial3-drag-cursor-bg-desktop, #7c3aed));
+            text-transform: var(--testimonial3-drag-cursor-text-transform-small-laptop, var(--testimonial3-drag-cursor-text-transform-desktop, uppercase));
+        }
+        
+        @media (min-width: 601px) and (max-width: 1024px) {
+            width: var(--testimonial3-drag-cursor-size-tablet, var(--testimonial3-drag-cursor-size-mobile, 80px));
+            height: var(--testimonial3-drag-cursor-size-tablet, var(--testimonial3-drag-cursor-size-mobile, 80px));
+            font-size: var(--testimonial3-drag-cursor-font-size-tablet, var(--testimonial3-drag-cursor-font-size-mobile, 16px));
+            font-weight: var(--testimonial3-drag-cursor-font-weight-tablet, var(--testimonial3-drag-cursor-font-weight-mobile, 500));
+            color: var(--testimonial3-drag-cursor-color-tablet, var(--testimonial3-drag-cursor-color-mobile, #ffffff));
+            background-color: var(--testimonial3-drag-cursor-bg-tablet, var(--testimonial3-drag-cursor-bg-mobile, #7c3aed));
+            text-transform: var(--testimonial3-drag-cursor-text-transform-tablet, var(--testimonial3-drag-cursor-text-transform-mobile, uppercase));
+        }
+        
+        @media (max-width: 600px) {
+            width: var(--testimonial3-drag-cursor-size-mobile, 80px);
+            height: var(--testimonial3-drag-cursor-size-mobile, 80px);
+            font-size: var(--testimonial3-drag-cursor-font-size-mobile, 16px);
+            font-weight: var(--testimonial3-drag-cursor-font-weight-mobile, 500);
+            color: var(--testimonial3-drag-cursor-color-mobile, #ffffff);
+            background-color: var(--testimonial3-drag-cursor-bg-mobile, #7c3aed);
+            text-transform: var(--testimonial3-drag-cursor-text-transform-mobile, uppercase);
+        }
+    }
+
+    &__pagination-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: block;
+
+        &.is-active {
+            background: rgba(255, 255, 255, 1);
+            width: 24px;
+            border-radius: 4px;
+        }
+    }
+}

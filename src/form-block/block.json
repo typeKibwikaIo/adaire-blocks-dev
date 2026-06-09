@@ -1,0 +1,188 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/form-block",
+  "version": "0.1.0",
+  "title": "Form",
+  "category": "adaire-start-actions",
+  "description": "Form block for Adaire Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "textdomain": "form-block",
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Contact"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Send us a message"
+    },
+    "text": {
+      "type": "string",
+      "default": "A clean starter form layout for collecting user enquiries."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Submit"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "destinationEmail": {
+      "type": "string",
+      "default": ""
+    },
+    "ccEmail": {
+      "type": "string",
+      "default": ""
+    },
+    "bccEmail": {
+      "type": "string",
+      "default": ""
+    },
+    "subject": {
+      "type": "string",
+      "default": "Website enquiry"
+    },
+    "successMessage": {
+      "type": "string",
+      "default": "Thanks, your message has been sent."
+    },
+    "redirectUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "showPhoneCondition": {
+      "type": "boolean",
+      "default": true
+    },
+    "allowAttachment": {
+      "type": "boolean",
+      "default": true
+    },
+    "gdprText": {
+      "type": "string",
+      "default": "I agree to the privacy policy."
+    },
+    "submitStyle": {
+      "type": "string",
+      "default": "filled"
+    },
+    "errorColor": {
+      "type": "string",
+      "default": "#ef4444"
+    },
+    "focusColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "fieldBorderColor": {
+      "type": "string",
+      "default": "#d1d5db"
+    },
+    "fieldRadius": {
+      "type": "number",
+      "default": 12
+    },
+    "formPadding": {
+      "type": "number",
+      "default": 28
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHeight": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    },
+    "fields": {
+      "type": "object",
+      "default": [
+        {
+          "label": "Name",
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "width": "half"
+        },
+        {
+          "label": "Email",
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "width": "half"
+        },
+        {
+          "label": "Phone",
+          "name": "phone",
+          "type": "tel",
+          "required": false,
+          "width": "half"
+        },
+        {
+          "label": "Subject",
+          "name": "subject",
+          "type": "text",
+          "required": false,
+          "width": "half"
+        },
+        {
+          "label": "Message",
+          "name": "message",
+          "type": "textarea",
+          "required": true,
+          "width": "full"
+        }
+      ]
+    }
+  }
+}

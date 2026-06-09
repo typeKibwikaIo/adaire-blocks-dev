@@ -1,0 +1,215 @@
+/**
+ * Block Template Styles
+ * 
+ * This file demonstrates how to use the container width, padding, 
+ * and margin CSS variables in your block styles.
+ */
+
+.ad-map {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    
+    // Container wrapper
+    &__container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        
+        // Constrained mode styles
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px) !important;
+        }
+    }
+    
+    // Responsive container max-width for tablet
+    @media (max-width: 1024px) {
+        &__container.is-constrained {
+            max-width: var(--container-max-width-tablet, var(--container-max-width, 100%)) !important;
+        }
+    }
+    
+    // Responsive container max-width for mobile
+    @media (max-width: 768px) {
+        &__container.is-constrained {
+            max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%)) !important;
+        }
+    }
+    
+    // Responsive margins
+    @media (max-width: 1024px) {
+        margin-top: var(--margin-top-tablet, 0) !important;
+        margin-right: var(--margin-right-tablet, 0) !important;
+        margin-bottom: var(--margin-bottom-tablet, 0) !important;
+        margin-left: var(--margin-left-tablet, 0) !important;
+    }
+    
+    @media (max-width: 768px) {
+        margin-top: var(--margin-top-mobile, 0) !important;
+        margin-right: var(--margin-right-mobile, 0) !important;
+        margin-bottom: var(--margin-bottom-mobile, 0) !important;
+        margin-left: var(--margin-left-mobile, 0) !important;
+    }
+    
+    // Responsive padding
+    @media (max-width: 1024px) {
+        padding-top: var(--padding-top-tablet, 0) !important;
+        padding-right: var(--padding-right-tablet, 0) !important;
+        padding-bottom: var(--padding-bottom-tablet, 0) !important;
+        padding-left: var(--padding-left-tablet, 0) !important;
+    }
+    
+    @media (max-width: 768px) {
+        padding-top: var(--padding-top-mobile, 0) !important;
+        padding-right: var(--padding-right-mobile, 0) !important;
+        padding-bottom: var(--padding-bottom-mobile, 0) !important;
+        padding-left: var(--padding-left-mobile, 0) !important;
+    }
+    
+    // Content area (removed empty ruleset)
+
+    &__box{
+        display: grid;
+        grid-template-columns: 280px 1fr 1.2fr;
+        gap: 0;
+        border-radius: 24px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    &__locations{
+        background: #f7f7f8;
+        border-right: 1px solid #eee;
+        
+        &__list{ list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(1,1fr); height: 100%;}
+        &__item{
+            padding: 28px 24px;
+            font-weight: var(--ad-map-nav-weight, 600);
+            color: var(--ad-map-nav-text, #333);
+            position: relative;
+            border-bottom: 1px solid #eee;
+            transition: background-color .3s ease, color .3s ease, transform .3s ease;
+            cursor: pointer;
+        }
+        &__item.is-active{
+            background: var(--ad-map-nav-active-bg, #d52d3a);
+            color: var(--ad-map-nav-active-text, #fff);
+            transform: translateX(2px);
+        }
+        &__item.is-active::after{
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0; height: 0;
+            border-left: 12px solid var(--ad-map-nav-active-bg, #d52d3a);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+    }
+    
+    &__address{
+        padding: 32px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        
+        &__panel{ display: none; opacity: 0; transform: translateX(20px); transition: opacity .32s ease, transform .32s ease; }
+        &__panel.is-active{ display: block; opacity: 1; transform: translateX(0); }
+        &__title{ font-weight: 700; margin: 0 0 10px; }
+        &__item p{ margin: 4px 0; color: #666; }
+    }
+    
+    &__map{
+        min-height: 360px;
+        position: relative;
+        overflow: hidden;
+        
+        &__panel{ position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transform: translateX(24px); transition: opacity .35s ease, transform .35s ease; display: block; pointer-events: none; }
+        &__panel.is-active{ opacity: 1; transform: translateX(0); pointer-events: auto; }
+        iframe{ width: 100%; height: 100%; border: 0; display: block; }
+        .ad-map__leaflet{ position: absolute; inset: 0; width: 100%; height: 100%; }
+    }
+
+    &.is-single-map {
+        .ad-map__map {
+            &__panel { position: relative; inset: auto; }
+            &.is-sliding iframe { animation: ad-map-fade-slide .35s ease both; }
+        }
+    }
+
+    @keyframes ad-map-fade-slide {
+        from { opacity: 0; transform: translateX(16px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    // Responsive
+    @media (max-width: 1024px){
+        &__box{ grid-template-columns: 220px 1fr 1fr; }
+    }
+    @media (max-width: 768px){
+        &__box{ grid-template-columns: 1fr; }
+        &__locations{ border-right: none; }
+        &__map{ order: 3; height: 320px; }
+    }
+   
+}
+
+/**
+ * Alternative Pattern: Apply padding to container instead of root
+ * 
+ * If you prefer to apply padding to the container rather than the root element,
+ * use this pattern instead:
+ */
+
+.your-block-alt {
+    &__container {
+        width: 100%;
+        
+        // Desktop padding
+        padding-top: var(--padding-top-desktop, 0);
+        padding-right: var(--padding-right-desktop, 0);
+        padding-bottom: var(--padding-bottom-desktop, 0);
+        padding-left: var(--padding-left-desktop, 0);
+        
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px) !important;
+            margin-left: auto;
+            margin-right: auto;
+            
+            @media (max-width: 1024px) {
+                max-width: var(--container-max-width-tablet, 100%) !important;
+                padding-top: var(--padding-top-tablet, 0);
+                padding-right: var(--padding-right-tablet, 0);
+                padding-bottom: var(--padding-bottom-tablet, 0);
+                padding-left: var(--padding-left-tablet, 0);
+            }
+            
+            @media (max-width: 768px) {
+                max-width: var(--container-max-width-mobile, 100%) !important;
+                padding-top: var(--padding-top-mobile, 0);
+                padding-right: var(--padding-right-mobile, 0);
+                padding-bottom: var(--padding-bottom-mobile, 0);
+                padding-left: var(--padding-left-mobile, 0);
+            }
+        }
+    }
+}
+
+/**
+ * WordPress Alignment Classes Support
+ * 
+ * These styles ensure proper alignment when using WordPress align classes
+ */
+
+.alignwide .your-block__container.is-constrained {
+    max-width: var(--wp--style--global--wide-size, 1280px) !important;
+}
+
+.alignfull .your-block__container.is-constrained {
+    max-width: 100% !important;
+}
+

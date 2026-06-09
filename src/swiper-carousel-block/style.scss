@@ -1,0 +1,251 @@
+// Swiper base CSS
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+
+// Breakpoint Mixins (standard breakpoints for all blocks)
+@mixin phone {
+	@media (max-width: 600px) {
+		@content;
+	}
+}
+
+@mixin tablet {
+	@media (min-width: 601px) and (max-width: 1024px) {
+		@content;
+	}
+}
+
+@mixin small-laptop {
+	@media (min-width: 1025px) and (max-width: 1300px) {
+		@content;
+	}
+}
+
+@mixin desktop {
+	@media (min-width: 1301px) and (max-width: 1920px) {
+		@content;
+	}
+}
+
+@mixin big-desktop {
+	@media (min-width: 1921px) {
+		@content;
+	}
+}
+
+.adaire-swiper-carousel {
+	--adaire-swiper-carousel-gap: 24px;
+	--adaire-swiper-carousel-drag-cursor-size: 80px;
+	--adaire-swiper-carousel-drag-cursor-font-size: 16px;
+	--adaire-swiper-carousel-drag-cursor-font-weight: 500;
+	--adaire-swiper-carousel-drag-cursor-color: #ffffff;
+	--adaire-swiper-carousel-drag-cursor-bg: #7c3aed;
+	--adaire-swiper-carousel-drag-cursor-text-transform: uppercase;
+
+	width: 100%;
+	position: relative;
+	display: flex;
+	justify-content: center;
+
+	&__container {
+		width: 100%;
+		max-width: 100%;
+		margin: 0 auto;
+
+		&.is-constrained {
+			max-width: var(--container-max-width, 1200px);
+		}
+	}
+
+	// Responsive container max-width
+	@include phone {
+		&__container.is-constrained {
+			max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%));
+		}
+	}
+
+	@include tablet {
+		&__container.is-constrained {
+			max-width: var(--container-max-width-tablet, var(--container-max-width-small-laptop, 100%));
+		}
+	}
+
+	@include small-laptop {
+		&__container.is-constrained {
+			max-width: var(--container-max-width-small-laptop, var(--container-max-width, 1200px));
+		}
+	}
+
+	@include desktop {
+		&__container.is-constrained {
+			max-width: var(--container-max-width, var(--container-max-width-big-desktop, 1200px));
+		}
+	}
+
+	@include big-desktop {
+		&__container.is-constrained {
+			max-width: var(--container-max-width-big-desktop, var(--container-max-width, 1200px));
+		}
+	}
+
+	&__wrapper {
+		position: relative;
+		width: 100%;
+		overflow-x: hidden;
+		overflow-y: visible;
+		cursor: grab;
+
+		&.is-grabbing {
+			cursor: grabbing;
+		}
+	}
+
+	// Swiper container
+	&__swiper {
+		width: 100%;
+		padding-bottom: 24px;
+		// Clip only horizontally (prevents empty space past last slide) without cutting off pagination.
+		overflow-x: hidden;
+		overflow-y: visible;
+	}
+
+	// Pagination (simple + minimal)
+	&__pagination {
+		position: relative;
+		margin-top: 14px;
+		display: flex;
+		justify-content: center;
+		gap: 8px;
+
+		.swiper-pagination-bullet {
+			width: 10px;
+			height: 10px;
+			opacity: 0.4;
+			background: var(--pagination-inactive-color, rgba(0, 0, 0, 0.5));
+		}
+
+		.swiper-pagination-bullet-active {
+			opacity: 1;
+			background: var(--pagination-active-color, rgba(0, 0, 0, 1));
+		}
+	}
+
+	// Hide pagination when it shouldn't be visible (fallback)
+	&:not([data-pagination-visible="true"]) {
+		.swiper-pagination {
+			display: none !important;
+		}
+	}
+
+	// Swiper wrapper (track)
+	&__list {
+		align-items: stretch;
+		// Responsive padding-left
+		padding-left: var(--list-padding-left-mobile, 10px);
+
+		// Tablet: 601px - 1024px
+		@include tablet {
+			padding-left: var(--list-padding-left-tablet, var(--list-padding-left-mobile, 10px));
+		}
+
+		// Small Laptop: 1025px - 1300px
+		@include small-laptop {
+			padding-left: var(--list-padding-left-small-laptop, var(--list-padding-left-desktop, 10px));
+		}
+
+		// Desktop: 1301px - 1920px
+		@include desktop {
+			padding-left: var(--list-padding-left-desktop, 10px);
+		}
+
+		// Big Desktop: ≥ 1921px
+		@include big-desktop {
+			padding-left: var(--list-padding-left-big-desktop, var(--list-padding-left-desktop, 10px));
+		}
+	}
+
+	// Swiper slide - styles are handled by Swiper base CSS and slide block styles
+	// Only set height-related properties here
+	.swiper-slide {
+		height: auto;
+
+		// Responsive slide height
+		min-height: var(--slide-height-mobile, 300px);
+
+		@include tablet {
+			min-height: var(--slide-height-tablet, var(--slide-height-mobile, 400px));
+		}
+
+		@include small-laptop {
+			min-height: var(--slide-height-small-laptop, var(--slide-height-desktop, 450px));
+		}
+
+		@include desktop {
+			min-height: var(--slide-height-desktop, 500px);
+		}
+
+		@include big-desktop {
+			min-height: var(--slide-height-big-desktop, var(--slide-height-desktop, 500px));
+		}
+	}
+
+	// Drag cursor
+	&__drag-cursor {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 20;
+		pointer-events: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--adaire-swiper-carousel-drag-cursor-size);
+		height: var(--adaire-swiper-carousel-drag-cursor-size);
+		border-radius: 50%;
+		background-color: var(--adaire-swiper-carousel-drag-cursor-bg);
+		color: var(--adaire-swiper-carousel-drag-cursor-color);
+		font-size: var(--adaire-swiper-carousel-drag-cursor-font-size);
+		font-weight: var(--adaire-swiper-carousel-drag-cursor-font-weight);
+		text-transform: var(--adaire-swiper-carousel-drag-cursor-text-transform);
+		letter-spacing: 0.05em;
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+		opacity: 0;
+		transform: scale(0);
+		transform-origin: center center;
+
+		@media (hover: none) {
+			display: none !important;
+		}
+
+		&--preview {
+			position: absolute;
+			top: auto;
+			left: auto;
+			right: 24px;
+			bottom: 24px;
+			opacity: 0.85;
+			transform: none;
+		}
+	}
+}
+
+// Swiper specifics - ensure Swiper controls slide widths
+// IMPORTANT: Don't override Swiper's width calculations
+.adaire-swiper-carousel {
+	.swiper-wrapper {
+		// Swiper base CSS handles display: flex
+		// Only add align-items if needed
+		align-items: stretch;
+	}
+
+	.swiper-slide {
+		height: auto;
+		// Ensure slides can use their internal flex layout
+		display: flex;
+		flex-direction: column;
+		// Critical: Let Swiper control the width
+		// Don't set width, max-width, or flex-basis here
+		flex-shrink: 0;
+		// Swiper calculates width based on slidesPerView
+	}
+}

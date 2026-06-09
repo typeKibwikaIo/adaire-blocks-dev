@@ -1,0 +1,449 @@
+/* Breakpoints */
+@mixin phone {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 601px) and (max-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin small-laptop {
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 1301px) and (max-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin big-desktop {
+    @media (min-width: 1921px) {
+        @content;
+    }
+}
+
+@mixin min-tablet {
+    @media (min-width: 601px) {
+        @content;
+    }
+}
+
+@mixin set-responsive-vars($device) {
+    --current-max-width: var(--container-max-width-#{$device});
+    --current-padding-top: var(--padding-top-#{$device});
+    --current-padding-right: var(--padding-right-#{$device});
+    --current-padding-bottom: var(--padding-bottom-#{$device});
+    --current-padding-left: var(--padding-left-#{$device});
+
+    --current-card-padding-top: var(--card-padding-top-#{$device});
+    --current-card-padding-right: var(--card-padding-right-#{$device});
+    --current-card-padding-bottom: var(--card-padding-bottom-#{$device});
+    --current-card-padding-left: var(--card-padding-left-#{$device});
+
+    --current-title-size: var(--title-font-size-#{$device});
+    --current-title-weight: var(--title-font-weight-#{$device});
+    --current-title-lh: var(--title-line-height-#{$device});
+
+    --current-desc-size: var(--desc-font-size-#{$device});
+    --current-desc-weight: var(--desc-font-weight-#{$device});
+    --current-desc-lh: var(--desc-line-height-#{$device});
+
+    --current-image-width: var(--image-width-#{$device});
+    --current-image-height: var(--image-height-#{$device});
+    --current-card-min-height: var(--card-min-height-#{$device}, auto);
+    --current-last-card-bottom-height: var(--last-card-bottom-height-#{$device}, 0px);
+}
+
+.adaire-card-scroll {
+    position: relative;
+    width: 100%;
+
+    /* Global box-sizing for this block */
+    &,
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    // Default (Mobile)
+    --card-min-height-mobile: 400px;
+    @include set-responsive-vars('mobile');
+
+    @include tablet {
+        --card-min-height-tablet: 500px;
+        @include set-responsive-vars('tablet');
+    }
+
+    @include small-laptop {
+        --card-min-height-smallLaptop: 600px;
+        @include set-responsive-vars('smallLaptop');
+    }
+
+    @include desktop {
+        --card-min-height-desktop: 600px;
+        @include set-responsive-vars('desktop');
+    }
+
+    @include big-desktop {
+        --card-min-height-bigDesktop: 600px;
+        @include set-responsive-vars('bigDesktop');
+    }
+}
+
+.adaire-card-scroll__container {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+
+    /* Center cards */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* Responsive Padding */
+    padding-top: var(--current-padding-top);
+    padding-right: var(--current-padding-right);
+    padding-bottom: var(--current-padding-bottom);
+    padding-left: var(--current-padding-left);
+
+    &.is-constrained {
+        max-width: var(--current-max-width);
+        overflow-x: clip;
+        margin: 0 auto;
+    }
+}
+
+.adaire-card-scroll__intro,
+.adaire-card-scroll__outro {
+    width: 100%;
+    height: var(--intro-height, 20vh);
+    position: relative;
+    padding: 0;
+}
+
+.adaire-card-scroll__cards {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Ensure items center */
+}
+
+.adaire-card-scroll__card {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 2rem;
+    border-radius: 0.75em;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: var(--current-card-min-height, 600px);
+
+    // Preview text styling
+    .adaire-card-scroll__preview-text {
+        font-size: 0.875rem;
+        line-height: 1.4;
+        text-align: center;
+        font-weight: 400;
+        transition: all 0.2s ease;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        user-select: none;
+        
+        &:hover {
+            font-weight: 500;
+        }
+    }
+
+    // Local responsive overrides
+    @include set-responsive-vars('mobile');
+
+    @include tablet {
+        @include set-responsive-vars('tablet');
+    }
+
+    @include small-laptop {
+        @include set-responsive-vars('smallLaptop');
+    }
+
+    @include desktop {
+        @include set-responsive-vars('desktop');
+    }
+
+    @include big-desktop {
+        @include set-responsive-vars('bigDesktop');
+    }
+
+    // Margin overrides
+    margin-bottom: var(--card-margin-bottom, 2rem);
+
+    /* Force consistent width via box-sizing and margins */
+    max-width: 100%;
+
+    .adaire-card-scroll__container.is-constrained & {
+        /* Force width to match container's constraint (minus padding if any) */
+        width: 100%;
+    }
+
+    /* Ensure usage of z-index for stacking */
+    z-index: 1;
+
+    /* Auto-increment z-index for up to 20 cards to ensure correct layering */
+    @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+            z-index: $i;
+        }
+    }
+    
+    /* Last card has higher z-index and bottom spacing */
+    &:last-child {
+        z-index: 1000; /* Higher than other cards */
+        padding-bottom: var(--current-last-card-bottom-height, 0px);
+    }
+    
+    /* Hide shadow when last card is above (class added by JS) */
+    &.shadow-hidden {
+        box-shadow: none !important;
+    }
+    
+    /* Note: Preview text appears above card content with z-index: 10000 */
+    /* No clipping needed - preview text is positioned fixed at bottom of viewport */
+}
+
+.adaire-card-scroll__card-inner {
+    display: flex;
+    flex-direction: column;
+    /* ALWAYS column now per new layout */
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    gap: 2em;
+
+    /* Responsive Padding */
+    padding-top: var(--current-card-padding-top);
+    padding-right: var(--current-card-padding-right);
+    padding-bottom: var(--current-card-padding-bottom);
+    padding-left: var(--current-card-padding-left);
+    
+    /* Ensure inner content doesn't overflow into preview text area */
+    /* The preview text appears at the bottom, so we need to ensure content respects that */
+    z-index: 1;
+    
+}
+
+.adaire-card-scroll__card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    pointer-events: none;
+    /* Overlay covers the entire card to hide moving content */
+    /* This overlay is added to pinned cards that are completely covered by cards above */
+    border-radius: inherit; /* Match card's border radius */
+}
+
+.adaire-card-scroll__card-row {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+
+    @include small-laptop {
+        flex-direction: row;
+        justify-content: space-between;
+
+    }
+
+    @include desktop {
+        flex-direction: row;
+        justify-content: space-between;
+
+    }
+
+    @include big-desktop {
+        flex-direction: row;
+        justify-content: space-between;
+
+    }
+
+    >div:first-child {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+.adaire-card-scroll__card-header {
+    width: 100%;
+}
+
+.adaire-card-scroll__card-content {
+    /* Full width description */
+    width: 100%;
+}
+
+.adaire-card-scroll__card-media {
+    /* Sizing for the media */
+    flex-shrink: 0;
+    width: var(--current-image-width);
+    height: var(--current-image-height, auto);
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75em;
+    margin-left: auto;
+    margin-right: auto;
+
+    @include small-laptop {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    @include desktop {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    @include big-desktop {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    img,
+    video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.adaire-card-scroll__card-media img,
+.adaire-card-scroll__card-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.adaire-card-scroll__card-title,
+.adaire-card-scroll__card-title h2 {
+    margin: 0;
+    margin-bottom: var(--title-margin-bottom, 0.5rem);
+    flex: 1;
+    /* Take remaining space */
+
+    /* Responsive Typography */
+    font-size: var(--current-title-size);
+    font-weight: var(--current-title-weight);
+    line-height: var(--current-title-lh);
+    margin-bottom: var(--title-margin-bottom, var(--title-margin-bottom-mobile, 0.5rem));
+
+    @include tablet {
+        margin-bottom: var(--title-margin-bottom-tablet, 0.5rem);
+    }
+
+    @include small-laptop {
+        margin-bottom: var(--title-margin-bottom-smallLaptop, 1rem);
+    }
+
+    @include desktop {
+        margin-bottom: var(--title-margin-bottom-desktop, 1rem);
+    }
+
+    @include big-desktop {
+        margin-bottom: var(--title-margin-bottom-bigDesktop, 1rem);
+    }
+}
+
+.adaire-card-scroll__card-description,
+.adaire-card-scroll__card-description p {
+    margin: 0;
+    margin-bottom: var(--desc-margin-bottom, 1.5rem);
+
+    /* Responsive Typography */
+    font-size: var(--current-desc-size);
+    font-weight: var(--current-desc-weight);
+    line-height: var(--current-desc-lh);
+    margin-bottom: var(--desc-margin-bottom, var(--desc-margin-bottom-mobile, 1.5rem));
+
+    @include tablet {
+        margin-bottom: var(--desc-margin-bottom-tablet, 1.5rem);
+    }
+
+    @include small-laptop {
+        margin-bottom: var(--desc-margin-bottom-smallLaptop, 2rem);
+    }
+
+    @include desktop {
+        margin-bottom: var(--desc-margin-bottom-desktop, 2rem);
+    }
+
+    @include big-desktop {
+        margin-bottom: var(--desc-margin-bottom-bigDesktop, 2rem);
+    }
+}
+
+.adaire-card-scroll__card-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    @mixin alignment-styles($device) {
+        &.is-aligned-#{$device}-left {
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        &.is-aligned-#{$device}-center {
+            justify-content: center;
+            text-align: center;
+        }
+
+        &.is-aligned-#{$device}-right {
+            justify-content: flex-end;
+            text-align: right;
+        }
+    }
+
+    @include alignment-styles('mobile');
+
+    @include tablet {
+        @include alignment-styles('tablet');
+    }
+
+    @include small-laptop {
+        @include alignment-styles('smallLaptop');
+    }
+
+    @include desktop {
+        @include alignment-styles('desktop');
+    }
+
+    @include big-desktop {
+        @include alignment-styles('bigDesktop');
+    }
+}
+
+.adaire-card-scroll__card-media {
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+}

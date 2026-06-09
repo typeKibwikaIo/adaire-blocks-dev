@@ -1,0 +1,32 @@
+.ad-scroll-text-block {
+  min-height: 100vh; /* enough height to scroll */
+  display: flex;
+  // align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 0;
+  // border: 2px solid red;
+}
+
+.ad-scroll-text-block__content {
+  width: 100%;
+  // border: 2px solid blue;
+  top: 0px !important;
+  position: relative;
+  & h1{
+    padding-top: var(--padding-top, 0px);
+    padding-bottom: var(--padding-bottom, 0px);
+    padding-left: var(--padding-left, 0px);
+    padding-right: var(--padding-right, 0px);
+    margin-top: var(--margin-top, 0px);
+    margin-bottom: var(--margin-bottom, 0px);
+    margin-left: var(--margin-left, 0px);
+    margin-right: var(--margin-right, 0px);
+    font-weight: var(--font-weight, 400);
+  }
+}
+
+.ad-scroll-text-block__content h1 {
+  white-space: nowrap;
+  display: inline-block;
+}

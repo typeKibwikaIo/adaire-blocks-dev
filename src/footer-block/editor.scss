@@ -1,0 +1,18 @@
+// Editor-specific styles for footer block
+.adaire-footer {
+    // Ensure proper spacing in editor
+    .adaire-footer__inner {
+        min-height: 200px;
+    }
+
+    // Make location accordion interactive in editor
+    .adaire-footer__location-header {
+        cursor: pointer;
+    }
+
+    // Ensure columns display properly in editor
+    .adaire-footer__columns {
+        display: grid;
+    }
+}
+

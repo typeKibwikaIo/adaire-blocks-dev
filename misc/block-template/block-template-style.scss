@@ -1,0 +1,130 @@
+/**
+ * Block Template Styles
+ * 
+ * This file demonstrates how to use the container width, padding, 
+ * and margin CSS variables in your block styles.
+ */
+
+.your-block {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    
+    // Container wrapper
+    &__container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        
+        // Constrained mode styles
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px) !important;
+        }
+    }
+    
+    // Responsive container max-width for tablet
+    @media (max-width: 1024px) {
+        &__container.is-constrained {
+            max-width: var(--container-max-width-tablet, var(--container-max-width, 100%)) !important;
+        }
+    }
+    
+    // Responsive container max-width for mobile
+    @media (max-width: 768px) {
+        &__container.is-constrained {
+            max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%)) !important;
+        }
+    }
+    
+    // Responsive margins
+    @media (max-width: 1024px) {
+        margin-top: var(--margin-top-tablet, 0) !important;
+        margin-right: var(--margin-right-tablet, 0) !important;
+        margin-bottom: var(--margin-bottom-tablet, 0) !important;
+        margin-left: var(--margin-left-tablet, 0) !important;
+    }
+    
+    @media (max-width: 768px) {
+        margin-top: var(--margin-top-mobile, 0) !important;
+        margin-right: var(--margin-right-mobile, 0) !important;
+        margin-bottom: var(--margin-bottom-mobile, 0) !important;
+        margin-left: var(--margin-left-mobile, 0) !important;
+    }
+    
+    // Responsive padding
+    @media (max-width: 1024px) {
+        padding-top: var(--padding-top-tablet, 0) !important;
+        padding-right: var(--padding-right-tablet, 0) !important;
+        padding-bottom: var(--padding-bottom-tablet, 0) !important;
+        padding-left: var(--padding-left-tablet, 0) !important;
+    }
+    
+    @media (max-width: 768px) {
+        padding-top: var(--padding-top-mobile, 0) !important;
+        padding-right: var(--padding-right-mobile, 0) !important;
+        padding-bottom: var(--padding-bottom-mobile, 0) !important;
+        padding-left: var(--padding-left-mobile, 0) !important;
+    }
+    
+    // Content area
+    &__content {
+        // Your block-specific styles here
+    }
+}
+
+/**
+ * Alternative Pattern: Apply padding to container instead of root
+ * 
+ * If you prefer to apply padding to the container rather than the root element,
+ * use this pattern instead:
+ */
+
+.your-block-alt {
+    &__container {
+        width: 100%;
+        
+        // Desktop padding
+        padding-top: var(--padding-top-desktop, 0);
+        padding-right: var(--padding-right-desktop, 0);
+        padding-bottom: var(--padding-bottom-desktop, 0);
+        padding-left: var(--padding-left-desktop, 0);
+        
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px) !important;
+            margin-left: auto;
+            margin-right: auto;
+            
+            @media (max-width: 1024px) {
+                max-width: var(--container-max-width-tablet, 100%) !important;
+                padding-top: var(--padding-top-tablet, 0);
+                padding-right: var(--padding-right-tablet, 0);
+                padding-bottom: var(--padding-bottom-tablet, 0);
+                padding-left: var(--padding-left-tablet, 0);
+            }
+            
+            @media (max-width: 768px) {
+                max-width: var(--container-max-width-mobile, 100%) !important;
+                padding-top: var(--padding-top-mobile, 0);
+                padding-right: var(--padding-right-mobile, 0);
+                padding-bottom: var(--padding-bottom-mobile, 0);
+                padding-left: var(--padding-left-mobile, 0);
+            }
+        }
+    }
+}
+
+/**
+ * WordPress Alignment Classes Support
+ * 
+ * These styles ensure proper alignment when using WordPress align classes
+ */
+
+.alignwide .your-block__container.is-constrained {
+    max-width: var(--wp--style--global--wide-size, 1280px) !important;
+}
+
+.alignfull .your-block__container.is-constrained {
+    max-width: 100% !important;
+}
+

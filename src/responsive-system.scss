@@ -1,0 +1,354 @@
+.adaire-responsive-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: 8px;
+	padding: 4px 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	background: #fff;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.adaire-responsive-toolbar__viewport {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding-right: 8px;
+	border-right: 1px solid #dcdcde;
+}
+
+.adaire-responsive-toolbar__select,
+.adaire-responsive-toolbar__dimension {
+	height: 30px;
+	min-height: 30px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	background: #fff;
+	font-size: 12px;
+	line-height: 1;
+}
+
+.adaire-responsive-toolbar__select {
+	max-width: 120px;
+	padding: 0 24px 0 8px;
+}
+
+.adaire-responsive-toolbar__dimension {
+	width: 64px;
+	padding: 0 6px;
+}
+
+.adaire-responsive-toolbar__zoom {
+	width: 78px;
+}
+
+.adaire-responsive-toolbar__separator {
+	color: #646970;
+	font-size: 13px;
+	line-height: 1;
+}
+
+.adaire-responsive-toolbar__rotate {
+	height: 30px;
+	min-width: 30px;
+	padding: 0 8px;
+}
+
+.adaire-responsive-toolbar__buttons {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-wrap: wrap;
+}
+
+.adaire-responsive-toolbar__button {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	height: 32px;
+}
+
+.adaire-responsive-toolbar__emoji {
+	font-size: 14px;
+	line-height: 1;
+}
+
+.adaire-responsive-toolbar__label {
+	font-size: 12px;
+	line-height: 1;
+}
+
+.adaire-responsive-indicator {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 12px;
+	padding: 10px 12px;
+	border-radius: 6px;
+	background: #f6f7f7;
+	font-size: 12px;
+}
+
+body[data-adaire-responsive-device] .interface-interface-skeleton__content,
+body[data-adaire-responsive-device] .edit-post-layout__content,
+[data-adaire-responsive-device] .interface-interface-skeleton__content,
+[data-adaire-responsive-device] .edit-post-layout__content,
+[data-adaire-responsive-device].interface-interface-skeleton__content,
+[data-adaire-responsive-device].edit-post-layout__content,
+[data-adaire-responsive-device].block-editor-iframe__html,
+[data-adaire-responsive-device].block-editor-iframe__body {
+	background: #f0f2f5;
+}
+
+body[data-adaire-responsive-device] .block-editor-writing-flow,
+body[data-adaire-responsive-device]
+.block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device].block-editor-writing-flow,
+[data-adaire-responsive-device].block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device].is-root-container,
+[data-adaire-responsive-device].editor-styles-wrapper,
+[data-adaire-responsive-device].edit-post-visual-editor,
+[data-adaire-responsive-device].block-editor-iframe__body {
+	width: var(--adaire-responsive-preview-width, 1440px);
+	max-width: var(--adaire-responsive-preview-width, 1440px);
+	margin-right: auto;
+	margin-left: auto;
+	transform: scale(var(--adaire-responsive-preview-zoom, 1));
+	transform-origin: top center;
+	transition:
+		width 160ms ease,
+		transform 160ms ease,
+		max-width 160ms ease,
+		border-radius 160ms ease,
+		box-shadow 160ms ease,
+		padding 160ms ease;
+}
+
+body[data-adaire-responsive-device] .interface-interface-skeleton__content,
+body[data-adaire-responsive-device] .edit-post-layout__content,
+[data-adaire-responsive-device].interface-interface-skeleton__content,
+[data-adaire-responsive-device].edit-post-layout__content {
+	overflow: auto;
+	padding: 32px;
+}
+
+body[data-adaire-responsive-device]
+.block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device].block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device].is-root-container,
+[data-adaire-responsive-device].editor-styles-wrapper,
+[data-adaire-responsive-device].edit-post-visual-editor,
+[data-adaire-responsive-device].block-editor-iframe__body {
+	position: relative;
+	min-height: var(--adaire-responsive-preview-height, 900px);
+	background: #fff;
+	box-sizing: border-box;
+	overflow: hidden auto;
+}
+
+body[data-adaire-responsive-device="desktop"]
+.block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device="desktop"].block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device="desktop"].is-root-container,
+[data-adaire-responsive-device="desktop"].editor-styles-wrapper,
+[data-adaire-responsive-device="desktop"].edit-post-visual-editor,
+[data-adaire-responsive-device="desktop"].block-editor-iframe__body {
+	border: 18px solid #202327;
+	border-bottom-width: 42px;
+	border-radius: 12px;
+	box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+}
+
+body[data-adaire-responsive-device="tablet"]
+.block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device="tablet"].block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device="tablet"].is-root-container,
+[data-adaire-responsive-device="tablet"].editor-styles-wrapper,
+[data-adaire-responsive-device="tablet"].edit-post-visual-editor,
+[data-adaire-responsive-device="tablet"].block-editor-iframe__body {
+	border: 16px solid #1f2329;
+	border-radius: 28px;
+	box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
+}
+
+body[data-adaire-responsive-device="mobile"]
+.block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device="mobile"].block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device="mobile"].is-root-container,
+[data-adaire-responsive-device="mobile"].editor-styles-wrapper,
+[data-adaire-responsive-device="mobile"].edit-post-visual-editor,
+[data-adaire-responsive-device="mobile"].block-editor-iframe__body {
+	border: 12px solid #17191d;
+	border-top-width: 34px;
+	border-bottom-width: 34px;
+	border-radius: 34px;
+	box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
+}
+
+body[data-adaire-responsive-device="smartwatch"]
+.block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device="smartwatch"].block-editor-block-list__layout.is-root-container,
+[data-adaire-responsive-device="smartwatch"].is-root-container,
+[data-adaire-responsive-device="smartwatch"].editor-styles-wrapper,
+[data-adaire-responsive-device="smartwatch"].edit-post-visual-editor,
+[data-adaire-responsive-device="smartwatch"].block-editor-iframe__body {
+	border: 10px solid #15171a;
+	border-radius: 42px;
+	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+	overflow: hidden;
+}
+
+.adaire-responsive-block--hidden {
+	display: none !important;
+}
+
+.adaire-responsive-front {
+	width: var(--adaire-desktop-width, initial);
+	height: var(--adaire-desktop-height, initial);
+	min-width: var(--adaire-desktop-min-width, initial);
+	max-width: var(--adaire-desktop-max-width, initial);
+	min-height: var(--adaire-desktop-min-height, initial);
+	max-height: var(--adaire-desktop-max-height, initial);
+	margin: var(--adaire-desktop-margin, initial);
+	padding: var(--adaire-desktop-padding, initial);
+	gap: var(--adaire-desktop-gap, initial);
+	font-size: var(--adaire-desktop-font-size, initial);
+	font-weight: var(--adaire-desktop-font-weight, initial);
+	line-height: var(--adaire-desktop-line-height, initial);
+	letter-spacing: var(--adaire-desktop-letter-spacing, initial);
+	text-align: var(--adaire-desktop-text-align, initial);
+	display: var(--adaire-desktop-display, initial);
+	position: var(--adaire-desktop-position, initial);
+	top: var(--adaire-desktop-top, initial);
+	bottom: var(--adaire-desktop-bottom, initial);
+	left: var(--adaire-desktop-left, initial);
+	right: var(--adaire-desktop-right, initial);
+	z-index: var(--adaire-desktop-z-index, initial);
+	background-color: var(--adaire-desktop-background-color, initial);
+	background-image: var(--adaire-desktop-background-image, initial);
+	border: var(--adaire-desktop-border, initial);
+	border-radius: var(--adaire-desktop-border-radius, initial);
+	box-shadow: var(--adaire-desktop-box-shadow, initial);
+	opacity: var(--adaire-desktop-opacity, initial);
+}
+
+@media (max-width: 1023px) {
+
+	.adaire-responsive-front {
+		width: var(--adaire-tablet-width, var(--adaire-desktop-width, initial));
+		height: var(--adaire-tablet-height, var(--adaire-desktop-height, initial));
+		min-width: var(--adaire-tablet-min-width, var(--adaire-desktop-min-width, initial));
+		max-width: var(--adaire-tablet-max-width, var(--adaire-desktop-max-width, initial));
+		min-height: var(--adaire-tablet-min-height, var(--adaire-desktop-min-height, initial));
+		max-height: var(--adaire-tablet-max-height, var(--adaire-desktop-max-height, initial));
+		margin: var(--adaire-tablet-margin, var(--adaire-desktop-margin, initial));
+		padding: var(--adaire-tablet-padding, var(--adaire-desktop-padding, initial));
+		gap: var(--adaire-tablet-gap, var(--adaire-desktop-gap, initial));
+		font-size: var(--adaire-tablet-font-size, var(--adaire-desktop-font-size, initial));
+		font-weight: var(--adaire-tablet-font-weight, var(--adaire-desktop-font-weight, initial));
+		line-height: var(--adaire-tablet-line-height, var(--adaire-desktop-line-height, initial));
+		letter-spacing: var(--adaire-tablet-letter-spacing, var(--adaire-desktop-letter-spacing, initial));
+		text-align: var(--adaire-tablet-text-align, var(--adaire-desktop-text-align, initial));
+		display: var(--adaire-tablet-display, var(--adaire-desktop-display, initial));
+		position: var(--adaire-tablet-position, var(--adaire-desktop-position, initial));
+		top: var(--adaire-tablet-top, var(--adaire-desktop-top, initial));
+		bottom: var(--adaire-tablet-bottom, var(--adaire-desktop-bottom, initial));
+		left: var(--adaire-tablet-left, var(--adaire-desktop-left, initial));
+		right: var(--adaire-tablet-right, var(--adaire-desktop-right, initial));
+		z-index: var(--adaire-tablet-z-index, var(--adaire-desktop-z-index, initial));
+		background-color: var(--adaire-tablet-background-color, var(--adaire-desktop-background-color, initial));
+		background-image: var(--adaire-tablet-background-image, var(--adaire-desktop-background-image, initial));
+		border: var(--adaire-tablet-border, var(--adaire-desktop-border, initial));
+		border-radius: var(--adaire-tablet-border-radius, var(--adaire-desktop-border-radius, initial));
+		box-shadow: var(--adaire-tablet-box-shadow, var(--adaire-desktop-box-shadow, initial));
+		opacity: var(--adaire-tablet-opacity, var(--adaire-desktop-opacity, initial));
+	}
+
+	.adaire-hide-tablet {
+		display: none !important;
+	}
+}
+
+@media (max-width: 767px) {
+
+	.adaire-responsive-front {
+		width: var(--adaire-mobile-width, var(--adaire-tablet-width, var(--adaire-desktop-width, initial)));
+		height: var(--adaire-mobile-height, var(--adaire-tablet-height, var(--adaire-desktop-height, initial)));
+		min-width: var(--adaire-mobile-min-width, var(--adaire-tablet-min-width, var(--adaire-desktop-min-width, initial)));
+		max-width: var(--adaire-mobile-max-width, var(--adaire-tablet-max-width, var(--adaire-desktop-max-width, initial)));
+		min-height: var(--adaire-mobile-min-height, var(--adaire-tablet-min-height, var(--adaire-desktop-min-height, initial)));
+		max-height: var(--adaire-mobile-max-height, var(--adaire-tablet-max-height, var(--adaire-desktop-max-height, initial)));
+		margin: var(--adaire-mobile-margin, var(--adaire-tablet-margin, var(--adaire-desktop-margin, initial)));
+		padding: var(--adaire-mobile-padding, var(--adaire-tablet-padding, var(--adaire-desktop-padding, initial)));
+		gap: var(--adaire-mobile-gap, var(--adaire-tablet-gap, var(--adaire-desktop-gap, initial)));
+		font-size: var(--adaire-mobile-font-size, var(--adaire-tablet-font-size, var(--adaire-desktop-font-size, initial)));
+		font-weight: var(--adaire-mobile-font-weight, var(--adaire-tablet-font-weight, var(--adaire-desktop-font-weight, initial)));
+		line-height: var(--adaire-mobile-line-height, var(--adaire-tablet-line-height, var(--adaire-desktop-line-height, initial)));
+		letter-spacing: var(--adaire-mobile-letter-spacing, var(--adaire-tablet-letter-spacing, var(--adaire-desktop-letter-spacing, initial)));
+		text-align: var(--adaire-mobile-text-align, var(--adaire-tablet-text-align, var(--adaire-desktop-text-align, initial)));
+		display: var(--adaire-mobile-display, var(--adaire-tablet-display, var(--adaire-desktop-display, initial)));
+		position: var(--adaire-mobile-position, var(--adaire-tablet-position, var(--adaire-desktop-position, initial)));
+		top: var(--adaire-mobile-top, var(--adaire-tablet-top, var(--adaire-desktop-top, initial)));
+		bottom: var(--adaire-mobile-bottom, var(--adaire-tablet-bottom, var(--adaire-desktop-bottom, initial)));
+		left: var(--adaire-mobile-left, var(--adaire-tablet-left, var(--adaire-desktop-left, initial)));
+		right: var(--adaire-mobile-right, var(--adaire-tablet-right, var(--adaire-desktop-right, initial)));
+		z-index: var(--adaire-mobile-z-index, var(--adaire-tablet-z-index, var(--adaire-desktop-z-index, initial)));
+		background-color: var(--adaire-mobile-background-color, var(--adaire-tablet-background-color, var(--adaire-desktop-background-color, initial)));
+		background-image: var(--adaire-mobile-background-image, var(--adaire-tablet-background-image, var(--adaire-desktop-background-image, initial)));
+		border: var(--adaire-mobile-border, var(--adaire-tablet-border, var(--adaire-desktop-border, initial)));
+		border-radius: var(--adaire-mobile-border-radius, var(--adaire-tablet-border-radius, var(--adaire-desktop-border-radius, initial)));
+		box-shadow: var(--adaire-mobile-box-shadow, var(--adaire-tablet-box-shadow, var(--adaire-desktop-box-shadow, initial)));
+		opacity: var(--adaire-mobile-opacity, var(--adaire-tablet-opacity, var(--adaire-desktop-opacity, initial)));
+	}
+
+	.adaire-hide-mobile {
+		display: none !important;
+	}
+}
+
+@media (max-width: 319px) {
+
+	.adaire-responsive-front {
+		width: var(--adaire-smartwatch-width, var(--adaire-mobile-width, var(--adaire-desktop-width, initial)));
+		height: var(--adaire-smartwatch-height, var(--adaire-mobile-height, var(--adaire-desktop-height, initial)));
+		min-width: var(--adaire-smartwatch-min-width, var(--adaire-mobile-min-width, var(--adaire-desktop-min-width, initial)));
+		max-width: var(--adaire-smartwatch-max-width, var(--adaire-mobile-max-width, var(--adaire-desktop-max-width, initial)));
+		min-height: var(--adaire-smartwatch-min-height, var(--adaire-mobile-min-height, var(--adaire-desktop-min-height, initial)));
+		max-height: var(--adaire-smartwatch-max-height, var(--adaire-mobile-max-height, var(--adaire-desktop-max-height, initial)));
+		margin: var(--adaire-smartwatch-margin, var(--adaire-mobile-margin, var(--adaire-desktop-margin, initial)));
+		padding: var(--adaire-smartwatch-padding, var(--adaire-mobile-padding, var(--adaire-desktop-padding, initial)));
+		gap: var(--adaire-smartwatch-gap, var(--adaire-mobile-gap, var(--adaire-desktop-gap, initial)));
+		font-size: var(--adaire-smartwatch-font-size, var(--adaire-mobile-font-size, var(--adaire-desktop-font-size, initial)));
+		font-weight: var(--adaire-smartwatch-font-weight, var(--adaire-mobile-font-weight, var(--adaire-desktop-font-weight, initial)));
+		line-height: var(--adaire-smartwatch-line-height, var(--adaire-mobile-line-height, var(--adaire-desktop-line-height, initial)));
+		letter-spacing: var(--adaire-smartwatch-letter-spacing, var(--adaire-mobile-letter-spacing, var(--adaire-desktop-letter-spacing, initial)));
+		text-align: var(--adaire-smartwatch-text-align, var(--adaire-mobile-text-align, var(--adaire-desktop-text-align, initial)));
+		display: var(--adaire-smartwatch-display, var(--adaire-mobile-display, var(--adaire-desktop-display, initial)));
+		position: var(--adaire-smartwatch-position, var(--adaire-mobile-position, var(--adaire-desktop-position, initial)));
+		top: var(--adaire-smartwatch-top, var(--adaire-mobile-top, var(--adaire-desktop-top, initial)));
+		bottom: var(--adaire-smartwatch-bottom, var(--adaire-mobile-bottom, var(--adaire-desktop-bottom, initial)));
+		left: var(--adaire-smartwatch-left, var(--adaire-mobile-left, var(--adaire-desktop-left, initial)));
+		right: var(--adaire-smartwatch-right, var(--adaire-mobile-right, var(--adaire-desktop-right, initial)));
+		z-index: var(--adaire-smartwatch-z-index, var(--adaire-mobile-z-index, var(--adaire-desktop-z-index, initial)));
+		background-color: var(--adaire-smartwatch-background-color, var(--adaire-mobile-background-color, var(--adaire-desktop-background-color, initial)));
+		background-image: var(--adaire-smartwatch-background-image, var(--adaire-mobile-background-image, var(--adaire-desktop-background-image, initial)));
+		border: var(--adaire-smartwatch-border, var(--adaire-mobile-border, var(--adaire-desktop-border, initial)));
+		border-radius: var(--adaire-smartwatch-border-radius, var(--adaire-mobile-border-radius, var(--adaire-desktop-border-radius, initial)));
+		box-shadow: var(--adaire-smartwatch-box-shadow, var(--adaire-mobile-box-shadow, var(--adaire-desktop-box-shadow, initial)));
+		opacity: var(--adaire-smartwatch-opacity, var(--adaire-mobile-opacity, var(--adaire-desktop-opacity, initial)));
+	}
+
+	.adaire-hide-smartwatch {
+		display: none !important;
+	}
+}
+
+@media (min-width: 1440px) {
+
+	.adaire-hide-desktop {
+		display: none !important;
+	}
+}
+

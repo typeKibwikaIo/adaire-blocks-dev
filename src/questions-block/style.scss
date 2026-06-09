@@ -1,0 +1,198 @@
+.animated-section {
+  color: #fff;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 2000;
+  overflow: hidden;
+
+  @media (max-width: 900px) {
+    max-height: 915px;
+    height: 915px;
+  }
+}
+
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-top: 10%;
+  position: relative;
+}
+
+.titles-column {
+  flex: 0 0 300px; // Increased from 200px to accommodate larger titles
+  padding-right: 40px;
+  position: relative; // Added to contain the titles
+  overflow: hidden; // Prevent titles from pushing content
+}
+
+.title-item {
+  opacity: 0.5;
+  transition: all 0.3s;
+  position: relative; // Added for better positioning
+  margin-bottom: 10px;
+  
+  &.active {
+    opacity: 1;
+  }
+  
+  h2 {
+    font-size: 3rem;
+    transition: all 0.3s;
+    font-weight: 500;
+    margin: 0;
+    white-space: nowrap; // Prevent text wrapping
+    overflow: hidden; // Hide overflow
+    text-overflow: ellipsis; // Show ellipsis for very long titles
+    color: var(--inactive-title-color, #666666); // Default inactive color
+
+    @media (max-width: 900px) {
+      font-size: 2rem;
+    }
+  }
+  
+  &.active h2 {
+    font-size: 5rem;
+    color: var(--title-color, #ffffff); // Active title color
+
+    @media (max-width: 900px) {
+      font-size: 3rem;
+    }
+  }
+}
+
+.section-number {
+  display: inline-block;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+
+.content-column {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+  max-width: 700px;
+  box-sizing: border-box;
+  margin-left: 0; // Ensure consistent left margin
+
+  @media (max-width: 900px) {
+     width: 100vw;
+  }
+}
+
+.content-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(50px);
+  pointer-events: none;
+  transition: opacity 0.5s, transform 0.5s;
+  z-index: 1;
+  
+  // Preserve line breaks and formatting
+  white-space: pre-line;
+  line-height: 1.6;
+  
+  // Style list items properly
+  div {
+    white-space: pre-line;
+    line-height: 1.6;
+  }
+  
+  &.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    z-index: 2;
+  }
+}
+
+@media (max-width: 900px) {
+  .section-container {
+		padding-top:60px;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .titles-column {
+    flex: none;
+    width: 100%;
+    padding-right: 0;
+    margin-bottom: 40px;
+  }
+  
+  .content-column {
+    max-width: 100%;
+  }
+} 
+
+@media (max-width: 600px) {
+  .section-container{
+		padding-top:60px;
+	}
+.section-number {
+  margin-bottom: 0px;
+}
+}
+
+// Progress Indicator Styles
+.progress-indicator {
+  position: absolute;
+  left: 20px;
+  top: 10%;
+  bottom: 10%;
+  width: var(--progress-indicator-width, 3px);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (max-width: 1024px) {
+    left: 15px;
+  }
+
+  @media (max-width: 768px) {
+    left: 10px;
+  }
+}
+
+.progress-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--progress-indicator-width, 3px);
+  background-color: var(--progress-indicator-color, #ffffff);
+  opacity: 0.3;
+  border-radius: 2px;
+}
+
+.progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--progress-indicator-fill-color, #ff0000);
+  border-radius: 2px;
+  transform: scaleY(0);
+  transform-origin: top center;
+}
+
+
+// Hide progress indicator on very small screens if needed
+@media (max-width: 480px) {
+  .progress-indicator {
+    display: none;
+  }
+}

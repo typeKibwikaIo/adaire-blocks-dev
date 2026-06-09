@@ -1,0 +1,15 @@
+{
+    "name": "Adaire Blocks",
+    "version": "1.1.6",
+    "download_url": "https://github.com/helloadaire/Adaire-Blocks/releases/download/v1.1.6.alpha/adaire-blocks.1.1.6.alpha.zip",
+    "sections": {
+      "description": "A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.\n\nAvailable Blocks:\n GSAP Hero Block - Create animated hero sections with smooth GSAP animations\n Portfolio Block - Showcase your work with elegant portfolio layouts\n Services Block - Display your services with professional card layouts\n Process Block - Illustrate your workflow with step-by-step process blocks\n Project Block - Highlight your projects with interactive project showcases\n Questions Block - Create FAQ sections with expandable content\n Scroll Controlled Blocks - Advanced scroll-triggered animations\n Scroll Triggered Blocks - Smooth scroll-based animations\n Button Block - Customizable button components\n Particles Block - Add dynamic particle effects to your pages",
+      "changelog": "<h4>1.1.6</h4><ul><li>Enhanced Mega Menu Block with improved color controls and better menu item styling</li><li>Improved menu control interface with better color management and visual feedback</li><li>Better color inheritance and hover state management for menu items</li><li>Enhanced build stability and improved plugin generation process</li><li>Better compatibility across different WordPress environments</li></ul><h4>1.1.5</h4><ul><li>Added comprehensive text section controls for Particles Block with improved alignment and positioning</li><li>Enhanced admin interface with custom SVG icons for better block identification in WordPress editor</li><li>Improved text-image coordination in Particles Block for better visual layout</li><li>Added responsive text positioning controls that work seamlessly across all device sizes</li><li>Enhanced visual consistency with unified icon system across all Adaire Blocks</li></ul>",
+      "installation": "<ol><li>Upload the plugin files to the <code>/wp-content/plugins/adaire-blocks</code> directory</li><li>Activate the plugin through the 'Plugins' menu in WordPress</li><li>Go to Adaire Blocks > Enable/Disable blocks > Make use of the blocks in the Gutenberg Editor</li></ol>",
+      "screenshots": "<ol></ol>"
+    },
+    "banners": {
+      "high": "",
+      "low": ""
+    }
+  }

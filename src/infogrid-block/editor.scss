@@ -1,0 +1,107 @@
+// Editor-specific styles for Info Grid Block
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+.wp-block-create-block-infogrid-block {
+    .adaire-infogrid {
+        &__item {
+            // Hover effect in editor
+            &:hover:not(.is-expanded) {
+                outline: 2px solid var(--infogrid-hover-bg);
+                outline-offset: -2px;
+            }
+        }
+        
+        // Expanded state shows description
+        &__item.is-expanded {
+            .adaire-infogrid__item-description {
+                margin-top: 16px;
+            }
+        }
+    }
+}
+
+// Device Toggle Styling
+.adaire-device-toggle {
+    background: #f0f0f1;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+
+    .adaire-device-toggle-label {
+        margin: 0 0 12px 0;
+        font-weight: 600;
+        font-size: 13px;
+        color: #1e1e1e;
+        display: block;
+    }
+
+    .adaire-device-toggle-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: center;
+
+        .components-button {
+            height: 36px;
+            padding: 0 8px;
+            border-radius: 4px;
+            flex: 1;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &.is-primary {
+                background: #1e1e1e;
+                color: #fff;
+            }
+
+            svg {
+                margin: 0;
+                flex-shrink: 0;
+            }
+
+            span {
+                font-size: 11px;
+                margin-left: 6px;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .adaire-device-toggle-status {
+        margin: 8px 0 0 0;
+        font-size: 11px;
+        color: #757575;
+        text-align: center;
+
+        strong {
+            color: #1e1e1e;
+        }
+    }
+}
+
+// Sidebar card styling improvements
+.components-card {
+    .components-card-header {
+        padding: 8px 12px;
+        
+        .components-flex {
+            width: 100%;
+        }
+    }
+    
+    .components-card-body {
+        padding: 12px;
+        
+        .components-base-control {
+            margin-bottom: 12px;
+            
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
