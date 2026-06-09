@@ -19,7 +19,9 @@ class AdaireBlocksSettings {
     private function __construct() {
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_init', array($this, 'init_settings'));
+        add_action('admin_init', array($this, 'sync_block_registry'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+        add_action('rest_api_init', array($this, 'register_rest_routes'));
         add_action('wp_ajax_adaire_blocks_save_settings', array($this, 'ajax_save_settings'));
         add_action('wp_ajax_adaire_blocks_reset_settings', array($this, 'ajax_reset_settings'));
         add_filter('plugin_action_links', array($this, 'add_plugin_settings_link'), 10, 2);
@@ -243,6 +245,119 @@ class AdaireBlocksSettings {
         return $blocks;
     }
 
+    public function sync_block_registry() {
+        $available_blocks = $this->get_available_blocks();
+
+        if (empty($available_blocks)) {
+            $this->log_registration_failure('No available blocks were found while syncing the block registry.');
+            return false;
+        }
+
+        $saved_settings = get_option($this->option_name, array());
+        $registry = get_option('adaire_blocks_registry', array());
+        $settings_changed = false;
+        $registry_changed = false;
+
+        foreach ($available_blocks as $block_key => $block_data) {
+            $block_name = isset($block_data['block_name']) ? $block_data['block_name'] : '';
+
+            if (!$block_name || !$this->block_exists($block_name)) {
+                $this->log_registration_failure('Block registry sync failed for key "' . $block_key . '". Missing build directory or block.json.');
+                continue;
+            }
+
+            if (!array_key_exists($block_key, $saved_settings)) {
+                $saved_settings[$block_key] = true;
+                $settings_changed = true;
+            }
+
+            $registry[$block_key] = array(
+                'block_name'    => $block_name,
+                'registered_at' => current_time('mysql'),
+                'category'      => isset($block_data['category_slug']) ? $block_data['category_slug'] : '',
+                'visible'       => isset($saved_settings[$block_key]) ? (bool) $saved_settings[$block_key] : true,
+            );
+            $registry_changed = true;
+        }
+
+        if ($settings_changed && !update_option($this->option_name, $saved_settings)) {
+            $this->log_registration_failure('Failed to persist new block settings during registry sync.');
+            return false;
+        }
+
+        if ($registry_changed && !update_option('adaire_blocks_registry', $registry)) {
+            $this->log_registration_failure('Failed to persist block registry records.');
+            return false;
+        }
+
+        $this->refresh_block_cache();
+
+        return true;
+    }
+
+    public function register_rest_routes() {
+        register_rest_route('adaire-blocks/v1', '/blocks', array(
+            'methods'             => 'GET',
+            'callback'            => array($this, 'get_registered_blocks_response'),
+            'permission_callback' => function() {
+                return current_user_can('manage_options');
+            },
+        ));
+    }
+
+    public function get_registered_blocks_response() {
+        $synced = $this->sync_block_registry();
+        $available_blocks = $this->get_available_blocks();
+        $settings = $this->get_settings();
+        $registry = get_option('adaire_blocks_registry', array());
+        $validation = $this->validate_block_registry($available_blocks, $registry);
+
+        return rest_ensure_response(array(
+            'success' => $synced && empty($validation['errors']),
+            'blocks' => $available_blocks,
+            'settings' => $settings,
+            'registry' => $registry,
+            'validation' => $validation,
+        ));
+    }
+
+    private function validate_block_registry($available_blocks, $registry) {
+        $errors = array();
+
+        foreach ($available_blocks as $block_key => $block_data) {
+            if (empty($registry[$block_key])) {
+                $errors[] = 'Missing registry record for ' . $block_key;
+                continue;
+            }
+
+            if (empty($block_data['block_name']) || !$this->block_exists($block_data['block_name'])) {
+                $errors[] = 'Missing build registration files for ' . $block_key;
+            }
+        }
+
+        foreach ($errors as $error) {
+            $this->log_registration_failure($error);
+        }
+
+        return array(
+            'total_available' => count($available_blocks),
+            'total_registry' => count($registry),
+            'errors' => $errors,
+        );
+    }
+
+    private function refresh_block_cache() {
+        wp_cache_delete($this->option_name, 'options');
+        wp_cache_delete('adaire_blocks_registry', 'options');
+        delete_transient('adaire_blocks_available_blocks');
+    }
+
+    private function log_registration_failure($message) {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('Adaire Blocks Registry: ' . $message);
+        }
+    }
+
     /**
      * Allowed SVG tags/attributes for block icons.
      */
@@ -433,7 +548,7 @@ class AdaireBlocksSettings {
         
         
         $available_blocks = $this->get_available_blocks();
-        $settings = get_option($this->option_name, $this->get_default_settings());
+        $settings = $this->get_settings();
         
         // Show success message if settings were just saved
         // Note: WordPress core handles nonce verification during form submission via settings_fields().
@@ -736,6 +851,11 @@ class AdaireBlocksSettings {
 
         $settings = $this->sanitize_settings($input_settings);
         update_option($this->option_name, $settings);
+        $synced = $this->sync_block_registry();
+
+        if (!$synced) {
+            wp_send_json_error(esc_html__('Block settings were saved, but registry validation failed. Check server logs for details.', 'adaire-blocks'));
+        }
         
         wp_send_json_success(array(
             'message' => esc_html__('Settings saved successfully!', 'adaire-blocks'),
@@ -755,6 +875,7 @@ class AdaireBlocksSettings {
         
         $default_settings = $this->get_default_settings();
         update_option($this->option_name, $default_settings);
+        $this->sync_block_registry();
         
         wp_send_json_success(array(
             'message' => 'Settings reset to defaults!',
