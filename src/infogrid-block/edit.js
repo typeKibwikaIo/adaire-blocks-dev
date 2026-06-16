@@ -24,6 +24,7 @@ import {
 import { useState, useEffect, createElement, useCallback, useRef } from '@wordpress/element';
 import { dragHandle, trash, plus, chevronUp, chevronDown, desktop, tablet, mobile } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
+import QuickZone from '../components/QuickZone';
 
 // Custom icons for small laptop and big desktop
 const smallLaptopIcon = createElement('svg', {
@@ -135,6 +136,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
     const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
     const [iconPickerTargetId, setIconPickerTargetId] = useState(null);
+    const [activeZone, setActiveZone] = useState(null);
 
     const attributesRef = useRef(attributes);
     useEffect(() => {
@@ -615,6 +617,58 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             className={`adaire-infogrid__item adaire-infogrid__item--${index + 1} ${expandedItem === item.id ? 'is-expanded' : ''}`}
                             onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
                         >
+                            <QuickZone
+                                id={`infogrid-item-${item.id}`}
+                                label="Item"
+                                activeZone={activeZone}
+                                setActiveZone={setActiveZone}
+                                content={
+                                    <>
+                                        <TextControl
+                                            label={__('Title', 'infogrid-block')}
+                                            value={item.title}
+                                            onChange={(value) => updateItem(item.id, 'title', value)}
+                                        />
+                                        <TextControl
+                                            label={__('Tagline', 'infogrid-block')}
+                                            value={item.tagline}
+                                            onChange={(value) => updateItem(item.id, 'tagline', value)}
+                                        />
+                                        <TextareaControl
+                                            label={__('Description', 'infogrid-block')}
+                                            value={item.description}
+                                            onChange={(value) => updateItem(item.id, 'description', value)}
+                                            rows={3}
+                                        />
+                                        <ToggleControl
+                                            label={__('Use icon instead of title', 'infogrid-block')}
+                                            checked={!!item.useIcon}
+                                            onChange={(value) => updateItem(item.id, 'useIcon', value)}
+                                        />
+                                        {item.useIcon && (
+                                            <BaseControl label={__('Item Icon', 'infogrid-block')}>
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={() => {
+                                                        setIconPickerTargetId(item.id);
+                                                        setIsIconPickerOpen(true);
+                                                    }}
+                                                    style={{ width: '100%', marginBottom: '8px' }}
+                                                >
+                                                    {item.iconClass ? (
+                                                        <>
+                                                            <i className={item.iconClass} style={{ marginRight: '8px' }}></i>
+                                                            {item.iconClass}
+                                                        </>
+                                                    ) : (
+                                                        __('Choose Bootstrap Icon', 'infogrid-block')
+                                                    )}
+                                                </Button>
+                                            </BaseControl>
+                                        )}
+                                    </>
+                                }
+                            >
                             <div className="adaire-infogrid__item-content">
                                 <div className="adaire-infogrid__item-header">
                                     {item.useIcon && item.iconClass ? (
@@ -636,6 +690,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     <p className="adaire-infogrid__item-description" style={{ whiteSpace: 'pre-line' }}>{item.description}</p>
                                 )}
                             </div>
+                            </QuickZone>
                         </div>
                     ))}
                 </div>

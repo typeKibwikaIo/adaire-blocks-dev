@@ -20,11 +20,13 @@ import { desktop, tablet, mobile } from '@wordpress/icons';
 import { Splide } from '@splidejs/splide';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
+import QuickZone from '../components/QuickZone';
 
 const FREE_TIER_ITEM_LIMIT = 3;
 
 export default function Edit({ attributes, setAttributes }) {
 	const [deviceType, setDeviceType] = useState('desktop');
+	const [activeZone, setActiveZone] = useState(null);
 	
 	// Check block limits
 	const { isLimitReached, showUpgradeNotice, upgradeMessage } = useBlockLimits(
@@ -1028,6 +1030,32 @@ export default function Edit({ attributes, setAttributes }) {
 															"--logo-size": `${logoSize || 60}px`,
 														}}
 													>
+														<QuickZone
+															id={`testimonial-logo-${index}`}
+															label="Company Logo"
+															activeZone={activeZone}
+															setActiveZone={setActiveZone}
+															content={
+																<>
+																	<TextControl
+																		label="Company Name"
+																		value={testimonial.companyName}
+																		onChange={(value) => updateTestimonial(index, 'companyName', value)}
+																	/>
+																	<MediaUploadCheck>
+																		<MediaUpload
+																			onSelect={(media) => updateTestimonial(index, 'companyLogo', media.url)}
+																			allowedTypes={['image']}
+																			render={({ open }) => (
+																				<Button onClick={open} variant="secondary" style={{ width: '100%' }}>
+																					{testimonial.companyLogo ? 'Replace Logo' : 'Upload Logo'}
+																				</Button>
+																			)}
+																		/>
+																	</MediaUploadCheck>
+																</>
+															}
+														>
 														<div className="ad-carousel-text-block__company-logo">
 												{testimonial.companyLogo ? (
 													<>
@@ -1057,12 +1085,39 @@ export default function Edit({ attributes, setAttributes }) {
 														{testimonial.companyName}
 													</div>
 												)}
-											</div>
+												</div>
+												</QuickZone>
+														<QuickZone
+															id={`testimonial-text-${index}`}
+															label="Quote & Author"
+															activeZone={activeZone}
+															setActiveZone={setActiveZone}
+															content={
+																<>
+																	<TextControl
+																		label="Quote"
+																		value={testimonial.quote}
+																		onChange={(value) => updateTestimonial(index, 'quote', value)}
+																	/>
+																	<TextControl
+																		label="Author Name"
+																		value={testimonial.authorName}
+																		onChange={(value) => updateTestimonial(index, 'authorName', value)}
+																	/>
+																	<TextControl
+																		label="Author Title"
+																		value={testimonial.authorTitle}
+																		onChange={(value) => updateTestimonial(index, 'authorTitle', value)}
+																	/>
+																</>
+															}
+														>
 														<div className="ad-carousel-text-block__quote">"{testimonial.quote}"</div>
 														<div className="ad-carousel-text-block__author">
 															<div className="ad-carousel-text-block__name">{testimonial.authorName}</div>
 															<div className="ad-carousel-text-block__title">{testimonial.authorTitle}</div>
-											</div>
+												</div>
+												</QuickZone>
 										</div>
 									</div>
 								))}

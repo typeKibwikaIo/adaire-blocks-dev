@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "adaire/row-block",
+  "title": "Row",
+  "description": "A row container with configurable column layouts.",
+  "category": "adaire-layout-sections",
+  "icon": "layout",
+  "editorScript": "file:./index.js",
+  "style": "file:./style-index.css",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "spacing": { "padding": true, "margin": true },
+    "color": { "background": true, "gradients": true }
+  },
+  "attributes": {
+    "layout": {
+      "type": "string",
+      "default": ""
+    },
+    "columnWidths": {
+      "type": "array",
+      "default": []
+    },
+    "align": {
+      "type": "string",
+      "default": "wide"
+    }
+  }
+}

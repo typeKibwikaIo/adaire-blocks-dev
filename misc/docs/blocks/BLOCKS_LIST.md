@@ -1,4 +1,4 @@
-# Adaire Blocks - Complete Block List
+# GutenBlocks Blocks - Complete Block List
 
 A comprehensive collection of 16 custom Gutenberg blocks for WordPress.
 

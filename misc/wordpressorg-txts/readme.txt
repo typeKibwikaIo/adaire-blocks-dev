@@ -1,4 +1,4 @@
-=== Adaire Blocks ===
+=== GutenBlocks Blocks ===
 Contributors: adairedigital
 Donate link: https://adaire.digital/
 Tags: blocks, gutenberg, animation, carousel, testimonials
@@ -15,7 +15,7 @@ Source code: https://github.com/helloadaire/Adaire-Blocks-Free
 
 == Description ==
 
-Adaire Blocks is a growing library of premium-feeling Gutenberg blocks built with modern web technologies. Drop in ready-made sections like accordions, carousels, testimonial sliders, counters, process timelines, toggles, and more, then fine-tune every color, font, animation, and layout from the native block inspector.
+GutenBlocks Blocks is a growing library of premium-feeling Gutenberg blocks built with modern web technologies. Drop in ready-made sections like accordions, carousels, testimonial sliders, counters, process timelines, toggles, and more, then fine-tune every color, font, animation, and layout from the native block inspector.
 
 ### Highlights
 
@@ -27,7 +27,7 @@ Adaire Blocks is a growing library of premium-feeling Gutenberg blocks built wit
 
 ### Included Blocks
 
-The free version includes the following Gutenberg blocks (with more unlocked via Adaire Blocks Plus/Premium upgrades):
+The free version includes the following Gutenberg blocks (with more unlocked via GutenBlocks Blocks Plus/Premium upgrades):
 
 **Free Blocks:**
 * Accordion - Create collapsible content sections with smooth animations
@@ -59,14 +59,14 @@ Each block supports device-aware container widths, custom typography, spacing co
 == Installation ==
 
 1. Upload the plugin folder to `/wp-content/plugins/adaire-blocks` or install from the WordPress.org directory.
-2. Activate **Adaire Blocks** through the **Plugins** screen in WordPress.
-3. Open the Gutenberg editor and search for “Adaire” or the block names listed above.
+2. Activate **GutenBlocks Blocks** through the **Plugins** screen in WordPress.
+3. Open the Gutenberg editor and search for “GutenBlocks” or the block names listed above.
 4. Drop a block into your layout, customize it in the inspector, and publish.
 
 == Frequently Asked Questions ==
 
 = What WordPress and PHP versions are required? =
-Adaire Blocks requires WordPress 6.7 or newer and PHP 7.4+. Modern block editor features rely on the APIs included in those versions.
+GutenBlocks Blocks requires WordPress 6.7 or newer and PHP 7.4+. Modern block editor features rely on the APIs included in those versions.
 
 = Are the blocks compatible with every theme? =
 Yes. The blocks follow core block editor spacing, typography, and color tools. They inherit theme fonts by default, and you can override typography and spacing per block.
@@ -77,7 +77,7 @@ Absolutely. Every block exposes controls for colors, gradients, typography, spac
 = Do the blocks work on mobile? =
 Yes. All layout, typography, and spacing controls ship with desktop/tablet/mobile inputs, so you can tailor designs per breakpoint.
 
-= What's the difference between the free plugin and Adaire Blocks Plus? =
+= What's the difference between the free plugin and GutenBlocks Blocks Plus? =
 The free version includes the core creative blocks listed above. Upgrading to Plus/Premium unlocks additional storytelling blocks, removes tier limits, and provides direct support. You can upgrade at any time without reinstalling.
 
 == Screenshots ==

@@ -1,0 +1,20 @@
+// Column block styling
+.adaire-column {
+  flex: 1 1 0;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 80px;
+
+  // Empty state styling
+  &:empty::before {
+    content: 'Add content here';
+    color: #757575;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+  }
+}

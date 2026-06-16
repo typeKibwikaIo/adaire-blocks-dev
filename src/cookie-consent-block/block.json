@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Cookie Consent",
   "category": "adaire-social-engagement",
-  "description": "Cookie Consent block for Adaire Blocks.",
+  "description": "Cookie Consent block for GutenBlocks Blocks.",
   "supports": {
     "html": false,
     "anchor": true

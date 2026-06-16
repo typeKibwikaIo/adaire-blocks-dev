@@ -18,6 +18,7 @@ import {
 } from "@wordpress/components";
 import { useEffect, useState } from "@wordpress/element";
 import { plus, trash, arrowUp, arrowDown } from "@wordpress/icons";
+import QuickZone from "../components/QuickZone";
 import "./editor.scss";
 
 const DEVICE_TYPES = [
@@ -124,6 +125,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			setAttributes({ blockId: clientId });
 		}
 	}, [blockId, clientId, setAttributes]);
+
+	const [activeZone, setActiveZone] = useState(null);
 
 	const gridColumnsDesktop = gridColumns?.desktop ?? 3;
 	const gridColumnsTablet = gridColumns?.tablet ?? gridColumnsDesktop;
@@ -1269,29 +1272,64 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					</div>
 
 					<div className="adaire-pricing-table__billing-toggle" aria-label={__("Billing toggle", "pricing-table-block")}>
-						<button
-							type="button"
-							className={`adaire-pricing-table__billing-option ${
-								billingMode === "monthly" ? "is-active" : ""
-							}`}
-							onClick={() => setAttributes({ billingMode: "monthly" })}
+						<QuickZone
+							id="billing-monthly-label"
+							label="Monthly Label"
+							activeZone={activeZone}
+							setActiveZone={setActiveZone}
+							content={
+								<TextControl
+									label={__("Monthly Label", "pricing-table-block")}
+									value={monthlyLabel}
+									onChange={(value) => setAttributes({ monthlyLabel: value })}
+								/>
+							}
 						>
-							{monthlyLabel}
-						</button>
-						<button
-							type="button"
-							className={`adaire-pricing-table__billing-option ${
-								billingMode === "yearly" ? "is-active" : ""
-							}`}
-							onClick={() => setAttributes({ billingMode: "yearly" })}
+							<button
+								type="button"
+								className={`adaire-pricing-table__billing-option ${
+									billingMode === "monthly" ? "is-active" : ""
+								}`}
+								onClick={() => setAttributes({ billingMode: "monthly" })}
+							>
+								{monthlyLabel}
+							</button>
+						</QuickZone>
+						<QuickZone
+							id="billing-yearly-label"
+							label="Yearly Label"
+							activeZone={activeZone}
+							setActiveZone={setActiveZone}
+							content={
+								<>
+									<TextControl
+										label={__("Yearly Label", "pricing-table-block")}
+										value={yearlyLabel}
+										onChange={(value) => setAttributes({ yearlyLabel: value })}
+									/>
+									<TextControl
+										label={__("Yearly Badge Text", "pricing-table-block")}
+										value={yearlyBadgeText}
+										onChange={(value) => setAttributes({ yearlyBadgeText: value })}
+									/>
+								</>
+							}
 						>
-							<span>{yearlyLabel}</span>
-							{yearlyBadgeText && (
-								<span className="adaire-pricing-table__billing-badge">
-									{yearlyBadgeText}
-								</span>
-							)}
-						</button>
+							<button
+								type="button"
+								className={`adaire-pricing-table__billing-option ${
+									billingMode === "yearly" ? "is-active" : ""
+								}`}
+								onClick={() => setAttributes({ billingMode: "yearly" })}
+							>
+								<span>{yearlyLabel}</span>
+								{yearlyBadgeText && (
+									<span className="adaire-pricing-table__billing-badge">
+										{yearlyBadgeText}
+									</span>
+								)}
+							</button>
+						</QuickZone>
 					</div>
 
 					<div className="adaire-pricing-table__grid">
@@ -1331,37 +1369,120 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									/>
 								</div>
 
-								<div className="adaire-pricing-table__price">
-									<span className="adaire-pricing-table__price-currency">
-										{card.currency}
-									</span>
-									<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--monthly">
-										{card.monthlyPrice}
-									</span>
-									<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--yearly">
-										{card.yearlyPrice}
-									</span>
-									<span className="adaire-pricing-table__price-suffix">
-										{card.priceSuffix}
-									</span>
-								</div>
+								<QuickZone
+									id={`price-${card.id}`}
+									label="Price"
+									activeZone={activeZone}
+									setActiveZone={setActiveZone}
+									content={
+										<>
+											<TextControl
+												label={__("Currency Symbol", "pricing-table-block")}
+												value={card.currency}
+												onChange={(value) =>
+													updateCard(cardIndex, { currency: value })
+												}
+											/>
+											<TextControl
+												label={__("Monthly Price", "pricing-table-block")}
+												value={card.monthlyPrice}
+												onChange={(value) =>
+													updateCard(cardIndex, { monthlyPrice: value })
+												}
+											/>
+											<TextControl
+												label={__("Yearly Price", "pricing-table-block")}
+												value={card.yearlyPrice}
+												onChange={(value) =>
+													updateCard(cardIndex, { yearlyPrice: value })
+												}
+											/>
+											<TextControl
+												label={__("Price Suffix", "pricing-table-block")}
+												value={card.priceSuffix}
+												onChange={(value) =>
+													updateCard(cardIndex, { priceSuffix: value })
+												}
+												placeholder="/mo"
+											/>
+										</>
+									}
+								>
+									<div className="adaire-pricing-table__price">
+										<span className="adaire-pricing-table__price-currency">
+											{card.currency}
+										</span>
+										<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--monthly">
+											{card.monthlyPrice}
+										</span>
+										<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--yearly">
+											{card.yearlyPrice}
+										</span>
+										<span className="adaire-pricing-table__price-suffix">
+											{card.priceSuffix}
+										</span>
+									</div>
+								</QuickZone>
 
 								<ul className="adaire-pricing-table__features">
 									{(card.features || []).map((feature, featureIndex) => (
 										<li key={`${card.id}-feature-preview-${featureIndex}`}>
-											{feature}
+											<QuickZone
+												id={`feature-${card.id}-${featureIndex}`}
+												label="Feature"
+												activeZone={activeZone}
+												setActiveZone={setActiveZone}
+												content={
+													<TextControl
+														label={__("Feature", "pricing-table-block")}
+														value={feature}
+														onChange={(value) =>
+															updateFeature(cardIndex, featureIndex, value)
+														}
+														placeholder={__("Add feature", "pricing-table-block")}
+													/>
+												}
+											>
+												{feature}
+											</QuickZone>
 										</li>
 									))}
 								</ul>
 
 								<div className="adaire-pricing-table__card-footer">
-									<a
-										href={card.buttonUrl || "#"}
-										className="adaire-pricing-table__button"
-										onClick={(e) => e.preventDefault()}
+									<QuickZone
+										id={`button-${card.id}`}
+										label="Button"
+										activeZone={activeZone}
+										setActiveZone={setActiveZone}
+										content={
+											<>
+												<TextControl
+													label={__("Button Label", "pricing-table-block")}
+													value={card.buttonLabel}
+													onChange={(value) =>
+														updateCard(cardIndex, { buttonLabel: value })
+													}
+												/>
+												<TextControl
+													label={__("Button URL", "pricing-table-block")}
+													value={card.buttonUrl}
+													onChange={(value) =>
+														updateCard(cardIndex, { buttonUrl: value })
+													}
+													placeholder="https://example.com"
+												/>
+											</>
+										}
 									>
-										{card.buttonLabel}
-									</a>
+										<a
+											href={card.buttonUrl || "#"}
+											className="adaire-pricing-table__button"
+											onClick={(e) => e.preventDefault()}
+										>
+											{card.buttonLabel}
+										</a>
+									</QuickZone>
 								</div>
 							</div>
 						))}

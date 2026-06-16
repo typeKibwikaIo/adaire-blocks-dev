@@ -9,7 +9,7 @@ The Modal Block pairs a trigger block with a modal content block so you can laun
 ### Locate and add the Modal Block
 
 cal1. Type `/` inside the editor and search for “Modal”.
-2. Select **Modal Block** from the Adaire collection.
+2. Select **Modal Block** from the GutenBlocks collection.
 3. A trigger area and a modal content area appear as nested blocks so you can start editing immediately.
 
 ## Block Structure

@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings page for Adaire Blocks
+ * Settings page for GutenBlocks Blocks
  *
  * @package AdaireBlocks
  */
@@ -46,8 +46,8 @@ class AdaireBlocksSettings {
         $svg_icon = 'data:image/svg+xml;base64,' . base64_encode('<svg width="20" height="20" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M408.523 321.353H163.388V393.981H401.889V483.583H195.142C156 483.583 125 516.017 125 556.18V645.814C125 685.978 156 718.411 195.142 718.411H401.889V645.814H201.776V556.18H401.889V645.814H477.941V393.981C477.941 353.818 446.941 321.353 408.523 321.353Z" fill="black"/><path d="M603.247 267.692V357.441H801.292C842.251 357.441 875 389.932 875 429.647V643.346C875 686.658 838.511 718.412 793.842 718.412H592.057C553.348 718.412 522.059 688.102 522.059 650.569V189C566.728 189 603.217 224.381 603.217 267.692H603.247ZM603.247 650.569H793.842V429.647H603.247V650.569Z" fill="black"/></svg>');
         
         add_menu_page(
-            'Adaire Blocks',
-            'Adaire Blocks',
+            'GutenBlocks Blocks',
+            'GutenBlocks Blocks',
             'manage_options',
             'adaire-blocks-settings',
             array($this, 'settings_page'),
@@ -71,7 +71,7 @@ class AdaireBlocksSettings {
         
         // // Debug: Log settings (only in debug mode)
         // if (defined('WP_DEBUG') && WP_DEBUG) {
-        //     error_log('Adaire Blocks Settings: ' . print_r($this->settings, true));
+        //     error_log('GutenBlocks Blocks Settings: ' . print_r($this->settings, true));
         // }
     }
     
@@ -97,7 +97,7 @@ class AdaireBlocksSettings {
     public function sanitize_settings($input) {
         // // Debug: Log what's being submitted (only in debug mode)
         // if (defined('WP_DEBUG') && WP_DEBUG) {
-        //     error_log('Adaire Blocks Sanitize Input: ' . print_r($input, true));
+        //     error_log('GutenBlocks Blocks Sanitize Input: ' . print_r($input, true));
         // }
         
         $sanitized = array();
@@ -129,7 +129,7 @@ class AdaireBlocksSettings {
         
         // // Debug: Log what's being saved (only in debug mode)
         // if (defined('WP_DEBUG') && WP_DEBUG) {
-        //     error_log('Adaire Blocks Sanitized Output: ' . print_r($sanitized, true));
+        //     error_log('GutenBlocks Blocks Sanitized Output: ' . print_r($sanitized, true));
         // }
         
         return $sanitized;
@@ -190,6 +190,75 @@ class AdaireBlocksSettings {
                 case 'adaire-blocks-premium':
                     $category_label = 'Premium';
                     break;
+                case 'adaire-hero-sections':
+                    $category_label = 'Hero & Navigation';
+                    break;
+                case 'adaire-layout-sections':
+                    $category_label = 'Layout Sections';
+                    break;
+                case 'adaire-marketing':
+                    $category_label = 'Marketing';
+                    break;
+                case 'adaire-media':
+                    $category_label = 'Media';
+                    break;
+                case 'adaire-business':
+                    $category_label = 'Business';
+                    break;
+                case 'adaire-testimonial':
+                    $category_label = 'Testimonials';
+                    break;
+                case 'adaire-social':
+                    $category_label = 'Social';
+                    break;
+                case 'adaire-blog-publishing':
+                    $category_label = 'Blog & Publishing';
+                    break;
+                case 'adaire-start-actions':
+                    $category_label = 'Start & Actions';
+                    break;
+                case 'adaire-information-blocks':
+                    $category_label = 'Information Blocks';
+                    break;
+                case 'adaire-effects-interactions':
+                    $category_label = 'Effects & Interactions';
+                    break;
+                case 'adaire-interactive':
+                    $category_label = 'Interactive';
+                    break;
+                case 'adaire-layout-navigation':
+                    $category_label = 'Layout & Navigation';
+                    break;
+                case 'adaire-blog-content':
+                    $category_label = 'Blog & Content';
+                    break;
+                case 'adaire-content-expandable':
+                    $category_label = 'Expandable Content';
+                    break;
+                case 'adaire-content-info':
+                    $category_label = 'Content & Info';
+                    break;
+                case 'adaire-content-tabs':
+                    $category_label = 'Tabs & Content';
+                    break;
+                case 'adaire-layout-hero':
+                    $category_label = 'Layout & Hero';
+                    break;
+                case 'adaire-marketing-conversion':
+                    $category_label = 'Marketing & Conversion';
+                    break;
+                case 'adaire-media-images':
+                    $category_label = 'Media & Images';
+                    break;
+                case 'adaire-media-videos':
+                    $category_label = 'Media & Videos';
+                    break;
+                case 'adaire-reviews-trust':
+                    $category_label = 'Reviews & Trust';
+                    break;
+                case 'adaire-social-engagement':
+                    $category_label = 'Social & Engagement';
+                    break;
                 default:
                     $category_label = $category_slug ? ucwords(str_replace('-', ' ', $category_slug)) : 'Widgets';
                     break;
@@ -223,7 +292,7 @@ class AdaireBlocksSettings {
             
             // // Debug: Log block status (only in debug mode)
             // if (defined('WP_DEBUG') && WP_DEBUG) {
-            //     error_log("Adaire Blocks Settings: Block $block_name - enabled: " . ($config->is_block_enabled($block_name) ? 'true' : 'false') . ", premium: " . ($is_premium_block ? 'true' : 'false'));
+            //     error_log("GutenBlocks Blocks Settings: Block $block_name - enabled: " . ($config->is_block_enabled($block_name) ? 'true' : 'false') . ", premium: " . ($is_premium_block ? 'true' : 'false'));
             // }
             
             $blocks[$settings_key] = array(
@@ -354,7 +423,7 @@ class AdaireBlocksSettings {
 
     private function log_registration_failure($message) {
         if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('Adaire Blocks Registry: ' . $message);
+            error_log('GutenBlocks Blocks Registry: ' . $message);
         }
     }
 
@@ -504,7 +573,7 @@ class AdaireBlocksSettings {
         wp_register_script(
             'adaire-blocks-admin',
             plugin_dir_url(__FILE__) . 'js/admin-settings.js',
-            array('jquery'),
+            array('jquery', 'wp-api-fetch'),
             '1.0.0',
             true
         );
@@ -514,6 +583,7 @@ class AdaireBlocksSettings {
             'AdaireBlocksAdminData',
             array(
                 'ajaxUrl'    => admin_url('admin-ajax.php'),
+                'restUrl'    => esc_url_raw(rest_url('adaire-blocks/v1/blocks')),
                 'nonce'      => wp_create_nonce('adaire_blocks_settings'),
                 'optionName' => $this->option_name,
                 'strings'    => array(
@@ -537,13 +607,13 @@ class AdaireBlocksSettings {
         
         // Safety check - ensure config is loaded
         if (!$config) {
-            wp_die('Error: Adaire Blocks configuration not loaded. Please try refreshing the page.');
+            wp_die('Error: GutenBlocks Blocks configuration not loaded. Please try refreshing the page.');
         }
         
         // // Debug: Log config status (only in debug mode)
         // if (defined('WP_DEBUG') && WP_DEBUG) {
-        //     error_log('Adaire Blocks Settings: Config loaded - is_premium: ' . ($config->is_premium() ? 'true' : 'false'));
-        //     error_log('Adaire Blocks Settings: Plugin version: ' . $config->get_plugin_version());
+        //     error_log('GutenBlocks Blocks Settings: Config loaded - is_premium: ' . ($config->is_premium() ? 'true' : 'false'));
+        //     error_log('GutenBlocks Blocks Settings: Plugin version: ' . $config->get_plugin_version());
         // }
         
         
@@ -761,15 +831,43 @@ class AdaireBlocksSettings {
                         <?php
                     };
 
-                    // Render tiers in the desired order: Free, Plus, Premium, then any others.
-                    $render_tier( 'Free Blocks',    $grouped_blocks['adaire-blocks-free'] );
-                    $render_tier( 'Plus Blocks',    $grouped_blocks['adaire-blocks-plus'] );
-                    $render_tier( 'Premium Blocks', $grouped_blocks['adaire-blocks-premium'] );
+                    $category_titles = array(
+                        'adaire-free' => 'Free Blocks',
+                        'adaire-plus' => 'Plus Blocks',
+                        'adaire-premium' => 'Premium Blocks',
+                        'other' => 'Other Blocks',
+                        'adaire-hero-sections' => 'Hero & Navigation',
+                        'adaire-layout-sections' => 'Layout Sections',
+                        'adaire-marketing' => 'Marketing',
+                        'adaire-media' => 'Media',
+                        'adaire-business' => 'Business',
+                        'adaire-testimonial' => 'Testimonials',
+                        'adaire-social' => 'Social',
+                        'adaire-blog-publishing' => 'Blog & Publishing',
+                        'adaire-start-actions' => 'Start & Actions',
+                        'adaire-information-blocks' => 'Information Blocks',
+                        'adaire-effects-interactions' => 'Effects & Interactions',
+                        'adaire-interactive' => 'Interactive',
+                        'adaire-layout-navigation' => 'Layout & Navigation',
+                        'adaire-blog-content' => 'Blog & Content',
+                        'adaire-content-expandable' => 'Expandable Content',
+                        'adaire-content-info' => 'Content & Info',
+                        'adaire-content-tabs' => 'Tabs & Content',
+                        'adaire-layout-hero' => 'Layout & Hero',
+                        'adaire-marketing-conversion' => 'Marketing & Conversion',
+                        'adaire-media-images' => 'Media & Images',
+                        'adaire-media-videos' => 'Media & Videos',
+                        'adaire-reviews-trust' => 'Reviews & Trust',
+                        'adaire-social-engagement' => 'Social & Engagement',
+                    );
 
-                    // Render any non-standard categories under "Other Blocks".
-                    $other_blocks = $grouped_blocks['other'];
-                    if (!empty($other_blocks)) {
-                        $render_tier( 'Other Blocks', $other_blocks );
+                    foreach ($grouped_blocks as $category_slug => $blocks_for_category) {
+                        if (empty($blocks_for_category)) {
+                            continue;
+                        }
+
+                        $title = isset($category_titles[$category_slug]) ? $category_titles[$category_slug] : ucwords(str_replace('-', ' ', $category_slug));
+                        $render_tier($title, $blocks_for_category);
                     }
                     ?>
                     
@@ -859,7 +957,8 @@ class AdaireBlocksSettings {
         
         wp_send_json_success(array(
             'message' => esc_html__('Settings saved successfully!', 'adaire-blocks'),
-            'settings' => $settings
+            'settings' => $settings,
+            'registrySynced' => true
         ));
     }
     

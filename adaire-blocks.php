@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Gutenblocks
+ * Plugin Name:       GutenBlocks
  * Description:       A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.
  * Version:           1.2.5
  * Requires at least: 6.7
@@ -73,7 +73,7 @@ $myUpdateChecker = PucFactory::buildUpdateChecker(
 add_action('upgrader_process_complete', function($upgrader, $hook_extra) {
     if (isset($hook_extra['plugin']) && $hook_extra['plugin'] === plugin_basename(__FILE__)) {
         delete_transient('adaire-blocks_latest_version');
-        error_log('[Adaire Blocks Rollback] Plugin updated - cleared version cache');
+        error_log('[GutenBlocks Blocks Rollback] Plugin updated - cleared version cache');
     }
 }, 10, 2);
 
@@ -81,7 +81,7 @@ add_action('upgrader_process_complete', function($upgrader, $hook_extra) {
 add_action('activated_plugin', function($plugin) {
     if ($plugin === plugin_basename(__FILE__)) {
         delete_transient('adaire-blocks_latest_version');
-        error_log('[Adaire Blocks Rollback] Plugin activated - cleared version cache');
+        error_log('[GutenBlocks Blocks Rollback] Plugin activated - cleared version cache');
     }
 });
 
@@ -93,7 +93,7 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
     $is_latest_version = true;
     
     // Log the current version
-    error_log('[Adaire Blocks Rollback] Current version: ' . $current_version);
+    error_log('[GutenBlocks Blocks Rollback] Current version: ' . $current_version);
     
     // Check if there's a newer version available by directly checking the JSON file
     // Cache the result for 1 hour to avoid checking too frequently
@@ -103,7 +103,7 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
     // Force refresh cache if we're on a newer version than what's cached
     if ($cached_version !== false && $cached_version !== 'error') {
         if (version_compare($current_version, $cached_version, '>')) {
-            error_log('[Adaire Blocks Rollback] Current version is newer than cached version - clearing cache');
+            error_log('[GutenBlocks Blocks Rollback] Current version is newer than cached version - clearing cache');
             delete_transient($cache_key);
             $cached_version = false;
         }
@@ -118,39 +118,39 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
             $json_data = json_decode(wp_remote_retrieve_body($response), true);
             if ($json_data && isset($json_data['version'])) {
                 $latest_version = $json_data['version'];
-                error_log('[Adaire Blocks Rollback] Latest available version from JSON: ' . $latest_version);
+                error_log('[GutenBlocks Blocks Rollback] Latest available version from JSON: ' . $latest_version);
                 
                 // Cache the result for 1 hour
                 set_transient($cache_key, $latest_version, HOUR_IN_SECONDS);
                 
                 if (version_compare($current_version, $latest_version, '<')) {
                     $is_latest_version = false;
-                    error_log('[Adaire Blocks Rollback] Hiding rollback link - newer version available: ' . $latest_version);
+                    error_log('[GutenBlocks Blocks Rollback] Hiding rollback link - newer version available: ' . $latest_version);
                 }
             } else {
-                error_log('[Adaire Blocks Rollback] Invalid JSON data received');
+                error_log('[GutenBlocks Blocks Rollback] Invalid JSON data received');
                 set_transient($cache_key, 'error', HOUR_IN_SECONDS);
             }
         } else {
-            error_log('[Adaire Blocks Rollback] Failed to fetch JSON: ' . (is_wp_error($response) ? $response->get_error_message() : 'HTTP ' . wp_remote_retrieve_response_code($response)));
+            error_log('[GutenBlocks Blocks Rollback] Failed to fetch JSON: ' . (is_wp_error($response) ? $response->get_error_message() : 'HTTP ' . wp_remote_retrieve_response_code($response)));
             set_transient($cache_key, 'error', HOUR_IN_SECONDS);
         }
     } else {
         // Use cached version
         if ($cached_version !== 'error') {
-            error_log('[Adaire Blocks Rollback] Using cached latest version: ' . $cached_version);
+            error_log('[GutenBlocks Blocks Rollback] Using cached latest version: ' . $cached_version);
             if (version_compare($current_version, $cached_version, '<')) {
                 $is_latest_version = false;
-                error_log('[Adaire Blocks Rollback] Hiding rollback link - newer version available: ' . $cached_version);
+                error_log('[GutenBlocks Blocks Rollback] Hiding rollback link - newer version available: ' . $cached_version);
             }
         } else {
-            error_log('[Adaire Blocks Rollback] Using cached error state - showing rollback link');
+            error_log('[GutenBlocks Blocks Rollback] Using cached error state - showing rollback link');
         }
     }
     
     // Only show rollback link if current version is the latest
     if ($is_latest_version) {
-        error_log('[Adaire Blocks Rollback] Showing rollback link - current version is latest');
+        error_log('[GutenBlocks Blocks Rollback] Showing rollback link - current version is latest');
         $links[] = '<a href="' . esc_url(admin_url('admin-post.php?action=my_plugin_rollback&_wpnonce=' . wp_create_nonce('my_plugin_rollback'))) . '" class="my-plugin-rollback-btn">Rollback</a>';
     }
     
@@ -164,13 +164,13 @@ add_action('admin_post_my_plugin_rollback', function () {
     }
 
     if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'my_plugin_rollback')) {
-        error_log('[Adaire Blocks Rollback] Nonce verification failed');
+        error_log('[GutenBlocks Blocks Rollback] Nonce verification failed');
         wp_die('Security check failed.');
     }
 
     // URL to the previous version ZIP
     $previous_version_zip = 'https://github.com/helloadaire/Adaire-Blocks/releases/download/v1.2.4.alpha/adaire-blocks.1.2.4.alpha.zip';
-    error_log('[Adaire Blocks Rollback] Attempting rollback to: ' . $previous_version_zip);
+    error_log('[GutenBlocks Blocks Rollback] Attempting rollback to: ' . $previous_version_zip);
 
     require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -181,16 +181,16 @@ add_action('admin_post_my_plugin_rollback', function () {
 
     // Deactivate current plugin
     deactivate_plugins($plugin_slug);
-    error_log('[Adaire Blocks Rollback] Plugin deactivated.');
+    error_log('[GutenBlocks Blocks Rollback] Plugin deactivated.');
 
     // Delete current plugin folder
     $plugin_dir = plugin_dir_path(__FILE__);
     if (WP_Filesystem()) {
         global $wp_filesystem;
         if ($wp_filesystem->delete($plugin_dir, true, true)) {
-            error_log('[Adaire Blocks Rollback] Plugin folder deleted successfully.');
+            error_log('[GutenBlocks Blocks Rollback] Plugin folder deleted successfully.');
         } else {
-            error_log('[Adaire Blocks Rollback] Failed to delete plugin folder.');
+            error_log('[GutenBlocks Blocks Rollback] Failed to delete plugin folder.');
             wp_die('Failed to delete current plugin folder. Check debug.log.');
         }
     }
@@ -201,10 +201,10 @@ add_action('admin_post_my_plugin_rollback', function () {
 
     if ($result && !is_wp_error($result)) {
         activate_plugin($plugin_slug);
-        error_log('[Adaire Blocks Rollback] Rollback successful and plugin activated.');
+        error_log('[GutenBlocks Blocks Rollback] Rollback successful and plugin activated.');
         wp_safe_redirect(admin_url('plugins.php?rollback=success'));
     } else {
-        error_log('[Adaire Blocks Rollback] Rollback failed: ' . print_r($result, true));
+        error_log('[GutenBlocks Blocks Rollback] Rollback failed: ' . print_r($result, true));
         wp_safe_redirect(admin_url('plugins.php?rollback=failed'));
     }
 
@@ -275,7 +275,7 @@ function adaire_blocks_license_notice() {
 	?>
 	<div class="notice notice-warning is-dismissible">
 		<p>
-			<strong>Adaire Blocks:</strong> 
+			<strong>GutenBlocks Blocks:</strong> 
 			Your license is not active. 
 			<a href="<?php echo esc_url($license_page_url); ?>">Activate your license</a> 
 			to unlock all features and receive updates.
@@ -296,7 +296,7 @@ function adaire_blocks_license_error_notice($message) {
 	?>
 	<div class="notice notice-error is-dismissible">
 		<p>
-			<strong>Adaire Blocks License Error:</strong> 
+			<strong>GutenBlocks Blocks License Error:</strong> 
 			<?php echo esc_html($message); ?>
 			<a href="<?php echo esc_url($license_page_url); ?>">Check your license</a>
 		</p>
@@ -1548,15 +1548,8 @@ function create_block_gsap_hero_block_block_init() {
 		}
 		
 		// Register enabled blocks individually
-		foreach ( $block_settings as $block_key => $enabled ) {
-			if ( ! $enabled ) {
-				continue; // Skip disabled blocks
-			}
-			
-			$block_name = $block_mapping[ $block_key ] ?? null;
-			if ( ! $block_name ) {
-				continue;
-			}
+		// Use $filtered_manifest as the source so new blocks (not yet in DB settings) are also registered.
+		foreach ( $filtered_manifest as $block_name => $block_data ) {
 			
 			// Check if this is a premium block and license is not active
 			$premium_blocks = array(
@@ -1684,7 +1677,59 @@ function create_block_gsap_hero_block_block_init() {
 add_action( 'init', 'create_block_gsap_hero_block_block_init' );
 
 /**
- * Register custom block categories for Gutenblocks (Free, Plus, Premium)
+ * Explicitly register row-block and column-block (adaire/ namespace) to ensure they appear in the editor.
+ * These blocks use a different namespace than the rest (create-block/) and need direct registration.
+ */
+add_action( 'init', function() {
+	$row_block_path    = __DIR__ . '/build/row-block';
+	$column_block_path = __DIR__ . '/build/column-block';
+
+	if ( file_exists( $row_block_path . '/block.json' ) && ! WP_Block_Type_Registry::get_instance()->is_registered( 'adaire/row-block' ) ) {
+		register_block_type( $row_block_path );
+	}
+
+	if ( file_exists( $column_block_path . '/block.json' ) && ! WP_Block_Type_Registry::get_instance()->is_registered( 'adaire/column-block' ) ) {
+		register_block_type( $column_block_path );
+	}
+}, 12 );
+
+/**
+ * Register plugin-owned navigation menu locations so site owners can assign
+ * WordPress menus to them from Appearance > Menus. These power the Header
+ * block's "Primary Menu" / "Footer Menu" Navigation Source options (see
+ * src/header-block/render.php). Purely additive — does not affect existing
+ * block registration or any other plugin behaviour.
+ */
+add_action( 'init', function() {
+	register_nav_menus( array(
+		'adaire-blocks-primary' => __( 'GutenBlocks — Primary Navigation', 'adaire-blocks' ),
+		'adaire-blocks-footer'  => __( 'GutenBlocks — Footer Navigation', 'adaire-blocks' ),
+	) );
+} );
+
+/**
+ * Register plugin-owned widget areas (sidebars) so site owners can place
+ * classic widgets into them from Appearance > Widgets. These back the
+ * Footer block's "Widget Area" column type (see
+ * src/website-footer-block/render.php). Purely additive.
+ */
+add_action( 'init', function() {
+	for ( $i = 1; $i <= 4; $i++ ) {
+		register_sidebar( array(
+			'id'            => 'adaire-footer-widget-' . $i,
+			/* translators: %d: widget area number. */
+			'name'          => sprintf( __( 'GutenBlocks — Footer Widget Area %d', 'adaire-blocks' ), $i ),
+			'description'   => __( 'Used by the GutenBlocks Footer block\'s Widget Area column type.', 'adaire-blocks' ),
+			'before_widget' => '<div class="website-footer-block__widget %1$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h4 class="website-footer-block__widget-title">',
+			'after_title'   => '</h4>',
+		) );
+	}
+} );
+
+/**
+ * Register custom block categories for GutenBlocks (Free, Plus, Premium)
  */
 function adaire_blocks_register_block_categories( $categories, $editor_context ) {
 	$registered_slugs = wp_list_pluck( $categories, 'slug' );
@@ -1692,137 +1737,137 @@ function adaire_blocks_register_block_categories( $categories, $editor_context )
 	$custom_categories = array(
 		array(
 			'slug'  => 'adaire-blocks-premium',
-			'title' => __( 'Gutenblocks PREMIUM', 'adaire-blocks' ),
+			'title' => __( 'GutenBlocks PREMIUM', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blocks-plus',
-			'title' => __( 'Gutenblocks PLUS', 'adaire-blocks' ),
+			'title' => __( 'GutenBlocks PLUS', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blocks-free',
-			'title' => __( 'Gutenblocks FREE', 'adaire-blocks' ),
+			'title' => __( 'GutenBlocks FREE', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'gutenblocks-alignment-layout-structure',
-			'title' => __( 'Alignment, Layout & Structure (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Alignment, Layout & Structure (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-hero-sections',
-			'title' => __( 'Hero & Navigation (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Hero & Navigation (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-layout-sections',
-			'title' => __( 'Layout Sections (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Layout Sections (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-marketing',
-			'title' => __( 'Marketing (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Marketing (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-media',
-			'title' => __( 'Media (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Media (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-business',
-			'title' => __( 'Business (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Business (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-testimonial',
-			'title' => __( 'Testimonials (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Testimonials (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-social',
-			'title' => __( 'Social (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Social (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blog-publishing',
-			'title' => __( 'Blog & Publishing (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Blog & Publishing (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-start-actions',
-			'title' => __( 'Start & Actions (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Start & Actions (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-information-blocks',
-			'title' => __( 'Information Blocks (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Information Blocks (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-effects-interactions',
-			'title' => __( 'Effects & Interactions (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Effects & Interactions (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-interactive',
-			'title' => __( 'Interactive (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Interactive (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-layout-navigation',
-			'title' => __( 'Layout & Navigation (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Layout & Navigation (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blog-content',
-			'title' => __( 'Blog & Content (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Blog & Content (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-content-expandable',
-			'title' => __( 'Expandable Content (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Expandable Content (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-content-info',
-			'title' => __( 'Content & Info (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Content & Info (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-content-tabs',
-			'title' => __( 'Tabs & Content (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Tabs & Content (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-layout-hero',
-			'title' => __( 'Layout & Hero (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Layout & Hero (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-marketing-conversion',
-			'title' => __( 'Marketing & Conversion (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Marketing & Conversion (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-media-images',
-			'title' => __( 'Media & Images (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Media & Images (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-media-videos',
-			'title' => __( 'Media & Videos (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Media & Videos (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-reviews-trust',
-			'title' => __( 'Reviews & Trust (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Reviews & Trust (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-social-engagement',
-			'title' => __( 'Social & Engagement (Gutenblocks)', 'adaire-blocks' ),
+			'title' => __( 'Social & Engagement (GutenBlocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 	);
@@ -2175,7 +2220,7 @@ function adaire_blocks_add_rest_api_settings() {
 			nonce: <?php echo json_encode(wp_create_nonce('wp_rest')); ?>,
 			versionString: 'wp/v2/'
 		};
-		console.log('[Adaire Blocks] wpApiSettings initialized:', window.wpApiSettings);
+		console.log('[GutenBlocks Blocks] wpApiSettings initialized:', window.wpApiSettings);
 	}
 	</script>
 	<?php
@@ -2192,7 +2237,7 @@ function adaire_blocks_enqueue_auto_recovery() {
 	// Check if the auto-recovery file exists
 	$script_path = ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/js/auto-block-recovery.js';
 	if ( ! file_exists( $script_path ) ) {
-		error_log( '[Adaire Blocks] Auto-recovery script not found at: ' . $script_path );
+		error_log( '[GutenBlocks Blocks] Auto-recovery script not found at: ' . $script_path );
 		return;
 	}
 
@@ -2208,10 +2253,10 @@ function adaire_blocks_enqueue_auto_recovery() {
 	// Add inline script to verify loading
 	$script_url = ADAIRE_BLOCKS_PLUGIN_URL . 'admin/js/auto-block-recovery.js';
 	$inline_script = sprintf(
-		'console.log("[Adaire Blocks] Inline script executing...");
-		console.log("[Adaire Blocks] Version: %s");
-		console.log("[Adaire Blocks] Script URL: %s");
-		console.log("[Adaire Blocks] Plugin path exists:", %s);
+		'console.log("[GutenBlocks Blocks] Inline script executing...");
+		console.log("[GutenBlocks Blocks] Version: %s");
+		console.log("[GutenBlocks Blocks] Script URL: %s");
+		console.log("[GutenBlocks Blocks] Plugin path exists:", %s);
 		window.adaireBlocksAutoRecoveryLoaded = true;
 		window.adaireBlocksVersion = "%s";',
 		esc_js(ADAIRE_BLOCKS_VERSION),
@@ -2319,3 +2364,31 @@ function adaire_blocks_enqueue_bootstrap_icons() {
 }
 add_action( 'wp_enqueue_scripts', 'adaire_blocks_enqueue_bootstrap_icons' );
 add_action( 'enqueue_block_editor_assets', 'adaire_blocks_enqueue_bootstrap_icons' );
+
+/**
+ * Enqueue the Elementor-style editor panel (compiled via webpack.config.js).
+ */
+function adaire_enqueue_editor_panel() {
+	$asset_file_path = plugin_dir_path( __FILE__ ) . 'build/editor-panel/index.asset.php';
+	if ( ! file_exists( $asset_file_path ) ) {
+		return; // Not yet built — skip silently.
+	}
+	$asset_file = include $asset_file_path;
+	wp_enqueue_script(
+		'adaire-editor-panel',
+		plugins_url( 'build/editor-panel/index.js', __FILE__ ),
+		$asset_file['dependencies'],
+		$asset_file['version'],
+		true
+	);
+	$style_path = plugin_dir_path( __FILE__ ) . 'build/editor-panel/style-index.css';
+	if ( file_exists( $style_path ) ) {
+		wp_enqueue_style(
+			'adaire-editor-panel-style',
+			plugins_url( 'build/editor-panel/style-index.css', __FILE__ ),
+			array(),
+			$asset_file['version']
+		);
+	}
+}
+add_action( 'enqueue_block_editor_assets', 'adaire_enqueue_editor_panel' );

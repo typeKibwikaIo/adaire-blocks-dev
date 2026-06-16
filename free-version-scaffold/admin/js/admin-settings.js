@@ -1,5 +1,5 @@
 /**
- * Adaire Blocks Admin Settings JavaScript
+ * GutenBlocks Blocks Admin Settings JavaScript
  */
 
 (function($, window) {
@@ -68,6 +68,7 @@
                         (ajaxData.strings && ajaxData.strings.saveSuccess) ||
                         'Settings saved successfully!';
                     showNotification(message, 'success');
+                    validateBlockRegistry();
                 },
                 function(errorMessage) {
                     $form.removeClass('loading');
@@ -85,6 +86,7 @@
          */
         function initSettings() {
             updateBlockCards();
+            validateBlockRegistry();
         }
         
         /**
@@ -150,6 +152,32 @@
                     }
                 }
             });
+        }
+
+        function validateBlockRegistry() {
+            if (!ajaxData.restUrl || !window.wp || !window.wp.apiFetch) {
+                return;
+            }
+
+            window.wp.apiFetch({ url: ajaxData.restUrl })
+                .then(function(response) {
+                    if (!response || !response.success) {
+                        console.error('GutenBlocks Blocks Registry validation failed', response);
+                        return;
+                    }
+
+                    if (response.validation && response.validation.errors && response.validation.errors.length) {
+                        console.error('GutenBlocks Blocks Registry validation errors', response.validation.errors);
+                    } else {
+                        console.info('GutenBlocks Blocks Registry validation passed', {
+                            available: response.validation.total_available,
+                            registry: response.validation.total_registry
+                        });
+                    }
+                })
+                .catch(function(error) {
+                    console.error('GutenBlocks Blocks Registry API request failed', error);
+                });
         }
         
         // Add smooth scrolling for better UX

@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "SaaS Hero",
   "category": "adaire-layout-hero",
-  "description": "SaaS Hero block for Adaire Blocks.",
+  "description": "SaaS Hero block for GutenBlocks Blocks.",
   "supports": {
     "html": false,
     "anchor": true
@@ -154,6 +154,19 @@
     "backgroundGradient": {
       "type": "string",
       "default": "linear-gradient(135deg,#111827,#3b0764)"
-    }
+    },
+    "ctaLayout": { "type": "string", "default": "buttons" },
+    "codeSnippetText": { "type": "string", "default": "npx create-app" },
+    "emailPlaceholder": { "type": "string", "default": "Your email address" },
+    "socialProofItems": { "type": "array", "default": [] },
+    "backgroundPattern": { "type": "string", "default": "none" },
+    "meshColor": { "type": "string", "default": "#7c3aed" },
+    "mediaStyle": { "type": "string", "default": "none" },
+    "layout": { "type": "string", "default": "centered" },
+    "highlightColor": { "type": "string", "default": "#a855f7" },
+    "highlightType": { "type": "string", "default": "color" },
+    "paddingTop": { "type": "number", "default": 80 },
+    "paddingBottom": { "type": "number", "default": 80 },
+    "sectionMinHeight": { "type": "string", "default": "auto" }
   }
 }

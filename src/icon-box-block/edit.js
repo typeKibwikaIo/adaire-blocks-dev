@@ -15,11 +15,13 @@ import {
 } from '@wordpress/components';
 import { desktop, tablet, mobile } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
+import QuickZone from '../components/QuickZone';
 import './editor.scss';
 
 export default function Edit({ attributes, setAttributes, clientId }) {
     const [deviceType, setDeviceType] = useState('desktop');
     const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
+    const [activeZone, setActiveZone] = useState(null);
 
     const {
         blockId,
@@ -304,6 +306,30 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 
             <div {...blockProps}>
+                <QuickZone
+                    id="icon"
+                    label="Icon"
+                    activeZone={activeZone}
+                    setActiveZone={setActiveZone}
+                    content={
+                        <>
+                            <Button
+                                onClick={() => setIsIconPickerOpen(true)}
+                                variant="secondary"
+                                style={{ width: '100%', marginBottom: '12px' }}
+                            >
+                                {chosenIcon ? __('Change Icon', 'icon-box-block') : __('Choose Bootstrap Icon', 'icon-box-block')}
+                            </Button>
+                            <RangeControl
+                                label={__('Icon Size', 'icon-box-block')}
+                                value={iconSize}
+                                onChange={(value) => setAttributes({ iconSize: value })}
+                                min={16}
+                                max={200}
+                            />
+                        </>
+                    }
+                >
                     {chosenIcon || iconSvg ? (
                         <IconWrapper
                             className="adaire-icon-box__wrapper"
@@ -355,6 +381,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             <p>{__('Choose an icon from the Icon Settings panel', 'icon-box-block')}</p>
                         </div>
                     )}
+                </QuickZone>
             </div>
         </>
     );

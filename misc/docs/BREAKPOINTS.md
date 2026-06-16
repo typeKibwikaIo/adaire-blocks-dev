@@ -1,6 +1,6 @@
 # Standard Breakpoints
 
-This document defines the standard breakpoint values used across all blocks in the Adaire Blocks plugin. **All future blocks must use these exact breakpoint values** to ensure consistency.
+This document defines the standard breakpoint values used across all blocks in the GutenBlocks Blocks plugin. **All future blocks must use these exact breakpoint values** to ensure consistency.
 
 ## Breakpoint Definitions
 

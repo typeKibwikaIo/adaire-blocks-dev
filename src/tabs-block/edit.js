@@ -15,6 +15,7 @@ import { desktop, tablet, mobile } from '@wordpress/icons';
 import './editor.scss';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
+import QuickZone from '../components/QuickZone';
 
 const ALIGN_OPTIONS = [
     { label: __('Left', 'tabs-block'), value: 'flex-start' },
@@ -35,6 +36,7 @@ const FREE_TIER_ITEM_LIMIT = 3;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
     const [deviceType, setDeviceType] = useState('desktop');
+    const [activeZone, setActiveZone] = useState(null);
     
     // Check block limits
     const { isLimitReached, showUpgradeNotice, upgradeMessage } = useBlockLimits(
@@ -573,15 +575,29 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     <div className="adaire-tabs__header">
                         <div className="adaire-tabs__list" role="tablist">
                             {tabs.map((tab, index) => (
-                                <button
+                                <QuickZone
                                     key={tab.id}
-                                    className={`adaire-tabs__tab ${activeTab === index ? 'is-active' : ''}`}
-                                    onClick={() => setAttributes({ activeTab: index })}
-                                    role="tab"
-                                    aria-selected={activeTab === index}
+                                    id={`tab-title-${tab.id}`}
+                                    label="Tab Title"
+                                    activeZone={activeZone}
+                                    setActiveZone={setActiveZone}
+                                    content={
+                                        <TextControl
+                                            label={__('Tab Title', 'tabs-block')}
+                                            value={tab.title}
+                                            onChange={(v) => updateTab(index, { title: v })}
+                                        />
+                                    }
                                 >
-                                    {tab.title}
-                                </button>
+                                    <button
+                                        className={`adaire-tabs__tab ${activeTab === index ? 'is-active' : ''}`}
+                                        onClick={() => setAttributes({ activeTab: index })}
+                                        role="tab"
+                                        aria-selected={activeTab === index}
+                                    >
+                                        {tab.title}
+                                    </button>
+                                </QuickZone>
                             ))}
                         </div>
                         <div className="adaire-tabs__underline" />

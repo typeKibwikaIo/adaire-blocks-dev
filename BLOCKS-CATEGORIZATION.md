@@ -1,6 +1,6 @@
 # Blocks Categorization
 
-This document shows the categorization of all blocks in the Adaire Blocks plugin. Each block is distinct and appears only in its designated category.
+This document shows the categorization of all blocks in the GutenBlocks Blocks plugin. Each block is distinct and appears only in its designated category.
 
 ## Free Blocks
 
@@ -25,6 +25,9 @@ These blocks are available in the free version without limitations.
 - **Info Grid** (`infogrid-block`)
 - **Info Grid 2** (`infogrid-2-block`)
 - **Image Composition** (`image-composition-block`)
+- **Website Footer** (`website-footer-block`)
+- **Row** (`row-block`)
+- **Container** (`container-block`)
 
 ## Plus Blocks
 

@@ -16,6 +16,7 @@ import { desktop, tablet, mobile } from '@wordpress/icons';
 import { createElement } from '@wordpress/element';
 import { plus, trash } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
+import QuickZone from '../components/QuickZone';
 import './editor.scss';
 
 // Custom icons for small laptop and big desktop
@@ -85,6 +86,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
     const [editingIndex, setEditingIndex] = useState(null);
     const [deviceType, setDeviceType] = useState('desktop');
+    const [activeZone, setActiveZone] = useState(null);
 
     const {
         blockId,
@@ -532,8 +534,66 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             } : {};
 
                             return (
+                        <QuickZone
+                            key={entry.id || index}
+                            id={`social-icon-${index}`}
+                            label="Social Icon"
+                            activeZone={activeZone}
+                            setActiveZone={setActiveZone}
+                            content={
+                                <>
+                                    <BaseControl label={__('Bootstrap Icon', 'social-banner-block')}>
+                                        <Button
+                                            onClick={() => {
+                                                setEditingIndex(index);
+                                                setIsIconPickerOpen(true);
+                                            }}
+                                            variant="secondary"
+                                            style={{ width: '100%', marginBottom: '8px' }}
+                                        >
+                                            {entry.icon ? (
+                                                <>
+                                                    <i className={entry.icon} style={{ marginRight: '8px' }}></i>
+                                                    {entry.icon}
+                                                </>
+                                            ) : (
+                                                __('Choose Icon', 'social-banner-block')
+                                            )}
+                                        </Button>
+                                    </BaseControl>
+                                    <BaseControl label={__('Icon Color', 'social-banner-block')}>
+                                        <ColorPicker
+                                            color={entry.iconColor || '#ffffff'}
+                                            onChangeComplete={(color) => updateIconEntry(index, 'iconColor', color.hex)}
+                                            disableAlpha
+                                        />
+                                    </BaseControl>
+                                    <BaseControl label={__('Background Color', 'social-banner-block')}>
+                                        <ColorPicker
+                                            color={entry.backgroundColor || '#000000'}
+                                            onChangeComplete={(color) => updateIconEntry(index, 'backgroundColor', color.hex)}
+                                            disableAlpha
+                                        />
+                                    </BaseControl>
+                                    <TextControl
+                                        label={__('Link URL', 'social-banner-block')}
+                                        value={entry.linkUrl || ''}
+                                        onChange={(value) => updateIconEntry(index, 'linkUrl', value)}
+                                        placeholder="https://example.com"
+                                    />
+                                    <SelectControl
+                                        label={__('Link Target', 'social-banner-block')}
+                                        value={entry.linkTarget || '_blank'}
+                                        options={[
+                                            { label: __('Same Window', 'social-banner-block'), value: '_self' },
+                                            { label: __('New Window', 'social-banner-block'), value: '_blank' },
+                                        ]}
+                                        onChange={(value) => updateIconEntry(index, 'linkTarget', value)}
+                                    />
+                                </>
+                            }
+                        >
                         <IconWrapper
-                                    key={entry.id || index}
                                     className="adaire-social-banner__item"
                             {...linkProps}
                                     style={{
@@ -552,6 +612,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         ></i>
                                     )}
                         </IconWrapper>
+                        </QuickZone>
                             );
                         })}
                         </div>

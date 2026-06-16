@@ -14,7 +14,6 @@ import {
 	SelectControl,
 	ToggleControl,
 	Button,
-	BaseControl,
 	TextControl,
 	TextareaControl,
 	__experimentalBoxControl  as BoxControl,
@@ -22,6 +21,7 @@ import {
 } from '@wordpress/components';
 import { useState, useCallback, useRef, useEffect, createElement } from '@wordpress/element';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import AdaireColorControl from '../components/AdaireColorControl';
 
 // â”€â”€â”€ Breakpoints (project standard â€” matches BREAKPOINTS.md) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -354,14 +354,11 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( val ) => setAttributes( { shadowOpacity: val } ) }
 						min={ 0 } max={ 1 } step={ 0.01 }
 					/>
-					<BaseControl label={ __( 'Shadow Color', 'adaire-blocks-dev2' ) }>
-						<input
-							type="color"
-							value={ shadowColor }
-							onChange={ ( e ) => setAttributes( { shadowColor: e.target.value } ) }
-							style={ { width: '100%', height: 36, borderRadius: 4, border: '1px solid #ccc', cursor: 'pointer' } }
-						/>
-					</BaseControl>
+					<AdaireColorControl
+						label={ __( 'Shadow Color', 'adaire-blocks-dev2' ) }
+						value={ shadowColor }
+						onChange={ ( value ) => setAttributes( { shadowColor: value } ) }
+					/>
 				</PanelBody>
 
 				{ /* â”€â”€ Border â”€â”€ */ }
@@ -391,14 +388,11 @@ export default function Edit( { attributes, setAttributes } ) {
 								] }
 								onChange={ ( val ) => setAttributes( { borderStyle: val } ) }
 							/>
-							<BaseControl label={ __( 'Border Color', 'adaire-blocks-dev2' ) }>
-								<input
-									type="color"
-									value={ borderColor }
-									onChange={ ( e ) => setAttributes( { borderColor: e.target.value } ) }
-									style={ { width: '100%', height: 36, borderRadius: 4, border: '1px solid #ccc', cursor: 'pointer' } }
-								/>
-							</BaseControl>
+							<AdaireColorControl
+								label={ __( 'Border Color', 'adaire-blocks-dev2' ) }
+								value={ borderColor }
+								onChange={ ( value ) => setAttributes( { borderColor: value } ) }
+							/>
 						</>
 					) }
 				</PanelBody>
@@ -533,6 +527,3 @@ export default function Edit( { attributes, setAttributes } ) {
 		</>
 	);
 }
-
-
-

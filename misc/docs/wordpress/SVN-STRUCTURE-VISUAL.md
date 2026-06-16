@@ -243,7 +243,7 @@ WordPress.org Plugin Page
 │  ║  banner-1544x500.png (top banner)  ║ │
 │  ╚════════════════════════════════════╝ │
 │                                         │
-│  Adaire Blocks                          │
+│  GutenBlocks Blocks                          │
 │  [Install Now]                          │
 │                                         │
 │  Screenshots:                           │

@@ -67,13 +67,14 @@ const DEFAULT_RESPONSIVE = DEVICE_KEYS.reduce(
 );
 
 const getActiveDevice = () => {
-	if ( typeof window === 'undefined' ) {
-		return 'desktop';
-	}
-
-	const storedDevice = window.localStorage.getItem( STORE_KEY );
-
-	return DEVICE_KEYS.includes( storedDevice ) ? storedDevice : 'desktop';
+	// Always start a fresh editor load in normal desktop mode. We intentionally do
+	// NOT resurrect a device chosen in a previous browser session here: doing so
+	// caused the entire post editor canvas to silently load shrunk down to
+	// whatever device (e.g. mobile/smartwatch) was last previewed, with no
+	// indication why. Within a single session, switching devices via the
+	// toolbar still works and still persists for that session (see
+	// setActiveDevice / updateActiveDevice below).
+	return 'desktop';
 };
 
 const setActiveDevice = ( device ) => {
@@ -223,7 +224,58 @@ const applyDeviceToEditorIframes = ( device, viewport ) => {
 	} );
 };
 
+const resetEditorIframes = () => {
+	getEditorIframes().forEach( ( iframe ) => {
+		delete iframe.dataset.adaireResponsiveDevice;
+		iframe.style.width = '';
+		iframe.style.minHeight = '';
+		iframe.style.maxWidth = '';
+		iframe.style.marginRight = '';
+		iframe.style.marginLeft = '';
+		iframe.style.display = '';
+		iframe.style.transform = '';
+		iframe.style.transformOrigin = '';
+		iframe.style.transition = '';
+	} );
+};
+
+const resetEditorDocument = ( editorDocument ) => {
+	const targets = [
+		...Array.from(
+			editorDocument.querySelectorAll(
+				'.block-editor-writing-flow, .block-editor-block-list__layout.is-root-container, .is-root-container, .editor-styles-wrapper, .edit-post-visual-editor, .block-editor-iframe__body, .interface-interface-skeleton__content, .edit-post-layout__content, .editor-visual-editor, .block-editor-iframe__html'
+			)
+		),
+		editorDocument.documentElement,
+		editorDocument.body,
+	].filter( Boolean );
+
+	targets.forEach( ( target ) => {
+		delete target.dataset.adaireResponsiveDevice;
+		target.style.removeProperty( '--adaire-responsive-preview-width' );
+		target.style.removeProperty( '--adaire-responsive-preview-height' );
+		target.style.removeProperty( '--adaire-responsive-preview-zoom' );
+	} );
+};
+
+// Fully releases the editor canvas back to WordPress core's own sizing.
+// Used whenever the active device is 'desktop', which should mean "no
+// device preview at all" rather than "preview at a 1440px frame".
+const resetEditorDevice = () => {
+	resetEditorIframes();
+	getEditorDocuments().forEach( resetEditorDocument );
+};
+
 const applyDeviceToEditor = ( device, viewport ) => {
+	// 'desktop' is the normal, unmodified editor — never clamp/frame it. Doing
+	// this unconditionally (the previous behaviour) is what made every post's
+	// canvas load capped at 1440px with a bordered "device frame", which is
+	// the shrink the editor appeared to do on every load.
+	if ( device === 'desktop' ) {
+		resetEditorDevice();
+		return;
+	}
+
 	applyDeviceToEditorIframes( device, viewport );
 	getEditorDocuments().forEach( ( editorDocument ) =>
 		applyDeviceToEditorDocument( editorDocument, device, viewport )
@@ -586,15 +638,6 @@ function ResponsivePreviewPlugin() {
 	}, [ activeDevice, viewport, device.width ] );
 
 	useEffect( () => {
-		const interval = window.setInterval(
-			() => applyDeviceToEditor( activeDevice, viewport ),
-			500
-		);
-
-		return () => window.clearInterval( interval );
-	}, [ activeDevice, viewport ] );
-
-	useEffect( () => {
 		if ( isEditedPostDirty ) {
 			const timeout = window.setTimeout( () => savePost(), 900 );
 			return () => window.clearTimeout( timeout );
@@ -637,7 +680,7 @@ function ResponsivePreviewPlugin() {
 	const toolbar = (
 		<div
 			className="adaire-responsive-toolbar"
-			aria-label="Adaire responsive preview toolbar"
+			aria-label="GutenBlocks responsive preview toolbar"
 		>
 			<div className="adaire-responsive-toolbar__viewport">
 				<select

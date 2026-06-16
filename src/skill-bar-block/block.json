@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Skill Bar",
   "category": "adaire-information-blocks",
-  "description": "Skill Bar block for Adaire Blocks.",
+  "description": "Skill Bar block for GutenBlocks Blocks.",
   "supports": {
     "html": false,
     "anchor": true

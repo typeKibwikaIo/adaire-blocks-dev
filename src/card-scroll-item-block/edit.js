@@ -20,6 +20,7 @@ import {
 } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import QuickZone from '../components/QuickZone';
 
 const BREAKPOINTS = [
     { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks-dev2') },
@@ -53,6 +54,7 @@ export default function Edit({ attributes, setAttributes }) {
     } = attributes;
 
     const [deviceType, setDeviceType] = useState('desktop');
+    const [activeZone, setActiveZone] = useState(null);
 
     const updateResponsive = (attr, breakpoint, value) => {
         setAttributes({
@@ -277,13 +279,79 @@ export default function Edit({ attributes, setAttributes }) {
                             />
                             <div {...innerBlocksProps} />
                         </div>
+                        <QuickZone
+                            id="card-media"
+                            label="Media"
+                            activeZone={activeZone}
+                            setActiveZone={setActiveZone}
+                            content={
+                                <>
+                                    <SelectControl
+                                        label="Media Type"
+                                        value={mediaType}
+                                        options={[
+                                            { label: 'Image', value: 'image' },
+                                            { label: 'Video', value: 'video' }
+                                        ]}
+                                        onChange={(val) => setAttributes({ mediaType: val })}
+                                    />
+                                    {mediaType === 'video' ? (
+                                        <>
+                                            <SelectControl
+                                                label="Video Type"
+                                                value={videoType}
+                                                options={[
+                                                    { label: 'Local File', value: 'local' },
+                                                    { label: 'YouTube / Vimeo', value: 'external' }
+                                                ]}
+                                                onChange={(val) => setAttributes({ videoType: val })}
+                                            />
+                                            {videoType === 'external' ? (
+                                                <TextControl
+                                                    label="External Video URL"
+                                                    value={externalVideoUrl}
+                                                    onChange={(val) => setAttributes({ externalVideoUrl: val })}
+                                                    help="Supports YouTube and Vimeo URLs."
+                                                />
+                                            ) : (
+                                                <MediaUploadCheck>
+                                                    <MediaUpload
+                                                        onSelect={(media) => setAttributes({ mediaId: media.id, mediaUrl: media.url })}
+                                                        allowedTypes={['video']}
+                                                        value={mediaId}
+                                                        render={({ open }) => (
+                                                            <Button variant="secondary" onClick={open} style={{ width: '100%' }}>
+                                                                {mediaUrl ? 'Replace Video File' : 'Select Video File'}
+                                                            </Button>
+                                                        )}
+                                                    />
+                                                </MediaUploadCheck>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <MediaUploadCheck>
+                                            <MediaUpload
+                                                onSelect={(media) => setAttributes({ mediaId: media.id, mediaUrl: media.url })}
+                                                allowedTypes={['image']}
+                                                value={mediaId}
+                                                render={({ open }) => (
+                                                    <Button variant="secondary" onClick={open} style={{ width: '100%' }}>
+                                                        {mediaUrl ? 'Replace Image' : 'Select Image'}
+                                                    </Button>
+                                                )}
+                                            />
+                                        </MediaUploadCheck>
+                                    )}
+                                </>
+                            }
+                        >
                         <div className="adaire-card-scroll__card-media">
                             {videoType === 'external' && externalVideoUrl ? (
                                 <div className="video-embed-preview" style={{ background: '#000', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
                                     <p>Video Embed: {externalVideoUrl}</p>
                                 </div>
                             ) : (
-                                mediaUrl && (
+                                mediaUrl ? (
                                     mediaType === 'image' ? (
                                         <img 
                                             src={mediaUrl} 
@@ -296,9 +364,14 @@ export default function Edit({ attributes, setAttributes }) {
                                     ) : (
                                         <video src={mediaUrl} muted loop={videoLoop} autoPlay playsInline />
                                     )
+                                ) : (
+                                    <div className="adaire-card-scroll__card-media-placeholder" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', opacity: 0.5 }}>
+                                        <span>{__('No Media', 'adaire-blocks-dev2')}</span>
+                                    </div>
                                 )
                             )}
                         </div>
+                        </QuickZone>
                     </div>
                 </div>
             </div>

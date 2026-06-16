@@ -2,7 +2,7 @@
 /**
  * Premium Features Marker File
  * 
- * This file serves as a marker to identify the premium version of Adaire Blocks.
+ * This file serves as a marker to identify the premium version of GutenBlocks Blocks.
  * The presence of this file tells the plugin configuration system that this is
  * the premium/pro version with all features unlocked.
  * 
@@ -31,6 +31,6 @@ define('ADAIRE_BLOCKS_PREMIUM_MARKER', true);
 
 // Log premium status for debugging
 if (defined('WP_DEBUG') && WP_DEBUG) {
-    error_log('[Adaire Blocks] Premium features marker loaded - Premium version detected');
+    error_log('[GutenBlocks Blocks] Premium features marker loaded - Premium version detected');
 }
 

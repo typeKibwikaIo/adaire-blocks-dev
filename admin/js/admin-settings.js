@@ -1,5 +1,5 @@
 /**
- * Adaire Blocks Admin Settings JavaScript
+ * GutenBlocks Blocks Admin Settings JavaScript
  */
 
 (function($, window) {
@@ -162,21 +162,21 @@
             window.wp.apiFetch({ url: ajaxData.restUrl })
                 .then(function(response) {
                     if (!response || !response.success) {
-                        console.error('Adaire Blocks Registry validation failed', response);
+                        console.error('GutenBlocks Blocks Registry validation failed', response);
                         return;
                     }
 
                     if (response.validation && response.validation.errors && response.validation.errors.length) {
-                        console.error('Adaire Blocks Registry validation errors', response.validation.errors);
+                        console.error('GutenBlocks Blocks Registry validation errors', response.validation.errors);
                     } else {
-                        console.info('Adaire Blocks Registry validation passed', {
+                        console.info('GutenBlocks Blocks Registry validation passed', {
                             available: response.validation.total_available,
                             registry: response.validation.total_registry
                         });
                     }
                 })
                 .catch(function(error) {
-                    console.error('Adaire Blocks Registry API request failed', error);
+                    console.error('GutenBlocks Blocks Registry API request failed', error);
                 });
         }
         

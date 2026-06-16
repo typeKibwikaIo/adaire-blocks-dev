@@ -12,7 +12,7 @@ The free and premium readme.txt files are **strategically different**, not just 
 |-------|--------|-------|--------|
 | Missing Donate link | ❌ Not present | ✅ Added | Fixed |
 | Duplicate tag | `blocks` appeared twice | Single instance | Fixed |
-| Contributor username | `adaires` | `adaire` | Fixed |
+| Contributor username | `gutenblocks` | `adaire` | Fixed |
 
 ---
 
@@ -22,7 +22,7 @@ The free and premium readme.txt files are **strategically different**, not just 
 
 | Field | Premium | Free |
 |-------|---------|------|
-| **Plugin Name** | Adaire Blocks | Adaire Blocks **(Free)** |
+| **Plugin Name** | GutenBlocks Blocks | GutenBlocks Blocks **(Free)** |
 | **Contributors** | adaire | adaire |
 | **Donate Link** | https://adaire.digital/ | https://adaire.digital/ |
 | **Tags** | blocks, gutenberg, gsap, animation, portfolio | block, gutenberg, gsap, animation, testimonial, accordion, tabs, logos |
@@ -140,7 +140,7 @@ Highly recommended upgrade for enhanced functionality.
 #### Free:
 ```
 = 1.1.0 =
-Free version of Adaire Blocks with essential features.
+Free version of GutenBlocks Blocks with essential features.
 
 (Plus links to upgrade)
 ```

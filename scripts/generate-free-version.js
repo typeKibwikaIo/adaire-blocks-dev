@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Free Version Generator for Adaire Blocks
+ * Free Version Generator for GutenBlocks Blocks
  *
  * Generates the free version by:
  * 1. Copying every file from free-version-scaffold/ (the authoritative template)
@@ -56,6 +56,7 @@ class FreeVersionGenerator {
 
             // Step 5: Sanitize settings page for free version (no upgrade/license UI)
             await this.sanitizeSettingsPage();
+            await this.ensureSettingsPageRendersAllCategories();
 
             // Step 6: Generate package.json
             await this.generatePackageJson();
@@ -296,6 +297,68 @@ class FreeVersionGenerator {
         console.log('   ✓ Sanitized settings page for free version');
     }
 
+    async ensureSettingsPageRendersAllCategories() {
+        const settingsPath = path.join(this.freeVersionDir, 'admin', 'settings-page.php');
+        if (!fs.existsSync(settingsPath)) {
+            return;
+        }
+
+        let content = fs.readFileSync(settingsPath, 'utf8');
+        if (content.includes('$category_titles = array(') && content.includes('foreach ($grouped_blocks as $category_slug => $blocks_for_category)')) {
+            console.log('   ✓ Settings page renders all block categories');
+            return;
+        }
+
+        const oldRenderBlockPattern = /                    \/\/ Render tiers in the desired order: Free, Plus, Premium, then any others\.\r?\n\s+\$render_tier\(\s*'Free Blocks',\s+\$grouped_blocks\['adaire-free'\]\s*\);\r?\n\s+\$render_tier\(\s*'Plus Blocks',\s+\$grouped_blocks\['adaire-plus'\]\s*\);\r?\n\s+\$render_tier\(\s*'Premium Blocks',\s+\$grouped_blocks\['adaire-premium'\]\s*\);\r?\n\r?\n\s+\/\/ Render any non-standard categories under "Other Blocks"\.\r?\n\s+\$other_blocks = \$grouped_blocks\['other'\];\r?\n\s+if \(!empty\(\$other_blocks\)\) \{\r?\n\s+\$render_tier\(\s*'Other Blocks',\s+\$other_blocks\s*\);\r?\n\s+\}/;
+
+        const newRenderBlock = `                    $category_titles = array(
+                        'adaire-free' => 'Free Blocks',
+                        'adaire-plus' => 'Plus Blocks',
+                        'adaire-premium' => 'Premium Blocks',
+                        'other' => 'Other Blocks',
+                        'adaire-hero-sections' => 'Hero & Navigation',
+                        'adaire-layout-sections' => 'Layout Sections',
+                        'adaire-marketing' => 'Marketing',
+                        'adaire-media' => 'Media',
+                        'adaire-business' => 'Business',
+                        'adaire-testimonial' => 'Testimonials',
+                        'adaire-social' => 'Social',
+                        'adaire-blog-publishing' => 'Blog & Publishing',
+                        'adaire-start-actions' => 'Start & Actions',
+                        'adaire-information-blocks' => 'Information Blocks',
+                        'adaire-effects-interactions' => 'Effects & Interactions',
+                        'adaire-interactive' => 'Interactive',
+                        'adaire-layout-navigation' => 'Layout & Navigation',
+                        'adaire-blog-content' => 'Blog & Content',
+                        'adaire-content-expandable' => 'Expandable Content',
+                        'adaire-content-info' => 'Content & Info',
+                        'adaire-content-tabs' => 'Tabs & Content',
+                        'adaire-layout-hero' => 'Layout & Hero',
+                        'adaire-marketing-conversion' => 'Marketing & Conversion',
+                        'adaire-media-images' => 'Media & Images',
+                        'adaire-media-videos' => 'Media & Videos',
+                        'adaire-reviews-trust' => 'Reviews & Trust',
+                        'adaire-social-engagement' => 'Social & Engagement',
+                    );
+
+                    foreach ($grouped_blocks as $category_slug => $blocks_for_category) {
+                        if (empty($blocks_for_category)) {
+                            continue;
+                        }
+
+                        $title = isset($category_titles[$category_slug]) ? $category_titles[$category_slug] : ucwords(str_replace('-', ' ', $category_slug));
+                        $render_tier($title, $blocks_for_category);
+                    }`;
+
+        if (!oldRenderBlockPattern.test(content)) {
+            throw new Error('Could not update settings page category renderer. Expected render block was not found.');
+        }
+
+        content = content.replace(oldRenderBlockPattern, newRenderBlock);
+        fs.writeFileSync(settingsPath, content);
+        console.log('   ✓ Updated settings page to render all block categories');
+    }
+
     /**
      * Generate package.json for the free version
      */
@@ -315,12 +378,12 @@ class FreeVersionGenerator {
         const freePackage = {
             name: 'adaire-blocks-free',
             version: currentVersion,
-            description: 'Free version of Adaire Blocks - Professional WordPress blocks for Gutenberg editor',
+            description: 'Free version of GutenBlocks Blocks - Professional WordPress blocks for Gutenberg editor',
             main: 'src/index.js',
             scripts: {
                 prebuild: 'node scripts/apply-new-icons.js && node scripts/update-block-icons.js',
-                build: 'wp-scripts build --blocks-manifest',
-                start: 'wp-scripts start --blocks-manifest',
+                build: 'node --max-old-space-size=6144 node_modules/@wordpress/scripts/bin/wp-scripts.js build --blocks-manifest',
+                start: 'node --max-old-space-size=6144 node_modules/@wordpress/scripts/bin/wp-scripts.js start --blocks-manifest',
                 'plugin-zip': 'wp-scripts plugin-zip',
                 'deploy:free': 'npm run build && npm run plugin-zip',
                 test: 'wp-scripts test-unit-js'
@@ -367,13 +430,24 @@ class FreeVersionGenerator {
             process.chdir(this.freeVersionDir);
             console.log(`   Changed to: ${this.freeVersionDir}`);
 
-            console.log('   Installing dependencies...');
-            execSync('npm ci', { stdio: 'inherit' });
+            console.log('   Linking node_modules from main plugin...');
+            const sourceNodeModules = path.join(this.sourceDir, 'node_modules');
+            const targetNodeModules = path.join(this.freeVersionDir, 'node_modules');
+            if (fs.existsSync(sourceNodeModules)) {
+                if (fs.existsSync(targetNodeModules)) {
+                    fs.rmSync(targetNodeModules, { recursive: true, force: true });
+                }
+                fs.symlinkSync(sourceNodeModules, targetNodeModules, 'junction');
+                console.log('   ✓ node_modules linked (junction)');
+            } else {
+                console.log('   ⚠️  node_modules not found in main plugin, falling back to npm install...');
+                execSync('npm install', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=6144' } });
+            }
             this.verifyDependencyInstall();
 
             console.log('   Running prebuild...');
             try {
-                execSync('npm run prebuild', { stdio: 'inherit' });
+                execSync('npm run prebuild', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=6144' } });
                 console.log('   ✓ Prebuild completed');
             } catch (prebuildError) {
                 console.log('   ⚠️  Prebuild failed, continuing...');
@@ -382,7 +456,14 @@ class FreeVersionGenerator {
 
             console.log('   Running build...');
             try {
-                execSync('npm run build', { stdio: 'inherit', cwd: this.freeVersionDir });
+                // Call wp-scripts directly with explicit heap size so memory limit is
+                // guaranteed regardless of how npm propagates NODE_OPTIONS on Windows.
+                // Prebuild already ran above, so skip it here via --ignore-scripts.
+                const wpScriptsBin = path.join(this.freeVersionDir, 'node_modules', '@wordpress', 'scripts', 'bin', 'wp-scripts.js');
+                execSync(
+                    `node --max-old-space-size=6144 "${wpScriptsBin}" build --blocks-manifest`,
+                    { stdio: 'inherit', cwd: this.freeVersionDir, shell: true }
+                );
             } catch (buildError) {
                 const buildDir = path.join(this.freeVersionDir, 'build');
                 const srcDir = path.join(this.freeVersionDir, 'src');
@@ -448,8 +529,8 @@ class FreeVersionGenerator {
         missingFiles.forEach(file => console.log(`      Missing or empty: ${path.relative(this.freeVersionDir, file)}`));
 
         fs.rmSync(path.join(this.freeVersionDir, 'node_modules'), { recursive: true, force: true });
-        execSync('npm cache verify', { stdio: 'inherit' });
-        execSync('npm ci', { stdio: 'inherit' });
+        execSync('npm cache verify', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=6144' } });
+        execSync('npm ci', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=6144' } });
 
         const stillMissingFiles = requiredFiles.filter(file => {
             if (!fs.existsSync(file)) {
@@ -482,7 +563,7 @@ class FreeVersionGenerator {
 
         const enabledBlocks = this.getEnabledBlocks();
 
-        let indexContent = `// Adaire Blocks Free Version - auto-generated, do not edit manually\n\n`;
+        let indexContent = `// GutenBlocks Blocks Free Version - auto-generated, do not edit manually\n\n`;
         enabledBlocks.forEach(blockName => {
             indexContent += `import './${blockName}';\n`;
         });

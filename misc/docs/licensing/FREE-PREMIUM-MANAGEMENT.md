@@ -1,6 +1,6 @@
 # Free vs Premium Plugin Management
 
-This document explains how to maintain both free and premium versions of Adaire Blocks using the new modular system.
+This document explains how to maintain both free and premium versions of GutenBlocks Blocks using the new modular system.
 
 ## 🎯 Overview
 

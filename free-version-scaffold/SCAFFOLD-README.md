@@ -1,6 +1,6 @@
 # Free Version Scaffold
 
-This folder is the **single source of truth** for the generated free version of Adaire Blocks.
+This folder is the **single source of truth** for the generated free version of GutenBlocks Blocks.
 
 It is based on `tags/1.2.3` — the clean, WordPress.org-compliant release — with the deactivation intent (SendGrid feedback modal) overlaid from the internal test build.
 
@@ -23,7 +23,7 @@ When you run `npm run generate-free`, the script:
 | `adaire-blocks.php` | Main plugin bootstrap — PHP header meta, feature toggles |
 | `includes/sendgrid.php` | SendGrid email delivery for deactivation feedback |
 | `admin/deactivation-modal.php` | Feedback modal — reasons list, form fields, AJAX handler, recipient email |
-| `admin/deactivation-log-page.php` | Tools → Adaire Deactivation Logs page (SendGrid testing) |
+| `admin/deactivation-log-page.php` | Tools → GutenBlocks Deactivation Logs page (SendGrid testing) |
 | `admin/css/deactivation-modal.css` | Feedback modal styles |
 | `admin/js/deactivation-modal.js` | Feedback modal front-end JS |
 | `docs/sendgrid-setup.md` | Developer docs for configuring SendGrid |

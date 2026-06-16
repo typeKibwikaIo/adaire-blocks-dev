@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/about-us-block",
+  "version": "0.1.0",
+  "title": "About Us",
+  "category": "adaire-business",
+  "description": "Editorial-style About Us section with hero heading, large statement, asymmetric image grid, body copy, and closing CTA.",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": ["wide", "full"],
+    "customClassName": true
+  },
+  "textdomain": "about-us-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "heading":           { "type": "string",  "default": "About us." },
+    "tagline":           { "type": "string",  "default": "Based in the vibrant heart of Sydney, Australia, KreativyLab is not just a digital agency; we're your partners in creativity." },
+    "mission":           { "type": "string",  "default": "Our mission is to turn your dreams into reality, one pixel at a time. With a diverse team of designers, developers, and innovators, we're constantly pushing the boundaries of what's possible in the digital world." },
+    "statement":         { "type": "string",  "default": "Founded with a vision to redefine design through a modern and friendly lens, we've become more than just a design agency; we're a community of kindred spirits who share a passion for artistry and innovation." },
+    "imageUrl1":         { "type": "string",  "default": "" },
+    "imageAlt1":         { "type": "string",  "default": "" },
+    "imageUrl2":         { "type": "string",  "default": "" },
+    "imageAlt2":         { "type": "string",  "default": "" },
+    "caption":           { "type": "string",  "default": "We're the designers who believe in the power of a warm smile and a friendly chat." },
+    "bodyText":          { "type": "string",  "default": "We thrive on turning your wildest design aspirations into stunning realities. At ArtistryLab, every project is a collaboration, every client is a friend, and every design is a work of art crafted with care and enthusiasm." },
+    "closingStatement":  { "type": "string",  "default": "We're here to make your design dreams come true." },
+    "showScrollButton":  { "type": "boolean", "default": true },
+    "scrollButtonText":  { "type": "string",  "default": "Scroll" },
+    "backgroundColor":   { "type": "string",  "default": "#0a0a0a" },
+    "textColor":         { "type": "string",  "default": "#ffffff" },
+    "mutedColor":        { "type": "string",  "default": "rgba(255,255,255,0.6)" },
+    "dividerColor":      { "type": "string",  "default": "rgba(255,255,255,0.1)" },
+    "paddingTop":        { "type": "number",  "default": 64 },
+    "paddingBottom":     { "type": "number",  "default": 64 }
+  }
+}

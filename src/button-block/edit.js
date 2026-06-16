@@ -3,10 +3,12 @@ import { PanelBody, TextControl, ToggleControl, ColorPicker, SelectControl, Rang
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import QuickZone from '../components/QuickZone';
 
 export default function Edit({ attributes, setAttributes }) {
   const [deviceType, setDeviceType] = useState('desktop');
-  
+  const [activeZone, setActiveZone] = useState(null);
+
   const { 
     buttonText, 
     buttonLink, 
@@ -373,6 +375,27 @@ export default function Edit({ attributes, setAttributes }) {
       </InspectorControls>
 
       <div {...blockProps}>
+        <QuickZone
+          id="button-text"
+          label="Button"
+          activeZone={activeZone}
+          setActiveZone={setActiveZone}
+          content={
+            <>
+              <TextControl
+                label="Button Text"
+                value={buttonText}
+                onChange={(value) => setAttributes({ buttonText: value })}
+                placeholder="Enter button text..."
+              />
+              <ToggleControl
+                label="Show Icon"
+                checked={showIcon}
+                onChange={(value) => setAttributes({ showIcon: value })}
+              />
+            </>
+          }
+        >
         <a
           href={buttonLink}
           target={openInNewTab ? '_blank' : undefined}
@@ -386,6 +409,7 @@ export default function Edit({ attributes, setAttributes }) {
             </svg>
           )}
         </a>
+        </QuickZone>
       </div>
     </>
   );

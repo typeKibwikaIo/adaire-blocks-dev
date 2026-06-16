@@ -17,6 +17,7 @@ TextControl,
 ToggleControl,
 } from '@wordpress/components';
 import DeviceSwitcher from '../components/DeviceSwitcher';
+import QuickZone from '../components/QuickZone';
 import {
 getBoxAttributes,
 getBoxValues,
@@ -115,6 +116,7 @@ loading="lazy"
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 const [ deviceType, setDeviceType ] = useState( 'desktop' );
+const [ activeZone, setActiveZone ] = useState( null );
 const {
 blockId,
 containerBorderRadius,
@@ -357,9 +359,62 @@ onChange={ ( value ) => setAttributes( { [ key ]: value } ) }
 </InspectorControls>
 <div { ...blockProps } data-block-id={ blockId }>
 <div className={ `ad-video-player__container ${ containerMode === 'constrained' ? 'is-constrained' : '' }` }>
+<QuickZone
+id="video-media"
+label="Video"
+activeZone={ activeZone }
+setActiveZone={ setActiveZone }
+content={
+<>
+<SelectControl
+label={ __( 'Video Type', 'video-player-block' ) }
+value={ videoType }
+options={ [
+{ label: 'YouTube', value: 'youtube' },
+{ label: 'Vimeo', value: 'vimeo' },
+{ label: 'Upload/Local', value: 'upload' },
+] }
+onChange={ ( value ) => setAttributes( { videoType: value } ) }
+/>
+{ videoType === 'youtube' && (
+<TextControl
+label={ __( 'Youtube Video URL (or ID)', 'video-player-block' ) }
+value={ ytVideoUrl }
+onChange={ ( value ) => setAttributes( { ytVideoId: getYouTubeId( value ), ytVideoUrl: value } ) }
+/>
+) }
+{ videoType === 'vimeo' && (
+<TextControl
+label={ __( 'Vimeo Video URL (or ID)', 'video-player-block' ) }
+value={ vimeoVideoUrl }
+onChange={ ( value ) => setAttributes( { vimeoVideoId: getVimeoId( value ), vimeoVideoUrl: value } ) }
+/>
+) }
+{ videoType === 'upload' && (
+<MediaUploadCheck>
+<MediaUpload
+allowedTypes={ mediaKind === 'image' ? [ 'image' ] : [ 'video' ] }
+onSelect={ ( media ) => setAttributes( {
+mediaFileId: media?.id || 0,
+mediaFileUrl: media?.url || '',
+videoFileId: media?.id || 0,
+videoFileUrl: media?.url || '',
+} ) }
+render={ ( { open } ) => (
+<Button isSecondary onClick={ open }>
+{ attributes.mediaFileUrl ? __( 'Replace file', 'video-player-block' ) : __( 'Upload/select file', 'video-player-block' ) }
+</Button>
+) }
+/>
+</MediaUploadCheck>
+) }
+</>
+}
+>
 <div className="ad-video-player__content">
 <VideoPreview attributes={ attributes } />
 </div>
+</QuickZone>
 </div>
 </div>
 </>

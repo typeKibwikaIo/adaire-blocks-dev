@@ -1,4 +1,4 @@
-=== Adaire Blocks ===
+=== GutenBlocks Blocks ===
 Contributors: adairedigital
 Donate link: https://adaireblocks.com
 Source code: https://github.com/helloadaire/Adaire-Blocks-Free
@@ -14,7 +14,7 @@ Professional WordPress blocks for Gutenberg editor with GSAP animations and mode
 
 == Description ==
 
-Adaire Blocks is a WordPress plugin that provides custom Gutenberg blocks to create visually appealing websites. Built with modern web technologies including GSAP, React, and optimized for performance.
+GutenBlocks Blocks is a WordPress plugin that provides custom Gutenberg blocks to create visually appealing websites. Built with modern web technologies including GSAP, React, and optimized for performance.
 
 **Available Blocks:**
 

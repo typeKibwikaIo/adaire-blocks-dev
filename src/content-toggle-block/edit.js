@@ -16,6 +16,7 @@ import {
 } from "@wordpress/components";
 import { useEffect, useState } from "@wordpress/element";
 import { plus, trash, arrowUp, arrowDown, desktop, tablet, mobile } from "@wordpress/icons";
+import QuickZone from "../components/QuickZone";
 import "./editor.scss";
 
 const CONTAINER_MODES = [
@@ -86,6 +87,7 @@ const formatDimensionValue = (dimension, fallbackValue, fallbackUnit) => {
 const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
     const [contentWidthDeviceType, setContentWidthDeviceType] = useState('desktop');
     const [wrapperPaddingDeviceType, setWrapperPaddingDeviceType] = useState('desktop');
+    const [activeZone, setActiveZone] = useState(null);
     
     const {
         blockId,
@@ -324,15 +326,33 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
             }}
         >
             {toggles?.map((toggle, index) => (
-                <button
+                <QuickZone
                     key={toggle.id || index}
-                    className={`adaire-content-toggle__pill ${index === activeToggle ? "is-active" : ""
-                        }`}
-                    onClick={() => setAttributes({ activeToggle: index })}
-                    type="button"
+                    id={`toggle-pill-${toggle.id || index}`}
+                    label="Toggle Label"
+                    activeZone={activeZone}
+                    setActiveZone={setActiveZone}
+                    content={
+                        <TextControl
+                            label={__("Label", "content-toggle-block")}
+                            value={toggle.label}
+                            onChange={(value) => {
+                                const newToggles = [...toggles];
+                                newToggles[index] = { ...newToggles[index], label: value };
+                                setAttributes({ toggles: newToggles });
+                            }}
+                        />
+                    }
                 >
-                    {toggle.label}
-                </button>
+                    <button
+                        className={`adaire-content-toggle__pill ${index === activeToggle ? "is-active" : ""
+                            }`}
+                        onClick={() => setAttributes({ activeToggle: index })}
+                        type="button"
+                    >
+                        {toggle.label}
+                    </button>
+                </QuickZone>
             ))}
         </div>
     );

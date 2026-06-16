@@ -1,0 +1,22 @@
+.container-block {
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    transition: all 0.3s ease;
+
+    &__inner {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    // Responsive adjustments
+    @media (max-width: 768px) {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    @media (max-width: 480px) {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}

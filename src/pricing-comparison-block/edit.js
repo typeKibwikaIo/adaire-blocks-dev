@@ -16,6 +16,7 @@ import {
 	__experimentalBoxControl as BoxControl,
 } from "@wordpress/components";
 import { useState, useMemo } from "@wordpress/element";
+import QuickZone from "../components/QuickZone";
 
 export default function Edit({ attributes, setAttributes }) {
 	const {
@@ -53,6 +54,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 	// Use internal state for the active group in the editor
 	const [activeTab, setActiveTab] = useState(activeGroupId || (planGroups[0]?.id || ""));
+	const [activeZone, setActiveZone] = useState(null);
 
 	const activeGroup = useMemo(() => {
 		return planGroups.find((group) => group.id === activeTab) || planGroups[0];
@@ -450,17 +452,35 @@ export default function Edit({ attributes, setAttributes }) {
 						/>
 						{planGroups.length > 1 && (
 							<div className="pc-tabs" data-active-tab={activeGroup?.id || ""}>
-								{planGroups.map((group) => (
-									<button
-										className={`pc-tab ${
-											group.id === activeTab ? "is-active" : ""
-										}`}
-										onClick={() => setAttributes({ activeTab: group.id })}
-										type="button"
+								{planGroups.map((group, groupIndex) => (
+									<QuickZone
 										key={group.id}
+										id={`pc-tab-${group.id}`}
+										label="Audience Tab"
+										activeZone={activeZone}
+										setActiveZone={setActiveZone}
+										content={
+											<TextControl
+												label={__("Tab Label", "pricing-comparison-block")}
+												value={group.label}
+												onChange={(label) => {
+													const newGroups = [...planGroups];
+													newGroups[groupIndex].label = label;
+													setAttributes({ planGroups: newGroups });
+												}}
+											/>
+										}
 									>
-										{group.label}
-									</button>
+										<button
+											className={`pc-tab ${
+												group.id === activeTab ? "is-active" : ""
+											}`}
+											onClick={() => setAttributes({ activeTab: group.id })}
+											type="button"
+										>
+											{group.label}
+										</button>
+									</QuickZone>
 								))}
 							</div>
 						)}

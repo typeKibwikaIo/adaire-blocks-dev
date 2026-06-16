@@ -1,4 +1,4 @@
-=== Adaire Blocks ===
+=== GutenBlocks Blocks ===
 Contributors: adairedigital
 Donate link: https://adaireblocks.com/
 Tags: blocks, gutenberg, gsap, animation, portfolio
@@ -14,7 +14,7 @@ A powerful WordPress plugin for creating visually stunning, high-performance web
 
 == Description ==
 
-Adaire Blocks is a comprehensive WordPress plugin that provides a collection of custom Gutenberg blocks designed to create visually stunning, high-performance websites. Built with modern web technologies including GSAP, React, and optimized for performance, this plugin offers a seamless experience for developers and designers working within the WordPress Gutenberg editor.
+GutenBlocks Blocks is a comprehensive WordPress plugin that provides a collection of custom Gutenberg blocks designed to create visually stunning, high-performance websites. Built with modern web technologies including GSAP, React, and optimized for performance, this plugin offers a seamless experience for developers and designers working within the WordPress Gutenberg editor.
 
 
 **Available Blocks:**
@@ -150,7 +150,7 @@ For support, please visit our website at https://adaireblocks.com/ or contact us
 
 = 1.2.5 =
 * Added Horizontal Scroll Carousel Block (Plus) - scroll-scrubbed horizontal track: page scroll moves the card row, section pins with configurable scrub speed, heading and section styling, responsive padding, card width, gap, and track padding
-* Added Horizontal Scroll Card Block (Plus, nested) - slides inside the carousel with title, body, image, shadows, borders, responsive spacing, and inner button blocks (Adaire Button and/or core buttons)
+* Added Horizontal Scroll Card Block (Plus, nested) - slides inside the carousel with title, body, image, shadows, borders, responsive spacing, and inner button blocks (GutenBlocks Button and/or core buttons)
 * Front-end uses GSAP ScrollTrigger with re-measurement when images load so scroll distance stays accurate
 
 = 1.2.4 =
@@ -308,7 +308,7 @@ For support, please visit our website at https://adaireblocks.com/ or contact us
 = 1.1.1 =
 * Added Complete License Activation System with external API integration
 * Added License validation, activation, and deactivation functionality
-* Added License admin page under Adaire Blocks menu
+* Added License admin page under GutenBlocks Blocks menu
 * Added Automatic license status checking and premium feature management
 * Added Database integration with automatic table creation
 * Added Token-based activation system with secure storage
@@ -329,7 +329,7 @@ For support, please visit our website at https://adaireblocks.com/ or contact us
 * Updated all block icons with new custom designs
 
 = 1.0.9 =
-* Added migration tool: One-click tool in admin panel to allow auto-migration of all Adaire Blocks on all pages and posts
+* Added migration tool: One-click tool in admin panel to allow auto-migration of all GutenBlocks Blocks on all pages and posts
 * Improved block compatibility with WordPress 6.7
 * Fixed block registration issues
 
@@ -382,13 +382,13 @@ Important update that adds one-click block migration tool and improves WordPress
 Significant feature release adding Accordion, Posts Grid, and Tabs blocks with improved responsive controls. Upgrade to access new blocks.
 
 = 1.0.0 =
-Initial release of Adaire Blocks.
+Initial release of GutenBlocks Blocks.
 
 == Additional Information ==
 
 **Made with ❤️ by Adaire Digital**
 
-Visit [Adaire Blocks](https://adaireblocks.com/ "Professional WordPress Development") for more information about our services and products.
+Visit [GutenBlocks Blocks](https://adaireblocks.com/ "Professional WordPress Development") for more information about our services and products.
 
 **Support and Documentation**
 
@@ -396,4 +396,4 @@ For detailed documentation, tutorials, and support, please visit our website or 
 
 **Contributing**
 
-We welcome contributions! If you'd like to contribute to the development of Adaire Blocks, please visit our GitHub repository.
+We welcome contributions! If you'd like to contribute to the development of GutenBlocks Blocks, please visit our GitHub repository.

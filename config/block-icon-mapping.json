@@ -16,7 +16,7 @@
 		"flipcard-block":              { "component": "flip-card",           "svg": "Free Blocks/flip-card-block.svg" },
 		"flipcard-front-block":        { "component": "flip-card" },
 		"flipcard-back-block":         { "component": "flip-card" },
-		"footer-block":                { "component": "container",           "svg": "part5/footer-block.svg" },
+		"footer-block":                { "component": "container" },
 		"hero-1-block":                { "component": "hero-1",              "svg": "part5/hero-1-block.svg" },
 		"icon-box-block":              { "component": "icon-box",            "svg": "Free Blocks/icon-block.svg" },
 		"image-composition-block":     { "component": "image-composition",   "svg": "part5/image-composition-block.svg" },
@@ -39,6 +39,7 @@
 		"pricing-table-block":         { "component": "pricing-table",       "svg": "Free Blocks/pricing-table-block.svg" },
 		"pricing-comparison-block":    { "component": "pricing-comparison",  "svg": "Plus Blocks/pricing-table-block.svg" },
 		"progress-block":              { "component": "progress",            "svg": "Plus Blocks/progress-plus-block.svg" },
+			"container-block":            { "component": "container",           "svg": "Free Blocks/container-block.svg" },
 		"project-block":               { "component": "project",             "svg": "Premium Blocks/project-premium-block.svg" },
 		"questions-block":             { "component": "questions",           "svg": "Plus Blocks/questions-plus-block.svg" },
 		"scroll-text-block":           { "component": "scroll-text",         "svg": "Plus Blocks/scroll-text-plus-block.svg" },
@@ -54,6 +55,9 @@
 		"testimonial3-block":          { "component": "testimonial-premium", "svg": "newer-icons/testimonial-premium-block.svg" },
 		"video-carousel-block":        { "component": "swiper-carousel" },
 		"video-hero-block":            { "component": "video-hero",          "svg": "Plus Blocks/video-hero-plus-block.svg" },
-		"video-player-block":          { "component": "video-player",        "svg": "Free Blocks/video-block.svg" }
+		"video-player-block":          { "component": "video-player",        "svg": "Free Blocks/video-block.svg" },
+			"website-footer-block":        { "component": "website-footer",     "svg": "Free Blocks/website-footer-block.svg" },
+				"row-block":                   { "component": "layout",             "svg": "Free Blocks/row-block.svg" },
+				"column-block":                { "component": "layout" }
 	}
 }

@@ -9,11 +9,11 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Add migration submenu to Adaire Blocks admin menu
+ * Add migration submenu to GutenBlocks Blocks admin menu
  */
 function adaire_blocks_add_migration_menu() {
     add_submenu_page(
-        'adaire-blocks-settings',  // Parent slug (Adaire Blocks menu)
+        'adaire-blocks-settings',  // Parent slug (GutenBlocks Blocks menu)
         'Block Migration',          // Page title
         'Migration',                // Menu title (shorter for submenu)
         'manage_options',
@@ -78,19 +78,19 @@ function adaire_blocks_migration_page() {
     }
     ?>
     <div class="wrap">
-        <h1>Adaire Blocks Migration Tool</h1>
+        <h1>GutenBlocks Blocks Migration Tool</h1>
         
         <div class="card" style="max-width: 800px; margin-top: 20px;">
             <h2> Update All Blocks (Queue-Based Migration)</h2>
             <p>
-                This tool uses a fast queue-based system to find all posts, pages, and reusable block patterns that contain Adaire Blocks 
+                This tool uses a fast queue-based system to find all posts, pages, and reusable block patterns that contain GutenBlocks Blocks 
                 and re-save them with the current block structure. This is useful when you've made changes to block 
                 code that cause validation errors.
             </p>
             
             <p><strong>What this does:</strong></p>
             <ul>
-                <li> Finds all posts/pages and patterns with Adaire Blocks</li>
+                <li> Finds all posts/pages and patterns with GutenBlocks Blocks</li>
                 <li> Processes each item one at a time in a queue</li>
                 <li> Automatically recovers and fixes validation errors</li>
                 <li> Re-saves each item with the current block structure</li>
@@ -145,7 +145,7 @@ function adaire_blocks_migration_page() {
             </p>
             
             <p style="margin-top: 20px; font-size: 13px; color: #666;">
-                <strong>Note:</strong> This tool will process both posts/pages and reusable block patterns (wp_block) that contain Adaire Blocks.
+                <strong>Note:</strong> This tool will process both posts/pages and reusable block patterns (wp_block) that contain GutenBlocks Blocks.
             </p>
         </div>
     </div>
@@ -177,11 +177,11 @@ function adaire_get_posts_to_migrate() {
     $all_posts = get_posts($args);
     $posts_checked = count($all_posts);
 
-    // Filter posts that contain Adaire Blocks
+    // Filter posts that contain GutenBlocks Blocks
     foreach ($all_posts as $post_id) {
         $content = get_post_field('post_content', $post_id);
         
-        // Check if post contains any Adaire Blocks
+        // Check if post contains any GutenBlocks Blocks
         if (has_blocks($content)) {
             $blocks = parse_blocks($content);
             if (adaire_has_adaire_blocks($blocks)) {
@@ -207,11 +207,11 @@ function adaire_get_posts_to_migrate() {
     $all_patterns = get_posts($pattern_args);
     $patterns_checked = count($all_patterns);
 
-    // Filter patterns that contain Adaire Blocks
+    // Filter patterns that contain GutenBlocks Blocks
     foreach ($all_patterns as $pattern_id) {
         $content = get_post_field('post_content', $pattern_id);
         
-        // Check if pattern contains any Adaire Blocks
+        // Check if pattern contains any GutenBlocks Blocks
         if (has_blocks($content)) {
             $blocks = parse_blocks($content);
             if (adaire_has_adaire_blocks($blocks)) {
@@ -237,11 +237,11 @@ function adaire_get_posts_to_migrate() {
 add_action('wp_ajax_adaire_get_posts_to_migrate', 'adaire_get_posts_to_migrate');
 
 /**
- * Check if blocks array contains any Adaire Blocks
+ * Check if blocks array contains any GutenBlocks Blocks
  */
 function adaire_has_adaire_blocks($blocks) {
     foreach ($blocks as $block) {
-        // Check if it's an Adaire Block (starts with 'create-block/')
+        // Check if it's an GutenBlocks Block (starts with 'create-block/')
         if (isset($block['blockName']) && strpos($block['blockName'], 'create-block/') === 0) {
             return true;
         }

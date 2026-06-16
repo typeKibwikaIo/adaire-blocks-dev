@@ -9,7 +9,7 @@ The Industries Block is a hero-style module that pairs bold copy with icon tiles
 ### Locate and add the block
 
 1. Use the “/” inserter and search for “Industries”.
-2. Add **Industries Block** from the Adaire collection.
+2. Add **Industries Block** from the GutenBlocks collection.
 3. You’ll see three headline lines, intro/description text, six sample industries, and an image placeholder you can customize immediately.
 
 ## Layout controls
@@ -48,7 +48,7 @@ The Industries Block is a hero-style module that pairs bold copy with icon tiles
 
 ## Color settings
 
-Available through the **Colors** panel (preloaded with Adaire palette tokens):
+Available through the **Colors** panel (preloaded with GutenBlocks palette tokens):
 
 - Background (`--industries-bg`)
 - Headline color + Headline accent color

@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Adaire Validation Server
- * Description: License validation server for Adaire Blocks
+ * Plugin Name: GutenBlocks Validation Server
+ * Description: License validation server for GutenBlocks Blocks
  * Version: 1.0.0
  * Author: Adaire
  */

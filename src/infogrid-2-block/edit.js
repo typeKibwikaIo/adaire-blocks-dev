@@ -41,6 +41,7 @@ import {
     alignRight,
 } from '@wordpress/icons';
 import BootstrapIconPicker from '../icon-box-block/BootstrapIconPicker';
+import QuickZone from '../components/QuickZone';
 
 // Custom icons for small laptop and big desktop
 const smallLaptopIcon = createElement('svg', {
@@ -219,6 +220,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
     const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
     const [activeIconItem, setActiveIconItem] = useState(null);
+    const [activeZone, setActiveZone] = useState(null);
 
     useEffect(() => {
         if (!blockId) {
@@ -765,11 +767,35 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     <div className="adaire-infogrid-2-content">
                         {items.map((item) => (
                             <div key={item.id} className="adaire-infogrid-2-item">
-                                {item.icon && (
+                                <QuickZone
+                                    id={`infogrid2-icon-${item.id}`}
+                                    label="Icon"
+                                    activeZone={activeZone}
+                                    setActiveZone={setActiveZone}
+                                    content={
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => {
+                                                setActiveIconItem(item.id);
+                                                setIsIconPickerOpen(true);
+                                            }}
+                                            style={{ width: '100%' }}
+                                        >
+                                            {item.icon && <i className={item.icon} style={{ marginRight: '8px' }}></i>}
+                                            {item.icon ? item.icon : __('Select Icon', 'adaire-blocks-dev2')}
+                                        </Button>
+                                    }
+                                >
+                                {item.icon ? (
                                     <div className="adaire-infogrid-2-item-icon">
                                         <i className={item.icon}></i>
                                     </div>
+                                ) : (
+                                    <div className="adaire-infogrid-2-item-icon adaire-infogrid-2-item-icon--placeholder">
+                                        <span>{__('Add Icon', 'adaire-blocks-dev2')}</span>
+                                    </div>
                                 )}
+                                </QuickZone>
                                 <RichText
                                     tagName="h3"
                                     className="adaire-infogrid-2-item-title"

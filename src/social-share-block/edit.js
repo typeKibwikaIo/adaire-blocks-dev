@@ -13,6 +13,7 @@ import {
     __experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
 import BootstrapIconPicker from './BootstrapIconPicker';
+import QuickZone from '../components/QuickZone';
 import './editor.scss';
 
 const PLATFORMS = [
@@ -29,6 +30,7 @@ const PLATFORMS = [
 export default function Edit({ attributes, setAttributes, clientId }) {
     const [isButtonIconPickerOpen, setIsButtonIconPickerOpen] = useState(false);
     const [platformIconPickerOpen, setPlatformIconPickerOpen] = useState(null);
+    const [activeZone, setActiveZone] = useState(null);
 
     const {
         blockId,
@@ -296,6 +298,30 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             )}
 
             <div {...blockProps}>
+                <QuickZone
+                    id="share-button"
+                    label="Share Button"
+                    activeZone={activeZone}
+                    setActiveZone={setActiveZone}
+                    content={
+                        <BaseControl label={__('Button Icon', 'social-share-block')}>
+                            <Button
+                                onClick={() => setIsButtonIconPickerOpen(true)}
+                                variant="secondary"
+                                style={{ width: '100%' }}
+                            >
+                                {buttonIcon ? (
+                                    <>
+                                        <i className={buttonIcon} style={{ marginRight: '8px' }}></i>
+                                        {buttonIcon}
+                                    </>
+                                ) : (
+                                    __('Choose Icon', 'social-share-block')
+                                )}
+                            </Button>
+                        </BaseControl>
+                    }
+                >
                 <button
                     className="adaire-social-share__button"
                     type="button"
@@ -303,13 +329,45 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 >
                     <i className={buttonIcon || 'bi bi-share'}></i>
                 </button>
+                </QuickZone>
                 <div className="adaire-social-share__tooltip" style={{ display: 'none' }}>
                     <div className="adaire-social-share__platforms">
                         {PLATFORMS.map((platform) => {
                             if (!enabledPlatforms[platform.key]) return null;
                             return (
-                                <a
+                                <QuickZone
                                     key={platform.key}
+                                    id={`social-platform-${platform.key}`}
+                                    label={platformLabels[platform.key] || platform.defaultLabel}
+                                    activeZone={activeZone}
+                                    setActiveZone={setActiveZone}
+                                    content={
+                                        <>
+                                            <BaseControl label={__('Platform Icon', 'social-share-block')}>
+                                                <Button
+                                                    onClick={() => setPlatformIconPickerOpen(platform.key)}
+                                                    variant="secondary"
+                                                    style={{ width: '100%', marginBottom: '8px' }}
+                                                >
+                                                    {platformIcons[platform.key] ? (
+                                                        <>
+                                                            <i className={platformIcons[platform.key]} style={{ marginRight: '8px' }}></i>
+                                                            {platformIcons[platform.key]}
+                                                        </>
+                                                    ) : (
+                                                        __('Choose Icon', 'social-share-block')
+                                                    )}
+                                                </Button>
+                                            </BaseControl>
+                                            <TextControl
+                                                label={__('Label', 'social-share-block')}
+                                                value={platformLabels[platform.key] || platform.defaultLabel}
+                                                onChange={(value) => handlePlatformLabelChange(platform.key, value)}
+                                            />
+                                        </>
+                                    }
+                                >
+                                <a
                                     href="#"
                                     className="adaire-social-share__platform"
                                     data-platform={platform.key}
@@ -318,6 +376,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     <i className={platformIcons[platform.key] || platform.defaultIcon}></i>
                                     <span>{platformLabels[platform.key] || platform.defaultLabel}</span>
                                 </a>
+                                </QuickZone>
                             );
                         })}
                     </div>

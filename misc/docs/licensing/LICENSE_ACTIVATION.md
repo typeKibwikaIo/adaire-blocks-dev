@@ -1,12 +1,12 @@
-# Adaire Blocks - License Activation System
+# GutenBlocks Blocks - License Activation System
 
 ## Overview
-The Adaire Blocks plugin includes a license activation system that validates and manages premium features through an external API.
+The GutenBlocks Blocks plugin includes a license activation system that validates and manages premium features through an external API.
 
 ## How It Works
 
 ### 1. License Input
-- Users enter their license key in the WordPress admin under **Adaire Blocks > License**
+- Users enter their license key in the WordPress admin under **GutenBlocks Blocks > License**
 - License keys are validated against the external API endpoint
 
 ### 2. Activation Process

@@ -91,7 +91,7 @@
 
 ## Current Status
 
-**Plugin Name:** Adaire Blocks  
+**Plugin Name:** GutenBlocks Blocks  
 **Current Version:** 1.1.0  
 **Ready for Submission:** ⬜ (Check when ready)
 

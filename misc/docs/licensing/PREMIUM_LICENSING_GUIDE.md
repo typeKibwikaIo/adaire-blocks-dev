@@ -18,7 +18,7 @@
 
 ## Overview
 
-This document outlines the complete licensing architecture for the Adaire Blocks premium plugin. The goal is to create a secure, user-friendly system that:
+This document outlines the complete licensing architecture for the GutenBlocks Blocks premium plugin. The goal is to create a secure, user-friendly system that:
 
 - Validates premium users through license keys
 - Prevents unauthorized use of premium features
@@ -413,7 +413,7 @@ Custom solution rarely makes financial sense unless:
 | WP Plugin Licenser | 0 USD | 60-600 USD | 0% | DIY developers | Variable |
 | Custom Build | 2,000-10,000 USD | 1,200-5,000 USD | 0% | Specific needs | Rarely cost-effective |
 
-**Recommendation**: For Adaire Blocks, EDD Software Licensing offers the best value at moderate scale.
+**Recommendation**: For GutenBlocks Blocks, EDD Software Licensing offers the best value at moderate scale.
 
 ---
 
@@ -614,7 +614,7 @@ Offer 40% discount to early adopters:
 - Creates urgency with countdown timer
 - Covers licensing platform costs quickly
 
-**Marketing Message**: "Launch Special: Get Adaire Blocks Premium at 40% off - Limited Time"
+**Marketing Message**: "Launch Special: Get GutenBlocks Blocks Premium at 40% off - Limited Time"
 
 ---
 
@@ -686,7 +686,7 @@ Periodic discounts throughout the year:
    - Email campaign: "Need more sites?"
 
 3. **Complementary Products** (Future):
-   - Adaire Blocks Templates: 29 USD/pack
+   - GutenBlocks Blocks Templates: 29 USD/pack
    - Premium Support (monthly): 29 USD/month
    - Custom Block Development: Starting at 499 USD
 
@@ -839,7 +839,7 @@ CUSTOMER JOURNEY:
 
 1. PURCHASE PHASE
    - Customer visits your website
-   - Adds Adaire Blocks Premium to cart
+   - Adds GutenBlocks Blocks Premium to cart
    - Completes checkout (via EDD/WooCommerce/Stripe)
    - Receives purchase confirmation email
 
@@ -856,7 +856,7 @@ CUSTOMER JOURNEY:
    - Shows admin notice: "Activate your license to unlock premium features"
 
 4. ACTIVATION
-   - User navigates to Adaire Blocks → License
+   - User navigates to GutenBlocks Blocks → License
    - Enters license key in input field
    - Clicks "Activate License" button
    - Plugin sends API request to licensing server:
@@ -934,7 +934,7 @@ CUSTOMER JOURNEY:
 ```
 
 **Product Setup**:
-1. Create new Download: "Adaire Blocks Premium"
+1. Create new Download: "GutenBlocks Blocks Premium"
 2. Enable Software Licensing for product
 3. Configure license settings:
    - Activation limit: 1 (or 5, 10, unlimited)
@@ -972,7 +972,7 @@ adaire-blocks-dev2/
 ```php
 <?php
 /**
- * Adaire Blocks License Manager
+ * GutenBlocks Blocks License Manager
  * Handles license activation, validation, and updates
  */
 
@@ -984,7 +984,7 @@ class Adaire_License_Manager {
     private $license_data_option = 'adaire_blocks_license_data';
     private $store_url = 'https://yourlicenseserver.com'; // Your EDD site
     private $item_id = 123; // EDD Download ID
-    private $item_name = 'Adaire Blocks Premium';
+    private $item_name = 'GutenBlocks Blocks Premium';
     
     public static function get_instance() {
         if (null === self::$instance) {
@@ -1159,7 +1159,7 @@ class Adaire_License_Manager {
             'disabled'   => 'Your license has been disabled.',
             'invalid'    => 'Invalid license key. Please check and try again.',
             'inactive'   => 'License is not active for this site.',
-            'item_name_mismatch' => 'This license key is not for Adaire Blocks Premium.',
+            'item_name_mismatch' => 'This license key is not for GutenBlocks Blocks Premium.',
             'no_activations_left' => 'Activation limit reached. Deactivate from another site first.'
         );
         
@@ -1204,7 +1204,7 @@ class Adaire_License_Page {
         
         ?>
         <div class="wrap">
-            <h1>Adaire Blocks Premium License</h1>
+            <h1>GutenBlocks Blocks Premium License</h1>
             
             <?php if ($license_status === 'valid'): ?>
                 <div class="notice notice-success">
@@ -1272,7 +1272,7 @@ class Adaire_License_Page {
             ?>
             <div class="notice notice-warning">
                 <p>
-                    <strong>Adaire Blocks Premium:</strong> 
+                    <strong>GutenBlocks Blocks Premium:</strong> 
                     Please <a href="<?php echo admin_url('admin.php?page=adaire-blocks-license'); ?>">activate your license</a> 
                     to unlock premium features and receive updates.
                 </p>

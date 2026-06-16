@@ -41,5 +41,4 @@ export { default as TestimonialPremiumIcon } from "./testimonial-premium.js";
 export { default as CaseStudiesIcon } from "./case-studies.js";
 export { default as CardScrollIcon } from "./card-scroll.js";
 export { default as ContainerIcon } from "./container.js";
-
-
+expor
