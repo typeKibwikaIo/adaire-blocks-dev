@@ -1,0 +1,11 @@
+/**
+ * Block Migration Tool Styles
+ *
+ * @package AdaireBlocks
+ */
+
+#migration-log > div {
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f0f1;
+}
+

@@ -1,0 +1,202 @@
+.adaire-content-toggle {
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.adaire-content-toggle__container {
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+
+    background-color: var(--wrapper-bg, transparent);
+    padding: var(--wrapper-padding-top, 0) var(--wrapper-padding-right, 0) var(--wrapper-padding-bottom, 0) var(--wrapper-padding-left, 0);
+
+    &.is-constrained {
+        max-width: var(--container-max-width, 1200px);
+    }
+}
+
+/* Responsive wrapper padding */
+@media (max-width: 1024px) {
+    .adaire-content-toggle__container {
+        padding: 
+            var(--wrapper-padding-top-tablet, var(--wrapper-padding-top, 0)) 
+            var(--wrapper-padding-right-tablet, var(--wrapper-padding-right, 0)) 
+            var(--wrapper-padding-bottom-tablet, var(--wrapper-padding-bottom, 0)) 
+            var(--wrapper-padding-left-tablet, var(--wrapper-padding-left, 0));
+    }
+}
+
+@media (max-width: 768px) {
+    .adaire-content-toggle__container {
+        padding: 
+            var(--wrapper-padding-top-mobile, var(--wrapper-padding-top-tablet, var(--wrapper-padding-top, 0))) 
+            var(--wrapper-padding-right-mobile, var(--wrapper-padding-right-tablet, var(--wrapper-padding-right, 0))) 
+            var(--wrapper-padding-bottom-mobile, var(--wrapper-padding-bottom-tablet, var(--wrapper-padding-bottom, 0))) 
+            var(--wrapper-padding-left-mobile, var(--wrapper-padding-left-tablet, var(--wrapper-padding-left, 0)));
+    }
+}
+
+.adaire-content-toggle__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    &--bottom {
+        flex-direction: column-reverse;
+    }
+}
+
+/* Pills Navigation */
+.adaire-content-toggle__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--pill-gap, 16px);
+    align-items: center;
+    justify-content: var(--pill-align, flex-start);
+}
+
+.adaire-content-toggle__pill {
+    padding: var(--pill-padding-top, 12px) var(--pill-padding-right, 24px) var(--pill-padding-bottom, 12px) var(--pill-padding-left, 24px);
+    background-color: var(--pill-bg, transparent);
+    color: var(--pill-text, #94a3b8);
+    border: 1px solid var(--pill-border, #475569);
+    border-radius: var(--pill-border-radius, 24px);
+    font-size: var(--pill-font-size, 16px);
+    font-weight: var(--pill-font-weight, 500);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    outline: none;
+
+    &:hover {
+        background-color: var(--pill-active-bg, #3b82f6);
+        color: var(--pill-active-text, #ffffff);
+        border-color: var(--pill-active-border, #3b82f6);
+    }
+
+    &.is-active {
+        background-color: var(--pill-active-bg, #3b82f6);
+        color: var(--pill-active-text, #ffffff);
+        border-color: var(--pill-active-border, #3b82f6);
+        font-weight: var(--pill-active-font-weight, 600);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--pill-active-bg, #3b82f6);
+        outline-offset: 2px;
+    }
+}
+
+/* Pill Style Variants */
+.adaire-content-toggle__pills--rounded {
+    .adaire-content-toggle__pill {
+        border-radius: 50px;
+    }
+}
+
+.adaire-content-toggle__pills--outlined {
+    .adaire-content-toggle__pill {
+        background-color: transparent;
+        border-width: 2px;
+
+        &.is-active {
+            background-color: transparent;
+            color: var(--pill-active-bg, #3b82f6);
+            border-color: var(--pill-active-bg, #3b82f6);
+        }
+
+        &:hover {
+            background-color: transparent;
+            color: var(--pill-active-bg, #3b82f6);
+            border-color: var(--pill-active-bg, #3b82f6);
+        }
+    }
+}
+
+.adaire-content-toggle__pills--filled {
+    .adaire-content-toggle__pill {
+        background-color: var(--pill-bg, #1e293b);
+        border: none;
+
+        &.is-active {
+            background-color: var(--pill-active-bg, #3b82f6);
+        }
+
+        &:hover {
+            background-color: var(--pill-active-bg, #3b82f6);
+        }
+    }
+}
+
+/* Content Area */
+.adaire-content-toggle__content {
+    position: relative;
+    background-color: var(--content-bg, #0a0e27);
+    border-radius: var(--content-border-radius, 16px);
+    padding: var(--content-padding-top, 40px) var(--content-padding-right, 40px) var(--content-padding-bottom, 40px) var(--content-padding-left, 40px);
+    min-height: 200px;
+
+    max-width: var(--content-width, 100%);
+    margin: 0 auto;
+}
+
+/* Responsive content width */
+@media (max-width: 1024px) {
+    .adaire-content-toggle__content {
+        max-width: var(--content-width-tablet, var(--content-width, 100%));
+    }
+}
+
+@media (max-width: 768px) {
+    .adaire-content-toggle__content {
+        max-width: var(--content-width-mobile, var(--content-width-tablet, var(--content-width, 100%)));
+    }
+}
+
+.adaire-content-toggle-panel {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &.is-active {
+        opacity: 1;
+    }
+
+    /* Ensure content inside panels has proper spacing */
+    >* {
+        margin-top: 0;
+    }
+
+    >*+* {
+        margin-top: 1em;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .adaire-content-toggle__container.is-constrained {
+        max-width: var(--container-max-width-tablet, 100%);
+    box-sizing: border-box;
+
+    }
+}
+
+@media (max-width: 768px) {
+    .adaire-content-toggle__container.is-constrained {
+        max-width: var(--container-max-width-mobile, 100%);
+    }
+
+    .adaire-content-toggle__pills {
+        gap: calc(var(--pill-gap, 16px) * 0.75);
+    }
+
+    .adaire-content-toggle__pill {
+        font-size: calc(var(--pill-font-size, 16px) * 0.9);
+        padding: calc(var(--pill-padding-top, 12px) * 0.8) calc(var(--pill-padding-right, 24px) * 0.8) calc(var(--pill-padding-bottom, 12px) * 0.8) calc(var(--pill-padding-left, 24px) * 0.8);
+    }
+
+    .adaire-content-toggle__content {
+        padding: calc(var(--content-padding-top, 40px) * 0.75) calc(var(--content-padding-right, 40px) * 0.75) calc(var(--content-padding-bottom, 40px) * 0.75) calc(var(--content-padding-left, 40px) * 0.75);
+    }
+}

@@ -37,19 +37,19 @@
     },
     "accentColor": {
       "type": "string",
-      "default": "#d52940"
+      "default": "#6366f1"
     },
     "backgroundColor": {
       "type": "string",
-      "default": "#111827"
+      "default": "#ffffff"
     },
     "textColor": {
       "type": "string",
-      "default": "#ffffff"
+      "default": "#111827"
     },
     "secondaryButtonText": {
       "type": "string",
-      "default": "Watch demo"
+      "default": "Book a Demo"
     },
     "secondaryButtonUrl": {
       "type": "string",
@@ -59,81 +59,105 @@
       "type": "string",
       "default": ""
     },
-    "videoUrl": {
-      "type": "string",
-      "default": ""
-    },
     "backgroundType": {
       "type": "string",
-      "default": "gradient"
+      "default": "solid"
     },
     "backgroundImage": {
       "type": "string",
       "default": ""
     },
-    "gradient": {
+    "backgroundGradient": {
       "type": "string",
-      "default": "linear-gradient(135deg,#111827,#3b0764)"
+      "default": ""
     },
-    "alignment": {
+    "layoutStyle": {
       "type": "string",
-      "default": "left"
+      "default": "centered"
     },
-    "socialProof": {
-      "type": "string",
-      "default": "Trusted by 2,000+ teams"
-    },
-    "trustLogos": {
-      "type": "string",
-      "default": "Acme, Velocity, Atlas"
-    },
-    "announcementText": {
-      "type": "string",
-      "default": "New: AI workflow builder"
-    },
-    "announcementUrl": {
-      "type": "string",
-      "default": "#"
-    },
-    "showScrollArrow": {
+    "showPill": {
       "type": "boolean",
       "default": true
     },
-    "variantLabel": {
+    "pillText": {
       "type": "string",
-      "default": "Variant A"
+      "default": "New: v2.0 Release"
     },
-    "typewriter": {
+    "pillBg": {
+      "type": "string",
+      "default": "#dbeafe"
+    },
+    "pillColor": {
+      "type": "string",
+      "default": "#1e40af"
+    },
+    "useGradientHeadline": {
       "type": "boolean",
-      "default": false
+      "default": true
     },
-    "headlineSize": {
-      "type": "number",
-      "default": 64
-    },
-    "headlineWeight": {
+    "gradientStart": {
       "type": "string",
-      "default": "800"
+      "default": "#6366f1"
     },
-    "subheadlineMaxWidth": {
-      "type": "number",
-      "default": 680
-    },
-    "minHeight": {
-      "type": "number",
-      "default": 78
-    },
-    "overlayOpacity": {
-      "type": "number",
-      "default": 35
-    },
-    "buttonWidth": {
+    "gradientEnd": {
       "type": "string",
-      "default": "auto"
+      "default": "#8b5cf6"
     },
-    "buttonHeight": {
+    "ctaType": {
       "type": "string",
-      "default": "auto"
+      "default": "dual-buttons"
+    },
+    "primaryButtonText": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "primaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "secondaryButtonText": {
+      "type": "string",
+      "default": "Book a Demo"
+    },
+    "secondaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "emailPlaceholder": {
+      "type": "string",
+      "default": "Enter your email"
+    },
+    "submitButtonText": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "singleButtonText": {
+      "type": "string",
+      "default": "Shop Collection"
+    },
+    "singleButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "microCopy": {
+      "type": "string",
+      "default": "Free shipping on orders over $50"
+    },
+    "buttonPrimaryColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonPrimaryBg": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "buttonSecondaryColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonSecondaryBg": {
+      "type": "string",
+      "default": "#ffffff"
     },
     "buttonHoverColor": {
       "type": "string",
@@ -151,22 +175,37 @@
       "type": "string",
       "default": "lift"
     },
-    "backgroundGradient": {
-      "type": "string",
-      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    "showHeroImage": {
+      "type": "boolean",
+      "default": true
     },
-    "ctaLayout": { "type": "string", "default": "buttons" },
-    "codeSnippetText": { "type": "string", "default": "npx create-app" },
-    "emailPlaceholder": { "type": "string", "default": "Your email address" },
-    "socialProofItems": { "type": "array", "default": [] },
-    "backgroundPattern": { "type": "string", "default": "none" },
-    "meshColor": { "type": "string", "default": "#7c3aed" },
-    "mediaStyle": { "type": "string", "default": "none" },
-    "layout": { "type": "string", "default": "centered" },
-    "highlightColor": { "type": "string", "default": "#a855f7" },
-    "highlightType": { "type": "string", "default": "color" },
-    "paddingTop": { "type": "number", "default": 80 },
-    "paddingBottom": { "type": "number", "default": 80 },
-    "sectionMinHeight": { "type": "string", "default": "auto" }
+    "imagePosition": {
+      "type": "string",
+      "default": "below"
+    },
+    "showTrustBar": {
+      "type": "boolean",
+      "default": true
+    },
+    "trustBarTitle": {
+      "type": "string",
+      "default": "Trusted by"
+    },
+    "trustLogos": {
+      "type": "string",
+      "default": "Acme\nVelocity\nAtlas\nNexus\nPrime"
+    },
+    "fontSize": {
+      "type": "number",
+      "default": 16
+    },
+    "padding": {
+      "type": "number",
+      "default": 80
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 12
+    }
   }
 }

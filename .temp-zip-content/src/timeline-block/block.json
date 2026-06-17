@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/timeline-block",
+  "version": "0.1.0",
+  "title": "Timeline",
+  "category": "adaire-information-blocks",
+  "description": "Display a vertical alternating or horizontal timeline with customizable items, icons, colors, and section header.",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": ["wide", "full"],
+    "customClassName": true
+  },
+  "textdomain": "timeline-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "orientation":       { "type": "string",  "default": "vertical" },
+    "eyebrow":           { "type": "string",  "default": "Our Process" },
+    "sectionTitle":      { "type": "string",  "default": "How It Works" },
+    "sectionDescription":{ "type": "string",  "default": "" },
+    "items": {
+      "type": "array",
+      "default": [
+        { "title": "Seamless Onboarding",   "description": "Register your business in minutes with our streamlined verification process designed for speed and compliance.", "icon": "shield" },
+        { "title": "Fund Your Account",     "description": "Deposit local fiat directly from any bank. Instant settlement with zero hidden fees or conversion charges.",      "icon": "zap"    },
+        { "title": "Instant Settlement",    "description": "Execute payments to vendors, partners, and teams worldwide — all settled in real-time.",                          "icon": "globe"  },
+        { "title": "Track & Report",        "description": "Full visibility into every transaction with real-time dashboards and exportable compliance reports.",              "icon": "check"  }
+      ]
+    },
+    "backgroundColor":   { "type": "string",  "default": "#0a1628" },
+    "accentColor":       { "type": "string",  "default": "#00bcd4" },
+    "eyebrowColor":      { "type": "string",  "default": "#00bcd4" },
+    "textColor":         { "type": "string",  "default": "#ffffff" },
+    "descriptionColor":  { "type": "string",  "default": "rgba(255,255,255,0.65)" },
+    "lineColor":         { "type": "string",  "default": "#1e3a5f" },
+    "nodeSize":          { "type": "number",  "default": 52 },
+    "showArrows":        { "type": "boolean", "default": true },
+    "showConnector":     { "type": "boolean", "default": true },
+    "paddingTop":        { "type": "number",  "default": 80 },
+    "paddingBottom":     { "type": "number",  "default": 80 }
+  }
+}

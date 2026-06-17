@@ -267,12 +267,28 @@ export default function Edit( { attributes: a, setAttributes } ) {
 						/>
 					</div>
 
+					<QuickZone
+							id="secondary-image"
+							label="Secondary Image"
+							activeZone={activeZone}
+							setActiveZone={setActiveZone}
+							content={
+								<ImageUploader
+									label={ __( 'Secondary image' ) }
+									url={ a.imageUrl2 }
+									alt={ a.imageAlt2 }
+									onSelect={ ( url, alt ) => setAttributes( { imageUrl2: url, imageAlt2: alt } ) }
+									onRemove={ () => setAttributes( { imageUrl2: '', imageAlt2: '' } ) }
+								/>
+							}
+						>
 					<div className="adaire-about__zone-sec-img">
 						{ a.imageUrl2
 							? <img className="adaire-about__img" src={ a.imageUrl2 } alt={ a.imageAlt2 } />
 							: imgPlaceholder( __( '🖼 Secondary image — upload in sidebar' ) )
 						}
 					</div>
+					</QuickZone>
 				</div>
 
 				{ /* 4 · Closing statement */ }

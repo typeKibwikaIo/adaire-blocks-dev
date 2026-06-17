@@ -1,0 +1,121 @@
+// Tabs Block - Editor Only Styles
+
+.adaire-tabs {
+    // Editor-specific wrapper
+    .block-editor-inner-blocks {
+        > .block-editor-block-list__layout {
+            > .wp-block {
+                margin: 0;
+            }
+        }
+    }
+    
+    // Hide all tab panels in editor except active
+    .adaire-tab-panel:not(.is-active) {
+        display: none !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        position: absolute !important;
+        pointer-events: none !important;
+    }
+    
+    // Extra specific rule to hide first panel if not active
+    // .adaire-tab-panel:first-child:not(.is-active) {
+    //     display: none !important;
+    //     height: 0 !important;
+    //     overflow: hidden !important;
+    //     opacity: 0 !important;
+    //     visibility: hidden !important;
+    //     position: absolute !important;
+    //     pointer-events: none !important;
+    // }
+    
+    .adaire-tab-panel.is-active {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        position: relative !important;
+        pointer-events: auto !important;
+    }
+    
+    // Editor tab styling
+    &__tab {
+        // More visible in editor
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        &.is-active {
+            background-color: rgba(59, 130, 246, 0.05);
+            border-bottom-color: var(--tab-underline-color, #3b82f6);
+        }
+    }
+    
+    // Hide underline in editor (too complex to position without JS)
+    // Active tab shows border-bottom instead
+    &__underline {
+        display: none;
+    }
+    
+    // Add some visual separation in the editor
+    &__content-wrapper {
+        margin-top: 20px;
+        border: 2px dashed rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        min-height: 150px;
+    }
+    
+    // Vertical layout in editor
+    &__container.is-vertical,
+    [data-tab-layout="vertical"] &__container {
+        min-height: 400px;
+        
+        .adaire-tabs__header {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .adaire-tabs__list {
+            flex: 1;
+            display: flex;
+            justify-content: var(--tabs-align, flex-start);
+        }
+        
+        .adaire-tabs__content-wrapper {
+            margin-top: 0;
+            margin-left: 20px;
+        }
+    }
+    
+    // Vertical layout right position in editor
+    &__container.is-vertical.is-right {
+        .adaire-tabs__content-wrapper {
+            margin-left: 0;
+            margin-right: 20px;
+        }
+    }
+    
+    // Panels wrapper
+    &__panels {
+        position: relative;
+        
+        .adaire-tab-panel.is-active {
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            background-color: rgba(59, 130, 246, 0.02);
+            border-radius: 6px;
+            padding: 12px;
+        }
+    }
+}
+
+// Block appender styling
+.adaire-tab-panel {
+    .block-list-appender {
+        margin-top: 1em;
+    }
+}
+

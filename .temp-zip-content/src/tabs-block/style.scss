@@ -1,0 +1,356 @@
+// Tabs Block - Frontend & Editor Styles
+
+.adaire-tabs {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    
+    // Container
+    &__container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px);
+        }
+    }
+
+    // Responsive container max-width for tablet
+    @media (max-width: 1024px) {
+        &__container.is-constrained {
+            max-width: var(--container-max-width-tablet, var(--container-max-width, 100%));
+        }
+    }
+    
+    // Responsive container max-width for mobile
+    @media (max-width: 768px) {
+        &__container.is-constrained {
+            max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%));
+        }
+    }
+        
+    // Vertical layout
+    &__container.is-vertical {
+        flex-direction: row;
+        gap: 40px;
+        align-items: stretch;
+        min-height: 400px;
+        
+        .adaire-tabs__header {
+            flex: 0 0 auto;
+            min-width: 200px;
+            margin-bottom: 0;
+            border-bottom: none;
+            border-right: 2px solid rgba(0, 0, 0, 0.08);
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .adaire-tabs__list {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+            width: 100%;
+            display: flex;
+            justify-content: var(--tabs-align, flex-start);
+            flex: 1;
+        }
+        
+        .adaire-tabs__tab {
+            text-align: left;
+            padding: 16px 20px;
+            border-bottom: none;
+            border-right: var(--underline-height, 3px) solid transparent;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.02);
+                transform: translateX(4px);
+            }
+            
+            &.is-active {
+                background-color: var(--vertical-active-bg-color, rgba(59, 130, 246, 0.05));
+                border-right-color: var(--tab-underline-color, #3b82f6);
+                transform: translateX(4px);
+            }
+        }
+        
+        .adaire-tabs__underline {
+            display: none;
+        }
+        
+        .adaire-tabs__content-wrapper {
+            flex: 1;
+            min-height: 200px;
+        }
+    }
+    
+    // Vertical layout - Right position
+    &__container.is-vertical.is-right {
+        flex-direction: row-reverse;
+        
+        .adaire-tabs__header {
+            border-right: none;
+            border-left: 2px solid rgba(0, 0, 0, 0.08);
+            padding-right: 0;
+            padding-left: 20px;
+        }
+        
+        .adaire-tabs__list {
+            justify-content: var(--tabs-align, flex-start);
+        }
+    }
+    
+    // Header (tabs navigation)
+    &__header {
+        position: relative;
+        margin-bottom: 8px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+    }
+    
+    // Bottom position for horizontal layout
+    &__container.is-bottom,
+    [data-tab-position="bottom"] &__container {
+        flex-direction: column-reverse;
+        
+        .adaire-tabs__header {
+            margin-bottom: 0;
+            margin-top: 8px;
+            border-bottom: none;
+            border-top: 2px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .adaire-tabs__underline {
+            top: -2px;
+            bottom: auto;
+        }
+    }
+    
+    // Tabs list
+    &__list {
+        display: flex;
+        gap: var(--tab-gap, 32px);
+        align-items: center;
+        justify-content: var(--tabs-align, flex-start);
+        position: relative;
+        flex-wrap: wrap;
+    }
+    
+    // Individual tab button
+    &__tab {
+        background: none;
+        border: none;
+        border-bottom: var(--underline-height, 3px) solid transparent;
+        padding: 16px 0;
+        font-family: inherit; // Respect site/user theme font
+        font-size: var(--tab-title-size, 18px);
+        font-weight: var(--tab-title-weight, 500);
+        color: var(--tab-title-color, #64748b);
+        cursor: pointer;
+        position: relative;
+        white-space: nowrap;
+        outline: none;
+        transform: scale(1);
+        letter-spacing: -0.01em;
+        
+        // Smooth transitions for all interactive states
+        transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                    font-weight 0.3s ease,
+                    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.3s ease,
+                    border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        &:hover {
+            color: var(--tab-title-active-color, #0f172a);
+            transform: scale(1.05);
+        }
+        
+        &.is-active {
+            color: var(--tab-title-active-color, #0f172a);
+            font-weight: var(--tab-title-active-weight, 600);
+            transform: scale(1);
+        }
+        
+        // Focus state for accessibility
+        &:focus-visible {
+            outline: 2px solid var(--tab-underline-color, #3b82f6);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+    }
+    
+    // Animated underline
+    &__underline {
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100px;
+        height: var(--underline-height, 3px);
+        background: var(--tab-underline-color, #3b82f6);
+        border-radius: 2px 2px 0 0;
+        transform-origin: left center;
+        will-change: transform, width, top;
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+        pointer-events: none;
+        transition: background 0.3s ease;
+    }
+    
+    // Content wrapper
+    &__content-wrapper {
+        position: relative;
+        width: 100%;
+        min-height: 200px;
+    }
+    
+    // Panels wrapper
+    &__panels {
+        position: relative;
+        width: 100%;
+        transition: min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    // Individual content panel
+    &__content {
+        width: 100%;
+        padding-top: var(--content-padding-top, 40px);
+        padding-right: var(--content-padding-right, 0px);
+        padding-bottom: var(--content-padding-bottom, 40px);
+        padding-left: var(--content-padding-left, 0px);
+        display: none;
+        opacity: 0;
+        
+        &.is-active {
+            display: block;
+            opacity: 1;
+        }
+        
+        // Style nested content
+        > * {
+            margin-bottom: 1em;
+            
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .adaire-tabs {
+        &__list {
+            gap: calc(var(--tab-gap, 32px) * 0.75);
+        }
+        
+        &__tab {
+            font-size: calc(var(--tab-title-size, 18px) * 0.9);
+            padding: 12px 0;
+            
+            // Show bottom border on active tab instead of moving underline
+            &.is-active {
+                border-bottom-color: var(--tab-underline-color, #3b82f6);
+                box-shadow: 0 var(--underline-height, 3px) 12px -2px rgba(59, 130, 246, 0.2);
+            }
+        }
+        
+        // Hide the moving underline on tablet/mobile
+        &__underline {
+            display: none;
+        }
+        
+        &__content {
+            padding-top: calc(var(--content-padding-top, 40px) * 0.75);
+            padding-right: calc(var(--content-padding-right, 0px) * 0.75);
+            padding-bottom: calc(var(--content-padding-bottom, 40px) * 0.75);
+            padding-left: calc(var(--content-padding-left, 0px) * 0.75);
+        }
+        
+        // Vertical layout responsive behavior
+        &__container.is-vertical,
+        [data-tab-layout="vertical"] &__container {
+            flex-direction: column;
+            gap: 20px;
+            
+            .adaire-tabs__header {
+                min-width: auto;
+                border-right: none;
+                border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+                padding-right: 0;
+                padding-bottom: 20px;
+            }
+            
+            .adaire-tabs__list {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .adaire-tabs__tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+                padding: 12px 16px;
+                border-right: none;
+                border-bottom: var(--underline-height, 3px) solid transparent;
+                
+                &:hover {
+                    transform: translateY(-2px);
+                }
+                
+                &.is-active {
+                    border-right-color: transparent;
+                    border-bottom-color: var(--tab-underline-color, #3b82f6);
+                    transform: translateY(-2px);
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .adaire-tabs {
+        &__list {
+            gap: calc(var(--tab-gap, 32px) * 0.5);
+            flex-wrap: wrap;
+        }
+        
+        &__tab {
+            font-size: calc(var(--tab-title-size, 18px) * 0.85);
+            padding: 10px 0;
+            
+            // Show bottom border on active tab instead of moving underline
+            &.is-active {
+                border-bottom-color: var(--tab-underline-color, #3b82f6);
+                box-shadow: 0 var(--underline-height, 3px) 12px -2px rgba(59, 130, 246, 0.2);
+            }
+        }
+        
+        // Hide the moving underline on mobile
+        &__underline {
+            display: none;
+        }
+        
+        &__content {
+            padding-top: calc(var(--content-padding-top, 40px) * 0.5);
+            padding-right: 0;
+            padding-bottom: calc(var(--content-padding-bottom, 40px) * 0.5);
+            padding-left: 0;
+        }
+    }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+    .adaire-tabs {
+        &__header {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+}
+

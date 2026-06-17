@@ -1,0 +1,248 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// About Us Block — adaire/about-us-block
+// Matches the Kreativy editorial reference design.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.adaire-about {
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	width: 100%;
+
+	*,
+	*::before,
+	*::after { box-sizing: inherit; }
+
+	// ── Shared inner wrap ──────────────────────────────────────────────────
+	// All zones share the same horizontal gutter
+	.adaire-about__hero,
+	.adaire-about__statement-zone,
+	.adaire-about__media,
+	.adaire-about__closing-zone {
+		max-width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: clamp( 24px, 5vw, 64px );
+		padding-right: clamp( 24px, 5vw, 64px );
+	}
+
+	// ══════════════════════════════════════════════════════════════════════
+	// 1 · HERO ZONE
+	// ══════════════════════════════════════════════════════════════════════
+	.adaire-about__hero {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		padding-bottom: 80px;
+	}
+
+	.adaire-about__hero-copy {
+		flex: 1;
+		max-width: 600px;
+	}
+
+	.adaire-about__heading {
+		font-size: clamp( 52px, 9vw, 104px );
+		font-weight: 700;
+		line-height: 1.0;
+		letter-spacing: -0.03em;
+		color: var( --ab-text, #fff );
+		margin: 0 0 28px;
+	}
+
+	.adaire-about__tagline {
+		font-size: 14px;
+		line-height: 1.65;
+		color: var( --ab-muted, rgba( 255, 255, 255, 0.6 ) );
+		max-width: 320px;
+		margin: 0 0 40px;
+	}
+
+	.adaire-about__mission {
+		font-size: 13px;
+		line-height: 1.75;
+		color: var( --ab-muted, rgba( 255, 255, 255, 0.5 ) );
+		max-width: 440px;
+		border-top: 1px solid var( --ab-divider, rgba( 255, 255, 255, 0.1 ) );
+		padding-top: 28px;
+		margin: 0;
+	}
+
+	.adaire-about__scroll-btn {
+		width: 76px;
+		height: 76px;
+		border-radius: 50%;
+		background: rgba( 255, 255, 255, 0.12 );
+		border: 1px solid rgba( 255, 255, 255, 0.15 );
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 11px;
+		letter-spacing: 0.04em;
+		color: rgba( 255, 255, 255, 0.75 );
+		flex-shrink: 0;
+		margin-left: 32px;
+		margin-top: 8px;
+		cursor: default;
+		transition: background 0.2s;
+
+		&:hover {
+			background: rgba( 255, 255, 255, 0.18 );
+		}
+	}
+
+	// ══════════════════════════════════════════════════════════════════════
+	// 2 · STATEMENT ZONE
+	// ══════════════════════════════════════════════════════════════════════
+	.adaire-about__statement-zone {
+		border-top: 1px solid var( --ab-divider, rgba( 255, 255, 255, 0.1 ) );
+		padding-top: 72px;
+		padding-bottom: 72px;
+	}
+
+	.adaire-about__statement {
+		font-size: clamp( 22px, 3.2vw, 38px );
+		line-height: 1.38;
+		font-weight: 400;
+		color: var( --ab-text, #fff );
+		max-width: 940px;
+		margin: 0;
+	}
+
+	// ══════════════════════════════════════════════════════════════════════
+	// 3 · MEDIA GRID  (4-zone editorial layout)
+	//
+	//   [ main-img  ]  [ caption  ]
+	//   [ body-text ]  [ sec-img  ]
+	//
+	// ══════════════════════════════════════════════════════════════════════
+	.adaire-about__media {
+		display: grid;
+		grid-template-columns: 56% 44%;
+		grid-template-rows: auto auto;
+		grid-template-areas:
+			"main-img  caption"
+			"body      sec-img";
+		column-gap: clamp( 24px, 4vw, 48px );
+		row-gap: 32px;
+		padding-bottom: 80px;
+	}
+
+	.adaire-about__zone-main-img { grid-area: main-img; }
+	.adaire-about__zone-caption  { grid-area: caption; padding-top: 8px; }
+	.adaire-about__zone-body     { grid-area: body; }
+	.adaire-about__zone-sec-img  { grid-area: sec-img; }
+
+	.adaire-about__img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	// Give main image a fixed aspect so layout is stable before images load
+	.adaire-about__zone-main-img .adaire-about__img {
+		aspect-ratio: 4 / 3;
+	}
+
+	// Secondary image fills the remaining height in its grid cell
+	.adaire-about__zone-sec-img {
+		display: flex;
+		flex-direction: column;
+
+		.adaire-about__img {
+			flex: 1;
+			min-height: 200px;
+		}
+	}
+
+	.adaire-about__caption {
+		font-size: 14px;
+		line-height: 1.72;
+		color: var( --ab-muted, rgba( 255, 255, 255, 0.65 ) );
+		margin: 0;
+		max-width: 320px;
+	}
+
+	.adaire-about__body {
+		font-size: 15px;
+		line-height: 1.8;
+		color: var( --ab-muted, rgba( 255, 255, 255, 0.7 ) );
+		margin: 0;
+		padding-top: 4px;
+	}
+
+	// ══════════════════════════════════════════════════════════════════════
+	// 4 · CLOSING STATEMENT
+	// ══════════════════════════════════════════════════════════════════════
+	.adaire-about__closing-zone {
+		border-top: 1px solid var( --ab-divider, rgba( 255, 255, 255, 0.1 ) );
+		padding-top: 72px;
+	}
+
+	.adaire-about__closing {
+		font-size: clamp( 32px, 5.5vw, 68px );
+		font-weight: 700;
+		line-height: 1.12;
+		letter-spacing: -0.02em;
+		color: var( --ab-text, #fff );
+		max-width: 880px;
+		margin: 0;
+	}
+
+	// ══════════════════════════════════════════════════════════════════════
+	// RESPONSIVE
+	// ══════════════════════════════════════════════════════════════════════
+
+	// Tablet
+	@media ( max-width: 900px ) {
+		.adaire-about__hero {
+			padding-bottom: 56px;
+		}
+
+		.adaire-about__media {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	// Mobile
+	@media ( max-width: 640px ) {
+		.adaire-about__hero {
+			flex-direction: column;
+			gap: 32px;
+		}
+
+		.adaire-about__scroll-btn {
+			margin-left: 0;
+		}
+
+		.adaire-about__media {
+			grid-template-columns: 1fr;
+			grid-template-areas:
+				"main-img"
+				"caption"
+				"body"
+				"sec-img";
+		}
+
+		.adaire-about__zone-main-img .adaire-about__img {
+			aspect-ratio: 3 / 2;
+		}
+
+		.adaire-about__zone-sec-img .adaire-about__img {
+			aspect-ratio: 3 / 2;
+		}
+
+		.adaire-about__statement-zone {
+			padding-top: 48px;
+			padding-bottom: 48px;
+		}
+
+		.adaire-about__closing-zone {
+			padding-top: 48px;
+		}
+
+		.adaire-about__media {
+			padding-bottom: 48px;
+		}
+	}
+}

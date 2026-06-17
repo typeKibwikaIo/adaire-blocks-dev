@@ -1,0 +1,66 @@
+/* Basic styling for the feedback popup */
+
+.adaire-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.adaire-modal-container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.adaire-modal-container h3 {
+    margin: 0 0 10px;
+}
+
+.adaire-reasons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.adaire-reasons-list label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.adaire-field {
+    margin: 20px 0;
+}
+
+.adaire-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.adaire-field input,
+#adaire-other-details textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.adaire-modal-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}

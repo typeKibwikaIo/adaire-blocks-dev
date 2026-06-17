@@ -1,0 +1,596 @@
+// Match InfoGrid 3 / base InfoGrid behavior: prevent WP core from adding default borders
+// when it detects border-width/borderStyle/borderColor in inline styles.
+.wp-block-create-block-infogrid-2-block,
+[class*="wp-block-create-block-infogrid-2-block"] {
+    outline: none !important;
+    border: none !important;
+    border-style: none !important;
+    border-width: 0 !important;
+    box-shadow: none !important;
+
+    &[style*="border-width"],
+    &[style*="borderWidth"],
+    &[style*="border-style"],
+    &[style*="borderStyle"],
+    &[style*="border-color"],
+    &[style*="borderColor"] {
+        border: none !important;
+        border-style: none !important;
+        border-width: 0 !important;
+        box-shadow: none !important;
+    }
+}
+
+.adaire-infogrid-2-container {
+    position: relative;
+    width: var(--infogrid-2-block-width-desktop, 100%);
+    margin-left: auto;
+    margin-right: auto;
+    background-size: var(--infogrid-2-bg-size, cover);
+    background-position: var(--infogrid-2-bg-position, center);
+    background-repeat: var(--infogrid-2-bg-repeat, no-repeat);
+    background-image: var(--infogrid-2-bg-image, none);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    box-sizing: border-box !important;
+
+    // Desktop Defaults
+    min-height: var(--infogrid-2-min-height-desktop, auto);
+    padding-top: var(--infogrid-2-padding-top-desktop, 80px);
+    padding-right: var(--infogrid-2-padding-right-desktop, 20px);
+    padding-bottom: var(--infogrid-2-padding-bottom-desktop, 80px);
+    padding-left: var(--infogrid-2-padding-left-desktop, 20px);
+    margin-top: var(--infogrid-2-margin-top-desktop, 0px);
+    margin-right: var(--infogrid-2-margin-right-desktop, 0px);
+    margin-bottom: var(--infogrid-2-margin-bottom-desktop, 0px);
+    margin-left: var(--infogrid-2-margin-left-desktop, 0px);
+
+    &.alignfull {
+        margin-left: calc(50% - 50vw) !important;
+        margin-right: calc(50% - 50vw) !important;
+        width: 100vw;
+        max-width: 100vw;
+    }
+
+    .adaire-infogrid-2-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+        opacity: var(--infogrid-2-overlay-opacity, 0.5);
+
+        &.is-type-solid {
+            background-color: var(--infogrid-2-overlay-bg-solid, transparent);
+        }
+
+        &.is-type-gradient {
+            background: var(--infogrid-2-overlay-bg-gradient, transparent);
+            opacity: 1;
+        }
+    }
+
+    .adaire-infogrid-2-wrapper {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: var(--infogrid-2-heading-alignment-flex-desktop, center);
+        text-align: var(--infogrid-2-heading-alignment-desktop, center);
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    &.is-constrained .adaire-infogrid-2-wrapper {
+        max-width: var(--infogrid-2-container-max-width, 1200px);
+    }
+
+    .adaire-infogrid-2-heading {
+        margin: 0;
+        margin-bottom: var(--infogrid-2-heading-margin-bottom-desktop, 20px);
+        font-size: var(--infogrid-2-heading-font-size-desktop, 40px);
+        font-weight: var(--infogrid-2-heading-font-weight-desktop, 700);
+        line-height: var(--infogrid-2-heading-line-height-desktop, 1.2);
+        letter-spacing: var(--infogrid-2-heading-letter-spacing-desktop, 0px);
+        text-transform: var(--infogrid-2-heading-text-transform-desktop, none);
+        color: var(--infogrid-2-heading-color-desktop, #ffffff);
+    }
+
+    .adaire-infogrid-2-content {
+        display: grid;
+        grid-template-columns: repeat(var(--infogrid-2-grid-columns-desktop, 3), 1fr);
+        gap: var(--infogrid-2-grid-gap-desktop, 30px);
+        width: 100%;
+        max-width: var(--infogrid-2-grid-width-desktop, 1200px);
+        margin-left: var(--infogrid-2-content-ml-desktop, auto);
+        margin-right: var(--infogrid-2-content-mr-desktop, auto);
+        justify-content: var(--infogrid-2-content-alignment-desktop, center);
+    }
+
+    .adaire-infogrid-2-item {
+        padding-top: var(--infogrid-2-item-padding-top-desktop, 30px);
+        padding-right: var(--infogrid-2-item-padding-right-desktop, 30px);
+        padding-bottom: var(--infogrid-2-item-padding-bottom-desktop, 30px);
+        padding-left: var(--infogrid-2-item-padding-left-desktop, 30px);
+
+        // Explicit border definition to prevent WordPress default block styles from interfering
+        border: var(--infogrid-2-item-bw-desktop, 1px) var(--infogrid-2-item-bs-desktop, solid) var(--infogrid-2-item-bc-desktop, #ffffff33) !important;
+        outline: none !important;
+        box-shadow: none !important;
+
+        display: flex;
+        flex-direction: column;
+        align-items: var(--infogrid-2-content-alignment-flex-desktop, center);
+        text-align: var(--infogrid-2-content-alignment-desktop, center);
+
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    .adaire-infogrid-2-item-icon {
+        margin-bottom: 20px;
+        color: var(--infogrid-2-icon-color-desktop, #ffffff);
+        font-size: var(--infogrid-2-icon-size-desktop, 32px);
+        line-height: 1;
+
+        i {
+            display: inline-block;
+        }
+    }
+
+    .adaire-infogrid-2-item-title {
+        margin: 0;
+        margin-bottom: var(--infogrid-2-title-margin-bottom-desktop, 15px);
+        font-size: var(--infogrid-2-title-font-size-desktop, 24px);
+        font-weight: var(--infogrid-2-title-font-weight-desktop, 600);
+        line-height: var(--infogrid-2-title-line-height-desktop, 1.4);
+        letter-spacing: var(--infogrid-2-title-letter-spacing-desktop, 0px);
+        text-transform: var(--infogrid-2-title-text-transform-desktop, none);
+        color: var(--infogrid-2-title-color-desktop, #ffffff);
+    }
+
+    .adaire-infogrid-2-item-text {
+        margin: 0;
+        margin-bottom: var(--infogrid-2-text-margin-bottom-desktop, 0px);
+        font-size: var(--infogrid-2-text-font-size-desktop, 16px);
+        font-weight: var(--infogrid-2-text-font-weight-desktop, 400);
+        line-height: var(--infogrid-2-text-line-height-desktop, 1.6);
+        letter-spacing: var(--infogrid-2-text-letter-spacing-desktop, 0px);
+        text-transform: var(--infogrid-2-text-text-transform-desktop, none);
+        color: var(--infogrid-2-text-color-desktop, #cccccc);
+    }
+}
+
+// Breakpoint Mixins (aligned with hero1 block)
+@mixin phone {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 601px) and (max-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin small-laptop {
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 1301px) and (max-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin big-desktop {
+    @media (min-width: 1921px) {
+        @content;
+    }
+}
+
+// Responsive styles using breakpoint mixins
+@include phone {
+    .adaire-infogrid-2-container {
+        width: var(--infogrid-2-block-width-mobile, var(--infogrid-2-block-width-desktop));
+        min-height: var(--infogrid-2-min-height-mobile, var(--infogrid-2-min-height-desktop));
+        padding-top: var(--infogrid-2-padding-top-mobile, var(--infogrid-2-padding-top-desktop));
+        padding-right: var(--infogrid-2-padding-right-mobile, var(--infogrid-2-padding-right-desktop));
+        padding-bottom: var(--infogrid-2-padding-bottom-mobile, var(--infogrid-2-padding-bottom-desktop));
+        padding-left: var(--infogrid-2-padding-left-mobile, var(--infogrid-2-padding-left-desktop));
+
+        &.is-constrained .adaire-infogrid-2-wrapper {
+            max-width: var(--infogrid-2-container-max-width-mobile, var(--infogrid-2-container-max-width-tablet, 100%));
+        }
+        margin-top: var(--infogrid-2-margin-top-mobile, var(--infogrid-2-margin-top-desktop));
+        margin-right: var(--infogrid-2-margin-right-mobile, var(--infogrid-2-margin-right-desktop));
+        margin-bottom: var(--infogrid-2-margin-bottom-mobile, var(--infogrid-2-margin-bottom-desktop));
+        margin-left: var(--infogrid-2-margin-left-mobile, var(--infogrid-2-margin-left-desktop));
+
+        .adaire-infogrid-2-wrapper {
+            align-items: var(--infogrid-2-heading-alignment-flex-mobile, var(--infogrid-2-heading-alignment-flex-desktop));
+            text-align: var(--infogrid-2-heading-alignment-mobile, var(--infogrid-2-heading-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-heading {
+            margin-bottom: var(--infogrid-2-heading-margin-bottom-mobile, var(--infogrid-2-heading-margin-bottom-desktop));
+            font-size: var(--infogrid-2-heading-font-size-mobile, var(--infogrid-2-heading-font-size-desktop));
+            font-weight: var(--infogrid-2-heading-font-weight-mobile, var(--infogrid-2-heading-font-weight-desktop));
+            line-height: var(--infogrid-2-heading-line-height-mobile, var(--infogrid-2-heading-line-height-desktop));
+            letter-spacing: var(--infogrid-2-heading-letter-spacing-mobile, var(--infogrid-2-heading-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-heading-text-transform-mobile, var(--infogrid-2-heading-text-transform-desktop));
+            color: var(--infogrid-2-heading-color-mobile, var(--infogrid-2-heading-color-desktop));
+        }
+
+        .adaire-infogrid-2-content {
+            grid-template-columns: repeat(var(--infogrid-2-grid-columns-mobile, var(--infogrid-2-grid-columns-desktop)), 1fr);
+            gap: var(--infogrid-2-grid-gap-mobile, var(--infogrid-2-grid-gap-desktop));
+            max-width: var(--infogrid-2-grid-width-mobile, var(--infogrid-2-grid-width-desktop));
+            margin-left: var(--infogrid-2-content-ml-mobile, var(--infogrid-2-content-ml-desktop));
+            margin-right: var(--infogrid-2-content-mr-mobile, var(--infogrid-2-content-mr-desktop));
+            justify-content: var(--infogrid-2-content-alignment-mobile, var(--infogrid-2-content-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-item {
+            padding-top: var(--infogrid-2-item-padding-top-mobile, var(--infogrid-2-item-padding-top-desktop));
+            padding-right: var(--infogrid-2-item-padding-right-mobile, var(--infogrid-2-item-padding-right-desktop));
+            padding-bottom: var(--infogrid-2-item-padding-bottom-mobile, var(--infogrid-2-item-padding-bottom-desktop));
+            padding-left: var(--infogrid-2-item-padding-left-mobile, var(--infogrid-2-item-padding-left-desktop));
+            border: var(--infogrid-2-item-bw-mobile, var(--infogrid-2-item-bw-desktop, 1px)) var(--infogrid-2-item-bs-mobile, var(--infogrid-2-item-bs-desktop, solid)) var(--infogrid-2-item-bc-mobile, var(--infogrid-2-item-bc-desktop, #ffffff33)) !important;
+            outline: none !important;
+            box-shadow: none !important;
+            text-align: var(--infogrid-2-content-alignment-mobile, var(--infogrid-2-content-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-item-icon {
+            color: var(--infogrid-2-icon-color-mobile, var(--infogrid-2-icon-color-desktop));
+            font-size: var(--infogrid-2-icon-size-mobile, var(--infogrid-2-icon-size-desktop));
+        }
+
+        .adaire-infogrid-2-item-title {
+            margin-bottom: var(--infogrid-2-title-margin-bottom-mobile, var(--infogrid-2-title-margin-bottom-desktop));
+            font-size: var(--infogrid-2-title-font-size-mobile, var(--infogrid-2-title-font-size-desktop));
+            font-weight: var(--infogrid-2-title-font-weight-mobile, var(--infogrid-2-title-font-weight-desktop));
+            line-height: var(--infogrid-2-title-line-height-mobile, var(--infogrid-2-title-line-height-desktop));
+            letter-spacing: var(--infogrid-2-title-letter-spacing-mobile, var(--infogrid-2-title-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-title-text-transform-mobile, var(--infogrid-2-title-text-transform-desktop));
+            color: var(--infogrid-2-title-color-mobile, var(--infogrid-2-title-color-desktop));
+        }
+
+        .adaire-infogrid-2-item-text {
+            margin-bottom: var(--infogrid-2-text-margin-bottom-mobile, var(--infogrid-2-text-margin-bottom-desktop));
+            font-size: var(--infogrid-2-text-font-size-mobile, var(--infogrid-2-text-font-size-desktop));
+            font-weight: var(--infogrid-2-text-font-weight-mobile, var(--infogrid-2-text-font-weight-desktop));
+            line-height: var(--infogrid-2-text-line-height-mobile, var(--infogrid-2-text-line-height-desktop));
+            letter-spacing: var(--infogrid-2-text-letter-spacing-mobile, var(--infogrid-2-text-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-text-text-transform-mobile, var(--infogrid-2-text-text-transform-desktop));
+            color: var(--infogrid-2-text-color-mobile, var(--infogrid-2-text-color-desktop));
+        }
+    }
+}
+
+@include tablet {
+    .adaire-infogrid-2-container {
+        width: var(--infogrid-2-block-width-tablet, var(--infogrid-2-block-width-desktop));
+        min-height: var(--infogrid-2-min-height-tablet, var(--infogrid-2-min-height-desktop));
+        padding-top: var(--infogrid-2-padding-top-tablet, var(--infogrid-2-padding-top-desktop));
+        padding-right: var(--infogrid-2-padding-right-tablet, var(--infogrid-2-padding-right-desktop));
+        padding-bottom: var(--infogrid-2-padding-bottom-tablet, var(--infogrid-2-padding-bottom-desktop));
+        padding-left: var(--infogrid-2-padding-left-tablet, var(--infogrid-2-padding-left-desktop));
+
+        &.is-constrained .adaire-infogrid-2-wrapper {
+            max-width: var(--infogrid-2-container-max-width-tablet, var(--infogrid-2-container-max-width, 100%));
+        }
+
+        margin-top: var(--infogrid-2-margin-top-tablet, var(--infogrid-2-margin-top-desktop));
+        margin-right: var(--infogrid-2-margin-right-tablet, var(--infogrid-2-margin-right-desktop));
+        margin-bottom: var(--infogrid-2-margin-bottom-tablet, var(--infogrid-2-margin-bottom-desktop));
+        margin-left: var(--infogrid-2-margin-left-tablet, var(--infogrid-2-margin-left-desktop));
+
+        .adaire-infogrid-2-wrapper {
+            align-items: var(--infogrid-2-heading-alignment-flex-tablet, var(--infogrid-2-heading-alignment-flex-desktop));
+            text-align: var(--infogrid-2-heading-alignment-tablet, var(--infogrid-2-heading-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-heading {
+            margin-bottom: var(--infogrid-2-heading-margin-bottom-tablet, var(--infogrid-2-heading-margin-bottom-desktop));
+            font-size: var(--infogrid-2-heading-font-size-tablet, var(--infogrid-2-heading-font-size-desktop));
+            font-weight: var(--infogrid-2-heading-font-weight-tablet, var(--infogrid-2-heading-font-weight-desktop));
+            line-height: var(--infogrid-2-heading-line-height-tablet, var(--infogrid-2-heading-line-height-desktop));
+            letter-spacing: var(--infogrid-2-heading-letter-spacing-tablet, var(--infogrid-2-heading-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-heading-text-transform-tablet, var(--infogrid-2-heading-text-transform-desktop));
+            color: var(--infogrid-2-heading-color-tablet, var(--infogrid-2-heading-color-desktop));
+        }
+
+        .adaire-infogrid-2-content {
+            grid-template-columns: repeat(var(--infogrid-2-grid-columns-tablet, var(--infogrid-2-grid-columns-desktop)), 1fr);
+            gap: var(--infogrid-2-grid-gap-tablet, var(--infogrid-2-grid-gap-desktop));
+            max-width: var(--infogrid-2-grid-width-tablet, var(--infogrid-2-grid-width-desktop));
+            margin-left: var(--infogrid-2-content-ml-tablet, var(--infogrid-2-content-ml-desktop));
+            margin-right: var(--infogrid-2-content-mr-tablet, var(--infogrid-2-content-mr-desktop));
+            justify-content: var(--infogrid-2-content-alignment-tablet, var(--infogrid-2-content-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-item {
+            padding-top: var(--infogrid-2-item-padding-top-tablet, var(--infogrid-2-item-padding-top-desktop));
+            padding-right: var(--infogrid-2-item-padding-right-tablet, var(--infogrid-2-item-padding-right-desktop));
+            padding-bottom: var(--infogrid-2-item-padding-bottom-tablet, var(--infogrid-2-item-padding-bottom-desktop));
+            padding-left: var(--infogrid-2-item-padding-left-tablet, var(--infogrid-2-item-padding-left-desktop));
+            border: var(--infogrid-2-item-bw-tablet, var(--infogrid-2-item-bw-desktop, 1px)) var(--infogrid-2-item-bs-tablet, var(--infogrid-2-item-bs-desktop, solid)) var(--infogrid-2-item-bc-tablet, var(--infogrid-2-item-bc-desktop, #ffffff33)) !important;
+            outline: none !important;
+            box-shadow: none !important;
+            text-align: var(--infogrid-2-content-alignment-tablet, var(--infogrid-2-content-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-item-icon {
+            color: var(--infogrid-2-icon-color-tablet, var(--infogrid-2-icon-color-desktop));
+            font-size: var(--infogrid-2-icon-size-tablet, var(--infogrid-2-icon-size-desktop));
+        }
+
+        .adaire-infogrid-2-item-title {
+            margin-bottom: var(--infogrid-2-title-margin-bottom-tablet, var(--infogrid-2-title-margin-bottom-desktop));
+            font-size: var(--infogrid-2-title-font-size-tablet, var(--infogrid-2-title-font-size-desktop));
+            font-weight: var(--infogrid-2-title-font-weight-tablet, var(--infogrid-2-title-font-weight-desktop));
+            line-height: var(--infogrid-2-title-line-height-tablet, var(--infogrid-2-title-line-height-desktop));
+            letter-spacing: var(--infogrid-2-title-letter-spacing-tablet, var(--infogrid-2-title-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-title-text-transform-tablet, var(--infogrid-2-title-text-transform-desktop));
+            color: var(--infogrid-2-title-color-tablet, var(--infogrid-2-title-color-desktop));
+        }
+
+        .adaire-infogrid-2-item-text {
+            margin-bottom: var(--infogrid-2-text-margin-bottom-tablet, var(--infogrid-2-text-margin-bottom-desktop));
+            font-size: var(--infogrid-2-text-font-size-tablet, var(--infogrid-2-text-font-size-desktop));
+            font-weight: var(--infogrid-2-text-font-weight-tablet, var(--infogrid-2-text-font-weight-desktop));
+            line-height: var(--infogrid-2-text-line-height-tablet, var(--infogrid-2-text-line-height-desktop));
+            letter-spacing: var(--infogrid-2-text-letter-spacing-tablet, var(--infogrid-2-text-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-text-text-transform-tablet, var(--infogrid-2-text-text-transform-desktop));
+            color: var(--infogrid-2-text-color-tablet, var(--infogrid-2-text-color-desktop));
+        }
+    }
+}
+
+@include small-laptop {
+    .adaire-infogrid-2-container {
+        width: var(--infogrid-2-block-width-small-laptop, var(--infogrid-2-block-width-desktop));
+        min-height: var(--infogrid-2-min-height-small-laptop, var(--infogrid-2-min-height-desktop));
+        padding-top: var(--infogrid-2-padding-top-small-laptop, var(--infogrid-2-padding-top-desktop));
+        padding-right: var(--infogrid-2-padding-right-small-laptop, var(--infogrid-2-padding-right-desktop));
+        padding-bottom: var(--infogrid-2-padding-bottom-small-laptop, var(--infogrid-2-padding-bottom-desktop));
+        padding-left: var(--infogrid-2-padding-left-small-laptop, var(--infogrid-2-padding-left-desktop));
+
+        &.is-constrained .adaire-infogrid-2-wrapper {
+            max-width: var(--infogrid-2-container-max-width-small-laptop, var(--infogrid-2-container-max-width, 1200px));
+        }
+        margin-top: var(--infogrid-2-margin-top-small-laptop, var(--infogrid-2-margin-top-desktop));
+        margin-right: var(--infogrid-2-margin-right-small-laptop, var(--infogrid-2-margin-right-desktop));
+        margin-bottom: var(--infogrid-2-margin-bottom-small-laptop, var(--infogrid-2-margin-bottom-desktop));
+        margin-left: var(--infogrid-2-margin-left-small-laptop, var(--infogrid-2-margin-left-desktop));
+
+        .adaire-infogrid-2-wrapper {
+            align-items: var(--infogrid-2-heading-alignment-flex-small-laptop, var(--infogrid-2-heading-alignment-flex-desktop));
+            text-align: var(--infogrid-2-heading-alignment-small-laptop, var(--infogrid-2-heading-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-heading {
+            margin-bottom: var(--infogrid-2-heading-margin-bottom-small-laptop, var(--infogrid-2-heading-margin-bottom-desktop));
+            font-size: var(--infogrid-2-heading-font-size-small-laptop, var(--infogrid-2-heading-font-size-desktop));
+            font-weight: var(--infogrid-2-heading-font-weight-small-laptop, var(--infogrid-2-heading-font-weight-desktop));
+            line-height: var(--infogrid-2-heading-line-height-small-laptop, var(--infogrid-2-heading-line-height-desktop));
+            letter-spacing: var(--infogrid-2-heading-letter-spacing-small-laptop, var(--infogrid-2-heading-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-heading-text-transform-small-laptop, var(--infogrid-2-heading-text-transform-desktop));
+            color: var(--infogrid-2-heading-color-small-laptop, var(--infogrid-2-heading-color-desktop));
+        }
+
+        .adaire-infogrid-2-content {
+            grid-template-columns: repeat(var(--infogrid-2-grid-columns-small-laptop, var(--infogrid-2-grid-columns-desktop)), 1fr);
+            gap: var(--infogrid-2-grid-gap-small-laptop, var(--infogrid-2-grid-gap-desktop));
+            max-width: var(--infogrid-2-grid-width-small-laptop, var(--infogrid-2-grid-width-desktop));
+            margin-left: var(--infogrid-2-content-ml-small-laptop, var(--infogrid-2-content-ml-desktop));
+            margin-right: var(--infogrid-2-content-mr-small-laptop, var(--infogrid-2-content-mr-desktop));
+            justify-content: var(--infogrid-2-content-alignment-small-laptop, var(--infogrid-2-content-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-item {
+            padding-top: var(--infogrid-2-item-padding-top-small-laptop, var(--infogrid-2-item-padding-top-desktop));
+            padding-right: var(--infogrid-2-item-padding-right-small-laptop, var(--infogrid-2-item-padding-right-desktop));
+            padding-bottom: var(--infogrid-2-item-padding-bottom-small-laptop, var(--infogrid-2-item-padding-bottom-desktop));
+            padding-left: var(--infogrid-2-item-padding-left-small-laptop, var(--infogrid-2-item-padding-left-desktop));
+            border-width: var(--infogrid-2-item-bw-small-laptop, var(--infogrid-2-item-bw-desktop));
+            border-style: var(--infogrid-2-item-bs-small-laptop, var(--infogrid-2-item-bs-desktop));
+            border-color: var(--infogrid-2-item-bc-small-laptop, var(--infogrid-2-item-bc-desktop));
+            text-align: var(--infogrid-2-content-alignment-small-laptop, var(--infogrid-2-content-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-item-icon {
+            color: var(--infogrid-2-icon-color-small-laptop, var(--infogrid-2-icon-color-desktop));
+            font-size: var(--infogrid-2-icon-size-small-laptop, var(--infogrid-2-icon-size-desktop));
+        }
+
+        .adaire-infogrid-2-item-title {
+            margin-bottom: var(--infogrid-2-title-margin-bottom-small-laptop, var(--infogrid-2-title-margin-bottom-desktop));
+            font-size: var(--infogrid-2-title-font-size-small-laptop, var(--infogrid-2-title-font-size-desktop));
+            font-weight: var(--infogrid-2-title-font-weight-small-laptop, var(--infogrid-2-title-font-weight-desktop));
+            line-height: var(--infogrid-2-title-line-height-small-laptop, var(--infogrid-2-title-line-height-desktop));
+            letter-spacing: var(--infogrid-2-title-letter-spacing-small-laptop, var(--infogrid-2-title-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-title-text-transform-small-laptop, var(--infogrid-2-title-text-transform-desktop));
+            color: var(--infogrid-2-title-color-small-laptop, var(--infogrid-2-title-color-desktop));
+        }
+
+        .adaire-infogrid-2-item-text {
+            margin-bottom: var(--infogrid-2-text-margin-bottom-small-laptop, var(--infogrid-2-text-margin-bottom-desktop));
+            font-size: var(--infogrid-2-text-font-size-small-laptop, var(--infogrid-2-text-font-size-desktop));
+            font-weight: var(--infogrid-2-text-font-weight-small-laptop, var(--infogrid-2-text-font-weight-desktop));
+            line-height: var(--infogrid-2-text-line-height-small-laptop, var(--infogrid-2-text-line-height-desktop));
+            letter-spacing: var(--infogrid-2-text-letter-spacing-small-laptop, var(--infogrid-2-text-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-text-text-transform-small-laptop, var(--infogrid-2-text-text-transform-desktop));
+            color: var(--infogrid-2-text-color-small-laptop, var(--infogrid-2-text-color-desktop));
+        }
+    }
+}
+
+@include desktop {
+    .adaire-infogrid-2-container {
+        width: var(--infogrid-2-block-width-desktop, var(--infogrid-2-block-width-desktop));
+        min-height: var(--infogrid-2-min-height-desktop, var(--infogrid-2-min-height-desktop));
+        padding-top: var(--infogrid-2-padding-top-desktop, var(--infogrid-2-padding-top-desktop));
+        padding-right: var(--infogrid-2-padding-right-desktop, var(--infogrid-2-padding-right-desktop));
+        padding-bottom: var(--infogrid-2-padding-bottom-desktop, var(--infogrid-2-padding-bottom-desktop));
+        padding-left: var(--infogrid-2-padding-left-desktop, var(--infogrid-2-padding-left-desktop));
+
+        &.is-constrained .adaire-infogrid-2-wrapper {
+            max-width: var(--infogrid-2-container-max-width-desktop, var(--infogrid-2-container-max-width, 1200px));
+        }
+        margin-top: var(--infogrid-2-margin-top-desktop, var(--infogrid-2-margin-top-desktop));
+        margin-right: var(--infogrid-2-margin-right-desktop, var(--infogrid-2-margin-right-desktop));
+        margin-bottom: var(--infogrid-2-margin-bottom-desktop, var(--infogrid-2-margin-bottom-desktop));
+        margin-left: var(--infogrid-2-margin-left-desktop, var(--infogrid-2-margin-left-desktop));
+
+            .adaire-infogrid-2-wrapper {
+            align-items: var(--infogrid-2-heading-alignment-flex-desktop, var(--infogrid-2-heading-alignment-flex-desktop));
+            text-align: var(--infogrid-2-heading-alignment-desktop, var(--infogrid-2-heading-alignment-desktop));
+            }
+
+            .adaire-infogrid-2-heading {
+            margin-bottom: var(--infogrid-2-heading-margin-bottom-desktop, var(--infogrid-2-heading-margin-bottom-desktop));
+            font-size: var(--infogrid-2-heading-font-size-desktop, var(--infogrid-2-heading-font-size-desktop));
+            font-weight: var(--infogrid-2-heading-font-weight-desktop, var(--infogrid-2-heading-font-weight-desktop));
+            line-height: var(--infogrid-2-heading-line-height-desktop, var(--infogrid-2-heading-line-height-desktop));
+            letter-spacing: var(--infogrid-2-heading-letter-spacing-desktop, var(--infogrid-2-heading-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-heading-text-transform-desktop, var(--infogrid-2-heading-text-transform-desktop));
+            color: var(--infogrid-2-heading-color-desktop, var(--infogrid-2-heading-color-desktop));
+            }
+
+            .adaire-infogrid-2-content {
+            grid-template-columns: repeat(var(--infogrid-2-grid-columns-desktop, var(--infogrid-2-grid-columns-desktop)), 1fr);
+            gap: var(--infogrid-2-grid-gap-desktop, var(--infogrid-2-grid-gap-desktop));
+            max-width: var(--infogrid-2-grid-width-desktop, var(--infogrid-2-grid-width-desktop));
+            margin-left: var(--infogrid-2-content-ml-desktop, var(--infogrid-2-content-ml-desktop));
+            margin-right: var(--infogrid-2-content-mr-desktop, var(--infogrid-2-content-mr-desktop));
+            justify-content: var(--infogrid-2-content-alignment-desktop, var(--infogrid-2-content-alignment-desktop));
+            }
+
+            .adaire-infogrid-2-item {
+            padding-top: var(--infogrid-2-item-padding-top-desktop, var(--infogrid-2-item-padding-top-desktop));
+            padding-right: var(--infogrid-2-item-padding-right-desktop, var(--infogrid-2-item-padding-right-desktop));
+            padding-bottom: var(--infogrid-2-item-padding-bottom-desktop, var(--infogrid-2-item-padding-bottom-desktop));
+            padding-left: var(--infogrid-2-item-padding-left-desktop, var(--infogrid-2-item-padding-left-desktop));
+            border-width: var(--infogrid-2-item-bw-desktop, var(--infogrid-2-item-bw-desktop));
+            border-style: var(--infogrid-2-item-bs-desktop, var(--infogrid-2-item-bs-desktop));
+            border-color: var(--infogrid-2-item-bc-desktop, var(--infogrid-2-item-bc-desktop));
+            text-align: var(--infogrid-2-content-alignment-desktop, var(--infogrid-2-content-alignment-desktop));
+            }
+
+            .adaire-infogrid-2-item-icon {
+            color: var(--infogrid-2-icon-color-desktop, var(--infogrid-2-icon-color-desktop));
+            font-size: var(--infogrid-2-icon-size-desktop, var(--infogrid-2-icon-size-desktop));
+            }
+
+            .adaire-infogrid-2-item-title {
+            margin-bottom: var(--infogrid-2-title-margin-bottom-desktop, var(--infogrid-2-title-margin-bottom-desktop));
+            font-size: var(--infogrid-2-title-font-size-desktop, var(--infogrid-2-title-font-size-desktop));
+            font-weight: var(--infogrid-2-title-font-weight-desktop, var(--infogrid-2-title-font-weight-desktop));
+            line-height: var(--infogrid-2-title-line-height-desktop, var(--infogrid-2-title-line-height-desktop));
+            letter-spacing: var(--infogrid-2-title-letter-spacing-desktop, var(--infogrid-2-title-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-title-text-transform-desktop, var(--infogrid-2-title-text-transform-desktop));
+            color: var(--infogrid-2-title-color-desktop, var(--infogrid-2-title-color-desktop));
+            }
+
+            .adaire-infogrid-2-item-text {
+            margin-bottom: var(--infogrid-2-text-margin-bottom-desktop, var(--infogrid-2-text-margin-bottom-desktop));
+            font-size: var(--infogrid-2-text-font-size-desktop, var(--infogrid-2-text-font-size-desktop));
+            font-weight: var(--infogrid-2-text-font-weight-desktop, var(--infogrid-2-text-font-weight-desktop));
+            line-height: var(--infogrid-2-text-line-height-desktop, var(--infogrid-2-text-line-height-desktop));
+            letter-spacing: var(--infogrid-2-text-letter-spacing-desktop, var(--infogrid-2-text-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-text-text-transform-desktop, var(--infogrid-2-text-text-transform-desktop));
+            color: var(--infogrid-2-text-color-desktop, var(--infogrid-2-text-color-desktop));
+        }
+    }
+}
+
+@include big-desktop {
+    .adaire-infogrid-2-container {
+        width: var(--infogrid-2-block-width-big-desktop, var(--infogrid-2-block-width-desktop));
+        min-height: var(--infogrid-2-min-height-big-desktop, var(--infogrid-2-min-height-desktop));
+        padding-top: var(--infogrid-2-padding-top-big-desktop, var(--infogrid-2-padding-top-desktop));
+        padding-right: var(--infogrid-2-padding-right-big-desktop, var(--infogrid-2-padding-right-desktop));
+        padding-bottom: var(--infogrid-2-padding-bottom-big-desktop, var(--infogrid-2-padding-bottom-desktop));
+        padding-left: var(--infogrid-2-padding-left-big-desktop, var(--infogrid-2-padding-left-desktop));
+
+        &.is-constrained .adaire-infogrid-2-wrapper {
+            max-width: var(--infogrid-2-container-max-width-big-desktop, var(--infogrid-2-container-max-width, 1200px));
+        }
+        margin-top: var(--infogrid-2-margin-top-big-desktop, var(--infogrid-2-margin-top-desktop));
+        margin-right: var(--infogrid-2-margin-right-big-desktop, var(--infogrid-2-margin-right-desktop));
+        margin-bottom: var(--infogrid-2-margin-bottom-big-desktop, var(--infogrid-2-margin-bottom-desktop));
+        margin-left: var(--infogrid-2-margin-left-big-desktop, var(--infogrid-2-margin-left-desktop));
+
+        .adaire-infogrid-2-wrapper {
+            align-items: var(--infogrid-2-heading-alignment-flex-big-desktop, var(--infogrid-2-heading-alignment-flex-desktop));
+            text-align: var(--infogrid-2-heading-alignment-big-desktop, var(--infogrid-2-heading-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-heading {
+            margin-bottom: var(--infogrid-2-heading-margin-bottom-big-desktop, var(--infogrid-2-heading-margin-bottom-desktop));
+            font-size: var(--infogrid-2-heading-font-size-big-desktop, var(--infogrid-2-heading-font-size-desktop));
+            font-weight: var(--infogrid-2-heading-font-weight-big-desktop, var(--infogrid-2-heading-font-weight-desktop));
+            line-height: var(--infogrid-2-heading-line-height-big-desktop, var(--infogrid-2-heading-line-height-desktop));
+            letter-spacing: var(--infogrid-2-heading-letter-spacing-big-desktop, var(--infogrid-2-heading-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-heading-text-transform-big-desktop, var(--infogrid-2-heading-text-transform-desktop));
+            color: var(--infogrid-2-heading-color-big-desktop, var(--infogrid-2-heading-color-desktop));
+        }
+
+        .adaire-infogrid-2-content {
+            grid-template-columns: repeat(var(--infogrid-2-grid-columns-big-desktop, var(--infogrid-2-grid-columns-desktop)), 1fr);
+            gap: var(--infogrid-2-grid-gap-big-desktop, var(--infogrid-2-grid-gap-desktop));
+            max-width: var(--infogrid-2-grid-width-big-desktop, var(--infogrid-2-grid-width-desktop));
+            margin-left: var(--infogrid-2-content-ml-big-desktop, var(--infogrid-2-content-ml-desktop));
+            margin-right: var(--infogrid-2-content-mr-big-desktop, var(--infogrid-2-content-mr-desktop));
+            justify-content: var(--infogrid-2-content-alignment-big-desktop, var(--infogrid-2-content-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-item {
+            padding-top: var(--infogrid-2-item-padding-top-big-desktop, var(--infogrid-2-item-padding-top-desktop));
+            padding-right: var(--infogrid-2-item-padding-right-big-desktop, var(--infogrid-2-item-padding-right-desktop));
+            padding-bottom: var(--infogrid-2-item-padding-bottom-big-desktop, var(--infogrid-2-item-padding-bottom-desktop));
+            padding-left: var(--infogrid-2-item-padding-left-big-desktop, var(--infogrid-2-item-padding-left-desktop));
+            border-width: var(--infogrid-2-item-bw-big-desktop, var(--infogrid-2-item-bw-desktop));
+            border-style: var(--infogrid-2-item-bs-big-desktop, var(--infogrid-2-item-bs-desktop));
+            border-color: var(--infogrid-2-item-bc-big-desktop, var(--infogrid-2-item-bc-desktop));
+            text-align: var(--infogrid-2-content-alignment-big-desktop, var(--infogrid-2-content-alignment-desktop));
+        }
+
+        .adaire-infogrid-2-item-icon {
+            color: var(--infogrid-2-icon-color-big-desktop, var(--infogrid-2-icon-color-desktop));
+            font-size: var(--infogrid-2-icon-size-big-desktop, var(--infogrid-2-icon-size-desktop));
+        }
+
+        .adaire-infogrid-2-item-title {
+            margin-bottom: var(--infogrid-2-title-margin-bottom-big-desktop, var(--infogrid-2-title-margin-bottom-desktop));
+            font-size: var(--infogrid-2-title-font-size-big-desktop, var(--infogrid-2-title-font-size-desktop));
+            font-weight: var(--infogrid-2-title-font-weight-big-desktop, var(--infogrid-2-title-font-weight-desktop));
+            line-height: var(--infogrid-2-title-line-height-big-desktop, var(--infogrid-2-title-line-height-desktop));
+            letter-spacing: var(--infogrid-2-title-letter-spacing-big-desktop, var(--infogrid-2-title-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-title-text-transform-big-desktop, var(--infogrid-2-title-text-transform-desktop));
+            color: var(--infogrid-2-title-color-big-desktop, var(--infogrid-2-title-color-desktop));
+        }
+
+        .adaire-infogrid-2-item-text {
+            margin-bottom: var(--infogrid-2-text-margin-bottom-big-desktop, var(--infogrid-2-text-margin-bottom-desktop));
+            font-size: var(--infogrid-2-text-font-size-big-desktop, var(--infogrid-2-text-font-size-desktop));
+            font-weight: var(--infogrid-2-text-font-weight-big-desktop, var(--infogrid-2-text-font-weight-desktop));
+            line-height: var(--infogrid-2-text-line-height-big-desktop, var(--infogrid-2-text-line-height-desktop));
+            letter-spacing: var(--infogrid-2-text-letter-spacing-big-desktop, var(--infogrid-2-text-letter-spacing-desktop));
+            text-transform: var(--infogrid-2-text-text-transform-big-desktop, var(--infogrid-2-text-text-transform-desktop));
+            color: var(--infogrid-2-text-color-big-desktop, var(--infogrid-2-text-color-desktop));
+        }
+    }
+}

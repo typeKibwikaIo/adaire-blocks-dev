@@ -1,0 +1,214 @@
+// Import Splide CSS
+@import '@splidejs/splide/css';
+
+.ad-carousel-text-block {
+	display: block;
+	padding: 60px 20px;
+	margin: 0;
+	font-family: inherit;
+	line-height: 1.5;
+	background: linear-gradient(180deg, #ffffff 0%, #f8f4ff 100%);
+	min-height: auto;
+	overflow: hidden;
+	color: var(--text-color, #000000);
+	font-size: var(--font-size, 16px);
+	
+	&__testimonial-carousel {
+		margin: 0 auto;
+		transition: max-width 0.3s ease;
+		
+		// Container mode logic
+		max-width: var(--container-max-width, 1200px);
+		
+		@media (max-width: 1024px) {
+			max-width: var(--container-max-width-tablet, 100%);
+		}
+		
+		@media (max-width: 768px) {
+			max-width: var(--container-max-width-mobile, 100%);
+		}
+		
+		// Full width mode
+		[data-container-mode="full"] & {
+			max-width: 100% !important;
+		}
+		
+		.splide {
+			width: 100%;
+			height: auto;
+			padding: 20px 0 60px 0;
+			overflow: hidden;
+			transition: none; // Prevent layout shifts
+			
+			.splide__track {
+				overflow: visible;
+			}
+			
+			.splide__list {
+				align-items: stretch;
+			}
+			
+			.splide__slide {
+				height: auto;
+				display: flex;
+				justify-content: center;
+				padding: 0 var(--card-gap-desktop, 30px);
+				box-sizing: border-box;
+				transition: none; // Prevent layout shifts
+				
+				// Responsive card gaps
+				@media (max-width: 1024px) {
+					padding: 0 var(--card-gap-tablet, 20px);
+				}
+				
+				@media (max-width: 768px) {
+					padding: 0 var(--card-gap-mobile, 15px);
+				}
+			}
+			
+			.splide__pagination {
+				bottom: 20px;
+				
+				.splide__pagination__page {
+					width: 12px;
+					height: 12px;
+					background: #d1d5db;
+					opacity: 1;
+					margin: 0 6px;
+					cursor: pointer !important; // Override custom cursor for dots
+					border-radius: 50%;
+					
+					&.is-active {
+						background: var(--dot-color);
+					}
+				}
+			}
+			
+			// Navigation arrows
+			.splide__arrow {
+				width: 44px;
+				height: 44px;
+				margin-top: -22px;
+				transition: all 0.3s ease;
+				border: none;
+				background: transparent;
+				cursor: pointer !important; // Override custom cursor for arrows
+				opacity: 0.8;
+
+				&:focus{
+					outline-style: none;
+				}
+				
+				&:hover {
+					opacity: 1;
+				}
+				
+				svg {
+					fill: var(--arrow-color, #333);
+					width: 24px;
+					height: 24px;
+				}
+			}
+			
+			.splide__arrow--prev {
+				left: -12px;
+			}
+			
+			.splide__arrow--next {
+				right: -8px;
+			}
+		}
+	}
+
+	// Testimonial card styles - these are direct children of splide__slide
+	&__testimonial-card {
+		background: var(--card-bg-color, #ffffff);
+		border-radius: 16px;
+		padding: 40px 20px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+		height: auto;
+		min-height: 300px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		width: var(--card-width-desktop, 100%);
+		max-width: 100%;
+		box-sizing: border-box;
+		transition: none; // Prevent layout shifts
+		overflow: visible; // Allow images to extend if needed
+		
+		// Responsive card widths
+		@media (max-width: 1024px) {
+			width: var(--card-width-tablet, 100%);
+		}
+		
+		@media (max-width: 768px) {
+			width: var(--card-width-mobile, 100%);
+		}
+	}
+	
+	// Child elements of testimonial card
+	&__company-logo {
+		margin-bottom: 20px;
+		width: 100%;
+		display: flex;
+		justify-content: var(--logo-alignment, center);
+		
+		img {
+			max-height: var(--logo-size, 60px) !important;
+			object-fit: contain !important;
+			width: auto !important;
+			height: auto !important;
+		}
+	}
+	
+	&__logo-placeholder {
+		font-size: 18px;
+		font-weight: 700;
+		color: #333;
+		letter-spacing: 1px;
+	}
+	
+	&__quote {
+		font-size: 16px;
+		line-height: 1.6;
+		color: var(--text-color, #333);
+		margin-bottom: 30px;
+		flex-grow: 1;
+		font-style: italic;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+	}
+	
+	&__author {
+		// Author container - styles applied to children
+	}
+	
+	&__name {
+		font-size: 18px;
+		font-weight: 700;
+		color: var(--text-color, #333);
+		margin-bottom: 5px;
+	}
+	
+	&__title {
+		font-size: 14px;
+		color: var(--text-color, #666);
+		font-weight: 400;
+	}
+}
+
+@media (max-width: 600px){
+	.splide__arrow {
+		width: 20px !important;
+		height: 20px !important;
+	}
+
+	.splide__arrow--prev {
+		left: -5px !important; 
+	}
+	
+	.splide__arrow--next {
+		right: -5px !important;
+	}
+}

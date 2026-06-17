@@ -1,0 +1,786 @@
+.website-footer-block {
+	width: 100%;
+	box-sizing: border-box;
+	position: relative;
+	font-family: var(--footer-font-family, inherit);
+	font-size: var(--footer-base-font-size, 14px);
+
+	&__container {
+		max-width: var(--footer-max-width, 1200px);
+		margin: 0 auto;
+		padding: 0 20px;
+		box-sizing: border-box;
+	}
+
+	// Top Bar Zone
+	&__top-bar {
+		width: 100%;
+		box-sizing: border-box;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		
+		&--small {
+			font-size: 13px;
+		}
+		
+		&--medium {
+			font-size: 14px;
+		}
+		
+		&--large {
+			font-size: 16px;
+		}
+
+		&.website-footer-block__top-bar--small {
+			font-size: 13px;
+		}
+
+		&.website-footer-block__top-bar--medium {
+			font-size: 14px;
+		}
+
+		&.website-footer-block__top-bar--large {
+			font-size: 16px;
+		}
+
+		&-content {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 20px;
+		}
+
+		&-copyright {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex-wrap: wrap;
+
+			p {
+				margin: 0;
+				line-height: 1.5;
+			}
+
+			a {
+				color: var(--footer-accent-color, #D52940);
+				text-decoration: none;
+				transition: color 0.3s ease;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+
+		&-social {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		&:has([style*="text-align: center"]) &-content {
+			justify-content: center;
+		}
+
+		&:has([style*="text-align: right"]) &-content {
+			justify-content: flex-end;
+		}
+	}
+
+	&__social-link-wrapper {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__social-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		color: inherit;
+		text-decoration: none;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.1);
+		transition: all 0.3s ease;
+
+		&:hover {
+			// Customizable via column.socialHoverColor / socialHoverBackgroundColor
+			// (wired through CSS custom props in render.php + edit.js). Falls back
+			// to the original hardcoded hover look when those are unset, so saved
+			// footers from before this feature existed render identically.
+			background: var(--social-hover-bg, rgba(255, 255, 255, 0.2));
+			color: var(--social-hover-color, inherit);
+			transform: translateY(-2px);
+		}
+	}
+
+	// Columns Section Zone
+	&__columns-section {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 40px 0;
+	}
+
+	&__columns-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 40px;
+		align-items: flex-start;
+	}
+
+	&__column {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		position: relative;
+		min-height: 100px;
+
+		&-header {
+			margin-bottom: 8px;
+		}
+
+		&-heading {
+			font-size: var(--footer-heading-font-size, 16px);
+			font-weight: var(--footer-heading-font-weight, 600);
+			margin: 0 0 12px 0;
+			line-height: 1.4;
+			color: inherit;
+		}
+
+		&--brand {
+			.brand-logo {
+				max-width: 150px;
+				height: auto;
+				margin-bottom: 12px;
+				display: block;
+			}
+
+			// BEM names actually emitted by edit.js / render.php — the old
+			// bare `.brand-name` / `.brand-description` selectors here never
+			// matched anything, which is why brand text had no typography.
+			.website-footer-block__brand-name {
+				font-size: 18px;
+				font-weight: 700;
+				margin-bottom: 8px;
+				line-height: 1.3;
+			}
+
+			.website-footer-block__brand-description {
+				font-size: 14px;
+				line-height: 1.6;
+				opacity: 0.9;
+				margin-bottom: 16px;
+			}
+		}
+
+		&--nav {
+			// Real rendered class is `website-footer-block__nav-list` (full BEM) —
+			// using the bare `.nav-list` here meant none of this ever matched,
+			// including the `gap` declaration, which is why nav-link spacing
+			// looked broken (an inline `gap` on a non-flex `<ul>` is a no-op).
+			.website-footer-block__nav-list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+
+				&--bulleted {
+					list-style: disc inside;
+					padding-left: 18px;
+				}
+
+				&--plain {
+					list-style: none;
+				}
+
+				li {
+					margin: 0;
+				}
+
+				a {
+					color: var(--footer-accent-color, #D52940);
+					text-decoration: none;
+					font-size: inherit;
+					font-weight: var(--footer-nav-font-weight, 400);
+					line-height: 1.5;
+					transition: color 0.3s ease;
+
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+			}
+		}
+
+		&--social {
+			// Real rendered class is `website-footer-block__social-list`; the
+			// displayStyle values used by edit.js/render.php are `vertical` and
+			// `icons` (not `horizontal`), so the modifier below is renamed to
+			// match — previously the icon-row layout had zero matching CSS.
+			.website-footer-block__social-list {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+
+				&--vertical {
+					display: flex;
+					flex-direction: column;
+				}
+
+				&--icons {
+					display: flex;
+					flex-direction: row;
+					flex-wrap: wrap;
+					align-items: center;
+					gap: 12px;
+				}
+
+				a {
+					color: inherit;
+					text-decoration: none;
+					font-size: 14px;
+					transition: color 0.3s ease;
+
+					&:hover {
+						color: var(--social-hover-color, var(--footer-accent-color, #D52940));
+					}
+				}
+			}
+		}
+
+		&--custom {
+			.custom-content {
+				min-height: 50px;
+			}
+		}
+
+		&--newsletter,
+		&--buttons,
+		&--copyright,
+		&--widget-area {
+			width: 100%;
+		}
+
+		&.is-dragging-column {
+			opacity: 0.4;
+		}
+	}
+
+	// Nested (sub-)menu support for nav columns sourced from WP menus
+	&__nav-sublist {
+		list-style: none;
+		margin: 8px 0 0 0;
+		padding: 0 0 0 16px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		a {
+			color: var(--footer-accent-color, #D52940);
+			text-decoration: none;
+			font-size: 0.95em;
+			opacity: 0.9;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	// Newsletter column
+	&__newsletter {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		width: 100%;
+
+		&-description {
+			margin: 0;
+			line-height: 1.6;
+			opacity: 0.9;
+			font-size: 14px;
+		}
+
+		&-field-row {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+		}
+
+		&-input {
+			flex: 1 1 160px;
+			min-width: 0;
+			padding: 10px 12px;
+			border-radius: 4px;
+			border: 1px solid rgba(255, 255, 255, 0.25);
+			background: rgba(255, 255, 255, 0.08);
+			color: inherit;
+			font-size: 14px;
+
+			&::placeholder {
+				color: inherit;
+				opacity: 0.6;
+			}
+
+			&:focus-visible {
+				outline: 2px solid var(--footer-accent-color, #D52940);
+				outline-offset: 2px;
+			}
+		}
+
+		&-button {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 10px 18px;
+			border-radius: 4px;
+			border: none;
+			background: var(--footer-accent-color, #D52940);
+			color: #ffffff;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+			transition: opacity 0.3s ease;
+			white-space: nowrap;
+
+			&:hover {
+				opacity: 0.85;
+			}
+		}
+	}
+
+	// Buttons column
+	&__buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+
+		&--vertical {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		&-item {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 10px 20px;
+			border-radius: 4px;
+			text-decoration: none;
+			font-weight: 500;
+			font-size: 14px;
+			border: 2px solid transparent;
+			transition: all 0.3s ease;
+			cursor: pointer;
+
+			&--solid {
+				background: var(--footer-accent-color, #D52940);
+				color: #ffffff;
+				border-color: var(--footer-accent-color, #D52940);
+			}
+
+			&--outline {
+				background: transparent;
+				border-color: var(--footer-accent-color, #D52940);
+				color: inherit;
+			}
+
+			&:hover {
+				transform: translateY(-1px);
+				opacity: 0.9;
+			}
+		}
+	}
+
+	// Copyright column
+	&__copyright-block {
+		p {
+			margin: 0;
+			line-height: 1.6;
+			font-size: 13px;
+			opacity: 0.85;
+		}
+	}
+
+	// Widget area column (front-end output)
+	&__widget-area {
+		width: 100%;
+
+		.widget {
+			margin-bottom: 16px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+
+			h2, h3, h4 {
+				font-size: 15px;
+				font-weight: 600;
+				margin: 0 0 10px 0;
+			}
+
+			ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			a {
+				color: var(--footer-accent-color, #D52940);
+				text-decoration: none;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+
+	// Widget area column (editor-only placeholder — render.php notes the
+	// editor should not attempt a live dynamic_sidebar() preview)
+	&__widget-area-placeholder {
+		width: 100%;
+	}
+
+	/* __column-hover-controls removed — replaced by QuickZone inline editor */
+
+	&__column-drag-handle,
+	&__column-control {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		padding: 0;
+		background: transparent;
+		border: none;
+		color: #fff;
+		cursor: pointer;
+		border-radius: 3px;
+
+		svg {
+			width: 16px;
+			height: 16px;
+			fill: currentColor;
+		}
+
+		&:hover {
+			background: rgba(255, 255, 255, 0.2);
+		}
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+	}
+
+	&__column-drag-handle {
+		cursor: grab;
+	}
+
+	&__column-control--danger:hover {
+		background: rgba(0, 0, 0, 0.3);
+	}
+
+	&__custom-content {
+		min-height: 50px;
+
+		p {
+			margin: 0 0 8px 0;
+		}
+	}
+
+	&__bottom-bar-social {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	&__inspector-item {
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 4px;
+		padding: 8px;
+		margin-bottom: 8px;
+	}
+
+	// Modernized, compact "+ Add Column" affordance (matches the
+	// adaire-qz-add-btn look used inside QuickZone popovers) — replaces the
+	// old full-width bold button. Editor-only; render.php never outputs this.
+	&__add-column {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		padding: 7px 16px;
+		background: transparent;
+		border: 1px dashed rgba(255, 255, 255, 0.35);
+		color: inherit;
+		cursor: pointer;
+		border-radius: 6px;
+		font-size: 12px;
+		font-weight: 600;
+		transition: all 0.15s ease;
+
+		&:hover {
+			background: rgba(255, 255, 255, 0.08);
+			border-color: var(--footer-accent-color, #D52940);
+			color: var(--footer-accent-color, #D52940);
+		}
+	}
+
+	&__remove-column {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background: rgba(255, 0, 0, 0.2);
+		border: none;
+		color: white;
+		cursor: pointer;
+		padding: 4px 8px;
+		border-radius: 4px;
+		font-size: 11px;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	&__column:hover &__remove-column {
+		opacity: 1;
+	}
+
+	&__cta {
+		display: inline-block;
+		padding: 10px 20px;
+		border-radius: 4px;
+		text-decoration: none;
+		font-weight: var(--footer-cta-font-weight, 500);
+		transition: all 0.3s ease;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+
+		&--button {
+			background: var(--footer-accent-color, #D52940);
+			color: white;
+		}
+
+		&--link {
+			background: transparent;
+			color: var(--footer-accent-color, #D52940);
+			text-decoration: underline;
+		}
+
+		&:hover {
+			background-color: var(--cta-hover-bg, rgba(255,255,255,0.1));
+			color: var(--cta-hover-color, var(--footer-accent-color, #D52940));
+			transform: translateY(-1px);
+		}
+	}
+
+	// Bottom Bar Zone
+	&__bottom-bar {
+		width: 100%;
+		box-sizing: border-box;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		font-size: 13px;
+
+		&-content {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 20px;
+		}
+
+		&-copyright {
+			display: flex;
+			align-items: center;
+
+			p {
+				margin: 0;
+				line-height: 1.5;
+			}
+		}
+
+		&-legal {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex-wrap: wrap;
+
+			// Real rendered class is `website-footer-block__legal-link-wrapper`
+			// (see edit.js / render.php / deprecated.js) — the bare `&-wrapper`
+			// here compiled to `__bottom-bar-legal-wrapper`, which never matched
+			// anything, so each link's wrapper span had no flex/gap of its own.
+			.website-footer-block__legal-link-wrapper {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+
+			a {
+				color: inherit;
+				text-decoration: none;
+				font-weight: var(--footer-link-font-weight, 400);
+				transition: color 0.3s ease;
+
+				&:hover {
+					color: var(--footer-accent-color, #D52940);
+					text-decoration: underline;
+				}
+			}
+		}
+
+		&:has([style*="text-align: center"]) &-content {
+			justify-content: center;
+		}
+
+		&:has([style*="text-align: right"]) &-content {
+			justify-content: flex-end;
+		}
+	}
+
+	&__separator {
+		opacity: 0.5;
+	}
+
+	// Responsive Breakpoints
+	@media (max-width: 1024px) {
+		&__columns-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 768px) {
+		&__columns-section {
+			padding: 30px 0;
+		}
+
+		&__columns-grid {
+			grid-template-columns: 1fr;
+			display: flex;
+			flex-direction: column;
+			
+			// Order columns by mobile priority
+			> * {
+				order: var(--mobile-priority, 999);
+			}
+		}
+
+		&__top-bar-content,
+		&__bottom-bar-content {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 12px;
+		}
+
+		&__top-bar,
+		&__bottom-bar {
+			&:has([style*="space-between"]) {
+				text-align: left;
+			}
+		}
+
+		&__newsletter-field-row {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		&__newsletter-button {
+			width: 100%;
+		}
+
+		&__buttons {
+			flex-direction: column;
+			align-items: stretch;
+
+			&-item {
+				width: 100%;
+			}
+		}
+	}
+
+	@media (max-width: 480px) {
+		&__container {
+			padding: 0 15px;
+		}
+
+		&__columns-section {
+			padding: 20px 0;
+		}
+
+		&__column {
+			min-height: auto;
+		}
+
+		&__social-icon {
+			width: 28px;
+			height: 28px;
+		}
+	}
+
+	// Enhanced list styling
+	&__nav-list {
+		&--numbered {
+			list-style: decimal inside;
+			padding-left: 20px;
+		}
+
+		&--dashed {
+			list-style: none;
+			padding-left: 0;
+			
+			li {
+				position: relative;
+				padding-left: 20px;
+
+				&::before {
+					content: '-';
+					position: absolute;
+					left: 0;
+					color: var(--footer-accent-color, #D52940);
+				}
+			}
+		}
+
+		&--dotted {
+			list-style: none;
+			padding-left: 0;
+			
+			li {
+				position: relative;
+				padding-left: 20px;
+
+				&::before {
+					content: '•';
+					position: absolute;
+					left: 0;
+					color: var(--footer-accent-color, #D52940);
+				}
+			}
+		}
+
+		a:hover {
+			color: var(--link-hover-color, #ffffff) !important;
+		}
+	}
+
+	// Selected column styling
+	&__column.is-selected-column {
+		outline: 2px solid var(--footer-accent-color, #D52940);
+		outline-offset: 2px;
+	}
+
+	// Accessibility
+	:focus-visible {
+		outline: 2px solid var(--footer-accent-color, #D52940);
+		outline-offset: 2px;
+	}
+
+	a:focus-visible {
+		outline: 2px solid var(--footer-accent-color, #D52940);
+		outline-offset: 2px;
+	}
+}

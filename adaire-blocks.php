@@ -4,7 +4,7 @@
  * Description:       A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.
  * Version:           1.2.5
  * Requires at least: 6.7
- * Requires PHP:      7.4
+ * Requires PHP:      7.0
  * Author:            <a href="https://adaireblocks.com" target="_blank">Adaire Digital</a>
  * License:           GPL-3.0
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html

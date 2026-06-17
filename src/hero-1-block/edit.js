@@ -30,6 +30,10 @@ import {
 	alignLeft,
 	alignCenter,
 	alignRight,
+	desktop,
+	tablet,
+	mobile,
+	laptop,
 } from "@wordpress/icons";
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import "./editor.scss";
@@ -893,7 +897,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								{__("Tablet", "hero-1-block")}
                             </Button>
                             <Button
-                                icon={smallLaptopIcon}
+                                icon={laptop}
 								isPrimary={deviceType === "smallLaptop"}
 								onClick={() => setDeviceType("smallLaptop")}
 								label={__("Small Laptop", "hero-1-block")}
@@ -909,7 +913,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								{__("Desktop", "hero-1-block")}
                             </Button>
                             <Button
-                                icon={bigDesktopIcon}
+                                icon={desktop}
 								isPrimary={deviceType === "bigDesktop"}
 								onClick={() => setDeviceType("bigDesktop")}
 								label={__("Big Desktop", "hero-1-block")}

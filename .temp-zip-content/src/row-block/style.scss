@@ -1,0 +1,116 @@
+// Row block styling
+.adaire-row {
+  display: grid;
+  // grid-template-columns is set via inline style from columnWidths attribute
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 80px;
+
+  @media (max-width: 768px) {
+    &.adaire-row--cols-2,
+    &.adaire-row--cols-3,
+    &.adaire-row--cols-4 {
+      grid-template-columns: 1fr !important;
+    }
+  }
+}
+
+.adaire-column {
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 80px;
+
+  // Empty state styling
+  &:empty::before {
+    content: 'Add content here';
+    color: #757575;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+  }
+}
+
+// Placeholder styling (editor only)
+.adaire-row-placeholder {
+  border: 1.5px dashed #c5bef5;
+  border-radius: 4px;
+  padding: 24px 20px 16px;
+  background: #fff;
+  font-family: -apple-system, sans-serif;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e1e1e;
+    margin-bottom: 8px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      color: #1e1e1e;
+    }
+  }
+
+  &__label {
+    font-size: 12px;
+    color: #757575;
+    margin: 0 0 16px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  &__skip {
+    display: block;
+    background: none;
+    border: none;
+    color: #007cba;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 4px;
+    text-align: right;
+    width: 100%;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.adaire-row-preset-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 8px 8px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 11px;
+  color: #3c3c3c;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: #7c6de8;
+    background: #f5f3ff;
+
+    svg rect {
+      fill: #7c6de8;
+    }
+  }
+}

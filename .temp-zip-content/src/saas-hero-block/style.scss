@@ -1,0 +1,298 @@
+.adaire-saas-hero {
+  position: relative;
+  padding: var(--ad-padding, 80px) 20px;
+  background: var(--ad-bg);
+  color: var(--ad-color);
+  overflow: hidden;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background: var(--ad-pill-bg, #dbeafe);
+    color: var(--ad-pill-color, #1e40af);
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+  }
+
+  &__text {
+    max-width: 700px;
+  }
+
+  &__eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--ad-accent);
+    margin-bottom: 16px;
+  }
+
+  &__heading {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+
+    &.has-gradient {
+      background: linear-gradient(135deg, var(--ad-gradient-start, #6366f1), var(--ad-gradient-end, #8b5cf6));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+
+  &__text {
+    font-size: 18px;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin-bottom: 32px;
+  }
+
+  &__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 32px;
+  }
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: var(--ad-radius, 12px);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &--primary {
+      background: var(--ad-button-primary-bg, var(--ad-accent));
+      color: var(--ad-button-primary-color, #ffffff);
+      border: 2px solid var(--ad-button-primary-bg, var(--ad-accent));
+
+      &:hover {
+        background: var(--ad-button-hover-bg, #111827);
+        color: var(--ad-button-hover-color, #ffffff);
+        border-color: var(--ad-button-hover-border, #111827);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    &--secondary {
+      background: var(--ad-button-secondary-bg, #ffffff);
+      color: var(--ad-button-secondary-color, #111827);
+      border: 2px solid var(--ad-button-secondary-bg, #ffffff);
+
+      &:hover {
+        background: var(--ad-button-hover-bg, #111827);
+        color: var(--ad-button-hover-color, #ffffff);
+        border-color: var(--ad-button-hover-border, #111827);
+      }
+    }
+  }
+
+  &__email-form {
+    display: flex;
+    gap: 12px;
+    max-width: 500px;
+    width: 100%;
+
+    input {
+      flex: 1;
+      padding: 14px 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: var(--ad-radius, 12px);
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: var(--ad-accent);
+      }
+    }
+
+    button {
+      padding: 14px 32px;
+      background: var(--ad-button-primary-bg, var(--ad-accent));
+      color: var(--ad-button-primary-color, #ffffff);
+      border: none;
+      border-radius: var(--ad-radius, 12px);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: var(--ad-button-hover-bg, #111827);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  &__micro-copy {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-top: 12px;
+  }
+
+  &__media {
+    margin-top: 48px;
+    width: 100%;
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--ad-radius, 12px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    &--right {
+      order: 2;
+    }
+
+    &--left {
+      order: 0;
+    }
+  }
+
+  &__trust-bar {
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  &__trust-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ad-accent);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  &__trust-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px;
+    opacity: 0.6;
+  }
+
+  &__trust-logo {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ad-color);
+  }
+
+  // Layout variants
+  &.layout-split-left,
+  &.layout-split-right {
+    .adaire-saas-hero__content {
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      gap: 48px;
+    }
+
+    .adaire-saas-hero__text {
+      flex: 1;
+      max-width: 500px;
+    }
+
+    .adaire-saas-hero__cta {
+      justify-content: flex-start;
+    }
+
+    .adaire-saas-hero__media {
+      flex: 1;
+      margin-top: 0;
+    }
+  }
+
+  &.layout-split-right {
+    .adaire-saas-hero__media {
+      order: 2;
+    }
+
+    .adaire-saas-hero__text {
+      order: 1;
+    }
+  }
+
+  &.layout-split-left {
+    .adaire-saas-hero__media {
+      order: 1;
+    }
+
+    .adaire-saas-hero__text {
+      order: 2;
+    }
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    padding: 60px 16px;
+
+    &__heading {
+      font-size: clamp(28px, 8vw, 42px);
+    }
+
+    &__text {
+      font-size: 16px;
+    }
+
+    &__cta {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    &__button {
+      width: 100%;
+    }
+
+    &__email-form {
+      flex-direction: column;
+    }
+
+    &.layout-split-left,
+    &.layout-split-right {
+      .adaire-saas-hero__content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .adaire-saas-hero__cta {
+        justify-content: center;
+      }
+
+      .adaire-saas-hero__media {
+        order: 2 !important;
+      }
+
+      .adaire-saas-hero__text {
+        order: 1 !important;
+      }
+    }
+  }
+}

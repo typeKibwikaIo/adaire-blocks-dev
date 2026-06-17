@@ -319,7 +319,8 @@ class AdaireBlocksSettings {
 
         if (empty($available_blocks)) {
             $this->log_registration_failure('No available blocks were found while syncing the block registry.');
-            return false;
+            // Return true to not block settings save - blocks might not be built yet
+            return true;
         }
 
         $saved_settings = get_option($this->option_name, array());
@@ -332,7 +333,7 @@ class AdaireBlocksSettings {
 
             if (!$block_name || !$this->block_exists($block_name)) {
                 $this->log_registration_failure('Block registry sync failed for key "' . $block_key . '". Missing build directory or block.json.');
-                continue;
+                continue; // Skip this block but continue with others
             }
 
             if (!array_key_exists($block_key, $saved_settings)) {
@@ -349,14 +350,14 @@ class AdaireBlocksSettings {
             $registry_changed = true;
         }
 
-        if ($settings_changed && !update_option($this->option_name, $saved_settings)) {
-            $this->log_registration_failure('Failed to persist new block settings during registry sync.');
-            return false;
+        // Try to update settings, but don't fail if update_option returns false (no changes)
+        if ($settings_changed) {
+            update_option($this->option_name, $saved_settings);
         }
 
-        if ($registry_changed && !update_option('adaire_blocks_registry', $registry)) {
-            $this->log_registration_failure('Failed to persist block registry records.');
-            return false;
+        // Try to update registry, but don't fail if update_option returns false (no changes)
+        if ($registry_changed) {
+            update_option('adaire_blocks_registry', $registry);
         }
 
         $this->refresh_block_cache();
@@ -933,18 +934,30 @@ class AdaireBlocksSettings {
         $input_settings = isset($parsed_form[$this->option_name]) ? (array) $parsed_form[$this->option_name] : array();
 
         $settings = $this->sanitize_settings($input_settings);
-        $saved = update_option($this->option_name, $settings);
+        $previous_settings = get_option($this->option_name, array());
+
+        // Always update the option to ensure it's saved
+        update_option($this->option_name, $settings);
+
+        // Attempt to sync block registry, but don't fail the save if it has issues
         $synced = $this->sync_block_registry();
 
-        if (!$synced) {
-            wp_send_json_error(esc_html__('Block settings were saved, but registry validation failed. Check server logs for details.', 'adaire-blocks'));
+        // Check if settings actually changed
+        $settings_changed = ($previous_settings !== $settings);
+
+        if ($settings_changed) {
+            wp_send_json_success(array(
+                'message' => esc_html__('Settings saved successfully!', 'adaire-blocks'),
+                'settings' => $settings,
+                'registrySynced' => $synced
+            ));
+        } else {
+            wp_send_json_success(array(
+                'message' => esc_html__('Settings saved successfully (no changes detected).', 'adaire-blocks'),
+                'settings' => $settings,
+                'registrySynced' => $synced
+            ));
         }
-        
-        wp_send_json_success(array(
-            'message' => esc_html__('Settings saved successfully!', 'adaire-blocks'),
-            'settings' => $settings,
-            'registrySynced' => true
-        ));
     }
     
     /**

@@ -1,0 +1,211 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/saas-hero-block",
+  "version": "0.1.0",
+  "title": "SaaS Hero",
+  "category": "adaire-layout-hero",
+  "description": "SaaS Hero block for GutenBlocks Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "textdomain": "saas-hero-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Scale faster"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Launch your SaaS faster"
+    },
+    "text": {
+      "type": "string",
+      "default": "A modern hero section for software products, startups, and landing pages."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Start free trial"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "secondaryButtonText": {
+      "type": "string",
+      "default": "Book a Demo"
+    },
+    "secondaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "heroImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid"
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "layoutStyle": {
+      "type": "string",
+      "default": "centered"
+    },
+    "showPill": {
+      "type": "boolean",
+      "default": true
+    },
+    "pillText": {
+      "type": "string",
+      "default": "New: v2.0 Release"
+    },
+    "pillBg": {
+      "type": "string",
+      "default": "#dbeafe"
+    },
+    "pillColor": {
+      "type": "string",
+      "default": "#1e40af"
+    },
+    "useGradientHeadline": {
+      "type": "boolean",
+      "default": true
+    },
+    "gradientStart": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "gradientEnd": {
+      "type": "string",
+      "default": "#8b5cf6"
+    },
+    "ctaType": {
+      "type": "string",
+      "default": "dual-buttons"
+    },
+    "primaryButtonText": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "primaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "secondaryButtonText": {
+      "type": "string",
+      "default": "Book a Demo"
+    },
+    "secondaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "emailPlaceholder": {
+      "type": "string",
+      "default": "Enter your email"
+    },
+    "submitButtonText": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "singleButtonText": {
+      "type": "string",
+      "default": "Shop Collection"
+    },
+    "singleButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "microCopy": {
+      "type": "string",
+      "default": "Free shipping on orders over $50"
+    },
+    "buttonPrimaryColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonPrimaryBg": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "buttonSecondaryColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonSecondaryBg": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "showHeroImage": {
+      "type": "boolean",
+      "default": true
+    },
+    "imagePosition": {
+      "type": "string",
+      "default": "below"
+    },
+    "showTrustBar": {
+      "type": "boolean",
+      "default": true
+    },
+    "trustBarTitle": {
+      "type": "string",
+      "default": "Trusted by"
+    },
+    "trustLogos": {
+      "type": "string",
+      "default": "Acme\nVelocity\nAtlas\nNexus\nPrime"
+    },
+    "fontSize": {
+      "type": "number",
+      "default": 16
+    },
+    "padding": {
+      "type": "number",
+      "default": 80
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 12
+    }
+  }
+}

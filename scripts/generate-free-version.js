@@ -18,7 +18,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, execFileSync } = require('child_process');
 
 class FreeVersionGenerator {
     constructor() {
@@ -66,6 +66,9 @@ class FreeVersionGenerator {
 
             // Step 8: Verify generation
             await this.verifyGeneration();
+
+            // Step 9: Create zip file
+            await this.createZipFile();
 
             console.log('\nFree version generated successfully!');
             console.log(`Location: ${this.freeVersionDir}`);
@@ -177,12 +180,21 @@ class FreeVersionGenerator {
         });
 
         // Copy shared src/ subdirectories
+        // 'new-icons' under src/icons is dev-only raw SVG source material
+        // (consumed only by scripts/apply-new-icons.js at prebuild time to
+        // bake src/icons/*.js icon components — nothing at runtime reads it).
+        // It also nests folders named "Free Blocks" / "Plus Blocks" /
+        // "Premium Blocks", which leaks paid-tier assets into the free zip
+        // and has been observed to break WordPress's plugin-zip installer
+        // ("Could not copy file." for that directory) on at least one
+        // Windows host, so it is skipped here unconditionally.
         const sharedSrcDirs = ['components', 'icons'];
+        const sharedSrcSkip = ['new-icons'];
         sharedSrcDirs.forEach(dir => {
             const src = path.join(this.sourceDir, 'src', dir);
             const dest = path.join(srcPath, dir);
             if (fs.existsSync(src)) {
-                this.copyDirectoryRecursive(src, dest);
+                this.copyDirectoryRecursive(src, dest, sharedSrcSkip);
             }
         });
 
@@ -382,8 +394,8 @@ class FreeVersionGenerator {
             main: 'src/index.js',
             scripts: {
                 prebuild: 'node scripts/apply-new-icons.js && node scripts/update-block-icons.js',
-                build: 'node --max-old-space-size=6144 node_modules/@wordpress/scripts/bin/wp-scripts.js build --blocks-manifest',
-                start: 'node --max-old-space-size=6144 node_modules/@wordpress/scripts/bin/wp-scripts.js start --blocks-manifest',
+                build: 'node --max-old-space-size=8192 node_modules/@wordpress/scripts/bin/wp-scripts.js build --blocks-manifest',
+                start: 'node --max-old-space-size=8192 node_modules/@wordpress/scripts/bin/wp-scripts.js start',
                 'plugin-zip': 'wp-scripts plugin-zip',
                 'deploy:free': 'npm run build && npm run plugin-zip',
                 test: 'wp-scripts test-unit-js'
@@ -441,13 +453,13 @@ class FreeVersionGenerator {
                 console.log('   ✓ node_modules linked (junction)');
             } else {
                 console.log('   ⚠️  node_modules not found in main plugin, falling back to npm install...');
-                execSync('npm install', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=6144' } });
+                execSync('npm install', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=8192' } });
             }
             this.verifyDependencyInstall();
 
             console.log('   Running prebuild...');
             try {
-                execSync('npm run prebuild', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=6144' } });
+                execSync('npm run prebuild', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=8192' } });
                 console.log('   ✓ Prebuild completed');
             } catch (prebuildError) {
                 console.log('   ⚠️  Prebuild failed, continuing...');
@@ -461,11 +473,10 @@ class FreeVersionGenerator {
                 // Prebuild already ran above, so skip it here via --ignore-scripts.
                 const wpScriptsBin = path.join(this.freeVersionDir, 'node_modules', '@wordpress', 'scripts', 'bin', 'wp-scripts.js');
                 execSync(
-                    `node --max-old-space-size=6144 "${wpScriptsBin}" build --blocks-manifest`,
+                    `node --max-old-space-size=8192 "${wpScriptsBin}" build --blocks-manifest`,
                     { stdio: 'inherit', cwd: this.freeVersionDir, shell: true }
                 );
             } catch (buildError) {
-                const buildDir = path.join(this.freeVersionDir, 'build');
                 const srcDir = path.join(this.freeVersionDir, 'src');
 
                 console.error('\n   Build command failed. Diagnostics:');
@@ -479,22 +490,11 @@ class FreeVersionGenerator {
                     console.error('   src/ directory does not exist!');
                 }
 
-                if (fs.existsSync(buildDir)) {
-                    const contents = fs.readdirSync(buildDir);
-                    console.error(`   build/ exists with ${contents.length} item(s)`);
-                } else {
-                    console.error('   build/ was not created');
-                }
-
+                console.error(`   Error: ${buildError.message}`);
                 throw new Error(`Build failed: ${buildError.message}`);
             }
 
-            const buildDir = path.join(this.freeVersionDir, 'build');
-            if (!fs.existsSync(buildDir) || fs.readdirSync(buildDir).length === 0) {
-                throw new Error('Build directory is empty — build may have failed');
-            }
-
-            console.log(`   ✓ Build completed (${fs.readdirSync(buildDir).length} items in build/)`);
+            console.log(`   ✓ Build completed successfully`);
 
         } catch (error) {
             process.chdir(originalDir);
@@ -529,8 +529,8 @@ class FreeVersionGenerator {
         missingFiles.forEach(file => console.log(`      Missing or empty: ${path.relative(this.freeVersionDir, file)}`));
 
         fs.rmSync(path.join(this.freeVersionDir, 'node_modules'), { recursive: true, force: true });
-        execSync('npm cache verify', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=6144' } });
-        execSync('npm ci', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=6144' } });
+        execSync('npm cache verify', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=8192' } });
+        execSync('npm ci', { stdio: 'inherit', shell: true, env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=8192' } });
 
         const stillMissingFiles = requiredFiles.filter(file => {
             if (!fs.existsSync(file)) {
@@ -588,6 +588,22 @@ class FreeVersionGenerator {
             blocks.forEach(b => console.log(`   ✓ ${b}`));
         }
 
+        // build/blocks-manifest.php — adaire-blocks.php does a hard
+        // `require __DIR__ . '/build/blocks-manifest.php'` during block
+        // registration. If this file is missing (e.g. the build ran without
+        // the `--blocks-manifest` flag), the require fails and ZERO blocks
+        // get registered — installs cleanly but shows "0 blocks available"
+        // in Block Management. Fail loudly here instead of shipping that.
+        const manifestFile = path.join(this.freeVersionDir, 'build', 'blocks-manifest.php');
+        if (!fs.existsSync(manifestFile)) {
+            throw new Error(
+                `build/blocks-manifest.php not found at ${manifestFile} — the build ran without ` +
+                'the --blocks-manifest flag. adaire-blocks.php requires this file to register any ' +
+                'blocks; without it the plugin installs but shows 0 blocks available.'
+            );
+        }
+        console.log('✓ build/blocks-manifest.php: present');
+
         // Plugin file cleanliness
         const phpFile = path.join(this.freeVersionDir, 'adaire-blocks.php');
         if (fs.existsSync(phpFile)) {
@@ -616,6 +632,116 @@ class FreeVersionGenerator {
         if (fs.existsSync(iconsPath)) {
             const iconFiles = fs.readdirSync(iconsPath).filter(f => f.endsWith('.js'));
             console.log(`✓ Icons: ${iconFiles.length} icon files`);
+        }
+    }
+
+    /**
+     * Create zip file of the free version.
+     *
+     * IMPORTANT: Compress-Archive is a PowerShell cmdlet, not a cmd.exe command.
+     * It must be invoked via `powershell.exe` directly (execFileSync) — running it
+     * through `execSync(cmd, { shell: true })` shells out to cmd.exe on Windows,
+     * which doesn't recognize Compress-Archive and fails immediately. On top of
+     * that, the previous implementation joined multiple absolute paths into a
+     * single space-separated string and passed it as one quoted -Path argument;
+     * PowerShell treats a quoted string as one literal path, so a path containing
+     * literal spaces never resolves, and Compress-Archive errors with
+     * "Cannot find path ... because it does not exist." Either failure means no
+     * zip is ever produced (silently, since the outer catch just logs a warning),
+     * which is what was actually shipping as "adaire-blocks-free.zip" — either a
+     * stale/missing file, or one assembled by hand from the generated folder with
+     * the wrong nesting, both of which WordPress rejects with
+     * "No valid plugins were found" (its installer only looks for a *.php file
+     * with a valid header at the top level of the extracted archive, or exactly
+     * one level inside a single wrapping folder).
+     *
+     * Fix: stage the shipped files into a single `adaire-blocks-free/` folder and
+     * compress that folder itself (mirrors the already-working approach in
+     * scripts/zip-generated-folder.js) via an explicit `powershell.exe` call with
+     * a single, properly quoted path.
+     */
+    async createZipFile() {
+        console.log('\nCreating zip file...');
+        try {
+            const zipPath = path.join(path.dirname(this.freeVersionDir), 'plugin-zips', 'adaire-blocks-free.zip');
+            const zipDir = path.dirname(zipPath);
+            const stagingDir = path.join(zipDir, 'adaire-blocks-free');
+
+            fs.mkdirSync(zipDir, { recursive: true });
+            fs.rmSync(zipPath, { force: true });
+            fs.rmSync(stagingDir, { recursive: true, force: true });
+
+            // node_modules is dev-only tooling (webpack, eslint, etc.) — never
+            // needed at runtime since build/ already contains the compiled output.
+            const nodeModulesDir = path.join(this.freeVersionDir, 'node_modules');
+            if (fs.existsSync(nodeModulesDir)) {
+                fs.rmSync(nodeModulesDir, { recursive: true, force: true });
+                console.log('   ✓ Node modules directory removed for distribution');
+            }
+
+            // IMPORTANT: build/ must ship. Block registration (see adaire-blocks.php's
+            // register_block_type() calls) reads block.json/blocks-manifest.php and
+            // compiled JS/CSS exclusively from build/ — WordPress never compiles the
+            // raw src/ JSX+SCSS at runtime. An earlier version of this function deleted
+            // build/ here, right after buildFreeVersion() had just created it, which
+            // shipped a zip with zero working blocks ("0 blocks available" in Block
+            // Management) even though it installed without error. Do not remove it.
+            const buildDir = path.join(this.freeVersionDir, 'build');
+            if (!fs.existsSync(buildDir)) {
+                throw new Error(
+                    `build/ not found at ${buildDir} — buildFreeVersion() must run before createZipFile(), ` +
+                    'otherwise the shipped plugin will install but register zero blocks.'
+                );
+            }
+
+            // Stage only the files that belong in the shipped plugin, wrapped in a
+            // single top-level "adaire-blocks-free" folder — the structure WordPress's
+            // plugin installer expects (one folder containing the main plugin file).
+            const filesToZip = [
+                'adaire-blocks.php',
+                'readme.txt',
+                'admin',
+                'includes',
+                'build',
+                'src',
+                'config',
+                'docs',
+                'scripts',
+            ];
+
+            fs.mkdirSync(stagingDir, { recursive: true });
+            filesToZip.forEach(name => {
+                const src = path.join(this.freeVersionDir, name);
+                if (!fs.existsSync(src)) {
+                    return;
+                }
+                const dest = path.join(stagingDir, name);
+                if (fs.statSync(src).isDirectory()) {
+                    fs.cpSync(src, dest, { recursive: true });
+                } else {
+                    fs.copyFileSync(src, dest);
+                }
+            });
+
+            execFileSync('powershell.exe', [
+                '-NoProfile',
+                '-ExecutionPolicy',
+                'Bypass',
+                '-Command',
+                `Compress-Archive -Path '${escapePowerShellPath(stagingDir)}' -DestinationPath '${escapePowerShellPath(zipPath)}' -Force`,
+            ], { stdio: 'inherit' });
+
+            fs.rmSync(stagingDir, { recursive: true, force: true });
+
+            if (!fs.existsSync(zipPath)) {
+                throw new Error('PowerShell Compress-Archive did not create the zip file');
+            }
+
+            const sizeMb = (fs.statSync(zipPath).size / 1024 / 1024).toFixed(2);
+            console.log(`   ✓ Zip file created: ${zipPath} (${sizeMb} MB)`);
+        } catch (error) {
+            console.error('   ⚠️  Warning: Zip file creation failed:', error.message);
+            console.log('   You can manually create the zip by running: npm run plugin-zip:free');
         }
     }
 
@@ -709,6 +835,14 @@ class FreeVersionGenerator {
 
         return enabledBlocks;
     }
+}
+
+/**
+ * Escape a path for safe interpolation inside a single-quoted PowerShell string
+ * (PowerShell escapes an embedded single quote by doubling it).
+ */
+function escapePowerShellPath(value) {
+    return value.replace(/'/g, "''");
 }
 
 // Run the generator

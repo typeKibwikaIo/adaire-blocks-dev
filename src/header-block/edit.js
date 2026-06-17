@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { useBlockProps, MediaUpload, MediaUploadCheck, RichText } from '@wordpress/block-editor';
+import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls } from '@wordpress/block-editor';
 import {
     Button, ColorPicker, PanelBody, Popover,
     RangeControl, SelectControl, TextControl,
@@ -12,7 +12,7 @@ import HeaderIcon, { iconOptions } from './icon-utils';
 import InspectorTabs from '../components/InspectorTabs';
 import { boxToCss } from '../components/spacing-utils';
 
-// â”€â”€â”€ Option maps â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Option maps ──────────────────────────────────────────────────────────
 
 const layoutOptions = [
     { label: 'Horizontal', value: 'horizontal' },
@@ -79,7 +79,7 @@ const mobileSlideDirectionOptions = [
     { label: 'Slide from left',  value: 'left'  },
 ];
 
-// â”€â”€â”€ Background position grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Background position grid ───────────────────────────────────────────
 
 const BG_POSITIONS = [
     ['top left',    'top center',    'top right'   ],
@@ -111,7 +111,7 @@ function BgPositionPicker({ value, onChange }) {
 
 // QuickZone, PenIcon, CloseIcon imported from ../components/QuickZone
 
-// â”€â”€â”€ Style helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Style helpers ───────────────────────────────────────────────────────
 
 function getActionRadius( shape ) {
     switch ( shape ) {
@@ -192,12 +192,12 @@ function getHeaderStyle( attributes ) {
     return styles;
 }
 
-// â”€â”€â”€ Logo sub-component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Logo sub-component ─────────────────────────────────────────────────
 
 function LogoPreview({ attributes }) {
     const logoContent = attributes.logoType === 'image' && attributes.logoImageUrl ? (
         // Apply width directly so the slider is live in the editor (CSS vars may not cascade
-        // immediately inside the block sandbox â€” inline style is always reactive).
+        // immediately inside the block sandbox — inline style is always reactive).
         <img
             src={ attributes.logoImageUrl }
             alt={ attributes.logoImageAlt || attributes.logoText }
@@ -220,7 +220,7 @@ function LogoPreview({ attributes }) {
     );
 }
 
-// â”€â”€â”€ Header canvas preview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Header canvas preview ───────────────────────────────────────────────
 
 function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone }) {
     const visibleNavItems = attributes.navItems || [];
@@ -351,7 +351,7 @@ function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone })
     );
 }
 
-// â”€â”€â”€ Logo Quick-Edit Zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Logo Quick-Edit Zone ────────────────────────────────────────────────
 
 function LogoZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     return (
@@ -406,7 +406,7 @@ function LogoZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
-// â”€â”€â”€ Actions Quick-Edit Zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Actions Quick-Edit Zone ─────────────────────────────────────────────
 
 function ActionsZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     return (
@@ -500,7 +500,7 @@ function ActionsZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
-// â”€â”€â”€ Background Quick-Edit chip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Background Quick-Edit chip ──────────────────────────────────────────
 // A floating chip at bottom-center of the header for background controls.
 
 function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
@@ -512,7 +512,7 @@ function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
         setActiveZone( isOpen ? null : 'background' );
     };
 
-    // Same close management as QuickZone â€” suppress WP auto-close so MediaUpload works
+    // Same close management as QuickZone — suppress WP auto-close so MediaUpload works
     useEffect( () => {
         if ( ! isOpen ) return;
         const handleKeyDown = ( e ) => {
@@ -699,7 +699,7 @@ function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
-// â”€â”€â”€ Main Edit component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Main Edit component ─────────────────────────────────────────────────
 
 export default function Edit({ attributes, setAttributes }) {
     const [ activeZone, setActiveZone ] = useState( null );
@@ -732,7 +732,7 @@ export default function Edit({ attributes, setAttributes }) {
         return coreStore && coreStore.getMenus ? coreStore.getMenus( { per_page: -1 } ) : [];
     }, [ attributes.navigationSource ] );
 
-    // â”€â”€ Inspector style panels â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Inspector style panels ──────────────────────────────────────────
     const stylePanels = [
         {
             title: __( 'Colors', 'header-block' ),
@@ -869,9 +869,10 @@ export default function Edit({ attributes, setAttributes }) {
 
     return (
         <>
+            <InspectorControls>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes } stylePanels={ stylePanels }>
 
-                {/* â”€â”€ Layout tab panels â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                {/* ── Layout tab panels ──────────────────────────────────── */}
                 <PanelBody title={ __( 'Layout', 'header-block' ) } initialOpen={ true }>
                     <SelectControl label="Layout"          value={ attributes.layout }         options={ layoutOptions } onChange={ v => setAttributes({ layout: v }) } />
                     <SelectControl label="Sticky behavior" value={ attributes.stickyBehavior } options={ stickyOptions } onChange={ v => setAttributes({ stickyBehavior: v }) } />
@@ -1079,9 +1080,9 @@ export default function Edit({ attributes, setAttributes }) {
                         value={ attributes.topBarLayout || 'space-between' }
                         options={ [
                             { label: 'Dispersed (left + right)', value: 'space-between' },
-                            { label: 'Grouped â€” Left',           value: 'left'          },
-                            { label: 'Grouped â€” Center',         value: 'center'        },
-                            { label: 'Grouped â€” Right',          value: 'right'         },
+                            { label: 'Grouped — Left',           value: 'left'          },
+                            { label: 'Grouped — Center',         value: 'center'        },
+                            { label: 'Grouped — Right',          value: 'right'         },
                         ] }
                         onChange={ v => setAttributes({ topBarLayout: v }) }
                     />
@@ -1094,13 +1095,16 @@ export default function Edit({ attributes, setAttributes }) {
                 </PanelBody>
 
             </InspectorTabs>
+            </InspectorControls>
 
+            <div {...blockProps}>
             <HeaderPreview
                 attributes={ attributes }
                 setAttributes={ setAttributes }
                 activeZone={ activeZone }
                 setActiveZone={ setActiveZone }
             />
+            </div>
         </>
     );
 }

@@ -1,0 +1,72 @@
+.adaire-accordion {
+  /* Constrained container support in editor - apply to inner */
+  .adaire-accordion__container.is-constrained {
+    max-width: var(--acc-container-max-width, 1200px);
+    margin-left: auto;
+    margin-right: auto;
+    
+    /* Responsive container max-width for tablet */
+    @media (max-width: 1024px) {
+      max-width: var(--acc-container-max-width-tablet, var(--acc-container-max-width, 100%));
+    }
+    
+    /* Responsive container max-width for mobile */
+    @media (max-width: 768px) {
+      max-width: var(--acc-container-max-width-mobile, var(--acc-container-max-width-tablet, 100%));
+    }
+  }
+  /* Mirror responsive horizontal margins in editor */
+  @media (max-width: 1024px) {
+    .adaire-accordion__container {
+      margin-left: var(--acc-margin-h-tablet, var(--acc-margin-left));
+      margin-right: var(--acc-margin-h-tablet, var(--acc-margin-right));
+    }
+  }
+  @media (max-width: 768px) {
+    .adaire-accordion__container {
+      margin-left: var(--acc-margin-h-mobile, var(--acc-margin-left));
+      margin-right: var(--acc-margin-h-mobile, var(--acc-margin-right));
+    }
+  }
+
+  &.alignfull,
+  &.alignwide {
+    .adaire-accordion__container {
+      padding-left: var(--acc-margin-h-desktop, var(--acc-margin-left));
+      padding-right: var(--acc-margin-h-desktop, var(--acc-margin-right));
+    }
+
+    @media (max-width: 1024px) {
+      .adaire-accordion__container {
+        padding-left: var(--acc-margin-h-tablet, var(--acc-margin-left));
+        padding-right: var(--acc-margin-h-tablet, var(--acc-margin-right));
+      }
+    }
+    @media (max-width: 768px) {
+      .adaire-accordion__container {
+        padding-left: var(--acc-margin-h-mobile, var(--acc-margin-left));
+        padding-right: var(--acc-margin-h-mobile, var(--acc-margin-right));
+      }
+    }
+  }
+  .adaire-accordion__item {
+    position: relative;
+    /* Mirror frontend shadows using the same intensity variable */
+    box-shadow: 0 1px 4px rgba(0,0,0,var(--acc-shadow-intensity, 0.08));
+    transition: all var(--acc-duration, 300ms) var(--acc-easing, ease);
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,var(--acc-shadow-intensity, 0.12));
+    }
+
+    &.is-open {
+      box-shadow: 0 8px 25px rgba(0,0,0,var(--acc-shadow-intensity, 0.16));
+    }
+  }
+
+  .adaire-accordion__item-actions {
+    padding: 0 var(--acc-padding) var(--acc-padding);
+  }
+}
+
+

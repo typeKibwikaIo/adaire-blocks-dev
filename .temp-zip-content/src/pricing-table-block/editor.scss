@@ -1,0 +1,77 @@
+.adaire-pricing-table {
+    .adaire-pricing-table__card-control {
+        padding: 16px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        background: #f9f9f9;
+    }
+
+    .adaire-pricing-table__card-control-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        gap: 8px;
+    }
+
+    .adaire-pricing-table__card-control-actions {
+        display: flex;
+        gap: 4px;
+    }
+
+    .adaire-pricing-table__feature-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .components-text-control__input {
+            flex: 1;
+        }
+    }
+
+    .adaire-pricing-table__dimension-controls {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+    }
+
+    .adaire-pricing-table__dimension-row {
+        margin-bottom: 20px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+    }
+
+    .adaire-pricing-table__comparison-control,
+    .adaire-pricing-table__comparison-row-control {
+        padding: 16px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        background: #f9f9f9;
+    }
+
+    .adaire-pricing-table__comparison-cell-control {
+        padding: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        background: #fff;
+        margin-bottom: 12px;
+
+        strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+    }
+}
+

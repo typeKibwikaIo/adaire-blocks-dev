@@ -1,0 +1,316 @@
+// Bootstrap Icons CSS is loaded via WordPress enqueue from CDN
+// See adaire-blocks.php: enqueue_bootstrap_icons_assets()
+
+// Breakpoint Mixins (standard breakpoints for all blocks)
+@mixin phone {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 601px) and (max-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin small-laptop {
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 1301px) and (max-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin big-desktop {
+    @media (min-width: 1921px) {
+        @content;
+    }
+}
+
+.adaire-social-banner {
+    // Base styles - position is set by modifier classes only
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--icon-spacing, 10px);
+    
+    // Background and border radius
+    background-color: var(--banner-background-color, transparent);
+    border-radius: var(--banner-background-border-radius, 0);
+    
+    // Responsive padding - Mobile (base, up to 600px)
+    padding-top: var(--banner-padding-top-mobile, 0px);
+    padding-right: var(--banner-padding-right-mobile, 0px);
+    padding-bottom: var(--banner-padding-bottom-mobile, 0px);
+    padding-left: var(--banner-padding-left-mobile, 0px);
+    
+    // Tablet: 601px - 1024px
+    @include tablet {
+        padding-top: var(--banner-padding-top-tablet, var(--banner-padding-top-mobile, 0px));
+        padding-right: var(--banner-padding-right-tablet, var(--banner-padding-right-mobile, 0px));
+        padding-bottom: var(--banner-padding-bottom-tablet, var(--banner-padding-bottom-mobile, 0px));
+        padding-left: var(--banner-padding-left-tablet, var(--banner-padding-left-mobile, 0px));
+    }
+    
+    // Small Laptop: 1025px - 1300px
+    @include small-laptop {
+        padding-top: var(--banner-padding-top-small-laptop, var(--banner-padding-top-desktop, 0px));
+        padding-right: var(--banner-padding-right-small-laptop, var(--banner-padding-right-desktop, 0px));
+        padding-bottom: var(--banner-padding-bottom-small-laptop, var(--banner-padding-bottom-desktop, 0px));
+        padding-left: var(--banner-padding-left-small-laptop, var(--banner-padding-left-desktop, 0px));
+    }
+    
+    // Desktop: 1301px - 1920px
+    @include desktop {
+        padding-top: var(--banner-padding-top-desktop, 0px);
+        padding-right: var(--banner-padding-right-desktop, 0px);
+        padding-bottom: var(--banner-padding-bottom-desktop, 0px);
+        padding-left: var(--banner-padding-left-desktop, 0px);
+    }
+    
+    // Big Desktop: ≥ 1921px
+    @include big-desktop {
+        padding-top: var(--banner-padding-top-big-desktop, var(--banner-padding-top-desktop, 0px));
+        padding-right: var(--banner-padding-right-big-desktop, var(--banner-padding-right-desktop, 0px));
+        padding-bottom: var(--banner-padding-bottom-big-desktop, var(--banner-padding-bottom-desktop, 0px));
+        padding-left: var(--banner-padding-left-big-desktop, var(--banner-padding-left-desktop, 0px));
+    }
+    
+    // Position type modifiers - these set the position
+    &--position-fixed {
+        position: fixed;
+        z-index: 9999;
+    }
+    
+    &--position-absolute {
+        position: absolute;
+        z-index: 9999;
+    }
+    
+    &--position-relative {
+        position: relative;
+        // Relative positioning doesn't need z-index by default
+        z-index: auto;
+    }
+    
+    // Display type modifiers
+    &--display-block {
+        display: flex;
+    }
+    
+    &--display-inline {
+        display: inline-flex;
+    }
+    
+    // Layout direction modifiers
+    &--layout-column {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    &--layout-row {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    // Horizontal positioning - use horizontal offset to position from left or right
+    // Works with all position types (fixed, absolute, relative)
+    &[style*="--banner-horizontal-offset-from: left"],
+    &[style*="--banner-horizontal-offset-from:left"] {
+        left: var(--banner-horizontal-offset, 0);
+        right: auto;
+    }
+    
+    &[style*="--banner-horizontal-offset-from: right"],
+    &[style*="--banner-horizontal-offset-from:right"] {
+        right: var(--banner-horizontal-offset, 0);
+        left: auto;
+    }
+    
+    // Vertical offset positioning based on offsetFrom
+    &[style*="--banner-offset-from: top"],
+    &[style*="--banner-offset-from:top"] {
+        top: var(--banner-offset, 100px);
+        bottom: auto;
+    }
+    
+    &[style*="--banner-offset-from: bottom"],
+    &[style*="--banner-offset-from:bottom"] {
+        bottom: var(--banner-offset, 0px);
+        top: auto;
+    }
+    
+    // Handle percentage offsets (no default needed, CSS variable handles it)
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--icon-spacing, 10px);
+    }
+    
+    // Match parent layout direction for list
+    &--layout-column &__list {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    &--layout-row &__list {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: calc(var(--icon-size, 24px) + 20px);
+        height: calc(var(--icon-size, 24px) + 20px);
+        min-width: calc(var(--icon-size, 24px) + 20px);
+        min-height: calc(var(--icon-size, 24px) + 20px);
+        border-radius: var(--icon-border-radius, 0);
+        text-decoration: none;
+        transition: all var(--animation-duration, 0.3s) var(--animation-easing, ease);
+        cursor: pointer;
+        box-sizing: border-box;
+        
+        &:focus {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
+    }
+    
+    // Hover animation classes
+    &--hover-up &__item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+    
+    &--hover-down &__item:hover {
+        transform: translateY(5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+    
+    &--hover-left &__item:hover {
+        transform: translateX(-5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+    
+    &--hover-right &__item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+    
+    &--hover-pulse &__item:hover {
+        animation: pulse var(--animation-duration, 0.6s) var(--animation-easing, ease-in-out);
+    }
+    
+    &--hover-scale-up &__item:hover {
+        transform: scale(1.15);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    &--hover-scale-down &__item:hover {
+        transform: scale(0.9);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    &--hover-rotate &__item:hover {
+        transform: rotate(15deg) scale(1.1);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+    
+    &--hover-shake &__item:hover {
+        animation: shake var(--animation-duration, 0.5s) var(--animation-easing, ease-in-out);
+    }
+    
+    &--hover-bounce &__item:hover {
+        animation: bounce var(--animation-duration, 0.6s) var(--animation-easing, ease-in-out);
+    }
+    
+    &--hover-glow &__item:hover {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.4);
+        filter: brightness(1.2);
+    }
+    
+    // Keyframe animations
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+    
+    @keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+        10%, 30%, 50%, 70%, 90% {
+            transform: translateX(-3px);
+        }
+        20%, 40%, 60%, 80% {
+            transform: translateX(3px);
+        }
+    }
+    
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-8px);
+        }
+    }
+
+    &__icon {
+        display: inline-block;
+        width: auto !important;
+        height: auto !important;
+        font-size: var(--icon-size, 24px) !important;
+        line-height: 1 !important;
+        color: var(--icon-color, #ffffff) !important;
+        transition: color 0.3s ease;
+        
+        // Bootstrap Icons styling
+        &.bi,
+        &[class*="bi-"] {
+            font-size: var(--icon-size, 24px) !important;
+            line-height: 1 !important;
+            vertical-align: middle !important;
+        }
+    }
+
+    &__placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        border: 2px dashed #ccc;
+        border-radius: 4px;
+        text-align: center;
+        color: #666;
+        min-width: 200px;
+        background: #f9f9f9;
+
+        p {
+            margin: 0;
+        }
+    }
+}
+
+// Override WordPress block wrapper classes
+.wp-block-create-block-social-banner-block,
+[class*="wp-block-create-block-social-banner-block"] {
+    outline: none !important;
+    border: none !important;
+    border-style: none !important;
+    box-shadow: none !important;
+}

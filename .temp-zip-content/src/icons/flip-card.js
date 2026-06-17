@@ -1,0 +1,28 @@
+import React from "react";
+
+const svgMarkup = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_77_2)">
+<rect width="24" height="24" rx="5" fill="#D52940"/>
+<g clip-path="url(#clip1_77_2)">
+<rect x="3.5" y="3.5" width="11" height="13" stroke="white"/>
+<rect x="9.5" y="8.5" width="11" height="13" stroke="white"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_77_2">
+<rect width="24" height="24" rx="5" fill="white"/>
+</clipPath>
+<clipPath id="clip1_77_2">
+<rect width="24" height="24" fill="white"/>
+</clipPath>
+</defs>
+</svg>`;
+
+const FlipCardIcon = () => (
+	<span
+		className="adaire-block-icon"
+		dangerouslySetInnerHTML={{ __html: svgMarkup }}
+	/>
+);
+
+export default FlipCardIcon;

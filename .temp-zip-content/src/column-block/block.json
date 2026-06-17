@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "adaire/column-block",
+  "title": "Column",
+  "description": "A column within a row block.",
+  "category": "adaire-layout-sections",
+  "parent": ["adaire/row-block"],
+  "icon": "layout",
+  "editorScript": "file:./index.js",
+  "supports": {
+    "html": false,
+    "spacing": { "padding": true, "margin": true },
+    "color": { "background": true, "gradients": true }
+  },
+  "attributes": {
+    "width": {
+      "type": "number",
+      "default": 100
+    }
+  }
+}

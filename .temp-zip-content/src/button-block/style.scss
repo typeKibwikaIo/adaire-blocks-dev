@@ -1,0 +1,251 @@
+.adaire-button-block {
+  display: inline-block;
+  margin-top: var(--button-margin-top, 20px);
+  margin-right: var(--button-margin-right, 0px);
+  margin-bottom: var(--button-margin-bottom, 20px);
+  margin-left: var(--button-margin-left, 0px);
+  z-index: var(--button-z-index, 1);
+
+  // Tablet responsive
+  @media (max-width: 1024px) {
+    margin-top: var(--button-margin-top-tablet, 16px);
+    margin-right: var(--button-margin-right-tablet, 0px);
+    margin-bottom: var(--button-margin-bottom-tablet, 16px);
+    margin-left: var(--button-margin-left-tablet, 0px);
+  }
+
+  // Mobile responsive
+  @media (max-width: 768px) {
+    margin-top: var(--button-margin-top-mobile, 12px);
+    margin-right: var(--button-margin-right-mobile, 0px);
+    margin-bottom: var(--button-margin-bottom-mobile, 12px);
+    margin-left: var(--button-margin-left-mobile, 0px);
+  }
+
+  // Smartwatch responsive
+  @media (max-width: 320px) {
+    margin-top: var(--button-margin-top-watch, 8px);
+    margin-right: var(--button-margin-right-watch, 0px);
+    margin-bottom: var(--button-margin-bottom-watch, 8px);
+    margin-left: var(--button-margin-left-watch, 0px);
+  }
+
+      // Override WordPress core rule: html :where([style*=border-width]) { border-style: solid }
+      &[style*="border-width"],
+      &[style*="borderWidth"] {
+          border: none !important;
+          border-style: none !important;
+          border-width: 0 !important;
+      }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--button-color, #ffffff);
+    background-color: var(--button-bg-color, transparent);
+    font-size: var(--button-font-size, 18px);
+    font-weight: var(--button-font-weight, 500);
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-top: var(--button-padding-top, 10px);
+    padding-right: var(--button-padding-right, 20px);
+    padding-bottom: var(--button-padding-bottom, 10px);
+    padding-left: var(--button-padding-left, 20px);
+    overflow: hidden;
+    border: none;
+    outline: none;
+    border-radius: var(--button-border-radius, 0px);
+
+    // Tablet responsive
+    @media (max-width: 1024px) {
+      font-size: var(--button-font-size-tablet, 16px);
+      padding-top: var(--button-padding-top-tablet, 8px);
+      padding-right: var(--button-padding-right-tablet, 16px);
+      padding-bottom: var(--button-padding-bottom-tablet, 8px);
+      padding-left: var(--button-padding-left-tablet, 16px);
+    }
+
+    // Mobile responsive
+    @media (max-width: 768px) {
+      font-size: var(--button-font-size-mobile, 14px);
+      padding-top: var(--button-padding-top-mobile, 6px);
+      padding-right: var(--button-padding-right-mobile, 12px);
+      padding-bottom: var(--button-padding-bottom-mobile, 6px);
+      padding-left: var(--button-padding-left-mobile, 12px);
+    }
+
+    // Smartwatch responsive
+    @media (max-width: 320px) {
+      font-size: var(--button-font-size-watch, 12px);
+      padding-top: var(--button-padding-top-watch, 4px);
+      padding-right: var(--button-padding-right-watch, 8px);
+      padding-bottom: var(--button-padding-bottom-watch, 4px);
+      padding-left: var(--button-padding-left-watch, 8px);
+    }
+
+    // Icon styles
+    svg {
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease;
+      margin-left: 8px;
+    }
+
+    // Focus styles (only visible on keyboard navigation)
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.5);
+      outline-offset: 4px;
+    }
+
+    // Style variations
+    &--underline {
+      // Default underline style
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--button-underline-color, #ff4242);
+        opacity: 1;
+        transform: translate3d(-100%, 0, 0);
+        transition: transform 0.3s ease;
+      }
+
+      &:hover::after {
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    &--fill {
+      background-color: var(--button-bg-color, #ff4242);
+      border-radius: var(--button-border-radius, 4px);
+      
+      &:hover {
+        background-color: var(--button-hover-bg-color, #e63939);
+        color: var(--button-hover-color, #ffffff);
+      }
+    }
+
+    &--border {
+      border-width: var(--button-border-width, 2px);
+      border-style: var(--button-border-style, solid);
+      border-color: var(--button-border-color, #ff4242);
+      border-radius: var(--button-border-radius, 4px);
+      
+      &:hover {
+        background-color: var(--button-hover-border-color, var(--button-border-color, #ff4242));
+        border-color: var(--button-hover-border-color, var(--button-border-color, #ff4242));
+        color: var(--button-hover-color, #ffffff);
+      }
+    }
+
+    &--gradient {
+      background: linear-gradient(45deg, var(--button-bg-color, #ff4242), var(--button-hover-bg-color, #e63939));
+      border-radius: var(--button-border-radius, 4px);
+      
+      &:hover {
+        background: linear-gradient(45deg, var(--button-hover-bg-color, #e63939), var(--button-bg-color, #ff4242));
+        color: var(--button-hover-color, #ffffff);
+      }
+    }
+
+    &--glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(var(--button-blur));
+      -webkit-backdrop-filter: blur(var(--button-blur));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--button-border-radius, 8px);
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: var(--button-hover-color, #ffffff);
+      }
+    }
+
+    // Hover animation variations
+    // slide-underline is the default animation (handled in style variations)
+
+    &--scale {
+      &:hover {
+        transform: scale(1.05);
+        color: var(--button-hover-color, #ffffff);
+      }
+    }
+
+    &--bounce {
+      &:hover {
+        animation: adaire-button-bounce 0.6s ease;
+        color: var(--button-hover-color, #ffffff);
+      }
+    }
+
+    &--glow {
+      &:hover {
+        box-shadow: 0 0 20px var(--button-color, #ff4242);
+        color: var(--button-hover-color, #ffffff);
+      }
+    }
+
+    &--shake {
+      &:hover {
+        animation: adaire-button-shake 0.5s ease-in-out;
+        color: var(--button-hover-color, #ffffff);
+      }
+    }
+
+    &--none {
+      // No hover animation
+      &:hover {
+        color: var(--button-hover-color, #ffffff);
+      }
+    }
+
+    // General hover styles
+    &:hover {
+      color: var(--button-hover-color, #ffffff);
+      background-color: var(--button-hover-bg-color, transparent);
+      text-decoration: none;
+
+      svg {
+        transform: translateX(4px);
+      }
+    }
+  }
+}
+
+// Keyframe animations (scoped to prevent conflicts)
+@keyframes adaire-button-bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes adaire-button-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}

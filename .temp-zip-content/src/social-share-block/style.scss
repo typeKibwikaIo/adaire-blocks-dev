@@ -1,0 +1,169 @@
+.adaire-social-share {
+    position: relative;
+    display: inline-block;
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+
+    &--align-left {
+        text-align: left;
+    }
+
+    &--align-center {
+        text-align: center;
+    }
+
+    &--align-right {
+        text-align: right;
+    }
+
+    &__button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--share-button-bg, transparent);
+        color: var(--share-icon-color, #333333);
+        border: var(--share-border-width, 0) solid var(--share-border-color, #333333);
+        border-radius: var(--share-border-radius, 0);
+        padding: var(--share-button-padding-top, 12px) var(--share-button-padding-right, 12px) var(--share-button-padding-bottom, 12px) var(--share-button-padding-left, 12px);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: var(--share-icon-size, 24px);
+        line-height: 1;
+        text-decoration: none;
+        box-sizing: border-box;
+
+        i {
+            font-size: var(--share-icon-size, 24px);
+            color: var(--share-icon-color, #333333);
+            transition: color 0.3s ease;
+        }
+
+        &:hover {
+            background-color: var(--share-button-bg-hover, transparent);
+        }
+
+        &:focus {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
+    }
+
+    &__tooltip {
+        position: absolute;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+        pointer-events: none;
+
+        .adaire-social-share--tooltip-top & {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            margin-bottom: 8px;
+        }
+
+        .adaire-social-share--tooltip-bottom & {
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            margin-top: 8px;
+        }
+
+        .adaire-social-share--tooltip-left & {
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%) translateX(-10px);
+            margin-right: 8px;
+        }
+
+        .adaire-social-share--tooltip-right & {
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%) translateX(10px);
+            margin-left: 8px;
+        }
+
+        &.is-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+            transform: translateY(0);
+
+            .adaire-social-share--tooltip-top & {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .adaire-social-share--tooltip-bottom & {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .adaire-social-share--tooltip-left & {
+                transform: translateY(-50%) translateX(0);
+            }
+
+            .adaire-social-share--tooltip-right & {
+                transform: translateY(-50%) translateX(0);
+            }
+        }
+    }
+
+    &__platforms {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        min-width: 180px;
+        max-width: 250px;
+
+        .adaire-social-share--tooltip-left &,
+        .adaire-social-share--tooltip-right & {
+            flex-direction: row;
+            flex-wrap: wrap;
+            min-width: auto;
+        }
+    }
+
+    &__platform {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #333333;
+        transition: background-color 0.2s ease;
+        font-size: 14px;
+        line-height: 1.4;
+
+        &:hover {
+            background-color: #f5f5f5;
+        }
+
+        &:focus {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
+
+        i {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        span {
+            white-space: nowrap;
+        }
+    }
+}
+

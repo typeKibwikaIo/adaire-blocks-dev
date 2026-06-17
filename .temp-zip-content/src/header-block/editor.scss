@@ -1,0 +1,264 @@
+// ─── Header block editor canvas ───────────────────────────────────────────────
+.wp-block-create-block-header-block {
+    box-sizing: border-box;
+    position: relative; // anchor for the BG zone chip
+
+    .adaire-header-logo-text,
+    .adaire-header-nav-item {
+        cursor: text;
+    }
+
+    .adaire-header-mobile-toggle {
+        pointer-events: none;
+    }
+}
+
+.adaire-header-control-group {
+    margin: 0 0 16px;
+    padding: 12px;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    background: #ffffff;
+}
+
+// ─── Quick-Edit Zones ─────────────────────────────────────────────────────────
+// Each clickable zone wraps header content. On hover a pen pill appears.
+
+.adaire-qz {
+    position: relative;
+    border-radius: 3px;
+    transition: outline 0.1s;
+
+    // Hover / active outline so the zone is visible
+    &:hover,
+    &.adaire-qz--active {
+        outline: 2px dashed rgba(99, 102, 241, 0.5);
+        outline-offset: 2px;
+    }
+
+    // The floating pen trigger button (hidden until hover or active)
+    &__btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px 4px 8px;
+        background: #6366f1;
+        color: #fff;
+        border: none;
+        border-radius: 0 3px 0 6px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s, background 0.1s;
+        z-index: 200;
+        white-space: nowrap;
+        line-height: 1;
+
+        svg { flex-shrink: 0; }
+
+        &:hover { background: #4f46e5; }
+    }
+
+    &:hover > &__btn,
+    &.adaire-qz--active > &__btn {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+// Background zone — fixed chip at bottom-center of the header
+.adaire-qz-bg {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    z-index: 150;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.15s;
+
+    &:hover { background: rgba(99, 102, 241, 0.85); }
+    svg { flex-shrink: 0; }
+}
+
+.wp-block-create-block-header-block:hover .adaire-qz-bg,
+.adaire-qz-bg.adaire-qz-bg--active {
+    opacity: 1;
+}
+
+// ─── Quick-Edit Popover ───────────────────────────────────────────────────────
+
+.adaire-header-qpop {
+    // Gutenberg Popover content wrapper
+    .components-popover__content {
+        padding: 0 !important;
+        min-width: 268px;
+        max-width: 300px;
+        max-height: 480px;
+        overflow-y: auto;
+        border-radius: 8px !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14) !important;
+    }
+
+    &__inner { display: flex; flex-direction: column; }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        background: #f8fafc;
+        border-radius: 8px 8px 0 0;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: #6366f1;
+        border-radius: 4px;
+        color: #fff;
+    }
+
+    &__title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #475569;
+    }
+
+    &__close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #94a3b8;
+        border-radius: 4px;
+        transition: background 0.1s, color 0.1s;
+
+        &:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+    }
+
+    &__body {
+        padding: 14px;
+
+        // Tighten WP controls inside the popover
+        .components-base-control { margin-bottom: 12px; }
+        .components-range-control { margin-bottom: 12px; }
+        p { margin: 0 0 6px; font-size: 12px; color: #475569; }
+        hr { border: none; border-top: 1px solid #f1f5f9; margin: 12px 0; }
+
+        .components-button.is-secondary {
+            font-size: 12px;
+            height: 32px;
+        }
+    }
+
+    &__section-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #94a3b8;
+        margin: 10px 0 6px;
+
+        &:first-child { margin-top: 0; }
+    }
+}
+
+// ─── Background position 9-point grid ─────────────────────────────────────────
+
+.adaire-bgpos {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 28px);
+    grid-template-rows: repeat(3, 28px);
+    gap: 4px;
+    margin-bottom: 10px;
+
+    &__dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 4px;
+        border: 2px solid #e2e8f0;
+        background: #f8fafc;
+        cursor: pointer;
+        transition: border-color 0.1s, background 0.1s;
+        position: relative;
+
+        // Dot indicator in center
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 50% auto auto 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            transition: background 0.1s;
+        }
+
+        &:hover { border-color: #a5b4fc; }
+
+        &.is-active {
+            border-color: #6366f1;
+            background: #ede9fe;
+
+            &::after { background: #6366f1; }
+        }
+    }
+
+    &__wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        margin-bottom: 14px;
+    }
+
+    &__label-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__value {
+        font-size: 11px;
+        color: #6366f1;
+        font-weight: 600;
+    }
+}
