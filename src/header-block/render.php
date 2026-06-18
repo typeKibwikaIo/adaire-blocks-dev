@@ -69,17 +69,52 @@ if ( ! function_exists( 'adaire_header_box_to_css' ) ) {
 	}
 }
 
+if ( ! function_exists( 'adaire_header_get_effective_background_type' ) ) {
+	/**
+	 * Resolves which of the three mutually-exclusive background modes
+	 * ("color" | "gradient" | "image") is active. Reads the explicit
+	 * backgroundType attribute when present; for content saved before
+	 * that attribute existed, infers it from whichever legacy field is
+	 * populated (image > gradient > color) so old headers keep rendering
+	 * exactly as they did before.
+	 */
+	function adaire_header_get_effective_background_type( $attributes ) {
+		if ( ! empty( $attributes['backgroundType'] ) ) {
+			return $attributes['backgroundType'];
+		}
+		if ( ! empty( $attributes['bgImageUrl'] ) ) {
+			return 'image';
+		}
+		if ( ! empty( $attributes['useGradient'] ) ) {
+			return 'gradient';
+		}
+		return 'color';
+	}
+}
+
 if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 	/**
-	 * Mirrors save.js getHeaderStyle() exactly (same CSS var names/values,
-	 * same conditional inclusion logic). Deliberately does NOT add the
-	 * background-image vars that edit.js's copy of this function has —
-	 * save.js never applied those to the frontend, so neither does this.
+	 * Mirrors save.js getHeaderStyle() (same CSS var names/values, same
+	 * conditional inclusion logic) with one intentional improvement: it now
+	 * also emits background-image vars when backgroundType resolves to
+	 * "image", because save.js/the original frontend never rendered the
+	 * background image at all (it only ever showed in the editor canvas).
+	 * That silent gap is fixed here rather than preserved.
 	 */
 	function adaire_header_get_style_vars( $attributes ) {
-		$background = ! empty( $attributes['transparentHeader'] )
-			? 'transparent'
-			: ( ! empty( $attributes['useGradient'] ) ? $attributes['gradientBackground'] : $attributes['backgroundColor'] );
+		$bg_type = adaire_header_get_effective_background_type( $attributes );
+
+		if ( ! empty( $attributes['transparentHeader'] ) ) {
+			$background = 'transparent';
+		} elseif ( 'image' === $bg_type && ! empty( $attributes['bgImageUrl'] ) ) {
+			// Background-color CSS var stays empty so a partially-transparent
+			// image doesn't get an opaque color layer painted behind it.
+			$background = 'transparent';
+		} elseif ( 'gradient' === $bg_type ) {
+			$background = $attributes['gradientBackground'];
+		} else {
+			$background = $attributes['backgroundColor'];
+		}
 
 		$topbar_justify_map = array(
 			'space-between' => 'space-between',
@@ -129,6 +164,43 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 		if ( ! empty( $attributes['searchIconBgColor'] ) ) {
 			$styles['--adaire-header-search-btn-bg'] = $attributes['searchIconBgColor'];
 		}
+		if ( ! empty( $attributes['searchInputBgColor'] ) ) {
+			$styles['--adaire-header-search-input-bg'] = $attributes['searchInputBgColor'];
+		}
+		if ( ! empty( $attributes['searchInputBorderColor'] ) ) {
+			$styles['--adaire-header-search-input-border'] = $attributes['searchInputBorderColor'];
+		}
+		if ( ! empty( $attributes['searchInputTextColor'] ) ) {
+			$styles['--adaire-header-search-input-text'] = $attributes['searchInputTextColor'];
+		}
+		if ( ! empty( $attributes['searchPlaceholderColor'] ) ) {
+			$styles['--adaire-header-search-placeholder-color'] = $attributes['searchPlaceholderColor'];
+		}
+		if ( ! empty( $attributes['searchContainerBgColor'] ) ) {
+			$styles['--adaire-header-search-container-bg'] = $attributes['searchContainerBgColor'];
+		}
+		if ( ! empty( $attributes['navShowDots'] ) ) {
+			$styles['--adaire-header-dot-size']    = ( ! empty( $attributes['navDotSize'] ) ? $attributes['navDotSize'] : 6 ) . 'px';
+			$styles['--adaire-header-dot-spacing'] = ( isset( $attributes['navDotSpacing'] ) ? $attributes['navDotSpacing'] : 8 ) . 'px';
+			if ( ! empty( $attributes['navDotColor'] ) ) {
+				$styles['--adaire-header-dot-color'] = $attributes['navDotColor'];
+			}
+		}
+		if ( ! empty( $attributes['ctaHoverBgColor'] ) ) {
+			$styles['--adaire-header-cta-hover-bg'] = $attributes['ctaHoverBgColor'];
+		}
+		if ( ! empty( $attributes['ctaHoverTextColor'] ) ) {
+			$styles['--adaire-header-cta-hover-text'] = $attributes['ctaHoverTextColor'];
+		}
+		if ( isset( $attributes['ctaBorderRadius'] ) && (int) $attributes['ctaBorderRadius'] >= 0 ) {
+			$styles['--adaire-header-cta-radius'] = (int) $attributes['ctaBorderRadius'] . 'px';
+		}
+		if ( isset( $attributes['ctaPaddingVertical'] ) && (int) $attributes['ctaPaddingVertical'] >= 0 ) {
+			$styles['--adaire-header-cta-padding-y'] = (int) $attributes['ctaPaddingVertical'] . 'px';
+		}
+		if ( isset( $attributes['ctaPaddingHorizontal'] ) && (int) $attributes['ctaPaddingHorizontal'] >= 0 ) {
+			$styles['--adaire-header-cta-padding-x'] = (int) $attributes['ctaPaddingHorizontal'] . 'px';
+		}
 		if ( ! empty( $attributes['signInBgColor'] ) ) {
 			$styles['--adaire-header-signin-bg'] = $attributes['signInBgColor'];
 		}
@@ -155,6 +227,14 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 		}
 		if ( ! empty( $attributes['ctaBorderColor'] ) ) {
 			$styles['--adaire-header-cta-border'] = $attributes['ctaBorderColor'];
+		}
+
+		if ( 'image' === $bg_type && empty( $attributes['transparentHeader'] ) && ! empty( $attributes['bgImageUrl'] ) ) {
+			$styles['--adaire-header-bg-image']       = 'url(' . esc_url( $attributes['bgImageUrl'] ) . ')';
+			$styles['--adaire-header-bg-size']        = ! empty( $attributes['bgSize'] ) ? $attributes['bgSize'] : 'cover';
+			$styles['--adaire-header-bg-position']    = ! empty( $attributes['bgPosition'] ) ? $attributes['bgPosition'] : 'center center';
+			$styles['--adaire-header-bg-repeat']      = ! empty( $attributes['bgRepeat'] ) ? $attributes['bgRepeat'] : 'no-repeat';
+			$styles['--adaire-header-bg-attachment']  = ! empty( $attributes['bgAttachment'] ) ? $attributes['bgAttachment'] : 'scroll';
 		}
 
 		$margin_css  = adaire_header_box_to_css( isset( $attributes['gutenblocksMargin'] ) ? $attributes['gutenblocksMargin'] : null );
@@ -210,6 +290,50 @@ if ( ! function_exists( 'adaire_header_icon_svg' ) ) {
 		$path = isset( $paths[ $name ] ) ? $paths[ $name ] : $paths['arrow-right'];
 
 		return '<svg class="adaire-header-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">' . $path . '</svg>';
+	}
+}
+
+if ( ! function_exists( 'adaire_header_social_icon_svg' ) ) {
+	/**
+	 * PHP port of icon-utils.js's socialIconPaths/SocialIcon — same path data,
+	 * mirrored byte-for-byte. Falls back to the original single-letter
+	 * placeholder for any platform name that isn't one of the six known ones
+	 * (e.g. a custom platform typed into the "Other" option).
+	 */
+	function adaire_header_social_icon_svg( $platform ) {
+		$key = strtolower( (string) $platform );
+
+		$paths = array(
+			'facebook'  => '<path fill="currentColor" d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5 3.66 9.13 8.44 9.94v-7.03H7.9v-2.91h2.54V9.84c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.81 8.44-4.94 8.44-9.94Z"/>',
+			'instagram' => '<rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/>',
+			'x'         => '<path fill="currentColor" d="M3 3l7.5 8.6L3.4 21h2.4l5.9-6.8L16.9 21H21l-7.9-9.1L20.6 3h-2.4l-5.4 6.2L7.1 3H3Z"/>',
+			'youtube'   => '<rect x="2.5" y="5.5" width="19" height="13" rx="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path fill="currentColor" d="M10.5 9.5v5l4.5-2.5-4.5-2.5Z"/>',
+			'linkedin'  => '<rect x="2.5" y="2.5" width="19" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="7.2" cy="7.6" r="1.3" fill="currentColor"/><path fill="currentColor" d="M6 10.6h2.4V18H6v-7.4Zm4.3 0h2.3v1.1c.5-.8 1.3-1.3 2.4-1.3 1.8 0 3 1.2 3 3.5V18h-2.4v-3.6c0-1-.4-1.7-1.4-1.7-.8 0-1.3.6-1.5 1.1-.1.2-.1.5-.1.8V18h-2.3v-7.4Z"/>',
+			'tiktok'    => '<path fill="currentColor" d="M14.5 2h2.4c.2 1.3 1 2.7 2.3 3.5 1 .6 2.1.9 3.3 1v2.5c-1.6 0-3.2-.5-4.5-1.4v6.7c0 3.2-2.6 5.7-5.8 5.7S6.4 17.5 6.4 14.3c0-3 2.2-5.4 5.1-5.7v2.6c-1.4.3-2.5 1.6-2.5 3.1 0 1.7 1.4 3.1 3.2 3.1s3.2-1.4 3.2-3.1V2Z"/>',
+		);
+
+		if ( empty( $paths[ $key ] ) ) {
+			$initial = '' !== $platform ? mb_substr( $platform, 0, 1 ) : '?';
+			return '<span class="adaire-header-social-fallback">' . esc_html( $initial ) . '</span>';
+		}
+
+		return '<svg class="adaire-header-social-icon" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' . $paths[ $key ] . '</svg>';
+	}
+}
+
+if ( ! function_exists( 'adaire_header_render_nav_dot' ) ) {
+	/**
+	 * Optional menu-indicator dot. Disabled unless navShowDots is explicitly
+	 * turned on — size/spacing/color travel via CSS vars set in
+	 * adaire_header_get_style_vars(); position (before/after the label)
+	 * is expressed as a class so style.scss can apply the right margin side.
+	 */
+	function adaire_header_render_nav_dot( $attributes ) {
+		if ( empty( $attributes['navShowDots'] ) ) {
+			return '';
+		}
+		$position = ( isset( $attributes['navDotPosition'] ) && 'before' === $attributes['navDotPosition'] ) ? 'before' : 'after';
+		return '<span class="adaire-header-nav-dot is-' . $position . '" aria-hidden="true"></span>';
 	}
 }
 
@@ -290,6 +414,43 @@ if ( ! function_exists( 'adaire_header_resolve_menu_object' ) ) {
 	}
 }
 
+if ( ! function_exists( 'adaire_header_label_from_url' ) ) {
+	/**
+	 * Derives a human-readable label from a menu item's URL, used when WP
+	 * has nothing usable for the title (see adaire_header_friendly_menu_label()).
+	 */
+	function adaire_header_label_from_url( $url ) {
+		$path = trim( (string) wp_parse_url( (string) $url, PHP_URL_PATH ), '/' );
+		if ( '' === $path ) {
+			return __( 'Menu item', 'header-block' );
+		}
+		$segments = explode( '/', $path );
+		$slug     = end( $segments );
+		$slug     = str_replace( array( '-', '_' ), ' ', $slug );
+		$slug     = trim( $slug );
+		return '' !== $slug ? ucwords( $slug ) : __( 'Menu item', 'header-block' );
+	}
+}
+
+if ( ! function_exists( 'adaire_header_friendly_menu_label' ) ) {
+	/**
+	 * wp_get_nav_menu_items()/wp_setup_nav_menu_item() falls back to a raw
+	 * "#123 (no title)" string when a menu item has no custom label AND its
+	 * linked object has no title (deleted/trashed/genuinely-untitled target).
+	 * That debug-style string (with a raw DB post ID) should never reach a
+	 * site visitor or the editor preview, so swap it for a label derived
+	 * from the item's URL instead. A real custom label or resolved object
+	 * title always takes priority and passes through unchanged.
+	 */
+	function adaire_header_friendly_menu_label( $title, $url ) {
+		$title = trim( (string) $title );
+		if ( '' !== $title && ! preg_match( '/^#\d+\s*\(no title\)$/i', $title ) ) {
+			return $title;
+		}
+		return adaire_header_label_from_url( $url );
+	}
+}
+
 if ( ! function_exists( 'adaire_header_build_menu_tree' ) ) {
 	/**
 	 * Assembles a flat wp_get_nav_menu_items() result into a nested tree via
@@ -314,7 +475,7 @@ if ( ! function_exists( 'adaire_header_build_menu_tree' ) ) {
 			foreach ( $by_parent[ $parent_id ] as $item ) {
 				$nodes[] = array(
 					'id'       => (int) $item->ID,
-					'label'    => $item->title,
+					'label'    => adaire_header_friendly_menu_label( $item->title, $item->url ),
 					'url'      => $item->url,
 					'children' => $build( (int) $item->ID ),
 				);
@@ -329,10 +490,17 @@ if ( ! function_exists( 'adaire_header_build_menu_tree' ) ) {
 if ( ! function_exists( 'adaire_header_resolve_nav' ) ) {
 	/**
 	 * Single entry point used by the nav renderer: decides between the
-	 * legacy flat navItems attribute and a live WordPress menu, and always
-	 * falls back to legacy items if a menu source is selected but nothing
-	 * is actually assigned yet (so the header never silently renders empty
-	 * just because a theme location isn't configured).
+	 * legacy flat navItems attribute and a live WordPress menu.
+	 *
+	 * IMPORTANT: once a dynamic source ("primary"/"footer"/"menu") is
+	 * explicitly selected, this never falls back to the legacy placeholder
+	 * items, even if nothing is assigned/resolved yet. An earlier version
+	 * fell back to the legacy navItems in that case, which meant a stale or
+	 * unrelated placeholder menu (e.g. carried over from another
+	 * environment) could silently render instead of the real selected menu.
+	 * Editor preview (see useResolvedMenuTree()/renderNav() in edit.js)
+	 * already shows an empty/"no menu assigned" state rather than the
+	 * placeholder, so this keeps the frontend consistent with the editor.
 	 *
 	 * @return array{items: array, dynamic: bool}
 	 */
@@ -350,8 +518,8 @@ if ( ! function_exists( 'adaire_header_resolve_nav' ) ) {
 		$menu = adaire_header_resolve_menu_object( $attributes );
 		if ( ! $menu ) {
 			return array(
-				'items'   => $legacy_items,
-				'dynamic' => false,
+				'items'   => array(),
+				'dynamic' => true,
 			);
 		}
 
@@ -378,16 +546,20 @@ if ( ! function_exists( 'adaire_header_render_menu_node' ) ) {
 	 * aria-expanded/aria-haspopup/aria-controls <button> that reveals the
 	 * submenu. Supports unlimited depth via recursion.
 	 */
-	function adaire_header_render_menu_node( $item, $depth ) {
-		$label    = isset( $item['label'] ) ? $item['label'] : '';
-		$url      = ! empty( $item['url'] ) ? $item['url'] : '#';
-		$children = ( isset( $item['children'] ) && is_array( $item['children'] ) ) ? $item['children'] : array();
-		$has_kids = ! empty( $children );
+	function adaire_header_render_menu_node( $item, $depth, $attributes = array() ) {
+		$label      = isset( $item['label'] ) ? $item['label'] : '';
+		$url        = ! empty( $item['url'] ) ? $item['url'] : '#';
+		$children   = ( isset( $item['children'] ) && is_array( $item['children'] ) ) ? $item['children'] : array();
+		$has_kids   = ! empty( $children );
+		$dot_position = ( isset( $attributes['navDotPosition'] ) && 'before' === $attributes['navDotPosition'] ) ? 'before' : 'after';
+		$dot          = adaire_header_render_nav_dot( $attributes );
+		$label_html   = '<span>' . esc_html( $label ) . '</span>';
+		$label_inner  = ( 'before' === $dot_position ) ? ( $dot . $label_html ) : ( $label_html . $dot );
 
 		$out = '<li class="adaire-header-menu-item' . ( $has_kids ? ' has-children' : '' ) . '">';
 
 		if ( ! $has_kids ) {
-			$out .= '<a class="adaire-header-nav-item" href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a>';
+			$out .= '<a class="adaire-header-nav-item" href="' . esc_url( $url ) . '">' . $label_inner . '</a>';
 			$out .= '</li>';
 			return $out;
 		}
@@ -395,7 +567,7 @@ if ( ! function_exists( 'adaire_header_render_menu_node' ) ) {
 		$submenu_id = 'adaire-submenu-' . ( ! empty( $item['id'] ) ? (int) $item['id'] : wp_unique_id( 'adaire-submenu-' ) );
 
 		$out .= '<span class="adaire-header-menu-item-row">';
-		$out .= '<a class="adaire-header-nav-item" href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a>';
+		$out .= '<a class="adaire-header-nav-item" href="' . esc_url( $url ) . '">' . $label_inner . '</a>';
 		$out .= '<button type="button" class="adaire-header-submenu-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="' . esc_attr( $submenu_id ) . '">';
 		$out .= '<svg class="adaire-header-submenu-caret" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" /></svg>';
 		$out .= '<span class="screen-reader-text">' . esc_html__( 'Toggle submenu', 'header-block' ) . '</span>';
@@ -404,7 +576,7 @@ if ( ! function_exists( 'adaire_header_render_menu_node' ) ) {
 
 		$out .= '<ul id="' . esc_attr( $submenu_id ) . '" class="adaire-header-submenu" data-depth="' . esc_attr( $depth + 1 ) . '">';
 		foreach ( $children as $child ) {
-			$out .= adaire_header_render_menu_node( $child, $depth + 1 );
+			$out .= adaire_header_render_menu_node( $child, $depth + 1, $attributes );
 		}
 		$out .= '</ul>';
 
@@ -414,13 +586,13 @@ if ( ! function_exists( 'adaire_header_render_menu_node' ) ) {
 }
 
 if ( ! function_exists( 'adaire_header_render_menu_tree' ) ) {
-	function adaire_header_render_menu_tree( $items ) {
+	function adaire_header_render_menu_tree( $items, $attributes = array() ) {
 		if ( empty( $items ) ) {
 			return '';
 		}
 		$out = '<ul class="adaire-header-menu-tree" data-depth="0">';
 		foreach ( $items as $item ) {
-			$out .= adaire_header_render_menu_node( $item, 0 );
+			$out .= adaire_header_render_menu_node( $item, 0, $attributes );
 		}
 		$out .= '</ul>';
 		return $out;
@@ -443,14 +615,20 @@ if ( ! function_exists( 'adaire_header_render_nav' ) ) {
 		$items = ( null === $items ) ? $resolved['items'] : $items;
 
 		if ( $resolved['dynamic'] ) {
-			$inner = adaire_header_render_menu_tree( $items );
+			$inner = adaire_header_render_menu_tree( $items, $attributes );
 		} else {
-			$inner = '';
+			$show_nav_icons = ! isset( $attributes['showNavIcons'] ) || $attributes['showNavIcons'];
+			$dot_position   = ( isset( $attributes['navDotPosition'] ) && 'before' === $attributes['navDotPosition'] ) ? 'before' : 'after';
+			$inner          = '';
 			foreach ( $items as $item ) {
-				$label = isset( $item['label'] ) ? $item['label'] : '';
-				$url   = ! empty( $item['url'] ) ? $item['url'] : '#';
-				$icon  = isset( $item['icon'] ) ? $item['icon'] : '';
-				$inner .= '<a class="adaire-header-nav-item" href="' . esc_url( $url ) . '">' . adaire_header_icon_svg( $icon ) . '<span>' . esc_html( $label ) . '</span></a>';
+				$label     = isset( $item['label'] ) ? $item['label'] : '';
+				$url       = ! empty( $item['url'] ) ? $item['url'] : '#';
+				$icon      = isset( $item['icon'] ) ? $item['icon'] : '';
+				$icon_html = $show_nav_icons ? adaire_header_icon_svg( $icon ) : '';
+				$label_html = '<span>' . esc_html( $label ) . '</span>';
+				$dot        = adaire_header_render_nav_dot( $attributes );
+				$content    = ( 'before' === $dot_position ) ? ( $dot . $icon_html . $label_html ) : ( $icon_html . $label_html . $dot );
+				$inner     .= '<a class="adaire-header-nav-item" href="' . esc_url( $url ) . '">' . $content . '</a>';
 			}
 		}
 
@@ -473,10 +651,16 @@ if ( ! function_exists( 'adaire_header_render_search' ) ) {
 
 		$mode        = isset( $attributes['searchMode'] ) ? $attributes['searchMode'] : 'expand';
 		$placeholder = isset( $attributes['searchPlaceholder'] ) ? $attributes['searchPlaceholder'] : '';
+		$layout      = isset( $attributes['searchLayoutStyle'] ) ? $attributes['searchLayoutStyle'] : 'icon-only';
 
-		$out  = '<div class="adaire-header-search is-' . esc_attr( $mode ) . '">';
-		$out .= '<button class="adaire-header-search-button" type="button" aria-label="' . esc_attr__( 'Open search', 'header-block' ) . '">' . adaire_header_icon_svg( 'search' ) . '</button>';
+		$out = '<div class="adaire-header-search is-' . esc_attr( $mode ) . ' layout-' . esc_attr( $layout ) . '">';
+		if ( 'expanded' !== $layout ) {
+			$out .= '<button class="adaire-header-search-button" type="button" aria-label="' . esc_attr__( 'Open search', 'header-block' ) . '">' . adaire_header_icon_svg( 'search' ) . '</button>';
+		}
 		$out .= '<form class="adaire-header-search-form" role="search" method="get" action="/">';
+		if ( 'expanded' === $layout ) {
+			$out .= '<span class="adaire-header-search-form-icon">' . adaire_header_icon_svg( 'search' ) . '</span>';
+		}
 		$out .= '<input type="search" name="s" placeholder="' . esc_attr( $placeholder ) . '" />';
 		$out .= '</form>';
 		$out .= '</div>';
@@ -493,17 +677,123 @@ if ( ! function_exists( 'adaire_header_render_socials' ) ) {
 			return '';
 		}
 
-		$links = ( isset( $attributes['socialLinks'] ) && is_array( $attributes['socialLinks'] ) ) ? $attributes['socialLinks'] : array();
+		$links        = ( isset( $attributes['socialLinks'] ) && is_array( $attributes['socialLinks'] ) ) ? $attributes['socialLinks'] : array();
+		$hover_effect = isset( $attributes['socialHoverEffect'] ) ? $attributes['socialHoverEffect'] : 'color';
 
-		$out = '<div class="adaire-header-socials">';
+		$out = '<div class="adaire-header-socials hover-' . esc_attr( $hover_effect ) . '">';
 		foreach ( $links as $item ) {
-			$platform = isset( $item['platform'] ) ? $item['platform'] : '';
-			$url      = ! empty( $item['url'] ) ? $item['url'] : '#';
-			$initial  = '' !== $platform ? mb_substr( $platform, 0, 1 ) : '';
-			$out     .= '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $platform ) . '">' . esc_html( $initial ) . '</a>';
+			$platform   = isset( $item['platform'] ) ? $item['platform'] : '';
+			$url        = ! empty( $item['url'] ) ? $item['url'] : '#';
+			$style_bits = array();
+			if ( ! empty( $item['bgColor'] ) ) {
+				$style_bits[] = 'background:' . esc_attr( $item['bgColor'] );
+			}
+			if ( ! empty( $item['iconColor'] ) ) {
+				$style_bits[] = 'color:' . esc_attr( $item['iconColor'] );
+			}
+			$style_attr = $style_bits ? ( ' style="' . implode( ';', $style_bits ) . '"' ) : '';
+			$out       .= '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $platform ) . '"' . $style_attr . '>' . adaire_header_social_icon_svg( $platform ) . '</a>';
 		}
 		$out .= '</div>';
 		return $out;
+	}
+}
+
+if ( ! function_exists( 'adaire_header_render_follow_us' ) ) {
+	/**
+	 * Top bar "Follow Us" content (requirement #8) — a flexible slot, not a
+	 * fixed template: text is fully editable, the <a> wrapper and the icon
+	 * are both independently optional, and the whole thing renders nothing
+	 * unless topBarFollowEnabled is explicitly turned on. The legacy static
+	 * "Follow us" <span> that already lives in topBarRight is untouched and
+	 * keeps rendering exactly as before when this stays off.
+	 */
+	function adaire_header_render_follow_us( $attributes ) {
+		if ( empty( $attributes['topBarFollowEnabled'] ) ) {
+			return '';
+		}
+
+		$text          = isset( $attributes['topBarFollowText'] ) ? $attributes['topBarFollowText'] : '';
+		$icon          = isset( $attributes['topBarFollowIcon'] ) ? $attributes['topBarFollowIcon'] : 'none';
+		$icon_position = ( isset( $attributes['topBarFollowIconPosition'] ) && 'right' === $attributes['topBarFollowIconPosition'] ) ? 'right' : 'left';
+		$url           = isset( $attributes['topBarFollowUrl'] ) ? trim( $attributes['topBarFollowUrl'] ) : '';
+
+		$icon_html = ( 'none' !== $icon ) ? adaire_header_icon_svg( $icon ) : '';
+		$text_html = ( '' !== $text ) ? '<span>' . wp_kses_post( $text ) . '</span>' : '';
+		$inner     = ( 'right' === $icon_position ) ? ( $text_html . $icon_html ) : ( $icon_html . $text_html );
+
+		if ( '' === $inner ) {
+			return '';
+		}
+
+		$classes = 'adaire-header-follow-us icon-' . $icon_position;
+
+		if ( '' !== $url ) {
+			$target_attr = ! empty( $attributes['topBarFollowNewTab'] ) ? ' target="_blank" rel="noopener noreferrer"' : '';
+			return '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $classes ) . '"' . $target_attr . '>' . $inner . '</a>';
+		}
+
+		return '<span class="' . esc_attr( $classes ) . '">' . $inner . '</span>';
+	}
+}
+
+if ( ! function_exists( 'adaire_header_suppress_redundant_follow_text' ) ) {
+	/**
+	 * The dedicated Follow Us widget (topBarFollowEnabled) and the plain
+	 * topBarLeft/topBarRight text fields used to default to the exact same
+	 * literal "Follow us" string, so a header using both defaults showed it
+	 * twice. Once the dedicated widget is on, strip a topbar text value that
+	 * is literally just that legacy default so only the dedicated widget's
+	 * output remains; any text the site owner actually customized is left
+	 * untouched.
+	 */
+	function adaire_header_suppress_redundant_follow_text( $text, $follow_enabled ) {
+		if ( empty( $follow_enabled ) ) {
+			return $text;
+		}
+		$plain = trim( wp_strip_all_tags( (string) $text ) );
+		if ( '' !== $plain && 0 === strcasecmp( $plain, 'follow us' ) ) {
+			return '';
+		}
+		return $text;
+	}
+}
+
+if ( ! function_exists( 'adaire_header_autolink_contact' ) ) {
+	/**
+	 * Auto-converts phone numbers to tel: links and email addresses to
+	 * mailto: links inside top-bar text (requirement: "phone numbers should
+	 * open a phone function when clicked"). Skips entirely if the string
+	 * already contains a manual link/markup-heavy content, so a site owner
+	 * who already added their own <a> tag never gets double-wrapped.
+	 */
+	function adaire_header_autolink_contact( $html ) {
+		if ( '' === $html || false !== stripos( $html, '<a' ) ) {
+			return $html;
+		}
+
+		$html = preg_replace_callback(
+			'/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/',
+			function ( $m ) {
+				return '<a href="mailto:' . esc_attr( $m[0] ) . '">' . esc_html( $m[0] ) . '</a>';
+			},
+			$html
+		);
+
+		$html = preg_replace_callback(
+			'/\+?\d[\d\s().-]{6,}\d/',
+			function ( $m ) {
+				if ( false !== stripos( $m[0], '<' ) ) {
+					return $m[0]; // Inside markup already inserted above (e.g. a mailto href); leave alone.
+				}
+				$raw    = $m[0];
+				$digits = preg_replace( '/[^\d+]/', '', $raw );
+				return '<a href="tel:' . esc_attr( $digits ) . '">' . esc_html( $raw ) . '</a>';
+			},
+			$html
+		);
+
+		return $html;
 	}
 }
 
@@ -511,7 +801,7 @@ if ( ! function_exists( 'adaire_header_render_action' ) ) {
 	/**
 	 * Mirrors save.js HeaderAction().
 	 */
-	function adaire_header_render_action( $show, $text, $url, $new_tab, $style, $icon, $label, $icon_position = 'left', $button_type = '' ) {
+	function adaire_header_render_action( $show, $text, $url, $new_tab, $style, $icon, $label, $icon_position = 'left', $button_type = '', $show_icon = true ) {
 		if ( empty( $show ) ) {
 			return '';
 		}
@@ -526,7 +816,7 @@ if ( ! function_exists( 'adaire_header_render_action' ) ) {
 		}
 		$attrs .= ' aria-label="' . esc_attr( $label ? $label : $text ) . '"';
 
-		$icon_html = adaire_header_icon_svg( $icon );
+		$icon_html = $show_icon ? adaire_header_icon_svg( $icon ) : '';
 		$text_html = '<span>' . esc_html( $text ) . '</span>';
 		$inner     = ( 'right' === $icon_pos ) ? ( $text_html . $icon_html ) : ( $icon_html . $text_html );
 
@@ -574,17 +864,68 @@ $wrapper_attributes = get_block_wrapper_attributes(
 	)
 );
 
+// Icon-toggle gates (req #4) — all default to true so untouched blocks keep
+// showing icons exactly as before.
+$show_icon_signin = ! isset( $attributes['showSignInIcon'] ) || $attributes['showSignInIcon'];
+$show_icon_signup = ! isset( $attributes['showSignUpIcon'] ) || $attributes['showSignUpIcon'];
+$show_icon_cta    = ! isset( $attributes['showCtaIcon'] ) || $attributes['showCtaIcon'];
+
+// Social placement (req #7) — rendered once, then dropped into exactly one
+// slot. Falls back to the original 'actions' slot if a topbar-dependent
+// placement is chosen but the topbar itself is off, so socials never just
+// disappear.
+$social_html      = adaire_header_render_socials( $attributes );
+$social_placement = isset( $attributes['socialPlacement'] ) ? $attributes['socialPlacement'] : 'actions';
+if ( in_array( $social_placement, array( 'topbar-left', 'topbar-right' ), true ) && empty( $attributes['showTopBar'] ) ) {
+	$social_placement = 'actions';
+}
+
+// Top bar "Follow Us" (req #8).
+$follow_html     = adaire_header_render_follow_us( $attributes );
+$follow_position = ( isset( $attributes['topBarFollowPosition'] ) && 'left' === $attributes['topBarFollowPosition'] ) ? 'left' : 'right';
+
+// Search placement (req #6) — 'start'/'end' keep rendering inside
+// .adaire-header-actions exactly as before; 'center' and 'floating' are new
+// slots elsewhere in the markup.
+$search_position = isset( $attributes['searchPosition'] ) ? $attributes['searchPosition'] : 'start';
+$search_html     = adaire_header_render_search( $attributes );
+
 $html = '<header ' . $wrapper_attributes . '>';
 
 if ( ! empty( $attributes['showTopBar'] ) ) {
+	$follow_enabled = ! empty( $attributes['topBarFollowEnabled'] );
+	$topbar_left_text  = adaire_header_suppress_redundant_follow_text( $attributes['topBarLeft'], $follow_enabled );
+	$topbar_right_text = adaire_header_suppress_redundant_follow_text( $attributes['topBarRight'], $follow_enabled );
+
+	$topbar_left  = '<span>' . adaire_header_autolink_contact( wp_kses_post( $topbar_left_text ) ) . '</span>';
+	$topbar_right = '<span>' . adaire_header_autolink_contact( wp_kses_post( $topbar_right_text ) ) . '</span>';
+
+	if ( $follow_html ) {
+		if ( 'left' === $follow_position ) {
+			$topbar_left .= $follow_html;
+		} else {
+			$topbar_right .= $follow_html;
+		}
+	}
+
+	if ( 'topbar-left' === $social_placement ) {
+		$topbar_left .= $social_html;
+	} elseif ( 'topbar-right' === $social_placement ) {
+		$topbar_right .= $social_html;
+	}
+
 	$html .= '<div class="adaire-header-topbar">';
-	$html .= '<span>' . wp_kses_post( $attributes['topBarLeft'] ) . '</span>';
-	$html .= '<span>' . wp_kses_post( $attributes['topBarRight'] ) . '</span>';
+	$html .= $topbar_left;
+	$html .= $topbar_right;
 	$html .= '</div>';
 }
 
 $html .= '<div class="adaire-header-inner layout-' . esc_attr( $attributes['layout'] ) . '">';
 $html .= adaire_header_render_mobile_toggle( $attributes, $nav_dom_id );
+
+if ( 'before-nav' === $social_placement ) {
+	$html .= $social_html;
+}
 
 if ( 'split' === $attributes['layout'] ) {
 	$total      = count( $resolved['items'] );
@@ -600,20 +941,31 @@ if ( 'split' === $attributes['layout'] ) {
 	$html .= adaire_header_render_nav( $attributes, $resolved, null, $nav_dom_id );
 }
 
-$html .= '<div class="adaire-header-actions">';
-if ( 'end' !== $attributes['searchPosition'] ) {
-	$html .= adaire_header_render_search( $attributes );
+if ( 'center' === $search_position ) {
+	$html .= '<div class="adaire-header-search-slot">' . $search_html . '</div>';
 }
-$html .= adaire_header_render_socials( $attributes );
-$html .= adaire_header_render_action( $attributes['showSignIn'], $attributes['signInText'], $attributes['signInUrl'], $attributes['signInNewTab'], $attributes['signInStyle'], $attributes['signInIcon'], __( 'Sign in', 'header-block' ), 'left', 'signin' );
-$html .= adaire_header_render_action( $attributes['showSignUp'], $attributes['signUpText'], $attributes['signUpUrl'], $attributes['signUpNewTab'], $attributes['signUpStyle'], $attributes['signUpIcon'], __( 'Sign up', 'header-block' ), 'left', 'signup' );
-$html .= adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'header-block' ), $attributes['ctaIconPosition'], 'cta' );
-if ( 'end' === $attributes['searchPosition'] ) {
-	$html .= adaire_header_render_search( $attributes );
+
+$html .= '<div class="adaire-header-actions">';
+if ( ! in_array( $search_position, array( 'end', 'center', 'floating' ), true ) ) {
+	$html .= $search_html;
+}
+if ( 'actions' === $social_placement ) {
+	$html .= $social_html;
+}
+$html .= adaire_header_render_action( $attributes['showSignIn'], $attributes['signInText'], $attributes['signInUrl'], $attributes['signInNewTab'], $attributes['signInStyle'], $attributes['signInIcon'], __( 'Sign in', 'header-block' ), 'left', 'signin', $show_icon_signin );
+$html .= adaire_header_render_action( $attributes['showSignUp'], $attributes['signUpText'], $attributes['signUpUrl'], $attributes['signUpNewTab'], $attributes['signUpStyle'], $attributes['signUpIcon'], __( 'Sign up', 'header-block' ), 'left', 'signup', $show_icon_signup );
+$html .= adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'header-block' ), $attributes['ctaIconPosition'], 'cta', $show_icon_cta );
+if ( 'end' === $search_position ) {
+	$html .= $search_html;
 }
 $html .= '</div>'; // .adaire-header-actions
 
 $html .= '</div>'; // .adaire-header-inner
+
+if ( 'floating' === $search_position ) {
+	$html .= '<div class="adaire-header-search-floating">' . $search_html . '</div>';
+}
+
 $html .= '</header>';
 
 echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- every dynamic value above is escaped at the point of interpolation.

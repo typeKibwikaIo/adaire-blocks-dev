@@ -19,7 +19,7 @@
         "layout": { "type": "string", "default": "horizontal" },
         "showTopBar": { "type": "boolean", "default": false },
         "topBarLeft": { "type": "string", "default": "Call us: +1 234 567 890" },
-        "topBarRight": { "type": "string", "default": "Follow us" },
+        "topBarRight": { "type": "string", "default": "" },
         "topBarBackgroundColor": { "type": "string", "default": "#111827" },
         "topBarTextColor": { "type": "string", "default": "#ffffff" },
         "topBarFontSize": { "type": "number", "default": 13 },
@@ -79,6 +79,7 @@
         "socialLinks": { "type": "array", "default": [{"platform":"Facebook","url":"#"},{"platform":"Instagram","url":"#"},{"platform":"LinkedIn","url":"#"}] },
         "socialIconSize": { "type": "number", "default": 18 },
         "socialIconColor": { "type": "string", "default": "#111827" },
+        "backgroundType": { "type": "string", "default": "" },
         "backgroundColor": { "type": "string", "default": "#ffffff" },
         "useGradient": { "type": "boolean", "default": false },
         "gradientBackground": { "type": "string", "default": "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)" },
@@ -117,6 +118,41 @@
         "bgSize": { "type": "string", "default": "cover" },
         "bgPosition": { "type": "string", "default": "center center" },
         "bgRepeat": { "type": "string", "default": "no-repeat" },
-        "bgAttachment": { "type": "string", "default": "scroll" }
+        "bgAttachment": { "type": "string", "default": "scroll" },
+
+        "navShowDots": { "type": "boolean", "default": false },
+        "navDotSize": { "type": "number", "default": 6 },
+        "navDotSpacing": { "type": "number", "default": 8 },
+        "navDotColor": { "type": "string", "default": "" },
+        "navDotPosition": { "type": "string", "default": "after" },
+
+        "showSignInIcon": { "type": "boolean", "default": true },
+        "showSignUpIcon": { "type": "boolean", "default": true },
+        "showCtaIcon": { "type": "boolean", "default": true },
+        "showNavIcons": { "type": "boolean", "default": true },
+
+        "ctaHoverBgColor": { "type": "string", "default": "" },
+        "ctaHoverTextColor": { "type": "string", "default": "" },
+        "ctaBorderRadius": { "type": "number", "default": -1 },
+        "ctaPaddingVertical": { "type": "number", "default": -1 },
+        "ctaPaddingHorizontal": { "type": "number", "default": -1 },
+
+        "searchLayoutStyle": { "type": "string", "default": "icon-only" },
+        "searchInputBgColor": { "type": "string", "default": "" },
+        "searchInputBorderColor": { "type": "string", "default": "" },
+        "searchInputTextColor": { "type": "string", "default": "" },
+        "searchPlaceholderColor": { "type": "string", "default": "" },
+        "searchContainerBgColor": { "type": "string", "default": "" },
+
+        "socialPlacement": { "type": "string", "default": "actions" },
+        "socialHoverEffect": { "type": "string", "default": "color" },
+
+        "topBarFollowEnabled": { "type": "boolean", "default": true },
+        "topBarFollowText": { "type": "string", "default": "Follow us" },
+        "topBarFollowUrl": { "type": "string", "default": "" },
+        "topBarFollowIcon": { "type": "string", "default": "none" },
+        "topBarFollowIconPosition": { "type": "string", "default": "left" },
+        "topBarFollowPosition": { "type": "string", "default": "right" },
+        "topBarFollowNewTab": { "type": "boolean", "default": false }
     }
 }

@@ -103,6 +103,11 @@
                 "showContactLink": true,
                 "contactLinkText": "Contact Us",
                 "contactLinkUrl": "#",
+                "contactLinkUnderline": false,
+                "contactLinkHoverColor": "",
+                "contactLinkHoverUnderlineColor": "",
+                "contactLinkHoverBackgroundColor": "",
+                "contactLinkTransitionDuration": -1,
                 "showCopyright": true,
                 "showSocialMedia": true,
                 "socialLinks": [
@@ -122,7 +127,11 @@
                     }
                 ],
                 "hoverColor": "#ffffff",
-                "hoverBackgroundColor": "#333333"
+                "hoverBackgroundColor": "#333333",
+                "hoverBorderColor": "",
+                "borderColor": "",
+                "borderRadius": -1,
+                "transitionDuration": -1
             }
         },
         "columnsSection": {
@@ -145,7 +154,8 @@
                         "marginBottom": 0,
                         "brandLogo": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23D52940'/%3E%3Ctext x='20' y='27' font-family='Arial, sans-serif' font-size='20' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EY%3C/text%3E%3C/svg%3E",
                         "brandLogoWidth": 48,
-                        "brandName": "Your Brand",
+                        "showBrandName": false,
+                        "brandName": "",
                         "description": "We create amazing digital experiences for businesses worldwide.",
                         "showCta": true,
                         "ctaText": "Get Started",
@@ -157,6 +167,9 @@
                         "ctaIconPosition": "none",
                         "ctaHoverColor": "#ffffff",
                         "ctaHoverBackgroundColor": "#c41e36",
+                        "ctaHoverBorderColor": "",
+                        "ctaBorderRadius": -1,
+                        "ctaTransitionDuration": -1,
                         "mobilePriority": 1
                     },
                     {
@@ -193,9 +206,13 @@
                             }
                         ],
                         "listStyle": "plain",
+                        "linkUnderline": false,
                         "itemSpacing": 12,
                         "linkColor": "",
                         "linkHoverColor": "#ffffff",
+                        "linkHoverUnderlineColor": "",
+                        "linkHoverBackgroundColor": "",
+                        "linkTransitionDuration": -1,
                         "mobilePriority": 2
                     },
                     {
@@ -227,9 +244,13 @@
                             }
                         ],
                         "listStyle": "plain",
+                        "linkUnderline": false,
                         "itemSpacing": 12,
                         "linkColor": "",
                         "linkHoverColor": "#ffffff",
+                        "linkHoverUnderlineColor": "",
+                        "linkHoverBackgroundColor": "",
+                        "linkTransitionDuration": -1,
                         "mobilePriority": 3
                     },
                     {
@@ -268,8 +289,15 @@
                         ],
                         "displayStyle": "vertical",
                         "iconSize": 24,
+                        "iconColor": "",
+                        "iconBgColor": "",
                         "socialHoverColor": "#ffffff",
                         "socialHoverBackgroundColor": "#333333",
+                        "socialBorderColor": "",
+                        "socialHoverBorderColor": "",
+                        "socialBorderRadius": -1,
+                        "socialIconSpacing": -1,
+                        "socialTransitionDuration": -1,
                         "mobilePriority": 4
                     }
                 ]
@@ -305,6 +333,11 @@
                         "url": "#"
                     }
                 ],
+                "legalLinkUnderline": false,
+                "legalLinkHoverColor": "",
+                "legalLinkHoverUnderlineColor": "",
+                "legalLinkHoverBackgroundColor": "",
+                "legalLinkTransitionDuration": -1,
                 "separator": "·",
                 "socialIcons": [
                     {
@@ -330,7 +363,11 @@
                     }
                 ],
                 "hoverColor": "#ffffff",
-                "hoverBackgroundColor": "#333333"
+                "hoverBackgroundColor": "#333333",
+                "hoverBorderColor": "",
+                "borderColor": "",
+                "borderRadius": -1,
+                "transitionDuration": -1
             }
         }
     },
