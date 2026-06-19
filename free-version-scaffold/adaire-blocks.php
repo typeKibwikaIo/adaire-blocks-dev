@@ -81,51 +81,6 @@ function adaire_blocks_register_nav_menu_locations() {
 }
 add_action('init', 'adaire_blocks_register_nav_menu_locations');
 
-/**
- * Enqueue block assets
- */
-function adaire_blocks_enqueue_assets() {
-    $blocks_dir = ADAIRE_BLOCKS_PLUGIN_PATH . 'build/';
-    
-    if (!is_dir($blocks_dir)) {
-            return;
-        }
-        
-    $block_dirs = glob($blocks_dir . '*', GLOB_ONLYDIR);
-    
-    foreach ($block_dirs as $block_dir) {
-        $block_name = basename($block_dir);
-        $asset_file = $block_dir . '/index.asset.php';
-        
-        if (file_exists($asset_file)) {
-            $asset = require $asset_file;
-            $dependencies = $asset['dependencies'] ?? [];
-            $version = $asset['version'] ?? ADAIRE_BLOCKS_VERSION;
-            
-            // Enqueue block script
-            wp_enqueue_script(
-                'adaire-blocks-' . $block_name,
-                ADAIRE_BLOCKS_PLUGIN_URL . 'build/' . $block_name . '/index.js',
-                $dependencies,
-                $version,
-                true
-            );
-            
-            // Enqueue block style
-            $style_file = $block_dir . '/style-index.css';
-            if (file_exists($style_file)) {
-                wp_enqueue_style(
-                    'adaire-blocks-' . $block_name . '-style',
-                    ADAIRE_BLOCKS_PLUGIN_URL . 'build/' . $block_name . '/style-index.css',
-                    [],
-                    $version
-                );
-            }
-        }
-    }
-}
-add_action('wp_enqueue_scripts', 'adaire_blocks_enqueue_assets');
-add_action('enqueue_block_editor_assets', 'adaire_blocks_enqueue_assets');
 
 function adaire_blocks_register_block_categories( $categories, $editor_context ) {
     $registered_slugs = wp_list_pluck( $categories, 'slug' );
