@@ -47,8 +47,9 @@ class Adaire_Deactivation_Modal
         );
 
         wp_localize_script('adaire-deactivation-modal', 'adaireDeactivation', [
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('adaire_deactivation_nonce'),
+            'ajaxUrl'    => admin_url('admin-ajax.php'),
+            'nonce'      => wp_create_nonce('adaire_deactivation_nonce'),
+            'adminEmail' => sanitize_email(get_option('admin_email', '')),
         ]);
     }
 
@@ -62,32 +63,84 @@ class Adaire_Deactivation_Modal
         ?>
         <div id="adaire-deactivation-modal" class="adaire-modal-overlay" style="display:none;">
             <div class="adaire-modal-container">
-                <h3>Quick feedback</h3>
-                <p>We'd love to know why you're deactivating....................................... It helps us improve the blocks.</p>
 
-                <form id="adaire-deactivation-form">
-                    <div class="adaire-reasons-list">
-                        <label><input type="radio" name="adaire_reason" value="no_longer_needed"> No longer needed</label>
-                        <label><input type="radio" name="adaire_reason" value="found_better"> Found a better plugin</label>
-                        <label><input type="radio" name="adaire_reason" value="not_working"> Not working as expected</label>
-                        <label><input type="radio" name="adaire_reason" value="temporary"> Temporary deactivation</label>
-                        <label><input type="radio" name="adaire_reason" value="other"> Other</label>
+                <div class="adaire-modal-header">
+                    <button type="button" class="adaire-modal-close" aria-label="<?php esc_attr_e( 'Close', 'adaire-blocks' ); ?>">&#x2715;</button>
+                    <div class="adaire-modal-header-inner">
+                        <div class="adaire-modal-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                        </div>
+                        <div>
+                            <h3><?php esc_html_e( 'Before you go…', 'adaire-blocks' ); ?></h3>
+                            <p><?php esc_html_e( 'Your feedback helps us build better blocks for everyone.', 'adaire-blocks' ); ?></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="adaire-modal-body">
+
+                    <div class="adaire-modal-form-area">
+                        <form id="adaire-deactivation-form">
+
+                            <p><?php esc_html_e( 'Why are you deactivating? (optional)', 'adaire-blocks' ); ?></p>
+
+                            <div class="adaire-reasons-list">
+                                <label>
+                                    <input type="radio" name="adaire_reason" value="no_longer_needed">
+                                    <?php esc_html_e( 'No longer needed', 'adaire-blocks' ); ?>
+                                </label>
+                                <label>
+                                    <input type="radio" name="adaire_reason" value="found_better">
+                                    <?php esc_html_e( 'Found a better plugin', 'adaire-blocks' ); ?>
+                                </label>
+                                <label>
+                                    <input type="radio" name="adaire_reason" value="not_working">
+                                    <?php esc_html_e( 'Not working as expected', 'adaire-blocks' ); ?>
+                                </label>
+                                <label>
+                                    <input type="radio" name="adaire_reason" value="missing_feature">
+                                    <?php esc_html_e( 'Missing a feature I need', 'adaire-blocks' ); ?>
+                                </label>
+                                <label>
+                                    <input type="radio" name="adaire_reason" value="too_complex">
+                                    <?php esc_html_e( 'Too complex / hard to use', 'adaire-blocks' ); ?>
+                                </label>
+                                <label>
+                                    <input type="radio" name="adaire_reason" value="temporary">
+                                    <?php esc_html_e( 'Temporary deactivation', 'adaire-blocks' ); ?>
+                                </label>
+                                <label>
+                                    <input type="radio" name="adaire_reason" value="other">
+                                    <?php esc_html_e( 'Other', 'adaire-blocks' ); ?>
+                                </label>
+                            </div>
+
+                            <div class="adaire-followup" style="display:none;">
+                                <textarea id="adaire-deactivation-details" rows="3" placeholder=""></textarea>
+                            </div>
+
+                            <div class="adaire-field">
+                                <label for="adaire-deactivation-email"><?php esc_html_e( 'Email (optional — so we can follow up)', 'adaire-blocks' ); ?></label>
+                                <input type="email" id="adaire-deactivation-email" placeholder="you@example.com">
+                            </div>
+
+                            <div class="adaire-modal-btns">
+                                <button type="submit" class="button button-primary adaire-submit-btn"><?php esc_html_e( 'Submit &amp; Deactivate', 'adaire-blocks' ); ?></button>
+                                <button type="button" class="button adaire-skip-btn"><?php esc_html_e( 'Skip', 'adaire-blocks' ); ?></button>
+                            </div>
+
+                        </form>
                     </div>
 
-                    <div id="adaire-other-details" style="display:none;">
-                        <textarea id="adaire-deactivation-details" placeholder="Tell us more..."></textarea>
+                    <div class="adaire-modal-success" style="display:none;">
+                        <div class="adaire-success-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <h4><?php esc_html_e( 'Thanks for the feedback!', 'adaire-blocks' ); ?></h4>
+                        <p><?php esc_html_e( 'We\'ll use it to make GutenBlocks better. See you next time.', 'adaire-blocks' ); ?></p>
                     </div>
 
-                    <div class="adaire-field">
-                        <label>Your email (optional)</label>
-                        <input type="email" id="adaire-deactivation-email" placeholder="you@example.com">
-                    </div>
-
-                    <div class="adaire-modal-btns">
-                        <button type="submit" class="button button-primary adaire-submit-btn">Submit & Deactivate</button>
-                        <button type="button" class="button adaire-skip-btn">Skip</button>
-                    </div>
-                </form>
+                </div><!-- .adaire-modal-body -->
             </div>
         </div>
         <?php
