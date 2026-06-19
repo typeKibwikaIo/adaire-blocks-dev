@@ -1,11 +1,11 @@
 ﻿import { useBlockProps } from "@wordpress/block-editor";
 
 export default function save({ attributes }) {
-	const { 
-		textColor, 
+	const {
+		textColor,
 		arrowColor,
 		dotColor,
-		fontSize, 
+		fontSize,
 		textToDisplay,
 		slidesPerView,
 		spaceBetween,
@@ -28,7 +28,9 @@ export default function save({ attributes }) {
 		slidesPerViewMobile,
 		slidesPerViewTablet,
 		slidesPerViewDesktop,
-		cardGap
+		cardGap,
+		responsivePaddingTop,
+		responsivePaddingBottom,
 	} = attributes;
 
 	const blockProps = useBlockProps.save({
@@ -53,6 +55,14 @@ export default function save({ attributes }) {
 			"--card-gap-desktop": `${cardGap?.desktop?.value ?? 30}${cardGap?.desktop?.unit ?? 'px'}`,
 			"--card-gap-tablet": `${cardGap?.tablet?.value ?? 20}${cardGap?.tablet?.unit ?? 'px'}`,
 			"--card-gap-mobile": `${cardGap?.mobile?.value ?? 15}${cardGap?.mobile?.unit ?? 'px'}`,
+			"--carousel-padding-top": `${responsivePaddingTop?.desktop ?? 60}px`,
+			"--carousel-padding-top-tablet": `${responsivePaddingTop?.tablet ?? 48}px`,
+			"--carousel-padding-top-mobile": `${responsivePaddingTop?.mobile ?? 36}px`,
+			"--carousel-padding-top-watch": `${responsivePaddingTop?.smartwatch ?? 24}px`,
+			"--carousel-padding-bottom": `${responsivePaddingBottom?.desktop ?? 60}px`,
+			"--carousel-padding-bottom-tablet": `${responsivePaddingBottom?.tablet ?? 48}px`,
+			"--carousel-padding-bottom-mobile": `${responsivePaddingBottom?.mobile ?? 36}px`,
+			"--carousel-padding-bottom-watch": `${responsivePaddingBottom?.smartwatch ?? 24}px`,
 			...(blockBackgroundColor && { background: blockBackgroundColor })
 		},
 		'data-slides-per-view': slidesPerView || 3,

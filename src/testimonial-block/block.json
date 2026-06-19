@@ -78,13 +78,45 @@
             "type": "array",
             "default": [
                 {
-                    "companyName": "STATS PERFORM",
-                    "companyLogo": "https://via.placeholder.com/200x60/4F46E5/FFFFFF?text=STATS+PERFORM",
+                    "companyName": "Stats Perform",
+                    "companyLogo": "",
                     "quote": "With an aggressive product development timeline, we needed a partner who had advanced mobile and machine-learning capabilities and could also match our pace.",
                     "authorName": "Darryl Lewis",
                     "authorTitle": "CTO of Stats Perform"
+                },
+                {
+                    "companyName": "Acme Corp",
+                    "companyLogo": "",
+                    "quote": "This platform has completely transformed how we approach our online presence. The quality and attention to detail exceeded every expectation we had going in.",
+                    "authorName": "Sarah Chen",
+                    "authorTitle": "Director of Marketing at Acme Corp"
+                },
+                {
+                    "companyName": "Meridian Labs",
+                    "companyLogo": "",
+                    "quote": "Outstanding results from day one. Our team productivity increased by 40% and client satisfaction scores have never been higher.",
+                    "authorName": "James Okonkwo",
+                    "authorTitle": "Head of Product at Meridian Labs"
                 }
             ]
+        },
+        "responsivePaddingTop": {
+            "type": "object",
+            "default": {
+                "desktop": 60,
+                "tablet": 48,
+                "mobile": 36,
+                "smartwatch": 24
+            }
+        },
+        "responsivePaddingBottom": {
+            "type": "object",
+            "default": {
+                "desktop": 60,
+                "tablet": 48,
+                "mobile": 36,
+                "smartwatch": 24
+            }
         },
         "blockId": {
             "type": "string",

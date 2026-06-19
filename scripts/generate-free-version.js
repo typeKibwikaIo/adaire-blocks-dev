@@ -18,8 +18,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
-const AdmZip = require('adm-zip');
+const { execSync, execFileSync } = require('child_process');
 
 class FreeVersionGenerator {
     constructor() {
@@ -643,97 +642,27 @@ class FreeVersionGenerator {
      * It must be invoked via `powershell.exe` directly (execFileSync) — running it
      * through `execSync(cmd, { shell: true })` shells out to cmd.exe on Windows,
      * which doesn't recognize Compress-Archive and fails immediately. On top of
-     * that, an earlier implementation joined multiple absolute paths into a
+     * that, the previous implementation joined multiple absolute paths into a
      * single space-separated string and passed it as one quoted -Path argument;
      * PowerShell treats a quoted string as one literal path, so a path containing
      * literal spaces never resolves, and Compress-Archive errors with
      * "Cannot find path ... because it does not exist." Either failure means no
-     * zip is ever produced (silently, since the outer catch just logs a warning).
+     * zip is ever produced (silently, since the outer catch just logs a warning),
+     * which is what was actually shipping as "adaire-blocks-free.zip" — either a
+     * stale/missing file, or one assembled by hand from the generated folder with
+     * the wrong nesting, both of which WordPress rejects with
+     * "No valid plugins were found" (its installer only looks for a *.php file
+     * with a valid header at the top level of the extracted archive, or exactly
+     * one level inside a single wrapping folder).
      *
-     * SECOND BUG (found 2026-06-18): staging the files into a folder named
-     * `adaire-blocks-free/` and then running `Compress-Archive -Path
-     * '<staging>\adaire-blocks-free'` was observed, on a real Windows machine, to
-     * produce a zip whose root contains "adaire-blocks-free/adaire-blocks-free/
-     * adaire-blocks.php" — the staging folder's name doubled up. WordPress's
-     * installer only unwraps ONE single wrapping folder, so it lands one level
-     * too shallow and reports "Plugin file does not exist" when activating.
-     *
-     * Fix: zip the *contents* of the staging folder (via the `\*` glob on
-     * -Path) instead of the staging folder itself, so the zip has NO wrapping
-     * folder at all — adaire-blocks.php and admin/, build/, src/, etc. sit
-     * directly at the zip root. WordPress's installer accepts this layout too
-     * (it only auto-unwraps when there is a single root folder; a flat root is
-     * installed as-is), and a flat zip can never end up double-nested because
-     * there is no wrapper name left to duplicate. After zipping, the entries are
-     * read back and verified so this class of bug fails loudly instead of
-     * shipping silently again.
-     *
-     * THIRD BUG (found 2026-06-18): even after the fix above, activation kept
-     * failing on a real Linux host (DreamHost) with "Failed opening required
-     * .../includes/class-adaire-blocks-config.php" on a freshly extracted,
-     * non-duplicated install. SFTP into the live folder showed the real cause:
-     * every nested file had landed FLAT in the plugin root with a literal
-     * backslash in its name — "includes\class-adaire-blocks-config.php" as one
-     * file, not a real includes/ directory containing class-adaire-blocks-
-     * config.php. Compress-Archive (a long-standing Windows/.NET quirk) can
-     * write zip entry names using "\" instead of the ZIP-spec-required "/".
-     * Windows-native extraction (and therefore Local WP testing) silently
-     * treats "\" as a path separator and everything looks fine; PHP's
-     * ZipArchive on Linux does not — it treats "\" as a literal filename
-     * character, so every subfolder file is flattened into the root with a
-     * mangled name and every `require_once 'includes/...'` call fails to find
-     * its target. Fix: after Compress-Archive runs, rewrite any entry whose
-     * name contains "\" to use "/" instead (see normalizeZipPathSeparators()),
-     * and verifyZipStructure() now also rejects any remaining backslash entry.
-     *
-     * FOURTH BUG (found 2026-06-18, later same day): normalizeZipPathSeparators()
-     * above turned out to be broken in practice. Its PowerShell script ran
-     * `Add-Type -AssemblyName System.IO.Compression.FileSystem` and then
-     * referenced `[System.IO.Compression.ZipArchiveMode]` — but that type does
-     * not reliably resolve from just that one Add-Type call in every
-     * PowerShell/.NET environment. The real failure was "Unable to find type
-     * [System.IO.Compression.ZipArchiveMode]", which meant `$zip` was never
-     * assigned, every following line failed with "You cannot call a method on
-     * a null-valued expression", and the function printed "Normalized 0
-     * backslash-separated entries" while hundreds of real entries were still
-     * backslash-separated underneath it — verifyZipStructure() then (correctly)
-     * threw on the un-fixed zip.
-     *
-     * Fix: stop shelling out to PowerShell/.NET entirely. The zip is now built
-     * directly in Node with the `adm-zip` package (already a transitive
-     * dependency of @wordpress/scripts, now pinned directly in package.json).
-     * addDirectoryToZip() always joins entry names with "/" itself, so there is
-     * no OS-dependent path separator that can ever leak into the zip, and no
-     * PowerShell assembly-loading step that can silently fail.
-     * verifyZipStructure() now reads the zip back with adm-zip instead of
-     * PowerShell, for the same reason.
+     * Fix: stage the shipped files into a single `adaire-blocks-free/` folder and
+     * compress that folder itself (mirrors the already-working approach in
+     * scripts/zip-generated-folder.js) via an explicit `powershell.exe` call with
+     * a single, properly quoted path.
      */
     async createZipFile() {
         console.log('\nCreating zip file...');
         try {
-            const zipPath = path.join(path.dirname(this.freeVersionDir), 'plugin-zips', 'adaire-blocks-free.zip');
-            const zipDir = path.dirname(zipPath);
-            const stagingDir = path.join(zipDir, 'adaire-blocks-free');
-
-            fs.mkdirSync(zipDir, { recursive: true });
-            fs.rmSync(zipPath, { force: true });
-            fs.rmSync(stagingDir, { recursive: true, force: true });
-
-            // node_modules is dev-only tooling (webpack, eslint, etc.) — never
-            // needed at runtime since build/ already contains the compiled output.
-            const nodeModulesDir = path.join(this.freeVersionDir, 'node_modules');
-            if (fs.existsSync(nodeModulesDir)) {
-                fs.rmSync(nodeModulesDir, { recursive: true, force: true });
-                console.log('   ✓ Node modules directory removed for distribution');
-            }
-
-            // IMPORTANT: build/ must ship. Block registration (see adaire-blocks.php's
-            // register_block_type() calls) reads block.json/blocks-manifest.php and
-            // compiled JS/CSS exclusively from build/ — WordPress never compiles the
-            // raw src/ JSX+SCSS at runtime. An earlier version of this function deleted
-            // build/ here, right after buildFreeVersion() had just created it, which
-            // shipped a zip with zero working blocks ("0 blocks available" in Block
-            // Management) even though it installed without error. Do not remove it.
             const buildDir = path.join(this.freeVersionDir, 'build');
             if (!fs.existsSync(buildDir)) {
                 throw new Error(
@@ -742,120 +671,17 @@ class FreeVersionGenerator {
                 );
             }
 
-            // Stage only the files that belong in the shipped plugin, wrapped in a
-            // single top-level "adaire-blocks-free" folder — the structure WordPress's
-            // plugin installer expects (one folder containing the main plugin file).
-            const filesToZip = [
-                'adaire-blocks.php',
-                'readme.txt',
-                'admin',
-                'includes',
-                'build',
-                'src',
-                'config',
-                'docs',
-                'scripts',
-            ];
-
-            fs.mkdirSync(stagingDir, { recursive: true });
-            filesToZip.forEach(name => {
-                const src = path.join(this.freeVersionDir, name);
-                if (!fs.existsSync(src)) {
-                    return;
-                }
-                const dest = path.join(stagingDir, name);
-                if (fs.statSync(src).isDirectory()) {
-                    fs.cpSync(src, dest, { recursive: true });
-                } else {
-                    fs.copyFileSync(src, dest);
-                }
-            });
-
-            // Zips the staging folder's CONTENTS directly with adm-zip, so no
-            // "adaire-blocks-free" wrapper entry is ever written to the zip
-            // (see class comment above) and no OS-dependent path separator can
-            // leak in (see FOURTH BUG comment above).
-            const zip = new AdmZip();
-            this.addDirectoryToZip(zip, stagingDir, '');
-            zip.writeZip(zipPath);
-
-            fs.rmSync(stagingDir, { recursive: true, force: true });
-
-            if (!fs.existsSync(zipPath)) {
-                throw new Error('adm-zip did not create the zip file');
-            }
-
-            this.verifyZipStructure(zipPath);
-
-            const sizeMb = (fs.statSync(zipPath).size / 1024 / 1024).toFixed(2);
-            console.log(`   ✓ Zip file created: ${zipPath} (${sizeMb} MB)`);
+            // Delegate to zip-generated-folder.js which uses a canonical exclusion
+            // list (strips src/, node_modules, dev config, etc.) and is the single
+            // source of truth for what belongs in a shipped zip.
+            execFileSync('node', [
+                path.join(this.sourceDir, 'scripts', 'zip-generated-folder.js'),
+                'free',
+            ], { stdio: 'inherit', cwd: this.sourceDir });
         } catch (error) {
             console.error('   ⚠️  Warning: Zip file creation failed:', error.message);
             console.log('   You can manually create the zip by running: npm run plugin-zip:free');
         }
-    }
-
-    /**
-     * Recursively add every file under sourceDir into zip, always using "/" to
-     * join entry names regardless of the host OS — this is what guarantees the
-     * zip can never end up with a backslash path separator (see FOURTH BUG
-     * comment above createZipFile()).
-     */
-    addDirectoryToZip(zip, sourceDir, zipPrefix) {
-        for (const item of fs.readdirSync(sourceDir)) {
-            const sourcePath = path.join(sourceDir, item);
-            const zipEntryName = zipPrefix ? `${zipPrefix}/${item}` : item;
-            const stat = fs.statSync(sourcePath);
-
-            if (stat.isDirectory()) {
-                this.addDirectoryToZip(zip, sourcePath, zipEntryName);
-            } else {
-                zip.addFile(zipEntryName, fs.readFileSync(sourcePath));
-            }
-        }
-    }
-
-    /**
-     * Read the zip back and confirm adaire-blocks.php sits at the root with no
-     * doubled-up wrapper folder, and that no entry uses a backslash path
-     * separator. Catches the "adaire-blocks-free/adaire-blocks-free/adaire-
-     * blocks.php" double-nesting bug AND the backslash-separator flattening
-     * bug at generation time instead of shipping a zip that fails to activate
-     * for whoever installs it.
-     */
-    verifyZipStructure(zipPath) {
-        const z = new AdmZip(zipPath);
-        const entries = z.getEntries().map(entry => entry.entryName);
-
-        const hasRootPluginFile = entries.includes('adaire-blocks.php');
-        const doubledWrapper = entries.some(e => /^adaire-blocks-free[\\/]adaire-blocks-free[\\/]/.test(e));
-        const backslashEntries = entries.filter(e => e.includes('\\'));
-
-        if (doubledWrapper) {
-            throw new Error(
-                `Zip has a doubled wrapper folder (adaire-blocks-free/adaire-blocks-free/...). ` +
-                `First few entries: ${entries.slice(0, 8).join(', ')}`
-            );
-        }
-
-        if (!hasRootPluginFile) {
-            throw new Error(
-                `adaire-blocks.php was not found at the zip root — WordPress's installer needs it ` +
-                `either at the root or one level inside a single wrapping folder. ` +
-                `First few entries: ${entries.slice(0, 8).join(', ')}`
-            );
-        }
-
-        if (backslashEntries.length > 0) {
-            throw new Error(
-                `Zip contains ${backslashEntries.length} entr${backslashEntries.length === 1 ? 'y' : 'ies'} with a ` +
-                `backslash "\\" path separator instead of "/" — these will flatten into mangled filenames on ` +
-                `Linux/PHP ZipArchive extraction instead of real subdirectories. normalizeZipPathSeparators() ` +
-                `should have caught these; examples: ${backslashEntries.slice(0, 5).join(', ')}`
-            );
-        }
-
-        console.log('   ✓ Zip structure verified: adaire-blocks.php at root, no wrapper folder, no backslash separators');
     }
 
     /**
@@ -948,6 +774,14 @@ class FreeVersionGenerator {
 
         return enabledBlocks;
     }
+}
+
+/**
+ * Escape a path for safe interpolation inside a single-quoted PowerShell string
+ * (PowerShell escapes an embedded single quote by doubling it).
+ */
+function escapePowerShellPath(value) {
+    return value.replace(/'/g, "''");
 }
 
 // Run the generator

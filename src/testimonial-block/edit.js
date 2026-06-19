@@ -13,6 +13,7 @@ import {
 	BaseControl,
 	ButtonGroup,
 	SelectControl,
+	RangeControl,
 } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import { useEffect, useRef, useCallback, useState } from "@wordpress/element";
@@ -21,6 +22,7 @@ import { Splide } from '@splidejs/splide';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
 import QuickZone from '../components/QuickZone';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 
 const FREE_TIER_ITEM_LIMIT = 3;
 
@@ -61,6 +63,8 @@ export default function Edit({ attributes, setAttributes }) {
 		slidesPerViewTablet,
 		slidesPerViewDesktop,
 		cardGap,
+		responsivePaddingTop,
+		responsivePaddingBottom,
 	} = attributes;
 
 	const splideRef = useRef(null);
@@ -90,6 +94,14 @@ export default function Edit({ attributes, setAttributes }) {
 			"--card-gap-desktop": `${cardGap?.desktop?.value ?? 30}${cardGap?.desktop?.unit ?? 'px'}`,
 			"--card-gap-tablet": `${cardGap?.tablet?.value ?? 20}${cardGap?.tablet?.unit ?? 'px'}`,
 			"--card-gap-mobile": `${cardGap?.mobile?.value ?? 15}${cardGap?.mobile?.unit ?? 'px'}`,
+			"--carousel-padding-top": `${responsivePaddingTop?.desktop ?? 60}px`,
+			"--carousel-padding-top-tablet": `${responsivePaddingTop?.tablet ?? 48}px`,
+			"--carousel-padding-top-mobile": `${responsivePaddingTop?.mobile ?? 36}px`,
+			"--carousel-padding-top-watch": `${responsivePaddingTop?.smartwatch ?? 24}px`,
+			"--carousel-padding-bottom": `${responsivePaddingBottom?.desktop ?? 60}px`,
+			"--carousel-padding-bottom-tablet": `${responsivePaddingBottom?.tablet ?? 48}px`,
+			"--carousel-padding-bottom-mobile": `${responsivePaddingBottom?.mobile ?? 36}px`,
+			"--carousel-padding-bottom-watch": `${responsivePaddingBottom?.smartwatch ?? 24}px`,
 			...(blockBackgroundColor && { background: blockBackgroundColor })
 		},
 		'data-slides-per-view': slidesPerView || 3,
@@ -796,7 +808,7 @@ export default function Edit({ attributes, setAttributes }) {
 				</PanelBody>
 
 				<PanelBody title="Testimonials" initialOpen={true}>
-					{testimonials.map((testimonial, index) => (
+					{(testimonials || []).map((testimonial, index) => (
 						<div
 							key={index}
 							style={{
@@ -1012,6 +1024,24 @@ export default function Edit({ attributes, setAttributes }) {
 						help="Add a custom ID to this block for CSS targeting or anchor links."
 					/>
 				</PanelBody>
+
+				<PanelBody title={__('Spacing', 'testimonial-block')} initialOpen={false}>
+					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Device')} />
+					<RangeControl
+						label={__('Padding top (px)', 'testimonial-block')}
+						value={getDeviceValue(responsivePaddingTop, deviceType, deviceType === 'desktop' ? 60 : deviceType === 'tablet' ? 48 : deviceType === 'mobile' ? 36 : 24)}
+						onChange={(v) => setAttributes({ responsivePaddingTop: updateDeviceAttribute(responsivePaddingTop, deviceType, v) })}
+						min={0}
+						max={200}
+					/>
+					<RangeControl
+						label={__('Padding bottom (px)', 'testimonial-block')}
+						value={getDeviceValue(responsivePaddingBottom, deviceType, deviceType === 'desktop' ? 60 : deviceType === 'tablet' ? 48 : deviceType === 'mobile' ? 36 : 24)}
+						onChange={(v) => setAttributes({ responsivePaddingBottom: updateDeviceAttribute(responsivePaddingBottom, deviceType, v) })}
+						min={0}
+						max={200}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<div {...blockProps}>
@@ -1022,7 +1052,7 @@ export default function Edit({ attributes, setAttributes }) {
 					>
 						<div className="splide__track">
 							<div className="splide__list">
-								{testimonials.map((testimonial, index) => (
+								{(testimonials || []).map((testimonial, index) => (
 									<div key={index} className="splide__slide">
 													<div 
 														className="ad-carousel-text-block__testimonial-card"
