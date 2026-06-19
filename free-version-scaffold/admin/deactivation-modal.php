@@ -64,15 +64,15 @@ class Adaire_Deactivation_Modal
         <div id="adaire-deactivation-modal" class="adaire-modal-overlay" style="display:none;">
             <div class="adaire-modal-container">
 
-                <div class="adaire-modal-header">
-                    <button type="button" class="adaire-modal-close" aria-label="<?php esc_attr_e( 'Close', 'adaire-blocks' ); ?>">&#x2715;</button>
-                    <div class="adaire-modal-header-inner">
-                        <div class="adaire-modal-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <div class="adaire-modal-header" style="background:linear-gradient(135deg,#6366f1 0%,#4f46e5 100%);padding:22px 24px 18px;color:#fff;position:relative;border-radius:16px 16px 0 0;">
+                    <button type="button" class="adaire-modal-close" aria-label="<?php esc_attr_e( 'Close', 'adaire-blocks' ); ?>" style="position:absolute;top:12px;right:12px;width:26px;height:26px;border:none;background:rgba(255,255,255,0.18);color:#fff;border-radius:50%;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;">&#x2715;</button>
+                    <div class="adaire-modal-header-inner" style="display:flex;align-items:center;gap:12px;">
+                        <div class="adaire-modal-icon" style="width:38px;height:38px;background:rgba(255,255,255,0.18);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                         </div>
                         <div>
-                            <h3><?php esc_html_e( 'Before you go…', 'adaire-blocks' ); ?></h3>
-                            <p><?php esc_html_e( 'Your feedback helps us build better blocks for everyone.', 'adaire-blocks' ); ?></p>
+                            <h3 style="margin:0 0 2px;font-size:16px;font-weight:700;color:#fff;"><?php esc_html_e( 'Before you go…', 'adaire-blocks' ); ?></h3>
+                            <p style="margin:0;font-size:12.5px;color:rgba(255,255,255,0.82);"><?php esc_html_e( 'Your feedback helps us build better blocks for everyone.', 'adaire-blocks' ); ?></p>
                         </div>
                     </div>
                 </div>
@@ -134,7 +134,7 @@ class Adaire_Deactivation_Modal
 
                     <div class="adaire-modal-success" style="display:none;">
                         <div class="adaire-success-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                         </div>
                         <h4><?php esc_html_e( 'Thanks for the feedback!', 'adaire-blocks' ); ?></h4>
                         <p><?php esc_html_e( 'We\'ll use it to make GutenBlocks better. See you next time.', 'adaire-blocks' ); ?></p>
