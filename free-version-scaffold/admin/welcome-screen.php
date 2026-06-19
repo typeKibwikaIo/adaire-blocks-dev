@@ -110,14 +110,21 @@ class Adaire_Welcome_Screen {
             'post_type'    => 'page',
             'post_status'  => 'draft',
             'post_title'   => $pattern['title'],
-            'post_content' => wp_slash( $pattern['content'] ),
-        ) );
+            'post_content' => $pattern['content'],
+        ), true );
 
-        if ( is_wp_error( $page_id ) ) {
-            wp_send_json_error( array( 'message' => $page_id->get_error_message() ) );
+        if ( is_wp_error( $page_id ) || empty( $page_id ) ) {
+            $message = is_wp_error( $page_id ) ? $page_id->get_error_message() : __( 'Failed to create page.', 'adaire-blocks' );
+            wp_send_json_error( array( 'message' => $message ) );
         }
 
-        wp_send_json_success( array( 'edit_url' => get_edit_post_link( $page_id, 'raw' ) ) );
+        $edit_url = get_edit_post_link( $page_id, 'raw' );
+
+        if ( empty( $edit_url ) ) {
+            wp_send_json_error( array( 'message' => __( 'Page created but could not get edit URL.', 'adaire-blocks' ) ) );
+        }
+
+        wp_send_json_success( array( 'edit_url' => $edit_url ) );
     }
 
     /**
