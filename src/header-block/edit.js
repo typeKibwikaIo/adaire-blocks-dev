@@ -204,12 +204,15 @@ function getHeaderStyle( attributes ) {
     if ( attributes.signInBgColor )     styles['--adaire-header-signin-bg']          = attributes.signInBgColor;
     if ( attributes.signInTextColor )   styles['--adaire-header-signin-text']        = attributes.signInTextColor;
     if ( attributes.signInBorderColor ) styles['--adaire-header-signin-border']      = attributes.signInBorderColor;
+    if ( attributes.signInFontSize )    styles['--adaire-header-signin-font-size']   = `${ attributes.signInFontSize }px`;
     if ( attributes.signUpBgColor )     styles['--adaire-header-signup-bg']          = attributes.signUpBgColor;
     if ( attributes.signUpTextColor )   styles['--adaire-header-signup-text']        = attributes.signUpTextColor;
     if ( attributes.signUpBorderColor ) styles['--adaire-header-signup-border']      = attributes.signUpBorderColor;
+    if ( attributes.signUpFontSize )    styles['--adaire-header-signup-font-size']   = `${ attributes.signUpFontSize }px`;
     if ( attributes.ctaBgColor )        styles['--adaire-header-cta-bg']             = attributes.ctaBgColor;
     if ( attributes.ctaTextColor )      styles['--adaire-header-cta-text']           = attributes.ctaTextColor;
     if ( attributes.ctaBorderColor )    styles['--adaire-header-cta-border']         = attributes.ctaBorderColor;
+    if ( attributes.ctaFontSize )       styles['--adaire-header-cta-font-size']      = `${ attributes.ctaFontSize }px`;
 
     // Background image — only when it's the active exclusive background mode
     // and the header isn't transparent (matches render.php's frontend logic).
@@ -1446,6 +1449,7 @@ export default function Edit({ attributes, setAttributes }) {
                         <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ attributes.signInBgColor }     onChange={ v => setAttributes({ signInBgColor: v || '' }) } />
                         <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ attributes.signInTextColor }   onChange={ v => setAttributes({ signInTextColor: v || '' }) } />
                         <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ attributes.signInBorderColor } onChange={ v => setAttributes({ signInBorderColor: v || '' }) } />
+                        <RangeControl label="Font size" value={ attributes.signInFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signInFontSize: v }) } />
                     </div>
                     {/* Sign Up */}
                     <div className="adaire-header-control-group">
@@ -1462,6 +1466,7 @@ export default function Edit({ attributes, setAttributes }) {
                         <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ attributes.signUpBgColor }     onChange={ v => setAttributes({ signUpBgColor: v || '' }) } />
                         <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ attributes.signUpTextColor }   onChange={ v => setAttributes({ signUpTextColor: v || '' }) } />
                         <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ attributes.signUpBorderColor } onChange={ v => setAttributes({ signUpBorderColor: v || '' }) } />
+                        <RangeControl label="Font size" value={ attributes.signUpFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signUpFontSize: v }) } />
                     </div>
                     {/* CTA */}
                     <div className="adaire-header-control-group">
@@ -1481,6 +1486,7 @@ export default function Edit({ attributes, setAttributes }) {
                         <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ attributes.ctaBgColor }     onChange={ v => setAttributes({ ctaBgColor: v || '' }) } />
                         <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ attributes.ctaTextColor }   onChange={ v => setAttributes({ ctaTextColor: v || '' }) } />
                         <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ attributes.ctaBorderColor } onChange={ v => setAttributes({ ctaBorderColor: v || '' }) } />
+                        <RangeControl label="Font size" value={ attributes.ctaFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ ctaFontSize: v }) } />
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>CTA hover colors</p>
                         <p style={{ marginBottom: 4 }}>Hover background</p><ColorPalette value={ attributes.ctaHoverBgColor }   onChange={ v => setAttributes({ ctaHoverBgColor: v || '' }) } />
                         <p style={{ marginBottom: 4 }}>Hover text</p>       <ColorPalette value={ attributes.ctaHoverTextColor } onChange={ v => setAttributes({ ctaHoverTextColor: v || '' }) } />

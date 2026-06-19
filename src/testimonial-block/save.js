@@ -89,7 +89,7 @@ export default function save({ attributes }) {
 				<div className="splide">
 					<div className="splide__track">
 						<div className="splide__list">
-							{testimonials.map((testimonial, index) => (
+							{(testimonials || []).map((testimonial, index) => (
 								<div key={index} className="splide__slide">
 									<div 
 										className="ad-carousel-text-block__testimonial-card"

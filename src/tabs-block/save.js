@@ -80,7 +80,7 @@ export default function save({ attributes }) {
             >
                 <div className="adaire-tabs__header">
                     <div className="adaire-tabs__list" role="tablist">
-                        {tabs.map((tab, index) => (
+                        {(tabs || []).map((tab, index) => (
                             <button
                                 key={tab.id}
                                 className={`adaire-tabs__tab ${activeTab === index ? 'is-active' : ''}`}

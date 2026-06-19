@@ -210,6 +210,9 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 		if ( ! empty( $attributes['signInBorderColor'] ) ) {
 			$styles['--adaire-header-signin-border'] = $attributes['signInBorderColor'];
 		}
+		if ( ! empty( $attributes['signInFontSize'] ) ) {
+			$styles['--adaire-header-signin-font-size'] = intval( $attributes['signInFontSize'] ) . 'px';
+		}
 		if ( ! empty( $attributes['signUpBgColor'] ) ) {
 			$styles['--adaire-header-signup-bg'] = $attributes['signUpBgColor'];
 		}
@@ -219,6 +222,9 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 		if ( ! empty( $attributes['signUpBorderColor'] ) ) {
 			$styles['--adaire-header-signup-border'] = $attributes['signUpBorderColor'];
 		}
+		if ( ! empty( $attributes['signUpFontSize'] ) ) {
+			$styles['--adaire-header-signup-font-size'] = intval( $attributes['signUpFontSize'] ) . 'px';
+		}
 		if ( ! empty( $attributes['ctaBgColor'] ) ) {
 			$styles['--adaire-header-cta-bg'] = $attributes['ctaBgColor'];
 		}
@@ -227,6 +233,9 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 		}
 		if ( ! empty( $attributes['ctaBorderColor'] ) ) {
 			$styles['--adaire-header-cta-border'] = $attributes['ctaBorderColor'];
+		}
+		if ( ! empty( $attributes['ctaFontSize'] ) ) {
+			$styles['--adaire-header-cta-font-size'] = intval( $attributes['ctaFontSize'] ) . 'px';
 		}
 
 		if ( 'image' === $bg_type && empty( $attributes['transparentHeader'] ) && ! empty( $attributes['bgImageUrl'] ) ) {

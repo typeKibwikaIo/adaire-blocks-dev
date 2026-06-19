@@ -184,6 +184,7 @@
 // When no custom variables are set these selectors replicate the base behavior exactly,
 // so existing blocks see no visual change. When variables are set they take precedence.
 .adaire-header-action--signin {
+    font-size: var(--adaire-header-signin-font-size, 16px);
     border-color: var(--adaire-header-signin-border, var(--adaire-header-hover-color, #2563eb));
     background: var(--adaire-header-signin-bg, var(--adaire-header-hover-color, #2563eb));
     color: var(--adaire-header-signin-text, #ffffff);
@@ -202,6 +203,7 @@
 }
 
 .adaire-header-action--signup {
+    font-size: var(--adaire-header-signup-font-size, 16px);
     border-color: var(--adaire-header-signup-border, var(--adaire-header-hover-color, #2563eb));
     background: var(--adaire-header-signup-bg, var(--adaire-header-hover-color, #2563eb));
     color: var(--adaire-header-signup-text, #ffffff);
@@ -220,6 +222,7 @@
 }
 
 .adaire-header-action--cta {
+    font-size: var(--adaire-header-cta-font-size, 16px);
     border-color: var(--adaire-header-cta-border, var(--adaire-header-hover-color, #2563eb));
     background: var(--adaire-header-cta-bg, var(--adaire-header-hover-color, #2563eb));
     color: var(--adaire-header-cta-text, #ffffff);
