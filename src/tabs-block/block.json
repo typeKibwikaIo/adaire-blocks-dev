@@ -30,8 +30,16 @@
             "type": "array",
             "default": [
                 {
-                    "title": "Retail",
+                    "title": "Features",
                     "id": "tab-1"
+                },
+                {
+                    "title": "Pricing",
+                    "id": "tab-2"
+                },
+                {
+                    "title": "FAQ",
+                    "id": "tab-3"
                 }
             ]
         },

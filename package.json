@@ -26,7 +26,8 @@
 		"deploy:premium": "npm run build:premium && npm run plugin-zip:premium"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^30.27.0"
+		"@wordpress/scripts": "^30.27.0",
+		"adm-zip": "^0.5.17"
 	},
 	"dependencies": {
 		"@splidejs/splide": "^4.1.4",

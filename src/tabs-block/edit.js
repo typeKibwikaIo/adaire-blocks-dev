@@ -91,15 +91,30 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--tab-title-color': tabTitleColor,
             '--tab-title-active-color': tabTitleActiveColor,
             '--tab-underline-color': tabUnderlineColor,
-            '--tab-title-size': `${tabTitleFontSize}px`,
+            '--tab-title-size': `${tabTitleFontSize?.desktop ?? tabTitleFontSize ?? 18}px`,
+            '--tab-title-size-tablet': `${tabTitleFontSize?.tablet ?? 16}px`,
+            '--tab-title-size-mobile': `${tabTitleFontSize?.mobile ?? 14}px`,
+            '--tab-title-size-watch': `${tabTitleFontSize?.smartwatch ?? 12}px`,
             '--tab-title-weight': tabTitleFontWeight,
             '--tab-title-active-weight': tabTitleActiveFontWeight,
-            '--tab-gap': `${tabGap}px`,
-            '--underline-height': `${underlineHeight}px`,
-            '--content-padding-top': `${contentPaddingTop}px`,
-            '--content-padding-right': `${contentPaddingRight}px`,
-            '--content-padding-bottom': `${contentPaddingBottom}px`,
-            '--content-padding-left': `${contentPaddingLeft}px`,
+            '--tab-gap': `${tabGap?.desktop ?? tabGap ?? 32}px`,
+            '--tab-gap-tablet': `${tabGap?.tablet ?? 24}px`,
+            '--tab-gap-mobile': `${tabGap?.mobile ?? 16}px`,
+            '--tab-gap-watch': `${tabGap?.smartwatch ?? 12}px`,
+            '--underline-height': `${underlineHeight?.desktop ?? underlineHeight ?? 3}px`,
+            '--underline-height-tablet': `${underlineHeight?.tablet ?? 2}px`,
+            '--underline-height-mobile': `${underlineHeight?.mobile ?? 2}px`,
+            '--underline-height-watch': `${underlineHeight?.smartwatch ?? 1}px`,
+            '--content-padding-top': `${contentPaddingTop?.desktop ?? contentPaddingTop ?? 40}px`,
+            '--content-padding-top-tablet': `${contentPaddingTop?.tablet ?? 32}px`,
+            '--content-padding-top-mobile': `${contentPaddingTop?.mobile ?? 24}px`,
+            '--content-padding-top-watch': `${contentPaddingTop?.smartwatch ?? 16}px`,
+            '--content-padding-right': `${contentPaddingRight?.desktop ?? contentPaddingRight ?? 0}px`,
+            '--content-padding-bottom': `${contentPaddingBottom?.desktop ?? contentPaddingBottom ?? 40}px`,
+            '--content-padding-bottom-tablet': `${contentPaddingBottom?.tablet ?? 32}px`,
+            '--content-padding-bottom-mobile': `${contentPaddingBottom?.mobile ?? 24}px`,
+            '--content-padding-bottom-watch': `${contentPaddingBottom?.smartwatch ?? 16}px`,
+            '--content-padding-left': `${contentPaddingLeft?.desktop ?? contentPaddingLeft ?? 0}px`,
             '--tabs-align': tabsAlign,
             '--container-max-width': `${containerMaxWidth?.desktop?.value ?? containerMaxWidth?.value ?? 1200}${containerMaxWidth?.desktop?.unit ?? containerMaxWidth?.unit ?? 'px'}`,
             '--container-max-width-tablet': `${containerMaxWidth?.tablet?.value ?? 100}${containerMaxWidth?.tablet?.unit ?? '%'}`,
@@ -159,7 +174,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
     // Template for tab panel blocks
     const ALLOWED_BLOCKS = ['create-block/tab-panel-block'];
-    const TEMPLATE = tabs.map((tab, index) => [
+    const TEMPLATE = (tabs || []).map((tab, index) => [
         'create-block/tab-panel-block',
         { 
             tabTitle: tab.title,
@@ -277,7 +292,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     <SelectControl
                         label={__('Initial Active Tab', 'tabs-block')}
                         value={activeTab}
-                        options={tabs.map((tab, index) => ({
+                        options={(tabs || []).map((tab, index) => ({
                             label: `${index + 1}. ${tab.title}`,
                             value: index
                         }))}
@@ -299,7 +314,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
                     ) }
                     <div style={{ marginTop: '16px' }}>
-                        {tabs.map((tab, index) => (
+                        {(tabs || []).map((tab, index) => (
                             <div key={tab.id} style={{ 
                                 marginBottom: '12px', 
                                 padding: '12px', 
@@ -574,7 +589,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 >
                     <div className="adaire-tabs__header">
                         <div className="adaire-tabs__list" role="tablist">
-                            {tabs.map((tab, index) => (
+                            {(tabs || []).map((tab, index) => (
                                 <QuickZone
                                     key={tab.id}
                                     id={`tab-title-${tab.id}`}
