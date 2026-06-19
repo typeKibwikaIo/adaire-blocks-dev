@@ -466,7 +466,7 @@
 		} );
 		
 		// Process top-level blocks with tree recovery
-			const recoveredBlocks = topLevelBlocks.map( function( block ) {
+			const recoveredBlocks = ( topLevelBlocks || [] ).map( function( block ) {
 			const recovered = recoverBlockTree( block );
 			
 			// Check if anything was recovered in this tree

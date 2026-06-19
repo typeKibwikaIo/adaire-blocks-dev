@@ -663,29 +663,6 @@ class FreeVersionGenerator {
     async createZipFile() {
         console.log('\nCreating zip file...');
         try {
-            const zipPath = path.join(path.dirname(this.freeVersionDir), 'plugin-zips', 'adaire-blocks-free.zip');
-            const zipDir = path.dirname(zipPath);
-            const stagingDir = path.join(zipDir, 'adaire-blocks-free');
-
-            fs.mkdirSync(zipDir, { recursive: true });
-            fs.rmSync(zipPath, { force: true });
-            fs.rmSync(stagingDir, { recursive: true, force: true });
-
-            // node_modules is dev-only tooling (webpack, eslint, etc.) — never
-            // needed at runtime since build/ already contains the compiled output.
-            const nodeModulesDir = path.join(this.freeVersionDir, 'node_modules');
-            if (fs.existsSync(nodeModulesDir)) {
-                fs.rmSync(nodeModulesDir, { recursive: true, force: true });
-                console.log('   ✓ Node modules directory removed for distribution');
-            }
-
-            // IMPORTANT: build/ must ship. Block registration (see adaire-blocks.php's
-            // register_block_type() calls) reads block.json/blocks-manifest.php and
-            // compiled JS/CSS exclusively from build/ — WordPress never compiles the
-            // raw src/ JSX+SCSS at runtime. An earlier version of this function deleted
-            // build/ here, right after buildFreeVersion() had just created it, which
-            // shipped a zip with zero working blocks ("0 blocks available" in Block
-            // Management) even though it installed without error. Do not remove it.
             const buildDir = path.join(this.freeVersionDir, 'build');
             if (!fs.existsSync(buildDir)) {
                 throw new Error(
@@ -694,51 +671,13 @@ class FreeVersionGenerator {
                 );
             }
 
-            // Stage only the files that belong in the shipped plugin, wrapped in a
-            // single top-level "adaire-blocks-free" folder — the structure WordPress's
-            // plugin installer expects (one folder containing the main plugin file).
-            const filesToZip = [
-                'adaire-blocks.php',
-                'readme.txt',
-                'admin',
-                'includes',
-                'build',
-                'src',
-                'config',
-                'docs',
-                'scripts',
-            ];
-
-            fs.mkdirSync(stagingDir, { recursive: true });
-            filesToZip.forEach(name => {
-                const src = path.join(this.freeVersionDir, name);
-                if (!fs.existsSync(src)) {
-                    return;
-                }
-                const dest = path.join(stagingDir, name);
-                if (fs.statSync(src).isDirectory()) {
-                    fs.cpSync(src, dest, { recursive: true });
-                } else {
-                    fs.copyFileSync(src, dest);
-                }
-            });
-
-            execFileSync('powershell.exe', [
-                '-NoProfile',
-                '-ExecutionPolicy',
-                'Bypass',
-                '-Command',
-                `Compress-Archive -Path '${escapePowerShellPath(stagingDir)}' -DestinationPath '${escapePowerShellPath(zipPath)}' -Force`,
-            ], { stdio: 'inherit' });
-
-            fs.rmSync(stagingDir, { recursive: true, force: true });
-
-            if (!fs.existsSync(zipPath)) {
-                throw new Error('PowerShell Compress-Archive did not create the zip file');
-            }
-
-            const sizeMb = (fs.statSync(zipPath).size / 1024 / 1024).toFixed(2);
-            console.log(`   ✓ Zip file created: ${zipPath} (${sizeMb} MB)`);
+            // Delegate to zip-generated-folder.js which uses a canonical exclusion
+            // list (strips src/, node_modules, dev config, etc.) and is the single
+            // source of truth for what belongs in a shipped zip.
+            execFileSync('node', [
+                path.join(this.sourceDir, 'scripts', 'zip-generated-folder.js'),
+                'free',
+            ], { stdio: 'inherit', cwd: this.sourceDir });
         } catch (error) {
             console.error('   ⚠️  Warning: Zip file creation failed:', error.message);
             console.log('   You can manually create the zip by running: npm run plugin-zip:free');

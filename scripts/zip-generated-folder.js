@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
+const AdmZip = require('adm-zip');
 
 const variant = (process.argv[2] || '').toLowerCase();
 const allowedVariants = ['free', 'plus', 'premium'];
@@ -18,7 +18,6 @@ const folderName = `adaire-blocks-${variant}`;
 const generatedDir = path.join(parentDir, folderName);
 const outputDir = path.join(parentDir, 'plugin-zips');
 const zipPath = path.join(outputDir, `${folderName}.zip`);
-const stagingDir = path.join(outputDir, folderName);
 
 const excludeNames = new Set([
     'node_modules',
@@ -48,43 +47,34 @@ if (!fs.existsSync(path.join(generatedDir, 'adaire-blocks.php'))) {
 }
 
 fs.mkdirSync(outputDir, { recursive: true });
-fs.rmSync(stagingDir, { recursive: true, force: true });
 fs.rmSync(zipPath, { force: true });
-copyPluginFiles(generatedDir, stagingDir);
 
-execFileSync('powershell.exe', [
-    '-NoProfile',
-    '-ExecutionPolicy',
-    'Bypass',
-    '-Command',
-    `Compress-Archive -Path '${escapePowerShellPath(stagingDir)}' -DestinationPath '${escapePowerShellPath(zipPath)}' -Force`
-], { stdio: 'inherit' });
-
-fs.rmSync(stagingDir, { recursive: true, force: true });
+// adm-zip writes RFC-compliant forward-slash separators in zip entry names,
+// which PHP's ZipArchive (used by WordPress's plugin installer) requires on
+// Linux servers. PowerShell's Compress-Archive uses backslashes, causing
+// WordPress to treat backslashes as literal filename characters instead of
+// path separators — so the plugin extracts as a flat pile of misnamed files.
+const zip = new AdmZip();
+addDirectory(zip, generatedDir, '');
+zip.writeZip(zipPath);
 
 const sizeMb = (fs.statSync(zipPath).size / 1024 / 1024).toFixed(2);
 console.log(`Created ${zipPath} (${sizeMb} MB)`);
 
-function copyPluginFiles(source, destination) {
-    fs.mkdirSync(destination, { recursive: true });
-
-    for (const item of fs.readdirSync(source)) {
+function addDirectory(zip, sourceDir, zipPrefix) {
+    for (const item of fs.readdirSync(sourceDir)) {
         if (excludeNames.has(item)) {
             continue;
         }
 
-        const sourcePath = path.join(source, item);
-        const destinationPath = path.join(destination, item);
+        const sourcePath = path.join(sourceDir, item);
+        const entryName = zipPrefix ? `${zipPrefix}/${item}` : item;
         const stat = fs.statSync(sourcePath);
 
         if (stat.isDirectory()) {
-            copyPluginFiles(sourcePath, destinationPath);
+            addDirectory(zip, sourcePath, entryName);
         } else {
-            fs.copyFileSync(sourcePath, destinationPath);
+            zip.addFile(entryName, fs.readFileSync(sourcePath));
         }
     }
-}
-
-function escapePowerShellPath(value) {
-    return value.replace(/'/g, "''");
 }

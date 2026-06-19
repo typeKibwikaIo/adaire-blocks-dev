@@ -48,6 +48,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         paddingRight,
         paddingBottom,
         paddingLeft,
+        responsiveIconSize,
     } = attributes;
 
     if (!blockId) {
@@ -61,6 +62,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             border: 'none',
             boxShadow: 'none',
             '--icon-size': `${iconSize}px`,
+            '--icon-size-tablet': `${responsiveIconSize?.tablet ?? iconSize ?? 48}px`,
+            '--icon-size-mobile': `${responsiveIconSize?.mobile ?? iconSize ?? 48}px`,
+            '--icon-size-watch': `${responsiveIconSize?.smartwatch ?? iconSize ?? 48}px`,
             '--icon-color': iconColor,
             '--icon-hover-color': iconHoverColor,
             '--icon-bg': backgroundColor,
