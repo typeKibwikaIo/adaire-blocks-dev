@@ -29,14 +29,18 @@ define('ADAIRE_BLOCKS_IS_FREE', true);
 // Include the main plugin class
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-blocks-config.php';
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/sendgrid.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-patterns.php';
 
 // Initialize the plugin
 function adaire_blocks_init() {
     // Get settings instance
     $settings = AdaireBlocksConfig::get_instance();
-    
+
     // Register blocks
     adaire_blocks_register_blocks();
+
+    // Register starter page patterns (landing/about/services/blog/contact)
+    Adaire_Patterns::init();
 }
 add_action('init', 'adaire_blocks_init');
 
@@ -225,6 +229,10 @@ if (is_admin()) {
     // Deactivation feedback log + SendGrid test page
     require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/deactivation-log-page.php';
     Adaire_Deactivation_Log_Page::get_instance();
+
+    // Welcome / Quick Start screen with starter page templates
+    require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/welcome-screen.php';
+    Adaire_Welcome_Screen::register();
 }
 
 /**
@@ -233,6 +241,12 @@ if (is_admin()) {
 function adaire_blocks_activate() {
     // Set default options
     add_option('adaire_blocks_version', ADAIRE_BLOCKS_VERSION);
+
+    // Send the user to the Welcome / Quick Start screen on their next
+    // admin page load (see Adaire_Welcome_Screen::maybe_redirect_after_activation()).
+    if (class_exists('Adaire_Welcome_Screen')) {
+        Adaire_Welcome_Screen::queue_activation_redirect();
+    }
 }
 register_activation_hook(__FILE__, 'adaire_blocks_activate');
 
