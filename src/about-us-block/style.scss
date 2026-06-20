@@ -71,22 +71,22 @@
 		width: 76px;
 		height: 76px;
 		border-radius: 50%;
-		background: rgba( 255, 255, 255, 0.12 );
-		border: 1px solid rgba( 255, 255, 255, 0.15 );
+		background: var( --ab-divider, rgba( 99, 102, 241, 0.1 ) );
+		border: 1px solid var( --ab-divider, rgba( 99, 102, 241, 0.15 ) );
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		font-size: 11px;
 		letter-spacing: 0.04em;
-		color: rgba( 255, 255, 255, 0.75 );
+		color: var( --ab-muted, rgba( 99, 102, 241, 0.75 ) );
 		flex-shrink: 0;
 		margin-left: 32px;
 		margin-top: 8px;
 		cursor: default;
-		transition: background 0.2s;
+		transition: opacity 0.2s;
 
 		&:hover {
-			background: rgba( 255, 255, 255, 0.18 );
+			opacity: 0.75;
 		}
 	}
 

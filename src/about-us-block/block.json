@@ -30,10 +30,10 @@
     "closingStatement":  { "type": "string",  "default": "We're here to make your design dreams come true." },
     "showScrollButton":  { "type": "boolean", "default": true },
     "scrollButtonText":  { "type": "string",  "default": "Scroll" },
-    "backgroundColor":   { "type": "string",  "default": "#0a0a0a" },
-    "textColor":         { "type": "string",  "default": "#ffffff" },
-    "mutedColor":        { "type": "string",  "default": "rgba(255,255,255,0.6)" },
-    "dividerColor":      { "type": "string",  "default": "rgba(255,255,255,0.1)" },
+    "backgroundColor":   { "type": "string",  "default": "#ffffff" },
+    "textColor":         { "type": "string",  "default": "#6366f1" },
+    "mutedColor":        { "type": "string",  "default": "rgba(99,102,241,0.65)" },
+    "dividerColor":      { "type": "string",  "default": "rgba(99,102,241,0.15)" },
     "paddingTop":        { "type": "number",  "default": 64 },
     "paddingBottom":     { "type": "number",  "default": 64 }
   }

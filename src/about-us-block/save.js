@@ -4,14 +4,14 @@ export default function save( { attributes: a } ) {
 	const blockProps = useBlockProps.save( {
 		className: 'adaire-about',
 		style: {
-			'--ab-bg'     : a.backgroundColor || '#0a0a0a',
-			'--ab-text'   : a.textColor       || '#ffffff',
-			'--ab-muted'  : a.mutedColor      || 'rgba(255,255,255,0.6)',
-			'--ab-divider': a.dividerColor    || 'rgba(255,255,255,0.1)',
-			backgroundColor: a.backgroundColor || '#0a0a0a',
+			'--ab-bg'     : a.backgroundColor || '#ffffff',
+			'--ab-text'   : a.textColor       || '#6366f1',
+			'--ab-muted'  : a.mutedColor      || 'rgba(99,102,241,0.65)',
+			'--ab-divider': a.dividerColor    || 'rgba(99,102,241,0.15)',
+			backgroundColor: a.backgroundColor || '#ffffff',
 			paddingTop    : `${ a.paddingTop    ?? 64 }px`,
 			paddingBottom : `${ a.paddingBottom ?? 64 }px`,
-			color         : a.textColor       || '#ffffff',
+			color         : a.textColor       || '#6366f1',
 		},
 	} );
 
