@@ -1,7 +1,7 @@
 # Device-Specific Controls Implementation Guide
 
 ## Overview
-This guide describes the pattern for adding responsive device-specific controls (Desktop, Tablet, Mobile, Smartwatch) to GutenBlocks blocks.
+This guide describes the pattern for adding responsive device-specific controls (Desktop, Tablet, Mobile, Smartwatch) to GutenBlocks.
 
 ## Pattern Summary
 Each block that needs responsive controls follows this 3-file structure:

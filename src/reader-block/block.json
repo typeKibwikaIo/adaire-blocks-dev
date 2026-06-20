@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Reader",
   "category": "adaire-blog-publishing",
-  "description": "Reader block for GutenBlocks Blocks.",
+  "description": "Reader block for GutenBlocks.",
   "supports": {
     "html": false,
     "anchor": true

@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Booking Form",
   "category": "adaire-business",
-  "description": "Booking Form block for GutenBlocks Blocks.",
+  "description": "Booking Form block for GutenBlocks.",
   "supports": {
     "html": false,
     "anchor": true

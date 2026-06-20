@@ -1,7 +1,7 @@
 {
 	"name": "adaire-blocks",
 	"version": "0.1.0",
-	"description": "GutenBlocks Blocks is a powerful WordPress plugin that empowers developers and designers to craft visually stunning, high-performance websites with ease. Seamlessly integrating GSAP animations and advanced layout controls, it lets you bring your creative vision to life with smooth, professional-grade motion effects — all within the familiar Gutenberg editor.",
+	"description": "GutenBlocks is a powerful WordPress plugin that empowers developers and designers to craft visually stunning, high-performance websites with ease. Seamlessly integrating GSAP animations and advanced layout controls, it lets you bring your creative vision to life with smooth, professional-grade motion effects — all within the familiar Gutenberg editor.",
 	"author": "Adaire Digital",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",

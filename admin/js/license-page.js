@@ -1,5 +1,5 @@
 /**
- * License Management JavaScript for GutenBlocks Blocks
+ * License Management JavaScript for GutenBlocks
  *
  * @package AdaireBlocks
  */
@@ -763,7 +763,7 @@
 						<div class="adaire-license-input-group">
 							<label for="license-key">License Key</label>
 							<input type="text" id="license-key" name="license_key" placeholder="Enter your license key" value="${(data && data.licenseKey) ? this.escapeHtml(data.licenseKey) : ''}" required>
-							<p class="description">Enter your GutenBlocks Blocks license key to activate the plugin.</p>
+							<p class="description">Enter your GutenBlocks license key to activate the plugin.</p>
 						</div>
 						<div class="adaire-license-actions">
 							<button type="submit" class="button button-primary" id="activate-license">
@@ -802,7 +802,7 @@
 					hour12: true
 				});
 			} catch(e) {
-				console.log('GutenBlocks Blocks License: Date formatting error:', e, dateStr);
+				console.log('GutenBlocks License: Date formatting error:', e, dateStr);
 				return dateStr;
 			}
 		}

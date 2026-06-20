@@ -1,6 +1,6 @@
 <?php
 /**
- * License Management Page for GutenBlocks Blocks
+ * License Management Page for GutenBlocks
  *
  * @package AdaireBlocks
  */
@@ -115,8 +115,8 @@ class AdaireBlocksLicensePage {
             
             <div class="adaire-license-container" data-license-key="<?php echo esc_attr($license_data['license_key'] ?? ''); ?>">
                 <div class="adaire-license-header">
-                    <h2>GutenBlocks Blocks License</h2>
-                    <p class="description">Manage your GutenBlocks Blocks license activation and status.</p>
+                    <h2>GutenBlocks License</h2>
+                    <p class="description">Manage your GutenBlocks license activation and status.</p>
                 </div>
                 
                 <div class="adaire-license-content">
@@ -186,7 +186,7 @@ class AdaireBlocksLicensePage {
                                                placeholder="Enter your license key"
                                                value="<?php echo esc_attr($license_data['license_key'] ?? ''); ?>"
                                                required>
-                                        <p class="description">Enter your GutenBlocks Blocks license key to activate the plugin.</p>
+                                        <p class="description">Enter your GutenBlocks license key to activate the plugin.</p>
                                     </div>
                                     
                                     <div class="adaire-license-actions">
@@ -239,20 +239,20 @@ class AdaireBlocksLicensePage {
      * Refresh license data from validation endpoint
      */
     private function refresh_license_data_from_api($license_key) {
-        error_log('GutenBlocks Blocks License: Refreshing license data from API on page load');
+        error_log('GutenBlocks License: Refreshing license data from API on page load');
         
         try {
             // Call the validation endpoint to get current data
             $validation_result = $this->license_manager->validate_license($license_key);
             
             if ($validation_result) {
-                error_log('GutenBlocks Blocks License: License data refreshed successfully from API');
-                error_log('GutenBlocks Blocks License: Updated data: ' . print_r($validation_result, true));
+                error_log('GutenBlocks License: License data refreshed successfully from API');
+                error_log('GutenBlocks License: Updated data: ' . print_r($validation_result, true));
             } else {
-                error_log('GutenBlocks Blocks License: Failed to refresh license data from API');
+                error_log('GutenBlocks License: Failed to refresh license data from API');
             }
         } catch (Exception $e) {
-            error_log('GutenBlocks Blocks License: Error refreshing license data: ' . $e->getMessage());
+            error_log('GutenBlocks License: Error refreshing license data: ' . $e->getMessage());
         }
     }
     

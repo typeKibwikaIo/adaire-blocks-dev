@@ -629,7 +629,7 @@ function SidebarContent( { isCollapsed, onToggleCollapse } ) {
 					</Tooltip>
 				</div>
 				<div className="adaire-ep__header-center">
-					<span className="adaire-ep__header-title">{ __( 'GutenBlocks Blocks' ) }</span>
+					<span className="adaire-ep__header-title">{ __( 'GutenBlocks' ) }</span>
 				</div>
 				<div className="adaire-ep__header-right">
 					<Tooltip text={ __( 'Search settings' ) }>

@@ -1,5 +1,5 @@
 /**
- * GutenBlocks Blocks Admin Settings JavaScript
+ * GutenBlocks Admin Settings JavaScript
  */
 
 (function($, window) {
@@ -162,21 +162,21 @@
             window.wp.apiFetch({ url: ajaxData.restUrl })
                 .then(function(response) {
                     if (!response || !response.success) {
-                        console.error('GutenBlocks Blocks Registry validation failed', response);
+                        console.error('GutenBlocks Registry validation failed', response);
                         return;
                     }
 
                     if (response.validation && response.validation.errors && response.validation.errors.length) {
-                        console.error('GutenBlocks Blocks Registry validation errors', response.validation.errors);
+                        console.error('GutenBlocks Registry validation errors', response.validation.errors);
                     } else {
-                        console.info('GutenBlocks Blocks Registry validation passed', {
+                        console.info('GutenBlocks Registry validation passed', {
                             available: response.validation.total_available,
                             registry: response.validation.total_registry
                         });
                     }
                 })
                 .catch(function(error) {
-                    console.error('GutenBlocks Blocks Registry API request failed', error);
+                    console.error('GutenBlocks Registry API request failed', error);
                 });
         }
         

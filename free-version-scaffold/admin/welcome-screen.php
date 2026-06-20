@@ -187,7 +187,7 @@ class Adaire_Welcome_Screen {
         $themes_url     = admin_url( 'themes.php' );
         $exit_url       = admin_url();
 
-        // Real bundled screenshots of GutenBlocks blocks in the editor —
+        // Real bundled screenshots of GutenBlocks in the editor —
         // used in place of stock photography or inline illustration.
         $hero_image_url      = plugins_url( 'images/welcome-hero.png', __FILE__ );
         $showcase_image_url  = plugins_url( 'images/welcome-showcase.png', __FILE__ );
@@ -703,7 +703,7 @@ class Adaire_Welcome_Screen {
                     ),
                     array(
                         'q' => __( 'Can I edit the templates after they\'re created?', 'adaire-blocks' ),
-                        'a' => __( 'Yes — every template is just regular GutenBlocks blocks on a draft page. Open it in the editor and replace any text, image, or section.', 'adaire-blocks' ),
+                        'a' => __( 'Yes — every template is just regular GutenBlocks on a draft page. Open it in the editor and replace any text, image, or section.', 'adaire-blocks' ),
                     ),
                     array(
                         'q' => __( 'What\'s the difference between the free and paid blocks?', 'adaire-blocks' ),

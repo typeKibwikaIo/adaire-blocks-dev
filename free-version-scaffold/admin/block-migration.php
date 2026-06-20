@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Add migration submenu to GutenBlocks Blocks admin menu
+ * Add migration submenu to GutenBlocks admin menu
  */
 function adaire_blocks_add_migration_menu() {
     add_submenu_page(
@@ -94,20 +94,20 @@ function adaire_blocks_migration_page() {
     }
     ?>
     <div class="wrap">
-        <h1>GutenBlocks Blocks Migration Tool</h1>
+        <h1>GutenBlocks Migration Tool</h1>
 
         <div class="card" style="max-width: 800px; margin-top: 20px;">
             <h2>Update All Blocks (Queue-Based Migration)</h2>
             <p>
                 This tool uses a queue-based system to find all posts, pages, custom post types,
-                and reusable block patterns that contain GutenBlocks Blocks and re-save them
+                and reusable block patterns that contain GutenBlocks and re-save them
                 with the current block structure. Use this after updating the plugin to fix
                 block validation errors.
             </p>
 
             <p><strong>What this does:</strong></p>
             <ul>
-                <li>Finds all content with GutenBlocks Blocks across all post types</li>
+                <li>Finds all content with GutenBlocks across all post types</li>
                 <li>Loads each item in the block editor and saves it with the current block structure</li>
                 <li>Processes items one at a time to avoid server timeouts</li>
                 <li>Preserves all block settings, content, and post status</li>
@@ -168,7 +168,7 @@ function adaire_blocks_migration_page() {
 }
 
 /**
- * AJAX: discover all items containing GutenBlocks Blocks.
+ * AJAX: discover all items containing GutenBlocks.
  *
  * Scans all public post types that support the block editor, plus wp_block
  * (reusable patterns). Returns only items that actually contain at least one

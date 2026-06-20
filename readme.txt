@@ -1,4 +1,4 @@
-=== GutenBlocks Blocks ===
+=== GutenBlocks ===
 Contributors: adairedigital
 Donate link: https://adaireblocks.com/
 Tags: blocks, gutenberg, gsap, animation, portfolio
@@ -14,7 +14,7 @@ A powerful WordPress plugin for creating visually stunning, high-performance web
 
 == Description ==
 
-GutenBlocks Blocks is a comprehensive WordPress plugin that provides a collection of custom Gutenberg blocks designed to create visually stunning, high-performance websites. Built with modern web technologies including GSAP, React, and optimized for performance, this plugin offers a seamless experience for developers and designers working within the WordPress Gutenberg editor.
+GutenBlocks is a comprehensive WordPress plugin that provides a collection of custom Gutenberg blocks designed to create visually stunning, high-performance websites. Built with modern web technologies including GSAP, React, and optimized for performance, this plugin offers a seamless experience for developers and designers working within the WordPress Gutenberg editor.
 
 
 **Available Blocks:**
@@ -308,7 +308,7 @@ For support, please visit our website at https://adaireblocks.com/ or contact us
 = 1.1.1 =
 * Added Complete License Activation System with external API integration
 * Added License validation, activation, and deactivation functionality
-* Added License admin page under GutenBlocks Blocks menu
+* Added License admin page under GutenBlocks menu
 * Added Automatic license status checking and premium feature management
 * Added Database integration with automatic table creation
 * Added Token-based activation system with secure storage
@@ -329,7 +329,7 @@ For support, please visit our website at https://adaireblocks.com/ or contact us
 * Updated all block icons with new custom designs
 
 = 1.0.9 =
-* Added migration tool: One-click tool in admin panel to allow auto-migration of all GutenBlocks Blocks on all pages and posts
+* Added migration tool: One-click tool in admin panel to allow auto-migration of all GutenBlocks on all pages and posts
 * Improved block compatibility with WordPress 6.7
 * Fixed block registration issues
 
@@ -382,13 +382,13 @@ Important update that adds one-click block migration tool and improves WordPress
 Significant feature release adding Accordion, Posts Grid, and Tabs blocks with improved responsive controls. Upgrade to access new blocks.
 
 = 1.0.0 =
-Initial release of GutenBlocks Blocks.
+Initial release of GutenBlocks.
 
 == Additional Information ==
 
 **Made with ❤️ by Adaire Digital**
 
-Visit [GutenBlocks Blocks](https://adaireblocks.com/ "Professional WordPress Development") for more information about our services and products.
+Visit [GutenBlocks](https://adaireblocks.com/ "Professional WordPress Development") for more information about our services and products.
 
 **Support and Documentation**
 
@@ -396,4 +396,4 @@ For detailed documentation, tutorials, and support, please visit our website or 
 
 **Contributing**
 
-We welcome contributions! If you'd like to contribute to the development of GutenBlocks Blocks, please visit our GitHub repository.
+We welcome contributions! If you'd like to contribute to the development of GutenBlocks, please visit our GitHub repository.

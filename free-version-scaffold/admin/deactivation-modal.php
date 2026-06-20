@@ -159,7 +159,7 @@ class Adaire_Deactivation_Modal
         $default_recipient = defined('ADAIRE_FEEDBACK_EMAIL') ? ADAIRE_FEEDBACK_EMAIL : self::DEFAULT_FEEDBACK_EMAIL;
         $feedback_recipient = apply_filters('adaire_blocks_deactivation_feedback_to', $default_recipient, $feedback);
 
-        $subject = 'GutenBlocks Blocks Deactivation Feedback';
+        $subject = 'GutenBlocks Deactivation Feedback';
         $message = $this->build_feedback_message($feedback);
 
         $send_result = $this->send_feedback_email($feedback_recipient, $subject, $message, $feedback['email']);
@@ -195,7 +195,7 @@ class Adaire_Deactivation_Modal
         $email_text = $feedback['email'] ?: 'Not provided';
 
         return implode("\n", [
-            'A user has deactivated the GutenBlocks Blocks Free plugin.',
+            'A user has deactivated the GutenBlocks Free plugin.',
             '',
             'Site: ' . $feedback['site'],
             'Reason: ' . $reason_text,

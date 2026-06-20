@@ -73,7 +73,7 @@ $myUpdateChecker = PucFactory::buildUpdateChecker(
 add_action('upgrader_process_complete', function($upgrader, $hook_extra) {
     if (isset($hook_extra['plugin']) && $hook_extra['plugin'] === plugin_basename(__FILE__)) {
         delete_transient('adaire-blocks_latest_version');
-        error_log('[GutenBlocks Blocks Rollback] Plugin updated - cleared version cache');
+        error_log('[GutenBlocks Rollback] Plugin updated - cleared version cache');
     }
 }, 10, 2);
 
@@ -81,7 +81,7 @@ add_action('upgrader_process_complete', function($upgrader, $hook_extra) {
 add_action('activated_plugin', function($plugin) {
     if ($plugin === plugin_basename(__FILE__)) {
         delete_transient('adaire-blocks_latest_version');
-        error_log('[GutenBlocks Blocks Rollback] Plugin activated - cleared version cache');
+        error_log('[GutenBlocks Rollback] Plugin activated - cleared version cache');
     }
 });
 
@@ -93,7 +93,7 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
     $is_latest_version = true;
     
     // Log the current version
-    error_log('[GutenBlocks Blocks Rollback] Current version: ' . $current_version);
+    error_log('[GutenBlocks Rollback] Current version: ' . $current_version);
     
     // Check if there's a newer version available by directly checking the JSON file
     // Cache the result for 1 hour to avoid checking too frequently
@@ -103,7 +103,7 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
     // Force refresh cache if we're on a newer version than what's cached
     if ($cached_version !== false && $cached_version !== 'error') {
         if (version_compare($current_version, $cached_version, '>')) {
-            error_log('[GutenBlocks Blocks Rollback] Current version is newer than cached version - clearing cache');
+            error_log('[GutenBlocks Rollback] Current version is newer than cached version - clearing cache');
             delete_transient($cache_key);
             $cached_version = false;
         }
@@ -118,39 +118,39 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
             $json_data = json_decode(wp_remote_retrieve_body($response), true);
             if ($json_data && isset($json_data['version'])) {
                 $latest_version = $json_data['version'];
-                error_log('[GutenBlocks Blocks Rollback] Latest available version from JSON: ' . $latest_version);
+                error_log('[GutenBlocks Rollback] Latest available version from JSON: ' . $latest_version);
                 
                 // Cache the result for 1 hour
                 set_transient($cache_key, $latest_version, HOUR_IN_SECONDS);
                 
                 if (version_compare($current_version, $latest_version, '<')) {
                     $is_latest_version = false;
-                    error_log('[GutenBlocks Blocks Rollback] Hiding rollback link - newer version available: ' . $latest_version);
+                    error_log('[GutenBlocks Rollback] Hiding rollback link - newer version available: ' . $latest_version);
                 }
             } else {
-                error_log('[GutenBlocks Blocks Rollback] Invalid JSON data received');
+                error_log('[GutenBlocks Rollback] Invalid JSON data received');
                 set_transient($cache_key, 'error', HOUR_IN_SECONDS);
             }
         } else {
-            error_log('[GutenBlocks Blocks Rollback] Failed to fetch JSON: ' . (is_wp_error($response) ? $response->get_error_message() : 'HTTP ' . wp_remote_retrieve_response_code($response)));
+            error_log('[GutenBlocks Rollback] Failed to fetch JSON: ' . (is_wp_error($response) ? $response->get_error_message() : 'HTTP ' . wp_remote_retrieve_response_code($response)));
             set_transient($cache_key, 'error', HOUR_IN_SECONDS);
         }
     } else {
         // Use cached version
         if ($cached_version !== 'error') {
-            error_log('[GutenBlocks Blocks Rollback] Using cached latest version: ' . $cached_version);
+            error_log('[GutenBlocks Rollback] Using cached latest version: ' . $cached_version);
             if (version_compare($current_version, $cached_version, '<')) {
                 $is_latest_version = false;
-                error_log('[GutenBlocks Blocks Rollback] Hiding rollback link - newer version available: ' . $cached_version);
+                error_log('[GutenBlocks Rollback] Hiding rollback link - newer version available: ' . $cached_version);
             }
         } else {
-            error_log('[GutenBlocks Blocks Rollback] Using cached error state - showing rollback link');
+            error_log('[GutenBlocks Rollback] Using cached error state - showing rollback link');
         }
     }
     
     // Only show rollback link if current version is the latest
     if ($is_latest_version) {
-        error_log('[GutenBlocks Blocks Rollback] Showing rollback link - current version is latest');
+        error_log('[GutenBlocks Rollback] Showing rollback link - current version is latest');
         $links[] = '<a href="' . esc_url(admin_url('admin-post.php?action=my_plugin_rollback&_wpnonce=' . wp_create_nonce('my_plugin_rollback'))) . '" class="my-plugin-rollback-btn">Rollback</a>';
     }
     
@@ -164,13 +164,13 @@ add_action('admin_post_my_plugin_rollback', function () {
     }
 
     if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'my_plugin_rollback')) {
-        error_log('[GutenBlocks Blocks Rollback] Nonce verification failed');
+        error_log('[GutenBlocks Rollback] Nonce verification failed');
         wp_die('Security check failed.');
     }
 
     // URL to the previous version ZIP
     $previous_version_zip = 'https://github.com/helloadaire/Adaire-Blocks/releases/download/v1.2.4.alpha/adaire-blocks.1.2.4.alpha.zip';
-    error_log('[GutenBlocks Blocks Rollback] Attempting rollback to: ' . $previous_version_zip);
+    error_log('[GutenBlocks Rollback] Attempting rollback to: ' . $previous_version_zip);
 
     require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -181,16 +181,16 @@ add_action('admin_post_my_plugin_rollback', function () {
 
     // Deactivate current plugin
     deactivate_plugins($plugin_slug);
-    error_log('[GutenBlocks Blocks Rollback] Plugin deactivated.');
+    error_log('[GutenBlocks Rollback] Plugin deactivated.');
 
     // Delete current plugin folder
     $plugin_dir = plugin_dir_path(__FILE__);
     if (WP_Filesystem()) {
         global $wp_filesystem;
         if ($wp_filesystem->delete($plugin_dir, true, true)) {
-            error_log('[GutenBlocks Blocks Rollback] Plugin folder deleted successfully.');
+            error_log('[GutenBlocks Rollback] Plugin folder deleted successfully.');
         } else {
-            error_log('[GutenBlocks Blocks Rollback] Failed to delete plugin folder.');
+            error_log('[GutenBlocks Rollback] Failed to delete plugin folder.');
             wp_die('Failed to delete current plugin folder. Check debug.log.');
         }
     }
@@ -201,10 +201,10 @@ add_action('admin_post_my_plugin_rollback', function () {
 
     if ($result && !is_wp_error($result)) {
         activate_plugin($plugin_slug);
-        error_log('[GutenBlocks Blocks Rollback] Rollback successful and plugin activated.');
+        error_log('[GutenBlocks Rollback] Rollback successful and plugin activated.');
         wp_safe_redirect(admin_url('plugins.php?rollback=success'));
     } else {
-        error_log('[GutenBlocks Blocks Rollback] Rollback failed: ' . print_r($result, true));
+        error_log('[GutenBlocks Rollback] Rollback failed: ' . print_r($result, true));
         wp_safe_redirect(admin_url('plugins.php?rollback=failed'));
     }
 
@@ -275,7 +275,7 @@ function adaire_blocks_license_notice() {
 	?>
 	<div class="notice notice-warning is-dismissible">
 		<p>
-			<strong>GutenBlocks Blocks:</strong> 
+			<strong>GutenBlocks:</strong> 
 			Your license is not active. 
 			<a href="<?php echo esc_url($license_page_url); ?>">Activate your license</a> 
 			to unlock all features and receive updates.
@@ -296,7 +296,7 @@ function adaire_blocks_license_error_notice($message) {
 	?>
 	<div class="notice notice-error is-dismissible">
 		<p>
-			<strong>GutenBlocks Blocks License Error:</strong> 
+			<strong>GutenBlocks License Error:</strong> 
 			<?php echo esc_html($message); ?>
 			<a href="<?php echo esc_url($license_page_url); ?>">Check your license</a>
 		</p>
@@ -2220,7 +2220,7 @@ function adaire_blocks_add_rest_api_settings() {
 			nonce: <?php echo json_encode(wp_create_nonce('wp_rest')); ?>,
 			versionString: 'wp/v2/'
 		};
-		console.log('[GutenBlocks Blocks] wpApiSettings initialized:', window.wpApiSettings);
+		console.log('[GutenBlocks] wpApiSettings initialized:', window.wpApiSettings);
 	}
 	</script>
 	<?php
@@ -2237,7 +2237,7 @@ function adaire_blocks_enqueue_auto_recovery() {
 	// Check if the auto-recovery file exists
 	$script_path = ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/js/auto-block-recovery.js';
 	if ( ! file_exists( $script_path ) ) {
-		error_log( '[GutenBlocks Blocks] Auto-recovery script not found at: ' . $script_path );
+		error_log( '[GutenBlocks] Auto-recovery script not found at: ' . $script_path );
 		return;
 	}
 
@@ -2253,10 +2253,10 @@ function adaire_blocks_enqueue_auto_recovery() {
 	// Add inline script to verify loading
 	$script_url = ADAIRE_BLOCKS_PLUGIN_URL . 'admin/js/auto-block-recovery.js';
 	$inline_script = sprintf(
-		'console.log("[GutenBlocks Blocks] Inline script executing...");
-		console.log("[GutenBlocks Blocks] Version: %s");
-		console.log("[GutenBlocks Blocks] Script URL: %s");
-		console.log("[GutenBlocks Blocks] Plugin path exists:", %s);
+		'console.log("[GutenBlocks] Inline script executing...");
+		console.log("[GutenBlocks] Version: %s");
+		console.log("[GutenBlocks] Script URL: %s");
+		console.log("[GutenBlocks] Plugin path exists:", %s);
 		window.adaireBlocksAutoRecoveryLoaded = true;
 		window.adaireBlocksVersion = "%s";',
 		esc_js(ADAIRE_BLOCKS_VERSION),
