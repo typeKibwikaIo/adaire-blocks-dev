@@ -154,9 +154,10 @@ function enqueue_bootstrap_icons_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_bootstrap_icons_assets' );
 
-// Also enqueue in editor - use a later hook to avoid interfering with block.json parsing
+// Enqueue Bootstrap Icons inside the block editor canvas (iframed in WP 6.3+).
+// enqueue_block_editor_assets injects into the editor iframe; admin_enqueue_scripts
+// only reaches the outer admin shell and is invisible inside the canvas.
 function enqueue_bootstrap_icons_editor() {
-    // Use admin_enqueue_scripts instead to avoid interfering with block registration
     wp_enqueue_style(
         'bootstrap-icons',
         'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
@@ -164,6 +165,7 @@ function enqueue_bootstrap_icons_editor() {
         '1.13.1'
     );
 }
+add_action( 'enqueue_block_editor_assets', 'enqueue_bootstrap_icons_editor' );
 add_action( 'admin_enqueue_scripts', 'enqueue_bootstrap_icons_editor' );
 
 // Bootstrap admin settings (register menu, assets, etc.)
