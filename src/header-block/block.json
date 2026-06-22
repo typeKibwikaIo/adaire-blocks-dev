@@ -139,6 +139,8 @@
         "ctaBorderRadius": { "type": "number", "default": -1 },
         "ctaPaddingVertical": { "type": "number", "default": -1 },
         "ctaPaddingHorizontal": { "type": "number", "default": -1 },
+        "buttonBorderRadius": { "type": "number", "default": 30 },
+        "buttonPaddingVertical": { "type": "number", "default": 4 },
 
         "searchLayoutStyle": { "type": "string", "default": "icon-only" },
         "searchInputBgColor": { "type": "string", "default": "" },

@@ -151,7 +151,9 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 			'--adaire-header-social-color'                => $attributes['socialIconColor'],
 			'--adaire-header-nav-icon-color'             => $attributes['navIconColor'],
 			'--adaire-header-z-index'                    => $attributes['zIndex'],
-			'--adaire-header-action-radius'              => adaire_header_get_action_radius( $attributes['buttonShape'] ),
+			'--adaire-header-action-radius'              => ( isset( $attributes['buttonBorderRadius'] ) && (int) $attributes['buttonBorderRadius'] >= 0 )
+				? (int) $attributes['buttonBorderRadius'] . 'px'
+				: adaire_header_get_action_radius( $attributes['buttonShape'] ),
 			'--adaire-header-hamburger-border'           => ! empty( $attributes['hamburgerBorder'] ) ? ( '1px solid ' . $attributes['hamburgerBorderColor'] ) : 'none',
 			'--adaire-header-hamburger-border-radius'    => $attributes['hamburgerBorderRadius'] . 'px',
 			'--adaire-header-search-icon-size'           => ( ! empty( $attributes['searchIconSize'] ) ? $attributes['searchIconSize'] : 18 ) . 'px',
@@ -191,6 +193,9 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 		}
 		if ( ! empty( $attributes['ctaHoverTextColor'] ) ) {
 			$styles['--adaire-header-cta-hover-text'] = $attributes['ctaHoverTextColor'];
+		}
+		if ( isset( $attributes['buttonPaddingVertical'] ) && (int) $attributes['buttonPaddingVertical'] >= 0 ) {
+			$styles['--adaire-header-action-padding-y'] = (int) $attributes['buttonPaddingVertical'] . 'px';
 		}
 		if ( isset( $attributes['ctaBorderRadius'] ) && (int) $attributes['ctaBorderRadius'] >= 0 ) {
 			$styles['--adaire-header-cta-radius'] = (int) $attributes['ctaBorderRadius'] . 'px';
