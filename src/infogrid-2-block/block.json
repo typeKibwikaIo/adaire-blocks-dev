@@ -544,7 +544,7 @@
         },
         "solidBgColor": {
             "type": "string",
-            "default": ""
+            "default": "#503AA8"
         },
         "backgroundSize": {
             "type": "string",
