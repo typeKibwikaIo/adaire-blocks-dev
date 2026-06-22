@@ -210,9 +210,23 @@ export default function Edit( { attributes, setAttributes } ) {
 								key={ index }
 							>
 								<QuickZone
-									isActive={ activeZone === index }
-									onActivate={ () => setActiveZone( index ) }
-									onDeactivate={ () => setActiveZone( null ) }
+									id={ `timeline-item-${ index }` }
+									label={ item.title || __( 'Milestone', 'timeline-block' ) }
+									activeZone={ activeZone }
+									setActiveZone={ setActiveZone }
+									content={
+										<>
+											<SelectControl
+												label={ __( 'Icon', 'timeline-block' ) }
+												value={ item.icon }
+												options={ ICON_OPTIONS }
+												onChange={ ( value ) => updateItem( index, 'icon', value ) }
+											/>
+											<Button isDestructive onClick={ () => removeItem( index ) }>
+												{ __( 'Remove milestone', 'timeline-block' ) }
+											</Button>
+										</>
+									}
 								>
 									<NodeIcon icon={ item.icon } />
 								</QuickZone>

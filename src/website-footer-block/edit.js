@@ -1181,7 +1181,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 {(column.navItems || []).map((item, itemIndex) => (
                                                                     <li key={item.id} style={{ listStyle: 'none' }}>
                                                                         <QuickZone
-                                                                            id={`footer-navitem-${item.id}`}
+                                                                            id={`footer-navitem-${column.id}-${item.id}`}
                                                                             label={item.label || __('Link', 'website-footer-block')}
                                                                             activeZone={activeZone}
                                                                             setActiveZone={setActiveZone}
@@ -1270,7 +1270,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                         {(column.socialItems || []).map((item) => (
                                                             <QuickZone
                                                                 key={item.id}
-                                                                id={`footer-socialitem-${item.id}`}
+                                                                id={`footer-socialitem-${column.id}-${item.id}`}
                                                                 label={item.label || item.platform || __('Social link', 'website-footer-block')}
                                                                 activeZone={activeZone}
                                                                 setActiveZone={setActiveZone}
@@ -1347,7 +1347,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                         {(column.buttonsItems || []).map((item) => (
                                                             <QuickZone
                                                                 key={item.id}
-                                                                id={`footer-btnitem-${item.id}`}
+                                                                id={`footer-btnitem-${column.id}-${item.id}`}
                                                                 label={item.label || __('Button', 'website-footer-block')}
                                                                 activeZone={activeZone}
                                                                 setActiveZone={setActiveZone}

@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
-import { 
-    useBlockProps, 
-    InspectorControls,
+import {
+    useBlockProps,
     BlockControls,
     PanelColorSettings,
     __experimentalUseCustomUnits as useCustomUnits,
@@ -27,6 +26,8 @@ import {
 import { useState, useEffect, createElement } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import InspectorTabs from '../components/InspectorTabs';
+import QuickZone from '../components/QuickZone';
 
 // Custom icons for small laptop and big desktop (match other blocks in repo)
 const smallLaptopIcon = createElement('svg', { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
@@ -50,6 +51,7 @@ const BREAKPOINTS = [
 const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
     const [headingDeviceType, setHeadingDeviceType] = useState('desktop');
+    const [activeZone, setActiveZone] = useState(null);
     
     const {
         blockId,
@@ -398,7 +400,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     const showErrorNotice = error && posts.length === 0;
 return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 {/* Heading Settings */}
                 <PanelBody title={__('Heading', 'posts-grid-block')} initialOpen={false}>
                     <PanelRow>
@@ -1067,7 +1069,7 @@ return (
                         ]}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps}>
                 {showErrorNotice && (
@@ -1114,11 +1116,39 @@ return (
                         </div>
                     )}
                     
-                    <div 
-                        className="adaire-posts-grid__grid" 
+                    <QuickZone
+                        id="layout"
+                        label={__('Layout', 'posts-grid-block')}
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
+                        content={
+                            <>
+                                {layoutType !== 'list' && (
+                                    <RangeControl
+                                        label={__('Columns', 'posts-grid-block')}
+                                        value={columns}
+                                        onChange={(value) => setAttributes({ columns: value })}
+                                        min={1}
+                                        max={6}
+                                        step={1}
+                                    />
+                                )}
+                                <RangeControl
+                                    label={__('Card Gap', 'posts-grid-block')}
+                                    value={cardGap}
+                                    onChange={(value) => setAttributes({ cardGap: value })}
+                                    min={0}
+                                    max={60}
+                                    step={1}
+                                />
+                            </>
+                        }
+                    >
+                    <div
+                        className="adaire-posts-grid__grid"
                         style={{
-                            gridTemplateColumns: layoutType === 'list' 
-                                ? '1fr' 
+                            gridTemplateColumns: layoutType === 'list'
+                                ? '1fr'
                                 : `repeat(${responsiveColumns}, 1fr)`
                         }}
                     >
@@ -1247,7 +1277,8 @@ return (
                             ))
                         )}
                     </div>
-                    
+                    </QuickZone>
+
                     {enableFiltering && filterPosition === 'bottom' && (
                         <div className="adaire-posts-grid__filters">
                             <div className="adaire-posts-grid__filter-list">

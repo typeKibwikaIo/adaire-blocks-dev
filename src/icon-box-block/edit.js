@@ -1,6 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps } from '@wordpress/block-editor';
 import {
     PanelBody,
     RangeControl,
@@ -16,6 +16,7 @@ import {
 import { desktop, tablet, mobile } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 import './editor.scss';
 
 export default function Edit({ attributes, setAttributes, clientId }) {
@@ -100,7 +101,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <PanelBody title={__('Icon Settings', 'icon-box-block')} initialOpen={true}>
                     <BaseControl label={__('Bootstrap Icon', 'icon-box-block')}>
                         <Button
@@ -297,7 +298,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         }}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <BootstrapIconPicker
                 isOpen={isIconPickerOpen}

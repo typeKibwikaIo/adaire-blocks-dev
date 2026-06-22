@@ -1,8 +1,10 @@
 ﻿import { __ } from '@wordpress/i18n';
-import { useBlockProps, InspectorControls, useInnerBlocksProps } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, SelectControl, ButtonGroup, Button, TextControl, BaseControl, ColorPicker } from '@wordpress/components';
 import { desktop, tablet, mobile } from '@wordpress/icons';
 import { useEffect, useState } from '@wordpress/element';
+import InspectorTabs from '../components/InspectorTabs';
+import QuickZone from '../components/QuickZone';
 import './editor.scss';
 
 const ALLOWED_BLOCKS = ['create-block/flipcard-front-block', 'create-block/flipcard-back-block'];
@@ -14,6 +16,7 @@ const TEMPLATE = [
 
 export default function Edit({ attributes, setAttributes, clientId }) {
     const [deviceType, setDeviceType] = useState('desktop');
+    const [activeZone, setActiveZone] = useState(null);
     const { 
         blockId, 
         width, 
@@ -87,7 +90,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <PanelBody title={__('Card Dimensions', 'flipcard-block')} initialOpen={true}>
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>
                         {__('Device', 'flipcard-block')}
@@ -375,14 +378,49 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         onChange={(value) => setAttributes({ animationEasing: value })}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps}>
-                <div className="adaire-flipcard__container">
-                    <div className="adaire-flipcard__inner">
-                        <div {...innerBlocksProps} />
+                <QuickZone
+                    id="colors"
+                    label={__('Colors', 'flipcard-block')}
+                    activeZone={activeZone}
+                    setActiveZone={setActiveZone}
+                    content={
+                        <>
+                            <p>{__('Front Background', 'flipcard-block')}</p>
+                            <ColorPicker
+                                color={frontBackgroundColor || '#ffffff'}
+                                onChangeComplete={(color) => {
+                                    const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
+                                    const colorValue = alpha < 1
+                                        ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
+                                        : color.hex;
+                                    setAttributes({ frontBackgroundColor: colorValue });
+                                }}
+                                enableAlpha={true}
+                            />
+                            <p>{__('Back Background', 'flipcard-block')}</p>
+                            <ColorPicker
+                                color={backBackgroundColor || '#f5f5f5'}
+                                onChangeComplete={(color) => {
+                                    const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
+                                    const colorValue = alpha < 1
+                                        ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
+                                        : color.hex;
+                                    setAttributes({ backBackgroundColor: colorValue });
+                                }}
+                                enableAlpha={true}
+                            />
+                        </>
+                    }
+                >
+                    <div className="adaire-flipcard__container">
+                        <div className="adaire-flipcard__inner">
+                            <div {...innerBlocksProps} />
+                        </div>
                     </div>
-                </div>
+                </QuickZone>
             </div>
         </>
     );

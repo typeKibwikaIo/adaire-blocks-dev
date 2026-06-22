@@ -128,12 +128,9 @@ class Adaire_Welcome_Screen {
     }
 
     /**
-     * Tiny inline-SVG icon set used throughout this screen instead of
-     * emoji, so the page reads as a real icon system rather than
-     * pictographic glyphs. Every icon shares a 24x24 viewBox, a single
-     * `currentColor` stroke, and rounded caps/joins for consistent
-     * weight — colour and size are controlled entirely by the wrapping
-     * element's CSS (`color` + `width`/`height`).
+     * Inline SVG icon set for this screen. Each icon uses a 24x24 viewBox
+     * and a single `currentColor` stroke; size and colour are set by the
+     * wrapping element's CSS (`color` + `width`/`height`).
      */
     private static function icon( $name ) {
         $icons = array(
@@ -168,29 +165,37 @@ class Adaire_Welcome_Screen {
             wp_die( esc_html__( 'Unauthorized', 'adaire-blocks' ) );
         }
 
-        $nonce     = wp_create_nonce( 'adaire_create_page' );
-        $ajax_url  = admin_url( 'admin-ajax.php' );
-        $docs_url  = 'https://adaire.digital/docs/';
+        $nonce       = wp_create_nonce( 'adaire_create_page' );
+        $ajax_url    = admin_url( 'admin-ajax.php' );
+        $docs_url    = 'https://adaire.digital/docs/';
         $support_url = 'https://adaire.digital/support/';
 
         $is_block_theme = function_exists( 'wp_is_block_theme' ) && wp_is_block_theme();
-        $theme_name     = wp_get_theme()->get( 'Name' );
-        $theme_slug     = get_stylesheet();
-        $header_url     = admin_url( 'site-editor.php?postType=wp_template_part&postId=' . rawurlencode( $theme_slug . '//header' ) );
-        $footer_url     = admin_url( 'site-editor.php?postType=wp_template_part&postId=' . rawurlencode( $theme_slug . '//footer' ) );
-        $all_parts_url  = admin_url( 'site-editor.php?path=%2Fwp_template_part%2Fall' );
+        $theme_name      = wp_get_theme()->get( 'Name' );
+        $theme_slug      = get_stylesheet();
+        $header_url      = admin_url( 'site-editor.php?postType=wp_template_part&postId=' . rawurlencode( $theme_slug . '//header' ) );
+        $footer_url      = admin_url( 'site-editor.php?postType=wp_template_part&postId=' . rawurlencode( $theme_slug . '//footer' ) );
+        $all_parts_url   = admin_url( 'site-editor.php?path=%2Fwp_template_part%2Fall' );
 
-        // Real sidebar/quick-action destinations — everything here is an
-        // existing, navigable admin screen (no fabricated features).
-        $settings_url   = admin_url( 'admin.php?page=adaire-blocks-settings' );
-        $migration_url  = admin_url( 'admin.php?page=adaire-blocks-migration' );
-        $themes_url     = admin_url( 'themes.php' );
-        $exit_url       = admin_url();
+        // Sidebar / quick-action destinations.
+        $settings_url  = admin_url( 'admin.php?page=adaire-blocks-settings' );
+        $migration_url = admin_url( 'admin.php?page=adaire-blocks-migration' );
+        $themes_url    = admin_url( 'themes.php' );
+        $exit_url      = admin_url();
 
-        // Real bundled screenshots of GutenBlocks in the editor —
-        // used in place of stock photography or inline illustration.
-        $hero_image_url      = plugins_url( 'images/welcome-hero.png', __FILE__ );
-        $showcase_image_url  = plugins_url( 'images/welcome-showcase.png', __FILE__ );
+        // Bundled screenshots used as the hero visual.
+        $hero_image_url     = plugins_url( 'images/welcome-hero.png', __FILE__ );
+        $showcase_image_url = plugins_url( 'images/welcome-showcase.png', __FILE__ );
+
+        // Reference imagery for the template gallery and resource cards.
+        // External preview assets; replace with self-hosted screenshots
+        // before a production build.
+        $preview_images = array(
+            'landing'  => 'https://s3-figma-hubfile-images-production.figma.com/hub/file/carousel/img/99645573e15e412a5bbde37b293767e199538427',
+            'about'    => 'https://elements-resized.envatousercontent.com/elements-cover-images/78d6a416-f0fa-4bef-803c-5409f46e8292?w=433&cf_fit=scale-down&q=85&format=auto&s=361f8685cc0bd6a084e3bf83cb1da9bed7d8ccbb8e6a657c8dfe4e420dc2efee',
+            'services' => 'https://marketstorage.b-cdn.net/users/rQMICWgf9EOBfrmE4CyLbdj4iiEgeWxc/previews/e22e1216-ce7b-475f-9c17-7143589e4f48/Dribbble-shot-HD-8.png',
+            'blog'     => 'https://firmbee.com/wp-content/uploads/Mockup.webdesign2-1-900x856.png',
+        );
 
         $templates = array(
             array(
@@ -199,6 +204,7 @@ class Adaire_Welcome_Screen {
                 'title'       => __( 'Landing Page', 'adaire-blocks' ),
                 'description' => __( 'Hero, features, testimonial & CTA.', 'adaire-blocks' ),
                 'homepage'    => true,
+                'image'       => $preview_images['landing'],
             ),
             array(
                 'slug'        => 'adaire-blocks/about-page',
@@ -206,6 +212,7 @@ class Adaire_Welcome_Screen {
                 'title'       => __( 'About Page', 'adaire-blocks' ),
                 'description' => __( 'Hero, about section, timeline & testimonial.', 'adaire-blocks' ),
                 'homepage'    => false,
+                'image'       => $preview_images['about'],
             ),
             array(
                 'slug'        => 'adaire-blocks/services-page',
@@ -213,6 +220,7 @@ class Adaire_Welcome_Screen {
                 'title'       => __( 'Services Page', 'adaire-blocks' ),
                 'description' => __( 'Hero, info grid & pricing table.', 'adaire-blocks' ),
                 'homepage'    => false,
+                'image'       => $preview_images['services'],
             ),
             array(
                 'slug'        => 'adaire-blocks/blog-landing',
@@ -220,6 +228,7 @@ class Adaire_Welcome_Screen {
                 'title'       => __( 'Blog Landing', 'adaire-blocks' ),
                 'description' => __( 'Hero with a posts grid.', 'adaire-blocks' ),
                 'homepage'    => false,
+                'image'       => $preview_images['blog'],
             ),
             array(
                 'slug'        => 'adaire-blocks/contact-page',
@@ -227,14 +236,69 @@ class Adaire_Welcome_Screen {
                 'title'       => __( 'Contact Page', 'adaire-blocks' ),
                 'description' => __( 'Hero with a two-column contact layout.', 'adaire-blocks' ),
                 'homepage'    => false,
+                'image'       => '',
+            ),
+        );
+
+        $resources = array(
+            array(
+                'href'  => $docs_url . 'getting-started/',
+                'tag'   => __( 'Guide', 'adaire-blocks' ),
+                'title' => __( 'Getting Started Guide', 'adaire-blocks' ),
+                'desc'  => __( 'Step-by-step walkthrough of every block and setting.', 'adaire-blocks' ),
+                'cta'   => __( 'Read the guide', 'adaire-blocks' ),
+                'image' => $preview_images['blog'],
+            ),
+            array(
+                'href'  => $docs_url . 'blocks/',
+                'tag'   => __( 'Reference', 'adaire-blocks' ),
+                'title' => __( 'Block Reference', 'adaire-blocks' ),
+                'desc'  => __( 'Attributes, options, and examples for all free blocks.', 'adaire-blocks' ),
+                'cta'   => __( 'Browse reference', 'adaire-blocks' ),
+                'image' => $preview_images['landing'],
+            ),
+            array(
+                'href'  => $support_url,
+                'tag'   => __( 'Help', 'adaire-blocks' ),
+                'title' => __( 'Support', 'adaire-blocks' ),
+                'desc'  => __( 'Submit a ticket or browse answered questions.', 'adaire-blocks' ),
+                'cta'   => __( 'Get support', 'adaire-blocks' ),
+                'image' => $preview_images['services'],
             ),
         );
         ?>
         <div class="wrap adaire-wrap-shell">
         <style>
-            .adaire-welcome * { box-sizing: border-box; }
-            .adaire-welcome { max-width: 980px; margin: 0 auto; padding: 36px 40px 64px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-            .adaire-welcome svg { display: block; }
+            .adaire-welcome, .adaire-welcome *, .adaire-shell-sidebar, .adaire-shell-sidebar * { box-sizing: border-box; }
+            .adaire-welcome svg, .adaire-shell-sidebar svg { display: block; }
+
+            /* ================= Design tokens ================= */
+            .adaire-shell {
+                --ab-brand: #d5293f;
+                --ab-brand-dark: #a01f2f;
+                --ab-brand-tint: #fdf0f1;
+                --ab-ink: #0f172a;
+                --ab-ink-2: #1e293b;
+                --ab-body: #475569;
+                --ab-muted: #64748b;
+                --ab-faint: #94a3b8;
+                --ab-line: rgba(15, 23, 42, .10);
+                --ab-line-soft: rgba(15, 23, 42, .06);
+                --ab-r-sm: 10px;
+                --ab-r-md: 14px;
+                --ab-r-lg: 20px;
+                --ab-r-xl: 28px;
+                --ab-r-pill: 999px;
+                --ab-shadow-1: 0 1px 2px rgba(15, 23, 42, .05);
+                --ab-shadow-2: 0 10px 26px rgba(15, 23, 42, .08);
+                --ab-shadow-3: 0 26px 56px rgba(15, 23, 42, .14);
+                --ab-shadow-brand: 0 18px 40px rgba(213, 41, 63, .20);
+                --ab-ease: cubic-bezier(.22, 1, .36, 1);
+                --ab-fs-h1: clamp(3.25rem, 2rem + 5.4vw, 6.75rem);
+                --ab-fs-h2: clamp(1.5rem, 1.3rem + 1vw, 2.25rem);
+                --ab-fs-lead: clamp(1.0625rem, 1rem + .3vw, 1.25rem);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            }
 
             /* ---------- App shell: replace native wp-admin chrome on this screen ---------- */
             .adaire-wrap-shell { margin: 0 !important; max-width: none !important; }
@@ -249,184 +313,294 @@ class Adaire_Welcome_Screen {
             #wpcontent, #wpbody, #wpbody-content { margin-left: 0 !important; padding-left: 0 !important; padding-bottom: 0 !important; }
             #wpbody-content > div:not(.adaire-wrap-shell) { display: none !important; }
 
-            .adaire-shell { display: grid; grid-template-columns: 250px 1fr; min-height: 100vh; background: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+            /* Shared flat white background for the sidebar and main column. */
+            .adaire-shell {
+                display: grid;
+                grid-template-columns: 264px 1fr;
+                min-height: 100vh;
+                position: relative;
+                background: #ffffff;
+            }
 
-            /* ---------- Sidebar ---------- */
-            .adaire-shell-sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; background: #fff; border-right: 1px solid #e2e8f0; padding: 22px 16px; display: flex; flex-direction: column; flex-shrink: 0; }
-            .adaire-shell-brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 22px; }
-            .adaire-shell-brand-mark { width: 22px; height: 22px; color: #d5293f; flex-shrink: 0; }
+            /* ---------- Sidebar (transparent: shows the shared canvas through it) ---------- */
+            .adaire-shell-sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+                background: #ffffff;
+                border-right: 1px solid var(--ab-line-soft);
+                padding: 24px 16px;
+                display: flex;
+                flex-direction: column;
+                flex-shrink: 0;
+                z-index: 3;
+            }
+            .adaire-shell-brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 26px; }
+            .adaire-shell-brand-mark { width: 22px; height: 22px; color: var(--ab-brand); flex-shrink: 0; }
             .adaire-shell-brand-mark svg { width: 100%; height: 100%; }
-            .adaire-shell-brand-name { font-size: 14px; font-weight: 700; color: #0f172a; letter-spacing: -.2px; }
+            .adaire-shell-brand-name { font-size: 14.5px; font-weight: 700; color: var(--ab-ink); letter-spacing: -.2px; }
             .adaire-shell-nav { display: flex; flex-direction: column; gap: 2px; }
-            .adaire-shell-link { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #475569; text-decoration: none; transition: background .15s ease, color .15s ease; }
+            .adaire-shell-link { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 9px 12px; border-radius: var(--ab-r-sm); font-size: 13.5px; font-weight: 600; color: var(--ab-body); text-decoration: none; transition: background .18s var(--ab-ease), color .18s var(--ab-ease); }
             .adaire-shell-link svg { width: 16px; height: 16px; flex-shrink: 0; }
-            .adaire-shell-link:hover { background: #f8fafc; color: #1e293b; text-decoration: none; }
-            .adaire-shell-link.is-active { background: #fdf0f1; color: #b5233a; }
-            .adaire-shell-nav-divider { height: 1px; background: #e2e8f0; margin: 14px 8px; }
-            .adaire-shell-nav-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: #94a3b8; padding: 0 10px 6px; }
+            .adaire-shell-link:hover { background: rgba(15, 23, 42, .045); color: var(--ab-ink-2); text-decoration: none; }
+            .adaire-shell-link.is-active { background: var(--ab-brand-tint); color: var(--ab-brand-dark); }
+            .adaire-shell-nav-divider { height: 1px; background: var(--ab-line-soft); margin: 16px 10px; }
+            .adaire-shell-nav-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--ab-faint); padding: 0 12px 8px; }
             .adaire-shell-link-ext { justify-content: space-between; }
             .adaire-shell-link-label { display: flex; align-items: center; gap: 10px; }
             .adaire-shell-ext-icon { display: inline-flex; width: 12px; height: 12px; color: #cbd5e1; flex-shrink: 0; }
             .adaire-shell-ext-icon svg { width: 100%; height: 100%; }
             .adaire-shell-spacer { flex: 1; }
-            .adaire-shell-sidebar-foot { padding: 14px 10px 4px; border-top: 1px solid #e2e8f0; margin-top: 10px; }
-            .adaire-shell-exit { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #94a3b8; text-decoration: none; margin-bottom: 8px; transition: color .15s ease; }
+            .adaire-shell-sidebar-foot { padding: 16px 12px 4px; border-top: 1px solid var(--ab-line-soft); margin-top: 12px; }
+            .adaire-shell-exit { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--ab-faint); text-decoration: none; margin-bottom: 10px; min-height: 32px; transition: color .18s var(--ab-ease); }
             .adaire-shell-exit svg { width: 13px; height: 13px; }
-            .adaire-shell-exit:hover { color: #475569; text-decoration: none; }
-            .adaire-shell-version { font-size: 11px; color: #cbd5e1; padding: 0 10px; }
+            .adaire-shell-exit:hover { color: var(--ab-body); text-decoration: none; }
+            .adaire-shell-version { font-size: 11px; color: #cbd5e1; padding: 0 12px; }
 
-            .adaire-shell-main { min-width: 0; overflow-x: hidden; }
+            .adaire-shell-main { min-width: 0; overflow-x: hidden; position: relative; z-index: 1; }
+
+            .adaire-welcome { max-width: 1320px; margin: 0 auto; padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 48px) 96px; }
+
+            @media (min-width: 1800px) {
+                .adaire-welcome { max-width: 1480px; }
+            }
 
             @media (max-width: 900px) {
                 .adaire-shell { grid-template-columns: 1fr; }
-                .adaire-shell-sidebar { position: relative; height: auto; flex-direction: row; align-items: center; overflow-x: auto; overflow-y: visible; border-right: none; border-bottom: 1px solid #e2e8f0; padding: 12px 14px; gap: 18px; }
+                .adaire-shell-sidebar { position: relative; height: auto; flex-direction: row; align-items: center; overflow-x: auto; overflow-y: visible; border-right: none; border-bottom: 1px solid var(--ab-line-soft); padding: 14px 16px; gap: 18px; }
                 .adaire-shell-brand { padding: 0; }
                 .adaire-shell-nav { flex-direction: row; }
                 .adaire-shell-nav-divider, .adaire-shell-nav-label, .adaire-shell-spacer { display: none; }
                 .adaire-shell-sidebar-foot { border-top: none; margin: 0; padding: 0; display: flex; align-items: center; }
                 .adaire-shell-version { display: none; }
-                .adaire-welcome { padding: 28px 20px 50px; }
             }
 
-            /* ---------- Hero (two-column: copy + real screenshots) ---------- */
-            .adaire-hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 44px; align-items: center; }
-            .adaire-hero-visual { position: relative; }
-            .adaire-hero-shot { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 20px 50px rgba(15,23,42,.18); border: 1px solid rgba(255,255,255,.4); transform: rotate(0.4deg); }
-            .adaire-hero-shot img { display: block; width: 100%; height: auto; }
-            .adaire-hero-shot-tag { position: absolute; left: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 6px; background: rgba(15,23,42,.78); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: #fff; font-size: 11px; font-weight: 600; padding: 7px 12px; border-radius: 999px; }
-            .adaire-hero-shot-tag .adaire-pill-icon { color: #fda4af; }
-            .adaire-hero-shot-float { position: absolute; top: -22px; right: -24px; width: 44%; border-radius: 10px; overflow: hidden; box-shadow: 0 14px 30px rgba(15,23,42,.22); border: 4px solid #fff; transform: rotate(-4deg); animation: adaire-float 7s ease-in-out infinite; }
-            .adaire-hero-shot-float img { display: block; width: 100%; height: auto; }
-            @media (max-width: 900px) { .adaire-hero-grid { grid-template-columns: 1fr; } .adaire-hero-shot-float { display: none; } }
-
-            /* ---------- Icon system (replaces emoji) ---------- */
-            .adaire-icon-badge { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 10px; background: #fdf0f1; color: #d5293f; flex-shrink: 0; transition: transform .25s ease, background .25s ease; }
+            /* ---------- Icon / pattern system (replaces emoji) ---------- */
+            .adaire-icon-badge { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--ab-r-sm); background: var(--ab-brand-tint); color: var(--ab-brand); flex-shrink: 0; transition: transform .3s var(--ab-ease); }
             .adaire-icon-badge svg { width: 20px; height: 20px; }
-            .adaire-template-card .adaire-icon-badge,
-            .adaire-resource .adaire-icon-badge { margin-bottom: 12px; }
-            .adaire-template-card:hover .adaire-icon-badge,
-            .adaire-hf-card:hover .adaire-icon-badge,
-            .adaire-resource:hover .adaire-icon-badge { transform: scale(1.12) rotate(-4deg); background: #fcdfe3; }
+
+            .adaire-swatch { position: relative; width: 52px; height: 52px; border-radius: var(--ab-r-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; transition: transform .35s var(--ab-ease), box-shadow .35s var(--ab-ease); box-shadow: inset 0 0 0 1px rgba(15, 23, 42, .05); }
+            .adaire-swatch::before { content: ''; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(255, 255, 255, .55) 0%, transparent 48%); }
+            .adaire-swatch svg { width: 21px; height: 21px; position: relative; z-index: 1; }
+            .adaire-swatch img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+            .adaire-swatch.has-image::before { background: linear-gradient(180deg, transparent 50%, rgba(15, 23, 42, .55) 100%); z-index: 1; }
+            .adaire-swatch.has-image svg { position: relative; z-index: 2; width: 17px; height: 17px; color: #fff; }
+            .adaire-swatch-1 { background: linear-gradient(160deg, #f7e2e4, #ecc3c8); color: #9c2236; }
+            .adaire-swatch-2 { background: linear-gradient(160deg, #eaedf2, #d9dfe7); color: #3c4758; }
+            .adaire-swatch-3 { background: linear-gradient(160deg, #f3ecdf, #e4d6bc); color: #80591c; }
+            .adaire-swatch-4 { background: linear-gradient(160deg, #e6efe9, #cfe2d6); color: #2c6644; }
+            .adaire-swatch-5 { background: linear-gradient(160deg, #e7edf4, #d2deec); color: #2b4d83; }
+            .adaire-swatch-6 { background: linear-gradient(160deg, #ede7f0, #ddd0e3); color: #654074; }
+            .adaire-hf-card:hover .adaire-swatch,
+            .adaire-step:hover .adaire-icon-badge { transform: scale(1.08); }
+
             .adaire-pill-icon { display: inline-flex; width: 13px; height: 13px; }
             .adaire-pill-icon svg { width: 100%; height: 100%; }
             .adaire-tip-icon, .adaire-note-icon { display: inline-flex; width: 18px; height: 18px; flex-shrink: 0; }
             .adaire-tip-icon svg, .adaire-note-icon svg { width: 100%; height: 100%; }
             .adaire-tip-icon { color: #15803d; }
-            .adaire-note-icon { color: #94a3b8; margin-top: 1px; }
+            .adaire-note-icon { color: var(--ab-faint); margin-top: 1px; }
             .adaire-btn-icon { display: inline-flex; width: 13px; height: 13px; }
             .adaire-btn-icon svg { width: 100%; height: 100%; }
 
-            /* ---------- Fade-in-on-scroll (scale + blur + translate — fade alone is not enough motion) ---------- */
-            .adaire-fade { opacity: 0; transform: translateY(18px) scale(.97); filter: blur(6px); transition: opacity .6s ease, transform .6s ease, filter .6s ease; }
+            /* ---------- Focus states (accessibility) ---------- */
+            .adaire-welcome a:focus-visible,
+            .adaire-welcome button:focus-visible,
+            .adaire-shell-link:focus-visible,
+            .adaire-shell-exit:focus-visible {
+                outline: 2px solid var(--ab-brand);
+                outline-offset: 3px;
+                border-radius: var(--ab-r-sm);
+            }
+
+            /* ---------- Fade-in-on-scroll ---------- */
+            .adaire-fade { opacity: 0; transform: translateY(20px) scale(.98); filter: blur(6px); transition: opacity .65s var(--ab-ease), transform .65s var(--ab-ease), filter .65s var(--ab-ease); }
             .adaire-fade.is-visible { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 
-            /* ---------- Hero ---------- */
-            .adaire-hero { position: relative; overflow: hidden; border-radius: 20px; padding: 48px 44px; margin-bottom: 40px; text-align: left; background: #fafafa; background-image: radial-gradient(circle, #e2e8f0 1.4px, transparent 1.4px); background-size: 24px 24px; --adaire-glow-y: 20%; }
-            .adaire-hero::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(circle at 50% var(--adaire-glow-y, 20%), rgba(213,41,63,.10), transparent 60%); }
-            .adaire-hero::after { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .035; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-            .adaire-hero-shape { position: absolute; pointer-events: none; z-index: 1; }
-            .adaire-hero-shape.circle { border: 1.5px solid #e2e8f0; border-radius: 50%; animation: adaire-float 7s ease-in-out infinite; }
-            .adaire-hero-shape.dot { background: #cbd5e1; border-radius: 50%; animation: adaire-float 5s ease-in-out infinite; }
-            .adaire-hero-shape.square { border: 1.5px solid #f4a0aa; border-radius: 10px; animation: adaire-float 8s ease-in-out infinite; }
-            @keyframes adaire-float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-16px) rotate(6deg); } }
-            @media (prefers-reduced-motion: reduce) { .adaire-hero-shape, .adaire-fade, .adaire-hero-inner, .adaire-btn-primary, .adaire-hero-shot-float { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
-
+            /* ================= Hero ================= */
+            .adaire-hero { position: relative; padding: clamp(24px, 3vw, 40px) 0 clamp(56px, 7vw, 88px); margin-bottom: clamp(40px, 5vw, 64px); }
+            .adaire-hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: .8fr 1.35fr; gap: clamp(32px, 4vw, 64px); align-items: center; }
             .adaire-hero-inner { position: relative; z-index: 2; transition: transform .2s ease-out; }
-            .adaire-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(253,240,241,.75); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: #b5233a; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; animation: adaire-pop .5s ease; }
-            @keyframes adaire-pop { 0% { opacity: 0; transform: scale(.8); } 100% { opacity: 1; transform: scale(1); } }
-            .adaire-hero-title { font-family: Georgia, 'Times New Roman', serif; font-weight: 600; font-size: 36px; line-height: 1.2; color: #0f172a; margin: 0 0 14px; }
-            .adaire-hero-title .adaire-accent { color: #d5293f; }
-            .adaire-hero-sub { font-size: 15px; color: #64748b; line-height: 1.6; margin: 0 0 28px; max-width: 460px; }
-            .adaire-hero-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 22px; }
+            .adaire-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(253, 240, 241, .85); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: var(--ab-brand-dark); font-size: 12px; font-weight: 700; padding: 7px 16px; border-radius: var(--ab-r-pill); margin-bottom: 24px; border: 1px solid rgba(213, 41, 63, .14); }
+            .adaire-hero-title { font-weight: 700; font-size: var(--ab-fs-h1); line-height: 1.06; letter-spacing: -.02em; color: var(--ab-ink); margin: 0 0 18px; }
+            .adaire-hero-title .adaire-accent { color: var(--ab-brand); }
+            .adaire-hero-sub { font-size: var(--ab-fs-lead); color: var(--ab-body); line-height: 1.65; margin: 0 0 32px; max-width: 480px; }
+            .adaire-hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 26px; }
 
-            .adaire-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 8px; padding: 12px 22px; cursor: pointer; border: none; transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease; }
-            .adaire-btn-primary { position: relative; overflow: hidden; background: linear-gradient(135deg, #a01f2f 0%, #d5293f 100%); color: #fff; box-shadow: 0 4px 14px rgba(213,41,63,.25); animation: adaire-glow-pulse 2.6s ease-in-out infinite; }
-            .adaire-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(213,41,63,.32); color: #fff; animation-play-state: paused; }
-            @keyframes adaire-glow-pulse { 0%, 100% { box-shadow: 0 4px 14px rgba(213,41,63,.25); } 50% { box-shadow: 0 4px 22px rgba(213,41,63,.45); } }
-            .adaire-ripple { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: rgba(255,255,255,.55); transform: scale(0); animation: adaire-ripple .6s ease-out; pointer-events: none; }
+            .adaire-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; font-size: 14.5px; font-weight: 600; text-decoration: none; border-radius: var(--ab-r-sm); padding: 13px 26px; cursor: pointer; border: none; transition: transform .25s var(--ab-ease), box-shadow .25s var(--ab-ease), background .25s var(--ab-ease), color .25s var(--ab-ease); }
+            .adaire-btn-primary { position: relative; overflow: hidden; background: linear-gradient(135deg, var(--ab-brand-dark) 0%, var(--ab-brand) 100%); color: #fff; box-shadow: var(--ab-shadow-brand); }
+            .adaire-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 22px 48px rgba(213, 41, 63, .28); color: #fff; }
+            .adaire-ripple { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: rgba(255, 255, 255, .55); transform: scale(0); animation: adaire-ripple .6s ease-out; pointer-events: none; }
             @keyframes adaire-ripple { to { transform: scale(20); opacity: 0; } }
-            .adaire-btn-arrow { display: inline-block; transition: transform .25s ease; }
+            .adaire-btn-arrow { display: inline-block; transition: transform .25s var(--ab-ease); }
             .adaire-btn-primary:hover .adaire-btn-arrow { transform: translateX(4px); }
-            .adaire-btn-ghost { background: transparent; color: #475569; padding: 12px 4px; }
-            .adaire-btn-ghost:hover { color: #1e293b; text-decoration: underline; }
-            .adaire-hero-version { display: inline-block; font-size: 12px; color: #94a3b8; }
+            .adaire-btn-ghost { background: transparent; color: var(--ab-body); padding: 13px 6px; border: none; }
+            .adaire-btn-ghost:hover { color: var(--ab-ink-2); text-decoration: underline; }
+            .adaire-hero-version { display: inline-block; font-size: 12px; color: var(--ab-faint); }
 
-            /* ---------- Steps ---------- */
-            .adaire-welcome-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
-            .adaire-step { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-            .adaire-step:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(15,23,42,.06); border-color: #f4a0aa; }
-            .adaire-step-num { width: 32px; height: 32px; background: #fdf0f1; color: #d5293f; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; margin-bottom: 12px; transition: transform .2s ease; }
-            .adaire-step:hover .adaire-step-num { transform: scale(1.12); }
-            .adaire-step h3 { font-size: 14px; margin: 0 0 6px; color: #1e293b; }
-            .adaire-step p { font-size: 13px; color: #64748b; margin: 0; line-height: 1.5; }
+            /* ---------- Hero visual ---------- */
+            .adaire-hero-visual { position: relative; isolation: isolate; }
+            .adaire-hero-visual::before {
+                content: '';
+                position: absolute;
+                inset: -10% -16% -10% -8%;
+                background: radial-gradient(circle at 60% 35%, rgba(213, 41, 63, .16), transparent 60%);
+                filter: blur(36px);
+                z-index: -1;
+            }
+            .adaire-hero-shot { position: relative; border-radius: 0; overflow: hidden; box-shadow: var(--ab-shadow-3); border: 1px solid rgba(255, 255, 255, .6); background: #1e1f24; }
+            .adaire-hero-shot-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #25262b; }
+            .adaire-hero-shot-dot { width: 9px; height: 9px; border-radius: 50%; background: #4a4b52; }
+            .adaire-hero-shot-dot:first-child { background: #e5594f; }
+            .adaire-hero-shot-dot:nth-child(2) { background: #e6b73f; }
+            .adaire-hero-shot-dot:nth-child(3) { background: #59b860; }
+            .adaire-hero-shot img { display: block; width: 100%; height: auto; }
+            .adaire-hero-shot-tag { position: absolute; left: 20px; bottom: 20px; display: inline-flex; align-items: center; gap: 6px; background: rgba(15, 23, 42, .8); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: #fff; font-size: 11.5px; font-weight: 600; padding: 8px 14px; border-radius: var(--ab-r-pill); }
+            .adaire-hero-shot-tag .adaire-pill-icon { color: #fda4af; }
+            .adaire-hero-shot-float { position: absolute; bottom: -42px; right: -48px; width: 60%; border-radius: 0; overflow: hidden; box-shadow: var(--ab-shadow-3); border: 6px solid #fff; animation: adaire-float 8s ease-in-out infinite; }
+            .adaire-hero-shot-float img { display: block; width: 100%; height: auto; }
+            @keyframes adaire-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+            @media (prefers-reduced-motion: reduce) { .adaire-fade, .adaire-hero-inner, .adaire-hero-shot-float { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
 
-            .adaire-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 4px; }
-            .adaire-section-title { font-size: 18px; font-weight: 600; color: #1e293b; margin: 0 0 6px; }
-            .adaire-section-subtitle { font-size: 13px; color: #64748b; margin: 0 0 20px; }
+            @media (min-width: 1600px) {
+                .adaire-hero-grid { grid-template-columns: .72fr 1.4fr; gap: 72px; }
+                .adaire-hero-shot-float { width: 56%; }
+            }
+            @media (max-width: 1199px) {
+                .adaire-hero-grid { grid-template-columns: 1fr 1.1fr; gap: 36px; }
+            }
+            @media (max-width: 900px) {
+                .adaire-hero-grid { grid-template-columns: 1fr; }
+                .adaire-hero-sub { max-width: 100%; }
+                .adaire-hero-shot-float { width: 50%; right: -14px; bottom: -28px; }
+            }
+            @media (max-width: 480px) {
+                .adaire-hero-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+                .adaire-btn { width: 100%; }
+                .adaire-hero-shot-float { display: none; }
+            }
 
-            /* ---------- Template slider ---------- */
-            .adaire-slider-nav { display: flex; gap: 8px; margin-bottom: 20px; flex-shrink: 0; }
-            .adaire-slider-btn { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #e2e8f0; background: rgba(255,255,255,.75); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: #475569; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease, transform .15s ease; }
-            .adaire-slider-btn svg { width: 16px; height: 16px; }
-            .adaire-slider-btn:hover { background: #d5293f; color: #fff; border-color: #d5293f; transform: translateY(-1px); }
-            .adaire-slider { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 -4px 40px; padding: 4px; }
+            /* ================= Section headings ================= */
+            .adaire-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
+            .adaire-section-title { font-size: var(--ab-fs-h2); font-weight: 700; letter-spacing: -.01em; color: var(--ab-ink-2); margin: 0 0 8px; }
+            .adaire-section-subtitle { font-size: 14.5px; color: var(--ab-muted); margin: 0 0 28px; line-height: 1.6; max-width: 640px; }
+
+            /* ================= Steps (stepper) ================= */
+            .adaire-welcome-steps { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-bottom: clamp(48px, 6vw, 72px); }
+            .adaire-welcome-steps::before { content: ''; position: absolute; top: 30px; left: 28px; right: 28px; height: 1px; background: var(--ab-line); z-index: 0; }
+            .adaire-step { position: relative; z-index: 1; padding: 0 4px; }
+            .adaire-step-num { position: relative; width: 44px; height: 44px; background: #fff; border: 1px solid var(--ab-line); color: var(--ab-brand); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; margin-bottom: 18px; transition: transform .25s var(--ab-ease), border-color .25s var(--ab-ease), box-shadow .25s var(--ab-ease); }
+            .adaire-step:hover .adaire-step-num { transform: scale(1.08); border-color: var(--ab-brand); box-shadow: var(--ab-shadow-2); }
+            .adaire-step h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; color: var(--ab-ink-2); }
+            .adaire-step p { font-size: 13.5px; color: var(--ab-muted); margin: 0; line-height: 1.6; }
+
+            @media (max-width: 700px) {
+                .adaire-welcome-steps { grid-template-columns: 1fr; gap: 24px; }
+                .adaire-welcome-steps::before { display: none; }
+            }
+
+            /* ================= Starter template gallery ================= */
+            .adaire-slider-nav { display: flex; gap: 10px; margin-bottom: 28px; flex-shrink: 0; }
+            .adaire-slider-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--ab-line); background: rgba(255, 255, 255, .7); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: var(--ab-body); cursor: pointer; transition: background .2s var(--ab-ease), color .2s var(--ab-ease), border-color .2s var(--ab-ease), transform .2s var(--ab-ease); }
+            .adaire-slider-btn svg { width: 17px; height: 17px; }
+            .adaire-slider-btn:hover { background: var(--ab-brand); color: #fff; border-color: var(--ab-brand); transform: translateY(-1px); }
+            .adaire-slider { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 -4px 64px; padding: 4px; }
             .adaire-slider::-webkit-scrollbar { display: none; }
-            .adaire-slider-track { display: flex; gap: 16px; }
-            .adaire-template-card { flex: 0 0 250px; scroll-snap-align: start; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
-            .adaire-template-card:hover { transform: translateY(-4px); border-color: #f4a0aa; box-shadow: 0 12px 28px rgba(213,41,63,.14); }
-            .adaire-template-card h3 { font-size: 14px; margin: 0 0 4px; color: #1e293b; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-            .adaire-template-card p { font-size: 12px; color: #64748b; margin: 0 0 14px; line-height: 1.4; min-height: 32px; }
-            .adaire-template-card .adaire-home-badge { background: #dcfce7; color: #15803d; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: .3px; }
-            .adaire-create-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: #d5293f; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; cursor: pointer; text-decoration: none; transition: background .2s ease, transform .15s ease; }
-            .adaire-create-btn:hover { background: #b5233a; color: #fff; transform: translateY(-1px); }
+            .adaire-slider-track { display: flex; gap: 24px; }
+
+            .adaire-template-card { flex: 0 0 320px; scroll-snap-align: start; display: flex; flex-direction: column; border: 1px solid var(--ab-line); border-radius: 0; overflow: hidden; background: transparent; box-shadow: var(--ab-shadow-1); transition: transform .35s var(--ab-ease), border-color .35s var(--ab-ease), box-shadow .35s var(--ab-ease); }
+            .adaire-template-card:hover { transform: translateY(-6px); border-color: rgba(213, 41, 63, .3); box-shadow: var(--ab-shadow-3); }
+            .adaire-template-media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+            .adaire-template-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ab-ease); }
+            .adaire-template-card:hover .adaire-template-media img { transform: scale(1.07); }
+            .adaire-template-media::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, .35) 50%, transparent 58%); background-size: 240% 240%; background-position: -60% -60%; opacity: 0; transition: opacity .2s var(--ab-ease), background-position 1s var(--ab-ease); }
+            .adaire-template-card:hover .adaire-template-media::after { opacity: 1; background-position: 140% 140%; }
+            .adaire-template-media-pattern { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; background: transparent; border-bottom: 1px solid var(--ab-line); }
+            .adaire-template-media-pattern::before { content: ''; position: absolute; inset: -20%; background: radial-gradient(circle at 26% 26%, rgba(213, 41, 63, .14), transparent 46%), radial-gradient(circle at 80% 72%, rgba(99, 102, 241, .10), transparent 50%); filter: blur(18px); }
+            .adaire-template-media-pattern svg { width: 22%; height: 22%; position: relative; z-index: 1; opacity: .9; color: var(--ab-brand); }
+            .adaire-home-badge { position: absolute; top: 14px; left: 14px; z-index: 2; background: rgba(255, 255, 255, .92); color: #15803d; font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: var(--ab-r-pill); text-transform: uppercase; letter-spacing: .4px; box-shadow: var(--ab-shadow-1); }
+            .adaire-template-body { padding: 24px 24px 26px; display: flex; flex-direction: column; flex: 1; }
+            .adaire-template-card h3 { font-size: 17.5px; font-weight: 700; margin: 0 0 7px; color: var(--ab-ink-2); letter-spacing: -.01em; }
+            .adaire-template-card p { font-size: 13.5px; color: var(--ab-muted); margin: 0 0 20px; line-height: 1.55; min-height: 34px; }
+            .adaire-create-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; width: 100%; min-height: 44px; background: var(--ab-ink); color: #fff; border: none; border-radius: var(--ab-r-sm); padding: 10px 16px; font-size: 13.5px; font-weight: 600; cursor: pointer; text-decoration: none; margin-top: auto; transition: background .2s var(--ab-ease), transform .15s var(--ab-ease); }
+            .adaire-create-btn:hover { background: var(--ab-brand); transform: translateY(-1px); }
             .adaire-create-btn.loading { opacity: .75; pointer-events: none; transform: none; }
-            .adaire-create-btn.loading::before { content: ''; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: adaire-spin .6s linear infinite; }
+            .adaire-create-btn.loading::before { content: ''; width: 12px; height: 12px; border: 2px solid rgba(255, 255, 255, .4); border-top-color: #fff; border-radius: 50%; animation: adaire-spin .6s linear infinite; }
             @keyframes adaire-spin { to { transform: rotate(360deg); } }
 
-            .adaire-homepage-tip { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 16px 20px; margin-bottom: 36px; font-size: 13px; color: #92400e; display: flex; align-items: flex-start; gap: 12px; }
-            .adaire-homepage-tip a { color: #b45309; }
+            .adaire-homepage-tip { background: transparent; border-left: 3px solid #15803d; border-radius: 0 var(--ab-r-sm) var(--ab-r-sm) 0; padding: 14px 20px; margin-bottom: 40px; font-size: 13.5px; color: #14532d; display: flex; align-items: flex-start; gap: 12px; }
+            .adaire-homepage-tip a { color: #15803d; font-weight: 600; }
 
-            /* ---------- Header & footer cards ---------- */
-            .adaire-hf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
-            .adaire-hf-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-            .adaire-hf-card:hover { transform: translateY(-3px); border-color: #f4a0aa; box-shadow: 0 10px 24px rgba(213,41,63,.12); color: inherit; text-decoration: none; }
-            .adaire-hf-card.is-add { border-style: dashed; background: #fafafa; }
-            .adaire-hf-card h3 { font-size: 14px; font-weight: 600; margin: 0 0 3px; color: #1e293b; }
-            .adaire-hf-card p { font-size: 12px; color: #64748b; margin: 0; line-height: 1.4; }
-            .adaire-hf-arrow { margin-left: auto; color: #cbd5e1; flex-shrink: 0; width: 16px; height: 16px; transition: transform .2s ease, color .2s ease; }
+            @media (max-width: 600px) {
+                .adaire-template-card { flex: 0 0 86vw; }
+            }
+
+            /* ================= Header & footer quick-link cards ================= */
+            .adaire-hf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: clamp(48px, 6vw, 72px); }
+            .adaire-hf-card { background: transparent; border: 1px solid var(--ab-line); border-radius: 0; padding: 22px 24px; display: flex; align-items: center; gap: 17px; min-height: 44px; text-decoration: none; color: inherit; box-shadow: var(--ab-shadow-1); transition: transform .25s var(--ab-ease), box-shadow .25s var(--ab-ease), border-color .25s var(--ab-ease); }
+            .adaire-hf-card:hover { transform: translateY(-4px); border-color: rgba(213, 41, 63, .3); box-shadow: var(--ab-shadow-2); color: inherit; text-decoration: none; }
+            .adaire-hf-card.is-add { border-style: dashed; }
+            .adaire-hf-card h3 { font-size: 15.5px; font-weight: 600; margin: 0 0 4px; color: var(--ab-ink-2); letter-spacing: -.005em; }
+            .adaire-hf-card p { font-size: 12.5px; color: var(--ab-muted); margin: 0; line-height: 1.5; }
+            .adaire-hf-arrow { margin-left: auto; color: #cbd5e1; flex-shrink: 0; width: 16px; height: 16px; transition: transform .25s var(--ab-ease), color .25s var(--ab-ease); }
             .adaire-hf-arrow svg { width: 100%; height: 100%; }
-            .adaire-hf-card:hover .adaire-hf-arrow { transform: translateX(4px); color: #d5293f; }
-            .adaire-hf-theme-tag { display: inline-block; font-size: 11px; background: #f1f5f9; color: #475569; border-radius: 4px; padding: 2px 7px; margin-bottom: 16px; }
-            .adaire-hf-classic-note { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px; font-size: 13px; color: #64748b; margin-bottom: 40px; display: flex; align-items: flex-start; gap: 10px; }
+            .adaire-hf-card:hover .adaire-hf-arrow { transform: translateX(4px); color: var(--ab-brand); }
+            .adaire-hf-theme-tag { display: inline-block; font-size: 11.5px; background: rgba(15, 23, 42, .05); color: var(--ab-body); border-radius: var(--ab-r-sm); padding: 4px 10px; margin-bottom: 20px; }
+            .adaire-hf-classic-note { background: transparent; border-left: 3px solid var(--ab-faint); border-radius: 0 var(--ab-r-sm) var(--ab-r-sm) 0; padding: 14px 20px; font-size: 13.5px; color: var(--ab-body); margin-bottom: 40px; display: flex; align-items: flex-start; gap: 10px; }
 
-            /* ---------- Resources ("Expand Your Toolkit" cards) ---------- */
-            .adaire-resources { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
-            .adaire-resource { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; text-decoration: none; color: inherit; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; display: flex; flex-direction: column; }
-            .adaire-resource:hover { transform: translateY(-3px); border-color: #f4a0aa; box-shadow: 0 10px 24px rgba(213,41,63,.12); color: inherit; text-decoration: none; }
-            .adaire-resource-tag { display: inline-block; align-self: flex-start; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; color: #b5233a; background: #fdf0f1; border-radius: 5px; padding: 3px 7px; margin-bottom: 10px; }
-            .adaire-resource h3 { font-size: 14px; margin: 0 0 4px; color: #1e293b; }
-            .adaire-resource p { font-size: 12px; color: #64748b; margin: 0 0 14px; flex: 1; }
-            .adaire-resource-foot { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #d5293f; }
-            .adaire-resource-foot svg { width: 13px; height: 13px; transition: transform .2s ease; }
+            /* ================= Resource cards (image-led) ================= */
+            .adaire-resources { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: clamp(48px, 6vw, 72px); }
+            .adaire-resource { display: flex; flex-direction: column; border: 1px solid var(--ab-line); border-radius: 0; overflow: hidden; background: transparent; box-shadow: var(--ab-shadow-1); text-decoration: none; color: inherit; transition: transform .3s var(--ab-ease), box-shadow .3s var(--ab-ease), border-color .3s var(--ab-ease); }
+            .adaire-resource:hover { transform: translateY(-5px); border-color: rgba(213, 41, 63, .3); box-shadow: var(--ab-shadow-2); color: inherit; text-decoration: none; }
+            .adaire-resource-media { position: relative; aspect-ratio: 16 / 9; overflow: hidden; }
+            .adaire-resource-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ab-ease); }
+            .adaire-resource:hover .adaire-resource-media img { transform: scale(1.07); }
+            .adaire-resource-media::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, .32) 50%, transparent 58%); background-size: 240% 240%; background-position: -60% -60%; opacity: 0; transition: opacity .2s var(--ab-ease), background-position 1s var(--ab-ease); }
+            .adaire-resource:hover .adaire-resource-media::after { opacity: 1; background-position: 140% 140%; }
+            .adaire-resource-tag { position: absolute; top: 12px; left: 12px; z-index: 2; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--ab-brand-dark); background: rgba(255, 255, 255, .92); border-radius: var(--ab-r-sm); padding: 5px 10px; }
+            .adaire-resource-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+            .adaire-resource h3 { font-size: 16px; font-weight: 700; margin: 0 0 7px; color: var(--ab-ink-2); letter-spacing: -.01em; }
+            .adaire-resource p { font-size: 13px; color: var(--ab-muted); margin: 0 0 18px; line-height: 1.55; flex: 1; }
+            .adaire-resource-foot { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--ab-brand); }
+            .adaire-resource-foot svg { width: 13px; height: 13px; transition: transform .2s var(--ab-ease); }
             .adaire-resource:hover .adaire-resource-foot svg { transform: translateX(3px); }
 
-            /* ---------- FAQ (chip-style — click a question, the answer below transitions in) ---------- */
-            .adaire-faq { margin-bottom: 20px; }
-            .adaire-faq-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-            .adaire-faq-chip { background: #fff; border: 1px solid #e2e8f0; border-radius: 999px; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #475569; cursor: pointer; transition: background .25s ease, border-color .25s ease, color .25s ease, transform .25s ease, box-shadow .25s ease, opacity .25s ease; }
-            .adaire-faq-chip:hover { border-color: #f4a0aa; color: #1e293b; }
-            .adaire-faq-chip[aria-pressed="true"] { background: linear-gradient(135deg, #a01f2f 0%, #d5293f 100%); border-color: transparent; color: #fff; box-shadow: 0 6px 16px rgba(213,41,63,.25); transform: translateY(-1px); }
-            .adaire-faq-chip:not([aria-pressed="true"]) { opacity: .8; }
-            .adaire-faq-answer-wrap { position: relative; }
-            .adaire-faq-answer { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px 22px; margin: 0; font-size: 13px; color: #475569; line-height: 1.7; min-height: 24px; opacity: 0; transform: translateY(6px) scale(.985); filter: blur(4px); transition: opacity .3s ease, transform .3s ease, filter .3s ease; }
-            .adaire-faq-answer.is-active { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+            /* ================= FAQ ================= */
+            .adaire-faq-layout { display: grid; grid-template-columns: .82fr 1.18fr; gap: 40px; align-items: start; }
+            .adaire-faq-visual { position: relative; border-radius: 0; overflow: hidden; box-shadow: var(--ab-shadow-2); aspect-ratio: 4 / 5; }
+            .adaire-faq-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ab-ease); }
+            .adaire-faq-visual:hover img { transform: scale(1.05); }
+            .adaire-faq-visual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(190deg, transparent 38%, rgba(15, 23, 42, .82) 100%); }
+            .adaire-faq-visual-card { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; display: flex; align-items: flex-start; gap: 12px; }
+            .adaire-faq-visual-icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--ab-r-sm); background: rgba(255, 255, 255, .16); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); color: #fff; flex-shrink: 0; }
+            .adaire-faq-visual-icon svg { width: 18px; height: 18px; }
+            .adaire-faq-visual-card h3 { font-size: 15px; font-weight: 600; margin: 0 0 4px; color: #fff; }
+            .adaire-faq-visual-card p { font-size: 12.5px; margin: 0; color: rgba(255, 255, 255, .8); line-height: 1.5; }
+            @media (max-width: 900px) {
+                .adaire-faq-layout { grid-template-columns: 1fr; }
+                .adaire-faq-visual { aspect-ratio: 16 / 9; }
+            }
+            .adaire-faq { margin-bottom: 24px; }
+            .adaire-faq-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+            .adaire-faq-chip { background: transparent; border: 1px solid var(--ab-line); border-radius: var(--ab-r-pill); padding: 11px 20px; min-height: 44px; font-size: 13.5px; font-weight: 600; color: var(--ab-body); cursor: pointer; transition: background .25s var(--ab-ease), border-color .25s var(--ab-ease), color .25s var(--ab-ease), transform .25s var(--ab-ease), box-shadow .25s var(--ab-ease); }
+            .adaire-faq-chip:hover { border-color: rgba(213, 41, 63, .35); color: var(--ab-ink-2); }
+            .adaire-faq-chip[aria-pressed="true"] { background: linear-gradient(135deg, var(--ab-brand-dark) 0%, var(--ab-brand) 100%); border-color: transparent; color: #fff; box-shadow: var(--ab-shadow-brand); transform: translateY(-1px); }
+            .adaire-faq-answer-wrap { border-top: 1px solid var(--ab-line); }
+            .adaire-faq-answer { padding: 24px 2px 4px; margin: 0; font-size: 14.5px; color: var(--ab-body); line-height: 1.75; min-height: 24px; opacity: 0; transform: translateY(6px); filter: blur(4px); transition: opacity .3s var(--ab-ease), transform .3s var(--ab-ease), filter .3s var(--ab-ease); }
+            .adaire-faq-answer.is-active { opacity: 1; transform: translateY(0); filter: blur(0); }
             @media (prefers-reduced-motion: reduce) { .adaire-faq-chip, .adaire-faq-answer { transition: none !important; transform: none !important; filter: none !important; } }
 
-            /* ---------- Narrow-viewport collapse for the card grids ---------- */
+            /* ================= Responsive grid collapse ================= */
+            @media (max-width: 1199px) {
+                .adaire-hf-grid, .adaire-resources { grid-template-columns: repeat(2, 1fr); }
+            }
             @media (max-width: 700px) {
-                .adaire-welcome-steps,
-                .adaire-hf-grid,
-                .adaire-resources { grid-template-columns: 1fr; }
+                .adaire-hf-grid, .adaire-resources { grid-template-columns: 1fr; }
+            }
+            @media (max-width: 420px) {
+                .adaire-welcome { padding-left: 16px; padding-right: 16px; }
+                .adaire-template-body, .adaire-hf-card, .adaire-resource-body { padding-left: 16px; padding-right: 16px; }
             }
         </style>
 
@@ -475,18 +649,11 @@ class Adaire_Welcome_Screen {
         <div class="adaire-welcome">
 
             <div class="adaire-hero">
-                <span class="adaire-hero-shape circle" style="width:90px;height:90px;top:8%;left:5%;"></span>
-                <span class="adaire-hero-shape dot" style="width:10px;height:10px;top:38%;left:13%;"></span>
-                <span class="adaire-hero-shape square" style="width:42px;height:42px;top:68%;left:9%;transform:rotate(10deg);"></span>
-                <span class="adaire-hero-shape dot" style="width:8px;height:8px;top:20%;right:10%;"></span>
-                <span class="adaire-hero-shape circle" style="width:54px;height:54px;top:62%;right:7%;"></span>
-                <span class="adaire-hero-shape square" style="width:30px;height:30px;top:14%;right:22%;transform:rotate(-8deg);"></span>
-
                 <div class="adaire-hero-grid">
                     <div class="adaire-hero-inner">
-                        <span class="adaire-pill"><span class="adaire-pill-icon"><?php echo self::icon( 'sparkle' ); ?></span> <?php esc_html_e( 'Free Plan Active', 'adaire-blocks' ); ?></span>
+                        <span class="adaire-pill"><span class="adaire-pill-icon"><?php echo self::icon( 'sparkle' ); ?></span> <?php esc_html_e( 'Free plan', 'adaire-blocks' ); ?></span>
                         <h1 class="adaire-hero-title"><?php esc_html_e( 'Welcome to', 'adaire-blocks' ); ?> <span class="adaire-accent">GutenBlocks</span></h1>
-                        <p class="adaire-hero-sub"><?php esc_html_e( "You're set up and ready to build. Create a starter page below or explore the blocks in the editor.", 'adaire-blocks' ); ?></p>
+                        <p class="adaire-hero-sub"><?php esc_html_e( 'Create a starter page from a ready-made layout, or explore the full block library directly in the editor.', 'adaire-blocks' ); ?></p>
                         <div class="adaire-hero-actions">
                             <a href="#adaire-templates" class="adaire-btn adaire-btn-primary">
                                 <?php esc_html_e( 'Start Building', 'adaire-blocks' ); ?>
@@ -496,15 +663,20 @@ class Adaire_Welcome_Screen {
                                 <?php esc_html_e( 'View Docs', 'adaire-blocks' ); ?>
                             </a>
                         </div>
-                        <span class="adaire-hero-version">v<?php echo esc_html( ADAIRE_BLOCKS_VERSION ); ?> — Free</span>
+                        <span class="adaire-hero-version">v<?php echo esc_html( ADAIRE_BLOCKS_VERSION ); ?> · <?php esc_html_e( 'Free plan', 'adaire-blocks' ); ?></span>
                     </div>
                     <div class="adaire-hero-visual">
                         <div class="adaire-hero-shot">
-                            <img src="<?php echo esc_url( $hero_image_url ); ?>" alt="<?php esc_attr_e( 'A GutenBlocks block in the WordPress editor', 'adaire-blocks' ); ?>" loading="eager" />
+                            <div class="adaire-hero-shot-bar">
+                                <span class="adaire-hero-shot-dot"></span>
+                                <span class="adaire-hero-shot-dot"></span>
+                                <span class="adaire-hero-shot-dot"></span>
+                            </div>
+                            <img src="<?php echo esc_url( $hero_image_url ); ?>" alt="<?php esc_attr_e( 'A GutenBlocks block in the WordPress editor', 'adaire-blocks' ); ?>" loading="eager" decoding="async" />
                             <span class="adaire-hero-shot-tag"><?php echo self::icon( 'sparkle' ); ?> <?php esc_html_e( 'Built with GutenBlocks', 'adaire-blocks' ); ?></span>
                         </div>
                         <div class="adaire-hero-shot-float">
-                            <img src="<?php echo esc_url( $showcase_image_url ); ?>" alt="<?php esc_attr_e( 'Another GutenBlocks block layout', 'adaire-blocks' ); ?>" loading="lazy" />
+                            <img src="<?php echo esc_url( $showcase_image_url ); ?>" alt="<?php esc_attr_e( 'Another GutenBlocks block layout', 'adaire-blocks' ); ?>" loading="lazy" decoding="async" />
                         </div>
                     </div>
                 </div>
@@ -551,35 +723,43 @@ class Adaire_Welcome_Screen {
                 <div class="adaire-slider-track">
                     <?php foreach ( $templates as $i => $tpl ) : ?>
                     <div class="adaire-template-card adaire-fade" style="transition-delay:<?php echo esc_attr( $i * 0.06 ); ?>s">
-                        <span class="adaire-icon-badge"><?php echo self::icon( $tpl['icon'] ); ?></span>
-                        <h3>
-                            <?php echo esc_html( $tpl['title'] ); ?>
+                        <div class="adaire-template-media">
                             <?php if ( $tpl['homepage'] ) : ?>
                                 <span class="adaire-home-badge"><?php esc_html_e( 'Homepage', 'adaire-blocks' ); ?></span>
                             <?php endif; ?>
-                        </h3>
-                        <p><?php echo esc_html( $tpl['description'] ); ?></p>
-                        <button
-                            class="adaire-create-btn"
-                            data-pattern="<?php echo esc_attr( $tpl['slug'] ); ?>"
-                            data-title="<?php echo esc_attr( $tpl['title'] ); ?>"
-                            data-homepage="<?php echo $tpl['homepage'] ? '1' : '0'; ?>"
-                        >
-                            <span class="adaire-btn-icon"><?php echo self::icon( 'plus' ); ?></span> <?php esc_html_e( 'Create Page', 'adaire-blocks' ); ?>
-                        </button>
+                            <?php if ( ! empty( $tpl['image'] ) ) : ?>
+                                <img src="<?php echo esc_url( $tpl['image'] ); ?>" alt="<?php echo esc_attr( $tpl['title'] ); ?>" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+                            <?php else : ?>
+                                <div class="adaire-template-media-pattern">
+                                    <?php echo self::icon( $tpl['icon'] ); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="adaire-template-body">
+                            <h3><?php echo esc_html( $tpl['title'] ); ?></h3>
+                            <p><?php echo esc_html( $tpl['description'] ); ?></p>
+                            <button
+                                class="adaire-create-btn"
+                                data-pattern="<?php echo esc_attr( $tpl['slug'] ); ?>"
+                                data-title="<?php echo esc_attr( $tpl['title'] ); ?>"
+                                data-homepage="<?php echo $tpl['homepage'] ? '1' : '0'; ?>"
+                            >
+                                <span class="adaire-btn-icon"><?php echo self::icon( 'plus' ); ?></span> <?php esc_html_e( 'Create Page', 'adaire-blocks' ); ?>
+                            </button>
+                        </div>
                     </div>
                     <?php endforeach; ?>
                 </div>
             </div>
 
             <p class="adaire-section-title"><?php esc_html_e( 'Jumpstart Your Workflow', 'adaire-blocks' ); ?></p>
-            <p class="adaire-section-subtitle"><?php esc_html_e( 'Quick links to the screens you\'ll use most — site editing, block management, and migration.', 'adaire-blocks' ); ?></p>
+            <p class="adaire-section-subtitle"><?php esc_html_e( 'Quick links to the screens you\'ll use most: site editing, block management, and migration.', 'adaire-blocks' ); ?></p>
             <span class="adaire-hf-theme-tag"><?php echo esc_html( __( 'Active theme: ', 'adaire-blocks' ) . $theme_name ); ?></span>
 
             <?php if ( $is_block_theme ) : ?>
             <div class="adaire-hf-grid">
                 <a href="<?php echo esc_url( $header_url ); ?>" class="adaire-hf-card adaire-fade">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'layout-top' ); ?></span>
+                    <span class="adaire-swatch adaire-swatch-2"><?php echo self::icon( 'layout-top' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Edit Header', 'adaire-blocks' ); ?></h3>
                         <p><?php esc_html_e( 'Logo, navigation &amp; top bar', 'adaire-blocks' ); ?></p>
@@ -587,7 +767,7 @@ class Adaire_Welcome_Screen {
                     <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
                 </a>
                 <a href="<?php echo esc_url( $footer_url ); ?>" class="adaire-hf-card adaire-fade" style="transition-delay:.06s">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'layout-bottom' ); ?></span>
+                    <span class="adaire-swatch adaire-swatch-5"><?php echo self::icon( 'layout-bottom' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Edit Footer', 'adaire-blocks' ); ?></h3>
                         <p><?php esc_html_e( 'Links, copyright &amp; social icons', 'adaire-blocks' ); ?></p>
@@ -595,7 +775,7 @@ class Adaire_Welcome_Screen {
                     <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
                 </a>
                 <a href="<?php echo esc_url( $all_parts_url ); ?>" class="adaire-hf-card is-add adaire-fade" style="transition-delay:.12s">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'grid' ); ?></span>
+                    <span class="adaire-swatch adaire-swatch-6"><?php echo self::icon( 'grid' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'All Template Parts', 'adaire-blocks' ); ?></h3>
                         <p><?php esc_html_e( 'Browse, add or manage all parts', 'adaire-blocks' ); ?></p>
@@ -603,7 +783,7 @@ class Adaire_Welcome_Screen {
                     <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
                 </a>
                 <a href="<?php echo esc_url( $settings_url ); ?>" class="adaire-hf-card adaire-fade" style="transition-delay:.18s">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'settings' ); ?></span>
+                    <span class="adaire-swatch adaire-swatch-3"><?php echo self::icon( 'settings' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Block Settings', 'adaire-blocks' ); ?></h3>
                         <p><?php esc_html_e( 'Enable or disable individual blocks', 'adaire-blocks' ); ?></p>
@@ -611,7 +791,7 @@ class Adaire_Welcome_Screen {
                     <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
                 </a>
                 <a href="<?php echo esc_url( $migration_url ); ?>" class="adaire-hf-card adaire-fade" style="transition-delay:.24s">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'sync' ); ?></span>
+                    <span class="adaire-swatch adaire-swatch-4"><?php echo self::icon( 'sync' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Migration Tool', 'adaire-blocks' ); ?></h3>
                         <p><?php esc_html_e( 'Move old blocks over to GutenBlocks', 'adaire-blocks' ); ?></p>
@@ -619,7 +799,7 @@ class Adaire_Welcome_Screen {
                     <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
                 </a>
                 <a href="<?php echo esc_url( $docs_url ); ?>" target="_blank" rel="noopener" class="adaire-hf-card adaire-fade" style="transition-delay:.3s">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'book-open' ); ?></span>
+                    <span class="adaire-swatch adaire-swatch-1"><?php echo self::icon( 'book-open' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Documentation', 'adaire-blocks' ); ?></h3>
                         <p><?php esc_html_e( 'Guides for every block and setting', 'adaire-blocks' ); ?></p>
@@ -635,11 +815,11 @@ class Adaire_Welcome_Screen {
                     esc_html__( 'Your active theme (%s) is a classic theme. Header and footer editing is available for block themes via the Site Editor. Switch to a block theme (e.g. Twenty Twenty-Four) to use these shortcuts.', 'adaire-blocks' ),
                     '<strong>' . esc_html( $theme_name ) . '</strong>'
                 ); ?>
-                <a href="<?php echo esc_url( admin_url( 'themes.php' ) ); ?>" style="margin-left:6px;"><?php esc_html_e( 'Browse themes →', 'adaire-blocks' ); ?></a></span>
+                <a href="<?php echo esc_url( $themes_url ); ?>" style="margin-left:6px;"><?php esc_html_e( 'Browse themes →', 'adaire-blocks' ); ?></a></span>
             </div>
             <div class="adaire-hf-grid">
                 <a href="<?php echo esc_url( $settings_url ); ?>" class="adaire-hf-card adaire-fade">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'settings' ); ?></span>
+                    <span class="adaire-swatch adaire-swatch-3"><?php echo self::icon( 'settings' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Block Settings', 'adaire-blocks' ); ?></h3>
                         <p><?php esc_html_e( 'Enable or disable individual blocks', 'adaire-blocks' ); ?></p>
@@ -647,7 +827,7 @@ class Adaire_Welcome_Screen {
                     <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
                 </a>
                 <a href="<?php echo esc_url( $migration_url ); ?>" class="adaire-hf-card adaire-fade" style="transition-delay:.06s">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'sync' ); ?></span>
+                    <span class="adaire-swatch adaire-swatch-4"><?php echo self::icon( 'sync' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Migration Tool', 'adaire-blocks' ); ?></h3>
                         <p><?php esc_html_e( 'Move old blocks over to GutenBlocks', 'adaire-blocks' ); ?></p>
@@ -655,7 +835,7 @@ class Adaire_Welcome_Screen {
                     <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
                 </a>
                 <a href="<?php echo esc_url( $docs_url ); ?>" target="_blank" rel="noopener" class="adaire-hf-card adaire-fade" style="transition-delay:.12s">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'book-open' ); ?></span>
+                    <span class="adaire-swatch adaire-swatch-1"><?php echo self::icon( 'book-open' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Documentation', 'adaire-blocks' ); ?></h3>
                         <p><?php esc_html_e( 'Guides for every block and setting', 'adaire-blocks' ); ?></p>
@@ -669,31 +849,35 @@ class Adaire_Welcome_Screen {
             <p class="adaire-section-subtitle"><?php esc_html_e( 'Guides and support to help you get more out of GutenBlocks.', 'adaire-blocks' ); ?></p>
 
             <div class="adaire-resources">
-                <a href="<?php echo esc_url( $docs_url . 'getting-started/' ); ?>" target="_blank" rel="noopener" class="adaire-resource adaire-fade">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'book-open' ); ?></span>
-                    <span class="adaire-resource-tag"><?php esc_html_e( 'Guide', 'adaire-blocks' ); ?></span>
-                    <h3><?php esc_html_e( 'Getting Started Guide', 'adaire-blocks' ); ?></h3>
-                    <p><?php esc_html_e( 'Step-by-step walkthrough of every block and setting.', 'adaire-blocks' ); ?></p>
-                    <span class="adaire-resource-foot"><?php esc_html_e( 'Read the guide', 'adaire-blocks' ); ?> <?php echo self::icon( 'chevron-right' ); ?></span>
+                <?php foreach ( $resources as $i => $res ) : ?>
+                <a href="<?php echo esc_url( $res['href'] ); ?>" target="_blank" rel="noopener" class="adaire-resource adaire-fade" style="transition-delay:<?php echo esc_attr( $i * 0.06 ); ?>s">
+                    <div class="adaire-resource-media">
+                        <img src="<?php echo esc_url( $res['image'] ); ?>" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+                        <span class="adaire-resource-tag"><?php echo esc_html( $res['tag'] ); ?></span>
+                    </div>
+                    <div class="adaire-resource-body">
+                        <h3><?php echo esc_html( $res['title'] ); ?></h3>
+                        <p><?php echo esc_html( $res['desc'] ); ?></p>
+                        <span class="adaire-resource-foot"><?php echo esc_html( $res['cta'] ); ?> <?php echo self::icon( 'chevron-right' ); ?></span>
+                    </div>
                 </a>
-                <a href="<?php echo esc_url( $docs_url . 'blocks/' ); ?>" target="_blank" rel="noopener" class="adaire-resource adaire-fade" style="transition-delay:.06s">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'blocks' ); ?></span>
-                    <span class="adaire-resource-tag"><?php esc_html_e( 'Reference', 'adaire-blocks' ); ?></span>
-                    <h3><?php esc_html_e( 'Block Reference', 'adaire-blocks' ); ?></h3>
-                    <p><?php esc_html_e( 'Attributes, options, and examples for all free blocks.', 'adaire-blocks' ); ?></p>
-                    <span class="adaire-resource-foot"><?php esc_html_e( 'Browse reference', 'adaire-blocks' ); ?> <?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-                <a href="<?php echo esc_url( $support_url ); ?>" target="_blank" rel="noopener" class="adaire-resource adaire-fade" style="transition-delay:.12s">
-                    <span class="adaire-icon-badge"><?php echo self::icon( 'message-circle' ); ?></span>
-                    <span class="adaire-resource-tag"><?php esc_html_e( 'Help', 'adaire-blocks' ); ?></span>
-                    <h3><?php esc_html_e( 'Support', 'adaire-blocks' ); ?></h3>
-                    <p><?php esc_html_e( 'Submit a ticket or browse answered questions.', 'adaire-blocks' ); ?></p>
-                    <span class="adaire-resource-foot"><?php esc_html_e( 'Get support', 'adaire-blocks' ); ?> <?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
+                <?php endforeach; ?>
             </div>
 
             <p class="adaire-section-title"><?php esc_html_e( 'Frequently Asked Questions', 'adaire-blocks' ); ?></p>
+            <p class="adaire-section-subtitle"><?php esc_html_e( 'Answers to common questions about templates, blocks, and themes.', 'adaire-blocks' ); ?></p>
 
+            <div class="adaire-faq-layout">
+            <div class="adaire-faq-visual adaire-fade">
+                <img src="<?php echo esc_url( $preview_images['about'] ); ?>" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+                <div class="adaire-faq-visual-card">
+                    <span class="adaire-faq-visual-icon"><?php echo self::icon( 'book-open' ); ?></span>
+                    <div>
+                        <h3><?php esc_html_e( 'Still have questions?', 'adaire-blocks' ); ?></h3>
+                        <p><?php esc_html_e( 'The full documentation covers every block in detail.', 'adaire-blocks' ); ?></p>
+                    </div>
+                </div>
+            </div>
             <div class="adaire-faq">
                 <?php
                 $faqs = array(
@@ -703,14 +887,14 @@ class Adaire_Welcome_Screen {
                     ),
                     array(
                         'q' => __( 'Can I edit the templates after they\'re created?', 'adaire-blocks' ),
-                        'a' => __( 'Yes — every template is just regular GutenBlocks on a draft page. Open it in the editor and replace any text, image, or section.', 'adaire-blocks' ),
+                        'a' => __( 'Yes. Every template is just regular GutenBlocks blocks on a draft page. Open it in the editor and replace any text, image, or section.', 'adaire-blocks' ),
                     ),
                     array(
                         'q' => __( 'What\'s the difference between the free and paid blocks?', 'adaire-blocks' ),
                         'a' => __( 'The free plan includes a curated set of layout, hero, and content blocks. Visit GutenBlocks Settings to see which blocks are included and what upgrading unlocks.', 'adaire-blocks' ),
                     ),
                     array(
-                        'q' => __( 'My theme doesn\'t show header/footer editing — why?', 'adaire-blocks' ),
+                        'q' => __( 'Why doesn\'t my theme show header/footer editing?', 'adaire-blocks' ),
                         'a' => __( 'Header and footer editing via the Site Editor only works with block themes. Classic themes manage these areas through their own theme settings or widgets.', 'adaire-blocks' ),
                     ),
                 );
@@ -726,6 +910,7 @@ class Adaire_Welcome_Screen {
                     <p class="adaire-faq-answer is-active" id="adaire-faq-answer"><?php echo esc_html( $faqs[0]['a'] ); ?></p>
                 </div>
             </div>
+            </div><!-- .adaire-faq-layout -->
 
         </div><!-- .adaire-welcome -->
             </main>
@@ -786,7 +971,7 @@ class Adaire_Welcome_Screen {
                 btn.addEventListener('click', function() {
                     if (!slider) { return; }
                     var dir = parseInt(btn.dataset.dir, 10) || 1;
-                    slider.scrollBy({ left: dir * 280, behavior: 'smooth' });
+                    slider.scrollBy({ left: dir * 344, behavior: 'smooth' });
                 });
             });
 
@@ -826,7 +1011,7 @@ class Adaire_Welcome_Screen {
                     var rect = heroEl.getBoundingClientRect();
                     var px = (e.clientX - rect.left) / rect.width - 0.5;
                     var py = (e.clientY - rect.top) / rect.height - 0.5;
-                    heroInner.style.transform = 'translate(' + (px * -10).toFixed(2) + 'px,' + (py * -8).toFixed(2) + 'px)';
+                    heroInner.style.transform = 'translate(' + (px * -8).toFixed(2) + 'px,' + (py * -6).toFixed(2) + 'px)';
                 });
                 heroEl.addEventListener('mouseleave', function() {
                     heroInner.style.transform = 'translate(0,0)';
@@ -845,22 +1030,6 @@ class Adaire_Welcome_Screen {
                     ripple.addEventListener('animationend', function() { ripple.remove(); });
                 });
             });
-
-            // ---------- Scroll-driven hero glow shift ----------
-            if (heroEl && !reduceMotion) {
-                var glowTicking = false;
-                window.addEventListener('scroll', function() {
-                    if (glowTicking) { return; }
-                    glowTicking = true;
-                    requestAnimationFrame(function() {
-                        var rect = heroEl.getBoundingClientRect();
-                        var span = rect.height + window.innerHeight;
-                        var progress = Math.min(Math.max(1 - (rect.bottom / span), 0), 1);
-                        heroEl.style.setProperty('--adaire-glow-y', (20 + progress * 50) + '%');
-                        glowTicking = false;
-                    });
-                }, { passive: true });
-            }
 
             // ---------- Fade-in-on-scroll ----------
             var faders = document.querySelectorAll('.adaire-fade');

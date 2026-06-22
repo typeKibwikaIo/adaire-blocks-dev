@@ -1,6 +1,5 @@
 ﻿import {
 	useBlockProps,
-	InspectorControls,
 	MediaUpload,
 	MediaUploadCheck,
 } from "@wordpress/block-editor";
@@ -23,6 +22,7 @@ import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
 import QuickZone from '../components/QuickZone';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import InspectorTabs from '../components/InspectorTabs';
 
 const FREE_TIER_ITEM_LIMIT = 3;
 
@@ -258,7 +258,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 	return (
 		<>
-			<InspectorControls>
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody title="Container Settings" initialOpen={true}>
 					<ButtonGroup>
 						{[
@@ -1042,7 +1042,7 @@ export default function Edit({ attributes, setAttributes }) {
 						max={200}
 					/>
 				</PanelBody>
-			</InspectorControls>
+			</InspectorTabs>
 
 			<div {...blockProps}>
 				<div className="ad-carousel-text-block__testimonial-carousel">

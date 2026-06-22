@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import {
     useBlockProps,
-    InspectorControls,
     MediaUpload,
     MediaUploadCheck,
     PanelColorSettings,
@@ -42,6 +41,7 @@ import {
 } from '@wordpress/icons';
 import BootstrapIconPicker from '../icon-box-block/BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 
 // Custom icons for small laptop and big desktop
 const smallLaptopIcon = createElement('svg', {
@@ -382,7 +382,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <div className="adaire-device-toggle">
                     <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks-dev2')}</p>
                     <div className="adaire-device-toggle-group">
@@ -737,7 +737,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         ))}
                     </div>
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <BootstrapIconPicker
                 isOpen={isIconPickerOpen}

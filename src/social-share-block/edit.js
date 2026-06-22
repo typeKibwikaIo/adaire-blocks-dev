@@ -1,6 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps } from '@wordpress/block-editor';
 import {
     PanelBody,
     RangeControl,
@@ -14,6 +14,7 @@ import {
 } from '@wordpress/components';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 import './editor.scss';
 
 const PLATFORMS = [
@@ -101,7 +102,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <PanelBody title={__('Button Settings', 'social-share-block')} initialOpen={true}>
                     <BaseControl label={__('Button Icon', 'social-share-block')}>
                         <Button
@@ -276,7 +277,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         </div>
                     ))}
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <BootstrapIconPicker
                 isOpen={isButtonIconPickerOpen}

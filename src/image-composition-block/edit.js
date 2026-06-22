@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import {
 	useBlockProps,
-	InspectorControls,
 	MediaUpload,
 	MediaUploadCheck,
 } from '@wordpress/block-editor';
@@ -14,6 +13,8 @@ import {
 } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import { desktop, tablet, mobile, plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
+import InspectorTabs from '../components/InspectorTabs';
+import QuickZone from '../components/QuickZone';
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
 	const {
@@ -26,6 +27,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 	} = attributes;
 
 	const [deviceType, setDeviceType] = useState('desktop');
+	const [activeZone, setActiveZone] = useState(null);
 
 	useEffect(() => {
 		if (!blockId) {
@@ -83,7 +85,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
 	return (
 		<>
-			<InspectorControls>
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody title={__('Images', 'image-composition-block')} initialOpen={true}>
 					<Button
 						variant="primary"
@@ -308,7 +310,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						</>
 					)}
 				</PanelBody>
-			</InspectorControls>
+			</InspectorTabs>
 
 			<div {...blockProps}>
 				<div
@@ -316,27 +318,52 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						containerMode === 'constrained' ? 'is-constrained' : ''
 					}`}
 				>
-					<div className="adaire-image-composition__grid">
-						{images.length === 0 && (
-							<div className="adaire-image-composition__placeholder">
-								<p>{__('Add images from the sidebar to build your composition.', 'image-composition-block')}</p>
-							</div>
-						)}
-						{images.map((image, index) => (
-							<div
-								key={image.id || index}
-								className={`adaire-image-composition__item adaire-image-composition__item--pattern-${(index % 4) + 1}`}
-							>
-								{image.url ? (
-									<img src={image.url} alt={image.alt || ''} />
-								) : (
-									<div className="adaire-image-composition__item-placeholder">
-										<span>{__('Select an image', 'image-composition-block')}</span>
-									</div>
-								)}
-							</div>
-						))}
-					</div>
+					<QuickZone
+						id="layout"
+						label={__('Layout', 'image-composition-block')}
+						activeZone={activeZone}
+						setActiveZone={setActiveZone}
+						content={
+							<>
+								<RangeControl
+									label={__('Gap between images (px)', 'image-composition-block')}
+									value={gap}
+									onChange={(value) => setAttributes({ gap: value })}
+									min={8}
+									max={80}
+								/>
+								<RangeControl
+									label={__('Image border radius (px)', 'image-composition-block')}
+									value={borderRadius}
+									onChange={(value) => setAttributes({ borderRadius: value })}
+									min={0}
+									max={40}
+								/>
+							</>
+						}
+					>
+						<div className="adaire-image-composition__grid">
+							{images.length === 0 && (
+								<div className="adaire-image-composition__placeholder">
+									<p>{__('Add images from the sidebar to build your composition.', 'image-composition-block')}</p>
+								</div>
+							)}
+							{images.map((image, index) => (
+								<div
+									key={image.id || index}
+									className={`adaire-image-composition__item adaire-image-composition__item--pattern-${(index % 4) + 1}`}
+								>
+									{image.url ? (
+										<img src={image.url} alt={image.alt || ''} />
+									) : (
+										<div className="adaire-image-composition__item-placeholder">
+											<span>{__('Select an image', 'image-composition-block')}</span>
+										</div>
+									)}
+								</div>
+							))}
+						</div>
+					</QuickZone>
 				</div>
 			</div>
 		</>

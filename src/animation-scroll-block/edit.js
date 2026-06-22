@@ -1,6 +1,6 @@
 ﻿import { __ } from "@wordpress/i18n";
 import { useState, useEffect, useRef } from "@wordpress/element";
-import { useBlockProps, InspectorControls, useInnerBlocksProps } from "@wordpress/block-editor";
+import { useBlockProps, useInnerBlocksProps } from "@wordpress/block-editor";
 import {
 	PanelBody,
 	Button,
@@ -11,6 +11,8 @@ import {
 	__experimentalBoxControl as BoxControl,
 } from "@wordpress/components";
 import { desktop, tablet, mobile } from "@wordpress/icons";
+import InspectorTabs from "../components/InspectorTabs";
+import QuickZone from "../components/QuickZone";
 import "./editor.scss";
 
 const ANIMATION_TYPES = [
@@ -43,6 +45,7 @@ const EASING_OPTIONS = [
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const [deviceType, setDeviceType] = useState("desktop");
+	const [activeZone, setActiveZone] = useState(null);
 	const contentRef = useRef(null);
 
 	const {
@@ -246,7 +249,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	return (
 		<>
-			<InspectorControls>
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody title={__("Animation Settings", "animation-scroll-block")} initialOpen={true}>
 					<SelectControl
 						label={__("Animation Type", "animation-scroll-block")}
@@ -563,16 +566,41 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						}}
 					/>
 				</PanelBody>
-			</InspectorControls>
+			</InspectorTabs>
 
 			<div {...blockProps} data-block-id={blockId}>
-				<div
-					className={`ad-animation-scroll__container ${
-						containerMode === "constrained" ? "is-constrained" : ""
-					}`}
+				<QuickZone
+					id="animation"
+					label={__("Animation", "animation-scroll-block")}
+					activeZone={activeZone}
+					setActiveZone={setActiveZone}
+					content={
+						<>
+							<SelectControl
+								label={__("Animation Type", "animation-scroll-block")}
+								value={animationType}
+								options={ANIMATION_TYPES}
+								onChange={(value) => setAttributes({ animationType: value })}
+							/>
+							<RangeControl
+								label={__("Duration (ms)", "animation-scroll-block")}
+								value={animationDuration}
+								onChange={(value) => setAttributes({ animationDuration: value })}
+								min={100}
+								max={3000}
+								step={100}
+							/>
+						</>
+					}
 				>
-					<div {...innerBlocksProps} />
-				</div>
+					<div
+						className={`ad-animation-scroll__container ${
+							containerMode === "constrained" ? "is-constrained" : ""
+						}`}
+					>
+						<div {...innerBlocksProps} />
+					</div>
+				</QuickZone>
 			</div>
 		</>
 	);

@@ -2,7 +2,6 @@
 import {
 	useBlockProps,
 	useInnerBlocksProps,
-	InspectorControls,
 	MediaUpload,
 	MediaUploadCheck,
 	RichText,
@@ -21,6 +20,7 @@ import {
 } from '@wordpress/components';
 import { useState, createElement } from '@wordpress/element';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import InspectorTabs from '../components/InspectorTabs';
 import './editor.scss';
 
 // Custom icons for small laptop and big desktop
@@ -400,7 +400,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 	return (
 		<div {...useBlockProps({ className: 'swiper-slide', style: styles })}>
-			<InspectorControls>
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody title={__('Image Settings', 'adaire-blocks')}>
 					<MediaUploadCheck>
 						<MediaUpload
@@ -556,7 +556,7 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={(value) => setAttributes({ textColor: value })}
 					/>
 				</PanelBody>
-			</InspectorControls>
+			</InspectorTabs>
 
 			<div className="swiper-slide-overlay" style={overlayStyles}></div>
 

@@ -1,8 +1,11 @@
 /**
  * QuickZone — Elementor-style inline quick-edit wrapper.
  *
- * Wrap any block canvas section. On hover a purple pen pill fades in;
- * clicking it opens a Popover with contextual controls directly on canvas.
+ * Wrap any block canvas section. Clicking the pen pill opens a Popover with
+ * contextual controls directly on canvas. It closes again when the mouse
+ * leaves the zone (with a short grace period so you can move from the
+ * trigger into the popover itself without it slamming shut), when you click
+ * outside the zone/popover, or on Escape.
  *
  * Usage:
  *   import QuickZone from '../components/QuickZone';
@@ -15,7 +18,7 @@
  *     <h2>{title}</h2>
  *   </QuickZone>
  */
-import { useRef, useEffect } from '@wordpress/element';
+import { useRef, useEffect, useCallback } from '@wordpress/element';
 import { Popover } from '@wordpress/components';
 import './QuickZone.scss';
 
@@ -45,12 +48,48 @@ export function isMediaLibraryOpen() {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
+// Grace period (ms) between the mouse leaving the zone/popover and the
+// popover actually closing — long enough to move from the trigger pill
+// into the popover panel without it closing underneath you.
+const HOVER_CLOSE_DELAY = 250;
+
 export default function QuickZone( { id, label, icon, children, content, activeZone, setActiveZone } ) {
-    const ref    = useRef( null );
-    const isOpen = activeZone === id;
+    const ref           = useRef( null );
+    const triggerRef    = useRef( null );
+    const closeTimerRef = useRef( null );
+    const isOpen         = !! id && activeZone === id;
+
+    const clearCloseTimer = useCallback( () => {
+        if ( closeTimerRef.current ) {
+            clearTimeout( closeTimerRef.current );
+            closeTimerRef.current = null;
+        }
+    }, [] );
+
+    // Only close *this* zone if it's still the active one when the timer
+    // fires — avoids stale closures stomping on a zone the user has since
+    // hovered into.
+    const scheduleClose = useCallback( () => {
+        clearCloseTimer();
+        closeTimerRef.current = setTimeout( () => {
+            setActiveZone( ( current ) => ( current === id ? null : current ) );
+        }, HOVER_CLOSE_DELAY );
+    }, [ id, setActiveZone, clearCloseTimer ] );
+
+    // Hovering the zone no longer opens it — opening is pen-click only.
+    // We still clear any pending close timer on enter so that if the zone
+    // is already open and the mouse comes back during the grace period,
+    // it isn't yanked shut underneath the user.
+    const handleZoneMouseEnter = useCallback( () => {
+        clearCloseTimer();
+    }, [ clearCloseTimer ] );
+
+    // Clean up any pending timer if the component unmounts mid-close.
+    useEffect( () => clearCloseTimer, [ clearCloseTimer ] );
 
     const toggle = ( e ) => {
         e.stopPropagation();
+        clearCloseTimer();
         setActiveZone( isOpen ? null : id );
     };
 
@@ -105,9 +144,12 @@ export default function QuickZone( { id, label, icon, children, content, activeZ
         <div
             ref={ ref }
             className={ `adaire-qz${ isOpen ? ' adaire-qz--active' : '' }` }
+            onMouseEnter={ handleZoneMouseEnter }
+            onMouseLeave={ scheduleClose }
         >
             { children }
             <button
+                ref={ triggerRef }
                 className="adaire-qz__btn"
                 onClick={ toggle }
                 aria-label={ label }
@@ -118,9 +160,17 @@ export default function QuickZone( { id, label, icon, children, content, activeZ
             { isOpen && (
                 <Popover
                     className="adaire-qpop"
+                    anchor={ triggerRef.current }
+                    placement="left-start"
+                    offset={ 8 }
+                    shift
                     onFocusOutside={ () => {} }
                 >
-                    <div className="adaire-qpop__inner">
+                    <div
+                        className="adaire-qpop__inner"
+                        onMouseEnter={ clearCloseTimer }
+                        onMouseLeave={ scheduleClose }
+                    >
                         <div className="adaire-qpop__head">
                             <div className="adaire-qpop__icon">
                                 <TriggerIcon />
