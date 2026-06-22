@@ -26,6 +26,7 @@
     width: var(--infogrid-2-block-width-desktop, 100%);
     margin-left: auto;
     margin-right: auto;
+    background-color: var(--infogrid-2-bg-color, transparent);
     background-size: var(--infogrid-2-bg-size, cover);
     background-position: var(--infogrid-2-bg-position, center);
     background-repeat: var(--infogrid-2-bg-repeat, no-repeat);

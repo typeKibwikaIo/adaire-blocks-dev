@@ -542,6 +542,10 @@
                 }
             }
         },
+        "solidBgColor": {
+            "type": "string",
+            "default": ""
+        },
         "backgroundSize": {
             "type": "string",
             "default": "cover"

@@ -214,7 +214,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         },
         backgroundSize,
         backgroundPosition,
-        backgroundRepeat
+        backgroundRepeat,
+        solidBgColor
     } = attributes;
 
     const [deviceType, setDeviceType] = useState('desktop');
@@ -309,6 +310,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     const styleVariables = useMemo(() => {
         const vars = {
+            '--infogrid-2-bg-color': solidBgColor || 'transparent',
             '--infogrid-2-bg-image': backgroundImageUrl ? `url(${backgroundImageUrl})` : 'none',
             '--infogrid-2-overlay-bg-solid': overlayColor || '#000000',
             '--infogrid-2-overlay-opacity': overlayOpacity !== undefined ? overlayOpacity : 0.5,
@@ -373,7 +375,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         });
 
         return vars;
-    }, [attributes, backgroundImageUrl, overlayColor, overlayOpacity, overlayGradient, responsiveMaxWidth]);
+    }, [attributes, solidBgColor, backgroundImageUrl, overlayColor, overlayOpacity, overlayGradient, responsiveMaxWidth]);
 
     const blockProps = useBlockProps({
         className: `adaire-infogrid-2-container ${containerMode === 'constrained' ? 'is-constrained' : ''}`,
@@ -403,6 +405,17 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </div>
 
                 <PanelBody title={__('Background & Overlay', 'adaire-blocks-dev2')}>
+                    <PanelColorSettings
+                        title={__('Solid Background Color', 'adaire-blocks-dev2')}
+                        initialOpen={false}
+                        colorSettings={[
+                            {
+                                value: solidBgColor,
+                                onChange: (val) => setAttributes({ solidBgColor: val || '' }),
+                                label: __('Background Color', 'adaire-blocks-dev2'),
+                            }
+                        ]}
+                    />
                     <MediaUploadCheck>
                         <MediaUpload
                             onSelect={(media) => setAttributes({ backgroundImage: media, backgroundImageUrl: media.url })}
