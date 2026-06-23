@@ -9,6 +9,7 @@ import {
     SelectControl,
     ButtonGroup,
     Button,
+    RangeControl,
     __experimentalUnitControl as UnitControl,
     __experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
@@ -42,6 +43,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         responsiveDescriptionLineHeight,
         responsiveImageDimensions,
         responsiveCardMinHeight,
+        responsiveCardWidth,
         introHeight,
         outroHeight,
         responsiveLastCardBottomHeight
@@ -112,6 +114,16 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         return `${value}${unit}`;
     };
 
+    // Reads the numeric portion out of a "NN%" string for the width drag
+    // slider. Non-percent values (px/em/etc, set via the unit field below)
+    // fall back to 100 so the handle still sits somewhere sensible —
+    // dragging it always writes a fresh percent value.
+    const parsePercent = (val, fallback = 100) => {
+        if (typeof val !== 'string') return fallback;
+        const match = val.match(/^(-?\d+(?:\.\d+)?)%$/);
+        return match ? parseFloat(match[1]) : fallback;
+    };
+
     const generateVars = (device) => ({
         [`--container-max-width-${device}`]: formatDimensionValue(responsiveMaxWidth?.[device], '1200', 'px'),
         [`--padding-top-${device}`]: responsivePadding?.[device]?.top,
@@ -131,6 +143,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         [`--image-width-${device}`]: responsiveImageDimensions?.[device]?.width || '100%',
         [`--image-height-${device}`]: responsiveImageDimensions?.[device]?.height || 'auto',
         [`--card-min-height-${device}`]: responsiveCardMinHeight?.[device],
+        [`--card-width-${device}`]: responsiveCardWidth?.[device] || '100%',
         [`--last-card-bottom-height-${device}`]: responsiveLastCardBottomHeight?.[device] || '0px',
     });
 
@@ -216,6 +229,20 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         label={`Global Card Min Height (${deviceType})`}
                         value={responsiveCardMinHeight?.[deviceType]}
                         onChange={(val) => updateResponsive('responsiveCardMinHeight', deviceType, val)}
+                    />
+                    <RangeControl
+                        label={__('Card Width — drag to resize', 'adaire-blocks-dev2')}
+                        value={parsePercent(responsiveCardWidth?.[deviceType], 100)}
+                        min={10}
+                        max={100}
+                        step={1}
+                        onChange={(val) => updateResponsive('responsiveCardWidth', deviceType, `${val}%`)}
+                    />
+                    <UnitControl
+                        label={`Card Width (${deviceType})`}
+                        value={responsiveCardWidth?.[deviceType] || '100%'}
+                        onChange={(val) => updateResponsive('responsiveCardWidth', deviceType, val)}
+                        help={__('Width of each card relative to the slider container. 100% fills the available space; narrower values center the card automatically. Type an exact value in any unit instead of dragging.', 'adaire-blocks-dev2')}
                     />
                     <UnitControl
                         label={`Last Card Bottom Height (${deviceType})`}

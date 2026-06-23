@@ -30,12 +30,12 @@
         { "title": "Track & Report",        "description": "Full visibility into every transaction with real-time dashboards and exportable compliance reports.",              "icon": "check"  }
       ]
     },
-    "backgroundColor":   { "type": "string",  "default": "#0a1628" },
-    "accentColor":       { "type": "string",  "default": "#00bcd4" },
-    "eyebrowColor":      { "type": "string",  "default": "#00bcd4" },
+    "backgroundColor":   { "type": "string",  "default": "#503AA8" },
+    "accentColor":       { "type": "string",  "default": "#ffffff" },
+    "eyebrowColor":      { "type": "string",  "default": "#aeb4cf" },
     "textColor":         { "type": "string",  "default": "#ffffff" },
-    "descriptionColor":  { "type": "string",  "default": "rgba(255,255,255,0.65)" },
-    "lineColor":         { "type": "string",  "default": "#1e3a5f" },
+    "descriptionColor":  { "type": "string",  "default": "#aeb4cf" },
+    "lineColor":         { "type": "string",  "default": "rgba(255,255,255,0.2)" },
     "nodeSize":          { "type": "number",  "default": 52 },
     "showArrows":        { "type": "boolean", "default": true },
     "showConnector":     { "type": "boolean", "default": true },

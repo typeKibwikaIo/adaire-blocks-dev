@@ -107,6 +107,13 @@
     "about-us-block": {
       "enabled": true,
       "upgradeMessage": "Upgrade to Premium for additional About Us layouts and animation effects."
+    },
+    "gallery-block": {
+      "enabled": true,
+      "limits": {
+        "maxItems": 8
+      },
+      "upgradeMessage": "Go pro to add more than 8 images to your gallery."
     }
   },
   "premium": {
@@ -539,6 +546,17 @@
         "border-toggle-and-styling",
         "nested-button-block"
       ]
+    },
+    "gallery-block": {
+      "enabled": true,
+      "limits": {},
+      "features": [
+        "unlimited-images",
+        "masonry-layout",
+        "custom-aspect-ratios",
+        "hover-effects",
+        "lightbox"
+      ]
     }
   },
   "plus": {
@@ -896,6 +914,18 @@
         "equal-height-css-grid-layout",
         "scrub-speed-control",
         "section-background-and-padding"
+      ]
+    },
+    "gallery-block": {
+      "enabled": true,
+      "limits": {},
+      "features": [
+        "unlimited-images",
+        "masonry-layout",
+        "custom-aspect-ratios",
+        "hover-effects",
+        "lightbox",
+        "priority-support"
       ]
     }
   }

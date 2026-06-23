@@ -34,6 +34,24 @@
             "type": "number",
             "default": 16
         },
+        "headingFontSize": {
+            "type": "object",
+            "default": {
+                "desktop": 18,
+                "tablet": 18,
+                "mobile": 18,
+                "smartwatch": 18
+            }
+        },
+        "contentFontSize": {
+            "type": "object",
+            "default": {
+                "desktop": 16,
+                "tablet": 16,
+                "mobile": 16,
+                "smartwatch": 16
+            }
+        },
         "textToDisplay": {
             "type": "string",
             "default": "Hello World"

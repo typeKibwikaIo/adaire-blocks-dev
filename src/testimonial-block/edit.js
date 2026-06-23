@@ -65,6 +65,8 @@ export default function Edit({ attributes, setAttributes }) {
 		cardGap,
 		responsivePaddingTop,
 		responsivePaddingBottom,
+		headingFontSize,
+		contentFontSize,
 	} = attributes;
 
 	const splideRef = useRef(null);
@@ -102,6 +104,20 @@ export default function Edit({ attributes, setAttributes }) {
 			"--carousel-padding-bottom-tablet": `${responsivePaddingBottom?.tablet ?? 48}px`,
 			"--carousel-padding-bottom-mobile": `${responsivePaddingBottom?.mobile ?? 36}px`,
 			"--carousel-padding-bottom-watch": `${responsivePaddingBottom?.smartwatch ?? 24}px`,
+			// Independent heading (author name) / content (quote) typography
+			// layers — see style.scss's &__name / &__quote, which consume
+			// these directly (most-specific selector wins) instead of relying
+			// on inheriting --font-size from the block root, which the old
+			// hardcoded per-element font-size declarations always overrode
+			// anyway.
+			"--heading-font-size": `${headingFontSize?.desktop ?? 18}px`,
+			"--heading-font-size-tablet": `${headingFontSize?.tablet ?? 18}px`,
+			"--heading-font-size-mobile": `${headingFontSize?.mobile ?? 18}px`,
+			"--heading-font-size-watch": `${headingFontSize?.smartwatch ?? 18}px`,
+			"--content-font-size": `${contentFontSize?.desktop ?? 16}px`,
+			"--content-font-size-tablet": `${contentFontSize?.tablet ?? 16}px`,
+			"--content-font-size-mobile": `${contentFontSize?.mobile ?? 16}px`,
+			"--content-font-size-watch": `${contentFontSize?.smartwatch ?? 16}px`,
 			...(blockBackgroundColor && { background: blockBackgroundColor })
 		},
 		'data-slides-per-view': slidesPerView || 3,
@@ -130,16 +146,13 @@ export default function Edit({ attributes, setAttributes }) {
 				// Get configuration from attributes
 				const slidesPerViewValue = parseInt(slidesPerView) || 3;
 				const spaceBetweenValue = parseInt(spaceBetween) || 50;
-				const loopValue = loop;
 				const navigationValue = navigation;
 				const paginationValue = pagination;
 				const scrollbarValue = scrollbar;
-				
-				// Count actual slides
-				const totalSlides = testimonials.length;
-				
-				// Splide loop works better with fewer restrictions
-				const shouldLoop = loopValue && totalSlides > 1;
+
+				// Note: `loop` is intentionally NOT applied here — see the
+				// comment on `type: 'slide'` below. The frontend (view.js)
+				// still honors it independently via data-loop.
 
 				// Check if we need to reinitialize or just update
 				const needsReinit = !splideInstanceRef.current;
@@ -177,16 +190,53 @@ export default function Edit({ attributes, setAttributes }) {
 							};
 
 							const splideInstance = new Splide(splideRef.current, {
-								type: shouldLoop ? 'loop' : 'slide',
+								// Always 'slide' here, never 'loop' — Splide's loop mode
+								// works by physically cloning slide DOM nodes (for the
+								// seamless wrap-around) and inserting those clones
+								// alongside the real ones. Clones are raw cloneNode()
+								// copies, so they carry none of React's event handlers.
+								// Combined with focus: 'center', a clone frequently ends
+								// up as the slide shown first/centered on mount — so its
+								// QuickZone ("Company Logo" / "Quote & Author") buttons
+								// look dead while every other (genuinely React-rendered)
+								// slide works fine. The live frontend's own Splide
+								// instance (view.js) reads `loop` independently from
+								// data-loop and is unaffected by this — looping there is
+								// safe since there's no React tree to break.
+								type: 'slide',
 								perPage: getCurrentSlidesPerView(),
 								perMove: 1,
 								gap: getCurrentGap(),
 								padding: '0',
-								arrows: false, // Disable arrows in editor
-								pagination: false, // Disable pagination in editor
-								drag: false, // Disable drag in editor
+								// Mirror the frontend's interactivity in the editor canvas
+								// itself, so the carousel can actually be previewed (and
+								// the remaining slides reached/edited) here instead of only
+								// on the published page. Arrows/pagination are plain click
+								// handlers so they're safe here.
+								//
+								// Drag is deliberately left OFF in the editor though: the
+								// block canvas lives inside WordPress's editor <iframe>, and
+								// Splide's drag handling listens for mouseup on the
+								// document — if a drag starts inside that iframe and the
+								// mouse is released outside it (e.g. over the Inspector
+								// sidebar, which lives in the parent document), that mouseup
+								// never reaches Splide's listener. The drag never gets told
+								// it ended, so it stays "active" and keeps hijacking
+								// clicks/movement even once the cursor's well outside the
+								// block. The live frontend has no such iframe boundary, so
+								// drag stays enabled there.
+								arrows: navigationValue,
+								pagination: paginationValue,
+								drag: false,
 								focus: 'center',
-								trimSpace: false,
+								// `true` (the default) trims the empty space that
+								// `focus: 'center'` would otherwise reserve before the
+								// first slide / after the last one so they can sit
+								// "centered" with nothing beside them. With `type: 'slide'`
+								// (no loop clones to fill that space — see above) leaving
+								// this `false` showed up as a literal blank gap to the left
+								// of the first card.
+								trimSpace: true,
 								updateOnMove: true,
 								resetProgress: false,
 								speed: 600,
@@ -1001,18 +1051,37 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 				</PanelBody>
 
-				<PanelBody title="Text Settings" initialOpen={false}>
-					<TextControl
-						label="Font Size (px)"
-						value={fontSize}
-						type="number"
-						onChange={(value) => {
-							const num = Number(value);
-							if (!isNaN(num) && value !== "") {
-								setAttributes({ fontSize: num });
-							}
-						}}
-						min={1}
+				<PanelBody title={__('Typography', 'testimonial-block')} initialOpen={false}>
+					<p style={{ marginBottom: '16px', color: '#666' }}>
+						{__('Heading and content text now have independent font-size controls, per device.', 'testimonial-block')}
+					</p>
+
+					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Device')} />
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '0' }}>
+						{__('Heading Font Size', 'testimonial-block')}
+					</p>
+					<p style={{ marginTop: '2px', marginBottom: '8px', fontSize: '12px', color: '#666' }}>
+						{__('Author name', 'testimonial-block')}
+					</p>
+					<RangeControl
+						value={getDeviceValue(headingFontSize, deviceType, 18)}
+						onChange={(v) => setAttributes({ headingFontSize: updateDeviceAttribute(headingFontSize, deviceType, v) })}
+						min={10}
+						max={48}
+					/>
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '0' }}>
+						{__('Content Font Size', 'testimonial-block')}
+					</p>
+					<p style={{ marginTop: '2px', marginBottom: '8px', fontSize: '12px', color: '#666' }}>
+						{__('Quote text', 'testimonial-block')}
+					</p>
+					<RangeControl
+						value={getDeviceValue(contentFontSize, deviceType, 16)}
+						onChange={(v) => setAttributes({ contentFontSize: updateDeviceAttribute(contentFontSize, deviceType, v) })}
+						min={10}
+						max={36}
 					/>
 				</PanelBody>
 

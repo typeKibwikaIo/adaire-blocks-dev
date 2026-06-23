@@ -103,20 +103,27 @@
 		justify-content: center;
 		width: 32px;
 		height: 32px;
-		color: inherit;
+		// Base color/background/border-color come from CSS custom props (set
+		// inline by render.php + edit.js as --social-icon-color/-bg and
+		// --social-border-color) rather than being set as literal inline style
+		// properties. This matters: an inline `style="color:...; background:..."`
+		// attribute has higher specificity than ANY class-based :hover rule and
+		// would permanently block the hover rule below from ever taking effect,
+		// even while actually hovering. Routing both states through CSS custom
+		// props keeps base and hover at the same (class-level) specificity, so
+		// the :hover rule's extra pseudo-class correctly wins on hover.
+		color: var(--social-icon-color, inherit);
 		text-decoration: none;
 		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.1);
+		background: var(--social-icon-bg, rgba(255, 255, 255, 0.1));
+		border: 2px solid var(--social-border-color, transparent);
 		transition: all 0.3s ease;
 
 		&:hover {
 			// Customizable via column.socialHoverColor / socialHoverBackgroundColor /
 			// socialHoverBorderColor (wired through CSS custom props in render.php +
-			// edit.js). Border-radius/border/transition/spacing are applied as direct
-			// inline styles (not CSS vars) since they're needed in both hover and
-			// non-hover states; only the hover-only border color needs a var here.
-			// Falls back to the original hardcoded hover look when unset, so saved
-			// footers from before this feature existed render identically.
+			// edit.js). Falls back to the original hardcoded hover look when unset,
+			// so saved footers from before this feature existed render identically.
 			background: var(--social-hover-bg, rgba(255, 255, 255, 0.2));
 			color: var(--social-hover-color, inherit);
 			border-color: var(--social-hover-border-color, transparent);
@@ -210,7 +217,12 @@
 				}
 
 				a, .website-footer-block__nav-link {
-					color: var(--footer-accent-color, #503AA8);
+					// Base color goes through --link-color (falling back to the
+					// footer accent), not a literal `color` declaration — an
+					// inline `color` on the link element would out-specificity
+					// this :hover rule's `color` and hover would never visibly
+					// apply, same bug class already fixed for the social icons.
+					color: var(--link-color, var(--footer-accent-color, #D52940));
 					text-decoration: var(--link-underline-mode, none);
 					font-size: inherit;
 					font-weight: var(--footer-nav-font-weight, 400);
@@ -252,7 +264,11 @@
 				}
 
 				a {
-					color: inherit;
+					// Base color via CSS var (not a literal `color: inherit` plus
+					// an inline override) so the :hover rule below — same
+					// specificity family — can actually win on hover. See
+					// &__social-icon above for the full explanation.
+					color: var(--social-icon-color, inherit);
 					text-decoration: none;
 					font-size: 14px;
 					transition: color 0.3s ease;
@@ -292,7 +308,9 @@
 		gap: 8px;
 
 		a {
-			color: var(--footer-accent-color, #503AA8);
+			// Same --link-color routing as the top-level nav-link rule above,
+			// so sub-menu links also respect the :hover rule below.
+			color: var(--link-color, var(--footer-accent-color, #D52940));
 			text-decoration: var(--link-underline-mode, none);
 			font-size: 0.95em;
 			opacity: 0.9;

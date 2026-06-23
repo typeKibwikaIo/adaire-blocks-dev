@@ -1,6 +1,18 @@
-// Bootstrap Icons — loaded here so it's available in both the frontend and the
-// editor canvas (the "style" field CSS loads in both contexts, unlike editorStyle).
-@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css');
+// Self-contained Bootstrap Icons font import.
+//
+// Why: the plugin also enqueues Bootstrap Icons via PHP (admin_enqueue_scripts /
+// enqueue_block_editor_assets in adaire-blocks.php), but the block editor canvas
+// renders inside an <iframe>, which is a separate document. WordPress's iframe
+// only picks up stylesheets that are present in the parent admin document's
+// <head> *at the moment the iframe initializes* — so depending on enqueue/hook
+// timing, the icon font's CSS (and therefore the `::before` glyph rules Bootstrap
+// Icons relies on) can silently fail to reach the canvas even though the same
+// markup renders fine elsewhere (e.g. the Inspector sidebar, which lives outside
+// the iframe). A plain CSS `@import` here is resolved by the browser inside
+// *whatever* document this compiled stylesheet ends up in, so it loads correctly
+// on canvas, in the Inspector, and on the front end alike — independent of any
+// PHP enqueue timing.
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
 
 // Match InfoGrid 3 / base InfoGrid behavior: prevent WP core from adding default borders
 // when it detects border-width/borderStyle/borderColor in inline styles.
@@ -145,8 +157,56 @@
         font-size: var(--infogrid-2-icon-size-desktop, 32px);
         line-height: 1;
 
-        i {
-            display: inline-block;
+        // Bootstrap Icons are font glyphs rendered via `::before` content, so
+        // they need an explicit, defensive size/visibility reset — without
+        // this, generic resets elsewhere (theme CSS, WP core `:where()`
+        // rules, or a parent flex/grid context) can silently collapse or
+        // hide the glyph even though the markup and font are otherwise
+        // correct. Mirrors the same defensive block used for `.bi` icons in
+        // icon-box-block's style.scss.
+        i,
+        i.bi,
+        i[class*="bi-"] {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: 0 !important;
+            min-height: 0 !important;
+            max-width: none !important;
+            max-height: none !important;
+            font-size: inherit !important;
+            line-height: 1 !important;
+            color: inherit !important;
+            font-family: "bootstrap-icons" !important;
+        }
+
+        // Uploaded image replaces the icon glyph. Sized in `em` so it tracks
+        // the same --infogrid-2-icon-size custom property (and all of its
+        // responsive breakpoint overrides below) the icon font-size already
+        // uses — no separate image-size controls needed.
+        img {
+            display: block;
+            width: 1em;
+            height: 1em;
+            object-fit: contain;
+        }
+
+        &--placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5em;
+            height: 1.5em;
+            border: 1px dashed currentColor;
+            border-radius: 4px;
+            font-size: inherit;
+
+            span {
+                font-size: 11px;
+                opacity: 0.6;
+            }
         }
     }
 

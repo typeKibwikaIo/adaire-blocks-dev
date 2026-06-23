@@ -4,11 +4,36 @@ const SIDES = [ 'Top', 'Right', 'Bottom', 'Left' ];
 export const getUnitValue = ( value, fallbackValue, fallbackUnit ) =>
 	`${ value?.value ?? fallbackValue }${ value?.unit ?? fallbackUnit }`;
 
+// Resolves a per-device height value, while staying backwards compatible with
+// content saved before height became responsive (a flat { value, unit } object
+// applied to every device instead of a per-device map).
+export const getContainerHeightForDevice = ( containerHeight, device, fallbackValue = 315, fallbackUnit = 'px' ) => {
+	if ( ! containerHeight ) {
+		return { value: fallbackValue, unit: fallbackUnit };
+	}
+
+	const deviceValue = containerHeight[ device ];
+	if ( deviceValue && typeof deviceValue === 'object' && 'value' in deviceValue ) {
+		return deviceValue;
+	}
+
+	// Legacy shape: a single flat { value, unit } applied to every device.
+	if ( 'value' in containerHeight ) {
+		return containerHeight;
+	}
+
+	return { value: fallbackValue, unit: fallbackUnit };
+};
+
 export const getVideoPlayerStyles = ( attributes ) => {
 	const {
 		containerMaxWidth,
 		containerHeight,
 		containerBorderRadius,
+		containerBackgroundColor,
+		containerBorderColor,
+		containerBorderWidth,
+		containerShadowIntensity,
 		marginTop,
 		marginRight,
 		marginBottom,
@@ -22,15 +47,26 @@ export const getVideoPlayerStyles = ( attributes ) => {
 	const padding = { Top: paddingTop, Right: paddingRight, Bottom: paddingBottom, Left: paddingLeft };
 	const styles = {
 		'--container-max-width': getUnitValue( containerMaxWidth?.desktop, 1200, 'px' ),
-		'--container-height': getUnitValue( containerHeight, 315, 'px' ),
+		'--container-height': getUnitValue( getContainerHeightForDevice( containerHeight, 'desktop' ), 315, 'px' ),
 		'--container-border-radius': `${ containerBorderRadius ?? 20 }px`,
+		'--container-background-color': containerBackgroundColor || 'transparent',
+		'--container-border-color': containerBorderColor || 'transparent',
+		'--container-border-width': `${ containerBorderWidth ?? 0 }px`,
+		'--container-shadow-intensity': containerShadowIntensity ?? 0,
 	};
 
 	DEVICES.filter( ( device ) => device !== 'desktop' ).forEach( ( device ) => {
-		styles[ `--container-max-width-${ device === 'smartwatch' ? 'watch' : device }` ] = getUnitValue(
+		const suffix = device === 'smartwatch' ? 'watch' : device;
+
+		styles[ `--container-max-width-${ suffix }` ] = getUnitValue(
 			containerMaxWidth?.[ device ],
 			100,
 			'%'
+		);
+		styles[ `--container-height-${ suffix }` ] = getUnitValue(
+			getContainerHeightForDevice( containerHeight, device ),
+			315,
+			'px'
 		);
 	} );
 
@@ -81,8 +117,12 @@ export const getVimeoId = ( value = '' ) => {
 	return value.split( '/' ).pop()?.split( '#' )[ 0 ] || value;
 };
 
+// NOTE: must be the "www" host — youtube.com/embed/... (no www) 302-redirects,
+// and that redirect hop happening inside an <iframe> is what was silently
+// breaking autoplay (the player loads fine, but the ?autoplay=1 param doesn't
+// survive the redirect, so it sits there paused until clicked).
 export const getYouTubeSrc = ( { ytVideoId, mute, controls, loop, autoplay } ) =>
-	`https://youtube.com/embed/${ ytVideoId }?mute=${ mute ? '1' : '0' }&controls=${ controls ? '1' : '0' }&loop=${ loop ? '1' : '0' }${ loop ? `&playlist=${ ytVideoId }` : '' }&autoplay=${ autoplay ? '1' : '0' }`;
+	`https://www.youtube.com/embed/${ ytVideoId }?mute=${ mute ? '1' : '0' }&controls=${ controls ? '1' : '0' }&loop=${ loop ? '1' : '0' }${ loop ? `&playlist=${ ytVideoId }` : '' }&autoplay=${ autoplay ? '1' : '0' }&playsinline=1`;
 
 export const getVimeoSrc = ( { vimeoVideoId, autoplay, mute, loop, controls } ) =>
 	`https://player.vimeo.com/video/${ vimeoVideoId }?autoplay=${ autoplay ? '1' : '0' }&muted=${ mute ? '1' : '0' }&loop=${ loop ? '1' : '0' }&controls=${ controls ? '1' : '0' }&background=${ autoplay && mute && ! controls ? '1' : '0' }`;

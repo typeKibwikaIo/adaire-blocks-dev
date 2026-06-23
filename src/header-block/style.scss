@@ -142,6 +142,24 @@
     justify-content: flex-end;
     gap: 14px;
     flex-shrink: 0;
+
+    // Improve CTA behavior: when Sign In, Sign Up and the CTA button are all
+    // disabled (and search/social aren't placed here either), this container
+    // renders with literally no content — render.php emits an empty
+    // <div class="adaire-header-actions"></div> and the editor's ActionsZone
+    // mounts none of its children either. Left in the flow, that empty box
+    // still claims a slot in .adaire-header-inner's layout (flex
+    // space-between, or the split layout's grid columns), leaving a dead gap
+    // on the right where the buttons used to sit. Collapsing it here lets the
+    // nav automatically reclaim that freed space — i.e. center/nav links
+    // shift right on their own — purely via CSS, with no markup changes, and
+    // with zero effect whenever any button, search, or social icon is still
+    // present. Every existing layout/positioning control (layout select,
+    // searchPosition, socialPlacement, navOrientation, etc.) keeps full,
+    // untouched control over everything else.
+    &:empty {
+        display: none;
+    }
 }
 
 .adaire-header-action {

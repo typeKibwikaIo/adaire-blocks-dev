@@ -5,6 +5,7 @@ import { useState } from '@wordpress/element';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import ButtonIcon, { BUTTON_ICON_OPTIONS } from './icons';
 
 export default function Edit({ attributes, setAttributes }) {
   const [deviceType, setDeviceType] = useState('desktop');
@@ -25,6 +26,8 @@ export default function Edit({ attributes, setAttributes }) {
     blurAmount,
     fontSize,
     showIcon,
+    iconType,
+    iconPosition,
     hoverAnimation,
     buttonPadding,
     buttonMargin,
@@ -292,6 +295,29 @@ export default function Edit({ attributes, setAttributes }) {
             help={showIcon ? 'Icon will be visible' : 'Icon will be hidden'}
           />
 
+          {showIcon && (
+            <>
+              <SelectControl
+                label="Icon"
+                value={iconType || 'arrow-diagonal'}
+                options={BUTTON_ICON_OPTIONS}
+                onChange={(value) => setAttributes({ iconType: value })}
+              />
+
+              <SelectControl
+                label="Icon Position"
+                value={iconPosition || 'right'}
+                options={[
+                  { label: 'Right of text', value: 'right' },
+                  { label: 'Left of text', value: 'left' },
+                  { label: 'Inline (no gap)', value: 'inline' }
+                ]}
+                onChange={(value) => setAttributes({ iconPosition: value })}
+                help="Left/Right move the icon using flex order; Inline keeps it after the text but removes the spacing gap."
+              />
+            </>
+          )}
+
           <SelectControl
             label="Hover Animation"
             value={hoverAnimation}
@@ -401,13 +427,13 @@ export default function Edit({ attributes, setAttributes }) {
           href={buttonLink}
           target={openInNewTab ? '_blank' : undefined}
           rel={openInNewTab ? 'noopener noreferrer' : undefined}
-          className={`adaire-button-block__link adaire-button-block__link--${buttonStyle || 'underline'} adaire-button-block__link--${hoverAnimation || 'slide-underline'}`}
+          className={`adaire-button-block__link adaire-button-block__link--${buttonStyle || 'underline'} adaire-button-block__link--${hoverAnimation || 'slide-underline'} adaire-button-block__link--icon-${iconPosition || 'right'}`}
         >
           {buttonText}
           {showIcon !== false && (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <span className="adaire-button-block__icon" aria-hidden="true">
+              <ButtonIcon type={iconType} />
+            </span>
           )}
         </a>
         </QuickZone>

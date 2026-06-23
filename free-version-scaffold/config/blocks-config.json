@@ -17,7 +17,7 @@
 			"upgradeMessage": "Upgrade to Premium for advanced video player features."
 		},
 		"icon-box-block": {
-			"enabled": true,
+			"enabled": false,
 			"upgradeMessage": "Upgrade to Premium for advanced icon box features."
 		},
 		"social-banner-block": {
@@ -33,7 +33,7 @@
 			"upgradeMessage": "Upgrade to Premium for advanced filtering and custom templates."
 		},
 		"posts-carousel-block": {
-			"enabled": true,
+			"enabled": false,
 			"upgradeMessage": "Upgrade to Premium for advanced carousel features."
 		},
 		"tabs-block": {
@@ -49,7 +49,7 @@
 			"upgradeMessage": "Upgrade to Premium for advanced video features."
 		},
 		"animation-scroll-block": {
-			"enabled": true,
+			"enabled": false,
 			"upgradeMessage": "Upgrade to Premium for advanced animation features."
 		},
 		"content-toggle-block": {

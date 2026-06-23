@@ -82,7 +82,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
     // Helper function to ensure we have a valid color with opacity
     const getBackgroundColor = (color) => {
-        if (!color) return 'rgba(59, 130, 246, 0.05)';
+        if (!color) return 'rgba(80, 58, 168, 0.05)';
         return color;
     };
 

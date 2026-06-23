@@ -15,6 +15,7 @@ export default function save({ attributes }) {
         responsiveDescriptionLineHeight,
         responsiveImageDimensions,
         responsiveCardMinHeight,
+        responsiveCardWidth,
         introHeight,
         outroHeight,
         responsiveLastCardBottomHeight
@@ -55,6 +56,7 @@ export default function save({ attributes }) {
         [`--image-width-${device}`]: responsiveImageDimensions?.[device]?.width || '100%',
         [`--image-height-${device}`]: responsiveImageDimensions?.[device]?.height || 'auto',
         [`--card-min-height-${device}`]: responsiveCardMinHeight?.[device],
+        [`--card-width-${device}`]: responsiveCardWidth?.[device] || '100%',
         [`--last-card-bottom-height-${device}`]: responsiveLastCardBottomHeight?.[device] || '0px',
     });
 

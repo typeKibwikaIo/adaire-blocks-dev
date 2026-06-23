@@ -31,6 +31,8 @@ export default function save({ attributes }) {
 		cardGap,
 		responsivePaddingTop,
 		responsivePaddingBottom,
+		headingFontSize,
+		contentFontSize,
 	} = attributes;
 
 	const blockProps = useBlockProps.save({
@@ -63,6 +65,17 @@ export default function save({ attributes }) {
 			"--carousel-padding-bottom-tablet": `${responsivePaddingBottom?.tablet ?? 48}px`,
 			"--carousel-padding-bottom-mobile": `${responsivePaddingBottom?.mobile ?? 36}px`,
 			"--carousel-padding-bottom-watch": `${responsivePaddingBottom?.smartwatch ?? 24}px`,
+			// Independent heading (author name) / content (quote) typography
+			// layers — must mirror edit.js exactly since this block saves
+			// static markup. See style.scss's &__name / &__quote.
+			"--heading-font-size": `${headingFontSize?.desktop ?? 18}px`,
+			"--heading-font-size-tablet": `${headingFontSize?.tablet ?? 18}px`,
+			"--heading-font-size-mobile": `${headingFontSize?.mobile ?? 18}px`,
+			"--heading-font-size-watch": `${headingFontSize?.smartwatch ?? 18}px`,
+			"--content-font-size": `${contentFontSize?.desktop ?? 16}px`,
+			"--content-font-size-tablet": `${contentFontSize?.tablet ?? 16}px`,
+			"--content-font-size-mobile": `${contentFontSize?.mobile ?? 16}px`,
+			"--content-font-size-watch": `${contentFontSize?.smartwatch ?? 16}px`,
 			...(blockBackgroundColor && { background: blockBackgroundColor })
 		},
 		'data-slides-per-view': slidesPerView || 3,

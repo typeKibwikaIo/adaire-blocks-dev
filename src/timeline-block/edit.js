@@ -11,7 +11,6 @@ import { useState } from '@wordpress/element';
 import InspectorTabs from '../components/InspectorTabs';
 import AdaireColorControl from '../components/AdaireColorControl';
 import QuickZone from '../components/QuickZone';
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import { ICON_SVGS, ICON_OPTIONS } from './icons';
 
 function ColorPicker( { label, value, onChange } ) {
@@ -24,13 +23,23 @@ function ColorPicker( { label, value, onChange } ) {
 	);
 }
 
-function NodeIcon( { icon } ) {
-	const svg = ICON_SVGS[ icon ] || ICON_SVGS.circle;
+// Mirrors save.js's node markup exactly (same class + inline size) so the
+// editor canvas and the front end render an identical circle/border/glyph.
+//
+// ICON_SVGS' entries are JSX elements, not HTML strings — the previous
+// version passed one to dangerouslySetInnerHTML's __html, which silently
+// stringifies a React element to the literal text "[object Object]" instead
+// of rendering it. save.js never had this bug because it renders the icon
+// directly as a JSX child; doing the same here fixes it.
+function NodeIcon( { icon, nodeSize } ) {
+	const svg = ICON_SVGS[ icon ] || ICON_SVGS.shield;
 	return (
-		<span
-			className="adaire-timeline__node-icon"
-			dangerouslySetInnerHTML={ { __html: svg } }
-		/>
+		<div
+			className="adaire-timeline__node"
+			style={ { width: nodeSize, height: nodeSize } }
+		>
+			{ svg }
+		</div>
 	);
 }
 
@@ -40,9 +49,17 @@ export default function Edit( { attributes, setAttributes } ) {
 		orientation,
 		showArrows,
 		showConnector,
+		eyebrow,
+		sectionTitle,
+		sectionDescription,
 	} = attributes;
 	const a = attributes;
+	const nodeSize = a.nodeSize || 52;
 
+	// Kept 1:1 with save.js's style object — this used to also carry a pile of
+	// responsive padding/typography vars that referenced attributes which were
+	// never registered in block.json and CSS vars that style.scss never
+	// consumed, so they did nothing and have been dropped.
 	const blockProps = useBlockProps( {
 		className: `adaire-timeline is-${ orientation }`,
 		style: {
@@ -52,40 +69,21 @@ export default function Edit( { attributes, setAttributes } ) {
 			'--tl-text'     : a.textColor        || '#ffffff',
 			'--tl-desc'     : a.descriptionColor || 'rgba(255,255,255,0.65)',
 			'--tl-line'     : a.lineColor        || '#1e3a5f',
-			'--tl-node-size': `${ a.nodeSize || 52 }px`,
-			'--tl-padding-top'           : `${ a.responsivePaddingTop?.desktop      ?? a.paddingTop    ?? 80 }px`,
-			'--tl-padding-top-tablet'    : `${ a.responsivePaddingTop?.tablet       ?? 60 }px`,
-			'--tl-padding-top-mobile'    : `${ a.responsivePaddingTop?.mobile       ?? 40 }px`,
-			'--tl-padding-top-watch'     : `${ a.responsivePaddingTop?.smartwatch   ?? 24 }px`,
-			'--tl-padding-bottom'        : `${ a.responsivePaddingBottom?.desktop    ?? a.paddingBottom ?? 80 }px`,
-			'--tl-padding-bottom-tablet' : `${ a.responsivePaddingBottom?.tablet     ?? 60 }px`,
-			'--tl-padding-bottom-mobile' : `${ a.responsivePaddingBottom?.mobile     ?? 40 }px`,
-			'--tl-padding-bottom-watch'  : `${ a.responsivePaddingBottom?.smartwatch ?? 24 }px`,
-			'--tl-title-size'            : `${ a.responsiveTitleSize?.desktop      ?? 20 }px`,
-			'--tl-title-size-tablet'     : `${ a.responsiveTitleSize?.tablet       ?? 18 }px`,
-			'--tl-title-size-mobile'     : `${ a.responsiveTitleSize?.mobile       ?? 16 }px`,
-			'--tl-title-size-watch'      : `${ a.responsiveTitleSize?.smartwatch   ?? 14 }px`,
-			'--tl-desc-size'             : `${ a.responsiveDescSize?.desktop       ?? 15 }px`,
-			'--tl-desc-size-tablet'      : `${ a.responsiveDescSize?.tablet        ?? 14 }px`,
-			'--tl-desc-size-mobile'      : `${ a.responsiveDescSize?.mobile        ?? 13 }px`,
-			'--tl-desc-size-watch'       : `${ a.responsiveDescSize?.smartwatch    ?? 12 }px`,
-			'--tl-section-title-size'    : `${ a.responsiveSectionTitleSize?.desktop    ?? 42 }px`,
-			'--tl-section-title-tablet'  : `${ a.responsiveSectionTitleSize?.tablet     ?? 34 }px`,
-			'--tl-section-title-mobile'  : `${ a.responsiveSectionTitleSize?.mobile     ?? 26 }px`,
-			'--tl-section-title-watch'   : `${ a.responsiveSectionTitleSize?.smartwatch ?? 22 }px`,
+			'--tl-node-size': `${ nodeSize }px`,
 			backgroundColor : a.backgroundColor  || '#0a1628',
+			paddingTop      : `${ a.paddingTop    ?? 80 }px`,
+			paddingBottom   : `${ a.paddingBottom ?? 80 }px`,
 			color           : a.textColor        || '#ffffff',
 		},
 	} );
 
 	const [ activeZone, setActiveZone ] = useState( null );
-	const [ deviceType, setDeviceType ] = useState( 'desktop' );
 
 	const addItem = () => {
 		const newItems = [
 			...items,
 			{
-				icon: 'circle',
+				icon: 'shield',
 				title: __( 'New Milestone', 'timeline-block' ),
 				description: __( 'Describe this milestone.', 'timeline-block' ),
 			},
@@ -137,44 +135,19 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 				<PanelBody title={ __( 'Spacing', 'timeline-block' ) } initialOpen={ false }>
-					<DeviceSwitcher deviceType={ deviceType } setDeviceType={ setDeviceType } label={ __( 'Device' ) } />
 					<RangeControl
 						label={ __( 'Padding top (px)', 'timeline-block' ) }
-						value={ getDeviceValue( a.responsivePaddingTop, deviceType, deviceType === 'desktop' ? ( a.paddingTop ?? 80 ) : deviceType === 'tablet' ? 60 : deviceType === 'mobile' ? 40 : 24 ) }
-						onChange={ ( v ) => setAttributes( { responsivePaddingTop: updateDeviceAttribute( a.responsivePaddingTop, deviceType, v ) } ) }
+						value={ a.paddingTop ?? 80 }
+						onChange={ ( v ) => setAttributes( { paddingTop: v } ) }
 						min={ 0 }
 						max={ 200 }
 					/>
 					<RangeControl
 						label={ __( 'Padding bottom (px)', 'timeline-block' ) }
-						value={ getDeviceValue( a.responsivePaddingBottom, deviceType, deviceType === 'desktop' ? ( a.paddingBottom ?? 80 ) : deviceType === 'tablet' ? 60 : deviceType === 'mobile' ? 40 : 24 ) }
-						onChange={ ( v ) => setAttributes( { responsivePaddingBottom: updateDeviceAttribute( a.responsivePaddingBottom, deviceType, v ) } ) }
+						value={ a.paddingBottom ?? 80 }
+						onChange={ ( v ) => setAttributes( { paddingBottom: v } ) }
 						min={ 0 }
 						max={ 200 }
-					/>
-				</PanelBody>
-				<PanelBody title={ __( 'Typography', 'timeline-block' ) } initialOpen={ false }>
-					<DeviceSwitcher deviceType={ deviceType } setDeviceType={ setDeviceType } label={ __( 'Device' ) } />
-					<RangeControl
-						label={ __( 'Section title (px)', 'timeline-block' ) }
-						value={ getDeviceValue( a.responsiveSectionTitleSize, deviceType, deviceType === 'desktop' ? 42 : deviceType === 'tablet' ? 34 : deviceType === 'mobile' ? 26 : 22 ) }
-						onChange={ ( v ) => setAttributes( { responsiveSectionTitleSize: updateDeviceAttribute( a.responsiveSectionTitleSize, deviceType, v ) } ) }
-						min={ 16 }
-						max={ 72 }
-					/>
-					<RangeControl
-						label={ __( 'Item title (px)', 'timeline-block' ) }
-						value={ getDeviceValue( a.responsiveTitleSize, deviceType, deviceType === 'desktop' ? 20 : deviceType === 'tablet' ? 18 : deviceType === 'mobile' ? 16 : 14 ) }
-						onChange={ ( v ) => setAttributes( { responsiveTitleSize: updateDeviceAttribute( a.responsiveTitleSize, deviceType, v ) } ) }
-						min={ 10 }
-						max={ 40 }
-					/>
-					<RangeControl
-						label={ __( 'Description (px)', 'timeline-block' ) }
-						value={ getDeviceValue( a.responsiveDescSize, deviceType, deviceType === 'desktop' ? 15 : deviceType === 'tablet' ? 14 : deviceType === 'mobile' ? 13 : 12 ) }
-						onChange={ ( v ) => setAttributes( { responsiveDescSize: updateDeviceAttribute( a.responsiveDescSize, deviceType, v ) } ) }
-						min={ 10 }
-						max={ 28 }
 					/>
 				</PanelBody>
 				<PanelBody
@@ -201,56 +174,122 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorTabs>
 
 			<div { ...blockProps }>
-				<div className={ `adaire-timeline__track ${ showConnector ? 'has-connector' : '' }` }>
+				{ /* Section header — was missing from the editor entirely even
+				     though save.js always renders it on the front end. */ }
+				<div className="adaire-timeline__header">
+					<RichText
+						tagName="p"
+						className="adaire-timeline__eyebrow"
+						value={ eyebrow }
+						onChange={ ( value ) => setAttributes( { eyebrow: value } ) }
+						placeholder={ __( 'Eyebrow', 'timeline-block' ) }
+					/>
+					<RichText
+						tagName="h2"
+						className="adaire-timeline__section-title"
+						value={ sectionTitle }
+						onChange={ ( value ) => setAttributes( { sectionTitle: value } ) }
+						placeholder={ __( 'Section title', 'timeline-block' ) }
+					/>
+					<RichText
+						tagName="p"
+						className="adaire-timeline__section-desc"
+						value={ sectionDescription }
+						onChange={ ( value ) => setAttributes( { sectionDescription: value } ) }
+						placeholder={ __( 'Section description (optional)', 'timeline-block' ) }
+					/>
+				</div>
+
+				<div className="adaire-timeline__track">
+					{ showConnector && <div className="adaire-timeline__line" /> }
+
 					{ (items || []).map( ( item, index ) => {
-						const side = index % 2 === 0 ? 'left' : 'right';
-						return (
-							<div
-								className={ `adaire-timeline__item is-${ side }` }
-								key={ index }
+						// Same parity as save.js — this used to run the opposite
+						// direction in the editor, so every item swapped sides
+						// the moment the page loaded on the front end.
+						const side = orientation === 'vertical'
+							? ( index % 2 === 0 ? 'right' : 'left' )
+							: 'bottom';
+
+						const nodeEl = (
+							<QuickZone
+								id={ `timeline-item-${ index }` }
+								label={ item.title || __( 'Milestone', 'timeline-block' ) }
+								activeZone={ activeZone }
+								setActiveZone={ setActiveZone }
+								content={
+									<>
+										<SelectControl
+											label={ __( 'Icon', 'timeline-block' ) }
+											value={ item.icon }
+											options={ ICON_OPTIONS }
+											onChange={ ( value ) => updateItem( index, 'icon', value ) }
+										/>
+										<Button isDestructive onClick={ () => removeItem( index ) }>
+											{ __( 'Remove milestone', 'timeline-block' ) }
+										</Button>
+									</>
+								}
 							>
-								<QuickZone
-									id={ `timeline-item-${ index }` }
-									label={ item.title || __( 'Milestone', 'timeline-block' ) }
-									activeZone={ activeZone }
-									setActiveZone={ setActiveZone }
-									content={
-										<>
-											<SelectControl
-												label={ __( 'Icon', 'timeline-block' ) }
-												value={ item.icon }
-												options={ ICON_OPTIONS }
-												onChange={ ( value ) => updateItem( index, 'icon', value ) }
-											/>
-											<Button isDestructive onClick={ () => removeItem( index ) }>
-												{ __( 'Remove milestone', 'timeline-block' ) }
-											</Button>
-										</>
-									}
-								>
-									<NodeIcon icon={ item.icon } />
-								</QuickZone>
-								<div className="adaire-timeline__content">
-									<RichText
-										tagName="h3"
-										className="adaire-timeline__title"
-										value={ item.title }
-										onChange={ ( value ) => updateItem( index, 'title', value ) }
-										placeholder={ __( 'Milestone title', 'timeline-block' ) }
-									/>
-									<RichText
-										tagName="p"
-										className="adaire-timeline__description"
-										value={ item.description }
-										onChange={ ( value ) => updateItem( index, 'description', value ) }
-										placeholder={ __( 'Milestone description', 'timeline-block' ) }
-									/>
+								<NodeIcon icon={ item.icon } nodeSize={ nodeSize } />
+							</QuickZone>
+						);
+
+						const contentEl = (
+							<div className="adaire-timeline__content">
+								<RichText
+									tagName="h3"
+									className="adaire-timeline__item-title"
+									value={ item.title }
+									onChange={ ( value ) => updateItem( index, 'title', value ) }
+									placeholder={ __( 'Milestone title', 'timeline-block' ) }
+								/>
+								<RichText
+									tagName="p"
+									className="adaire-timeline__item-desc"
+									value={ item.description }
+									onChange={ ( value ) => updateItem( index, 'description', value ) }
+									placeholder={ __( 'Milestone description', 'timeline-block' ) }
+								/>
+							</div>
+						);
+
+						if ( orientation === 'horizontal' ) {
+							return (
+								<div key={ index } className="adaire-timeline__item">
+									{ nodeEl }
+									{ contentEl }
 								</div>
-								{ showArrows && (
-									<span
-										className={ `adaire-timeline__arrow${ side === 'left' ? '' : ' is-hidden' }` }
-									/>
-								) }
+							);
+						}
+
+						// Vertical alternating — same 3-column [slot][center][slot]
+						// grid structure as save.js so style.scss's grid rules
+						// (which only ever matched the front end before) now
+						// apply on canvas too.
+						return (
+							<div key={ index } className={ `adaire-timeline__item is-${ side }` }>
+								<div className="adaire-timeline__slot">
+									{ side === 'left' && contentEl }
+								</div>
+
+								<div className="adaire-timeline__center">
+									{ showArrows && (
+										<span className={ `adaire-timeline__arrow${ side === 'left' ? '' : ' is-hidden' }` }>
+											›
+										</span>
+									) }
+									{ nodeEl }
+									{ showArrows && (
+										<span className={ `adaire-timeline__arrow${ side === 'right' ? '' : ' is-hidden' }` }>
+											‹
+										</span>
+									) }
+								</div>
+
+								<div className="adaire-timeline__slot">
+									{ side === 'right' && contentEl }
+								</div>
 							</div>
 						);
 					} ) }

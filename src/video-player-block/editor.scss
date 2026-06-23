@@ -21,33 +21,58 @@
         width: 100%;
         max-width: 100%;
         margin: 0 auto;
-        height: var(--container-height, 1200px) ;
+        height: var(--container-height, 315px) ;
         border-radius: var(--container-border-radius, 20px);
+        background-color: var(--container-background-color, transparent);
+        border: var(--container-border-width, 0px) solid var(--container-border-color, transparent);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, calc(var(--container-shadow-intensity, 0) * 0.45)),
+            0 4px 12px rgba(0, 0, 0, calc(var(--container-shadow-intensity, 0) * 0.3));
         overflow: hidden;
-        
+
         &.is-constrained {
             max-width: var(--container-max-width, 1200px) ;
         }
     }
-    
+
     // Responsive container max-width for tablet
     @media (max-width: 1024px) {
         &__container.is-constrained {
             max-width: var(--container-max-width-tablet, var(--container-max-width, 100%)) !important;
         }
     }
-    
+
     // Responsive container max-width for mobile
     @media (max-width: 768px) {
         &__container.is-constrained {
             max-width: var(--container-max-width-mobile, var(--container-max-width-tablet, 100%)) !important;
         }
     }
-    
+
     // Responsive container max-width for smartwatch
     @media (max-width: 320px) {
         &__container.is-constrained {
             max-width: var(--container-max-width-watch, var(--container-max-width-mobile, 100%)) !important;
+        }
+    }
+
+    // Responsive container height for tablet
+    @media (max-width: 1024px) {
+        &__container {
+            height: var(--container-height-tablet, var(--container-height, 315px)) !important;
+        }
+    }
+
+    // Responsive container height for mobile
+    @media (max-width: 768px) {
+        &__container {
+            height: var(--container-height-mobile, var(--container-height-tablet, 315px)) !important;
+        }
+    }
+
+    // Responsive container height for smartwatch
+    @media (max-width: 320px) {
+        &__container {
+            height: var(--container-height-watch, var(--container-height-mobile, 315px)) !important;
         }
     }
     
@@ -131,10 +156,56 @@
     // }
     
     /**
+     * Initial setup placeholder (shown once, on first insertion only).
+     *
+     * Reserves the REAL configured/default height & width up front (instead
+     * of letting the WP <Placeholder> shrink to its own intrinsic size), so
+     * the block doesn't jump/resize — and overlap whatever follows it on the
+     * canvas — the moment the user hits Continue and the real video appears.
+     */
+    &__container.ad-video-player__setup-container {
+        height: auto;
+        min-height: var(--container-height, 315px);
+        max-width: 100%;
+        overflow: visible;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 0;
+
+        &.is-constrained {
+            max-width: var(--container-max-width, 1200px);
+        }
+    }
+
+    &__setup {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        max-width: 360px;
+
+        .components-button-group {
+            display: flex;
+            gap: 8px;
+        }
+    }
+
+    &__control-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+
+        .components-text-control__input {
+            min-width: 100px;
+        }
+    }
+
+    /**
      * Editor-specific adjustments
      * Add visual aids for better editing experience
      */
-    
+
     // Add subtle border in editor to show block boundaries
 	&.is-selected {
 		outline: none;

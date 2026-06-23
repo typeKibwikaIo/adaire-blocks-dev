@@ -139,7 +139,11 @@ export default function save({ attributes }) {
                 <div className="adaire-infogrid-2-content">
                     {items.map((item) => (
                         <div key={item.id} className="adaire-infogrid-2-item">
-                            {item.icon && (
+                            {item.imageUrl ? (
+                                <div className="adaire-infogrid-2-item-icon">
+                                    <img src={item.imageUrl} alt={item.title || ''} />
+                                </div>
+                            ) : item.icon && (
                                 <div className="adaire-infogrid-2-item-icon">
                                     <i className={item.icon}></i>
                                 </div>

@@ -116,9 +116,9 @@
     "ratingBadges": {
       "type": "array",
       "default": [
-        { "iconType": "star", "text": "4.8/5", "subtext": "500+ App Store reviews" },
-        { "iconType": "star", "text": "4.7/5", "subtext": "1,200+ Google Play reviews" },
-        { "iconType": "badge", "text": "Excellent", "subtext": "Rated on Trustpilot" }
+        { "icon": "bi bi-star-fill", "imageUrl": "", "text": "4.8/5", "subtext": "500+ App Store reviews" },
+        { "icon": "bi bi-star-fill", "imageUrl": "", "text": "4.7/5", "subtext": "1,200+ Google Play reviews" },
+        { "icon": "bi bi-trophy-fill", "imageUrl": "", "text": "Excellent", "subtext": "Rated on Trustpilot" }
       ]
     },
 
@@ -131,12 +131,12 @@
     "securityFeatures": {
       "type": "array",
       "default": [
-        { "icon": "🔒", "title": "Bank-level encryption", "text": "Your data is protected with 256-bit encryption, the same standard used by major banks." },
-        { "icon": "🏦", "title": "Licensed & regulated", "text": "Backed by a fully licensed financial partner, supervised by national regulators." },
-        { "icon": "🛡️", "title": "Fraud monitoring", "text": "Round-the-clock automated monitoring flags suspicious activity in real time." },
-        { "icon": "💳", "title": "Deposit protection", "text": "Funds held with our banking partner are protected up to the applicable guarantee scheme." },
-        { "icon": "🔑", "title": "Two-factor authentication", "text": "An extra layer of security keeps your account safe even if your password is compromised." },
-        { "icon": "📞", "title": "24/7 support", "text": "A dedicated security team is available around the clock if anything looks wrong." }
+        { "icon": "bi bi-lock-fill", "imageUrl": "", "title": "Bank-level encryption", "text": "Your data is protected with 256-bit encryption, the same standard used by major banks." },
+        { "icon": "bi bi-bank", "imageUrl": "", "title": "Licensed & regulated", "text": "Backed by a fully licensed financial partner, supervised by national regulators." },
+        { "icon": "bi bi-shield-fill-check", "imageUrl": "", "title": "Fraud monitoring", "text": "Round-the-clock automated monitoring flags suspicious activity in real time." },
+        { "icon": "bi bi-credit-card-fill", "imageUrl": "", "title": "Deposit protection", "text": "Funds held with our banking partner are protected up to the applicable guarantee scheme." },
+        { "icon": "bi bi-key-fill", "imageUrl": "", "title": "Two-factor authentication", "text": "An extra layer of security keeps your account safe even if your password is compromised." },
+        { "icon": "bi bi-telephone-fill", "imageUrl": "", "title": "24/7 support", "text": "A dedicated security team is available around the clock if anything looks wrong." }
       ]
     },
 

@@ -1,0 +1,96 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "create-block/gallery-block",
+    "version": "0.1.0",
+    "title": "Gallery",
+    "category": "adaire-media-images",
+    "description": "Add one to many images and arrange them in a flexible grid or masonry layout.",
+    "example": {},
+    "supports": {
+        "html": false,
+        "align": true,
+        "alignWide": true,
+        "anchor": true,
+        "customClassName": true,
+        "reusable": true,
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    },
+    "textdomain": "gallery-block",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style-index.css",
+    "viewScript": "file:./view.js",
+    "attributes": {
+        "blockId": {
+            "type": "string",
+            "default": ""
+        },
+        "images": {
+            "type": "array",
+            "default": []
+        },
+        "layoutMode": {
+            "type": "string",
+            "default": "grid"
+        },
+        "columns": {
+            "type": "object",
+            "default": {
+                "desktop": 4,
+                "tablet": 3,
+                "mobile": 2,
+                "smartwatch": 1
+            }
+        },
+        "gap": {
+            "type": "number",
+            "default": 16
+        },
+        "aspectRatio": {
+            "type": "string",
+            "default": "1/1"
+        },
+        "imageBorderRadius": {
+            "type": "number",
+            "default": 8
+        },
+        "hoverEffect": {
+            "type": "string",
+            "default": "zoom"
+        },
+        "lightboxEnabled": {
+            "type": "boolean",
+            "default": true
+        },
+        "captionsEnabled": {
+            "type": "boolean",
+            "default": false
+        },
+        "containerMode": {
+            "type": "string",
+            "default": "full"
+        },
+        "containerMaxWidth": {
+            "type": "object",
+            "default": {
+                "desktop": {
+                    "value": 1200,
+                    "unit": "px"
+                },
+                "tablet": {
+                    "value": 100,
+                    "unit": "%"
+                },
+                "mobile": {
+                    "value": 100,
+                    "unit": "%"
+                }
+            }
+        }
+    },
+    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#0F9D7C\"/>\n<rect x=\"4\" y=\"4\" width=\"7\" height=\"7\" rx=\"1.2\" fill=\"white\"/>\n<rect x=\"13\" y=\"4\" width=\"7\" height=\"11\" rx=\"1.2\" fill=\"white\" fill-opacity=\"0.85\"/>\n<rect x=\"4\" y=\"13\" width=\"7\" height=\"7\" rx=\"1.2\" fill=\"white\" fill-opacity=\"0.85\"/>\n<rect x=\"13\" y=\"17\" width=\"7\" height=\"3\" rx=\"1.2\" fill=\"white\" fill-opacity=\"0.6\"/>\n</svg>"
+}

@@ -106,6 +106,47 @@ const BREAKPOINTS = [
     { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks-dev2') }
 ];
 
+// Shared font-weight options for the on-canvas QuickZone typography popovers
+// (mirrors the options already used in the Inspector's TypographySection).
+const FONT_WEIGHT_OPTIONS = [
+    { label: '100', value: '100' }, { label: '200', value: '200' },
+    { label: '300', value: '300' }, { label: '400', value: '400' },
+    { label: '500', value: '500' }, { label: '600', value: '600' },
+    { label: '700', value: '700' }, { label: '800', value: '800' },
+    { label: '900', value: '900' }
+];
+
+// Compact quick-edit typography controls used inside QuickZone popovers for
+// the Heading / Item Title / Item Text on-canvas zones — font size, weight,
+// and color only (the full set, incl. line-height/letter-spacing/transform,
+// stays in the Inspector's "Typography Settings" panel).
+const QuickTypographyControls = ({ attributes, updateResponsiveAttribute, deviceType, fontSizeAttr, fontWeightAttr, colorAttr }) => (
+    <>
+        <UnitControl
+            label={__('Font Size', 'adaire-blocks-dev2')}
+            value={attributes[fontSizeAttr]?.[deviceType]}
+            onChange={(val) => updateResponsiveAttribute(fontSizeAttr, deviceType, val)}
+        />
+        <SelectControl
+            label={__('Font Weight', 'adaire-blocks-dev2')}
+            value={attributes[fontWeightAttr]?.[deviceType]}
+            options={FONT_WEIGHT_OPTIONS}
+            onChange={(val) => updateResponsiveAttribute(fontWeightAttr, deviceType, val)}
+        />
+        <PanelColorSettings
+            title={__('Color', 'adaire-blocks-dev2')}
+            initialOpen={true}
+            colorSettings={[
+                {
+                    value: attributes[colorAttr]?.[deviceType],
+                    onChange: (val) => updateResponsiveAttribute(colorAttr, deviceType, val),
+                    label: __('Color', 'adaire-blocks-dev2'),
+                }
+            ]}
+        />
+    </>
+);
+
 // Helper function to format dimension values
 const formatDimensionValue = (dimension, fallbackValue, fallbackUnit) => {
     if (typeof dimension === 'string') return dimension;
@@ -190,6 +231,15 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         showHeading,
         headingText,
         responsiveHeadingAlignment,
+        responsiveHeadingFontSize,
+        responsiveHeadingFontWeight,
+        responsiveHeadingColor,
+        responsiveTitleFontSize,
+        responsiveTitleFontWeight,
+        responsiveTitleColor,
+        responsiveTextFontSize,
+        responsiveTextFontWeight,
+        responsiveTextColor,
         responsiveIconColor,
         responsiveContentAlignment,
         responsivePadding,
@@ -274,6 +324,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             items: [...currentItems, {
                 id: newId,
                 icon: 'bi bi-lightning-charge',
+                image: null,
+                imageUrl: '',
                 title: 'New Item',
                 text: 'Description goes here.'
             }]
@@ -283,6 +335,25 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     const updateItem = useCallback((id, field, value) => {
         setAttributes({
             items: itemsRef.current.map(item => item.id === id ? { ...item, [field]: value } : item)
+        });
+    }, [setAttributes]);
+
+    // Uploading an image switches that item's visual to the image; the
+    // bootstrap-icon class on `icon` is left untouched so "Remove Image"
+    // can restore the icon without the user having to re-pick it.
+    const setItemImage = useCallback((id, media) => {
+        setAttributes({
+            items: itemsRef.current.map(item => item.id === id
+                ? { ...item, image: media, imageUrl: media.url }
+                : item)
+        });
+    }, [setAttributes]);
+
+    const removeItemImage = useCallback((id) => {
+        setAttributes({
+            items: itemsRef.current.map(item => item.id === id
+                ? { ...item, image: null, imageUrl: '' }
+                : item)
         });
     }, [setAttributes]);
 
@@ -815,6 +886,39 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                         <i className={item.icon} style={{ marginRight: '8px' }}></i>
                                         {item.icon ? item.icon : __('Select Icon', 'adaire-blocks-dev2')}
                                     </Button>
+                                    <p style={{ fontSize: '11px', color: '#757575', margin: '0 0 6px' }}>
+                                        {__('Or use an uploaded image instead of the icon:', 'adaire-blocks-dev2')}
+                                    </p>
+                                    <MediaUploadCheck>
+                                        <MediaUpload
+                                            onSelect={(media) => setItemImage(item.id, media)}
+                                            allowedTypes={['image']}
+                                            value={item.image?.id}
+                                            render={({ open }) => (
+                                                <Button
+                                                    onClick={open}
+                                                    variant="secondary"
+                                                    style={{ width: '100%', marginBottom: '8px', height: '70px', border: '1px dashed #ccc' }}
+                                                >
+                                                    {item.imageUrl ? (
+                                                        <img src={item.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                                    ) : (
+                                                        __('Upload Image', 'adaire-blocks-dev2')
+                                                    )}
+                                                </Button>
+                                            )}
+                                        />
+                                    </MediaUploadCheck>
+                                    {item.imageUrl && (
+                                        <Button
+                                            onClick={() => removeItemImage(item.id)}
+                                            isDestructive
+                                            variant="link"
+                                            style={{ marginBottom: '12px' }}
+                                        >
+                                            {__('Remove Image (use icon instead)', 'adaire-blocks-dev2')}
+                                        </Button>
+                                    )}
                                     <TextControl
                                         label={__('Title', 'adaire-blocks-dev2')}
                                         value={item.title}
@@ -851,13 +955,30 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 )}
                 <div className="adaire-infogrid-2-wrapper">
                     {showHeading && (
-                        <RichText
-                            tagName="h2"
-                            className="adaire-infogrid-2-heading"
-                            value={headingText}
-                            onChange={(val) => setAttributes({ headingText: val })}
-                            placeholder={__('Enter heading...', 'adaire-blocks-dev2')}
-                        />
+                        <QuickZone
+                            id="infogrid2-heading"
+                            label="Heading"
+                            activeZone={activeZone}
+                            setActiveZone={setActiveZone}
+                            content={
+                                <QuickTypographyControls
+                                    attributes={attributes}
+                                    updateResponsiveAttribute={updateResponsiveAttribute}
+                                    deviceType={deviceType}
+                                    fontSizeAttr="responsiveHeadingFontSize"
+                                    fontWeightAttr="responsiveHeadingFontWeight"
+                                    colorAttr="responsiveHeadingColor"
+                                />
+                            }
+                        >
+                            <RichText
+                                tagName="h2"
+                                className="adaire-infogrid-2-heading"
+                                value={headingText}
+                                onChange={(val) => setAttributes({ headingText: val })}
+                                placeholder={__('Enter heading...', 'adaire-blocks-dev2')}
+                            />
+                        </QuickZone>
                     )}
                     <div className="adaire-infogrid-2-content">
                         {items.map((item) => (
@@ -868,20 +989,55 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     activeZone={activeZone}
                                     setActiveZone={setActiveZone}
                                     content={
-                                        <Button
-                                            variant="secondary"
-                                            onClick={() => {
-                                                setActiveIconItem(item.id);
-                                                setIsIconPickerOpen(true);
-                                            }}
-                                            style={{ width: '100%' }}
-                                        >
-                                            {item.icon && <i className={item.icon} style={{ marginRight: '8px' }}></i>}
-                                            {item.icon ? item.icon : __('Select Icon', 'adaire-blocks-dev2')}
-                                        </Button>
+                                        <>
+                                            <Button
+                                                variant="secondary"
+                                                onClick={() => {
+                                                    setActiveIconItem(item.id);
+                                                    setIsIconPickerOpen(true);
+                                                }}
+                                                style={{ width: '100%', marginBottom: '8px' }}
+                                            >
+                                                {item.icon && <i className={item.icon} style={{ marginRight: '8px' }}></i>}
+                                                {item.icon ? item.icon : __('Select Icon', 'adaire-blocks-dev2')}
+                                            </Button>
+                                            <MediaUploadCheck>
+                                                <MediaUpload
+                                                    onSelect={(media) => setItemImage(item.id, media)}
+                                                    allowedTypes={['image']}
+                                                    value={item.image?.id}
+                                                    render={({ open }) => (
+                                                        <Button
+                                                            onClick={open}
+                                                            variant="secondary"
+                                                            style={{ width: '100%', height: '60px', border: '1px dashed #ccc' }}
+                                                        >
+                                                            {item.imageUrl ? (
+                                                                <img src={item.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                                            ) : (
+                                                                __('Upload Image', 'adaire-blocks-dev2')
+                                                            )}
+                                                        </Button>
+                                                    )}
+                                                />
+                                            </MediaUploadCheck>
+                                            {item.imageUrl && (
+                                                <Button
+                                                    onClick={() => removeItemImage(item.id)}
+                                                    isDestructive
+                                                    variant="link"
+                                                >
+                                                    {__('Remove Image', 'adaire-blocks-dev2')}
+                                                </Button>
+                                            )}
+                                        </>
                                     }
                                 >
-                                {item.icon ? (
+                                {item.imageUrl ? (
+                                    <div className="adaire-infogrid-2-item-icon">
+                                        <img src={item.imageUrl} alt={item.title || ''} />
+                                    </div>
+                                ) : item.icon ? (
                                     <div className="adaire-infogrid-2-item-icon">
                                         <i className={item.icon}></i>
                                     </div>
@@ -891,20 +1047,54 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     </div>
                                 )}
                                 </QuickZone>
-                                <RichText
-                                    tagName="h3"
-                                    className="adaire-infogrid-2-item-title"
-                                    value={item.title}
-                                    onChange={(val) => updateItem(item.id, 'title', val)}
-                                    placeholder={__('Enter title...', 'adaire-blocks-dev2')}
-                                />
-                                <RichText
-                                    tagName="p"
-                                    className="adaire-infogrid-2-item-text"
-                                    value={item.text}
-                                    onChange={(val) => updateItem(item.id, 'text', val)}
-                                    placeholder={__('Enter text...', 'adaire-blocks-dev2')}
-                                />
+                                <QuickZone
+                                    id={`infogrid2-title-${item.id}`}
+                                    label="Title"
+                                    activeZone={activeZone}
+                                    setActiveZone={setActiveZone}
+                                    content={
+                                        <QuickTypographyControls
+                                            attributes={attributes}
+                                            updateResponsiveAttribute={updateResponsiveAttribute}
+                                            deviceType={deviceType}
+                                            fontSizeAttr="responsiveTitleFontSize"
+                                            fontWeightAttr="responsiveTitleFontWeight"
+                                            colorAttr="responsiveTitleColor"
+                                        />
+                                    }
+                                >
+                                    <RichText
+                                        tagName="h3"
+                                        className="adaire-infogrid-2-item-title"
+                                        value={item.title}
+                                        onChange={(val) => updateItem(item.id, 'title', val)}
+                                        placeholder={__('Enter title...', 'adaire-blocks-dev2')}
+                                    />
+                                </QuickZone>
+                                <QuickZone
+                                    id={`infogrid2-text-${item.id}`}
+                                    label="Text"
+                                    activeZone={activeZone}
+                                    setActiveZone={setActiveZone}
+                                    content={
+                                        <QuickTypographyControls
+                                            attributes={attributes}
+                                            updateResponsiveAttribute={updateResponsiveAttribute}
+                                            deviceType={deviceType}
+                                            fontSizeAttr="responsiveTextFontSize"
+                                            fontWeightAttr="responsiveTextFontWeight"
+                                            colorAttr="responsiveTextColor"
+                                        />
+                                    }
+                                >
+                                    <RichText
+                                        tagName="p"
+                                        className="adaire-infogrid-2-item-text"
+                                        value={item.text}
+                                        onChange={(val) => updateItem(item.id, 'text', val)}
+                                        placeholder={__('Enter text...', 'adaire-blocks-dev2')}
+                                    />
+                                </QuickZone>
                             </div>
                         ))}
                     </div>

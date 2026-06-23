@@ -85,6 +85,9 @@
         "responsiveDescriptionMarginBottom": {
             "type": "object"
         },
+        "responsiveCardWidth": {
+            "type": "object"
+        },
         "previewText": {
             "type": "string",
             "default": ""

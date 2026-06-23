@@ -27,7 +27,7 @@
 		font-weight: 700;
 		letter-spacing: 0.14em;
 		text-transform: uppercase;
-		color: var( --tl-eyebrow, #00bcd4 );
+		color: var( --tl-eyebrow, #aeb4cf );
 		margin: 0 0 14px;
 	}
 
@@ -42,7 +42,7 @@
 	.adaire-timeline__section-desc {
 		font-size: 16px;
 		line-height: 1.75;
-		color: var( --tl-desc, rgba( 255, 255, 255, 0.65 ) );
+		color: var( --tl-desc, #aeb4cf );
 		margin: 0 auto;
 		max-width: 560px;
 	}
@@ -51,21 +51,21 @@
 	.adaire-timeline__node {
 		position: relative;
 		border-radius: 50%;
-		background: var( --tl-bg, #0a1628 );  // opaque so it covers the connector line
-		border: 2px solid var( --tl-accent, #00bcd4 );
+		background: var( --tl-bg, #503AA8 );  // opaque so it covers the connector line
+		border: 2px solid var( --tl-accent, #ffffff );
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-shrink: 0;
 		z-index: 2;
-		color: var( --tl-accent, #00bcd4 );
+		color: var( --tl-accent, #ffffff );
 		width: var( --tl-node-size, 52px );
 		height: var( --tl-node-size, 52px );
-		box-shadow: 0 0 0 6px rgba( 0, 188, 212, 0.08 );
+		box-shadow: 0 0 0 6px rgba( 255, 255, 255, 0.12 );
 		transition: box-shadow 0.25s ease;
 
 		&:hover {
-			box-shadow: 0 0 0 10px rgba( 0, 188, 212, 0.14 );
+			box-shadow: 0 0 0 10px rgba( 255, 255, 255, 0.2 );
 		}
 
 		svg {
@@ -86,7 +86,7 @@
 	.adaire-timeline__item-desc {
 		font-size: 15px;
 		line-height: 1.75;
-		color: var( --tl-desc, rgba( 255, 255, 255, 0.65 ) );
+		color: var( --tl-desc, #aeb4cf );
 		margin: 0;
 	}
 
@@ -94,7 +94,7 @@
 	.adaire-timeline__arrow {
 		font-size: 22px;
 		line-height: 1;
-		color: var( --tl-accent, #00bcd4 );
+		color: var( --tl-accent, #ffffff );
 		user-select: none;
 		flex-shrink: 0;
 
@@ -121,7 +121,7 @@
 			top: 0;
 			bottom: 0;
 			width: 2px;
-			background: var( --tl-line, #1e3a5f );
+			background: var( --tl-line, rgba( 255, 255, 255, 0.2 ) );
 			transform: translateX( -50% );
 			z-index: 0;
 		}
@@ -242,7 +242,7 @@
 			left: 0;
 			right: 0;
 			height: 2px;
-			background: var( --tl-line, #1e3a5f );
+			background: var( --tl-line, rgba( 255, 255, 255, 0.2 ) );
 			transform: translateY( -50% );
 			z-index: 0;
 		}
