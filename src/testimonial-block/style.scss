@@ -170,7 +170,11 @@
 	}
 	
 	&__quote {
-		font-size: 16px;
+		// Content layer — independent from &__name's heading layer below.
+		// Consumed directly here (most-specific selector) rather than relying
+		// on inheriting --font-size from the block root, which this rule used
+		// to silently override with a hardcoded value regardless of it.
+		font-size: var(--content-font-size, 16px);
 		line-height: 1.6;
 		color: var(--text-color, #333);
 		margin-bottom: 30px;
@@ -178,17 +182,34 @@
 		font-style: italic;
 		word-wrap: break-word;
 		overflow-wrap: break-word;
+
+		@media (max-width: 1024px) {
+			font-size: var(--content-font-size-tablet, 16px);
+		}
+
+		@media (max-width: 768px) {
+			font-size: var(--content-font-size-mobile, 16px);
+		}
 	}
-	
+
 	&__author {
 		// Author container - styles applied to children
 	}
-	
+
 	&__name {
-		font-size: 18px;
+		// Heading layer — independent from &__quote's content layer above.
+		font-size: var(--heading-font-size, 18px);
 		font-weight: 700;
 		color: var(--text-color, #333);
 		margin-bottom: 5px;
+
+		@media (max-width: 1024px) {
+			font-size: var(--heading-font-size-tablet, 18px);
+		}
+
+		@media (max-width: 768px) {
+			font-size: var(--heading-font-size-mobile, 18px);
+		}
 	}
 	
 	&__title {

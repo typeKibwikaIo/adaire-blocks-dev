@@ -3,12 +3,12 @@
     "apiVersion": 3,
     "name": "create-block/accordion-item-block",
     "version": "0.1.0",
-    "title": "Expandable Item",
+    "title": "Accordion Item",
     "category": "adaire-content-expandable",
     "parent": [
         "create-block/accordion-block"
     ],
-    "description": "Single expandable section with title and content used inside an Expandable Content block.",
+    "description": "Single expandable section with title and content used inside an Accordion Block.",
     "supports": {
         "html": false,
         "reusable": false,

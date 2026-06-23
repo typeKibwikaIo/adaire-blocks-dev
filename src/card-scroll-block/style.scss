@@ -58,6 +58,7 @@
     --current-image-width: var(--image-width-#{$device});
     --current-image-height: var(--image-height-#{$device});
     --current-card-min-height: var(--card-min-height-#{$device}, auto);
+    --current-card-width: var(--card-width-#{$device}, 100%);
     --current-last-card-bottom-height: var(--last-card-bottom-height-#{$device}, 0px);
 }
 
@@ -140,7 +141,10 @@
 
 .adaire-card-scroll__card {
     position: relative;
-    width: 100%;
+    // Per-card override (set directly on this card by card-scroll-item-block)
+    // takes precedence over the slider-wide default resolved by
+    // set-responsive-vars() below; falls back to 100% if neither is set.
+    width: var(--card-width-mobile, var(--current-card-width, 100%));
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -173,30 +177,30 @@
 
     @include tablet {
         @include set-responsive-vars('tablet');
+        width: var(--card-width-tablet, var(--current-card-width, 100%));
     }
 
     @include small-laptop {
         @include set-responsive-vars('smallLaptop');
+        width: var(--card-width-smallLaptop, var(--current-card-width, 100%));
     }
 
     @include desktop {
         @include set-responsive-vars('desktop');
+        width: var(--card-width-desktop, var(--current-card-width, 100%));
     }
 
     @include big-desktop {
         @include set-responsive-vars('bigDesktop');
+        width: var(--card-width-bigDesktop, var(--current-card-width, 100%));
     }
 
     // Margin overrides
     margin-bottom: var(--card-margin-bottom, 2rem);
 
-    /* Force consistent width via box-sizing and margins */
+    /* Cards never exceed their container's width, however wide a custom
+       value is set to. */
     max-width: 100%;
-
-    .adaire-card-scroll__container.is-constrained & {
-        /* Force width to match container's constraint (minus padding if any) */
-        width: 100%;
-    }
 
     /* Ensure usage of z-index for stacking */
     z-index: 1;

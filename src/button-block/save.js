@@ -1,5 +1,6 @@
 ﻿import { useBlockProps } from '@wordpress/block-editor';
 import { getDeviceValue } from '../components/DeviceSwitcher';
+import ButtonIcon from './icons';
 
 export default function save({ attributes }) {
   const { 
@@ -17,6 +18,8 @@ export default function save({ attributes }) {
     blurAmount,
     fontSize,
     showIcon,
+    iconType,
+    iconPosition,
     hoverAnimation,
     buttonPadding,
     buttonMargin,
@@ -89,13 +92,13 @@ export default function save({ attributes }) {
         href={buttonLink}
         target={openInNewTab ? '_blank' : undefined}
         rel={openInNewTab ? 'noopener noreferrer' : undefined}
-        className={`adaire-button-block__link adaire-button-block__link--${buttonStyle || 'underline'} adaire-button-block__link--${hoverAnimation || 'slide-underline'}`}
+        className={`adaire-button-block__link adaire-button-block__link--${buttonStyle || 'underline'} adaire-button-block__link--${hoverAnimation || 'slide-underline'} adaire-button-block__link--icon-${iconPosition || 'right'}`}
       >
         {buttonText}
         {showIcon !== false && (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <span className="adaire-button-block__icon" aria-hidden="true">
+            <ButtonIcon type={iconType} />
+          </span>
         )}
       </a>
     </div>

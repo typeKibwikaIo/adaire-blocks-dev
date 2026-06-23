@@ -1,6 +1,6 @@
 import { useBlockProps, RichText, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 import InspectorTabs from '../components/InspectorTabs';
-import QuickZone from '../components/QuickZone';
+import QuickZone, { markMediaOpening } from '../components/QuickZone';
 import { PanelBody, ToggleControl, RangeControl, SelectControl, ColorPicker, Button, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState, useMemo } from '@wordpress/element';
@@ -10,12 +10,17 @@ import { useSelect } from '@wordpress/data';
 
 const ALIGN_MAP = { top: 'flex-start', center: 'center', bottom: 'flex-end' };
 
+// SVGs use width/height="1em" (not a fixed px value) so the glyph scales
+// with whatever inline font-size the container sets from the Icon Size
+// control — otherwise the icon stayed a fixed size while only its
+// surrounding circle/box grew or shrank, which read as the icon being
+// misaligned/floating inside its background as you adjusted the slider.
 const SOCIAL_SVGS = {
-    twitter:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>',
-    facebook:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
-    instagram: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>',
-    linkedin:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
-    youtube:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+    twitter:   '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>',
+    facebook:  '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+    instagram: '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>',
+    linkedin:  '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+    youtube:   '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
 };
 
 const getIconSvg = (platform) => SOCIAL_SVGS[platform] || SOCIAL_SVGS.twitter;
@@ -109,7 +114,12 @@ function FooterDynamicMenuNode({ item, column }) {
             <span
                 className="website-footer-block__nav-link"
                 style={{
-                    color: column.linkColor || 'inherit',
+                    // Base color goes through --link-color (consumed by
+                    // style.scss's nav-link rule), not a literal `color`
+                    // prop — a literal value here would out-specificity the
+                    // :hover rule and the hover color below would never
+                    // visibly apply, same bug already fixed for social icons.
+                    '--link-color': column.linkColor || undefined,
                     '--link-hover-color': column.linkHoverColor || undefined,
                     '--link-hover-bg': column.linkHoverBackgroundColor || undefined,
                     '--link-hover-underline-color': column.linkHoverUnderlineColor || undefined,
@@ -420,6 +430,36 @@ export default function Edit({ attributes, setAttributes }) {
         });
     };
 
+    // ── bottom-bar social icon management ─────────────────────────────
+    // Mirrors the top-bar social-link CRUD above (and updateSocialPlatform)
+    // so bottomBar.socialIcons gets the same add/remove/edit support that
+    // topBar.socialLinks already had.
+
+    const updateBottomBarSocialIcon = (id, field, val) => {
+        updateBottomBar({
+            socialIcons: (bottomBar.socialIcons || []).map(l => l.id === id ? { ...l, [field]: val } : l),
+        });
+    };
+
+    const removeBottomBarSocialIcon = (id) => {
+        updateBottomBar({ socialIcons: (bottomBar.socialIcons || []).filter(l => l.id !== id) });
+    };
+
+    const addBottomBarSocialIcon = () => {
+        updateBottomBar({
+            socialIcons: [...(bottomBar.socialIcons || []), {
+                id: Date.now(), platform: 'twitter', label: 'Twitter', url: '#', icon: 'twitter',
+            }],
+        });
+    };
+
+    // Keeps `icon` in sync with `platform`, same reasoning as updateSocialPlatform.
+    const updateBottomBarSocialPlatform = (id, platform) => {
+        updateBottomBar({
+            socialIcons: (bottomBar.socialIcons || []).map(l => l.id === id ? { ...l, platform, icon: platform } : l),
+        });
+    };
+
     const getFontSizeClass = (size) => ({ small: 'small', medium: 'medium', large: 'large' }[size] || 'medium');
 
     // ── reusable control block — defined once, rendered in BOTH the
@@ -557,6 +597,54 @@ export default function Edit({ attributes, setAttributes }) {
                                     </div>
                                 ))}
                                 <Button className="adaire-qz-add-btn" onClick={addTopBarSocialLink}>+ Add Social Link</Button>
+
+                                <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '12px 0' }} />
+                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Icon Styling', 'website-footer-block')}</strong>
+                                <RangeControl label={__('Icon Size (px)', 'website-footer-block')} value={topBar.iconSize || 24} min={12} max={60}
+                                    onChange={(v) => updateTopBar({ iconSize: v })} />
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={topBar.iconColor || ''} onChangeComplete={(c) => updateTopBar({ iconColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Background Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={topBar.iconBgColor || ''} onChangeComplete={(c) => updateTopBar({ iconBgColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Hover Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={topBar.hoverColor || ''} onChangeComplete={(c) => updateTopBar({ hoverColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Hover Background', 'website-footer-block')}</label>
+                                    <ColorPicker color={topBar.hoverBackgroundColor || ''} onChangeComplete={(c) => updateTopBar({ hoverBackgroundColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Border Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={topBar.borderColor || ''} onChangeComplete={(c) => updateTopBar({ borderColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Hover Border Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={topBar.hoverBorderColor || ''} onChangeComplete={(c) => updateTopBar({ hoverBorderColor: c.hex })} disableAlpha />
+                                </div>
+                                <RangeControl
+                                    label={__('Icon Border Radius (%)', 'website-footer-block')}
+                                    value={topBar.borderRadius != null && topBar.borderRadius >= 0 ? topBar.borderRadius : 50}
+                                    min={0} max={50}
+                                    onChange={(v) => updateTopBar({ borderRadius: v })}
+                                    help={__('50% = circle, 0% = square', 'website-footer-block')}
+                                />
+                                <RangeControl
+                                    label={__('Icon Spacing (px)', 'website-footer-block')}
+                                    value={topBar.iconSpacing != null && topBar.iconSpacing >= 0 ? topBar.iconSpacing : 12}
+                                    min={0} max={40}
+                                    onChange={(v) => updateTopBar({ iconSpacing: v })}
+                                />
+                                <RangeControl
+                                    label={__('Hover Transition (ms)', 'website-footer-block')}
+                                    value={topBar.transitionDuration != null && topBar.transitionDuration >= 0 ? topBar.transitionDuration : 300}
+                                    min={0} max={1000} step={50}
+                                    onChange={(v) => updateTopBar({ transitionDuration: v })}
+                                />
                             </>
                         )}
                         <div style={{ marginBottom: 16, marginTop: 8 }}>
@@ -677,6 +765,69 @@ export default function Edit({ attributes, setAttributes }) {
                             </>
                         )}
                         <ToggleControl label="Show Social Media Icons" checked={bottomBar.showSocialIcons}  onChange={(v) => updateBottomBar({ showSocialIcons: v })} />
+                        {bottomBar.showSocialIcons && (
+                            <>
+                                <p style={{ fontWeight: 600, marginBottom: 8, marginTop: 8 }}>Social Icons</p>
+                                {(bottomBar.socialIcons || []).map((link) => (
+                                    <div key={link.id} style={{ marginBottom: 10 }}>
+                                        <SelectControl label="Platform" value={link.platform || 'twitter'}
+                                            options={['twitter','facebook','instagram','linkedin','youtube'].map(p => ({ label: p.charAt(0).toUpperCase()+p.slice(1), value: p }))}
+                                            onChange={(v) => updateBottomBarSocialPlatform(link.id, v)} />
+                                        <TextControl label="URL" value={link.url || '#'} onChange={(v) => updateBottomBarSocialIcon(link.id, 'url', v)} />
+                                        <Button variant="link" isDestructive onClick={() => removeBottomBarSocialIcon(link.id)}>Remove</Button>
+                                    </div>
+                                ))}
+                                <Button className="adaire-qz-add-btn" onClick={addBottomBarSocialIcon}>+ Add Social Icon</Button>
+
+                                <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '12px 0' }} />
+                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Icon Styling', 'website-footer-block')}</strong>
+                                <RangeControl label={__('Icon Size (px)', 'website-footer-block')} value={bottomBar.iconSize || 24} min={12} max={60}
+                                    onChange={(v) => updateBottomBar({ iconSize: v })} />
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={bottomBar.iconColor || ''} onChangeComplete={(c) => updateBottomBar({ iconColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Background Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={bottomBar.iconBgColor || ''} onChangeComplete={(c) => updateBottomBar({ iconBgColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Hover Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={bottomBar.hoverColor || ''} onChangeComplete={(c) => updateBottomBar({ hoverColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Hover Background', 'website-footer-block')}</label>
+                                    <ColorPicker color={bottomBar.hoverBackgroundColor || ''} onChangeComplete={(c) => updateBottomBar({ hoverBackgroundColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Border Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={bottomBar.borderColor || ''} onChangeComplete={(c) => updateBottomBar({ borderColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 4 }}>
+                                    <label>{__('Icon Hover Border Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={bottomBar.hoverBorderColor || ''} onChangeComplete={(c) => updateBottomBar({ hoverBorderColor: c.hex })} disableAlpha />
+                                </div>
+                                <RangeControl
+                                    label={__('Icon Border Radius (%)', 'website-footer-block')}
+                                    value={bottomBar.borderRadius != null && bottomBar.borderRadius >= 0 ? bottomBar.borderRadius : 50}
+                                    min={0} max={50}
+                                    onChange={(v) => updateBottomBar({ borderRadius: v })}
+                                    help={__('50% = circle, 0% = square', 'website-footer-block')}
+                                />
+                                <RangeControl
+                                    label={__('Icon Spacing (px)', 'website-footer-block')}
+                                    value={bottomBar.iconSpacing != null && bottomBar.iconSpacing >= 0 ? bottomBar.iconSpacing : 12}
+                                    min={0} max={40}
+                                    onChange={(v) => updateBottomBar({ iconSpacing: v })}
+                                />
+                                <RangeControl
+                                    label={__('Hover Transition (ms)', 'website-footer-block')}
+                                    value={bottomBar.transitionDuration != null && bottomBar.transitionDuration >= 0 ? bottomBar.transitionDuration : 300}
+                                    min={0} max={1000} step={50}
+                                    onChange={(v) => updateBottomBar({ transitionDuration: v })}
+                                />
+                            </>
+                        )}
                         <SelectControl label="Alignment" value={bottomBar.alignment}
                             options={[
                                 { label: 'Left', value: 'left' }, { label: 'Center', value: 'center' },
@@ -775,12 +926,54 @@ export default function Edit({ attributes, setAttributes }) {
                                     )}
                                 </div>
                                 {topBar.showSocialMedia && (
-                                    <div className="website-footer-block__top-bar-social">
+                                    <div
+                                        className="website-footer-block__top-bar-social"
+                                        style={{ gap: (topBar.iconSpacing != null && topBar.iconSpacing >= 0) ? `${topBar.iconSpacing}px` : undefined }}
+                                    >
                                         {topBar.socialLinks.map((link) => (
-                                            <div key={link.id} className="website-footer-block__social-link-wrapper">
-                                                <a className="website-footer-block__social-icon" aria-label={link.label}
-                                                    dangerouslySetInnerHTML={{ __html: getIconSvg(link.platform) }} />
-                                            </div>
+                                            <QuickZone
+                                                key={link.id}
+                                                id={`footer-topbar-social-${link.id}`}
+                                                label={link.label || link.platform || __('Social link', 'website-footer-block')}
+                                                activeZone={activeZone}
+                                                setActiveZone={setActiveZone}
+                                                content={
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 220 }}>
+                                                        <SelectControl label={__('Platform (icon)', 'website-footer-block')} value={link.platform || 'twitter'}
+                                                            options={['twitter','facebook','instagram','linkedin','youtube'].map(p => ({ label: p.charAt(0).toUpperCase() + p.slice(1), value: p }))}
+                                                            onChange={(v) => updateTopBarSocialLink(link.id, 'platform', v)} />
+                                                        <TextControl label={__('Label', 'website-footer-block')} value={link.label || ''} onChange={(v) => updateTopBarSocialLink(link.id, 'label', v)} />
+                                                        <TextControl label={__('URL', 'website-footer-block')} value={link.url || ''} onChange={(v) => updateTopBarSocialLink(link.id, 'url', v)} placeholder="https://…" />
+                                                        <Button variant="link" isDestructive onClick={() => removeTopBarSocialLink(link.id)}>{__('Remove', 'website-footer-block')}</Button>
+                                                    </div>
+                                                }
+                                            >
+                                                <div className="website-footer-block__social-link-wrapper">
+                                                    <a
+                                                        className="website-footer-block__social-icon"
+                                                        aria-label={link.label}
+                                                        style={{
+                                                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                                            width: (topBar.iconSize || 24) + 12, height: (topBar.iconSize || 24) + 12,
+                                                            borderRadius: (topBar.borderRadius != null && topBar.borderRadius >= 0) ? `${topBar.borderRadius}%` : '50%',
+                                                            fontSize: `${topBar.iconSize || 24}px`,
+                                                            transition: `all ${(topBar.transitionDuration != null && topBar.transitionDuration >= 0) ? topBar.transitionDuration : 300}ms ease`,
+                                                            // Base color/bg/border-color go through CSS vars (consumed by
+                                                            // style.scss's base &__social-icon rule), NOT as literal style
+                                                            // props — a literal color/backgroundColor/border here would
+                                                            // out-specificity the :hover rule and the hover colors below
+                                                            // would never visibly apply.
+                                                            '--social-icon-color': topBar.iconColor || '',
+                                                            '--social-icon-bg': topBar.iconBgColor || '',
+                                                            '--social-border-color': topBar.borderColor || '',
+                                                            '--social-hover-color': topBar.hoverColor || '',
+                                                            '--social-hover-bg': topBar.hoverBackgroundColor || '',
+                                                            '--social-hover-border-color': topBar.hoverBorderColor || '',
+                                                        }}
+                                                        dangerouslySetInnerHTML={{ __html: getIconSvg(link.platform) }}
+                                                    />
+                                                </div>
+                                            </QuickZone>
                                         ))}
                                     </div>
                                 )}
@@ -859,7 +1052,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                                                 allowedTypes={['image']}
                                                                                 value={column.brandLogo}
                                                                                 render={({ open }) => (
-                                                                                    <Button variant="secondary" onClick={open} style={{ width: '100%' }}>
+                                                                                    <Button variant="secondary" onClick={() => { markMediaOpening(); open(); }} style={{ width: '100%' }}>
                                                                                         {column.brandLogo ? __('Replace Logo', 'website-footer-block') : __('Upload Logo', 'website-footer-block')}
                                                                                     </Button>
                                                                                 )}
@@ -1198,7 +1391,10 @@ export default function Edit({ attributes, setAttributes }) {
                                                                             <span
                                                                                 className="website-footer-block__nav-link"
                                                                                 style={{
-                                                                                    color: column.linkColor || 'inherit',
+                                                                                    // See FooterDynamicMenuNode above — base color
+                                                                                    // goes through --link-color, not a literal
+                                                                                    // `color` prop, so :hover can still win.
+                                                                                    '--link-color': column.linkColor || undefined,
                                                                                     '--link-hover-color': column.linkHoverColor || undefined,
                                                                                     '--link-hover-bg': column.linkHoverBackgroundColor || undefined,
                                                                                     '--link-hover-underline-color': column.linkHoverUnderlineColor || undefined,
@@ -1296,11 +1492,14 @@ export default function Edit({ attributes, setAttributes }) {
                                                                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                                                                             width: (column.iconSize || 24) + 12, height: (column.iconSize || 24) + 12,
                                                                             borderRadius: (column.socialBorderRadius != null && column.socialBorderRadius >= 0) ? `${column.socialBorderRadius}%` : '50%',
-                                                                            color: column.iconColor || 'inherit',
-                                                                            backgroundColor: column.iconBgColor || 'rgba(255,255,255,0.1)',
                                                                             fontSize: `${column.iconSize || 24}px`,
-                                                                            border: `2px solid ${column.socialBorderColor || 'transparent'}`,
                                                                             transition: `all ${(column.socialTransitionDuration != null && column.socialTransitionDuration >= 0) ? column.socialTransitionDuration : 300}ms ease`,
+                                                                            // See top-bar icon style comment: base color/bg/border
+                                                                            // must go through CSS vars, not literal style props, or
+                                                                            // the :hover rule can never out-specificity them.
+                                                                            '--social-icon-color': column.iconColor || '',
+                                                                            '--social-icon-bg': column.iconBgColor || '',
+                                                                            '--social-border-color': column.socialBorderColor || '',
                                                                             '--social-hover-color': column.socialHoverColor || '',
                                                                             '--social-hover-bg': column.socialHoverBackgroundColor || '',
                                                                             '--social-hover-border-color': column.socialHoverBorderColor || '',
@@ -1504,11 +1703,56 @@ export default function Edit({ attributes, setAttributes }) {
                                     </div>
                                 )}
                                 {bottomBar.showSocialIcons && (
-                                    <div className="website-footer-block__bottom-bar-social">
+                                    <div
+                                        className="website-footer-block__bottom-bar-social"
+                                        style={{ gap: (bottomBar.iconSpacing != null && bottomBar.iconSpacing >= 0) ? `${bottomBar.iconSpacing}px` : undefined }}
+                                    >
                                         {(bottomBar.socialIcons || []).map((link) => (
-                                            <span key={link.id} className="website-footer-block__social-icon"
-                                                dangerouslySetInnerHTML={{ __html: getIconSvg(link.icon) }} />
+                                            <QuickZone
+                                                key={link.id}
+                                                id={`footer-bottombar-social-${link.id}`}
+                                                label={link.label || link.platform || __('Social icon', 'website-footer-block')}
+                                                activeZone={activeZone}
+                                                setActiveZone={setActiveZone}
+                                                content={
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 220 }}>
+                                                        <SelectControl label={__('Platform (icon)', 'website-footer-block')} value={link.platform || 'twitter'}
+                                                            options={['twitter','facebook','instagram','linkedin','youtube'].map(p => ({ label: p.charAt(0).toUpperCase() + p.slice(1), value: p }))}
+                                                            onChange={(v) => updateBottomBarSocialPlatform(link.id, v)} />
+                                                        <TextControl label={__('Label', 'website-footer-block')} value={link.label || ''} onChange={(v) => updateBottomBarSocialIcon(link.id, 'label', v)} />
+                                                        <TextControl label={__('URL', 'website-footer-block')} value={link.url || ''} onChange={(v) => updateBottomBarSocialIcon(link.id, 'url', v)} placeholder="https://…" />
+                                                        <Button variant="link" isDestructive onClick={() => removeBottomBarSocialIcon(link.id)}>{__('Remove', 'website-footer-block')}</Button>
+                                                    </div>
+                                                }
+                                            >
+                                                <span
+                                                    className="website-footer-block__social-icon"
+                                                    aria-label={link.label}
+                                                    style={{
+                                                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                                        width: (bottomBar.iconSize || 24) + 12, height: (bottomBar.iconSize || 24) + 12,
+                                                        borderRadius: (bottomBar.borderRadius != null && bottomBar.borderRadius >= 0) ? `${bottomBar.borderRadius}%` : '50%',
+                                                        fontSize: `${bottomBar.iconSize || 24}px`,
+                                                        transition: `all ${(bottomBar.transitionDuration != null && bottomBar.transitionDuration >= 0) ? bottomBar.transitionDuration : 300}ms ease`,
+                                                        // See top-bar icon style comment above: base color/bg/border
+                                                        // must go through CSS vars, not literal style props, or the
+                                                        // :hover rule can never out-specificity them.
+                                                        '--social-icon-color': bottomBar.iconColor || '',
+                                                        '--social-icon-bg': bottomBar.iconBgColor || '',
+                                                        '--social-border-color': bottomBar.borderColor || '',
+                                                        '--social-hover-color': bottomBar.hoverColor || '',
+                                                        '--social-hover-bg': bottomBar.hoverBackgroundColor || '',
+                                                        '--social-hover-border-color': bottomBar.hoverBorderColor || '',
+                                                    }}
+                                                    dangerouslySetInnerHTML={{ __html: getIconSvg(link.icon || link.platform) }}
+                                                />
+                                            </QuickZone>
                                         ))}
+                                        {!(bottomBar.socialIcons || []).length && (
+                                            <span style={{ fontSize: 12, opacity: 0.6, fontStyle: 'italic' }}>
+                                                {__('Add icons via the settings panel →', 'website-footer-block')}
+                                            </span>
+                                        )}
                                     </div>
                                 )}
                             </div>

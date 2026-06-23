@@ -131,7 +131,11 @@
                 "hoverBorderColor": "",
                 "borderColor": "",
                 "borderRadius": -1,
-                "transitionDuration": -1
+                "transitionDuration": -1,
+                "iconSize": 24,
+                "iconColor": "",
+                "iconBgColor": "",
+                "iconSpacing": -1
             }
         },
         "columnsSection": {
@@ -367,7 +371,11 @@
                 "hoverBorderColor": "",
                 "borderColor": "",
                 "borderRadius": -1,
-                "transitionDuration": -1
+                "transitionDuration": -1,
+                "iconSize": 24,
+                "iconColor": "",
+                "iconBgColor": "",
+                "iconSpacing": -1
             }
         }
     },

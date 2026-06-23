@@ -1,17 +1,20 @@
 import { MediaUpload, MediaUploadCheck, RichText, URLInput, useBlockProps } from '@wordpress/block-editor';
-import { Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl } from '@wordpress/components';
+import { BaseControl, Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import { useDispatch } from '@wordpress/data';
 import AdaireColorControl from '../components/AdaireColorControl';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import BootstrapIconPicker from './BootstrapIconPicker';
 import {
   getTrustItems,
   getStyleVars,
   getBgTypeClass,
   resolveSentinel,
   buildPresetPatch,
+  resolveRatingIcon,
+  resolveFeatureIcon,
   TrustLogo,
   RatingBadgeView,
   SecurityFeatureView,
@@ -62,6 +65,8 @@ function RepeaterField({ items, onChange, renderItem, addLabel, newItem }) {
 
 export default function Edit({ attributes, setAttributes, isSelected, clientId }) {
   const [activeZone, setActiveZone] = useState(null);
+  const [ratingIconPickerIndex, setRatingIconPickerIndex] = useState(null);
+  const [securityIconPickerIndex, setSecurityIconPickerIndex] = useState(null);
   const a = attributes;
   const trustItemsResolved = getTrustItems(a);
 
@@ -390,15 +395,29 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
               items={a.ratingBadges}
               onChange={(items) => setAttributes({ ratingBadges: items })}
               addLabel={__('Add badge', 'saas-hero-block')}
-              newItem={{ iconType: 'star', text: '5.0/5', subtext: __('Reviews', 'saas-hero-block') }}
-              renderItem={(item, update) => (
+              newItem={{ icon: 'bi bi-star-fill', imageUrl: '', text: '5.0/5', subtext: __('Reviews', 'saas-hero-block') }}
+              renderItem={(item, update, idx) => (
                 <>
-                  <SelectControl
-                    label={__('Icon', 'saas-hero-block')}
-                    value={item.iconType || 'star'}
-                    options={[{ label: 'Star rating', value: 'star' }, { label: 'Badge', value: 'badge' }, { label: 'App Store', value: 'appstore' }, { label: 'Google Play', value: 'googleplay' }]}
-                    onChange={(v) => update({ iconType: v })}
-                  />
+                  <BaseControl label={__('Icon', 'saas-hero-block')} __nextHasNoMarginBottom>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setRatingIconPickerIndex(idx)}
+                      style={{ width: '100%', justifyContent: 'flex-start', marginBottom: '8px' }}
+                      disabled={!!item.imageUrl}
+                    >
+                      <i className={resolveRatingIcon(item)} style={{ marginRight: '8px' }} aria-hidden="true" />
+                      {item.imageUrl ? __('Using uploaded image below', 'saas-hero-block') : __('Choose icon', 'saas-hero-block')}
+                    </Button>
+                  </BaseControl>
+                  <div className="adaire-repeater__media-row">
+                    {media(__('badge image', 'saas-hero-block'), item.imageUrl, (url) => update({ imageUrl: url }))}
+                    {item.imageUrl && (
+                      <Button variant="tertiary" isDestructive size="small" onClick={() => update({ imageUrl: '' })}>
+                        {__('Remove image (use icon instead)', 'saas-hero-block')}
+                      </Button>
+                    )}
+                  </div>
+                  <p className="adaire-help-note">{__('An uploaded image, if set, replaces the icon for this badge.', 'saas-hero-block')}</p>
                   <TextControl label={__('Text', 'saas-hero-block')} value={item.text || ''} onChange={(v) => update({ text: v })} />
                   <TextControl label={__('Subtext', 'saas-hero-block')} value={item.subtext || ''} onChange={(v) => update({ subtext: v })} />
                 </>
@@ -419,10 +438,29 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
               items={a.securityFeatures}
               onChange={(items) => setAttributes({ securityFeatures: items })}
               addLabel={__('Add feature', 'saas-hero-block')}
-              newItem={{ icon: '✅', title: __('New feature', 'saas-hero-block'), text: '' }}
-              renderItem={(item, update) => (
+              newItem={{ icon: 'bi bi-check-circle-fill', imageUrl: '', title: __('New feature', 'saas-hero-block'), text: '' }}
+              renderItem={(item, update, idx) => (
                 <>
-                  <TextControl label={__('Icon (emoji)', 'saas-hero-block')} value={item.icon || ''} onChange={(v) => update({ icon: v })} />
+                  <BaseControl label={__('Icon', 'saas-hero-block')} __nextHasNoMarginBottom>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setSecurityIconPickerIndex(idx)}
+                      style={{ width: '100%', justifyContent: 'flex-start', marginBottom: '8px' }}
+                      disabled={!!item.imageUrl}
+                    >
+                      <i className={resolveFeatureIcon(item)} style={{ marginRight: '8px' }} aria-hidden="true" />
+                      {item.imageUrl ? __('Using uploaded image below', 'saas-hero-block') : __('Choose icon', 'saas-hero-block')}
+                    </Button>
+                  </BaseControl>
+                  <div className="adaire-repeater__media-row">
+                    {media(__('badge image', 'saas-hero-block'), item.imageUrl, (url) => update({ imageUrl: url }))}
+                    {item.imageUrl && (
+                      <Button variant="tertiary" isDestructive size="small" onClick={() => update({ imageUrl: '' })}>
+                        {__('Remove image (use icon instead)', 'saas-hero-block')}
+                      </Button>
+                    )}
+                  </div>
+                  <p className="adaire-help-note">{__('An uploaded image, if set, replaces the icon for this feature.', 'saas-hero-block')}</p>
                   <TextControl label={__('Title', 'saas-hero-block')} value={item.title || ''} onChange={(v) => update({ title: v })} />
                   <TextareaControl label={__('Text', 'saas-hero-block')} value={item.text || ''} onChange={(v) => update({ text: v })} />
                 </>
@@ -498,6 +536,32 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
         {spacingControls}
       </PanelBody>
     </InspectorTabs>
+
+    <BootstrapIconPicker
+      isOpen={ratingIconPickerIndex !== null}
+      onClose={() => setRatingIconPickerIndex(null)}
+      onSelect={(iconClass) => {
+        if (ratingIconPickerIndex !== null) {
+          const next = (a.ratingBadges || []).slice();
+          next[ratingIconPickerIndex] = { ...next[ratingIconPickerIndex], icon: iconClass };
+          setAttributes({ ratingBadges: next });
+        }
+      }}
+      currentIcon={ratingIconPickerIndex !== null ? (a.ratingBadges || [])[ratingIconPickerIndex]?.icon : ''}
+    />
+
+    <BootstrapIconPicker
+      isOpen={securityIconPickerIndex !== null}
+      onClose={() => setSecurityIconPickerIndex(null)}
+      onSelect={(iconClass) => {
+        if (securityIconPickerIndex !== null) {
+          const next = (a.securityFeatures || []).slice();
+          next[securityIconPickerIndex] = { ...next[securityIconPickerIndex], icon: iconClass };
+          setAttributes({ securityFeatures: next });
+        }
+      }}
+      currentIcon={securityIconPickerIndex !== null ? (a.securityFeatures || [])[securityIconPickerIndex]?.icon : ''}
+    />
 
     <section {...blockProps}>
       {a.effectDotPattern && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--dots" aria-hidden="true" />}

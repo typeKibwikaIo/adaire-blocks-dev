@@ -7,9 +7,12 @@ useBlockProps,
 } from '@wordpress/block-editor';
 import {
 __experimentalBoxControl as BoxControl,
+BaseControl,
 Button,
 ButtonGroup,
+ColorPicker,
 PanelBody,
+Placeholder,
 RangeControl,
 SelectControl,
 TextControl,
@@ -21,6 +24,7 @@ import InspectorTabs from '../components/InspectorTabs';
 import {
 getBoxAttributes,
 getBoxValues,
+getContainerHeightForDevice,
 getVimeoId,
 getVimeoSrc,
 getVideoPlayerStyles,
@@ -119,7 +123,12 @@ const [ deviceType, setDeviceType ] = useState( 'desktop' );
 const [ activeZone, setActiveZone ] = useState( null );
 const {
 blockId,
+dimensionsConfigured,
 containerBorderRadius,
+containerBackgroundColor,
+containerBorderColor,
+containerBorderWidth,
+containerShadowIntensity,
 containerHeight,
 containerMaxWidth,
 containerMode,
@@ -136,7 +145,9 @@ loop,
 
 useEffect( () => {
 if ( ! blockId ) {
-setAttributes( { blockId: clientId } );
+// First time this block instance is ever mounted (freshly inserted,
+// never saved before) — flag it so the initial size prompt shows once.
+setAttributes( { blockId: clientId, dimensionsConfigured: false } );
 }
 }, [ blockId, clientId, setAttributes ] );
 
@@ -146,6 +157,8 @@ style: getVideoPlayerStyles( attributes ),
 } );
 const currentMaxWidth = containerMaxWidth?.[ deviceType ] || {};
 const maxWidthDefault = deviceType === 'desktop' ? 1200 : 100;
+const currentHeight = getContainerHeightForDevice( containerHeight, deviceType );
+const heightDefault = deviceType === 'desktop' || deviceType === 'tablet' ? 315 : deviceType === 'mobile' ? 250 : 200;
 
 const sideloadMedia = async () => {
 if ( ! mediaRemoteUrl ) {
@@ -202,6 +215,107 @@ getBoxAttributes( names, currentValues, deviceType, value )
 );
 };
 
+if ( ! dimensionsConfigured ) {
+const desktopMaxWidth = containerMaxWidth?.desktop || {};
+
+return (
+<div { ...blockProps } data-block-id={ blockId }>
+<div
+className={ `ad-video-player__container ad-video-player__setup-container ${ containerMode === 'constrained' ? 'is-constrained' : '' }` }
+>
+<Placeholder
+label={ __( 'Video Player', 'video-player-block' ) }
+instructions={ __(
+'Set the initial width and height for your video. You can change these anytime from the Container Settings panel.',
+'video-player-block'
+) }
+>
+<div className="ad-video-player__setup">
+<BaseControl label={ __( 'Width', 'video-player-block' ) } __nextHasNoMarginBottom>
+<ButtonGroup>
+{ [
+{ label: __( 'Full Width', 'video-player-block' ), value: 'full' },
+{ label: __( 'Constrained', 'video-player-block' ), value: 'constrained' },
+].map( ( option ) => (
+<Button
+key={ option.value }
+isPrimary={ containerMode === option.value }
+isSecondary={ containerMode !== option.value }
+onClick={ () => setAttributes( { containerMode: option.value } ) }
+>
+{ option.label }
+</Button>
+) ) }
+</ButtonGroup>
+{ containerMode === 'constrained' && (
+<div className="ad-video-player__control-row">
+<TextControl
+type="number"
+value={ desktopMaxWidth.value ?? 1200 }
+onChange={ ( value ) =>
+setAttributes( {
+containerMaxWidth: {
+...( containerMaxWidth || {} ),
+desktop: { ...desktopMaxWidth, value: Number( value ) },
+},
+} )
+}
+/>
+<UnitButtons
+value={ desktopMaxWidth.unit || 'px' }
+onChange={ ( unit ) =>
+setAttributes( {
+containerMaxWidth: {
+...( containerMaxWidth || {} ),
+desktop: { ...desktopMaxWidth, unit },
+},
+} )
+}
+/>
+</div>
+) }
+</BaseControl>
+<BaseControl label={ __( 'Height', 'video-player-block' ) } __nextHasNoMarginBottom>
+<div className="ad-video-player__control-row">
+<TextControl
+type="number"
+value={ currentHeight.value ?? heightDefault }
+onChange={ ( value ) =>
+setAttributes( {
+containerHeight: {
+...( containerHeight || {} ),
+desktop: { ...currentHeight, value: Number( value ) },
+},
+} )
+}
+/>
+<UnitButtons
+units={ HEIGHT_UNITS }
+value={ currentHeight.unit || 'px' }
+onChange={ ( unit ) =>
+setAttributes( {
+containerHeight: {
+...( containerHeight || {} ),
+desktop: { ...currentHeight, unit },
+},
+} )
+}
+/>
+</div>
+</BaseControl>
+<Button
+variant="primary"
+onClick={ () => setAttributes( { dimensionsConfigured: true } ) }
+>
+{ __( 'Continue', 'video-player-block' ) }
+</Button>
+</div>
+</Placeholder>
+</div>
+</div>
+);
+}
+
 return (
 <>
 <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
@@ -213,23 +327,84 @@ onChange={ ( value ) => setAttributes( { containerBorderRadius: Number( value ) 
 min={ 0 }
 max={ 100 }
 />
-<TextControl
+<BaseControl label={ __( 'Background Color', 'video-player-block' ) } __nextHasNoMarginBottom>
+<ColorPicker
+color={ containerBackgroundColor || '#000000' }
+onChangeComplete={ ( color ) => {
+const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
+const colorValue = alpha < 1
+? `rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ alpha })`
+: color.hex;
+setAttributes( { containerBackgroundColor: colorValue } );
+} }
+enableAlpha
+/>
+<Button onClick={ () => setAttributes( { containerBackgroundColor: '' } ) } isSmall style={ { marginTop: '8px' } }>
+{ __( 'Reset (transparent)', 'video-player-block' ) }
+</Button>
+</BaseControl>
+<BaseControl label={ __( 'Border Color', 'video-player-block' ) } __nextHasNoMarginBottom>
+<ColorPicker
+color={ containerBorderColor || '#e0e0e0' }
+onChangeComplete={ ( color ) => {
+const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
+const colorValue = alpha < 1
+? `rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ alpha })`
+: color.hex;
+setAttributes( { containerBorderColor: colorValue } );
+} }
+enableAlpha
+/>
+<Button onClick={ () => setAttributes( { containerBorderColor: '' } ) } isSmall style={ { marginTop: '8px' } }>
+{ __( 'Reset (none)', 'video-player-block' ) }
+</Button>
+</BaseControl>
+<RangeControl
+label={ __( 'Border Width (px)', 'video-player-block' ) }
+value={ containerBorderWidth ?? 0 }
+onChange={ ( value ) => setAttributes( { containerBorderWidth: Number( value ) } ) }
+min={ 0 }
+max={ 20 }
+/>
+<RangeControl
+label={ __( 'Shadow Intensity', 'video-player-block' ) }
+value={ containerShadowIntensity ?? 0 }
+onChange={ ( value ) => setAttributes( { containerShadowIntensity: value } ) }
+min={ 0 }
+max={ 1 }
+step={ 0.05 }
+/>
+<div className="ad-video-player__control-group">
+<DeviceSwitcher
 label={ __( 'Container Height', 'video-player-block' ) }
+deviceType={ deviceType }
+setDeviceType={ setDeviceType }
+/>
+<TextControl
 type="number"
-value={ containerHeight?.value }
+value={ currentHeight.value ?? heightDefault }
 onChange={ ( value ) =>
 setAttributes( {
-containerHeight: { ...( containerHeight || {} ), value: Number( value ) },
+containerHeight: {
+...( containerHeight || {} ),
+[ deviceType ]: { ...currentHeight, value: Number( value ) },
+},
 } )
 }
 />
 <UnitButtons
 units={ HEIGHT_UNITS }
-value={ containerHeight?.unit }
+value={ currentHeight.unit || 'px' }
 onChange={ ( unit ) =>
-setAttributes( { containerHeight: { ...( containerHeight || {} ), unit } } )
+setAttributes( {
+containerHeight: {
+...( containerHeight || {} ),
+[ deviceType ]: { ...currentHeight, unit },
+},
+} )
 }
 />
+</div>
 <ButtonGroup>
 { [
 { label: __( 'Full Width', 'video-player-block' ), value: 'full' },

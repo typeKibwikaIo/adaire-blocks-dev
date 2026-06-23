@@ -86,12 +86,20 @@
       padding-left: var(--button-padding-left-watch, 8px);
     }
 
-    // Icon styles
-    svg {
+    // Icon wrapper — spacing/position vary by the
+    // adaire-button-block__link--icon-{left,right,inline} modifier below.
+    // The slide-on-hover animation lives on the inner svg itself so it
+    // doesn't fight with the `order` used to reposition the wrapper.
+    .adaire-button-block__icon {
+      display: inline-flex;
       position: relative;
       z-index: 1;
-      transition: transform 0.3s ease;
       margin-left: 8px;
+
+      svg {
+        display: block;
+        transition: transform 0.3s ease;
+      }
     }
 
     // Focus styles (only visible on keyboard navigation)
@@ -215,8 +223,41 @@
       background-color: var(--button-hover-bg-color, transparent);
       text-decoration: none;
 
-      svg {
+      .adaire-button-block__icon svg {
         transform: translateX(4px);
+      }
+    }
+
+    // Icon position variants. DOM order is always text-then-icon (see
+    // edit.js/save.js); these reposition the icon visually via flex
+    // `order` rather than physically reordering markup, so reading order
+    // for assistive tech stays text-first regardless of position chosen.
+    // "right" needs no rule of its own — the .adaire-button-block__icon
+    // default (margin-left: 8px, natural order) already is that look.
+    //
+    // Placed after "General hover styles" above: its hover rule
+    // (.link:hover .icon svg) has the SAME specificity as
+    // .link--icon-left:hover .icon svg below (both are exactly one class
+    // + :hover + one class + one type selector), so source order is what
+    // decides the winner here, not specificity — this block must stay
+    // below the generic one for the left-position override to apply.
+    &--icon-left {
+      .adaire-button-block__icon {
+        order: -1;
+        margin-left: 0;
+        margin-right: 8px;
+      }
+
+      &:hover .adaire-button-block__icon svg {
+        // Slide toward the direction of travel (left) instead of the
+        // rightward slide used for the other two positions.
+        transform: translateX(-4px);
+      }
+    }
+
+    &--icon-inline {
+      .adaire-button-block__icon {
+        margin-left: 0;
       }
     }
   }

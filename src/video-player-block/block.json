@@ -25,6 +25,10 @@
             "type": "string",
             "default": ""
         },
+        "dimensionsConfigured": {
+            "type": "boolean",
+            "default": true
+        },
         "containerMode": {
             "type": "string",
             "default": "full"
@@ -53,13 +57,43 @@
         "containerHeight": {
             "type": "object",
             "default": {
-                "value": 315,
-                "unit": "px"
+                "desktop": {
+                    "value": 315,
+                    "unit": "px"
+                },
+                "tablet": {
+                    "value": 315,
+                    "unit": "px"
+                },
+                "mobile": {
+                    "value": 250,
+                    "unit": "px"
+                },
+                "smartwatch": {
+                    "value": 200,
+                    "unit": "px"
+                }
             }
         },
         "containerBorderRadius": {
             "type": "number",
             "default": 20
+        },
+        "containerBackgroundColor": {
+            "type": "string",
+            "default": ""
+        },
+        "containerBorderColor": {
+            "type": "string",
+            "default": ""
+        },
+        "containerBorderWidth": {
+            "type": "number",
+            "default": 0
+        },
+        "containerShadowIntensity": {
+            "type": "number",
+            "default": 0
         },
         "marginTop": {
             "type": "object",

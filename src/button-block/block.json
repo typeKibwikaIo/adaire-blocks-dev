@@ -74,6 +74,14 @@
             "type": "boolean",
             "default": true
         },
+        "iconType": {
+            "type": "string",
+            "default": "arrow-diagonal"
+        },
+        "iconPosition": {
+            "type": "string",
+            "default": "right"
+        },
         "hoverAnimation": {
             "type": "string",
             "default": "slide-underline"

@@ -193,12 +193,58 @@ export function TrustLogo( { item } ) {
 		: <span className="adaire-saas-hero__trust-logo">{ inner }</span>;
 }
 
-const RATING_ICONS = { star: '⭐', badge: '🏆', appstore: '🍎', googleplay: '▶' };
+// ─── Rating Badges & Security Panel: icon resolution ──────────────────────
+// Both sections moved from emoji glyphs to real Bootstrap Icons classes
+// (e.g. "bi bi-star-fill"), and both items can alternatively use an uploaded
+// image instead of an icon. Content saved before this change still carries
+// the old shape — a legacy `iconType` keyword for ratings, a raw emoji
+// character for security features — so these maps translate old values to
+// an equivalent Bootstrap icon instead of rendering blank or an emoji.
+const LEGACY_RATING_ICON_MAP = {
+	star: 'bi bi-star-fill',
+	badge: 'bi bi-trophy-fill',
+	appstore: 'bi bi-apple',
+	googleplay: 'bi bi-google-play',
+};
+
+const LEGACY_SECURITY_ICON_MAP = {
+	'🔒': 'bi bi-lock-fill',
+	'🏦': 'bi bi-bank',
+	'🛡️': 'bi bi-shield-fill-check',
+	'🛡': 'bi bi-shield-fill-check',
+	'💳': 'bi bi-credit-card-fill',
+	'🔑': 'bi bi-key-fill',
+	'📞': 'bi bi-telephone-fill',
+};
+
+export function resolveRatingIcon( badge ) {
+	if ( badge.icon && badge.icon.indexOf( 'bi-' ) !== -1 ) {
+		return badge.icon;
+	}
+	if ( badge.iconType && LEGACY_RATING_ICON_MAP[ badge.iconType ] ) {
+		return LEGACY_RATING_ICON_MAP[ badge.iconType ];
+	}
+	return 'bi bi-star-fill';
+}
+
+export function resolveFeatureIcon( feature ) {
+	if ( feature.icon && feature.icon.indexOf( 'bi-' ) !== -1 ) {
+		return feature.icon;
+	}
+	if ( feature.icon && LEGACY_SECURITY_ICON_MAP[ feature.icon ] ) {
+		return LEGACY_SECURITY_ICON_MAP[ feature.icon ];
+	}
+	return 'bi bi-shield-check';
+}
 
 export function RatingBadgeView( { badge } ) {
 	return (
 		<div className="adaire-saas-hero__rating-badge">
-			<span className="adaire-saas-hero__rating-icon" aria-hidden="true">{ RATING_ICONS[ badge.iconType ] || '⭐' }</span>
+			<span className="adaire-saas-hero__rating-icon" aria-hidden="true">
+				{ badge.imageUrl
+					? <img src={ badge.imageUrl } alt="" className="adaire-saas-hero__rating-icon-img" loading="lazy" />
+					: <i className={ resolveRatingIcon( badge ) } /> }
+			</span>
 			<span className="adaire-saas-hero__rating-copy">
 				<strong>{ badge.text }</strong>
 				<small>{ badge.subtext }</small>
@@ -210,7 +256,11 @@ export function RatingBadgeView( { badge } ) {
 export function SecurityFeatureView( { feature } ) {
 	return (
 		<div className="adaire-saas-hero__security-card">
-			<span className="adaire-saas-hero__security-icon" aria-hidden="true">{ feature.icon }</span>
+			<span className="adaire-saas-hero__security-icon" aria-hidden="true">
+				{ feature.imageUrl
+					? <img src={ feature.imageUrl } alt="" className="adaire-saas-hero__security-icon-img" loading="lazy" />
+					: <i className={ resolveFeatureIcon( feature ) } /> }
+			</span>
 			<h4>{ feature.title }</h4>
 			<p>{ feature.text }</p>
 		</div>

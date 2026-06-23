@@ -17,6 +17,7 @@ export default function save({ attributes }) {
         responsiveMinHeight,
         responsiveTitleMarginBottom,
         responsiveDescriptionMarginBottom,
+        responsiveCardWidth,
         previewText,
         textColor,
         imageBackgroundSize,
@@ -35,6 +36,10 @@ export default function save({ attributes }) {
             }, {}),
             ...Object.keys(responsiveDescriptionMarginBottom || {}).reduce((acc, br) => {
                 if (responsiveDescriptionMarginBottom[br]) acc[`--desc-margin-bottom-${br}`] = responsiveDescriptionMarginBottom[br];
+                return acc;
+            }, {}),
+            ...Object.keys(responsiveCardWidth || {}).reduce((acc, br) => {
+                if (responsiveCardWidth[br]) acc[`--card-width-${br}`] = responsiveCardWidth[br];
                 return acc;
             }, {}),
         }

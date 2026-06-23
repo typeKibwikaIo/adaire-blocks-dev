@@ -18,7 +18,7 @@
  *     <h2>{title}</h2>
  *   </QuickZone>
  */
-import { useRef, useEffect, useCallback } from '@wordpress/element';
+import { useRef, useEffect, useCallback, useState } from '@wordpress/element';
 import { Popover } from '@wordpress/components';
 import './QuickZone.scss';
 
@@ -44,6 +44,30 @@ export const CloseIcon = () => (
 // WordPress's wp.media() creates .media-modal in <body> when open.
 export function isMediaLibraryOpen() {
     return !! document.querySelector( '.media-modal, .media-modal-backdrop' );
+}
+
+// ─── Shared helper: tell every QuickZone "a media frame is opening" ─────────
+// wp.media()'s modal can take a little while to actually mount its DOM (its
+// Backbone view tree is compiled lazily the first time it's opened on a
+// page), and during that gap isMediaLibraryOpen() above still returns false.
+// An outside mousedown landing during that gap used to read as "user
+// clicked away" and close the zone — tearing out the MediaUpload button
+// (and the frame it's bound to) right as the modal was opening, which looks
+// like "the media modal closes right after it opens."
+//
+// Call markMediaOpening() synchronously in the same click handler that
+// calls MediaUpload's `open()`, *before* calling `open()`. Every QuickZone's
+// outside-click handler then unconditionally ignores mousedowns for the
+// next MEDIA_OPENING_GRACE_MS — no DOM-presence guessing needed for that
+// window. After it elapses the modal is always long since mounted, so the
+// normal isMediaLibraryOpen() polling below protects things from then on.
+const MEDIA_OPENING_GRACE_MS = 4000;
+let mediaOpeningUntil = 0;
+export function markMediaOpening() {
+    mediaOpeningUntil = Date.now() + MEDIA_OPENING_GRACE_MS;
+}
+function isMediaRecentlyOpening() {
+    return Date.now() < mediaOpeningUntil;
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
@@ -72,6 +96,22 @@ export default function QuickZone( { id, label, icon, children, content, activeZ
     const scheduleClose = useCallback( () => {
         clearCloseTimer();
         closeTimerRef.current = setTimeout( () => {
+            // Never let a mouseleave close the zone out from under an open
+            // (or just-opened) WP media frame. Opening wp.media() can shift
+            // layout (e.g. the scrollbar disappearing when the modal locks
+            // body scroll) or otherwise trigger a mouseleave on this zone
+            // with no real "the user moved away" intent behind it — and
+            // previously that mouseleave would tear down the MediaUpload
+            // (and the frame it's bound to) mid-flight, since the Popover's
+            // content (and the MediaUpload inside it) only renders while
+            // isOpen is true. That's exactly what "I click Replace/Upload
+            // and it crashes" looks like, for ANY block using QuickZone —
+            // not just footer. Defer instead of closing while media is
+            // open/opening, and keep deferring until it isn't.
+            if ( isMediaLibraryOpen() || isMediaRecentlyOpening() ) {
+                scheduleClose();
+                return;
+            }
             setActiveZone( ( current ) => ( current === id ? null : current ) );
         }, HOVER_CLOSE_DELAY );
     }, [ id, setActiveZone, clearCloseTimer ] );
@@ -121,13 +161,46 @@ export default function QuickZone( { id, label, icon, children, content, activeZ
             // Ignore clicks inside our zone wrapper (contains trigger button + children)
             if ( ref.current && ref.current.contains( e.target ) ) return;
 
-            // Ignore clicks inside the Popover portal content
-            if ( e.target.closest && e.target.closest( '.adaire-qpop, .components-popover__content' ) ) return;
+            // Ignore clicks inside the Popover portal content, or anywhere inside
+            // an already-open media modal/backdrop (covers clicks made while
+            // browsing/selecting inside the library itself).
+            //
+            // This is also where we arm the media-opening grace window (see
+            // markMediaOpening() above), for EVERY QuickZone in the codebase,
+            // automatically: a mousedown always lands here a moment *before*
+            // the click that follows it fires a MediaUpload button's onClick
+            // (mousedown precedes click), so arming the grace window on any
+            // mousedown inside our own popover body protects every
+            // QuickZone + MediaUpload pairing — there are 30+ of them across
+            // the plugin — without each one having to remember to call
+            // markMediaOpening() itself from its own button handler.
+            if ( e.target.closest && e.target.closest(
+                '.adaire-qpop, .components-popover__content, .media-modal, .media-modal-backdrop, .media-frame'
+            ) ) {
+                markMediaOpening();
+                return;
+            }
 
-            // Wait one tick so the WP media modal can render before we check
+            // A MediaUpload button somewhere just called open() (see
+            // markMediaOpening() above) — give the modal a generous window
+            // to actually mount before trusting any "outside" click enough
+            // to close on it.
+            if ( isMediaRecentlyOpening() ) return;
+
+            // Wait one tick so the WP media modal can render before we check.
+            // On a cold start, wp.media() compiles + renders its Backbone view
+            // tree the first time it's opened on the page, which can take
+            // longer than a single tick — if we only checked once here, that
+            // slow first open looked indistinguishable from "click landed
+            // outside" and the zone (and the media button inside it) closed
+            // out from under the in-flight modal. So if the modal isn't there
+            // yet, we give it one more short window before actually closing.
             setTimeout( () => {
                 if ( isMediaLibraryOpen() ) return; // media library just opened — stay open
-                setActiveZone( null );
+                setTimeout( () => {
+                    if ( isMediaLibraryOpen() ) return; // it finished opening just a bit late
+                    setActiveZone( ( current ) => ( current === id ? null : current ) );
+                }, 150 );
             }, 0 );
         };
 
@@ -139,6 +212,45 @@ export default function QuickZone( { id, label, icon, children, content, activeZ
             document.removeEventListener( 'mousedown', handleMouseDown, true );
         };
     }, [ isOpen, setActiveZone ] );
+
+    // ─── Media-modal visibility tracking ───────────────────────────────────
+    // While the WP media library is open, HIDE (don't unmount) the quick-edit
+    // panel — including its "×" close button — instead of leaving it sitting
+    // there clickable on top of the modal. Clicking that × while the media
+    // modal was still open used to call setActiveZone(null), which unmounts
+    // the Popover's content (the MediaUpload lives in there too), which
+    // destroys the media frame mid-flight and closes the modal out from
+    // under the user. Hiding via CSS instead of unmounting keeps MediaUpload
+    // mounted and its frame alive, while making the panel visually gone and
+    // unclickable for as long as the modal is open. Once the modal itself
+    // finishes (an image was picked, or the user cancelled it), the
+    // quick-edit panel's job here is done, so we finish closing the zone for
+    // real instead of popping the panel back up behind the user.
+    const hadMediaRef          = useRef( false );
+    const [ isMediaActive, setIsMediaActive ] = useState( false );
+
+    useEffect( () => {
+        if ( ! isOpen ) {
+            setIsMediaActive( false );
+            hadMediaRef.current = false;
+            return;
+        }
+
+        const sync = () => {
+            const active = isMediaLibraryOpen();
+            setIsMediaActive( active );
+            if ( ! active && hadMediaRef.current ) {
+                setActiveZone( ( current ) => ( current === id ? null : current ) );
+            }
+            hadMediaRef.current = active;
+        };
+
+        sync();
+        const observer = new MutationObserver( sync );
+        observer.observe( document.body, { childList: true, subtree: true } );
+
+        return () => observer.disconnect();
+    }, [ isOpen, id, setActiveZone ] );
 
     return (
         <div
@@ -159,7 +271,7 @@ export default function QuickZone( { id, label, icon, children, content, activeZ
             </button>
             { isOpen && (
                 <Popover
-                    className="adaire-qpop"
+                    className={ `adaire-qpop${ isMediaActive ? ' adaire-qpop--media-active' : '' }` }
                     anchor={ triggerRef.current }
                     placement="left-start"
                     offset={ 8 }

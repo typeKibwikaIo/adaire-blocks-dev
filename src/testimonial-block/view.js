@@ -49,7 +49,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     pagination: pagination,
                     drag: 'free',
                     focus: 'center',
-                    trimSpace: false,
+                    // Loop mode (clones filling the boundary) masks this, but with
+                    // `loop` turned off (type: 'slide') leaving this `false` reserves
+                    // blank space before the first slide / after the last one so they
+                    // can sit "centered" — visible here since .splide__track is
+                    // overflow: visible (kept that way so the arrow buttons aren't
+                    // clipped). `true` trims that reserved space away.
+                    trimSpace: true,
                     updateOnMove: true,
                     resetProgress: false,
                     speed: 600,

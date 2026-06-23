@@ -39,12 +39,16 @@
                 {
                     "id": 1,
                     "icon": "bi bi-lightning-charge",
+                    "image": null,
+                    "imageUrl": "",
                     "title": "Fast Performance",
                     "text": "Experience blazing fast speeds with our optimized engine."
                 },
                 {
                     "id": 2,
                     "icon": "bi bi-shield-check",
+                    "image": null,
+                    "imageUrl": "",
                     "title": "Secure Design",
                     "text": "Your data is protected by industry-leading security protocols."
                 }

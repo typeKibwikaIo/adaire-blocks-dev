@@ -19,8 +19,12 @@
 		width: 100%;
 		max-width: 100%;
 		margin: 0 auto;
-		height: var(--container-height, 1200px);
+		height: var(--container-height, 315px);
 		border-radius: var(--container-border-radius, 20px);
+		background-color: var(--container-background-color, transparent);
+		border: var(--container-border-width, 0px) solid var(--container-border-color, transparent);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, calc(var(--container-shadow-intensity, 0) * 0.45)),
+			0 4px 12px rgba(0, 0, 0, calc(var(--container-shadow-intensity, 0) * 0.3));
 		overflow: hidden;
 
 		// Constrained mode styles
@@ -55,6 +59,36 @@
 			max-width: var(
 				--container-max-width-watch,
 				var(--container-max-width-mobile, 100%)
+			) !important;
+		}
+	}
+
+	// Responsive container height for tablet
+	@media (max-width: 1024px) {
+		&__container {
+			height: var(
+				--container-height-tablet,
+				var(--container-height, 315px)
+			) !important;
+		}
+	}
+
+	// Responsive container height for mobile
+	@media (max-width: 768px) {
+		&__container {
+			height: var(
+				--container-height-mobile,
+				var(--container-height-tablet, 315px)
+			) !important;
+		}
+	}
+
+	// Responsive container height for smartwatch
+	@media (max-width: 320px) {
+		&__container {
+			height: var(
+				--container-height-watch,
+				var(--container-height-mobile, 315px)
 			) !important;
 		}
 	}

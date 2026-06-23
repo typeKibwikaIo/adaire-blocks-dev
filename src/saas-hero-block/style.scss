@@ -188,12 +188,46 @@
   &__rating-badge {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    padding: 10px 16px 10px 10px;
+    border-radius: 14px;
+    background: rgba(99, 102, 241, 0.05);
+    background: color-mix(in srgb, var(--ad-accent, #6366f1) 5%, transparent);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    border: 1px solid color-mix(in srgb, var(--ad-accent, #6366f1) 10%, transparent);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(17, 24, 39, 0.08);
+    }
   }
 
+  // Icon chip: accent-tinted rounded square, real Bootstrap Icons glyph
+  // (color inherits from currentColor via the --ad-accent var) instead of
+  // the old plain emoji text. An uploaded badge image renders in the same
+  // slot at the same footprint, so layout never shifts between the two modes.
   &__rating-icon {
-    font-size: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 17px;
     line-height: 1;
+    background: rgba(99, 102, 241, 0.12);
+    background: color-mix(in srgb, var(--ad-accent, #6366f1) 12%, transparent);
+    color: var(--ad-accent, #6366f1);
+    overflow: hidden;
+  }
+
+  &__rating-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: inherit;
   }
 
   &__rating-copy {
@@ -482,7 +516,21 @@
     text-align: left;
   }
 
+  // Card treatment: real background/border/shadow so each feature reads as
+  // a distinct card rather than bare icon + text floating in the panel.
   &__security-card {
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid rgba(17, 24, 39, 0.07);
+    border-radius: calc(var(--ad-radius, 12px) * 0.75);
+    box-shadow: 0 4px 16px rgba(17, 24, 39, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(17, 24, 39, 0.09);
+    }
+
     h4 {
       font-size: 15px;
       font-weight: 700;
@@ -497,9 +545,29 @@
     }
   }
 
+  // Same accent-tinted icon-chip pattern as the rating badges above, kept
+  // visually consistent across both modernized sections.
   &__security-icon {
-    font-size: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    font-size: 21px;
     line-height: 1;
+    background: rgba(99, 102, 241, 0.12);
+    background: color-mix(in srgb, var(--ad-accent, #6366f1) 12%, transparent);
+    color: var(--ad-accent, #6366f1);
+    overflow: hidden;
+  }
+
+  &__security-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: inherit;
   }
 
   // ── FAQ accordion ─────────────────────────────────────────────────────
@@ -586,14 +654,37 @@
       justify-content: flex-start;
     }
 
-    .adaire-saas-hero__media {
+    // The second selector here covers the editor canvas only: edit.js wraps
+    // the media preview in a <QuickZone>, which renders its own outer
+    // .adaire-qz div around .adaire-saas-hero__media. That wrapper — not
+    // .adaire-saas-hero__media itself — is the actual direct child of
+    // .adaire-saas-hero__content, i.e. the real flex item. `order`/`flex`
+    // only affect direct flex children, so without targeting .adaire-qz too,
+    // every rule below silently no-ops in the editor: the media box never
+    // moves, while .adaire-saas-hero__text (a real direct child) still
+    // shifts via its own order — which is exactly why "Split Layout (Left)"
+    // looked fine (image defaults to order 0, already on the left) while
+    // "Split Layout (Right)" didn't (image stayed at order 0 instead of
+    // moving past the text). save.js has no such wrapper, so
+    // .adaire-saas-hero__media alone is enough on the front end.
+    .adaire-saas-hero__media,
+    .adaire-saas-hero__content > .adaire-qz {
       flex: 1;
+      min-width: 0; // flex items default to min-width: auto, which lets the
+      // image's intrinsic size stop it from shrinking and overflow the row —
+      // the classic "flex child with an <img> won't shrink" bug. Without this,
+      // whichever side the media lands on (order: 1 for split-left, order: 2
+      // for split-right, set just below) can blow past the container edge
+      // instead of sharing space with the text column. min-width: 0 lets it
+      // shrink to fit on BOTH sides.
+      max-width: 100%;
       margin-top: 0;
     }
   }
 
   &.layout-split-right {
-    .adaire-saas-hero__media {
+    .adaire-saas-hero__media,
+    .adaire-saas-hero__content > .adaire-qz {
       order: 2;
     }
 
@@ -603,7 +694,8 @@
   }
 
   &.layout-split-left {
-    .adaire-saas-hero__media {
+    .adaire-saas-hero__media,
+    .adaire-saas-hero__content > .adaire-qz {
       order: 1;
     }
 
@@ -656,7 +748,8 @@
         justify-content: center;
       }
 
-      .adaire-saas-hero__media {
+      .adaire-saas-hero__media,
+      .adaire-saas-hero__content > .adaire-qz {
         order: 2 !important;
       }
 
@@ -732,6 +825,17 @@
     opacity: 0.6;
     margin-right: 4px;
   }
+
+  // Wraps the "upload badge image" button + its "remove image" button for
+  // ratingBadges / securityFeatures items, so they sit on one row instead
+  // of stacking full-width like the rest of the field controls.
+  &__media-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
 }
 
 .adaire-qz-subhead {
@@ -751,4 +855,202 @@
   font-size: 12px;
   opacity: 0.65;
   margin-top: 8px;
+}
+
+// ── Bootstrap Icon Picker modal (Ratings & Security Panel) ───────────────
+// Same modal styling pattern used by the other blocks' BootstrapIconPicker
+// (icon-box-block, our-process-block, etc.) — kept here rather than a new
+// editor.scss since this block already keeps all editor-only chrome in
+// this one stylesheet (see note above .adaire-repeater).
+.adaire-bootstrap-icon-picker {
+  .components-modal__content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    overflow: hidden;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  &__search {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+
+    input {
+      padding: 12px 16px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      width: 100%;
+
+      &:focus {
+        border-color: #0073aa;
+        box-shadow: 0 0 0 1px #0073aa;
+      }
+    }
+  }
+
+  &__count {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #666;
+    text-align: right;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px;
+    margin: 0 -8px;
+    height: 250px;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+
+      &:hover {
+        background: #a1a1a1;
+      }
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 12px;
+    border: 1.5px solid #e5e5e5;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    min-height: 140px;
+    position: relative;
+
+    &:hover {
+      border-color: #0073aa;
+      background: #f8f9fa;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 115, 170, 0.15);
+    }
+
+    &.is-selected {
+      border-color: #0073aa;
+      background: #e7f5f9;
+      box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.2);
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        background: #0073aa;
+        border-radius: 50%;
+      }
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+      }
+    }
+
+    i {
+      font-size: 32px;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      display: block;
+    }
+  }
+
+  &__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    word-break: break-word;
+    line-height: 1.3;
+  }
+
+  &__class {
+    font-size: 11px;
+    color: #666;
+    font-family: monospace;
+    word-break: break-all;
+    opacity: 0.8;
+  }
+
+  &__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+  }
+
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  &__page-info {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+    flex: 1;
+    justify-content: center;
+  }
+
+  &__page-jump {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 12px;
+
+    input {
+      width: 60px;
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-align: center;
+    }
+  }
 }

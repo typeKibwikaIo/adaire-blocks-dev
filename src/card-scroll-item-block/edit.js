@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import {
     useBlockProps,
-    InspectorControls,
     PanelColorSettings,
     RichText,
     MediaUpload,
@@ -21,6 +20,7 @@ import {
 import { useState } from '@wordpress/element';
 import { desktop, tablet, mobile } from '@wordpress/icons';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 
 const BREAKPOINTS = [
     { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks-dev2') },
@@ -48,6 +48,7 @@ export default function Edit({ attributes, setAttributes }) {
         externalVideoUrl,
         responsiveTitleMarginBottom,
         responsiveDescriptionMarginBottom,
+        responsiveCardWidth,
         previewText,
         imageBackgroundSize,
         imageBackgroundPosition,
@@ -74,20 +75,47 @@ export default function Edit({ attributes, setAttributes }) {
         }
     );
 
+    // Emits one CSS var per breakpoint that actually has an override set,
+    // e.g. { mobile: '2rem' } -> { '--title-margin-bottom-mobile': '2rem' }.
+    // Mirrors save.js exactly, so the same breakpoint's real media query
+    // picks up the same value in the editor as on the front end — setting a
+    // single unsuffixed var tied to whichever device tab happens to be
+    // selected (the old approach) only ever applied at the mobile breakpoint
+    // and ignored the editor canvas's actual rendered width otherwise.
+    const responsiveStyleVars = (attr, cssVarName) => {
+        const obj = attributes[attr];
+        if (!obj) return {};
+        return Object.keys(obj).reduce((acc, br) => {
+            if (obj[br]) acc[`${cssVarName}-${br}`] = obj[br];
+            return acc;
+        }, {});
+    };
+
+    // Reads the numeric portion out of a "NN%" string for the width drag
+    // slider. Non-percent values (px/em/etc, set via the unit field below)
+    // or an unset/inherited value fall back to 100 so the handle still sits
+    // somewhere sensible — dragging it always writes a fresh percent value.
+    const parsePercent = (val, fallback = 100) => {
+        if (typeof val !== 'string') return fallback;
+        const match = val.match(/^(-?\d+(?:\.\d+)?)%$/);
+        return match ? parseFloat(match[1]) : fallback;
+    };
+
     const blockProps = useBlockProps({
         className: 'adaire-card-scroll__card',
         style: {
             backgroundColor: backgroundColor,
             boxShadow: `0 4px ${shadowBlur}px -1px ${shadowColor}`,
             '--card-min-height': 'var(--current-card-min-height)',
-            '--title-margin-bottom': responsiveTitleMarginBottom?.[deviceType] || 'var(--title-margin-bottom-mobile)',
-            '--desc-margin-bottom': responsiveDescriptionMarginBottom?.[deviceType] || 'var(--desc-margin-bottom-mobile)',
+            ...responsiveStyleVars('responsiveTitleMarginBottom', '--title-margin-bottom'),
+            ...responsiveStyleVars('responsiveDescriptionMarginBottom', '--desc-margin-bottom'),
+            ...responsiveStyleVars('responsiveCardWidth', '--card-width'),
         }
     });
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
                 <div className="adaire-device-toggle" style={{ padding: '16px 16px 0', borderBottom: '1px solid #e0e0e0', marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
                     <ButtonGroup>
                         {BREAKPOINTS.map((bp) => (
@@ -208,7 +236,35 @@ export default function Edit({ attributes, setAttributes }) {
                     )}
                 </PanelBody>
 
-                <PanelBody title={__('Layout & Spacing', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Layout', 'adaire-blocks-dev2')} initialOpen={false}>
+                    <RangeControl
+                        label={__('Card Width — drag to resize', 'adaire-blocks-dev2')}
+                        value={parsePercent(responsiveCardWidth?.[deviceType])}
+                        min={10}
+                        max={100}
+                        step={1}
+                        onChange={(val) => updateResponsive('responsiveCardWidth', deviceType, `${val}%`)}
+                        help={!responsiveCardWidth?.[deviceType] ? __('Inheriting from global Card Slider setting.', 'adaire-blocks-dev2') : __("Overrides the Card Slider's width just for this card.", 'adaire-blocks-dev2')}
+                    />
+                    <UnitControl
+                        label={`Card Width (${deviceType})`}
+                        value={responsiveCardWidth?.[deviceType] || ''}
+                        onChange={(val) => updateResponsive('responsiveCardWidth', deviceType, val)}
+                        help={__('Type an exact value in any unit (%, px, em…) instead of dragging.', 'adaire-blocks-dev2')}
+                    />
+                    <SelectControl
+                        label={`Button Alignment (${deviceType})`}
+                        value={buttonAlignment?.[deviceType] || 'left'}
+                        options={[
+                            { label: 'Left', value: 'left' },
+                            { label: 'Center', value: 'center' },
+                            { label: 'Right', value: 'right' }
+                        ]}
+                        onChange={(val) => updateResponsive('buttonAlignment', deviceType, val)}
+                    />
+                </PanelBody>
+
+                <PanelBody title={__('Spacing', 'adaire-blocks-dev2')} initialOpen={false}>
                     <UnitControl
                         label={`Title Bottom Margin (${deviceType})`}
                         value={responsiveTitleMarginBottom?.[deviceType] || ''}
@@ -220,16 +276,6 @@ export default function Edit({ attributes, setAttributes }) {
                         value={responsiveDescriptionMarginBottom?.[deviceType] || ''}
                         onChange={(val) => updateResponsive('responsiveDescriptionMarginBottom', deviceType, val)}
                         help={!responsiveDescriptionMarginBottom?.[deviceType] ? "Inheriting from global parent setting." : ""}
-                    />
-                    <SelectControl
-                        label={`Button Alignment (${deviceType})`}
-                        value={buttonAlignment?.[deviceType] || 'left'}
-                        options={[
-                            { label: 'Left', value: 'left' },
-                            { label: 'Center', value: 'center' },
-                            { label: 'Right', value: 'right' }
-                        ]}
-                        onChange={(val) => updateResponsive('buttonAlignment', deviceType, val)}
                     />
                 </PanelBody>
 
@@ -255,7 +301,7 @@ export default function Edit({ attributes, setAttributes }) {
                 <PanelBody title={__('Shadow', 'adaire-blocks-dev2')} initialOpen={false}>
                     <RangeControl label="Shadow Blur" value={shadowBlur} onChange={(val) => setAttributes({ shadowBlur: val })} min={0} max={50} />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps}>
                 <div className="adaire-card-scroll__card-inner">
@@ -267,7 +313,7 @@ export default function Edit({ attributes, setAttributes }) {
                                 value={title}
                                 onChange={(val) => setAttributes({ title: val })}
                                 placeholder={__('Card Title...', 'adaire-blocks-dev2')}
-                                style={{ color: headerTextColor, marginBottom: responsiveTitleMarginBottom?.[deviceType] }}
+                                style={{ color: headerTextColor }}
                             />
                             <RichText
                                 tagName="p"
@@ -275,7 +321,7 @@ export default function Edit({ attributes, setAttributes }) {
                                 value={description}
                                 onChange={(val) => setAttributes({ description: val })}
                                 placeholder={__('Card description...', 'adaire-blocks-dev2')}
-                                style={{ color: textColor, marginBottom: responsiveDescriptionMarginBottom?.[deviceType] }}
+                                style={{ color: textColor }}
                             />
                             <div {...innerBlocksProps} />
                         </div>

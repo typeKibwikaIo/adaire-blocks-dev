@@ -271,6 +271,16 @@
                 "bigDesktop": "600px"
             }
         },
+        "responsiveCardWidth": {
+            "type": "object",
+            "default": {
+                "mobile": "100%",
+                "tablet": "100%",
+                "smallLaptop": "100%",
+                "desktop": "100%",
+                "bigDesktop": "100%"
+            }
+        },
         "responsiveLastCardBottomHeight": {
             "type": "object",
             "default": {
