@@ -24,7 +24,7 @@
         },
         "arrowColor": {
             "type": "string",
-            "default": "#ff0000"
+            "default": "#503AA8"
         },
         "dotColor": {
             "type": "string",

@@ -51,6 +51,14 @@
                     "imageUrl": "",
                     "title": "Secure Design",
                     "text": "Your data is protected by industry-leading security protocols."
+                },
+                {
+                    "id": 3,
+                    "icon": "bi bi-bar-chart-line",
+                    "image": null,
+                    "imageUrl": "",
+                    "title": "Powerful Analytics",
+                    "text": "Track performance, understand your audience, and make smarter decisions with real-time insights."
                 }
             ]
         },
