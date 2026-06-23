@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Form",
   "category": "adaire-start-actions",
-  "description": "Form block for GutenBlocks Blocks.",
+  "description": "Form block for GutenBlocks.",
   "supports": {
     "html": false,
     "anchor": true

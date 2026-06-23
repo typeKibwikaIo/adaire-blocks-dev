@@ -2,10 +2,10 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "create-block/saas-hero-block",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "SaaS Hero",
   "category": "adaire-layout-hero",
-  "description": "SaaS Hero block for GutenBlocks Blocks.",
+  "description": "SaaS Hero block for GutenBlocks.",
   "supports": {
     "html": false,
     "anchor": true
@@ -15,197 +15,146 @@
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "attributes": {
-    "eyebrow": {
-      "type": "string",
-      "default": "Scale faster"
+    "eyebrow": { "type": "string", "default": "Scale faster" },
+    "heading": { "type": "string", "default": "Launch your SaaS faster" },
+    "text": { "type": "string", "default": "A modern hero section for software products, startups, and landing pages." },
+    "buttonText": { "type": "string", "default": "Start free trial" },
+    "buttonUrl": { "type": "string", "default": "#" },
+
+    "accentColor": { "type": "string", "default": "#6366f1" },
+    "backgroundColor": { "type": "string", "default": "#ffffff" },
+    "textColor": { "type": "string", "default": "#111827" },
+    "heroImageUrl": { "type": "string", "default": "" },
+
+    "backgroundType": { "type": "string", "default": "solid" },
+    "backgroundImage": { "type": "string", "default": "" },
+    "backgroundGradient": { "type": "string", "default": "" },
+    "backgroundImageSize": { "type": "string", "default": "cover" },
+    "backgroundImagePosition": { "type": "string", "default": "center" },
+    "backgroundImageRepeat": { "type": "string", "default": "no-repeat" },
+
+    "layoutStyle": { "type": "string", "default": "centered" },
+
+    "showPill": { "type": "boolean", "default": true },
+    "pillText": { "type": "string", "default": "New: v2.0 Release" },
+    "pillBg": { "type": "string", "default": "#dbeafe" },
+    "pillColor": { "type": "string", "default": "#1e40af" },
+
+    "useGradientHeadline": { "type": "boolean", "default": true },
+    "gradientStart": { "type": "string", "default": "#6366f1" },
+    "gradientEnd": { "type": "string", "default": "#8b5cf6" },
+
+    "ctaType": { "type": "string", "default": "dual-buttons" },
+    "primaryButtonText": { "type": "string", "default": "Get Started" },
+    "primaryButtonUrl": { "type": "string", "default": "#" },
+    "secondaryButtonText": { "type": "string", "default": "Book a Demo" },
+    "secondaryButtonUrl": { "type": "string", "default": "#" },
+    "emailPlaceholder": { "type": "string", "default": "Enter your email" },
+    "submitButtonText": { "type": "string", "default": "Get Started" },
+    "singleButtonText": { "type": "string", "default": "Shop Collection" },
+    "singleButtonUrl": { "type": "string", "default": "#" },
+    "microCopy": { "type": "string", "default": "Free shipping on orders over $50" },
+    "buttonPrimaryColor": { "type": "string", "default": "#ffffff" },
+    "buttonPrimaryBg": { "type": "string", "default": "#6366f1" },
+    "buttonSecondaryColor": { "type": "string", "default": "#111827" },
+    "buttonSecondaryBg": { "type": "string", "default": "#ffffff" },
+    "buttonHoverColor": { "type": "string", "default": "#ffffff" },
+    "buttonHoverBackgroundColor": { "type": "string", "default": "#111827" },
+    "buttonHoverBorderColor": { "type": "string", "default": "#111827" },
+    "buttonHoverEffect": { "type": "string", "default": "lift" },
+    "ctaAlignment": { "type": "string", "default": "center" },
+    "ctaGap": { "type": "number", "default": 16 },
+    "ctaPaddingV": { "type": "number", "default": 14 },
+    "ctaPaddingH": { "type": "number", "default": 32 },
+    "ctaBorderRadius": { "type": "number", "default": -1 },
+
+    "showHeroImage": { "type": "boolean", "default": true },
+    "imagePosition": { "type": "string", "default": "below" },
+    "mediaShadow": { "type": "boolean", "default": true },
+    "mediaBorderRadius": { "type": "number", "default": -1 },
+    "mediaSpacing": { "type": "number", "default": 48 },
+
+    "showTrustBar": { "type": "boolean", "default": true },
+    "trustBarTitle": { "type": "string", "default": "Trusted by" },
+    "trustLogos": { "type": "string", "default": "Acme\nVelocity\nAtlas\nNexus\nPrime" },
+    "trustItems": {
+      "type": "array",
+      "default": [
+        { "name": "Acme", "logoUrl": "", "url": "" },
+        { "name": "Velocity", "logoUrl": "", "url": "" },
+        { "name": "Atlas", "logoUrl": "", "url": "" },
+        { "name": "Nexus", "logoUrl": "", "url": "" },
+        { "name": "Prime", "logoUrl": "", "url": "" }
+      ]
     },
-    "heading": {
-      "type": "string",
-      "default": "Launch your SaaS faster"
+    "trustLayout": { "type": "string", "default": "row" },
+    "trustItemWidth": { "type": "number", "default": 0 },
+    "trustItemGap": { "type": "number", "default": 32 },
+    "trustLogoMaxHeight": { "type": "number", "default": 32 },
+    "trustCarousel": { "type": "boolean", "default": false },
+    "trustCarouselAutoplay": { "type": "boolean", "default": true },
+    "trustCarouselSpeed": { "type": "number", "default": 30 },
+    "trustCarouselDirection": { "type": "string", "default": "left" },
+    "trustCarouselPauseOnHover": { "type": "boolean", "default": true },
+    "trustCarouselVisibleItems": { "type": "number", "default": 5 },
+
+    "effectsPreset": { "type": "string", "default": "none" },
+    "effectDotPattern": { "type": "boolean", "default": false },
+    "effectGradientOverlay": { "type": "boolean", "default": false },
+    "effectGradientOverlayColor1": { "type": "string", "default": "#6366f1" },
+    "effectGradientOverlayColor2": { "type": "string", "default": "#8b5cf6" },
+    "effectGradientOverlayOpacity": { "type": "number", "default": 30 },
+    "effectAbstractShapes": { "type": "boolean", "default": false },
+    "effectGlow": { "type": "boolean", "default": false },
+    "effectGlowColor": { "type": "string", "default": "#6366f1" },
+    "effectBlur": { "type": "boolean", "default": false },
+    "effectFloatingElements": { "type": "boolean", "default": false },
+    "effectAnimatedAccents": { "type": "boolean", "default": false },
+
+    "showRatingBadges": { "type": "boolean", "default": false },
+    "ratingBadgesAlignment": { "type": "string", "default": "center" },
+    "ratingBadges": {
+      "type": "array",
+      "default": [
+        { "iconType": "star", "text": "4.8/5", "subtext": "500+ App Store reviews" },
+        { "iconType": "star", "text": "4.7/5", "subtext": "1,200+ Google Play reviews" },
+        { "iconType": "badge", "text": "Excellent", "subtext": "Rated on Trustpilot" }
+      ]
     },
-    "text": {
-      "type": "string",
-      "default": "A modern hero section for software products, startups, and landing pages."
+
+    "showSecurityPanel": { "type": "boolean", "default": false },
+    "securityPanelTitle": { "type": "string", "default": "Security through our trusted partner" },
+    "securityPanelPartnerName": { "type": "string", "default": "SecurePay" },
+    "securityPanelText": { "type": "string", "default": "Your money and data are protected by bank-grade infrastructure, managed in partnership with a fully licensed financial institution." },
+    "securityPanelBg": { "type": "string", "default": "#f8fafc" },
+    "securityPanelTextColor": { "type": "string", "default": "#111827" },
+    "securityFeatures": {
+      "type": "array",
+      "default": [
+        { "icon": "🔒", "title": "Bank-level encryption", "text": "Your data is protected with 256-bit encryption, the same standard used by major banks." },
+        { "icon": "🏦", "title": "Licensed & regulated", "text": "Backed by a fully licensed financial partner, supervised by national regulators." },
+        { "icon": "🛡️", "title": "Fraud monitoring", "text": "Round-the-clock automated monitoring flags suspicious activity in real time." },
+        { "icon": "💳", "title": "Deposit protection", "text": "Funds held with our banking partner are protected up to the applicable guarantee scheme." },
+        { "icon": "🔑", "title": "Two-factor authentication", "text": "An extra layer of security keeps your account safe even if your password is compromised." },
+        { "icon": "📞", "title": "24/7 support", "text": "A dedicated security team is available around the clock if anything looks wrong." }
+      ]
     },
-    "buttonText": {
-      "type": "string",
-      "default": "Start free trial"
+
+    "showFaq": { "type": "boolean", "default": false },
+    "faqTitle": { "type": "string", "default": "Frequently asked questions" },
+    "faqOpenFirst": { "type": "boolean", "default": true },
+    "faqItems": {
+      "type": "array",
+      "default": [
+        { "question": "How long does it take to open an account?", "answer": "Most accounts are approved within 5 minutes once you submit your details and verification documents." },
+        { "question": "Is there a monthly fee?", "answer": "We offer a free plan with core features, plus paid plans that unlock advanced tools and lower transaction fees." },
+        { "question": "Can I cancel anytime?", "answer": "Yes. There is no long-term contract — you can downgrade or close your account whenever you like." },
+        { "question": "Is my money protected?", "answer": "Funds are held with our regulated banking partner and protected under the applicable deposit guarantee scheme." }
+      ]
     },
-    "buttonUrl": {
-      "type": "string",
-      "default": "#"
-    },
-    "accentColor": {
-      "type": "string",
-      "default": "#6366f1"
-    },
-    "backgroundColor": {
-      "type": "string",
-      "default": "#ffffff"
-    },
-    "textColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "secondaryButtonText": {
-      "type": "string",
-      "default": "Book a Demo"
-    },
-    "secondaryButtonUrl": {
-      "type": "string",
-      "default": "#"
-    },
-    "heroImageUrl": {
-      "type": "string",
-      "default": ""
-    },
-    "backgroundType": {
-      "type": "string",
-      "default": "solid"
-    },
-    "backgroundImage": {
-      "type": "string",
-      "default": ""
-    },
-    "backgroundGradient": {
-      "type": "string",
-      "default": ""
-    },
-    "layoutStyle": {
-      "type": "string",
-      "default": "centered"
-    },
-    "showPill": {
-      "type": "boolean",
-      "default": true
-    },
-    "pillText": {
-      "type": "string",
-      "default": "New: v2.0 Release"
-    },
-    "pillBg": {
-      "type": "string",
-      "default": "#dbeafe"
-    },
-    "pillColor": {
-      "type": "string",
-      "default": "#1e40af"
-    },
-    "useGradientHeadline": {
-      "type": "boolean",
-      "default": true
-    },
-    "gradientStart": {
-      "type": "string",
-      "default": "#6366f1"
-    },
-    "gradientEnd": {
-      "type": "string",
-      "default": "#8b5cf6"
-    },
-    "ctaType": {
-      "type": "string",
-      "default": "dual-buttons"
-    },
-    "primaryButtonText": {
-      "type": "string",
-      "default": "Get Started"
-    },
-    "primaryButtonUrl": {
-      "type": "string",
-      "default": "#"
-    },
-    "secondaryButtonText": {
-      "type": "string",
-      "default": "Book a Demo"
-    },
-    "secondaryButtonUrl": {
-      "type": "string",
-      "default": "#"
-    },
-    "emailPlaceholder": {
-      "type": "string",
-      "default": "Enter your email"
-    },
-    "submitButtonText": {
-      "type": "string",
-      "default": "Get Started"
-    },
-    "singleButtonText": {
-      "type": "string",
-      "default": "Shop Collection"
-    },
-    "singleButtonUrl": {
-      "type": "string",
-      "default": "#"
-    },
-    "microCopy": {
-      "type": "string",
-      "default": "Free shipping on orders over $50"
-    },
-    "buttonPrimaryColor": {
-      "type": "string",
-      "default": "#ffffff"
-    },
-    "buttonPrimaryBg": {
-      "type": "string",
-      "default": "#6366f1"
-    },
-    "buttonSecondaryColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "buttonSecondaryBg": {
-      "type": "string",
-      "default": "#ffffff"
-    },
-    "buttonHoverColor": {
-      "type": "string",
-      "default": "#ffffff"
-    },
-    "buttonHoverBackgroundColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "buttonHoverBorderColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "buttonHoverEffect": {
-      "type": "string",
-      "default": "lift"
-    },
-    "showHeroImage": {
-      "type": "boolean",
-      "default": true
-    },
-    "imagePosition": {
-      "type": "string",
-      "default": "below"
-    },
-    "showTrustBar": {
-      "type": "boolean",
-      "default": true
-    },
-    "trustBarTitle": {
-      "type": "string",
-      "default": "Trusted by"
-    },
-    "trustLogos": {
-      "type": "string",
-      "default": "Acme\nVelocity\nAtlas\nNexus\nPrime"
-    },
-    "fontSize": {
-      "type": "number",
-      "default": 16
-    },
-    "padding": {
-      "type": "number",
-      "default": 80
-    },
-    "borderRadius": {
-      "type": "number",
-      "default": 12
-    }
+
+    "fontSize": { "type": "number", "default": 16 },
+    "padding": { "type": "number", "default": 80 },
+    "borderRadius": { "type": "number", "default": 12 }
   }
 }

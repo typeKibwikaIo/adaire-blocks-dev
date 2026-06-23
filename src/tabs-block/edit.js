@@ -1,12 +1,12 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useState } from '@wordpress/element';
-import { useBlockProps, InspectorControls, useInnerBlocksProps } from '@wordpress/block-editor';
-import { 
-    PanelBody, 
-    RangeControl, 
-    ColorPalette, 
-    Button, 
-    ButtonGroup, 
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import {
+    PanelBody,
+    RangeControl,
+    ColorPalette,
+    Button,
+    ButtonGroup,
     TextControl,
     SelectControl,
     ColorPicker
@@ -16,6 +16,7 @@ import './editor.scss';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 
 const ALIGN_OPTIONS = [
     { label: __('Left', 'tabs-block'), value: 'flex-start' },
@@ -196,7 +197,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <PanelBody title={__('Container Settings', 'tabs-block')} initialOpen={true}>
                     <ButtonGroup>
                         {[
@@ -575,7 +576,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         onChange={(v) => setAttributes({ animationEase: v })}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps} data-block-id={blockId} data-active-tab={activeTab} data-tab-layout={tabLayout} data-tab-position={tabPosition}>
                 <div 

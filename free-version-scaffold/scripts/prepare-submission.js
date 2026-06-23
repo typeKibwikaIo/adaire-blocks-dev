@@ -39,7 +39,7 @@ const config = {
     ]
 };
 
-console.log('🚀 Preparing GutenBlocks Blocks for WordPress.org submission...\n');
+console.log('🚀 Preparing GutenBlocks for WordPress.org submission...\n');
 
 async function prepareSubmission() {
     try {

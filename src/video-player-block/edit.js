@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import {
-InspectorControls,
 MediaUpload,
 MediaUploadCheck,
 useBlockProps,
@@ -18,6 +17,7 @@ ToggleControl,
 } from '@wordpress/components';
 import DeviceSwitcher from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 import {
 getBoxAttributes,
 getBoxValues,
@@ -204,7 +204,7 @@ getBoxAttributes( names, currentValues, deviceType, value )
 
 return (
 <>
-<InspectorControls>
+<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 <PanelBody title={ __( 'Container Settings', 'video-player-block' ) } initialOpen>
 <RangeControl
 label={ __( 'Border Radius (px)', 'video-player-block' ) }
@@ -356,7 +356,7 @@ onChange={ ( value ) => setAttributes( { [ key ]: value } ) }
 </PanelBody>
 { renderSpacingControl( 'Margins', { top: 'marginTop', right: 'marginRight', bottom: 'marginBottom', left: 'marginLeft' } ) }
 { renderSpacingControl( 'Padding', { top: 'paddingTop', right: 'paddingRight', bottom: 'paddingBottom', left: 'paddingLeft' } ) }
-</InspectorControls>
+</InspectorTabs>
 <div { ...blockProps } data-block-id={ blockId }>
 <div className={ `ad-video-player__container ${ containerMode === 'constrained' ? 'is-constrained' : '' }` }>
 <QuickZone

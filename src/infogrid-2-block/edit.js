@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import {
     useBlockProps,
-    InspectorControls,
     MediaUpload,
     MediaUploadCheck,
     PanelColorSettings,
@@ -42,6 +41,7 @@ import {
 } from '@wordpress/icons';
 import BootstrapIconPicker from '../icon-box-block/BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 
 // Custom icons for small laptop and big desktop
 const smallLaptopIcon = createElement('svg', {
@@ -214,7 +214,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         },
         backgroundSize,
         backgroundPosition,
-        backgroundRepeat
+        backgroundRepeat,
+        solidBgColor,
+        responsiveItemTextAlign,
+        responsiveItemBorderRadius
     } = attributes;
 
     const [deviceType, setDeviceType] = useState('desktop');
@@ -309,6 +312,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     const styleVariables = useMemo(() => {
         const vars = {
+            '--infogrid-2-bg-color': solidBgColor || 'transparent',
             '--infogrid-2-bg-image': backgroundImageUrl ? `url(${backgroundImageUrl})` : 'none',
             '--infogrid-2-overlay-bg-solid': overlayColor || '#000000',
             '--infogrid-2-overlay-opacity': overlayOpacity !== undefined ? overlayOpacity : 0.5,
@@ -373,7 +377,70 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         });
 
         return vars;
-    }, [attributes, backgroundImageUrl, overlayColor, overlayOpacity, overlayGradient, responsiveMaxWidth]);
+    }, [attributes, solidBgColor, backgroundImageUrl, overlayColor, overlayOpacity, overlayGradient, responsiveMaxWidth]);
+
+    // Ensure Bootstrap Icons loads in the editor iframe regardless of hook timing
+    useEffect(() => {
+        if (typeof document !== 'undefined' && !document.querySelector('[data-bi-infogrid]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css';
+            link.setAttribute('data-bi-infogrid', '1');
+            document.head.appendChild(link);
+        }
+    }, []);
+
+    // Scoped per-device styles injected directly into the editor, bypassing media-query
+    // breakpoints that don't match the editor canvas width. This makes all controls
+    // immediately reflect in the preview when the user changes them or switches device.
+    const editorStyle = useMemo(() => {
+        const g = (attr) => { const v = attr?.[deviceType]; return (v !== undefined && v !== null) ? v : attr?.desktop; };
+        const s = (attr, side) => { const v = attr?.[deviceType]?.[side]; return (v !== undefined && v !== null) ? v : attr?.desktop?.[side]; };
+        const ca = g(responsiveContentAlignment) || 'left';
+        const flexAlign = ca === 'center' ? 'center' : ca === 'right' ? 'flex-end' : 'flex-start';
+        const textAlign = g(responsiveItemTextAlign) || 'left';
+        const b = `[data-block="${clientId}"]`;
+        return [
+            `${b}{`,
+            `padding-top:${s(responsivePadding,'top')||''};`,
+            `padding-right:${s(responsivePadding,'right')||''};`,
+            `padding-bottom:${s(responsivePadding,'bottom')||''};`,
+            `padding-left:${s(responsivePadding,'left')||''};`,
+            `margin-top:${s(responsiveMargin,'top')||''};`,
+            `margin-right:${s(responsiveMargin,'right')||''};`,
+            `margin-bottom:${s(responsiveMargin,'bottom')||''};`,
+            `margin-left:${s(responsiveMargin,'left')||''};`,
+            `min-height:${g(responsiveMinHeight)||''};}`,
+            `${b} .adaire-infogrid-2-content{`,
+            `grid-template-columns:repeat(${g(responsiveGridColumns)||3},1fr);`,
+            `gap:${g(responsiveGridGap)||'30px'};}`,
+            `${b} .adaire-infogrid-2-item{`,
+            `padding-top:${s(responsiveItemPadding,'top')||''};`,
+            `padding-right:${s(responsiveItemPadding,'right')||''};`,
+            `padding-bottom:${s(responsiveItemPadding,'bottom')||''};`,
+            `padding-left:${s(responsiveItemPadding,'left')||''};`,
+            `align-items:${flexAlign};text-align:${textAlign};border-radius:${g(responsiveItemBorderRadius)||'12px'};}`,
+            `${b} .adaire-infogrid-2-item-icon{`,
+            `color:${g(responsiveIconColor)||'#ffffff'};`,
+            `font-size:${g(responsiveIconSize)||'32px'};}`,
+            `${b} .adaire-infogrid-2-item-title{`,
+            `font-size:${g(attributes.responsiveTitleFontSize)||'24px'};`,
+            `font-weight:${g(attributes.responsiveTitleFontWeight)||'600'};`,
+            `line-height:${g(attributes.responsiveTitleLineHeight)||'1.4'};`,
+            `color:${g(attributes.responsiveTitleColor)||'#ffffff'};}`,
+            `${b} .adaire-infogrid-2-item-text{`,
+            `font-size:${g(attributes.responsiveTextFontSize)||'16px'};`,
+            `font-weight:${g(attributes.responsiveTextFontWeight)||'400'};`,
+            `line-height:${g(attributes.responsiveTextLineHeight)||'1.6'};`,
+            `color:${g(attributes.responsiveTextColor)||'#cccccc'};}`,
+            `${b} .adaire-infogrid-2-heading{`,
+            `font-size:${g(attributes.responsiveHeadingFontSize)||'40px'};`,
+            `font-weight:${g(attributes.responsiveHeadingFontWeight)||'700'};`,
+            `color:${g(attributes.responsiveHeadingColor)||'#ffffff'};}`,
+        ].join('');
+    }, [deviceType, clientId, attributes, responsivePadding, responsiveMargin, responsiveMinHeight,
+        responsiveGridColumns, responsiveGridGap, responsiveItemPadding, responsiveContentAlignment,
+        responsiveIconColor, responsiveIconSize, responsiveItemTextAlign, responsiveItemBorderRadius]);
 
     const blockProps = useBlockProps({
         className: `adaire-infogrid-2-container ${containerMode === 'constrained' ? 'is-constrained' : ''}`,
@@ -382,7 +449,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <div className="adaire-device-toggle">
                     <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks-dev2')}</p>
                     <div className="adaire-device-toggle-group">
@@ -403,6 +470,17 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </div>
 
                 <PanelBody title={__('Background & Overlay', 'adaire-blocks-dev2')}>
+                    <PanelColorSettings
+                        title={__('Solid Background Color', 'adaire-blocks-dev2')}
+                        initialOpen={false}
+                        colorSettings={[
+                            {
+                                value: solidBgColor,
+                                onChange: (val) => setAttributes({ solidBgColor: val || '' }),
+                                label: __('Background Color', 'adaire-blocks-dev2'),
+                            }
+                        ]}
+                    />
                     <MediaUploadCheck>
                         <MediaUpload
                             onSelect={(media) => setAttributes({ backgroundImage: media, backgroundImageUrl: media.url })}
@@ -651,6 +729,16 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         values={responsiveItemPadding[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveItemPadding', deviceType, val)}
                     />
+                    <SelectControl
+                        label={__('Text Alignment', 'adaire-blocks-dev2')}
+                        value={responsiveItemTextAlign?.[deviceType] || 'left'}
+                        options={[
+                            { label: __('Left', 'adaire-blocks-dev2'), value: 'left' },
+                            { label: __('Center', 'adaire-blocks-dev2'), value: 'center' },
+                            { label: __('Right', 'adaire-blocks-dev2'), value: 'right' },
+                        ]}
+                        onChange={(val) => updateResponsiveAttribute('responsiveItemTextAlign', deviceType, val)}
+                    />
                     <hr style={{ margin: '20px 0', border: '0', borderTop: '1px solid #ccc' }} />
                     <p style={{ fontWeight: 600, fontSize: '12px', marginBottom: '12px' }}>{__('Item Border', 'adaire-blocks-dev2')}</p>
                     <UnitControl
@@ -680,6 +768,11 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 label: __('Color', 'adaire-blocks-dev2'),
                             }
                         ]}
+                    />
+                    <UnitControl
+                        label={__('Border Radius', 'adaire-blocks-dev2')}
+                        value={responsiveItemBorderRadius?.[deviceType] || '12px'}
+                        onChange={(val) => updateResponsiveAttribute('responsiveItemBorderRadius', deviceType, val)}
                     />
                 </PanelBody>
 
@@ -737,7 +830,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         ))}
                     </div>
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <BootstrapIconPicker
                 isOpen={isIconPickerOpen}
@@ -749,6 +842,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 }}
                 currentIcon={activeIconItem ? items.find(i => i.id === activeIconItem)?.icon : ''}
             />
+
+            <style dangerouslySetInnerHTML={{ __html: editorStyle }} />
 
             <div {...blockProps}>
                 {overlayType !== 'none' && (

@@ -64,10 +64,6 @@
 			"enabled": true,
 			"upgradeMessage": "Upgrade to Premium for advanced social sharing features."
 		},
-		"infogrid-block": {
-			"enabled": true,
-			"upgradeMessage": "Upgrade to Premium for advanced grid layouts and features."
-		},
 		"container-block": {
 			"enabled": true,
 			"upgradeMessage": "Upgrade to Premium for advanced container features and unlimited custom breakpoints."

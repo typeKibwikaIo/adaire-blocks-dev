@@ -3,6 +3,10 @@
     box-sizing: border-box;
     position: relative; // anchor for the BG zone chip
 
+    .adaire-header-inner {
+        position: relative;
+    }
+
     .adaire-header-logo-text,
     .adaire-header-nav-item {
         cursor: text;
@@ -12,6 +16,9 @@
         pointer-events: none;
     }
 }
+
+// Note: inline canvas width-drag handles were removed — site width is now
+// Inspector-only (Layout panel "Contained width" control).
 
 .adaire-header-control-group {
     margin: 0 0 16px;
@@ -27,13 +34,20 @@
 .adaire-qz {
     position: relative;
     border-radius: 3px;
-    transition: outline 0.1s;
+    cursor: pointer;
+    transition: outline 0.1s, background-color 0.1s;
 
-    // Hover / active outline so the zone is visible
+    // Hover / active outline + tint so it's unmistakable the zone is
+    // interactive, even before the pen-pill trigger button is noticed.
     &:hover,
     &.adaire-qz--active {
-        outline: 2px dashed rgba(99, 102, 241, 0.5);
+        outline: 2px dashed rgba(99, 102, 241, 0.6);
         outline-offset: 2px;
+        background-color: rgba(99, 102, 241, 0.06);
+    }
+
+    &.adaire-qz--active {
+        outline-style: solid;
     }
 
     // The floating pen trigger button (hidden until hover or active)

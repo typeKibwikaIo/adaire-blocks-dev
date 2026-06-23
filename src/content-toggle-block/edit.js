@@ -1,7 +1,6 @@
 ﻿import { __, sprintf } from "@wordpress/i18n";
 import {
     useBlockProps,
-    InspectorControls,
     PanelColorSettings,
     useInnerBlocksProps,
 } from "@wordpress/block-editor";
@@ -17,6 +16,7 @@ import {
 import { useEffect, useState } from "@wordpress/element";
 import { plus, trash, arrowUp, arrowDown, desktop, tablet, mobile } from "@wordpress/icons";
 import QuickZone from "../components/QuickZone";
+import InspectorTabs from "../components/InspectorTabs";
 import "./editor.scss";
 
 const CONTAINER_MODES = [
@@ -387,7 +387,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <PanelBody title={__("Layout", "content-toggle-block")} initialOpen={true}>
                     <p>{__("Container Width", "content-toggle-block")}</p>
                     <ButtonGroup>
@@ -933,7 +933,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                         </div>
                     </BaseControl>
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps}>
                 <div 

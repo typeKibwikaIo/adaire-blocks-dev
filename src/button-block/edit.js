@@ -1,9 +1,10 @@
-﻿import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+﻿import { useBlockProps } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl, ColorPicker, SelectControl, RangeControl, BaseControl, Button, __experimentalBoxControl as BoxControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 
 export default function Edit({ attributes, setAttributes }) {
   const [deviceType, setDeviceType] = useState('desktop');
@@ -98,7 +99,7 @@ export default function Edit({ attributes, setAttributes }) {
 
   return (
     <>
-      <InspectorControls>
+      <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
         <PanelBody title="Button Settings" initialOpen={true}>
           <TextControl
             label="Button Text"
@@ -372,7 +373,7 @@ export default function Edit({ attributes, setAttributes }) {
             help="Add a custom ID to this block for CSS targeting or anchor links."
           />
         </PanelBody>
-      </InspectorControls>
+      </InspectorTabs>
 
       <div {...blockProps}>
         <QuickZone

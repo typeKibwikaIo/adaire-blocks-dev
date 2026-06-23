@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Promo Banner",
   "category": "adaire-marketing",
-  "description": "Promo Banner block for GutenBlocks Blocks.",
+  "description": "Promo Banner block for GutenBlocks.",
   "supports": {
     "html": false,
     "anchor": true

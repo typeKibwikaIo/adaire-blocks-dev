@@ -61,12 +61,16 @@
 			}
 
 			a {
-				color: var(--footer-accent-color, #D52940);
-				text-decoration: none;
-				transition: color 0.3s ease;
+				color: var(--footer-accent-color, #503AA8);
+				text-decoration: var(--contact-underline-mode, none);
+				transition: color var(--contact-transition-duration, 300ms) ease,
+					background-color var(--contact-transition-duration, 300ms) ease;
 
 				&:hover {
-					text-decoration: underline;
+					color: var(--contact-hover-color, inherit);
+					background-color: var(--contact-hover-bg, transparent);
+					text-decoration: var(--contact-hover-underline-mode, none);
+					text-decoration-color: var(--contact-hover-underline-color, currentColor);
 				}
 			}
 		}
@@ -106,12 +110,16 @@
 		transition: all 0.3s ease;
 
 		&:hover {
-			// Customizable via column.socialHoverColor / socialHoverBackgroundColor
-			// (wired through CSS custom props in render.php + edit.js). Falls back
-			// to the original hardcoded hover look when those are unset, so saved
+			// Customizable via column.socialHoverColor / socialHoverBackgroundColor /
+			// socialHoverBorderColor (wired through CSS custom props in render.php +
+			// edit.js). Border-radius/border/transition/spacing are applied as direct
+			// inline styles (not CSS vars) since they're needed in both hover and
+			// non-hover states; only the hover-only border color needs a var here.
+			// Falls back to the original hardcoded hover look when unset, so saved
 			// footers from before this feature existed render identically.
 			background: var(--social-hover-bg, rgba(255, 255, 255, 0.2));
 			color: var(--social-hover-color, inherit);
+			border-color: var(--social-hover-border-color, transparent);
 			transform: translateY(-2px);
 		}
 	}
@@ -201,16 +209,20 @@
 					margin: 0;
 				}
 
-				a {
-					color: var(--footer-accent-color, #D52940);
-					text-decoration: none;
+				a, .website-footer-block__nav-link {
+					color: var(--footer-accent-color, #503AA8);
+					text-decoration: var(--link-underline-mode, none);
 					font-size: inherit;
 					font-weight: var(--footer-nav-font-weight, 400);
 					line-height: 1.5;
-					transition: color 0.3s ease;
+					transition: color var(--link-transition-duration, 300ms) ease,
+						background-color var(--link-transition-duration, 300ms) ease;
 
 					&:hover {
-						text-decoration: underline;
+						color: var(--link-hover-color, #ffffff);
+						background-color: var(--link-hover-bg, transparent);
+						text-decoration: var(--link-hover-underline-mode, none);
+						text-decoration-color: var(--link-hover-underline-color, currentColor);
 					}
 				}
 			}
@@ -246,7 +258,7 @@
 					transition: color 0.3s ease;
 
 					&:hover {
-						color: var(--social-hover-color, var(--footer-accent-color, #D52940));
+						color: var(--social-hover-color, var(--footer-accent-color, #503AA8));
 					}
 				}
 			}
@@ -280,13 +292,18 @@
 		gap: 8px;
 
 		a {
-			color: var(--footer-accent-color, #D52940);
-			text-decoration: none;
+			color: var(--footer-accent-color, #503AA8);
+			text-decoration: var(--link-underline-mode, none);
 			font-size: 0.95em;
 			opacity: 0.9;
+			transition: color var(--link-transition-duration, 300ms) ease,
+				background-color var(--link-transition-duration, 300ms) ease;
 
 			&:hover {
-				text-decoration: underline;
+				color: var(--link-hover-color, #ffffff);
+				background-color: var(--link-hover-bg, transparent);
+				text-decoration: var(--link-hover-underline-mode, none);
+				text-decoration-color: var(--link-hover-underline-color, currentColor);
 			}
 		}
 	}
@@ -327,7 +344,7 @@
 			}
 
 			&:focus-visible {
-				outline: 2px solid var(--footer-accent-color, #D52940);
+				outline: 2px solid var(--footer-accent-color, #503AA8);
 				outline-offset: 2px;
 			}
 		}
@@ -339,7 +356,7 @@
 			padding: 10px 18px;
 			border-radius: 4px;
 			border: none;
-			background: var(--footer-accent-color, #D52940);
+			background: var(--footer-accent-color, #503AA8);
 			color: #ffffff;
 			font-size: 14px;
 			font-weight: 500;
@@ -369,29 +386,36 @@
 			align-items: center;
 			justify-content: center;
 			padding: 10px 20px;
-			border-radius: 4px;
+			border-radius: var(--buttons-border-radius, 4px);
 			text-decoration: none;
 			font-weight: 500;
 			font-size: 14px;
 			border: 2px solid transparent;
-			transition: all 0.3s ease;
+			transition: all var(--buttons-transition-duration, 300ms) ease;
 			cursor: pointer;
 
 			&--solid {
-				background: var(--footer-accent-color, #D52940);
+				background: var(--footer-accent-color, #503AA8);
 				color: #ffffff;
-				border-color: var(--footer-accent-color, #D52940);
+				border-color: var(--footer-accent-color, #503AA8);
 			}
 
 			&--outline {
 				background: transparent;
-				border-color: var(--footer-accent-color, #D52940);
+				border-color: var(--footer-accent-color, #503AA8);
 				color: inherit;
 			}
 
+			// Per-button hover overrides (item.hoverBackgroundColor / hoverTextColor /
+			// hoverBorderColor, wired via CSS custom props in edit.js + render.php).
+			// Falls back to the original translateY/opacity look when unset, so
+			// buttons saved before this feature existed render identically.
 			&:hover {
+				background-color: var(--buttons-hover-bg, rgba(255, 255, 255, 0.1));
+				color: var(--buttons-hover-color, inherit);
+				border-color: var(--buttons-hover-border-color, transparent);
 				transform: translateY(-1px);
-				opacity: 0.9;
+				opacity: var(--buttons-hover-opacity, 0.9);
 			}
 		}
 	}
@@ -430,7 +454,7 @@
 			}
 
 			a {
-				color: var(--footer-accent-color, #D52940);
+				color: var(--footer-accent-color, #503AA8);
 				text-decoration: none;
 
 				&:hover {
@@ -527,8 +551,8 @@
 
 		&:hover {
 			background: rgba(255, 255, 255, 0.08);
-			border-color: var(--footer-accent-color, #D52940);
-			color: var(--footer-accent-color, #D52940);
+			border-color: var(--footer-accent-color, #503AA8);
+			color: var(--footer-accent-color, #503AA8);
 		}
 	}
 
@@ -554,28 +578,30 @@
 	&__cta {
 		display: inline-block;
 		padding: 10px 20px;
-		border-radius: 4px;
+		border-radius: var(--cta-border-radius, 4px);
+		border: 2px solid transparent;
 		text-decoration: none;
 		font-weight: var(--footer-cta-font-weight, 500);
-		transition: all 0.3s ease;
+		transition: all var(--cta-transition-duration, 300ms) ease;
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
 
 		&--button {
-			background: var(--footer-accent-color, #D52940);
+			background: var(--footer-accent-color, #503AA8);
 			color: white;
 		}
 
 		&--link {
 			background: transparent;
-			color: var(--footer-accent-color, #D52940);
+			color: var(--footer-accent-color, #503AA8);
 			text-decoration: underline;
 		}
 
 		&:hover {
 			background-color: var(--cta-hover-bg, rgba(255,255,255,0.1));
-			color: var(--cta-hover-color, var(--footer-accent-color, #D52940));
+			color: var(--cta-hover-color, var(--footer-accent-color, #503AA8));
+			border-color: var(--cta-hover-border-color, transparent);
 			transform: translateY(-1px);
 		}
 	}
@@ -622,13 +648,16 @@
 
 			a {
 				color: inherit;
-				text-decoration: none;
+				text-decoration: var(--legal-underline-mode, none);
 				font-weight: var(--footer-link-font-weight, 400);
-				transition: color 0.3s ease;
+				transition: color var(--legal-transition-duration, 300ms) ease,
+					background-color var(--legal-transition-duration, 300ms) ease;
 
 				&:hover {
-					color: var(--footer-accent-color, #D52940);
-					text-decoration: underline;
+					color: var(--legal-hover-color, var(--footer-accent-color, #503AA8));
+					background-color: var(--legal-hover-bg, transparent);
+					text-decoration: var(--legal-hover-underline-mode, none);
+					text-decoration-color: var(--legal-hover-underline-color, currentColor);
 				}
 			}
 		}
@@ -740,7 +769,7 @@
 					content: '-';
 					position: absolute;
 					left: 0;
-					color: var(--footer-accent-color, #D52940);
+					color: var(--footer-accent-color, #503AA8);
 				}
 			}
 		}
@@ -748,7 +777,7 @@
 		&--dotted {
 			list-style: none;
 			padding-left: 0;
-			
+
 			li {
 				position: relative;
 				padding-left: 20px;
@@ -757,30 +786,32 @@
 					content: '•';
 					position: absolute;
 					left: 0;
-					color: var(--footer-accent-color, #D52940);
+					color: var(--footer-accent-color, #503AA8);
 				}
 			}
 		}
 
-		a:hover {
-			color: var(--link-hover-color, #ffffff) !important;
-		}
+		// Hover color/underline/background/transition are now handled by the
+		// `&--nav .website-footer-block__nav-list a, .website-footer-block__nav-link`
+		// rule above — this `!important` override predated that rule and is
+		// no longer needed (it would otherwise fight the new hover-bg/
+		// hover-underline-color support).
 	}
 
 	// Selected column styling
 	&__column.is-selected-column {
-		outline: 2px solid var(--footer-accent-color, #D52940);
+		outline: 2px solid var(--footer-accent-color, #503AA8);
 		outline-offset: 2px;
 	}
 
 	// Accessibility
 	:focus-visible {
-		outline: 2px solid var(--footer-accent-color, #D52940);
+		outline: 2px solid var(--footer-accent-color, #503AA8);
 		outline-offset: 2px;
 	}
 
 	a:focus-visible {
-		outline: 2px solid var(--footer-accent-color, #D52940);
+		outline: 2px solid var(--footer-accent-color, #503AA8);
 		outline-offset: 2px;
 	}
 }

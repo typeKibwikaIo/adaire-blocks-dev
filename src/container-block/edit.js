@@ -1,8 +1,12 @@
-import { useBlockProps, InspectorControls, InnerBlocks } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, SelectControl, ColorPicker, TextControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { useState } from '@wordpress/element';
+import InspectorTabs from '../components/InspectorTabs';
+import QuickZone from '../components/QuickZone';
 
 export default function Edit({ attributes, setAttributes }) {
+    const [activeZone, setActiveZone] = useState(null);
     const {
         maxWidth,
         alignContainer,
@@ -53,7 +57,7 @@ export default function Edit({ attributes, setAttributes }) {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <PanelBody title={__('Container Settings', 'container-block')} initialOpen={true}>
                     <TextControl
                         label={__('Max Width', 'container-block')}
@@ -216,12 +220,47 @@ export default function Edit({ attributes, setAttributes }) {
                         onChange={(value) => setAttributes({ boxShadow: value })}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps}>
-                <div className="container-block__inner">
-                    <InnerBlocks />
-                </div>
+                <QuickZone
+                    id="background"
+                    label={__('Background', 'container-block')}
+                    activeZone={activeZone}
+                    setActiveZone={setActiveZone}
+                    content={
+                        <>
+                            <SelectControl
+                                label={__('Background Type', 'container-block')}
+                                value={backgroundType}
+                                options={[
+                                    { label: __('Solid Color', 'container-block'), value: 'solid' },
+                                    { label: __('Gradient', 'container-block'), value: 'gradient' },
+                                    { label: __('Image', 'container-block'), value: 'image' }
+                                ]}
+                                onChange={(value) => setAttributes({ backgroundType: value })}
+                            />
+                            {backgroundType === 'solid' && (
+                                <ColorPicker
+                                    color={backgroundColor}
+                                    onChangeComplete={(color) => setAttributes({ backgroundColor: color.hex })}
+                                    disableAlpha
+                                />
+                            )}
+                            <RangeControl
+                                label={__('Border Radius (px)', 'container-block')}
+                                value={borderRadius}
+                                onChange={(value) => setAttributes({ borderRadius: value })}
+                                min={0}
+                                max={100}
+                            />
+                        </>
+                    }
+                >
+                    <div className="container-block__inner">
+                        <InnerBlocks />
+                    </div>
+                </QuickZone>
             </div>
         </>
     );

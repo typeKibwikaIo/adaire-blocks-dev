@@ -55,7 +55,7 @@ export default function save( { attributes: a } ) {
 			<div className="adaire-timeline__track">
 				{ showConnector && <div className="adaire-timeline__line" /> }
 
-				{ items.map( ( item, i ) => {
+				{ ( items || [] ).map( ( item, i ) => {
 					const side = orientation === 'vertical'
 						? ( i % 2 === 0 ? 'right' : 'left' )
 						: 'bottom';

@@ -1,6 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { useBlockProps, InspectorControls, PanelColorSettings } from '@wordpress/block-editor';
+import { useBlockProps, PanelColorSettings } from '@wordpress/block-editor';
 import {
     PanelBody,
     RangeControl,
@@ -17,6 +17,7 @@ import { createElement } from '@wordpress/element';
 import { plus, trash } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 import './editor.scss';
 
 // Custom icons for small laptop and big desktop
@@ -189,7 +190,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <PanelBody title={__('Position Settings', 'social-banner-block')} initialOpen={true}>
                     <SelectControl
                         label={__('Position Type', 'social-banner-block')}
@@ -506,7 +507,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ))
                     )}
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <BootstrapIconPicker
                 isOpen={isIconPickerOpen}

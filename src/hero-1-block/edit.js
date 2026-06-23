@@ -2,7 +2,6 @@
 import { useState, useEffect } from "@wordpress/element";
 import {
 	useBlockProps,
-	InspectorControls,
 	MediaUpload,
 	MediaUploadCheck,
 	useInnerBlocksProps,
@@ -36,12 +35,15 @@ import {
 	laptop,
 } from "@wordpress/icons";
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import InspectorTabs from '../components/InspectorTabs';
+import QuickZone from '../components/QuickZone';
 import "./editor.scss";
 
 const ALLOWED_BLOCKS = ["create-block/button-block"];
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const [deviceType, setDeviceType] = useState("desktop");
+	const [activeZone, setActiveZone] = useState(null);
 
     const {
         blockId,
@@ -866,7 +868,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody
 					title={__("Responsive Settings", "hero-1-block")}
 					initialOpen={true}
@@ -2515,7 +2517,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						)}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps}>
 				{overlayType !== "none" && (
@@ -2551,6 +2553,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 				{mediaType === "video" || mediaType === "image" ? (
                     <div className="adaire-hero-1__content-video-wrapper">
+                <QuickZone
+                    id="content"
+                    label={__("Content", "hero-1-block")}
+                    activeZone={activeZone}
+                    setActiveZone={setActiveZone}
+                    content={
+                        <>
+                            <TextareaControl
+                                label={__("Heading", "hero-1-block")}
+                                value={headingText}
+                                onChange={(value) => setAttributes({ headingText: value })}
+                            />
+                            <TextControl
+                                label={__("Text Content", "hero-1-block")}
+                                value={textContent}
+                                onChange={(value) => setAttributes({ textContent: value })}
+                            />
+                        </>
+                    }
+                >
                 <div className="adaire-hero-1__cta-container">
                     {showPreheader && (
 								<div className="adaire-hero-1__preheader">{preheaderText}</div>
@@ -2561,6 +2583,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							<p className="adaire-hero-1__text">{textContent}</p>
 							<div {...innerBlocksProps} />
 						</div>
+						</QuickZone>
 						{mediaType === "image" ? (
 							<div className="adaire-hero-1__video-player">
 								{mediaImageUrl ? (
@@ -2632,6 +2655,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						)}
                     </div>
                 ) : (
+                    <QuickZone
+                        id="content"
+                        label={__("Content", "hero-1-block")}
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
+                        content={
+                            <>
+                                <TextareaControl
+                                    label={__("Heading", "hero-1-block")}
+                                    value={headingText}
+                                    onChange={(value) => setAttributes({ headingText: value })}
+                                />
+                                <TextControl
+                                    label={__("Text Content", "hero-1-block")}
+                                    value={textContent}
+                                    onChange={(value) => setAttributes({ textContent: value })}
+                                />
+                            </>
+                        }
+                    >
                     <div className="adaire-hero-1__cta-container">
                         {showPreheader && (
 							<div className="adaire-hero-1__preheader">{preheaderText}</div>
@@ -2642,6 +2685,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						<p className="adaire-hero-1__text">{textContent}</p>
                         <div {...innerBlocksProps} />
                     </div>
+                    </QuickZone>
                 )}
                 {showIcon && iconImageUrl && (
                     <div

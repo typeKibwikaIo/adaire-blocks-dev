@@ -9,13 +9,13 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Add migration submenu to GutenBlocks Blocks admin menu
+ * Add migration submenu to GutenBlocks admin menu
  */
 function adaire_blocks_add_migration_menu() {
     add_submenu_page(
-        'adaire-blocks-settings',  // Parent slug (GutenBlocks Blocks menu)
-        'Block Migration',          // Page title
-        'Migration',                // Menu title (shorter for submenu)
+        'adaire-blocks-settings',
+        'Block Migration',
+        'Migration',
         'manage_options',
         'adaire-blocks-migration',
         'adaire_blocks_migration_page'
@@ -24,50 +24,66 @@ function adaire_blocks_add_migration_menu() {
 add_action('admin_menu', 'adaire_blocks_add_migration_menu');
 
 /**
- * Enqueue migration page styles and scripts
+ * Enqueue migration page styles and scripts.
+ *
+ * The hook for a submenu under 'adaire-blocks-settings' is:
+ *   adaire-blocks-settings_page_adaire-blocks-migration
  */
 function adaire_blocks_enqueue_migration_assets($hook) {
-    if ($hook !== 'adaire-blocks_page_adaire-blocks-migration') {
+    if ($hook !== 'adaire-blocks-settings_page_adaire-blocks-migration') {
         return;
     }
-    
-    // Get plugin version for cache busting
-    $main_plugin_file = dirname(dirname(__FILE__)) . '/adaire-blocks.php';
-    $plugin_version = '1.0.0';
-    if (file_exists($main_plugin_file)) {
-        $plugin_data = get_file_data($main_plugin_file, array('Version' => 'Version'), false);
-        $plugin_version = !empty($plugin_data['Version']) ? $plugin_data['Version'] : '1.0.0';
-    }
-    
-    // Enqueue styles
+
+    $version = defined('ADAIRE_BLOCKS_VERSION') ? ADAIRE_BLOCKS_VERSION : '1.0.0';
+
     wp_enqueue_style(
         'adaire-blocks-migration',
         plugin_dir_url(__FILE__) . 'css/block-migration.css',
-        array(),
-        $plugin_version
+        [],
+        $version
     );
-    
-    // Enqueue scripts
+
     wp_enqueue_script(
         'adaire-blocks-migration',
         plugin_dir_url(__FILE__) . 'js/block-migration.js',
-        array(),
-        $plugin_version,
+        [],
+        $version,
         true
     );
-    
-    // Localize script with PHP data
-    wp_localize_script(
-        'adaire-blocks-migration',
-        'adaireMigration',
-        array(
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('adaire_migration'),
-            'postUrl' => admin_url('post.php'),
-        )
-    );
+
+    wp_localize_script('adaire-blocks-migration', 'adaireMigration', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce'   => wp_create_nonce('adaire_migration'),
+        'postUrl' => admin_url('post.php'),
+    ]);
 }
 add_action('admin_enqueue_scripts', 'adaire_blocks_enqueue_migration_assets');
+
+/**
+ * Enqueue the editor-side receiver script inside the hidden iframe.
+ *
+ * Only loaded when ?adaire_auto_migrate=1 is in the URL so it adds zero
+ * overhead to normal editor sessions.
+ */
+function adaire_blocks_enqueue_migration_editor_script() {
+    if ( empty( $_GET['adaire_auto_migrate'] ) ) {
+        return;
+    }
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+
+    $version = defined('ADAIRE_BLOCKS_VERSION') ? ADAIRE_BLOCKS_VERSION : '1.0.0';
+
+    wp_enqueue_script(
+        'adaire-blocks-migration-editor',
+        plugin_dir_url(__FILE__) . 'js/block-migration-editor.js',
+        ['wp-data', 'wp-blocks', 'wp-block-editor', 'wp-editor'],
+        $version,
+        true
+    );
+}
+add_action('enqueue_block_editor_assets', 'adaire_blocks_enqueue_migration_editor_script');
 
 /**
  * Migration page HTML
@@ -78,34 +94,32 @@ function adaire_blocks_migration_page() {
     }
     ?>
     <div class="wrap">
-        <h1>GutenBlocks Blocks Migration Tool</h1>
-        
+        <h1>GutenBlocks Migration Tool</h1>
+
         <div class="card" style="max-width: 800px; margin-top: 20px;">
-            <h2> Update All Blocks (Queue-Based Migration)</h2>
+            <h2>Update All Blocks (Queue-Based Migration)</h2>
             <p>
-                This tool uses a fast queue-based system to find all posts, pages, and reusable block patterns that contain GutenBlocks Blocks 
-                and re-save them with the current block structure. This is useful when you've made changes to block 
-                code that cause validation errors.
+                This tool uses a queue-based system to find all posts, pages, custom post types,
+                and reusable block patterns that contain GutenBlocks and re-save them
+                with the current block structure. Use this after updating the plugin to fix
+                block validation errors.
             </p>
-            
+
             <p><strong>What this does:</strong></p>
             <ul>
-                <li> Finds all posts/pages and patterns with GutenBlocks Blocks</li>
-                <li> Processes each item one at a time in a queue</li>
-                <li> Automatically recovers and fixes validation errors</li>
-                <li> Re-saves each item with the current block structure</li>
-                <li> Preserves all block settings and content</li>
-                <li> Cleans up resources after each item for optimal performance</li>
+                <li>Finds all content with GutenBlocks across all post types</li>
+                <li>Loads each item in the block editor and saves it with the current block structure</li>
+                <li>Processes items one at a time to avoid server timeouts</li>
+                <li>Preserves all block settings, content, and post status</li>
             </ul>
-            
+
             <p><strong>⚠️ Important:</strong></p>
             <ul>
-                <li> Faster than previous version - processes posts sequentially with optimized timeouts</li>
-                <li> It's recommended to backup your database first</li>
+                <li>Back up your database before running this on a live site</li>
                 <li>Do not close this page while migration is running</li>
-                <li> You can cancel at any time - already processed posts will remain migrated</li>
+                <li>You can cancel at any time — already-processed items remain migrated</li>
             </ul>
-            
+
             <div id="migration-status" style="margin: 20px 0; padding: 15px; background: #f0f0f1; border-radius: 4px; display: none;">
                 <div id="migration-progress">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -134,7 +148,7 @@ function adaire_blocks_migration_page() {
                     <p id="completion-summary"></p>
                 </div>
             </div>
-            
+
             <p>
                 <button id="start-migration" class="button button-primary button-large" onclick="startMigration()">
                     Start Migration
@@ -143,9 +157,10 @@ function adaire_blocks_migration_page() {
                     Cancel
                 </button>
             </p>
-            
+
             <p style="margin-top: 20px; font-size: 13px; color: #666;">
-                <strong>Note:</strong> This tool will process both posts/pages and reusable block patterns (wp_block) that contain GutenBlocks Blocks.
+                <strong>Note:</strong> Scans all public post types that support the block editor,
+                plus reusable block patterns (wp_block).
             </p>
         </div>
     </div>
@@ -153,7 +168,11 @@ function adaire_blocks_migration_page() {
 }
 
 /**
- * AJAX: Get posts and patterns that need migration
+ * AJAX: discover all items containing GutenBlocks.
+ *
+ * Scans all public post types that support the block editor, plus wp_block
+ * (reusable patterns). Returns only items that actually contain at least one
+ * create-block/* block so the queue stays as short as possible.
  */
 function adaire_get_posts_to_migrate() {
     check_ajax_referer('adaire_migration', 'nonce');
@@ -162,101 +181,94 @@ function adaire_get_posts_to_migrate() {
         wp_send_json_error(['message' => 'Unauthorized']);
     }
 
+    // Collect all public post types that use the block editor.
+    $scannable_types = [];
+    foreach (get_post_types(['public' => true], 'objects') as $type) {
+        if ($type->name === 'attachment' || $type->name === 'wp_block') {
+            continue;
+        }
+        if (post_type_supports($type->name, 'editor')) {
+            $scannable_types[] = $type->name;
+        }
+    }
+
+    // Allow site owners to narrow or extend the list.
+    $scannable_types = apply_filters('adaire_migration_post_types', $scannable_types);
+
     $items_to_migrate = [];
-    $posts_count = 0;
-    $patterns_count = 0;
+    $posts_count      = 0;
+    $patterns_count   = 0;
+    $posts_checked    = 0;
+    $patterns_checked = 0;
 
-    // Get all posts and pages that might contain blocks
-    $args = [
-        'post_type' => ['post', 'page'],
-        'post_status' => ['publish', 'draft', 'pending', 'private'],
-        'posts_per_page' => -1,
-        'fields' => 'ids',
-    ];
+    // --- posts / pages / custom post types ---
+    if (!empty($scannable_types)) {
+        $all_posts = get_posts([
+            'post_type'      => $scannable_types,
+            'post_status'    => ['publish', 'draft', 'pending', 'private'],
+            'posts_per_page' => -1,
+            'fields'         => 'all',
+            'no_found_rows'  => true,
+        ]);
 
-    $all_posts = get_posts($args);
-    $posts_checked = count($all_posts);
+        $posts_checked = count($all_posts);
 
-    // Filter posts that contain GutenBlocks Blocks
-    foreach ($all_posts as $post_id) {
-        $content = get_post_field('post_content', $post_id);
-        
-        // Check if post contains any GutenBlocks Blocks
-        if (has_blocks($content)) {
-            $blocks = parse_blocks($content);
-            if (adaire_has_adaire_blocks($blocks)) {
-                $post = get_post($post_id);
+        foreach ($all_posts as $post) {
+            if (has_blocks($post->post_content) && adaire_has_adaire_blocks(parse_blocks($post->post_content))) {
                 $items_to_migrate[] = [
-                    'id' => $post_id,
-                    'title' => $post->post_title,
-                    'type' => 'post',
+                    'id'    => $post->ID,
+                    'title' => $post->post_title ?: "(no title — ID {$post->ID})",
+                    'type'  => 'post',
                 ];
                 $posts_count++;
             }
         }
     }
 
-    // Get all reusable blocks/patterns (wp_block post type)
-    $pattern_args = [
-        'post_type' => 'wp_block',
-        'post_status' => ['publish', 'draft', 'pending', 'private'],
+    // --- reusable block patterns (wp_block) ---
+    $all_patterns = get_posts([
+        'post_type'      => 'wp_block',
+        'post_status'    => ['publish', 'draft', 'pending', 'private'],
         'posts_per_page' => -1,
-        'fields' => 'ids',
-    ];
+        'fields'         => 'all',
+        'no_found_rows'  => true,
+    ]);
 
-    $all_patterns = get_posts($pattern_args);
     $patterns_checked = count($all_patterns);
 
-    // Filter patterns that contain GutenBlocks Blocks
-    foreach ($all_patterns as $pattern_id) {
-        $content = get_post_field('post_content', $pattern_id);
-        
-        // Check if pattern contains any GutenBlocks Blocks
-        if (has_blocks($content)) {
-            $blocks = parse_blocks($content);
-            if (adaire_has_adaire_blocks($blocks)) {
-                $pattern = get_post($pattern_id);
-                $items_to_migrate[] = [
-                    'id' => $pattern_id,
-                    'title' => $pattern->post_title ? $pattern->post_title : 'Untitled Pattern',
-                    'type' => 'pattern',
-                ];
-                $patterns_count++;
-            }
+    foreach ($all_patterns as $pattern) {
+        if (has_blocks($pattern->post_content) && adaire_has_adaire_blocks(parse_blocks($pattern->post_content))) {
+            $items_to_migrate[] = [
+                'id'    => $pattern->ID,
+                'title' => $pattern->post_title ?: "Untitled Pattern (ID {$pattern->ID})",
+                'type'  => 'pattern',
+            ];
+            $patterns_count++;
         }
     }
 
     wp_send_json_success([
-        'items' => $items_to_migrate,
-        'posts_count' => $posts_count,
-        'patterns_count' => $patterns_count,
-        'posts_checked' => $posts_checked,
+        'items'            => $items_to_migrate,
+        'posts_count'      => $posts_count,
+        'patterns_count'   => $patterns_count,
+        'posts_checked'    => $posts_checked,
         'patterns_checked' => $patterns_checked,
     ]);
 }
 add_action('wp_ajax_adaire_get_posts_to_migrate', 'adaire_get_posts_to_migrate');
 
 /**
- * Check if blocks array contains any GutenBlocks Blocks
+ * Recursively check whether a parsed blocks array contains at least one
+ * GutenBlocks block (namespace create-block/).
  */
 function adaire_has_adaire_blocks($blocks) {
     foreach ($blocks as $block) {
-        // Check if it's an GutenBlocks Block (starts with 'create-block/')
         if (isset($block['blockName']) && strpos($block['blockName'], 'create-block/') === 0) {
             return true;
         }
-        
-        // Check inner blocks recursively
-        if (!empty($block['innerBlocks'])) {
-            if (adaire_has_adaire_blocks($block['innerBlocks'])) {
-                return true;
-            }
+        if (!empty($block['innerBlocks']) && adaire_has_adaire_blocks($block['innerBlocks'])) {
+            return true;
         }
     }
-    
     return false;
 }
-
-// Note: Migration now happens via JavaScript in hidden iframes
-// Each post is loaded in the editor context where auto-recovery runs
-// This ensures blocks are actually recovered using the current save.js

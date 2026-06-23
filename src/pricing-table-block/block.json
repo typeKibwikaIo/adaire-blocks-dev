@@ -143,7 +143,7 @@
         },
         "featuredCardBackgroundColor": {
             "type": "string",
-            "default": "#14b85a"
+            "default": "#503AA8"
         },
         "featuredCardTextColor": {
             "type": "string",
@@ -155,7 +155,7 @@
         },
         "cardHoverBorderColor": {
             "type": "string",
-            "default": "#14b85a"
+            "default": "#503AA8"
         },
         "headingColor": {
             "type": "string",
@@ -183,11 +183,11 @@
         },
         "buttonBackgroundColor": {
             "type": "string",
-            "default": "#10b981"
+            "default": "#503AA8"
         },
         "buttonHoverBackgroundColor": {
             "type": "string",
-            "default": "#059669"
+            "default": "#3d2c8d"
         },
         "headingFontSize": {
             "type": "object",
@@ -376,7 +376,7 @@
         },
         "yearlyBadgeBackgroundColor": {
             "type": "string",
-            "default": "#22c55e"
+            "default": "#503AA8"
         },
         "priceSuffixFontSize": {
             "type": "object",

@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "App Download",
   "category": "adaire-marketing-conversion",
-  "description": "App Download block for GutenBlocks Blocks.",
+  "description": "App Download block for GutenBlocks.",
   "supports": {
     "html": false,
     "anchor": true

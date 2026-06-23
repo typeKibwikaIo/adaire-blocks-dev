@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
-import { 
-    useBlockProps, 
-    InspectorControls,
+import {
+    useBlockProps,
     PanelColorSettings,
     __experimentalUseCustomUnits as useCustomUnits,
     __experimentalUnitControl as UnitControl
@@ -25,9 +24,12 @@ import {
 import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import InspectorTabs from '../components/InspectorTabs';
+import QuickZone from '../components/QuickZone';
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
+    const [activeZone, setActiveZone] = useState(null);
     
     const {
         blockId,
@@ -356,7 +358,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     const showErrorNotice = error && posts.length === 0;
 return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 {/* Content Settings */}
                 <PanelBody title={__('Content Settings', 'posts-carousel-block')} initialOpen={true}>
                     <TextControl
@@ -1084,7 +1086,7 @@ return (
                         ]}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps}>
                 {showErrorNotice && (
@@ -1109,6 +1111,32 @@ return (
                         </div>
                     )}
                     
+                    <QuickZone
+                        id="layout"
+                        label={__('Layout', 'posts-carousel-block')}
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
+                        content={
+                            <>
+                                <RangeControl
+                                    label={__('Slides Per View (Desktop)', 'posts-carousel-block')}
+                                    value={slidesPerView?.desktop ?? 4}
+                                    onChange={(value) => setAttributes({ slidesPerView: { ...slidesPerView, desktop: value } })}
+                                    min={1}
+                                    max={6}
+                                    step={1}
+                                />
+                                <RangeControl
+                                    label={__('Card Gap', 'posts-carousel-block')}
+                                    value={cardGap}
+                                    onChange={(value) => setAttributes({ cardGap: value })}
+                                    min={0}
+                                    max={60}
+                                    step={1}
+                                />
+                            </>
+                        }
+                    >
                     <div className="adaire-posts-carousel__wrapper">
                         <div className="adaire-posts-carousel__track">
                         {(posts.length > 0 && !error) ? posts.slice(0, postsPerPage).map((post, index) => (
@@ -1180,7 +1208,8 @@ return (
                         )}
                         </div>
                     </div>
-                    
+                    </QuickZone>
+
                     {enableFiltering && filterPosition === 'bottom' && (
                         <div className="adaire-posts-carousel__filters">
                             <div className="adaire-posts-carousel__filter-list">

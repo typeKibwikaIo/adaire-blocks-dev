@@ -2,7 +2,6 @@
 import {
 	useBlockProps,
 	RichText,
-	InspectorControls,
 	PanelColorSettings,
 } from "@wordpress/block-editor";
 import {
@@ -19,6 +18,8 @@ import {
 import { useEffect, useState, createElement } from "@wordpress/element";
 import { plus, trash, arrowUp, arrowDown, desktop, tablet, mobile } from "@wordpress/icons";
 import BootstrapIconPicker from "./BootstrapIconPicker";
+import InspectorTabs from "../components/InspectorTabs";
+import QuickZone from "../components/QuickZone";
 import "./editor.scss";
 
 const DEFAULT_COLORS = [
@@ -149,6 +150,7 @@ const resolveStepLink = (rawLink) => {
 const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 	const [iconPickerOpenFor, setIconPickerOpenFor] = useState(null);
 	const [deviceType, setDeviceType] = useState("desktop");
+	const [activeZone, setActiveZone] = useState(null);
 
 	const {
 		blockId,
@@ -381,7 +383,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 
 	return (
 		<>
-			<InspectorControls>
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody title={__("Layout", "our-process-block")} initialOpen={true}>
 					<p>{__("Container Width", "our-process-block")}</p>
 					<ButtonGroup>
@@ -868,7 +870,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 						</div>
 					))}
 				</PanelBody>
-			</InspectorControls>
+			</InspectorTabs>
 
 			<BootstrapIconPicker
 				isOpen={iconPickerOpenFor !== null}
@@ -909,6 +911,38 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 						/>
 					</div>
 
+					<QuickZone
+						id="layout"
+						label={__("Layout", "our-process-block")}
+						activeZone={activeZone}
+						setActiveZone={setActiveZone}
+						content={
+							<>
+								<RangeControl
+									label={__("Grid Columns (Desktop)", "our-process-block")}
+									value={gridColumns?.desktop || 3}
+									onChange={(value) =>
+										setAttributes({
+											gridColumns: { ...gridColumns, desktop: value },
+										})
+									}
+									min={1}
+									max={6}
+								/>
+								<RangeControl
+									label={__("Grid Gap", "our-process-block")}
+									value={gridGap?.desktop ?? 16}
+									onChange={(value) =>
+										setAttributes({
+											gridGap: { ...gridGap, desktop: value },
+										})
+									}
+									min={0}
+									max={64}
+								/>
+							</>
+						}
+					>
 					<div className="adaire-our-process__grid">
 						{processSteps?.map((step, index) => (
 							(() => {
@@ -951,6 +985,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 							})()
 						))}
 					</div>
+					</QuickZone>
 				</div>
 			</div>
 		</>

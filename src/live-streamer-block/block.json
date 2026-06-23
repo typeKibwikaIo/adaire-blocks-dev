@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Live Streamer",
   "category": "adaire-media-videos",
-  "description": "Live Streamer block for GutenBlocks Blocks.",
+  "description": "Live Streamer block for GutenBlocks.",
   "supports": {
     "html": false,
     "anchor": true

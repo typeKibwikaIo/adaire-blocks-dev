@@ -203,4 +203,4 @@ npm start
 
 ## License
 
-This block is part of the GutenBlocks Blocks plugin and follows the same GPL-2.0+ license.
+This block is part of the GutenBlocks plugin and follows the same GPL-2.0+ license.

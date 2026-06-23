@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: GutenBlocks Blocks
+ * Plugin Name: GutenBlocks
  * Plugin URI: https://adaire.digital/adaire-blocks/
  * Description: Professional WordPress blocks for Gutenberg editor with GSAP animations and modern design.
  * Version: 1.2.4
@@ -29,14 +29,18 @@ define('ADAIRE_BLOCKS_IS_FREE', true);
 // Include the main plugin class
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-blocks-config.php';
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/sendgrid.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-patterns.php';
 
 // Initialize the plugin
 function adaire_blocks_init() {
     // Get settings instance
     $settings = AdaireBlocksConfig::get_instance();
-    
+
     // Register blocks
     adaire_blocks_register_blocks();
+
+    // Register starter page patterns (landing/about/services/blog/contact)
+    Adaire_Patterns::init();
 }
 add_action('init', 'adaire_blocks_init');
 
@@ -77,51 +81,6 @@ function adaire_blocks_register_nav_menu_locations() {
 }
 add_action('init', 'adaire_blocks_register_nav_menu_locations');
 
-/**
- * Enqueue block assets
- */
-function adaire_blocks_enqueue_assets() {
-    $blocks_dir = ADAIRE_BLOCKS_PLUGIN_PATH . 'build/';
-    
-    if (!is_dir($blocks_dir)) {
-            return;
-        }
-        
-    $block_dirs = glob($blocks_dir . '*', GLOB_ONLYDIR);
-    
-    foreach ($block_dirs as $block_dir) {
-        $block_name = basename($block_dir);
-        $asset_file = $block_dir . '/index.asset.php';
-        
-        if (file_exists($asset_file)) {
-            $asset = require $asset_file;
-            $dependencies = $asset['dependencies'] ?? [];
-            $version = $asset['version'] ?? ADAIRE_BLOCKS_VERSION;
-            
-            // Enqueue block script
-            wp_enqueue_script(
-                'adaire-blocks-' . $block_name,
-                ADAIRE_BLOCKS_PLUGIN_URL . 'build/' . $block_name . '/index.js',
-                $dependencies,
-                $version,
-                true
-            );
-            
-            // Enqueue block style
-            $style_file = $block_dir . '/style-index.css';
-            if (file_exists($style_file)) {
-                wp_enqueue_style(
-                    'adaire-blocks-' . $block_name . '-style',
-                    ADAIRE_BLOCKS_PLUGIN_URL . 'build/' . $block_name . '/style-index.css',
-                    [],
-                    $version
-                );
-            }
-        }
-    }
-}
-add_action('wp_enqueue_scripts', 'adaire_blocks_enqueue_assets');
-add_action('enqueue_block_editor_assets', 'adaire_blocks_enqueue_assets');
 
 function adaire_blocks_register_block_categories( $categories, $editor_context ) {
     $registered_slugs = wp_list_pluck( $categories, 'slug' );
@@ -181,7 +140,8 @@ function enqueue_bootstrap_icons_assets() {
         has_block( 'create-block/icon-box-block', $post ) ||
         has_block( 'create-block/social-banner-block', $post ) ||
         has_block( 'create-block/social-share-block', $post ) ||
-        has_block( 'create-block/our-process-block', $post )
+        has_block( 'create-block/our-process-block', $post ) ||
+        has_block( 'create-block/infogrid-2-block', $post )
     ) {
         // Enqueue Bootstrap Icons CSS from CDN
         wp_enqueue_style(
@@ -194,9 +154,10 @@ function enqueue_bootstrap_icons_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_bootstrap_icons_assets' );
 
-// Also enqueue in editor - use a later hook to avoid interfering with block.json parsing
+// Enqueue Bootstrap Icons inside the block editor canvas (iframed in WP 6.3+).
+// enqueue_block_editor_assets injects into the editor iframe; admin_enqueue_scripts
+// only reaches the outer admin shell and is invisible inside the canvas.
 function enqueue_bootstrap_icons_editor() {
-    // Use admin_enqueue_scripts instead to avoid interfering with block registration
     wp_enqueue_style(
         'bootstrap-icons',
         'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
@@ -204,6 +165,7 @@ function enqueue_bootstrap_icons_editor() {
         '1.13.1'
     );
 }
+add_action( 'enqueue_block_editor_assets', 'enqueue_bootstrap_icons_editor' );
 add_action( 'admin_enqueue_scripts', 'enqueue_bootstrap_icons_editor' );
 
 // Bootstrap admin settings (register menu, assets, etc.)
@@ -225,6 +187,10 @@ if (is_admin()) {
     // Deactivation feedback log + SendGrid test page
     require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/deactivation-log-page.php';
     Adaire_Deactivation_Log_Page::get_instance();
+
+    // Welcome / Quick Start screen with starter page templates
+    require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/welcome-screen.php';
+    Adaire_Welcome_Screen::register();
 }
 
 /**
@@ -233,6 +199,12 @@ if (is_admin()) {
 function adaire_blocks_activate() {
     // Set default options
     add_option('adaire_blocks_version', ADAIRE_BLOCKS_VERSION);
+
+    // Send the user to the Welcome / Quick Start screen on their next
+    // admin page load (see Adaire_Welcome_Screen::maybe_redirect_after_activation()).
+    if (class_exists('Adaire_Welcome_Screen')) {
+        Adaire_Welcome_Screen::queue_activation_redirect();
+    }
 }
 register_activation_hook(__FILE__, 'adaire_blocks_activate');
 

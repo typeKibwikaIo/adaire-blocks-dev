@@ -1,4 +1,4 @@
-﻿import { Button, ButtonGroup } from '@wordpress/components';
+import { Button, ButtonGroup } from '@wordpress/components';
 import { registerPlugin } from '@wordpress/plugins';
 import { getBlockTypes } from '@wordpress/blocks';
 import { createPortal, useEffect, useMemo, useState } from '@wordpress/element';
@@ -67,14 +67,14 @@ const buildTourSteps = ( blocks ) => {
 
 	return [
 		{
-			title: 'Welcome to GutenBlocks Blocks',
+			title: 'Welcome to GutenBlocks',
 			description:
 				'This quick tour shows where to find the blocks, how to edit them, and how to use the shared responsive preview system.',
 			items: [
 				{
 					label: 'Add blocks',
 					description:
-						'Click the block inserter and search for GutenBlocks blocks by name or category.',
+						'Click the block inserter and search for GutenBlocks by name or category.',
 				},
 				{
 					label: 'Edit settings',
@@ -179,7 +179,7 @@ function AdaireGetStartedTour() {
 			isSecondary
 			className="adaire-tour-launcher"
 			onClick={ openTour }
-			aria-label="Have a tour of GutenBlocks blocks"
+			aria-label="Have a tour of GutenBlocks"
 		>
 			Have a tour
 		</Button>

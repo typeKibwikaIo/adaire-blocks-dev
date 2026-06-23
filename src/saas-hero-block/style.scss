@@ -1,9 +1,163 @@
 .adaire-saas-hero {
   position: relative;
   padding: var(--ad-padding, 80px) 20px;
-  background: var(--ad-bg);
+  background-color: var(--ad-bg-color, #ffffff);
   color: var(--ad-color);
   overflow: hidden;
+
+  // Background type — three discrete layers gated by class, instead of one
+  // shorthand var with no real consumer for the image case (the original bug).
+  &.bg-type-gradient {
+    background-image: var(--ad-bg-gradient);
+  }
+
+  &.bg-type-image {
+    background-image: var(--ad-bg-image);
+    background-size: var(--ad-bg-image-size, cover);
+    background-position: var(--ad-bg-image-position, center);
+    background-repeat: var(--ad-bg-image-repeat, no-repeat);
+  }
+
+  &.is-block-selected {
+    outline: 2px solid var(--ad-accent, #6366f1);
+    outline-offset: -2px;
+  }
+
+  // ── Hero Effects & Decorations ──────────────────────────────────────────
+  // Purely decorative (aria-hidden), absolutely positioned behind content,
+  // each independently optional and cheap (no JS, CSS-only).
+  &__fx {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+
+    &--dots {
+      background-image: radial-gradient(currentColor 1.5px, transparent 1.5px);
+      background-size: 22px 22px;
+      opacity: 0.12;
+    }
+
+    &--gradient-overlay {
+      background-image: var(--ad-effect-gradient-overlay);
+      opacity: var(--ad-effect-gradient-overlay-opacity, 0.3);
+    }
+
+    &--blur {
+      &::before {
+        content: '';
+        position: absolute;
+        top: -10%;
+        right: -10%;
+        width: 50%;
+        height: 50%;
+        border-radius: 50%;
+        background: var(--ad-accent, #6366f1);
+        opacity: 0.25;
+        filter: blur(60px);
+      }
+    }
+
+    &--glow {
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 60%;
+        height: 60%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, var(--ad-effect-glow-color, #6366f1) 0%, transparent 70%);
+        opacity: 0.35;
+      }
+    }
+
+    &--shapes .shape {
+      position: absolute;
+      border: 2px solid currentColor;
+      opacity: 0.15;
+
+      &-1 {
+        top: 8%;
+        left: 6%;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+      }
+
+      &-2 {
+        bottom: 12%;
+        right: 8%;
+        width: 90px;
+        height: 90px;
+        border-radius: 16px;
+        transform: rotate(20deg);
+      }
+
+      &-3 {
+        top: 40%;
+        right: 18%;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        transform: rotate(-15deg);
+      }
+    }
+
+    &--floating .float {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--ad-accent, #6366f1);
+      opacity: 0.4;
+      animation: adaire-hero-float 6s ease-in-out infinite;
+
+      &-1 {
+        top: 18%;
+        left: 12%;
+        animation-delay: 0s;
+      }
+
+      &-2 {
+        top: 65%;
+        left: 22%;
+        width: 10px;
+        height: 10px;
+        animation-delay: 1.2s;
+      }
+
+      &-3 {
+        top: 30%;
+        right: 14%;
+        width: 18px;
+        height: 18px;
+        animation-delay: 2.4s;
+      }
+    }
+
+    &--accent {
+      background: linear-gradient(90deg, transparent, var(--ad-accent, #6366f1), transparent);
+      height: 2px;
+      top: auto;
+      bottom: 0;
+      opacity: 0.5;
+      background-size: 200% 100%;
+      animation: adaire-hero-accent-sweep 6s linear infinite;
+    }
+  }
+
+  &__container,
+  &__pill,
+  &__ratings,
+  &__content,
+  &__trust-bar,
+  &__security,
+  &__faq {
+    position: relative;
+    z-index: 1;
+  }
 
   &__container {
     max-width: 1200px;
@@ -20,6 +174,41 @@
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 24px;
+  }
+
+  // ── Ratings & app-store badges strip ─────────────────────────────────────
+  &__ratings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: var(--ad-rating-align, center);
+    margin-bottom: 24px;
+  }
+
+  &__rating-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__rating-icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  &__rating-copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+
+    strong {
+      font-size: 14px;
+    }
+
+    small {
+      opacity: 0.65;
+      font-size: 12px;
+    }
   }
 
   &__content {
@@ -58,7 +247,7 @@
   }
 
   &__text {
-    font-size: 18px;
+    font-size: var(--ad-font-size, 18px);
     line-height: 1.6;
     opacity: 0.9;
     margin-bottom: 32px;
@@ -67,8 +256,8 @@
   &__cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
+    gap: var(--ad-cta-gap, 16px);
+    justify-content: var(--ad-cta-align, center);
     margin-top: 32px;
   }
 
@@ -76,10 +265,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 32px;
+    padding: var(--ad-cta-padding-v, 14px) var(--ad-cta-padding-h, 32px);
     font-size: 16px;
     font-weight: 600;
-    border-radius: var(--ad-radius, 12px);
+    border-radius: var(--ad-cta-radius, var(--ad-radius, 12px));
     text-decoration: none;
     transition: all 0.3s ease;
     cursor: pointer;
@@ -119,9 +308,9 @@
 
     input {
       flex: 1;
-      padding: 14px 20px;
+      padding: var(--ad-cta-padding-v, 14px) 20px;
       border: 2px solid #e5e7eb;
-      border-radius: var(--ad-radius, 12px);
+      border-radius: var(--ad-cta-radius, var(--ad-radius, 12px));
       font-size: 16px;
       outline: none;
       transition: border-color 0.3s ease;
@@ -132,11 +321,11 @@
     }
 
     button {
-      padding: 14px 32px;
+      padding: var(--ad-cta-padding-v, 14px) var(--ad-cta-padding-h, 32px);
       background: var(--ad-button-primary-bg, var(--ad-accent));
       color: var(--ad-button-primary-color, #ffffff);
       border: none;
-      border-radius: var(--ad-radius, 12px);
+      border-radius: var(--ad-cta-radius, var(--ad-radius, 12px));
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
@@ -155,15 +344,18 @@
     margin-top: 12px;
   }
 
+  // ── Media asset ───────────────────────────────────────────────────────
   &__media {
-    margin-top: 48px;
+    margin-top: var(--ad-media-spacing, 48px);
     width: 100%;
+    position: relative;
+    z-index: 1;
 
     img {
       width: 100%;
       height: auto;
-      border-radius: var(--ad-radius, 12px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      border-radius: var(--ad-media-radius, var(--ad-radius, 12px));
+      box-shadow: var(--ad-media-shadow, 0 20px 60px rgba(0, 0, 0, 0.15));
     }
 
     &--right {
@@ -175,6 +367,7 @@
     }
   }
 
+  // ── Trusted By / Logo Names ─────────────────────────────────────────────
   &__trust-bar {
     margin-top: 64px;
     padding-top: 40px;
@@ -191,21 +384,190 @@
     letter-spacing: 1px;
   }
 
+  &__trust-logos-wrap {
+    overflow: hidden;
+  }
+
   &__trust-logos {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 32px;
-    opacity: 0.6;
+    align-items: center;
+    gap: var(--ad-trust-item-gap, 32px);
+    opacity: 0.7;
   }
 
-  &__trust-logo {
+  &__trust-bar.trust-layout-one-per-line &__trust-logos {
+    flex-direction: column;
+  }
+
+  &__trust-logo,
+  &__trust-logo-text {
     font-size: 16px;
     font-weight: 600;
     color: var(--ad-color);
   }
 
-  // Layout variants
+  &__trust-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ad-trust-item-width, auto);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &__trust-logo-img {
+    max-height: var(--ad-trust-logo-max-height, 32px);
+    width: auto;
+    object-fit: contain;
+  }
+
+  // Pure-CSS marquee: the logo list is duplicated in the DOM (see edit.js /
+  // save.js), and both copies scroll together via one transform animation —
+  // this gives a seamless infinite loop with zero JavaScript.
+  &__trust-bar.is-carousel {
+    .adaire-saas-hero__trust-logos-wrap {
+      display: flex;
+      flex-wrap: nowrap;
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+
+    .adaire-saas-hero__trust-logos {
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      animation: adaire-hero-marquee var(--ad-trust-carousel-speed, 30s) linear infinite;
+    }
+
+    .adaire-saas-hero__trust-logo {
+      flex: 0 0 calc(100% / var(--ad-trust-visible-items, 5));
+    }
+
+    &.is-autoplay-off .adaire-saas-hero__trust-logos {
+      animation-play-state: paused;
+    }
+
+    &.is-pause-on-hover:hover .adaire-saas-hero__trust-logos {
+      animation-play-state: paused;
+    }
+  }
+
+  // ── Security / partner trust panel ───────────────────────────────────────
+  &__security {
+    margin-top: 64px;
+    padding: 40px;
+    border-radius: var(--ad-radius, 12px);
+    background: var(--ad-security-bg, #f8fafc);
+    color: var(--ad-security-color, #111827);
+    text-align: center;
+  }
+
+  &__security-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  &__security-text {
+    max-width: 640px;
+    margin: 0 auto 32px;
+    opacity: 0.8;
+    line-height: 1.6;
+  }
+
+  &__security-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    text-align: left;
+  }
+
+  &__security-card {
+    h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 8px 0 6px;
+    }
+
+    p {
+      font-size: 13px;
+      opacity: 0.75;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+
+  &__security-icon {
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  // ── FAQ accordion ─────────────────────────────────────────────────────
+  // Native <details>/<summary> — zero JS for expand/collapse, identical in
+  // the editor canvas and on the published page.
+  &__faq {
+    margin-top: 64px;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__faq-title {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  &__faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__faq-item {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--ad-radius, 12px);
+    padding: 4px 20px;
+    text-align: left;
+
+    & + & {
+      margin-top: 0;
+    }
+  }
+
+  &__faq-question {
+    cursor: pointer;
+    list-style: none;
+    padding: 16px 0;
+    font-weight: 600;
+    position: relative;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::after {
+      content: '+';
+      position: absolute;
+      right: 4px;
+      top: 14px;
+      font-size: 20px;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  &__faq-item[open] &__faq-question::after {
+    transform: rotate(45deg);
+  }
+
+  &__faq-answer {
+    padding: 0 0 18px;
+    opacity: 0.8;
+    line-height: 1.6;
+  }
+
+  // ── Layout variants ──────────────────────────────────────────────────
   &.layout-split-left,
   &.layout-split-right {
     .adaire-saas-hero__content {
@@ -250,7 +612,7 @@
     }
   }
 
-  // Responsive
+  // ── Responsive ───────────────────────────────────────────────────────
   @media (max-width: 768px) {
     padding: 60px 16px;
 
@@ -275,6 +637,14 @@
       flex-direction: column;
     }
 
+    &__security-grid {
+      grid-template-columns: 1fr;
+    }
+
+    &__trust-bar.is-carousel .adaire-saas-hero__trust-logo {
+      flex: 0 0 calc(100% / 2.5);
+    }
+
     &.layout-split-left,
     &.layout-split-right {
       .adaire-saas-hero__content {
@@ -295,4 +665,90 @@
       }
     }
   }
+}
+
+@keyframes adaire-hero-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(100% * var(--ad-trust-dir, -1)));
+  }
+}
+
+@keyframes adaire-hero-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes adaire-hero-accent-sweep {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adaire-saas-hero {
+    &__fx--floating .float,
+    &__fx--accent,
+    &__trust-bar.is-carousel .adaire-saas-hero__trust-logos {
+      animation: none !important;
+    }
+  }
+}
+
+// ── Editor-only inspector chrome (RepeaterField, QuickZone helper text) ──
+// These classes never appear in save.js output, so they're inert on the
+// published page — kept here since this block has no separate editor.scss.
+.adaire-repeater {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  &__item {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  &__row-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  &__index {
+    font-weight: 600;
+    font-size: 12px;
+    opacity: 0.6;
+    margin-right: 4px;
+  }
+}
+
+.adaire-qz-subhead {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.6;
+  margin: 16px 0 8px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.adaire-help-note {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-top: 8px;
 }

@@ -1,130 +1,147 @@
 import { RichText, useBlockProps } from '@wordpress/block-editor';
+import {
+  getTrustItems,
+  getStyleVars,
+  getBgTypeClass,
+  TrustLogo,
+  RatingBadgeView,
+  SecurityFeatureView,
+  FaqItemView,
+} from './shared';
 
-export default function save( { attributes: a } ) {
-  let bgStyle = {};
-  if ( a.backgroundType === 'gradient' ) {
-    bgStyle.background = a.backgroundGradient || 'linear-gradient(135deg, #6366f1, #8b5cf6)';
-  } else if ( a.backgroundType === 'image' && a.backgroundImage ) {
-    bgStyle.backgroundImage    = `url(${ a.backgroundImage })`;
-    bgStyle.backgroundSize     = 'cover';
-    bgStyle.backgroundPosition = 'center';
-  } else {
-    bgStyle.backgroundColor = a.backgroundColor || '#ffffff';
-  }
+// Mirrors edit.js's render tree exactly (same shared.js helpers + presentation
+// components), just swapping RichText for RichText.Content and dropping the
+// QuickZone/inspector wrappers — so the editor canvas and the published page
+// can never visually drift apart.
+export default function save({ attributes: a }) {
+  const trustItemsResolved = getTrustItems(a);
 
-  const blockProps = useBlockProps.save( {
+  const blockProps = useBlockProps.save({
     className: [
       'adaire-saas-hero',
-      `layout-${ a.layoutStyle || 'centered' }`,
-    ].join( ' ' ),
-    style: {
-      '--ad-accent': a.accentColor || '#6366f1',
-      '--ad-bg': a.backgroundType === 'gradient' ? (a.backgroundGradient || 'linear-gradient(135deg, #6366f1, #8b5cf6)') : (a.backgroundColor || '#ffffff'),
-      '--ad-color': a.textColor || '#111827',
-      '--ad-pill-bg': a.pillBg || '#dbeafe',
-      '--ad-pill-color': a.pillColor || '#1e40af',
-      '--ad-gradient-start': a.gradientStart || '#6366f1',
-      '--ad-gradient-end': a.gradientEnd || '#8b5cf6',
-      '--ad-button-primary-color': a.buttonPrimaryColor || '#ffffff',
-      '--ad-button-primary-bg': a.buttonPrimaryBg || '#6366f1',
-      '--ad-button-secondary-color': a.buttonSecondaryColor || '#111827',
-      '--ad-button-secondary-bg': a.buttonSecondaryBg || '#ffffff',
-      '--ad-button-hover-color': a.buttonHoverColor || '#ffffff',
-      '--ad-button-hover-bg': a.buttonHoverBackgroundColor || '#111827',
-      '--ad-button-hover-border': a.buttonHoverBorderColor || '#111827',
-      '--ad-radius': `${ a.borderRadius || 12 }px`,
-      '--ad-padding': `${ a.padding || 80 }px`,
-      '--ad-font-size': `${ a.fontSize || 16 }px`,
-      ...bgStyle,
-    },
-  } );
+      `layout-${a.layoutStyle || 'centered'}`,
+      getBgTypeClass(a),
+      a.trustCarousel ? 'has-trust-carousel' : '',
+      a.effectFloatingElements ? 'has-floating-elements' : '',
+    ].filter(Boolean).join(' '),
+    style: getStyleVars(a),
+  });
 
   return (
-    <section { ...blockProps }>
+    <section {...blockProps}>
+      {a.effectDotPattern && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--dots" aria-hidden="true" />}
+      {a.effectGradientOverlay && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--gradient-overlay" aria-hidden="true" />}
+      {a.effectBlur && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--blur" aria-hidden="true" />}
+      {a.effectGlow && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--glow" aria-hidden="true" />}
+      {a.effectAbstractShapes && (
+        <div className="adaire-saas-hero__fx adaire-saas-hero__fx--shapes" aria-hidden="true">
+          <span className="shape shape-1" /><span className="shape shape-2" /><span className="shape shape-3" />
+        </div>
+      )}
+      {a.effectFloatingElements && (
+        <div className="adaire-saas-hero__fx adaire-saas-hero__fx--floating" aria-hidden="true">
+          <span className="float float-1" /><span className="float float-2" /><span className="float float-3" />
+        </div>
+      )}
+      {a.effectAnimatedAccents && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--accent" aria-hidden="true" />}
+
       <div className="adaire-saas-hero__container">
-        {/* Top Pill */}
-        { a.showPill && a.pillText && (
+        {a.showPill && a.pillText && (
           <div className="adaire-saas-hero__pill">
-            <RichText.Content tagName="span" value={ a.pillText } />
+            <RichText.Content tagName="span" value={a.pillText} />
           </div>
         )}
 
-        {/* Main Content */}
+        {a.showRatingBadges && (
+          <div className="adaire-saas-hero__ratings">
+            {(a.ratingBadges || []).map((badge, i) => <RatingBadgeView key={i} badge={badge} />)}
+          </div>
+        )}
+
         <div className="adaire-saas-hero__content">
           <div className="adaire-saas-hero__text">
-            { a.eyebrow && (
-              <RichText.Content
-                tagName="p"
-                className="adaire-saas-hero__eyebrow"
-                value={ a.eyebrow }
-              />
+            {a.eyebrow && (
+              <RichText.Content tagName="p" className="adaire-saas-hero__eyebrow" value={a.eyebrow} />
             )}
 
             <RichText.Content
               tagName="h1"
-              className={`adaire-saas-hero__heading ${ a.useGradientHeadline ? 'has-gradient' : ''}`}
-              value={ a.heading }
+              className={`adaire-saas-hero__heading ${a.useGradientHeadline ? 'has-gradient' : ''}`}
+              value={a.heading}
             />
 
-            <RichText.Content
-              tagName="p"
-              className="adaire-saas-hero__text"
-              value={ a.text }
-            />
+            <RichText.Content tagName="p" className="adaire-saas-hero__text" value={a.text} />
 
-            {/* CTA Module */}
             <div className="adaire-saas-hero__cta">
-              { a.ctaType === 'dual-buttons' && (
+              {a.ctaType === 'dual-buttons' && (
                 <>
-                  <a href={ a.primaryButtonUrl || '#' } className="adaire-saas-hero__button adaire-saas-hero__button--primary">
-                    { a.primaryButtonText }
+                  <a href={a.primaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                    {a.primaryButtonText}
                   </a>
-                  <a href={ a.secondaryButtonUrl || '#' } className="adaire-saas-hero__button adaire-saas-hero__button--secondary">
-                    { a.secondaryButtonText }
+                  <a href={a.secondaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--secondary">
+                    {a.secondaryButtonText}
                   </a>
                 </>
               )}
 
-              { a.ctaType === 'email-form' && (
+              {a.ctaType === 'email-form' && (
                 <form className="adaire-saas-hero__email-form" onSubmit="return false">
-                  <input
-                    type="email"
-                    placeholder={ a.emailPlaceholder || 'Enter your email' }
-                    required
-                  />
-                  <button type="submit">
-                    { a.submitButtonText || 'Get Started' }
-                  </button>
+                  <input type="email" placeholder={a.emailPlaceholder || 'Enter your email'} required />
+                  <button type="submit">{a.submitButtonText || 'Get Started'}</button>
                 </form>
               )}
 
-              { a.ctaType === 'single-button' && (
+              {a.ctaType === 'single-button' && (
                 <>
-                  <a href={ a.singleButtonUrl || '#' } className="adaire-saas-hero__button adaire-saas-hero__button--primary">
-                    { a.singleButtonText }
+                  <a href={a.singleButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                    {a.singleButtonText}
                   </a>
-                  { a.microCopy && <p className="adaire-saas-hero__micro-copy">{ a.microCopy }</p>}
+                  {a.microCopy && <p className="adaire-saas-hero__micro-copy">{a.microCopy}</p>}
                 </>
               )}
             </div>
           </div>
 
-          {/* Hero Image */}
-          { a.showHeroImage && a.heroImageUrl && (
-            <div className={`adaire-saas-hero__media adaire-saas-hero__media--${ a.imagePosition || 'below' }`}>
-              <img src={ a.heroImageUrl } alt="Hero" loading="lazy" />
+          {a.showHeroImage && a.heroImageUrl && (
+            <div className={`adaire-saas-hero__media adaire-saas-hero__media--${a.imagePosition || 'below'}`}>
+              <img src={a.heroImageUrl} alt="Hero" loading="lazy" />
             </div>
           )}
         </div>
 
-        {/* Trust Bar */}
-        { a.showTrustBar && a.trustBarTitle && (
-          <div className="adaire-saas-hero__trust-bar">
-            <p className="adaire-saas-hero__trust-title">{ a.trustBarTitle }</p>
-            <div className="adaire-saas-hero__trust-logos">
-              { a.trustLogos && a.trustLogos.split('\n').map((logo, index) => (
-                <span key={ index } className="adaire-saas-hero__trust-logo">{ logo }</span>
-              ))}
+        {a.showTrustBar && trustItemsResolved.length > 0 && (
+          <div className={`adaire-saas-hero__trust-bar trust-layout-${a.trustLayout || 'row'} ${a.trustCarousel ? 'is-carousel' : ''} ${a.trustCarousel && a.trustCarouselAutoplay === false ? 'is-autoplay-off' : ''} ${a.trustCarousel && a.trustCarouselPauseOnHover === false ? '' : 'is-pause-on-hover'}`}>
+            {a.trustBarTitle && <RichText.Content tagName="p" className="adaire-saas-hero__trust-title" value={a.trustBarTitle} />}
+            <div className="adaire-saas-hero__trust-logos-wrap">
+              <div className="adaire-saas-hero__trust-logos">
+                {trustItemsResolved.map((item, i) => <TrustLogo key={i} item={item} />)}
+              </div>
+              {a.trustCarousel && (
+                <div className="adaire-saas-hero__trust-logos adaire-saas-hero__trust-logos--clone" aria-hidden="true">
+                  {trustItemsResolved.map((item, i) => <TrustLogo key={`clone-${i}`} item={item} />)}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {a.showSecurityPanel && (
+          <div className="adaire-saas-hero__security">
+            <h3 className="adaire-saas-hero__security-title">
+              {a.securityPanelTitle}{a.securityPanelPartnerName ? ` ${a.securityPanelPartnerName}` : ''}
+            </h3>
+            {a.securityPanelText && <p className="adaire-saas-hero__security-text">{a.securityPanelText}</p>}
+            <div className="adaire-saas-hero__security-grid">
+              {(a.securityFeatures || []).map((feature, i) => <SecurityFeatureView key={i} feature={feature} />)}
+            </div>
+          </div>
+        )}
+
+        {a.showFaq && (
+          <div className="adaire-saas-hero__faq">
+            {a.faqTitle && <h3 className="adaire-saas-hero__faq-title">{a.faqTitle}</h3>}
+            <div className="adaire-saas-hero__faq-list">
+              {(a.faqItems || []).map((item, i) => <FaqItemView key={i} item={item} defaultOpen={a.faqOpenFirst !== false && i === 0} />)}
             </div>
           </div>
         )}

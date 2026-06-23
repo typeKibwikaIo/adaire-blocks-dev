@@ -1,3 +1,7 @@
+// Bootstrap Icons — loaded here so it's available in both the frontend and the
+// editor canvas (the "style" field CSS loads in both contexts, unlike editorStyle).
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css');
+
 // Match InfoGrid 3 / base InfoGrid behavior: prevent WP core from adding default borders
 // when it detects border-width/borderStyle/borderColor in inline styles.
 .wp-block-create-block-infogrid-2-block,
@@ -26,6 +30,7 @@
     width: var(--infogrid-2-block-width-desktop, 100%);
     margin-left: auto;
     margin-right: auto;
+    background-color: var(--infogrid-2-bg-color, transparent);
     background-size: var(--infogrid-2-bg-size, cover);
     background-position: var(--infogrid-2-bg-position, center);
     background-repeat: var(--infogrid-2-bg-repeat, no-repeat);
@@ -118,13 +123,14 @@
 
         // Explicit border definition to prevent WordPress default block styles from interfering
         border: var(--infogrid-2-item-bw-desktop, 1px) var(--infogrid-2-item-bs-desktop, solid) var(--infogrid-2-item-bc-desktop, #ffffff33) !important;
+        border-radius: var(--infogrid-2-item-border-radius-desktop, 12px);
         outline: none !important;
         box-shadow: none !important;
 
         display: flex;
         flex-direction: column;
         align-items: var(--infogrid-2-content-alignment-flex-desktop, center);
-        text-align: var(--infogrid-2-content-alignment-desktop, center);
+        text-align: var(--infogrid-2-item-text-align-desktop, left);
 
         transition: all 0.3s ease;
 
@@ -246,9 +252,10 @@
             padding-bottom: var(--infogrid-2-item-padding-bottom-mobile, var(--infogrid-2-item-padding-bottom-desktop));
             padding-left: var(--infogrid-2-item-padding-left-mobile, var(--infogrid-2-item-padding-left-desktop));
             border: var(--infogrid-2-item-bw-mobile, var(--infogrid-2-item-bw-desktop, 1px)) var(--infogrid-2-item-bs-mobile, var(--infogrid-2-item-bs-desktop, solid)) var(--infogrid-2-item-bc-mobile, var(--infogrid-2-item-bc-desktop, #ffffff33)) !important;
+            border-radius: var(--infogrid-2-item-border-radius-mobile, var(--infogrid-2-item-border-radius-desktop, 12px));
             outline: none !important;
             box-shadow: none !important;
-            text-align: var(--infogrid-2-content-alignment-mobile, var(--infogrid-2-content-alignment-desktop));
+            text-align: var(--infogrid-2-item-text-align-mobile, var(--infogrid-2-item-text-align-desktop, left));
         }
 
         .adaire-infogrid-2-item-icon {
@@ -326,9 +333,10 @@
             padding-bottom: var(--infogrid-2-item-padding-bottom-tablet, var(--infogrid-2-item-padding-bottom-desktop));
             padding-left: var(--infogrid-2-item-padding-left-tablet, var(--infogrid-2-item-padding-left-desktop));
             border: var(--infogrid-2-item-bw-tablet, var(--infogrid-2-item-bw-desktop, 1px)) var(--infogrid-2-item-bs-tablet, var(--infogrid-2-item-bs-desktop, solid)) var(--infogrid-2-item-bc-tablet, var(--infogrid-2-item-bc-desktop, #ffffff33)) !important;
+            border-radius: var(--infogrid-2-item-border-radius-tablet, var(--infogrid-2-item-border-radius-desktop, 12px));
             outline: none !important;
             box-shadow: none !important;
-            text-align: var(--infogrid-2-content-alignment-tablet, var(--infogrid-2-content-alignment-desktop));
+            text-align: var(--infogrid-2-item-text-align-tablet, var(--infogrid-2-item-text-align-desktop, left));
         }
 
         .adaire-infogrid-2-item-icon {
@@ -407,7 +415,8 @@
             border-width: var(--infogrid-2-item-bw-small-laptop, var(--infogrid-2-item-bw-desktop));
             border-style: var(--infogrid-2-item-bs-small-laptop, var(--infogrid-2-item-bs-desktop));
             border-color: var(--infogrid-2-item-bc-small-laptop, var(--infogrid-2-item-bc-desktop));
-            text-align: var(--infogrid-2-content-alignment-small-laptop, var(--infogrid-2-content-alignment-desktop));
+            border-radius: var(--infogrid-2-item-border-radius-small-laptop, var(--infogrid-2-item-border-radius-desktop, 12px));
+            text-align: var(--infogrid-2-item-text-align-small-laptop, var(--infogrid-2-item-text-align-desktop, left));
         }
 
         .adaire-infogrid-2-item-icon {
@@ -486,7 +495,8 @@
             border-width: var(--infogrid-2-item-bw-desktop, var(--infogrid-2-item-bw-desktop));
             border-style: var(--infogrid-2-item-bs-desktop, var(--infogrid-2-item-bs-desktop));
             border-color: var(--infogrid-2-item-bc-desktop, var(--infogrid-2-item-bc-desktop));
-            text-align: var(--infogrid-2-content-alignment-desktop, var(--infogrid-2-content-alignment-desktop));
+            border-radius: var(--infogrid-2-item-border-radius-desktop, 12px);
+            text-align: var(--infogrid-2-item-text-align-desktop, left);
             }
 
             .adaire-infogrid-2-item-icon {
@@ -565,7 +575,8 @@
             border-width: var(--infogrid-2-item-bw-big-desktop, var(--infogrid-2-item-bw-desktop));
             border-style: var(--infogrid-2-item-bs-big-desktop, var(--infogrid-2-item-bs-desktop));
             border-color: var(--infogrid-2-item-bc-big-desktop, var(--infogrid-2-item-bc-desktop));
-            text-align: var(--infogrid-2-content-alignment-big-desktop, var(--infogrid-2-content-alignment-desktop));
+            border-radius: var(--infogrid-2-item-border-radius-big-desktop, var(--infogrid-2-item-border-radius-desktop, 12px));
+            text-align: var(--infogrid-2-item-text-align-big-desktop, var(--infogrid-2-item-text-align-desktop, left));
         }
 
         .adaire-infogrid-2-item-icon {

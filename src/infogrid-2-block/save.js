@@ -14,6 +14,7 @@ export default function save({ attributes }) {
         backgroundSize,
         backgroundPosition,
         backgroundRepeat,
+        solidBgColor,
         containerMode = 'constrained',
         responsiveMaxWidth = {
             mobile: { value: 100, unit: "%" },
@@ -33,6 +34,7 @@ export default function save({ attributes }) {
 
     const generateVariables = () => {
         const vars = {
+            '--infogrid-2-bg-color': solidBgColor || 'transparent',
             '--infogrid-2-bg-image': backgroundImageUrl ? `url(${backgroundImageUrl})` : 'none',
             '--infogrid-2-overlay-bg-solid': overlayColor || 'transparent',
             '--infogrid-2-overlay-opacity': overlayOpacity !== undefined ? overlayOpacity : 0.5,

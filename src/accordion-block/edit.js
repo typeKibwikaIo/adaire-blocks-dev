@@ -1,18 +1,21 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useCallback, useState, useEffect } from '@wordpress/element';
-import { useBlockProps, InspectorControls, useInnerBlocksProps, store as blockEditorStore } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps, store as blockEditorStore } from '@wordpress/block-editor';
 import { createBlock } from '@wordpress/blocks';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { PanelBody, RangeControl, ToggleControl, ColorPalette, Button, ButtonGroup, TextControl, BaseControl } from '@wordpress/components';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
+import InspectorTabs from '../components/InspectorTabs';
+import QuickZone from '../components/QuickZone';
 
 const EASINGS = [ 'ease', 'linear', 'ease-in', 'ease-out', 'ease-in-out' ];
 const FREE_TIER_ITEM_LIMIT = 3;
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
     const [deviceType, setDeviceType] = useState('desktop');
+    const [activeZone, setActiveZone] = useState(null);
     
     const { replaceInnerBlocks, insertBlock } = useDispatch(blockEditorStore);
     const innerBlocks = useSelect(
@@ -348,7 +351,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <PanelBody title={ __('Responsive Settings', 'accordion-block') } initialOpen={ false }>
                     <DeviceSwitcher 
                         deviceType={deviceType} 
@@ -633,12 +636,27 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         ) ) }
                     </ButtonGroup>
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div { ...blockProps } data-allow-multiple={ allowMultipleOpen }>
-                <div className={`adaire-accordion__container ${containerMode === 'constrained' ? 'is-constrained' : ''}`}>
-                    <div {...innerBlocksProps} />
-                </div>
+                <QuickZone
+                    id="colors"
+                    label={ __('Colors', 'accordion-block') }
+                    activeZone={ activeZone }
+                    setActiveZone={ setActiveZone }
+                    content={
+                        <>
+                            <p>{ __('Background', 'accordion-block') }</p>
+                            <ColorPalette value={ backgroundColor } onChange={ (v)=> setAttributes({ backgroundColor: v }) } />
+                            <p>{ __('Chevron', 'accordion-block') }</p>
+                            <ColorPalette value={ chevronColor } onChange={ (v)=> setAttributes({ chevronColor: v }) } />
+                        </>
+                    }
+                >
+                    <div className={`adaire-accordion__container ${containerMode === 'constrained' ? 'is-constrained' : ''}`}>
+                        <div {...innerBlocksProps} />
+                    </div>
+                </QuickZone>
             </div>
         </>
     );

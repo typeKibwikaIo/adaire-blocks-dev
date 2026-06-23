@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
-import { 
-    useBlockProps, 
-    InspectorControls,
+import {
+    useBlockProps,
     PanelColorSettings
 } from '@wordpress/block-editor';
 import {
@@ -25,6 +24,7 @@ import { useState, useEffect, createElement, useCallback, useRef } from '@wordpr
 import { dragHandle, trash, plus, chevronUp, chevronDown, desktop, tablet, mobile } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
+import InspectorTabs from '../components/InspectorTabs';
 
 // Custom icons for small laptop and big desktop
 const smallLaptopIcon = createElement('svg', {
@@ -258,7 +258,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <div className="adaire-device-toggle">
                     <p className="adaire-device-toggle-label">{__('Device View', 'infogrid-block')}</p>
                     <div className="adaire-device-toggle-group">
@@ -582,7 +582,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, val)}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <BootstrapIconPicker
                 isOpen={isIconPickerOpen}

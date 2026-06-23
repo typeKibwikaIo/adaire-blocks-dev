@@ -68,10 +68,6 @@
       "enabled": true,
       "upgradeMessage": "Upgrade to Premium for advanced social sharing features."
     },
-    "infogrid-block": {
-      "enabled": true,
-      "upgradeMessage": "Upgrade to Premium for advanced grid layouts and features."
-    },
     "header-block": {
       "enabled": true,
       "upgradeMessage": "Upgrade to Premium for mega menu layouts, advanced dropdowns, and deeper menu integrations."

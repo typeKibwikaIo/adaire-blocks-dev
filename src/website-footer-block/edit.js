@@ -3,7 +3,7 @@ import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
 import { PanelBody, ToggleControl, RangeControl, SelectControl, ColorPicker, Button, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { useState, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 
 // ── helpers ──────────────────────────────────────────────────────────────
@@ -19,6 +19,17 @@ const SOCIAL_SVGS = {
 };
 
 const getIconSvg = (platform) => SOCIAL_SVGS[platform] || SOCIAL_SVGS.twitter;
+
+// Effective "show brand name text" state — mirrors
+// adaire_footer_render_brand_column_content()'s PHP fallback exactly so the
+// editor canvas and the live site never disagree: if the column has never
+// had the new `showBrandName` flag set (legacy saved content), fall back to
+// "show it if there's actually text" (a no-op for empty text, and preserves
+// any real brand name a site owner already typed). Brand-new columns get an
+// explicit `showBrandName: false` default from block.json, so the old
+// placeholder "Your Brand" text never appears unless the user opts in.
+const effectiveShowBrandName = (column) =>
+    column.showBrandName !== undefined ? !!column.showBrandName : !!column.brandName;
 
 // Column type options shown in the per-column QuickZone settings popover.
 const columnTypeOptions = [
@@ -41,6 +52,84 @@ const navigationSourceOptions = [
     { label: 'Footer Menu',          value: 'footer'  },
     { label: 'Select existing menu', value: 'menu'    },
 ];
+
+// Same plugin-owned menu-location slugs adaire_footer_register_nav_menu_locations()
+// uses in render.php (and the identical slugs header-block's render.php uses for
+// its own Primary/Footer options) — keeps editor resolution and frontend
+// resolution looking at the same WP menu locations.
+const NAV_MENU_LOCATION_SLUGS = { primary: 'adaire-blocks-primary', footer: 'adaire-blocks-footer' };
+
+function decodeEntities(html) {
+    if (!html) return '';
+    const txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+}
+
+// WP's wp_get_nav_menu_items() (and the REST menu-items endpoint that powers
+// core.getMenuItems) falls back to a raw "#123 (no title)" string when a menu
+// item has no custom label and its linked object has no title. Mirrors
+// isPlaceholderMenuTitle()/friendlyMenuLabel() in header-block/edit.js and
+// adaire_footer_friendly_menu_label() conventions, so the editor never shows
+// a raw DB id where the frontend would show a friendly fallback.
+function isPlaceholderMenuTitle(title) {
+    return /^#\d+\s*\(no title\)$/i.test((title || '').trim());
+}
+
+function menuLabelFromUrl(url) {
+    const fallback = __('Menu item', 'website-footer-block');
+    if (!url) return fallback;
+    const path = String(url).replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]+/i, '').split(/[?#]/)[0];
+    const trimmed = path.replace(/^\/+|\/+$/g, '');
+    if (!trimmed) return fallback;
+    const segments = trimmed.split('/');
+    const slug = (segments[segments.length - 1] || '').replace(/[-_]+/g, ' ').trim();
+    return slug ? slug.replace(/\b\w/g, (c) => c.toUpperCase()) : fallback;
+}
+
+function friendlyMenuLabel(rawTitle, url) {
+    const title = (rawTitle || '').trim();
+    if (title && !isPlaceholderMenuTitle(title)) return title;
+    return menuLabelFromUrl(url);
+}
+
+// Renders one resolved WP-menu node (and, recursively, its children) on the
+// editor canvas. Mirrors adaire_footer_render_nav_node() in render.php
+// exactly — same `website-footer-block__nav-link` / `__nav-sublist` classes
+// and always-visible nested-<ul> structure (footer menus have no JS-driven
+// disclosure, unlike header-block's dropdown nav) — so the live preview and
+// the saved frontend output can never visually disagree. Uses a <span>
+// rather than an <a> since this tree isn't individually editable (items come
+// from the live WP menu, not column.navItems) and a real <a href> inside the
+// iframed editor canvas could attempt to navigate on click.
+function FooterDynamicMenuNode({ item, column }) {
+    const hasKids = !!(item.children && item.children.length);
+    return (
+        <li style={{ listStyle: 'none' }}>
+            <span
+                className="website-footer-block__nav-link"
+                style={{
+                    color: column.linkColor || 'inherit',
+                    '--link-hover-color': column.linkHoverColor || undefined,
+                    '--link-hover-bg': column.linkHoverBackgroundColor || undefined,
+                    '--link-hover-underline-color': column.linkHoverUnderlineColor || undefined,
+                    '--link-underline-mode': column.linkUnderline ? 'underline' : undefined,
+                    '--link-hover-underline-mode': (column.linkUnderline || column.linkHoverUnderlineColor) ? 'underline' : undefined,
+                    '--link-transition-duration': (column.linkTransitionDuration != null && column.linkTransitionDuration >= 0) ? `${column.linkTransitionDuration}ms` : undefined,
+                }}
+            >
+                {item.label}
+            </span>
+            {hasKids && (
+                <ul className="website-footer-block__nav-sublist">
+                    {item.children.map((child) => (
+                        <FooterDynamicMenuNode key={child.id} item={child} column={column} />
+                    ))}
+                </ul>
+            )}
+        </li>
+    );
+}
 
 // Matches the four sidebars registered in adaire-blocks.php
 // (adaire-footer-widget-1..4).
@@ -82,15 +171,100 @@ export default function Edit({ attributes, setAttributes }) {
     const [activeZone, setActiveZone] = useState(null);
 
     // Fetches the site's WP menus once, for any nav column whose
-    // navigationSource is "menu" — same data source header-block uses.
+    // navigationSource isn't "legacy" — needed both to populate the "Select
+    // existing menu" dropdown (source === 'menu') AND to resolve which menu
+    // is assigned to the Primary/Footer theme locations (source === 'primary'
+    // | 'footer', via each menu's `.locations` array) — same data source and
+    // `context: 'view'` (required for `.locations` to be present) header-block
+    // uses for its own navigationSource resolution.
     const anyColumnNeedsMenuList = (columnsSection.columns || []).some(
-        (col) => col.type === 'nav' && col.navigationSource === 'menu'
+        (col) => col.type === 'nav' && col.navigationSource && col.navigationSource !== 'legacy'
     );
     const wpMenus = useSelect((select) => {
         if (!anyColumnNeedsMenuList) return [];
         const coreStore = select('core');
-        return coreStore && coreStore.getMenus ? coreStore.getMenus({ per_page: -1 }) : [];
+        return coreStore && coreStore.getMenus ? coreStore.getMenus({ per_page: -1, context: 'view' }) : [];
     }, [anyColumnNeedsMenuList]);
+
+    // ── Dynamic menu live-render (Task #8) ──────────────────────────────
+    // Resolves, for every nav column whose navigationSource isn't "legacy",
+    // which actual WP menu id applies — then fetches and nests that menu's
+    // items so the editor canvas shows the *real* selected/assigned menu
+    // instead of a placeholder, mirroring adaire_footer_resolve_nav_items()
+    // + adaire_footer_build_menu_tree() in render.php so editor and frontend
+    // can never disagree once a dynamic menu is assigned.
+    const navColumns = columnsSection.columns || [];
+
+    const resolvedMenuIdByColumn = useMemo(() => {
+        const map = {};
+        navColumns.forEach((col) => {
+            if (col.type !== 'nav') return;
+            const source = col.navigationSource;
+            if (!source || source === 'legacy') return;
+            if (source === 'menu') {
+                map[col.id] = col.selectedMenuId || 0;
+                return;
+            }
+            const slug = NAV_MENU_LOCATION_SLUGS[source];
+            const match = (slug && wpMenus) ? wpMenus.find((m) => Array.isArray(m.locations) && m.locations.includes(slug)) : null;
+            map[col.id] = match ? match.id : 0;
+        });
+        return map;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(navColumns.map((c) => [c.id, c.type, c.navigationSource, c.selectedMenuId])), wpMenus]);
+
+    // One single useSelect call regardless of how many nav columns exist —
+    // calling useSelect inside a loop/map would violate the rules of hooks
+    // since column count can change between renders (add/remove column).
+    // Multiple inner select() calls within one useSelect callback are fine;
+    // each is tracked and re-resolved independently.
+    const menuItemsByColumn = useSelect((select) => {
+        const coreStore = select('core');
+        const result = {};
+        Object.keys(resolvedMenuIdByColumn).forEach((colId) => {
+            const menuId = resolvedMenuIdByColumn[colId];
+            if (!menuId) { result[colId] = []; return; }
+            result[colId] = (coreStore && coreStore.getMenuItems)
+                ? coreStore.getMenuItems({ menus: menuId, per_page: -1, context: 'view' })
+                : null;
+        });
+        return result;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resolvedMenuIdByColumn]);
+
+    const menuTreeByColumn = useMemo(() => {
+        const trees = {};
+        Object.keys(menuItemsByColumn).forEach((colId) => {
+            const items = menuItemsByColumn[colId];
+            if (!items || !items.length) { trees[colId] = []; return; }
+            const byParent = {};
+            items.forEach((item) => {
+                const parent = item.parent || 0;
+                if (!byParent[parent]) byParent[parent] = [];
+                byParent[parent].push(item);
+            });
+            Object.keys(byParent).forEach((k) => byParent[k].sort((a, b) => (a.menu_order || 0) - (b.menu_order || 0)));
+            const build = (parentId) => (byParent[parentId] || []).map((item) => ({
+                id: item.id,
+                label: friendlyMenuLabel(decodeEntities((item.title && item.title.rendered) || ''), item.url),
+                url: item.url,
+                children: build(item.id),
+            }));
+            trees[colId] = build(0);
+        });
+        return trees;
+    }, [menuItemsByColumn]);
+
+    // True while we still don't know the outcome (menu list still resolving,
+    // or items for an already-resolved menu id still resolving) — false once
+    // we know for certain there's nothing assigned, so the "no menu" message
+    // doesn't flash before the real content loads.
+    const isMenuLoadingForColumn = (col) => {
+        if (col.type !== 'nav' || !col.navigationSource || col.navigationSource === 'legacy') return false;
+        if (col.navigationSource !== 'menu' && wpMenus === undefined) return true;
+        const menuId = resolvedMenuIdByColumn[col.id];
+        return !!menuId && menuItemsByColumn[col.id] === null;
+    };
 
     // ── attribute updaters ──────────────────────────────────────────────
 
@@ -248,6 +422,63 @@ export default function Edit({ attributes, setAttributes }) {
 
     const getFontSizeClass = (size) => ({ small: 'small', medium: 'medium', large: 'large' }[size] || 'medium');
 
+    // ── reusable control block — defined once, rendered in BOTH the
+    // Inspector "Footer Styling" panel and the canvas "Background" QuickZone,
+    // so the two surfaces can never drift out of sync (mirrors the pattern
+    // used in header-block / saas-hero-block). Solid / Gradient / Image stay
+    // mutually exclusive via the single `backgroundType` attribute. ────────
+    const backgroundControls = (
+        <>
+            <SelectControl label={__('Background Type', 'website-footer-block')} value={backgroundType}
+                options={[
+                    { label: __('Solid Color', 'website-footer-block'), value: 'solid' },
+                    { label: __('Gradient', 'website-footer-block'),    value: 'gradient' },
+                    { label: __('Image', 'website-footer-block'),       value: 'image' },
+                ]}
+                onChange={(v) => setAttributes({ backgroundType: v })} />
+            {backgroundType === 'solid' && (
+                <div style={{ marginBottom: 16 }}>
+                    <label>{__('Background Color', 'website-footer-block')}</label>
+                    <ColorPicker color={backgroundColor} onChangeComplete={(c) => setAttributes({ backgroundColor: c.hex })} disableAlpha />
+                </div>
+            )}
+            {backgroundType === 'gradient' && (
+                <div style={{ marginBottom: 16 }}>
+                    <label>{__('Gradient', 'website-footer-block')}</label>
+                    <ColorPicker color={backgroundGradient} onChangeComplete={(c) => setAttributes({ backgroundGradient: c.hex })} enableAlpha />
+                </div>
+            )}
+            {backgroundType === 'image' && (
+                <>
+                    <MediaUploadCheck>
+                        <MediaUpload
+                            onSelect={(media) => setAttributes({ backgroundImage: media.url })}
+                            allowedTypes={['image']}
+                            value={backgroundImage}
+                            render={({ open }) => (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 8 }}>
+                                    {backgroundImage && (
+                                        <img src={backgroundImage} alt="" style={{ width: '100%', height: 70, objectFit: 'cover', borderRadius: 4, border: '1px solid rgba(255,255,255,0.2)' }} />
+                                    )}
+                                    <Button variant="secondary" onClick={open}>
+                                        {backgroundImage ? __('Replace Image', 'website-footer-block') : __('Select Image', 'website-footer-block')}
+                                    </Button>
+                                    {backgroundImage && (
+                                        <Button variant="link" isDestructive onClick={() => setAttributes({ backgroundImage: '' })}>
+                                            {__('Remove Image', 'website-footer-block')}
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
+                        />
+                    </MediaUploadCheck>
+                    <TextControl label={__('Background Image URL', 'website-footer-block')} value={backgroundImage}
+                        onChange={(v) => setAttributes({ backgroundImage: v })} placeholder="https://example.com/image.jpg" />
+                </>
+            )}
+        </>
+    );
+
     // ── render ───────────────────────────────────────────────────────────
 
     return (
@@ -256,29 +487,7 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Footer Styling ──────────────────────────────────── */}
                 <PanelBody title={__('Footer Styling', 'website-footer-block')} initialOpen={true}>
-                    <SelectControl label="Background Type" value={backgroundType}
-                        options={[
-                            { label: 'Solid Color', value: 'solid' },
-                            { label: 'Gradient',    value: 'gradient' },
-                            { label: 'Image',       value: 'image' },
-                        ]}
-                        onChange={(v) => setAttributes({ backgroundType: v })} />
-                    {backgroundType === 'solid' && (
-                        <div style={{ marginBottom: 16 }}>
-                            <label>Background Color</label>
-                            <ColorPicker color={backgroundColor} onChangeComplete={(c) => setAttributes({ backgroundColor: c.hex })} disableAlpha />
-                        </div>
-                    )}
-                    {backgroundType === 'gradient' && (
-                        <div style={{ marginBottom: 16 }}>
-                            <label>Gradient</label>
-                            <ColorPicker color={backgroundGradient} onChangeComplete={(c) => setAttributes({ backgroundGradient: c.hex })} enableAlpha />
-                        </div>
-                    )}
-                    {backgroundType === 'image' && (
-                        <TextControl label="Background Image URL" value={backgroundImage}
-                            onChange={(v) => setAttributes({ backgroundImage: v })} placeholder="https://example.com/image.jpg" />
-                    )}
+                    {backgroundControls}
                     <div style={{ marginBottom: 16 }}>
                         <label>Text Color</label>
                         <ColorPicker color={textColor} onChangeComplete={(c) => setAttributes({ textColor: c.hex })} disableAlpha />
@@ -307,7 +516,32 @@ export default function Edit({ attributes, setAttributes }) {
                         <ToggleControl label="Show Copyright"   checked={topBar.showCopyright}   onChange={(v) => updateTopBar({ showCopyright: v })} />
                         <ToggleControl label="Show Contact Link" checked={topBar.showContactLink} onChange={(v) => updateTopBar({ showContactLink: v })} />
                         {topBar.showContactLink && (
-                            <TextControl label="Contact URL" value={topBar.contactLinkUrl || '#'} onChange={(v) => updateTopBar({ contactLinkUrl: v })} />
+                            <>
+                                <TextControl label="Contact URL" value={topBar.contactLinkUrl || '#'} onChange={(v) => updateTopBar({ contactLinkUrl: v })} />
+                                <ToggleControl
+                                    label={__('Underline contact link', 'website-footer-block')}
+                                    checked={!!topBar.contactLinkUnderline}
+                                    onChange={(v) => updateTopBar({ contactLinkUnderline: v })}
+                                />
+                                <div style={{ marginBottom: 8 }}>
+                                    <label>{__('Contact Link Hover Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={topBar.contactLinkHoverColor || ''} onChangeComplete={(c) => updateTopBar({ contactLinkHoverColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 8 }}>
+                                    <label>{__('Contact Link Hover Underline Color', 'website-footer-block')}</label>
+                                    <ColorPicker color={topBar.contactLinkHoverUnderlineColor || ''} onChangeComplete={(c) => updateTopBar({ contactLinkHoverUnderlineColor: c.hex })} disableAlpha />
+                                </div>
+                                <div style={{ marginBottom: 8 }}>
+                                    <label>{__('Contact Link Hover Background', 'website-footer-block')}</label>
+                                    <ColorPicker color={topBar.contactLinkHoverBackgroundColor || ''} onChangeComplete={(c) => updateTopBar({ contactLinkHoverBackgroundColor: c.hex })} disableAlpha />
+                                </div>
+                                <RangeControl
+                                    label={__('Contact Link Hover Transition (ms)', 'website-footer-block')}
+                                    value={topBar.contactLinkTransitionDuration != null && topBar.contactLinkTransitionDuration >= 0 ? topBar.contactLinkTransitionDuration : 300}
+                                    min={0} max={1000} step={50}
+                                    onChange={(v) => updateTopBar({ contactLinkTransitionDuration: v })}
+                                />
+                            </>
                         )}
                         <ToggleControl label="Show Social Media" checked={topBar.showSocialMedia} onChange={(v) => updateTopBar({ showSocialMedia: v })} />
                         {topBar.showSocialMedia && (
@@ -461,6 +695,29 @@ export default function Edit({ attributes, setAttributes }) {
                             <label>Legal Links Color</label>
                             <ColorPicker color={bottomBar.legalLinkColor || ''} onChangeComplete={(c) => updateBottomBar({ legalLinkColor: c.hex })} disableAlpha />
                         </div>
+                        <ToggleControl
+                            label={__('Underline legal links', 'website-footer-block')}
+                            checked={!!bottomBar.legalLinkUnderline}
+                            onChange={(v) => updateBottomBar({ legalLinkUnderline: v })}
+                        />
+                        <div style={{ marginBottom: 8 }}>
+                            <label>{__('Legal Links Hover Color', 'website-footer-block')}</label>
+                            <ColorPicker color={bottomBar.legalLinkHoverColor || ''} onChangeComplete={(c) => updateBottomBar({ legalLinkHoverColor: c.hex })} disableAlpha />
+                        </div>
+                        <div style={{ marginBottom: 8 }}>
+                            <label>{__('Legal Links Hover Underline Color', 'website-footer-block')}</label>
+                            <ColorPicker color={bottomBar.legalLinkHoverUnderlineColor || ''} onChangeComplete={(c) => updateBottomBar({ legalLinkHoverUnderlineColor: c.hex })} disableAlpha />
+                        </div>
+                        <div style={{ marginBottom: 8 }}>
+                            <label>{__('Legal Links Hover Background', 'website-footer-block')}</label>
+                            <ColorPicker color={bottomBar.legalLinkHoverBackgroundColor || ''} onChangeComplete={(c) => updateBottomBar({ legalLinkHoverBackgroundColor: c.hex })} disableAlpha />
+                        </div>
+                        <RangeControl
+                            label={__('Legal Links Hover Transition (ms)', 'website-footer-block')}
+                            value={bottomBar.legalLinkTransitionDuration != null && bottomBar.legalLinkTransitionDuration >= 0 ? bottomBar.legalLinkTransitionDuration : 300}
+                            min={0} max={1000} step={50}
+                            onChange={(v) => updateBottomBar({ legalLinkTransitionDuration: v })}
+                        />
                         <div style={{ marginBottom: 16 }}>
                             <label>Bottom Bar Background</label>
                             <ColorPicker color={bottomBar.backgroundColor || ''} onChangeComplete={(c) => updateBottomBar({ backgroundColor: c.hex })} disableAlpha />
@@ -472,6 +729,13 @@ export default function Edit({ attributes, setAttributes }) {
 
             {/* ── PREVIEW ──────────────────────────────────────────────── */}
             <div {...blockProps}>
+                <QuickZone
+                    id="footer-background"
+                    label={__('Background', 'website-footer-block')}
+                    activeZone={activeZone}
+                    setActiveZone={setActiveZone}
+                    content={backgroundControls}
+                >
                 <div className="website-footer-block__container">
 
                     {/* ── Top Bar ──────────────────────────────────────── */}
@@ -496,9 +760,17 @@ export default function Edit({ attributes, setAttributes }) {
                                     {topBar.showContactLink && (
                                         <>
                                             <span className="website-footer-block__separator"> | </span>
-                                            <RichText tagName="a" value={topBar.contactLinkText}
+                                            <RichText tagName="a" className="website-footer-block__contact-link" value={topBar.contactLinkText}
                                                 onChange={(v) => updateTopBar({ contactLinkText: v })}
-                                                placeholder="Contact Us" withoutInteractiveFormatting />
+                                                placeholder="Contact Us" withoutInteractiveFormatting
+                                                style={{
+                                                    '--contact-underline-mode': topBar.contactLinkUnderline ? 'underline' : undefined,
+                                                    '--contact-hover-color': topBar.contactLinkHoverColor || undefined,
+                                                    '--contact-hover-bg': topBar.contactLinkHoverBackgroundColor || undefined,
+                                                    '--contact-hover-underline-color': topBar.contactLinkHoverUnderlineColor || undefined,
+                                                    '--contact-hover-underline-mode': (topBar.contactLinkUnderline || topBar.contactLinkHoverUnderlineColor) ? 'underline' : undefined,
+                                                    '--contact-transition-duration': (topBar.contactLinkTransitionDuration != null && topBar.contactLinkTransitionDuration >= 0) ? `${topBar.contactLinkTransitionDuration}ms` : undefined,
+                                                }} />
                                         </>
                                     )}
                                 </div>
@@ -599,11 +871,56 @@ export default function Edit({ attributes, setAttributes }) {
                                                                         )}
                                                                     </>
                                                                 )}
+                                                                <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
+                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>Brand Name</strong>
+                                                                <ToggleControl
+                                                                    label={__('Show brand name text', 'website-footer-block')}
+                                                                    checked={effectiveShowBrandName(column)}
+                                                                    onChange={(v) => updateColumn(column.id, { showBrandName: v })}
+                                                                    help={__('Off by default — turn on to type a brand name under the logo.', 'website-footer-block')}
+                                                                />
+                                                                <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
+                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>Call to Action</strong>
                                                                 <ToggleControl label={__('Show CTA button', 'website-footer-block')} checked={!!column.showCta}
                                                                     onChange={(v) => updateColumn(column.id, { showCta: v })} />
                                                                 {!!column.showCta && (
-                                                                    <TextControl label={__('CTA Link URL', 'website-footer-block')} value={column.ctaUrl || ''}
-                                                                        onChange={(v) => updateColumn(column.id, { ctaUrl: v })} placeholder="https://…" />
+                                                                    <>
+                                                                        <TextControl label={__('CTA Link URL', 'website-footer-block')} value={column.ctaUrl || ''}
+                                                                            onChange={(v) => updateColumn(column.id, { ctaUrl: v })} placeholder="https://…" />
+                                                                        <div>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Background Color', 'website-footer-block')}</label>
+                                                                            <ColorPicker color={column.ctaBackgroundColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaBackgroundColor: c.hex })} />
+                                                                        </div>
+                                                                        <div>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Text Color', 'website-footer-block')}</label>
+                                                                            <ColorPicker color={column.ctaTextColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaTextColor: c.hex })} />
+                                                                        </div>
+                                                                        <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('CTA Hover State', 'website-footer-block')}</strong>
+                                                                        <div>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Background Color', 'website-footer-block')}</label>
+                                                                            <ColorPicker color={column.ctaHoverBackgroundColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaHoverBackgroundColor: c.hex })} />
+                                                                        </div>
+                                                                        <div>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Text Color', 'website-footer-block')}</label>
+                                                                            <ColorPicker color={column.ctaHoverColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaHoverColor: c.hex })} />
+                                                                        </div>
+                                                                        <div>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Border Color', 'website-footer-block')}</label>
+                                                                            <ColorPicker color={column.ctaHoverBorderColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaHoverBorderColor: c.hex })} />
+                                                                        </div>
+                                                                        <RangeControl
+                                                                            label={__('Border Radius (px)', 'website-footer-block')}
+                                                                            value={column.ctaBorderRadius != null && column.ctaBorderRadius >= 0 ? column.ctaBorderRadius : 4}
+                                                                            min={0} max={40}
+                                                                            onChange={(v) => updateColumn(column.id, { ctaBorderRadius: v })}
+                                                                        />
+                                                                        <RangeControl
+                                                                            label={__('Hover Transition (ms)', 'website-footer-block')}
+                                                                            value={column.ctaTransitionDuration != null && column.ctaTransitionDuration >= 0 ? column.ctaTransitionDuration : 300}
+                                                                            min={0} max={1000} step={50}
+                                                                            onChange={(v) => updateColumn(column.id, { ctaTransitionDuration: v })}
+                                                                        />
+                                                                    </>
                                                                 )}
                                                             </>
                                                         )}
@@ -655,18 +972,40 @@ export default function Edit({ attributes, setAttributes }) {
                                                                         { label: 'Bulleted', value: 'bulleted' },
                                                                         { label: 'Numbered', value: 'numbered' },
                                                                         { label: 'Dashed',   value: 'dashed' },
+                                                                        { label: 'Dotted',   value: 'dotted' },
                                                                     ]}
                                                                     onChange={(v) => updateColumn(column.id, { listStyle: v })} />
                                                                 <RangeControl label={__('Item Spacing (px)', 'website-footer-block')} value={column.itemSpacing} min={0} max={40}
                                                                     onChange={(v) => updateColumn(column.id, { itemSpacing: v })} />
+                                                                <ToggleControl
+                                                                    label={__('Underline links', 'website-footer-block')}
+                                                                    checked={!!column.linkUnderline}
+                                                                    onChange={(v) => updateColumn(column.id, { linkUnderline: v })}
+                                                                    help={__('Off by default — combine with List Style above for bullets, underlines, both, or neither.', 'website-footer-block')}
+                                                                />
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Link Color', 'website-footer-block')}</label>
                                                                     <ColorPicker color={column.linkColor || ''} onChangeComplete={(c) => updateColumn(column.id, { linkColor: c.hex })} disableAlpha />
                                                                 </div>
+                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Link Hover State', 'website-footer-block')}</strong>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Link Hover Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Hover Text Color', 'website-footer-block')}</label>
                                                                     <ColorPicker color={column.linkHoverColor || ''} onChangeComplete={(c) => updateColumn(column.id, { linkHoverColor: c.hex })} disableAlpha />
                                                                 </div>
+                                                                <div style={{ marginBottom: 4 }}>
+                                                                    <label>{__('Hover Underline Color', 'website-footer-block')}</label>
+                                                                    <ColorPicker color={column.linkHoverUnderlineColor || ''} onChangeComplete={(c) => updateColumn(column.id, { linkHoverUnderlineColor: c.hex })} disableAlpha />
+                                                                </div>
+                                                                <div style={{ marginBottom: 4 }}>
+                                                                    <label>{__('Hover Background Color', 'website-footer-block')}</label>
+                                                                    <ColorPicker color={column.linkHoverBackgroundColor || ''} onChangeComplete={(c) => updateColumn(column.id, { linkHoverBackgroundColor: c.hex })} disableAlpha />
+                                                                </div>
+                                                                <RangeControl
+                                                                    label={__('Hover Transition (ms)', 'website-footer-block')}
+                                                                    value={column.linkTransitionDuration != null && column.linkTransitionDuration >= 0 ? column.linkTransitionDuration : 300}
+                                                                    min={0} max={1000} step={50}
+                                                                    onChange={(v) => updateColumn(column.id, { linkTransitionDuration: v })}
+                                                                />
                                                                 {(column.navigationSource || 'legacy') === 'legacy' && (
                                                                     <>
                                                                         <p style={{ fontSize: 12, opacity: 0.75, marginTop: 4 }}>
@@ -707,6 +1046,33 @@ export default function Edit({ attributes, setAttributes }) {
                                                                     <label>{__('Icon Hover Background', 'website-footer-block')}</label>
                                                                     <ColorPicker color={column.socialHoverBackgroundColor || ''} onChangeComplete={(c) => updateColumn(column.id, { socialHoverBackgroundColor: c.hex })} disableAlpha />
                                                                 </div>
+                                                                <div style={{ marginBottom: 4 }}>
+                                                                    <label>{__('Icon Border Color', 'website-footer-block')}</label>
+                                                                    <ColorPicker color={column.socialBorderColor || ''} onChangeComplete={(c) => updateColumn(column.id, { socialBorderColor: c.hex })} disableAlpha />
+                                                                </div>
+                                                                <div style={{ marginBottom: 4 }}>
+                                                                    <label>{__('Icon Hover Border Color', 'website-footer-block')}</label>
+                                                                    <ColorPicker color={column.socialHoverBorderColor || ''} onChangeComplete={(c) => updateColumn(column.id, { socialHoverBorderColor: c.hex })} disableAlpha />
+                                                                </div>
+                                                                <RangeControl
+                                                                    label={__('Icon Border Radius (%)', 'website-footer-block')}
+                                                                    value={column.socialBorderRadius != null && column.socialBorderRadius >= 0 ? column.socialBorderRadius : 50}
+                                                                    min={0} max={50}
+                                                                    onChange={(v) => updateColumn(column.id, { socialBorderRadius: v })}
+                                                                    help={__('50% = circle, 0% = square', 'website-footer-block')}
+                                                                />
+                                                                <RangeControl
+                                                                    label={__('Icon Spacing (px)', 'website-footer-block')}
+                                                                    value={column.socialIconSpacing != null && column.socialIconSpacing >= 0 ? column.socialIconSpacing : 12}
+                                                                    min={0} max={40}
+                                                                    onChange={(v) => updateColumn(column.id, { socialIconSpacing: v })}
+                                                                />
+                                                                <RangeControl
+                                                                    label={__('Hover Transition (ms)', 'website-footer-block')}
+                                                                    value={column.socialTransitionDuration != null && column.socialTransitionDuration >= 0 ? column.socialTransitionDuration : 300}
+                                                                    min={0} max={1000} step={50}
+                                                                    onChange={(v) => updateColumn(column.id, { socialTransitionDuration: v })}
+                                                                />
                                                                 <p style={{ fontSize: 12, opacity: 0.75, marginTop: 4 }}>
                                                                     {__('Click an icon on canvas to edit its platform, label, URL, or remove it.', 'website-footer-block')}
                                                                 </p>
@@ -791,16 +1157,31 @@ export default function Edit({ attributes, setAttributes }) {
                                                 {column.type === 'nav' && (
                                                     <>
                                                         {column.navigationSource && column.navigationSource !== 'legacy' ? (
-                                                            <p style={{ fontSize: 12, opacity: 0.7, fontStyle: 'italic' }}>
-                                                                {__('Items load live from the selected WordPress menu.', 'website-footer-block')}
-                                                            </p>
+                                                            isMenuLoadingForColumn(column) ? (
+                                                                <p style={{ fontSize: 12, opacity: 0.6, fontStyle: 'italic' }}>
+                                                                    {__('Loading menu…', 'website-footer-block')}
+                                                                </p>
+                                                            ) : (menuTreeByColumn[column.id] || []).length > 0 ? (
+                                                                <ul className={`website-footer-block__nav-list website-footer-block__nav-list--${column.listStyle}`}
+                                                                    style={{ gap: `${column.itemSpacing}px` }}>
+                                                                    {menuTreeByColumn[column.id].map((item) => (
+                                                                        <FooterDynamicMenuNode key={item.id} item={item} column={column} />
+                                                                    ))}
+                                                                </ul>
+                                                            ) : (
+                                                                <p style={{ fontSize: 12, opacity: 0.6, fontStyle: 'italic' }}>
+                                                                    {column.navigationSource === 'menu'
+                                                                        ? __('No menu selected yet — choose one in the settings panel.', 'website-footer-block')
+                                                                        : __('No menu assigned to this location yet — assign one under Appearance → Menus.', 'website-footer-block')}
+                                                                </p>
+                                                            )
                                                         ) : (
                                                             <ul className={`website-footer-block__nav-list website-footer-block__nav-list--${column.listStyle}`}
                                                                 style={{ gap: `${column.itemSpacing}px` }}>
                                                                 {(column.navItems || []).map((item, itemIndex) => (
                                                                     <li key={item.id} style={{ listStyle: 'none' }}>
                                                                         <QuickZone
-                                                                            id={`footer-navitem-${item.id}`}
+                                                                            id={`footer-navitem-${column.id}-${item.id}`}
                                                                             label={item.label || __('Link', 'website-footer-block')}
                                                                             activeZone={activeZone}
                                                                             setActiveZone={setActiveZone}
@@ -814,7 +1195,18 @@ export default function Edit({ attributes, setAttributes }) {
                                                                                 </div>
                                                                             }
                                                                         >
-                                                                            <span style={{ color: column.linkColor || 'inherit' }}>
+                                                                            <span
+                                                                                className="website-footer-block__nav-link"
+                                                                                style={{
+                                                                                    color: column.linkColor || 'inherit',
+                                                                                    '--link-hover-color': column.linkHoverColor || undefined,
+                                                                                    '--link-hover-bg': column.linkHoverBackgroundColor || undefined,
+                                                                                    '--link-hover-underline-color': column.linkHoverUnderlineColor || undefined,
+                                                                                    '--link-underline-mode': column.linkUnderline ? 'underline' : undefined,
+                                                                                    '--link-hover-underline-mode': (column.linkUnderline || column.linkHoverUnderlineColor) ? 'underline' : undefined,
+                                                                                    '--link-transition-duration': (column.linkTransitionDuration != null && column.linkTransitionDuration >= 0) ? `${column.linkTransitionDuration}ms` : undefined,
+                                                                                }}
+                                                                            >
                                                                                 {item.label || __('Link', 'website-footer-block')}
                                                                             </span>
                                                                         </QuickZone>
@@ -841,9 +1233,11 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 Click "Logo" pen → Upload Logo
                                                             </div>
                                                         ) : null}
-                                                        <RichText tagName="div" className="website-footer-block__brand-name"
-                                                            value={column.brandName} onChange={(v) => updateColumn(column.id, { brandName: v })}
-                                                            placeholder="Brand Name" withoutInteractiveFormatting />
+                                                        {effectiveShowBrandName(column) && (
+                                                            <RichText tagName="div" className="website-footer-block__brand-name"
+                                                                value={column.brandName} onChange={(v) => updateColumn(column.id, { brandName: v })}
+                                                                placeholder="Brand Name" withoutInteractiveFormatting />
+                                                        )}
                                                         <RichText tagName="p" className="website-footer-block__brand-description"
                                                             value={column.description} onChange={(v) => updateColumn(column.id, { description: v })}
                                                             placeholder="Brand description…" />
@@ -852,18 +1246,31 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 className={`website-footer-block__cta website-footer-block__cta--${column.ctaStyle}`}
                                                                 value={column.ctaText} onChange={(v) => updateColumn(column.id, { ctaText: v })}
                                                                 placeholder="Call to Action"
-                                                                style={{ backgroundColor: column.ctaStyle === 'button' ? column.ctaBackgroundColor : 'transparent', color: column.ctaStyle === 'button' ? column.ctaTextColor : 'inherit' }} />
+                                                                style={{
+                                                                    backgroundColor: column.ctaStyle === 'button' ? column.ctaBackgroundColor : 'transparent',
+                                                                    color: column.ctaStyle === 'button' ? column.ctaTextColor : 'inherit',
+                                                                    '--cta-hover-bg': column.ctaHoverBackgroundColor || undefined,
+                                                                    '--cta-hover-color': column.ctaHoverColor || undefined,
+                                                                    '--cta-hover-border-color': column.ctaHoverBorderColor || undefined,
+                                                                    '--cta-border-radius': (column.ctaBorderRadius != null && column.ctaBorderRadius >= 0) ? `${column.ctaBorderRadius}px` : undefined,
+                                                                    '--cta-transition-duration': (column.ctaTransitionDuration != null && column.ctaTransitionDuration >= 0) ? `${column.ctaTransitionDuration}ms` : undefined,
+                                                                }} />
                                                         )}
                                                     </>
                                                 )}
 
                                                 {/* Social column */}
                                                 {column.type === 'social' && (
-                                                    <div className={`website-footer-block__social-list website-footer-block__social-list--${column.displayStyle || 'vertical'}`}>
+                                                    <div
+                                                        className={`website-footer-block__social-list website-footer-block__social-list--${column.displayStyle || 'vertical'}`}
+                                                        style={{
+                                                            gap: (column.socialIconSpacing != null && column.socialIconSpacing >= 0) ? `${column.socialIconSpacing}px` : undefined,
+                                                        }}
+                                                    >
                                                         {(column.socialItems || []).map((item) => (
                                                             <QuickZone
                                                                 key={item.id}
-                                                                id={`footer-socialitem-${item.id}`}
+                                                                id={`footer-socialitem-${column.id}-${item.id}`}
                                                                 label={item.label || item.platform || __('Social link', 'website-footer-block')}
                                                                 activeZone={activeZone}
                                                                 setActiveZone={setActiveZone}
@@ -888,11 +1295,15 @@ export default function Edit({ attributes, setAttributes }) {
                                                                         style={{
                                                                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                                                                             width: (column.iconSize || 24) + 12, height: (column.iconSize || 24) + 12,
-                                                                            borderRadius: '50%', color: column.iconColor || 'inherit',
+                                                                            borderRadius: (column.socialBorderRadius != null && column.socialBorderRadius >= 0) ? `${column.socialBorderRadius}%` : '50%',
+                                                                            color: column.iconColor || 'inherit',
                                                                             backgroundColor: column.iconBgColor || 'rgba(255,255,255,0.1)',
                                                                             fontSize: `${column.iconSize || 24}px`,
+                                                                            border: `2px solid ${column.socialBorderColor || 'transparent'}`,
+                                                                            transition: `all ${(column.socialTransitionDuration != null && column.socialTransitionDuration >= 0) ? column.socialTransitionDuration : 300}ms ease`,
                                                                             '--social-hover-color': column.socialHoverColor || '',
                                                                             '--social-hover-bg': column.socialHoverBackgroundColor || '',
+                                                                            '--social-hover-border-color': column.socialHoverBorderColor || '',
                                                                         }}
                                                                     >
                                                                         <span dangerouslySetInnerHTML={{ __html: getIconSvg(item.icon || item.platform) }} />
@@ -936,7 +1347,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                         {(column.buttonsItems || []).map((item) => (
                                                             <QuickZone
                                                                 key={item.id}
-                                                                id={`footer-btnitem-${item.id}`}
+                                                                id={`footer-btnitem-${column.id}-${item.id}`}
                                                                 label={item.label || __('Button', 'website-footer-block')}
                                                                 activeZone={activeZone}
                                                                 setActiveZone={setActiveZone}
@@ -955,6 +1366,33 @@ export default function Edit({ attributes, setAttributes }) {
                                                                             <label>{__('Text Color', 'website-footer-block')}</label>
                                                                             <ColorPicker color={item.textColor || ''} onChangeComplete={(c) => updateButtonsItem(column.id, item.id, 'textColor', c.hex)} disableAlpha />
                                                                         </div>
+                                                                        <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
+                                                                        <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Hover State', 'website-footer-block')}</strong>
+                                                                        <div style={{ marginBottom: 4 }}>
+                                                                            <label>{__('Hover Background', 'website-footer-block')}</label>
+                                                                            <ColorPicker color={item.hoverBackgroundColor || ''} onChangeComplete={(c) => updateButtonsItem(column.id, item.id, 'hoverBackgroundColor', c.hex)} disableAlpha />
+                                                                        </div>
+                                                                        <div style={{ marginBottom: 4 }}>
+                                                                            <label>{__('Hover Text Color', 'website-footer-block')}</label>
+                                                                            <ColorPicker color={item.hoverTextColor || ''} onChangeComplete={(c) => updateButtonsItem(column.id, item.id, 'hoverTextColor', c.hex)} disableAlpha />
+                                                                        </div>
+                                                                        <div style={{ marginBottom: 4 }}>
+                                                                            <label>{__('Hover Border Color', 'website-footer-block')}</label>
+                                                                            <ColorPicker color={item.hoverBorderColor || ''} onChangeComplete={(c) => updateButtonsItem(column.id, item.id, 'hoverBorderColor', c.hex)} disableAlpha />
+                                                                        </div>
+                                                                        <RangeControl
+                                                                            label={__('Border Radius (px)', 'website-footer-block')}
+                                                                            value={item.borderRadius != null && item.borderRadius >= 0 ? item.borderRadius : 4}
+                                                                            min={0} max={50}
+                                                                            onChange={(v) => updateButtonsItem(column.id, item.id, 'borderRadius', v)}
+                                                                        />
+                                                                        <RangeControl
+                                                                            label={__('Hover Transition (ms)', 'website-footer-block')}
+                                                                            value={item.transitionDuration != null && item.transitionDuration >= 0 ? item.transitionDuration : 300}
+                                                                            min={0} max={1000} step={50}
+                                                                            onChange={(v) => updateButtonsItem(column.id, item.id, 'transitionDuration', v)}
+                                                                        />
+                                                                        <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
                                                                         <ToggleControl label={__('Open in new tab', 'website-footer-block')} checked={!!item.newTab} onChange={(v) => updateButtonsItem(column.id, item.id, 'newTab', v)} />
                                                                         <Button variant="link" isDestructive onClick={() => removeButtonsItem(column.id, item.id)}>{__('Remove', 'website-footer-block')}</Button>
                                                                     </div>
@@ -966,6 +1404,11 @@ export default function Edit({ attributes, setAttributes }) {
                                                                         backgroundColor: (item.style || 'solid') === 'solid' ? (item.backgroundColor || 'var(--footer-accent-color, #D52940)') : 'transparent',
                                                                         color: item.textColor || ((item.style || 'solid') === 'solid' ? '#ffffff' : 'inherit'),
                                                                         borderColor: item.backgroundColor || 'var(--footer-accent-color, #D52940)',
+                                                                        borderRadius: (item.borderRadius != null && item.borderRadius >= 0) ? `${item.borderRadius}px` : undefined,
+                                                                        transition: `all ${(item.transitionDuration != null && item.transitionDuration >= 0) ? item.transitionDuration : 300}ms ease`,
+                                                                        '--buttons-hover-bg': item.hoverBackgroundColor || undefined,
+                                                                        '--buttons-hover-color': item.hoverTextColor || undefined,
+                                                                        '--buttons-hover-border-color': item.hoverBorderColor || undefined,
                                                                     }}>
                                                                     {item.label || __('Button', 'website-footer-block')}
                                                                 </span>
@@ -1044,10 +1487,18 @@ export default function Edit({ attributes, setAttributes }) {
                                         {(bottomBar.legalLinks || []).map((link, index) => (
                                             <span key={link.id} className="website-footer-block__legal-link-wrapper">
                                                 {index > 0 && <span className="website-footer-block__separator">{bottomBar.separator}</span>}
-                                                <RichText tagName="a" value={link.label}
+                                                <RichText tagName="a" className="website-footer-block__legal-link" value={link.label}
                                                     onChange={(v) => updateLegalLink(link.id, 'label', v)}
                                                     placeholder="Privacy" withoutInteractiveFormatting
-                                                    style={{ color: bottomBar.legalLinkColor || undefined }} />
+                                                    style={{
+                                                        color: bottomBar.legalLinkColor || undefined,
+                                                        '--legal-underline-mode': bottomBar.legalLinkUnderline ? 'underline' : undefined,
+                                                        '--legal-hover-color': bottomBar.legalLinkHoverColor || undefined,
+                                                        '--legal-hover-bg': bottomBar.legalLinkHoverBackgroundColor || undefined,
+                                                        '--legal-hover-underline-color': bottomBar.legalLinkHoverUnderlineColor || undefined,
+                                                        '--legal-hover-underline-mode': (bottomBar.legalLinkUnderline || bottomBar.legalLinkHoverUnderlineColor) ? 'underline' : undefined,
+                                                        '--legal-transition-duration': (bottomBar.legalLinkTransitionDuration != null && bottomBar.legalLinkTransitionDuration >= 0) ? `${bottomBar.legalLinkTransitionDuration}ms` : undefined,
+                                                    }} />
                                             </span>
                                         ))}
                                     </div>
@@ -1064,6 +1515,7 @@ export default function Edit({ attributes, setAttributes }) {
                         </div>
                     )}
                 </div>
+                </QuickZone>
             </div>
         </>
     );

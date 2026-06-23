@@ -1,6 +1,6 @@
 # Free Version Scaffold
 
-This folder is the **single source of truth** for the generated free version of GutenBlocks Blocks.
+This folder is the **single source of truth** for the generated free version of GutenBlocks.
 
 It is based on `tags/1.2.3` — the clean, WordPress.org-compliant release — with the deactivation intent (SendGrid feedback modal) overlaid from the internal test build.
 

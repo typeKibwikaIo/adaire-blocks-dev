@@ -2,7 +2,6 @@
 import {
 	useBlockProps,
 	InnerBlocks,
-	InspectorControls,
 	PanelColorSettings,
 } from '@wordpress/block-editor';
 import {
@@ -18,6 +17,8 @@ import {
 import { useState, useEffect, createElement } from '@wordpress/element';
 import { desktop, tablet, mobile } from '@wordpress/icons';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import InspectorTabs from '../components/InspectorTabs';
+import QuickZone from '../components/QuickZone';
 import './editor.scss';
 
 // Custom icons for small laptop and big desktop
@@ -102,6 +103,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 	} = attributes;
 
 	const [deviceType, setDeviceType] = useState('desktop');
+	const [activeZone, setActiveZone] = useState(null);
 
     const ALLOWED_BLOCKS = ['adaire/swiper-slide'];
 
@@ -237,7 +239,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     return (
 		<>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 					<PanelBody title={__('Responsive Settings', 'swiper-carousel-block')} initialOpen={false}>
 						<DeviceSwitcher 
 							deviceType={deviceType} 
@@ -701,17 +703,46 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         step={1}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
 			<div {...blockProps}>
-				<div
-					className={`adaire-swiper-carousel__container ${
-						containerMode === 'constrained' ? 'is-constrained' : ''
-					}`}
+				<QuickZone
+					id="layout"
+					label={__('Layout', 'swiper-carousel-block')}
+					activeZone={activeZone}
+					setActiveZone={setActiveZone}
+					content={
+						<>
+							<RangeControl
+								label={__('Gap Between Cards', 'swiper-carousel-block')}
+								value={cardGap}
+								onChange={(value) => setAttributes({ cardGap: value })}
+								min={4}
+								max={48}
+								step={2}
+							/>
+							<RangeControl
+								label={__('Slides Per View (Desktop)', 'swiper-carousel-block')}
+								value={slidesPerView?.desktop ?? 4}
+								onChange={(value) =>
+									setAttributes({
+										slidesPerView: { ...slidesPerView, desktop: value },
+									})
+								}
+								min={1}
+								max={12}
+							/>
+						</>
+					}
 				>
-					<div className="adaire-swiper-carousel__wrapper">
-						<div className="adaire-swiper-carousel__swiper swiper">
-							<div className="adaire-swiper-carousel__list swiper-wrapper">
+					<div
+						className={`adaire-swiper-carousel__container ${
+							containerMode === 'constrained' ? 'is-constrained' : ''
+						}`}
+					>
+						<div className="adaire-swiper-carousel__wrapper">
+							<div className="adaire-swiper-carousel__swiper swiper">
+								<div className="adaire-swiper-carousel__list swiper-wrapper">
                 <InnerBlocks
                     allowedBlocks={ALLOWED_BLOCKS}
                     template={[['adaire/swiper-slide']]}
@@ -725,6 +756,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						</div>
 					</div>
 				</div>
+				</QuickZone>
 
 				{/* Drag cursor preview in editor */}
 				<div className="adaire-swiper-carousel__drag-cursor adaire-swiper-carousel__drag-cursor--preview">

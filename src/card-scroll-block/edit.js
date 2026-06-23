@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import {
     useBlockProps,
-    InspectorControls,
     useInnerBlocksProps,
     InnerBlocks,
 } from '@wordpress/block-editor';
@@ -17,6 +16,7 @@ import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { desktop, tablet, mobile } from '@wordpress/icons';
 import { createBlock } from '@wordpress/blocks';
 import { useDispatch } from '@wordpress/data';
+import InspectorTabs from '../components/InspectorTabs';
 
 const BREAKPOINTS = [
     { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks-dev2') },
@@ -159,7 +159,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <div className="adaire-device-toggle" style={{ padding: '16px 16px 0', borderBottom: '1px solid #e0e0e0', marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
                     <ButtonGroup>
                         {BREAKPOINTS.map((bp) => (
@@ -310,7 +310,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         onChange={(val) => updateResponsive('responsiveDescriptionLineHeight', deviceType, val)}
                     />
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps}>
                 <div 

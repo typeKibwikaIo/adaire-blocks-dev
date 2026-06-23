@@ -1,10 +1,10 @@
-# GutenBlocks Blocks
+# GutenBlocks
 
 A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.
 
 ## Features
 
-GutenBlocks Blocks is a comprehensive WordPress plugin that provides a collection of custom Gutenberg blocks designed to create visually stunning, high-performance websites. Built with modern web technologies including GSAP, React, and optimized for performance.
+GutenBlocks is a comprehensive WordPress plugin that provides a collection of custom Gutenberg blocks designed to create visually stunning, high-performance websites. Built with modern web technologies including GSAP, React, and optimized for performance.
 
 - **Unified icon language**: refreshed SVG icons for every Free, Plus, and Premium block so the editor, admin block management screen, and documentation all share the same polished visuals.
 
@@ -87,7 +87,7 @@ GutenBlocks Blocks is a comprehensive WordPress plugin that provides a collectio
 
 ## Usage
 
-Once activated, you'll find all GutenBlocks Blocks in the Gutenberg block inserter under their respective categories:
+Once activated, you'll find all GutenBlocks in the Gutenberg block inserter under their respective categories:
 
 - **Media**: Video Hero Block, Video Player Block, Logos Block
 - **Design**: Container Block, Accordion Block, Tabs Block
@@ -276,7 +276,7 @@ A: The plugin is optimized for performance with efficient block registration and
 ### Version 1.1.1 =
 * **Added** Complete License Activation System with external API integration
 * **Added** License validation, activation, and deactivation functionality
-* **Added** License admin page under GutenBlocks Blocks menu
+* **Added** License admin page under GutenBlocks menu
 * **Added** Automatic license status checking and premium feature management
 * **Added** Database integration with automatic table creation
 * **Added** Token-based activation system with secure storage
@@ -299,8 +299,8 @@ A: The plugin is optimized for performance with efficient block registration and
 
 ### Version 1.0.9
 - **Added:** Block Migration Tool for automated block updates and validation fixes
-- **Added:** Migration admin page under GutenBlocks Blocks menu
-- **Feature:** Batch-update all posts and pages with GutenBlocks Blocks
+- **Added:** Migration admin page under GutenBlocks menu
+- **Feature:** Batch-update all posts and pages with GutenBlocks
 - **Feature:** Real-time progress tracking with visual indicators
 - **Feature:** Detailed migration logs with timestamps
 - **Feature:** Automatic validation error recovery
