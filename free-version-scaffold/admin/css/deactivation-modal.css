@@ -33,7 +33,7 @@
 
 /* Header */
 .adaire-modal-header {
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    background: linear-gradient(135deg, #E8272A 0%, #c01f22 100%);
     padding: 24px 28px 20px;
     color: #fff;
     position: relative;
@@ -136,8 +136,8 @@
 }
 
 .adaire-reasons-list label:hover {
-    border-color: #a5b4fc;
-    background: #f8f7ff;
+    border-color: #f4a0a1;
+    background: #fff5f5;
 }
 
 .adaire-reasons-list input[type="radio"] {
@@ -162,17 +162,17 @@
 }
 
 .adaire-reasons-list input[type="radio"]:checked {
-    border-color: #6366f1;
+    border-color: #E8272A;
 }
 
 .adaire-reasons-list input[type="radio"]:checked::after {
-    background: #6366f1;
+    background: #E8272A;
 }
 
 .adaire-reasons-list label:has(input:checked) {
-    border-color: #6366f1;
-    background: #f5f3ff;
-    color: #4338ca;
+    border-color: #E8272A;
+    background: #fff0f0;
+    color: #c01f22;
 }
 
 /* Follow-up textarea */
@@ -202,8 +202,8 @@
 
 .adaire-followup textarea:focus {
     outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    border-color: #E8272A;
+    box-shadow: 0 0 0 3px rgba(232,39,42,0.12);
 }
 
 /* Email field */
@@ -234,8 +234,8 @@
 
 .adaire-field input[type="email"]:focus {
     outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    border-color: #E8272A;
+    box-shadow: 0 0 0 3px rgba(232,39,42,0.12);
 }
 
 /* Buttons */
@@ -246,8 +246,8 @@
 
 .adaire-submit-btn {
     flex: 1;
-    background: #6366f1 !important;
-    border-color: #6366f1 !important;
+    background: #E8272A !important;
+    border-color: #E8272A !important;
     color: #fff !important;
     border-radius: 8px !important;
     height: 38px !important;
@@ -258,8 +258,8 @@
 }
 
 .adaire-submit-btn:hover:not(:disabled) {
-    background: #4f46e5 !important;
-    border-color: #4f46e5 !important;
+    background: #c01f22 !important;
+    border-color: #c01f22 !important;
 }
 
 .adaire-submit-btn:disabled {

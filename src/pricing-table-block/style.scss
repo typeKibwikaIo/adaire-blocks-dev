@@ -156,7 +156,7 @@
         margin-left: 8px;
         padding: 2px 8px;
         border-radius: 999px;
-        background-color: var(--pricing-badge-bg, #22c55e);
+        background-color: var(--pricing-badge-bg, #503AA8);
         color: #ffffff;
         font-size: var(--pricing-badge-font-size, 11px);
         font-weight: 600;
@@ -258,7 +258,7 @@
 
         &:hover {
             transform: translateY(-6px);
-            border-color: var(--pricing-card-border-hover, #14b85a);
+            border-color: var(--pricing-card-border-hover, #503AA8);
             box-shadow:
                 0 28px 60px rgba(15, 23, 42, 0.11),
                 0 6px 18px rgba(15, 23, 42, 0.06);
@@ -276,11 +276,11 @@
         &.is-featured {
             background:
                 linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)),
-                var(--pricing-card-bg-featured, #14b85a);
+                var(--pricing-card-bg-featured, #503AA8);
             color: var(--pricing-card-text-featured, #ffffff);
             border-color: color-mix(
                 in srgb,
-                var(--pricing-card-bg-featured, #14b85a) 72%,
+                var(--pricing-card-bg-featured, #503AA8) 72%,
                 #111827 28%
             );
             transform: translateY(-8px);
@@ -470,10 +470,10 @@
         border-radius: max(var(--pricing-card-radius, 6px), 8px);
         transition: all 0.2s ease;
         box-shadow: 0 8px 18px
-            var(--pricing-button-glow, rgba(16, 185, 129, 0.25));
+            var(--pricing-button-glow, rgba(80, 58, 168, 0.25));
 
         &:hover {
-            background-color: var(--pricing-button-bg-hover, #059669);
+            background-color: var(--pricing-button-bg-hover, #3d2c8d);
             transform: translateY(-1px);
             box-shadow: 0 12px 22px
                 var(--pricing-button-glow, rgba(16, 185, 129, 0.3));

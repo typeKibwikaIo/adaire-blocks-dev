@@ -507,6 +507,26 @@
                 "bigDesktop": "#ffffff33"
             }
         },
+        "responsiveItemTextAlign": {
+            "type": "object",
+            "default": {
+                "mobile": "left",
+                "tablet": "left",
+                "smallLaptop": "left",
+                "desktop": "left",
+                "bigDesktop": "left"
+            }
+        },
+        "responsiveItemBorderRadius": {
+            "type": "object",
+            "default": {
+                "mobile": "12px",
+                "tablet": "12px",
+                "smallLaptop": "12px",
+                "desktop": "12px",
+                "bigDesktop": "12px"
+            }
+        },
         "responsiveBlockWidth": {
             "type": "object",
             "default": {
