@@ -743,7 +743,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${currentPage === 1 ? 'disabled' : ''}
                         data-action="prev"
                     >
-                        <span>â† Previous</span>
+                        <span>&larr; Previous</span>
                     </button>
                 `;
 
@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${currentPage === totalPages ? 'disabled' : ''}
                         data-action="next"
                     >
-                        <span>Next â†’</span>
+                        <span>Next &rarr;</span>
                     </button>
                 `;
                 
@@ -804,7 +804,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${currentPage === 1 ? 'disabled' : ''}
                         data-action="prev"
                     >
-                        <span>â† Previous</span>
+                        <span>&larr; Previous</span>
                     </button>
                     <span class="adaire-posts-grid__pagination-info">
                         Page ${currentPage} of ${totalPages}
@@ -814,7 +814,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${currentPage === totalPages ? 'disabled' : ''}
                         data-action="next"
                     >
-                        <span>Next â†’</span>
+                        <span>Next &rarr;</span>
                     </button>
                 `;
                 

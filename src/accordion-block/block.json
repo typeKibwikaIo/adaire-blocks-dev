@@ -31,15 +31,33 @@
             "default": [
                 {
                     "id": "",
-                    "title": "Accordion Item 1",
-                    "content": "Lorem ipsum dolor sit amet.",
+                    "title": "What is the Accordion Block?",
+                    "content": "The Accordion Block lets you organize content into collapsible sections, keeping your page clean and easy to scan. Each item has a title that visitors click to reveal the content below — perfect for FAQs, feature lists, or step-by-step guides.",
+                    "open": true
+                },
+                {
+                    "id": "",
+                    "title": "How do I add more accordion items?",
+                    "content": "Click the \"+\" button that appears at the bottom of the accordion in the editor to add a new item. You can also duplicate an existing item by selecting it and using the block toolbar. Drag and drop items to reorder them at any time.",
+                    "open": false
+                },
+                {
+                    "id": "",
+                    "title": "How do I customise the appearance?",
+                    "content": "Select the accordion block and open the block settings panel on the right. You can change the title colour, content colour, background colour, chevron icon, border radius, padding, font sizes, and animation speed — giving you full control over the look and feel.",
+                    "open": false
+                },
+                {
+                    "id": "",
+                    "title": "Can multiple items be open at the same time?",
+                    "content": "By default only one item is open at a time. To allow multiple items to stay open simultaneously, toggle the \"Allow multiple open\" option in the block settings panel. You can also choose which item opens by default when the page first loads.",
                     "open": false
                 }
             ]
         },
         "titleColor": {
             "type": "string",
-            "default": "#1a1a1a"
+            "default": "#503AA8"
         },
         "contentColor": {
             "type": "string",
@@ -51,7 +69,7 @@
         },
         "chevronColor": {
             "type": "string",
-            "default": "#4a5568"
+            "default": "#503AA8"
         },
         "chevronSize": {
             "type": "object",

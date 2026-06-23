@@ -64,7 +64,7 @@ class Adaire_Deactivation_Modal
         <div id="adaire-deactivation-modal" class="adaire-modal-overlay" style="display:none;">
             <div class="adaire-modal-container">
 
-                <div class="adaire-modal-header" style="background:linear-gradient(135deg,#6366f1 0%,#4f46e5 100%);padding:22px 24px 18px;color:#fff;position:relative;border-radius:16px 16px 0 0;">
+                <div class="adaire-modal-header" style="background:linear-gradient(135deg,#E8272A 0%,#c01f22 100%);padding:22px 24px 18px;color:#fff;position:relative;border-radius:16px 16px 0 0;">
                     <button type="button" class="adaire-modal-close" aria-label="<?php esc_attr_e( 'Close', 'adaire-blocks' ); ?>" style="position:absolute;top:12px;right:12px;width:26px;height:26px;border:none;background:rgba(255,255,255,0.18);color:#fff;border-radius:50%;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;">&#x2715;</button>
                     <div class="adaire-modal-header-inner" style="display:flex;align-items:center;gap:12px;">
                         <div class="adaire-modal-icon" style="width:38px;height:38px;background:rgba(255,255,255,0.18);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">

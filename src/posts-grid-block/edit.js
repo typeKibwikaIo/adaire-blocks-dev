@@ -385,6 +385,41 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         { label: 'Circ Out', value: 'circ.out' }
     ];
 
+    const DEMO_POSTS = [
+        {
+            title: 'Getting Started with Gutenberg Blocks',
+            category: 'Tutorials',
+            excerpt: 'Learn how to build powerful WordPress pages using the block editor — no coding required.',
+            date: 'June 10, 2025',
+            author: 'Jane Smith',
+            readTime: '4 min read',
+        },
+        {
+            title: '10 Tips for Better Web Design in 2025',
+            category: 'Design',
+            excerpt: 'Discover the design principles top agencies use to create stunning, high-converting websites.',
+            date: 'May 28, 2025',
+            author: 'Alex Johnson',
+            readTime: '6 min read',
+        },
+        {
+            title: 'How to Speed Up Your WordPress Site',
+            category: 'Performance',
+            excerpt: 'A step-by-step guide to optimising page speed, reducing load times, and improving your Google score.',
+            date: 'May 15, 2025',
+            author: 'Chris Lee',
+            readTime: '5 min read',
+        },
+        {
+            title: 'The Ultimate Guide to SEO for Beginners',
+            category: 'SEO',
+            excerpt: 'Everything you need to know about search engine optimisation — from keywords to backlinks and beyond.',
+            date: 'April 30, 2025',
+            author: 'Sarah Brown',
+            readTime: '8 min read',
+        },
+    ];
+
     if (loading) {
         return (
             <div {...blockProps}>
@@ -1162,13 +1197,23 @@ return (
                             >
                                 <div className="adaire-posts-grid__image">
                                     {post.featured_media ? (
-                                        <img 
-                                            src={post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '/placeholder.jpg'} 
+                                        <img
+                                            src={post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '/placeholder.jpg'}
                                             alt={post.title.rendered}
                                         />
                                     ) : (
-                                        <div className="adaire-posts-grid__placeholder">
-                                            <span>{__('No Image', 'posts-grid-block')}</span>
+                                        <div className="adaire-posts-grid__image-placeholder" style={{
+                                            background: 'linear-gradient(135deg, #503AA8 0%, #3d2c8d 100%)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: '100%',
+                                        }}>
+                                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.4 }}>
+                                                <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="1.5"/>
+                                                <circle cx="8.5" cy="8.5" r="1.5" fill="white"/>
+                                                <path d="M21 15l-5-5L5 21" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
                                         </div>
                                     )}
                                 </div>
@@ -1225,56 +1270,59 @@ return (
                             </div>
                         )) : (
                             // Fallback preview when no posts are available
-                            Array.from({ length: Math.max(1, Math.min(postsPerPage, 4)) }, (_, index) => (
-                                <div 
-                                    key={`preview-${index}`} 
-                                    className={`adaire-posts-grid__item ${layoutType === 'list' ? 'list__view' : ''}`}
-                                    style={{ cursor: 'pointer' }}
-                                    title="Preview - Entire card will be clickable on frontend"
-                                >
-                                    <div className="adaire-posts-grid__image">
-                                        <div className="adaire-posts-grid__placeholder">
-                                            <span>{__('No Image', 'posts-grid-block')}</span>
+                            Array.from({ length: Math.max(1, Math.min(postsPerPage, 4)) }, (_, index) => {
+                                const demo = DEMO_POSTS[index % DEMO_POSTS.length];
+                                return (
+                                    <div
+                                        key={`preview-${index}`}
+                                        className={`adaire-posts-grid__item ${layoutType === 'list' ? 'list__view' : ''}`}
+                                        style={{ cursor: 'pointer' }}
+                                        title="Preview — your actual posts will appear here on the frontend"
+                                    >
+                                        <div className="adaire-posts-grid__image">
+                                            <div className="adaire-posts-grid__image-placeholder" style={{
+                                                background: 'linear-gradient(135deg, #503AA8 0%, #3d2c8d 100%)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                height: '100%',
+                                            }}>
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.4 }}>
+                                                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="1.5"/>
+                                                    <circle cx="8.5" cy="8.5" r="1.5" fill="white"/>
+                                                    <path d="M21 15l-5-5L5 21" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div className="adaire-posts-grid__content">
+                                            {showCategories && (
+                                                <div className="adaire-posts-grid__categories">
+                                                    <span className="adaire-posts-grid__category">
+                                                        {demo.category}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            <h3 className="adaire-posts-grid__title">{demo.title}</h3>
+                                            {showExcerpt && (
+                                                <div className="adaire-posts-grid__excerpt">{demo.excerpt}</div>
+                                            )}
+                                            {(showDate || showAuthor || showReadTime) && (
+                                                <div className="adaire-posts-grid__meta">
+                                                    {showDate && (
+                                                        <span className="adaire-posts-grid__date">{demo.date}</span>
+                                                    )}
+                                                    {showAuthor && (
+                                                        <span className="adaire-posts-grid__author">{demo.author}</span>
+                                                    )}
+                                                    {showReadTime && (
+                                                        <span className="adaire-posts-grid__read-time">{demo.readTime}</span>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="adaire-posts-grid__content">
-                                        {showCategories && (
-                                            <div className="adaire-posts-grid__categories">
-                                                <span className="adaire-posts-grid__category">
-                                                    {__('Sample Category', 'posts-grid-block')}
-                                                </span>
-                                            </div>
-                                        )}
-                                        <h3 className="adaire-posts-grid__title">
-                                            {__('Sample Post Title', 'posts-grid-block')}
-                                        </h3>
-                                        {showExcerpt && (
-                                            <div className="adaire-posts-grid__excerpt">
-                                                {__('This is a preview of how your posts will look. The block will display your actual posts on the frontend.', 'posts-grid-block')}
-                                            </div>
-                                        )}
-                                        {(showDate || showAuthor || showReadTime) && (
-                                            <div className="adaire-posts-grid__meta">
-                                                {showDate && (
-                                                    <span className="adaire-posts-grid__date">
-                                                        {new Date().toLocaleDateString()}
-                                                    </span>
-                                                )}
-                                                {showAuthor && (
-                                                    <span className="adaire-posts-grid__author">
-                                                        {__('Sample Author', 'posts-grid-block')}
-                                                    </span>
-                                                )}
-                                                {showReadTime && (
-                                                    <span className="adaire-posts-grid__read-time">
-                                                        {__('3 min read', 'posts-grid-block')}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            ))
+                                );
+                            })
                         )}
                     </div>
                     </QuickZone>
@@ -1299,7 +1347,7 @@ return (
                             {paginationStyle === 'numbers' && (
                                 <div className="adaire-posts-grid__pagination-wrapper">
                                     <button className="adaire-posts-grid__pagination-btn adaire-posts-grid__pagination-prev is-disabled" disabled>
-                                        <span>â† Previous</span>
+                                        <span>&larr; Previous</span>
                                     </button>
                                     <div className="adaire-posts-grid__pagination-numbers">
                                         <button className="adaire-posts-grid__pagination-number is-active">1</button>
@@ -1307,7 +1355,7 @@ return (
                                         <button className="adaire-posts-grid__pagination-number">3</button>
                                     </div>
                                     <button className="adaire-posts-grid__pagination-btn adaire-posts-grid__pagination-next">
-                                        <span>Next â†’</span>
+                                        <span>Next &rarr;</span>
                                     </button>
                                 </div>
                             )}
@@ -1321,13 +1369,13 @@ return (
                             {paginationStyle === 'prevnext' && (
                                 <div className="adaire-posts-grid__pagination-wrapper adaire-posts-grid__pagination-wrapper--prevnext">
                                     <button className="adaire-posts-grid__pagination-btn adaire-posts-grid__pagination-prev is-disabled" disabled>
-                                        <span>â† Previous</span>
+                                        <span>&larr; Previous</span>
                                     </button>
                                     <span className="adaire-posts-grid__pagination-info">
                                         {__('Page 1 of 3', 'posts-grid-block')}
                                     </span>
                                     <button className="adaire-posts-grid__pagination-btn adaire-posts-grid__pagination-next">
-                                        <span>Next â†’</span>
+                                        <span>Next &rarr;</span>
                                     </button>
                                 </div>
                             )}

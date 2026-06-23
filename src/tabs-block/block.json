@@ -49,15 +49,15 @@
         },
         "tabTitleColor": {
             "type": "string",
-            "default": "#64748b"
+            "default": "#aeb4cf"
         },
         "tabTitleActiveColor": {
             "type": "string",
-            "default": "#0f172a"
+            "default": "#503AA8"
         },
         "tabUnderlineColor": {
             "type": "string",
-            "default": "#3b82f6"
+            "default": "#503AA8"
         },
         "tabTitleFontSize": {
             "type": "object",
@@ -213,7 +213,7 @@
         },
         "verticalActiveBgColor": {
             "type": "string",
-            "default": "rgba(59, 130, 246, 0.05)"
+            "default": "rgba(80, 58, 168, 0.05)"
         },
         "verticalActiveBgOpacity": {
             "type": "number",
