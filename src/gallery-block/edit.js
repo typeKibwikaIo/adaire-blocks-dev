@@ -101,7 +101,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							onSelect={ onSelectImages }
 							allowedTypes={ [ 'image' ] }
 							multiple
-							gallery
 							render={ renderAddImagesButton }
 						/>
 					</MediaUploadCheck>
@@ -279,7 +278,6 @@ export default function Edit( { attributes, setAttributes } ) {
 									onSelect={ onSelectImages }
 									allowedTypes={ [ 'image' ] }
 									multiple
-									gallery
 									render={ renderAddImagesButton }
 								/>
 							</MediaUploadCheck>
@@ -333,7 +331,6 @@ export default function Edit( { attributes, setAttributes } ) {
 										onSelect={ onSelectImages }
 										allowedTypes={ [ 'image' ] }
 										multiple
-										gallery
 										render={ renderAddImagesButton }
 									/>
 								</MediaUploadCheck>
