@@ -22,8 +22,10 @@ export default function save( { attributes: a } ) {
 			'--tl-line'     : a.lineColor        || '#1e3a5f',
 			'--tl-node-size': `${ nodeSize }px`,
 			backgroundColor : a.backgroundColor  || '#0a1628',
-			paddingTop      : `${ a.paddingTop   ?? 80 }px`,
+			paddingTop      : `${ a.paddingTop    ?? 80 }px`,
 			paddingBottom   : `${ a.paddingBottom ?? 80 }px`,
+			marginTop       : `${ a.marginTop     ?? 0  }px`,
+			marginBottom    : `${ a.marginBottom  ?? 0  }px`,
 			color           : a.textColor        || '#ffffff',
 		},
 	} );

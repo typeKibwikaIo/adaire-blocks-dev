@@ -73,6 +73,8 @@ export default function Edit( { attributes, setAttributes } ) {
 			backgroundColor : a.backgroundColor  || '#0a1628',
 			paddingTop      : `${ a.paddingTop    ?? 80 }px`,
 			paddingBottom   : `${ a.paddingBottom ?? 80 }px`,
+			marginTop       : `${ a.marginTop     ?? 0  }px`,
+			marginBottom    : `${ a.marginBottom  ?? 0  }px`,
 			color           : a.textColor        || '#ffffff',
 		},
 	} );
@@ -146,6 +148,20 @@ export default function Edit( { attributes, setAttributes } ) {
 						label={ __( 'Padding bottom (px)', 'timeline-block' ) }
 						value={ a.paddingBottom ?? 80 }
 						onChange={ ( v ) => setAttributes( { paddingBottom: v } ) }
+						min={ 0 }
+						max={ 200 }
+					/>
+					<RangeControl
+						label={ __( 'Margin top (px)', 'timeline-block' ) }
+						value={ a.marginTop ?? 0 }
+						onChange={ ( v ) => setAttributes( { marginTop: v } ) }
+						min={ 0 }
+						max={ 200 }
+					/>
+					<RangeControl
+						label={ __( 'Margin bottom (px)', 'timeline-block' ) }
+						value={ a.marginBottom ?? 0 }
+						onChange={ ( v ) => setAttributes( { marginBottom: v } ) }
 						min={ 0 }
 						max={ 200 }
 					/>

@@ -40,6 +40,8 @@
     "showArrows":        { "type": "boolean", "default": true },
     "showConnector":     { "type": "boolean", "default": true },
     "paddingTop":        { "type": "number",  "default": 80 },
-    "paddingBottom":     { "type": "number",  "default": 80 }
+    "paddingBottom":     { "type": "number",  "default": 80 },
+    "marginTop":         { "type": "number",  "default": 0 },
+    "marginBottom":      { "type": "number",  "default": 0 }
   }
 }
