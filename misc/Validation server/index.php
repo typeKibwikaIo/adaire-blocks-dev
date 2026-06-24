@@ -1,6 +1,6 @@
 <?php
 /**
- * GutenBlocks Blocks License Validation Server
+ * Adaire Blocks License Validation Server
  * 
  * This server handles all license validation, activation, and deactivation operations
  * to keep client credentials secure on the server side.
@@ -77,7 +77,7 @@ function logServerOperation($operation, $data) {
         'request_method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown'
     ];
     
-    writeToDebugLog('GutenBlocks Validation Server: ' . json_encode($log_entry, JSON_PRETTY_PRINT));
+    writeToDebugLog('Adaire Blocks Validation Server: ' . json_encode($log_entry, JSON_PRETTY_PRINT));
 }
 
 /**
@@ -325,10 +325,10 @@ function activateLicense($license_key) {
         }
         
         // Log the extraction for debugging
-        writeToDebugLog('GutenBlocks Validation Server: Token extraction - ' . 
+        writeToDebugLog('Adaire Blocks Validation Server: Token extraction - ' . 
             ($token ? 'Token found: ' . substr($token, 0, 8) . '...' : 'No token found in response'));
-        writeToDebugLog('GutenBlocks Validation Server: Original API response structure: ' . json_encode($api_response));
-        writeToDebugLog('GutenBlocks Validation Server: Normalized data structure: ' . json_encode($normalized_data));
+        writeToDebugLog('Adaire Blocks Validation Server: Original API response structure: ' . json_encode($api_response));
+        writeToDebugLog('Adaire Blocks Validation Server: Normalized data structure: ' . json_encode($normalized_data));
     }
     
     return [
