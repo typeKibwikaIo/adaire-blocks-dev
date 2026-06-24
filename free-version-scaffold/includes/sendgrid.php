@@ -37,7 +37,7 @@ function adaire_blocks_send_via_sendgrid($to, $subject, $message, $reply_to = nu
         $from_email = 'wordpress@example.com';
     }
     $from_email = apply_filters('adaire_blocks_deactivation_feedback_from', $from_email, []);
-    $from_name = apply_filters('adaire_blocks_deactivation_feedback_from_name', 'GutenBlocks', []);
+    $from_name = apply_filters('adaire_blocks_deactivation_feedback_from_name', 'Adaire Blocks', []);
 
     $payload = [
         'personalizations' => [

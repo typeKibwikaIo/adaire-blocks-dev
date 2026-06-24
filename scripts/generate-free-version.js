@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Free Version Generator for GutenBlocks
+ * Free Version Generator for Adaire Blocks
  *
  * Generates the free version by:
  * 1. Copying every file from free-version-scaffold/ (the authoritative template)
@@ -390,7 +390,7 @@ class FreeVersionGenerator {
         const freePackage = {
             name: 'adaire-blocks-free',
             version: currentVersion,
-            description: 'Free version of GutenBlocks - Professional WordPress blocks for Gutenberg editor',
+            description: 'Free version of Adaire Blocks - Professional WordPress blocks for Gutenberg editor',
             main: 'src/index.js',
             scripts: {
                 prebuild: 'node scripts/apply-new-icons.js && node scripts/update-block-icons.js',
@@ -563,7 +563,7 @@ class FreeVersionGenerator {
 
         const enabledBlocks = this.getEnabledBlocks();
 
-        let indexContent = `// GutenBlocks Free Version - auto-generated, do not edit manually\n\n`;
+        let indexContent = `// Adaire Blocks Free Version - auto-generated, do not edit manually\n\n`;
         enabledBlocks.forEach(blockName => {
             indexContent += `import './${blockName}';\n`;
         });

@@ -1,7 +1,7 @@
 # Device-Specific Controls Implementation Guide
 
 ## Overview
-This guide describes the pattern for adding responsive device-specific controls (Desktop, Tablet, Mobile, Smartwatch) to GutenBlocks.
+This guide describes the pattern for adding responsive device-specific controls (Desktop, Tablet, Mobile, Smartwatch) to Adaire Blocks.
 
 ## Pattern Summary
 Each block that needs responsive controls follows this 3-file structure:

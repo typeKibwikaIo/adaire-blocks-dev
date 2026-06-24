@@ -1,5 +1,5 @@
 /**
- * GutenBlocks Editor Panel — Blockstudio-style sidebar
+ * Adaire Blocks Editor Panel — Blockstudio-style sidebar
  * Two tabs: General | Advanced
  * Auto-groups attributes into sections by camelCase prefix detection.
  * Advanced tab always shows Margin / Padding / Z-Index / CSS ID / CSS Classes.
@@ -629,7 +629,7 @@ function SidebarContent( { isCollapsed, onToggleCollapse } ) {
 					</Tooltip>
 				</div>
 				<div className="adaire-ep__header-center">
-					<span className="adaire-ep__header-title">{ __( 'GutenBlocks' ) }</span>
+					<span className="adaire-ep__header-title">{ __( 'Adaire Blocks' ) }</span>
 				</div>
 				<div className="adaire-ep__header-right">
 					<Tooltip text={ __( 'Search settings' ) }>

@@ -1,5 +1,5 @@
 /**
- * AdaireColorControl — shared modern color control for every GutenBlocks block.
+ * AdaireColorControl — shared modern color control for every Adaire Blocks block.
  *
  * Wraps WordPress core <ColorPalette> so every "Appearance" color field gets the
  * same modern UI: a row of preset swatches, a "Custom color" button that opens the

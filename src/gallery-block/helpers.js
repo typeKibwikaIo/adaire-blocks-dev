@@ -1,6 +1,6 @@
 const DEVICES = [ 'desktop', 'tablet', 'mobile', 'smartwatch' ];
 
-// CSS variable suffix convention shared across GutenBlocks: "smartwatch" maps to "watch".
+// CSS variable suffix convention shared across Adaire Blocks: "smartwatch" maps to "watch".
 const suffixFor = ( device ) => ( device === 'smartwatch' ? 'watch' : device );
 
 export const getUnitValue = ( value, fallbackValue, fallbackUnit ) =>

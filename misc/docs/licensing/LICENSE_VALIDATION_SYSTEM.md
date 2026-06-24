@@ -1,4 +1,4 @@
-# GutenBlocks Blocks License Validation System
+# Adaire Blocks License Validation System
 
 ## TL;DR
 
@@ -26,7 +26,7 @@
 
 ## Overview
 
-The GutenBlocks Blocks license validation system is a secure, server-side license management solution that protects API credentials while enabling license activation, validation, and deactivation for the WordPress plugin.
+The Adaire Blocks license validation system is a secure, server-side license management solution that protects API credentials while enabling license activation, validation, and deactivation for the WordPress plugin.
 
 **Key Benefits:**
 - ✅ API credentials never exposed to client-side code
@@ -690,10 +690,10 @@ When `WP_DEBUG` is enabled, additional tools appear:
 
 **Example Log Entries:**
 ```
-[2024-01-15 10:30:15] GutenBlocks Blocks License: Starting license activation via validation server
-[2024-01-15 10:30:15] GutenBlocks Blocks License: License Key: abc123de...
-[2024-01-15 10:30:16] GutenBlocks Blocks License: Response Code: 200
-[2024-01-15 10:30:16] GutenBlocks Blocks License: License activation successful
+[2024-01-15 10:30:15] Adaire Blocks License: Starting license activation via validation server
+[2024-01-15 10:30:15] Adaire Blocks License: License Key: abc123de...
+[2024-01-15 10:30:16] Adaire Blocks License: Response Code: 200
+[2024-01-15 10:30:16] Adaire Blocks License: License activation successful
 ```
 
 ### Common Issues & Solutions
@@ -782,5 +782,5 @@ curl "https://adaireblocks.com/validation-server/?action=activate&license_key=AB
 
 **Document Version:** 1.0  
 **Last Updated:** January 2024  
-**Maintained by:** GutenBlocks Development Team
+**Maintained by:** Adaire Blocks Development Team
 
