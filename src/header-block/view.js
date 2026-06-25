@@ -72,6 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        const closeBtn = header.querySelector('.adaire-header-mobile-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => closeMobileMenu());
+        }
+
         // Focus trap + Escape handling while the mobile overlay/slide-in menu is open.
         document.addEventListener('keydown', (event) => {
             if (!isMobileMenuOpen()) {
@@ -204,6 +209,39 @@ document.addEventListener('DOMContentLoaded', () => {
             const uid = `adaire-hdr-${Math.random().toString(36).slice(2, 9)}`;
             header.setAttribute('data-header-uid', uid);
 
+            const menuStyle = header.dataset.mobileMenuStyle || 'dropdown';
+            const slideDir = header.dataset.mobileSlideDirection || 'right';
+            const isLeft = slideDir === 'left';
+
+            let overlayRules = '';
+            if (menuStyle === 'slide-in' || menuStyle === 'overlay') {
+                const width = menuStyle === 'overlay' ? '100vw' : 'min(86vw, 380px)';
+                const inset = menuStyle === 'slide-in' && isLeft ? '0 auto 0 0' : '0 0 0 auto';
+                const closedTransform = menuStyle === 'slide-in'
+                    ? (isLeft ? 'translateX(-100%)' : 'translateX(100%)')
+                    : 'translateX(100%)';
+                overlayRules = `
+                    @media (max-width: ${breakpoint}px) {
+                        [data-header-uid="${uid}"].mobile-slide-in .adaire-header-nav,
+                        [data-header-uid="${uid}"].mobile-overlay .adaire-header-nav {
+                            display: flex !important;
+                            position: fixed !important;
+                            inset: ${inset} !important;
+                            width: ${width} !important;
+                            transform: ${closedTransform} !important;
+                            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
+                            visibility: hidden !important;
+                        }
+                        [data-header-uid="${uid}"].is-mobile-menu-open.mobile-slide-in .adaire-header-nav,
+                        [data-header-uid="${uid}"].is-mobile-menu-open.mobile-overlay .adaire-header-nav {
+                            transform: translateX(0) !important;
+                            visibility: visible !important;
+                            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0s;
+                        }
+                    }
+                `;
+            }
+
             const styleEl = document.createElement('style');
             styleEl.textContent = `
                 @media (min-width: ${breakpoint + 1}px) {
@@ -215,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     [data-header-uid="${uid}"] .adaire-header-nav { display: none; }
                     [data-header-uid="${uid}"].is-mobile-menu-open .adaire-header-nav { display: flex; }
                 }
+                ${overlayRules}
             `;
             document.head.appendChild(styleEl);
         }

@@ -648,7 +648,13 @@ if ( ! function_exists( 'adaire_header_render_nav' ) ) {
 
 		$id_attr = $nav_id ? ( ' id="' . esc_attr( $nav_id ) . '"' ) : '';
 
-		return '<nav' . $id_attr . ' class="adaire-header-nav is-' . esc_attr( $attributes['navOrientation'] ) . '" aria-label="' . esc_attr__( 'Header navigation', 'header-block' ) . '">' . $inner . '</nav>';
+		$close_btn = '';
+		if ( $nav_id && in_array( $attributes['mobileMenuStyle'] ?? 'dropdown', array( 'slide-in', 'overlay' ), true ) ) {
+			$close_icon = '<svg class="adaire-header-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+			$close_btn  = '<button class="adaire-header-mobile-close" type="button" aria-label="' . esc_attr__( 'Close menu', 'header-block' ) . '">' . $close_icon . '</button>';
+		}
+
+		return '<nav' . $id_attr . ' class="adaire-header-nav is-' . esc_attr( $attributes['navOrientation'] ) . '" aria-label="' . esc_attr__( 'Header navigation', 'header-block' ) . '">' . $close_btn . $inner . '</nav>';
 	}
 }
 
@@ -860,7 +866,11 @@ if ( ! function_exists( 'adaire_header_render_mobile_toggle' ) ) {
 
 $style_string = adaire_header_style_vars_to_string( adaire_header_get_style_vars( $attributes ) );
 $box_shadow_class = ! empty( $attributes['boxShadow'] ) ? ' has-shadow' : '';
-$classes = trim( 'adaire-header-block is-' . $attributes['stickyBehavior'] . ' mobile-' . $attributes['mobileMenuStyle'] . $box_shadow_class );
+$slide_class = '';
+if ( 'slide-in' === $attributes['mobileMenuStyle'] && isset( $attributes['mobileSlideDirection'] ) && 'left' === $attributes['mobileSlideDirection'] ) {
+	$slide_class = ' mobile-slide-left';
+}
+$classes = trim( 'adaire-header-block is-' . $attributes['stickyBehavior'] . ' mobile-' . $attributes['mobileMenuStyle'] . $slide_class . $box_shadow_class );
 
 $resolved  = adaire_header_resolve_nav( $attributes );
 $nav_dom_id = wp_unique_id( 'adaire-header-nav-' );
