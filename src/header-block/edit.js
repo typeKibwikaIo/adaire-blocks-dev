@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls } from '@wordpress/block-editor';
 import {
-    Button, ColorPicker, PanelBody, Popover,
+    Button, ColorPicker, GradientPicker, PanelBody, Popover,
     RangeControl, SelectControl, TextControl,
     ToggleControl, ColorPalette,
 } from '@wordpress/components';
@@ -1040,11 +1040,14 @@ function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
                                     ) }
 
                                     { getEffectiveBackgroundType( attributes ) === 'gradient' && (
-                                        <TextControl
-                                            label="Gradient CSS"
-                                            value={ attributes.gradientBackground }
-                                            onChange={ v => setAttributes({ gradientBackground: v }) }
-                                        />
+                                        <div>
+                                            <p style={{ marginBottom: 6 }}>Gradient</p>
+                                            <GradientPicker
+                                                value={ attributes.gradientBackground }
+                                                onChange={ v => setAttributes({ gradientBackground: v || 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' }) }
+                                                clearable={ false }
+                                            />
+                                        </div>
                                     ) }
 
                                     { getEffectiveBackgroundType( attributes ) === 'image' && (
@@ -1193,7 +1196,11 @@ export default function Edit({ attributes, setAttributes }) {
                             ) }
 
                             { getEffectiveBackgroundType( attributes ) === 'gradient' && (
-                                <TextControl label="Gradient CSS" value={ attributes.gradientBackground } onChange={ v => setAttributes({ gradientBackground: v }) } />
+                                <GradientPicker
+                                    value={ attributes.gradientBackground }
+                                    onChange={ v => setAttributes({ gradientBackground: v || 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' }) }
+                                    clearable={ false }
+                                />
                             ) }
 
                             { getEffectiveBackgroundType( attributes ) === 'image' && (
@@ -1344,7 +1351,6 @@ export default function Edit({ attributes, setAttributes }) {
                     <ToggleControl label="Show tagline"        checked={ attributes.showTagline }  onChange={ v => setAttributes({ showTagline: v }) } />
                     { attributes.showTagline && <TextControl label="Tagline" value={ attributes.tagline } onChange={ v => setAttributes({ tagline: v }) } /> }
                     <RangeControl  label="Logo width"          value={ attributes.logoWidth }       min={ 40 } max={ 360 } onChange={ v => setAttributes({ logoWidth: v }) } />
-                    <RangeControl  label="Mobile logo width"   value={ attributes.mobileLogoWidth } min={ 40 } max={ 260 } onChange={ v => setAttributes({ mobileLogoWidth: v }) } />
                     <ToggleControl label="Link logo to homepage" checked={ attributes.linkLogoHome } onChange={ v => setAttributes({ linkLogoHome: v }) } />
                     { attributes.linkLogoHome && <TextControl label="Logo URL" value={ attributes.logoUrl } onChange={ v => setAttributes({ logoUrl: v }) } /> }
                 </PanelBody>
@@ -1515,6 +1521,7 @@ export default function Edit({ attributes, setAttributes }) {
                 </PanelBody>
 
                 <PanelBody title={ __( 'Mobile', 'header-block' ) } initialOpen={ false }>
+                    <RangeControl  label="Mobile logo width"   value={ attributes.mobileLogoWidth } min={ 40 } max={ 260 } onChange={ v => setAttributes({ mobileLogoWidth: v }) } />
                     <SelectControl label="Mobile menu style"    value={ attributes.mobileMenuStyle }     options={ mobileStyleOptions } onChange={ v => setAttributes({ mobileMenuStyle: v }) } />
                     { attributes.mobileMenuStyle === 'slide-in' && (
                         <SelectControl
