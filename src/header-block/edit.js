@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls, ColorPalette } from '@wordpress/block-editor';
 import {
     Button, ColorPicker, GradientPicker, PanelBody, Popover,
     RangeControl, SelectControl, TextControl,
-    ToggleControl, ColorPalette,
+    ToggleControl,
 } from '@wordpress/components';
 import QuickZone, { PenIcon, CloseIcon, isMediaLibraryOpen } from '../components/QuickZone';
 import { __ } from '@wordpress/i18n';
