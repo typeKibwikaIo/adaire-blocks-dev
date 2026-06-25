@@ -1,7 +1,7 @@
-import { useBlockProps, RichText, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
+﻿import { useBlockProps, RichText, MediaUpload, MediaUploadCheck, ColorPalette } from '@wordpress/block-editor';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone, { markMediaOpening } from '../components/QuickZone';
-import { PanelBody, ToggleControl, RangeControl, SelectControl, ColorPicker, Button, TextControl } from '@wordpress/components';
+import { PanelBody, ToggleControl, RangeControl, SelectControl, Button, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
@@ -479,13 +479,13 @@ export default function Edit({ attributes, setAttributes }) {
             {backgroundType === 'solid' && (
                 <div style={{ marginBottom: 16 }}>
                     <label>{__('Background Color', 'website-footer-block')}</label>
-                    <ColorPicker color={backgroundColor} onChangeComplete={(c) => setAttributes({ backgroundColor: c.hex })} disableAlpha />
+                    <ColorPalette value={backgroundColor} onChange={(v) => setAttributes({ backgroundColor: v || '' })} />
                 </div>
             )}
             {backgroundType === 'gradient' && (
                 <div style={{ marginBottom: 16 }}>
                     <label>{__('Gradient', 'website-footer-block')}</label>
-                    <ColorPicker color={backgroundGradient} onChangeComplete={(c) => setAttributes({ backgroundGradient: c.hex })} enableAlpha />
+                    <ColorPalette value={backgroundGradient} onChange={(v) => setAttributes({ backgroundGradient: v || '' })} />
                 </div>
             )}
             {backgroundType === 'image' && (
@@ -530,11 +530,11 @@ export default function Edit({ attributes, setAttributes }) {
                     {backgroundControls}
                     <div style={{ marginBottom: 16 }}>
                         <label>Text Color</label>
-                        <ColorPicker color={textColor} onChangeComplete={(c) => setAttributes({ textColor: c.hex })} disableAlpha />
+                        <ColorPalette value={textColor} onChange={(v) => setAttributes({ textColor: v || '' })} />
                     </div>
                     <div style={{ marginBottom: 16 }}>
                         <label>Accent Color</label>
-                        <ColorPicker color={accentColor} onChangeComplete={(c) => setAttributes({ accentColor: c.hex })} disableAlpha />
+                        <ColorPalette value={accentColor} onChange={(v) => setAttributes({ accentColor: v || '' })} />
                     </div>
                     <RangeControl label="Max Width (px)"        value={maxWidth}      onChange={(v) => setAttributes({ maxWidth: v })}      min={800} max={1600} />
                     <RangeControl label="Padding Top (px)"      value={paddingTop}    onChange={(v) => setAttributes({ paddingTop: v })}    min={0} max={120} />
@@ -565,15 +565,15 @@ export default function Edit({ attributes, setAttributes }) {
                                 />
                                 <div style={{ marginBottom: 8 }}>
                                     <label>{__('Contact Link Hover Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={topBar.contactLinkHoverColor || ''} onChangeComplete={(c) => updateTopBar({ contactLinkHoverColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={topBar.contactLinkHoverColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 8 }}>
                                     <label>{__('Contact Link Hover Underline Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={topBar.contactLinkHoverUnderlineColor || ''} onChangeComplete={(c) => updateTopBar({ contactLinkHoverUnderlineColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={topBar.contactLinkHoverUnderlineColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverUnderlineColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 8 }}>
                                     <label>{__('Contact Link Hover Background', 'website-footer-block')}</label>
-                                    <ColorPicker color={topBar.contactLinkHoverBackgroundColor || ''} onChangeComplete={(c) => updateTopBar({ contactLinkHoverBackgroundColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={topBar.contactLinkHoverBackgroundColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverBackgroundColor: v || '' })} />
                                 </div>
                                 <RangeControl
                                     label={__('Contact Link Hover Transition (ms)', 'website-footer-block')}
@@ -604,27 +604,27 @@ export default function Edit({ attributes, setAttributes }) {
                                     onChange={(v) => updateTopBar({ iconSize: v })} />
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={topBar.iconColor || ''} onChangeComplete={(c) => updateTopBar({ iconColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={topBar.iconColor || ''} onChange={(v) => updateTopBar({ iconColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Background Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={topBar.iconBgColor || ''} onChangeComplete={(c) => updateTopBar({ iconBgColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={topBar.iconBgColor || ''} onChange={(v) => updateTopBar({ iconBgColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Hover Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={topBar.hoverColor || ''} onChangeComplete={(c) => updateTopBar({ hoverColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={topBar.hoverColor || ''} onChange={(v) => updateTopBar({ hoverColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Hover Background', 'website-footer-block')}</label>
-                                    <ColorPicker color={topBar.hoverBackgroundColor || ''} onChangeComplete={(c) => updateTopBar({ hoverBackgroundColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={topBar.hoverBackgroundColor || ''} onChange={(v) => updateTopBar({ hoverBackgroundColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Border Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={topBar.borderColor || ''} onChangeComplete={(c) => updateTopBar({ borderColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={topBar.borderColor || ''} onChange={(v) => updateTopBar({ borderColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Hover Border Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={topBar.hoverBorderColor || ''} onChangeComplete={(c) => updateTopBar({ hoverBorderColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={topBar.hoverBorderColor || ''} onChange={(v) => updateTopBar({ hoverBorderColor: v || '' })} />
                                 </div>
                                 <RangeControl
                                     label={__('Icon Border Radius (%)', 'website-footer-block')}
@@ -649,11 +649,11 @@ export default function Edit({ attributes, setAttributes }) {
                         )}
                         <div style={{ marginBottom: 16, marginTop: 8 }}>
                             <label>Top Bar Background Color</label>
-                            <ColorPicker color={topBar.backgroundColor || ''} onChangeComplete={(c) => updateTopBar({ backgroundColor: c.hex })} disableAlpha />
+                            <ColorPalette value={topBar.backgroundColor || ''} onChange={(v) => updateTopBar({ backgroundColor: v || '' })} />
                         </div>
                         <div style={{ marginBottom: 16 }}>
                             <label>Text / Icon Color</label>
-                            <ColorPicker color={topBar.textColor || ''} onChangeComplete={(c) => updateTopBar({ textColor: c.hex })} disableAlpha />
+                            <ColorPalette value={topBar.textColor || ''} onChange={(v) => updateTopBar({ textColor: v || '' })} />
                         </div>
                         <SelectControl label="Alignment" value={topBar.alignment}
                             options={[
@@ -785,27 +785,27 @@ export default function Edit({ attributes, setAttributes }) {
                                     onChange={(v) => updateBottomBar({ iconSize: v })} />
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={bottomBar.iconColor || ''} onChangeComplete={(c) => updateBottomBar({ iconColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={bottomBar.iconColor || ''} onChange={(v) => updateBottomBar({ iconColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Background Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={bottomBar.iconBgColor || ''} onChangeComplete={(c) => updateBottomBar({ iconBgColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={bottomBar.iconBgColor || ''} onChange={(v) => updateBottomBar({ iconBgColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Hover Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={bottomBar.hoverColor || ''} onChangeComplete={(c) => updateBottomBar({ hoverColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={bottomBar.hoverColor || ''} onChange={(v) => updateBottomBar({ hoverColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Hover Background', 'website-footer-block')}</label>
-                                    <ColorPicker color={bottomBar.hoverBackgroundColor || ''} onChangeComplete={(c) => updateBottomBar({ hoverBackgroundColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={bottomBar.hoverBackgroundColor || ''} onChange={(v) => updateBottomBar({ hoverBackgroundColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Border Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={bottomBar.borderColor || ''} onChangeComplete={(c) => updateBottomBar({ borderColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={bottomBar.borderColor || ''} onChange={(v) => updateBottomBar({ borderColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Hover Border Color', 'website-footer-block')}</label>
-                                    <ColorPicker color={bottomBar.hoverBorderColor || ''} onChangeComplete={(c) => updateBottomBar({ hoverBorderColor: c.hex })} disableAlpha />
+                                    <ColorPalette value={bottomBar.hoverBorderColor || ''} onChange={(v) => updateBottomBar({ hoverBorderColor: v || '' })} />
                                 </div>
                                 <RangeControl
                                     label={__('Icon Border Radius (%)', 'website-footer-block')}
@@ -840,11 +840,11 @@ export default function Edit({ attributes, setAttributes }) {
                         <RangeControl label="Margin Bottom (px)" value={bottomBar.marginBottom || 0} min={0} max={100} onChange={(v) => updateBottomBar({ marginBottom: v })} />
                         <div style={{ marginBottom: 16, marginTop: 8 }}>
                             <label>Text / Copyright Color</label>
-                            <ColorPicker color={bottomBar.textColor || ''} onChangeComplete={(c) => updateBottomBar({ textColor: c.hex })} disableAlpha />
+                            <ColorPalette value={bottomBar.textColor || ''} onChange={(v) => updateBottomBar({ textColor: v || '' })} />
                         </div>
                         <div style={{ marginBottom: 16 }}>
                             <label>Legal Links Color</label>
-                            <ColorPicker color={bottomBar.legalLinkColor || ''} onChangeComplete={(c) => updateBottomBar({ legalLinkColor: c.hex })} disableAlpha />
+                            <ColorPalette value={bottomBar.legalLinkColor || ''} onChange={(v) => updateBottomBar({ legalLinkColor: v || '' })} />
                         </div>
                         <ToggleControl
                             label={__('Underline legal links', 'website-footer-block')}
@@ -853,15 +853,15 @@ export default function Edit({ attributes, setAttributes }) {
                         />
                         <div style={{ marginBottom: 8 }}>
                             <label>{__('Legal Links Hover Color', 'website-footer-block')}</label>
-                            <ColorPicker color={bottomBar.legalLinkHoverColor || ''} onChangeComplete={(c) => updateBottomBar({ legalLinkHoverColor: c.hex })} disableAlpha />
+                            <ColorPalette value={bottomBar.legalLinkHoverColor || ''} onChange={(v) => updateBottomBar({ legalLinkHoverColor: v || '' })} />
                         </div>
                         <div style={{ marginBottom: 8 }}>
                             <label>{__('Legal Links Hover Underline Color', 'website-footer-block')}</label>
-                            <ColorPicker color={bottomBar.legalLinkHoverUnderlineColor || ''} onChangeComplete={(c) => updateBottomBar({ legalLinkHoverUnderlineColor: c.hex })} disableAlpha />
+                            <ColorPalette value={bottomBar.legalLinkHoverUnderlineColor || ''} onChange={(v) => updateBottomBar({ legalLinkHoverUnderlineColor: v || '' })} />
                         </div>
                         <div style={{ marginBottom: 8 }}>
                             <label>{__('Legal Links Hover Background', 'website-footer-block')}</label>
-                            <ColorPicker color={bottomBar.legalLinkHoverBackgroundColor || ''} onChangeComplete={(c) => updateBottomBar({ legalLinkHoverBackgroundColor: c.hex })} disableAlpha />
+                            <ColorPalette value={bottomBar.legalLinkHoverBackgroundColor || ''} onChange={(v) => updateBottomBar({ legalLinkHoverBackgroundColor: v || '' })} />
                         </div>
                         <RangeControl
                             label={__('Legal Links Hover Transition (ms)', 'website-footer-block')}
@@ -871,7 +871,7 @@ export default function Edit({ attributes, setAttributes }) {
                         />
                         <div style={{ marginBottom: 16 }}>
                             <label>Bottom Bar Background</label>
-                            <ColorPicker color={bottomBar.backgroundColor || ''} onChangeComplete={(c) => updateBottomBar({ backgroundColor: c.hex })} disableAlpha />
+                            <ColorPalette value={bottomBar.backgroundColor || ''} onChange={(v) => updateBottomBar({ backgroundColor: v || '' })} />
                         </div>
                     </PanelBody>
                 )}
@@ -1082,24 +1082,24 @@ export default function Edit({ attributes, setAttributes }) {
                                                                             onChange={(v) => updateColumn(column.id, { ctaUrl: v })} placeholder="https://…" />
                                                                         <div>
                                                                             <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Background Color', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={column.ctaBackgroundColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaBackgroundColor: c.hex })} />
+                                                                            <ColorPalette value={column.ctaBackgroundColor || ''} onChange={(v) => updateColumn(column.id, { ctaBackgroundColor: v || '' })} />
                                                                         </div>
                                                                         <div>
                                                                             <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Text Color', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={column.ctaTextColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaTextColor: c.hex })} />
+                                                                            <ColorPalette value={column.ctaTextColor || ''} onChange={(v) => updateColumn(column.id, { ctaTextColor: v || '' })} />
                                                                         </div>
                                                                         <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('CTA Hover State', 'website-footer-block')}</strong>
                                                                         <div>
                                                                             <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Background Color', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={column.ctaHoverBackgroundColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaHoverBackgroundColor: c.hex })} />
+                                                                            <ColorPalette value={column.ctaHoverBackgroundColor || ''} onChange={(v) => updateColumn(column.id, { ctaHoverBackgroundColor: v || '' })} />
                                                                         </div>
                                                                         <div>
                                                                             <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Text Color', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={column.ctaHoverColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaHoverColor: c.hex })} />
+                                                                            <ColorPalette value={column.ctaHoverColor || ''} onChange={(v) => updateColumn(column.id, { ctaHoverColor: v || '' })} />
                                                                         </div>
                                                                         <div>
                                                                             <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Border Color', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={column.ctaHoverBorderColor || ''} onChangeComplete={(c) => updateColumn(column.id, { ctaHoverBorderColor: c.hex })} />
+                                                                            <ColorPalette value={column.ctaHoverBorderColor || ''} onChange={(v) => updateColumn(column.id, { ctaHoverBorderColor: v || '' })} />
                                                                         </div>
                                                                         <RangeControl
                                                                             label={__('Border Radius (px)', 'website-footer-block')}
@@ -1178,20 +1178,20 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 />
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Link Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.linkColor || ''} onChangeComplete={(c) => updateColumn(column.id, { linkColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.linkColor || ''} onChange={(v) => updateColumn(column.id, { linkColor: v || '' })} />
                                                                 </div>
                                                                 <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Link Hover State', 'website-footer-block')}</strong>
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Hover Text Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.linkHoverColor || ''} onChangeComplete={(c) => updateColumn(column.id, { linkHoverColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.linkHoverColor || ''} onChange={(v) => updateColumn(column.id, { linkHoverColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Hover Underline Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.linkHoverUnderlineColor || ''} onChangeComplete={(c) => updateColumn(column.id, { linkHoverUnderlineColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.linkHoverUnderlineColor || ''} onChange={(v) => updateColumn(column.id, { linkHoverUnderlineColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Hover Background Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.linkHoverBackgroundColor || ''} onChangeComplete={(c) => updateColumn(column.id, { linkHoverBackgroundColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.linkHoverBackgroundColor || ''} onChange={(v) => updateColumn(column.id, { linkHoverBackgroundColor: v || '' })} />
                                                                 </div>
                                                                 <RangeControl
                                                                     label={__('Hover Transition (ms)', 'website-footer-block')}
@@ -1225,27 +1225,27 @@ export default function Edit({ attributes, setAttributes }) {
                                                                     onChange={(v) => updateColumn(column.id, { iconSize: v })} />
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Icon Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.iconColor || ''} onChangeComplete={(c) => updateColumn(column.id, { iconColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.iconColor || ''} onChange={(v) => updateColumn(column.id, { iconColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Icon Background Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.iconBgColor || ''} onChangeComplete={(c) => updateColumn(column.id, { iconBgColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.iconBgColor || ''} onChange={(v) => updateColumn(column.id, { iconBgColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Icon Hover Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.socialHoverColor || ''} onChangeComplete={(c) => updateColumn(column.id, { socialHoverColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.socialHoverColor || ''} onChange={(v) => updateColumn(column.id, { socialHoverColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Icon Hover Background', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.socialHoverBackgroundColor || ''} onChangeComplete={(c) => updateColumn(column.id, { socialHoverBackgroundColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.socialHoverBackgroundColor || ''} onChange={(v) => updateColumn(column.id, { socialHoverBackgroundColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Icon Border Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.socialBorderColor || ''} onChangeComplete={(c) => updateColumn(column.id, { socialBorderColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.socialBorderColor || ''} onChange={(v) => updateColumn(column.id, { socialBorderColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Icon Hover Border Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.socialHoverBorderColor || ''} onChangeComplete={(c) => updateColumn(column.id, { socialHoverBorderColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.socialHoverBorderColor || ''} onChange={(v) => updateColumn(column.id, { socialHoverBorderColor: v || '' })} />
                                                                 </div>
                                                                 <RangeControl
                                                                     label={__('Icon Border Radius (%)', 'website-footer-block')}
@@ -1289,11 +1289,11 @@ export default function Edit({ attributes, setAttributes }) {
                                                                     placeholder={__('Enter your email', 'website-footer-block')} />
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Button Background', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.newsletterButtonColor || ''} onChangeComplete={(c) => updateColumn(column.id, { newsletterButtonColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.newsletterButtonColor || ''} onChange={(v) => updateColumn(column.id, { newsletterButtonColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
                                                                     <label>{__('Button Text Color', 'website-footer-block')}</label>
-                                                                    <ColorPicker color={column.newsletterButtonTextColor || ''} onChangeComplete={(c) => updateColumn(column.id, { newsletterButtonTextColor: c.hex })} disableAlpha />
+                                                                    <ColorPalette value={column.newsletterButtonTextColor || ''} onChange={(v) => updateColumn(column.id, { newsletterButtonTextColor: v || '' })} />
                                                                 </div>
                                                             </>
                                                         )}
@@ -1559,25 +1559,25 @@ export default function Edit({ attributes, setAttributes }) {
                                                                             onChange={(v) => updateButtonsItem(column.id, item.id, 'style', v)} />
                                                                         <div style={{ marginBottom: 4 }}>
                                                                             <label>{__('Background', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={item.backgroundColor || ''} onChangeComplete={(c) => updateButtonsItem(column.id, item.id, 'backgroundColor', c.hex)} disableAlpha />
+                                                                            <ColorPalette value={item.backgroundColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'backgroundColor', v || '')} />
                                                                         </div>
                                                                         <div style={{ marginBottom: 4 }}>
                                                                             <label>{__('Text Color', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={item.textColor || ''} onChangeComplete={(c) => updateButtonsItem(column.id, item.id, 'textColor', c.hex)} disableAlpha />
+                                                                            <ColorPalette value={item.textColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'textColor', v || '')} />
                                                                         </div>
                                                                         <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
                                                                         <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Hover State', 'website-footer-block')}</strong>
                                                                         <div style={{ marginBottom: 4 }}>
                                                                             <label>{__('Hover Background', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={item.hoverBackgroundColor || ''} onChangeComplete={(c) => updateButtonsItem(column.id, item.id, 'hoverBackgroundColor', c.hex)} disableAlpha />
+                                                                            <ColorPalette value={item.hoverBackgroundColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'hoverBackgroundColor', v || '')} />
                                                                         </div>
                                                                         <div style={{ marginBottom: 4 }}>
                                                                             <label>{__('Hover Text Color', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={item.hoverTextColor || ''} onChangeComplete={(c) => updateButtonsItem(column.id, item.id, 'hoverTextColor', c.hex)} disableAlpha />
+                                                                            <ColorPalette value={item.hoverTextColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'hoverTextColor', v || '')} />
                                                                         </div>
                                                                         <div style={{ marginBottom: 4 }}>
                                                                             <label>{__('Hover Border Color', 'website-footer-block')}</label>
-                                                                            <ColorPicker color={item.hoverBorderColor || ''} onChangeComplete={(c) => updateButtonsItem(column.id, item.id, 'hoverBorderColor', c.hex)} disableAlpha />
+                                                                            <ColorPalette value={item.hoverBorderColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'hoverBorderColor', v || '')} />
                                                                         </div>
                                                                         <RangeControl
                                                                             label={__('Border Radius (px)', 'website-footer-block')}

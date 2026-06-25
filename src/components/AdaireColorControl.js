@@ -14,6 +14,7 @@
  *   />
  */
 
+import { useSettings } from '@wordpress/block-editor';
 import { ColorPalette } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import './AdaireColorControl.scss';
@@ -36,15 +37,20 @@ export default function AdaireColorControl( {
 	onChange = () => {},
 	clearable = true,
 	enableAlpha = true,
-	colors = ADAIRE_COLOR_PALETTE,
 } ) {
+	const [ themeColors ] = useSettings( 'color.palette.theme' );
+	const mergedColors = [
+		...( themeColors?.length ? [ { name: __( 'Theme' ), colors: themeColors } ] : [] ),
+		{ name: __( 'Brand' ), colors: ADAIRE_COLOR_PALETTE },
+	];
+
 	return (
 		<div className="adaire-color-control">
 			{ label ? (
 				<span className="adaire-color-control__label">{ label }</span>
 			) : null }
 			<ColorPalette
-				colors={ colors }
+				colors={ mergedColors }
 				value={ value }
 				onChange={ ( next ) => onChange( next ?? '' ) }
 				enableAlpha={ enableAlpha }
