@@ -5,6 +5,7 @@ import {
     MediaUploadCheck,
     PanelColorSettings,
     RichText,
+    useSettings,
 } from '@wordpress/block-editor';
 import {
     PanelBody,
@@ -120,32 +121,45 @@ const FONT_WEIGHT_OPTIONS = [
 // the Heading / Item Title / Item Text on-canvas zones — font size, weight,
 // and color only (the full set, incl. line-height/letter-spacing/transform,
 // stays in the Inspector's "Typography Settings" panel).
-const QuickTypographyControls = ({ attributes, updateResponsiveAttribute, deviceType, fontSizeAttr, fontWeightAttr, colorAttr }) => (
-    <>
-        <UnitControl
-            label={__('Font Size', 'adaire-blocks-dev2')}
-            value={attributes[fontSizeAttr]?.[deviceType]}
-            onChange={(val) => updateResponsiveAttribute(fontSizeAttr, deviceType, val)}
-        />
-        <SelectControl
-            label={__('Font Weight', 'adaire-blocks-dev2')}
-            value={attributes[fontWeightAttr]?.[deviceType]}
-            options={FONT_WEIGHT_OPTIONS}
-            onChange={(val) => updateResponsiveAttribute(fontWeightAttr, deviceType, val)}
-        />
-        <PanelColorSettings
-            title={__('Color', 'adaire-blocks-dev2')}
-            initialOpen={true}
-            colorSettings={[
-                {
-                    value: attributes[colorAttr]?.[deviceType],
-                    onChange: (val) => updateResponsiveAttribute(colorAttr, deviceType, val),
-                    label: __('Color', 'adaire-blocks-dev2'),
-                }
-            ]}
-        />
-    </>
-);
+const QuickTypographyControls = ({ attributes, updateResponsiveAttribute, deviceType, fontSizeAttr, fontWeightAttr, colorAttr }) => {
+    const [ themeColors ] = useSettings( 'color.palette.theme' );
+    const bindColor = ( hex ) => {
+        if ( ! hex ) return '';
+        const match = ( themeColors || [] ).find( c => c.color === hex );
+        return match ? `var(--wp--preset--color--${ match.slug })` : hex;
+    };
+    const resolveColor = ( v ) => {
+        if ( ! v || ! v.startsWith( 'var(--wp--preset--color--' ) ) return v ?? '';
+        const slug = v.slice( 'var(--wp--preset--color--'.length, -1 );
+        return ( themeColors || [] ).find( c => c.slug === slug )?.color ?? v;
+    };
+    return (
+        <>
+            <UnitControl
+                label={__('Font Size', 'adaire-blocks-dev2')}
+                value={attributes[fontSizeAttr]?.[deviceType]}
+                onChange={(val) => updateResponsiveAttribute(fontSizeAttr, deviceType, val)}
+            />
+            <SelectControl
+                label={__('Font Weight', 'adaire-blocks-dev2')}
+                value={attributes[fontWeightAttr]?.[deviceType]}
+                options={FONT_WEIGHT_OPTIONS}
+                onChange={(val) => updateResponsiveAttribute(fontWeightAttr, deviceType, val)}
+            />
+            <PanelColorSettings
+                title={__('Color', 'adaire-blocks-dev2')}
+                initialOpen={true}
+                colorSettings={[
+                    {
+                        value: resolveColor( attributes[colorAttr]?.[deviceType] ),
+                        onChange: (val) => updateResponsiveAttribute(colorAttr, deviceType, bindColor(val)),
+                        label: __('Color', 'adaire-blocks-dev2'),
+                    }
+                ]}
+            />
+        </>
+    );
+};
 
 // Helper function to format dimension values
 const formatDimensionValue = (dimension, fallbackValue, fallbackUnit) => {
@@ -156,69 +170,93 @@ const formatDimensionValue = (dimension, fallbackValue, fallbackUnit) => {
 };
 
 // Helper components moved outside Edit to prevent focus loss during rerenders
-const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, label, fontSizeAttr, fontWeightAttr, lineHeightAttr, letterSpacingAttr, textTransformAttr, colorAttr, marginAttr }) => (
-    <div className="adaire-typography-section" style={{ borderBottom: '1px solid #eee', paddingBottom: '16px', marginBottom: '16px' }}>
-        <p className="adaire-typography-section-name" style={{ fontWeight: 600, marginBottom: '12px' }}>{label}</p>
-        <UnitControl
-            label={__('Font Size', 'adaire-blocks-dev2')}
-            value={attributes[fontSizeAttr][deviceType]}
-            onChange={(val) => updateResponsiveAttribute(fontSizeAttr, deviceType, val)}
-        />
-        <SelectControl
-            label={__('Font Weight', 'adaire-blocks-dev2')}
-            value={attributes[fontWeightAttr][deviceType]}
-            options={[
-                { label: '100', value: '100' }, { label: '200', value: '200' },
-                { label: '300', value: '300' }, { label: '400', value: '400' },
-                { label: '500', value: '500' }, { label: '600', value: '600' },
-                { label: '700', value: '700' }, { label: '800', value: '800' },
-                { label: '900', value: '900' }
-            ]}
-            onChange={(val) => updateResponsiveAttribute(fontWeightAttr, deviceType, val)}
-        />
-        <UnitControl
-            label={__('Line Height', 'adaire-blocks-dev2')}
-            value={attributes[lineHeightAttr][deviceType]}
-            onChange={(val) => updateResponsiveAttribute(lineHeightAttr, deviceType, val)}
-        />
-        <UnitControl
-            label={__('Letter Spacing', 'adaire-blocks-dev2')}
-            value={attributes[letterSpacingAttr][deviceType]}
-            onChange={(val) => updateResponsiveAttribute(letterSpacingAttr, deviceType, val)}
-        />
-        <SelectControl
-            label={__('Text Transform', 'adaire-blocks-dev2')}
-            value={attributes[textTransformAttr][deviceType]}
-            options={[
-                { label: __('None', 'adaire-blocks-dev2'), value: 'none' },
-                { label: __('Uppercase', 'adaire-blocks-dev2'), value: 'uppercase' },
-                { label: __('Lowercase', 'adaire-blocks-dev2'), value: 'lowercase' },
-                { label: __('Capitalize', 'adaire-blocks-dev2'), value: 'capitalize' }
-            ]}
-            onChange={(val) => updateResponsiveAttribute(textTransformAttr, deviceType, val)}
-        />
-        <PanelColorSettings
-            title={__('Text Color', 'adaire-blocks-dev2')}
-            initialOpen={false}
-            colorSettings={[
-                {
-                    value: attributes[colorAttr][deviceType],
-                    onChange: (val) => updateResponsiveAttribute(colorAttr, deviceType, val),
-                    label: __('Color', 'adaire-blocks-dev2'),
-                }
-            ]}
-        />
-        {marginAttr && (
+const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, label, fontSizeAttr, fontWeightAttr, lineHeightAttr, letterSpacingAttr, textTransformAttr, colorAttr, marginAttr }) => {
+    const [ themeColors ] = useSettings( 'color.palette.theme' );
+    const bindColor = ( hex ) => {
+        if ( ! hex ) return '';
+        const match = ( themeColors || [] ).find( c => c.color === hex );
+        return match ? `var(--wp--preset--color--${ match.slug })` : hex;
+    };
+    const resolveColor = ( v ) => {
+        if ( ! v || ! v.startsWith( 'var(--wp--preset--color--' ) ) return v ?? '';
+        const slug = v.slice( 'var(--wp--preset--color--'.length, -1 );
+        return ( themeColors || [] ).find( c => c.slug === slug )?.color ?? v;
+    };
+    return (
+        <div className="adaire-typography-section" style={{ borderBottom: '1px solid #eee', paddingBottom: '16px', marginBottom: '16px' }}>
+            <p className="adaire-typography-section-name" style={{ fontWeight: 600, marginBottom: '12px' }}>{label}</p>
             <UnitControl
-                label={__('Margin Bottom', 'adaire-blocks-dev2')}
-                value={attributes[marginAttr][deviceType]}
-                onChange={(val) => updateResponsiveAttribute(marginAttr, deviceType, val)}
+                label={__('Font Size', 'adaire-blocks-dev2')}
+                value={attributes[fontSizeAttr][deviceType]}
+                onChange={(val) => updateResponsiveAttribute(fontSizeAttr, deviceType, val)}
             />
-        )}
-    </div>
-);
+            <SelectControl
+                label={__('Font Weight', 'adaire-blocks-dev2')}
+                value={attributes[fontWeightAttr][deviceType]}
+                options={[
+                    { label: '100', value: '100' }, { label: '200', value: '200' },
+                    { label: '300', value: '300' }, { label: '400', value: '400' },
+                    { label: '500', value: '500' }, { label: '600', value: '600' },
+                    { label: '700', value: '700' }, { label: '800', value: '800' },
+                    { label: '900', value: '900' }
+                ]}
+                onChange={(val) => updateResponsiveAttribute(fontWeightAttr, deviceType, val)}
+            />
+            <UnitControl
+                label={__('Line Height', 'adaire-blocks-dev2')}
+                value={attributes[lineHeightAttr][deviceType]}
+                onChange={(val) => updateResponsiveAttribute(lineHeightAttr, deviceType, val)}
+            />
+            <UnitControl
+                label={__('Letter Spacing', 'adaire-blocks-dev2')}
+                value={attributes[letterSpacingAttr][deviceType]}
+                onChange={(val) => updateResponsiveAttribute(letterSpacingAttr, deviceType, val)}
+            />
+            <SelectControl
+                label={__('Text Transform', 'adaire-blocks-dev2')}
+                value={attributes[textTransformAttr][deviceType]}
+                options={[
+                    { label: __('None', 'adaire-blocks-dev2'), value: 'none' },
+                    { label: __('Uppercase', 'adaire-blocks-dev2'), value: 'uppercase' },
+                    { label: __('Lowercase', 'adaire-blocks-dev2'), value: 'lowercase' },
+                    { label: __('Capitalize', 'adaire-blocks-dev2'), value: 'capitalize' }
+                ]}
+                onChange={(val) => updateResponsiveAttribute(textTransformAttr, deviceType, val)}
+            />
+            <PanelColorSettings
+                title={__('Text Color', 'adaire-blocks-dev2')}
+                initialOpen={false}
+                colorSettings={[
+                    {
+                        value: resolveColor( attributes[colorAttr][deviceType] ),
+                        onChange: (val) => updateResponsiveAttribute(colorAttr, deviceType, bindColor(val)),
+                        label: __('Color', 'adaire-blocks-dev2'),
+                    }
+                ]}
+            />
+            {marginAttr && (
+                <UnitControl
+                    label={__('Margin Bottom', 'adaire-blocks-dev2')}
+                    value={attributes[marginAttr][deviceType]}
+                    onChange={(val) => updateResponsiveAttribute(marginAttr, deviceType, val)}
+                />
+            )}
+        </div>
+    );
+};
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
+    const [ themeColors ] = useSettings( 'color.palette.theme' );
+    const bindColor = ( hex ) => {
+        if ( ! hex ) return '';
+        const match = ( themeColors || [] ).find( c => c.color === hex );
+        return match ? `var(--wp--preset--color--${ match.slug })` : hex;
+    };
+    const resolveColor = ( v ) => {
+        if ( ! v || ! v.startsWith( 'var(--wp--preset--color--' ) ) return v ?? '';
+        const slug = v.slice( 'var(--wp--preset--color--'.length, -1 );
+        return ( themeColors || [] ).find( c => c.slug === slug )?.color ?? v;
+    };
     const {
         blockId,
         items,
@@ -635,8 +673,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 initialOpen={true}
                                 colorSettings={[
                                     {
-                                        value: overlayColor,
-                                        onChange: (val) => setAttributes({ overlayColor: val }),
+                                        value: resolveColor( overlayColor ),
+                                        onChange: (val) => setAttributes({ overlayColor: bindColor(val) }),
                                         label: __('Solid Color', 'adaire-blocks-dev2'),
                                     }
                                 ]}
@@ -789,8 +827,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         initialOpen={false}
                         colorSettings={[
                             {
-                                value: responsiveIconColor[deviceType],
-                                onChange: (val) => updateResponsiveAttribute('responsiveIconColor', deviceType, val),
+                                value: resolveColor( responsiveIconColor[deviceType] ),
+                                onChange: (val) => updateResponsiveAttribute('responsiveIconColor', deviceType, bindColor(val)),
                                 label: __('Color', 'adaire-blocks-dev2'),
                             }
                         ]}
@@ -834,8 +872,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         initialOpen={false}
                         colorSettings={[
                             {
-                                value: responsiveItemBorderColor[deviceType],
-                                onChange: (val) => updateResponsiveAttribute('responsiveItemBorderColor', deviceType, val),
+                                value: resolveColor( responsiveItemBorderColor[deviceType] ),
+                                onChange: (val) => updateResponsiveAttribute('responsiveItemBorderColor', deviceType, bindColor(val)),
                                 label: __('Color', 'adaire-blocks-dev2'),
                             }
                         ]}

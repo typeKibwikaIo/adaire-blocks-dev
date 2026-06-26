@@ -44,6 +44,18 @@ export default function AdaireColorControl( {
 		{ name: __( 'Brand' ), colors: ADAIRE_COLOR_PALETTE },
 	];
 
+	const bindColor = ( hex ) => {
+		if ( ! hex ) return '';
+		const match = ( themeColors || [] ).find( c => c.color === hex );
+		return match ? `var(--wp--preset--color--${ match.slug })` : hex;
+	};
+
+	const resolveColor = ( v ) => {
+		if ( ! v || ! v.startsWith( 'var(--wp--preset--color--' ) ) return v ?? '';
+		const slug = v.slice( 'var(--wp--preset--color--'.length, -1 );
+		return ( themeColors || [] ).find( c => c.slug === slug )?.color ?? v;
+	};
+
 	return (
 		<div className="adaire-color-control">
 			{ label ? (
@@ -51,8 +63,8 @@ export default function AdaireColorControl( {
 			) : null }
 			<ColorPalette
 				colors={ mergedColors }
-				value={ value }
-				onChange={ ( next ) => onChange( next ?? '' ) }
+				value={ resolveColor( value ) }
+				onChange={ ( next ) => onChange( bindColor( next ) ?? '' ) }
 				enableAlpha={ enableAlpha }
 				clearable={ clearable }
 				__experimentalIsRenderedInSidebar

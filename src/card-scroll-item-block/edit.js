@@ -6,6 +6,7 @@ import {
     MediaUpload,
     MediaUploadCheck,
     useInnerBlocksProps,
+    useSettings,
 } from '@wordpress/block-editor';
 import {
     PanelBody,
@@ -31,6 +32,17 @@ const BREAKPOINTS = [
 ];
 
 export default function Edit({ attributes, setAttributes }) {
+    const [ themeColors ] = useSettings( 'color.palette.theme' );
+    const bindColor = ( hex ) => {
+        if ( ! hex ) return '';
+        const match = ( themeColors || [] ).find( c => c.color === hex );
+        return match ? `var(--wp--preset--color--${ match.slug })` : hex;
+    };
+    const resolveColor = ( v ) => {
+        if ( ! v || ! v.startsWith( 'var(--wp--preset--color--' ) ) return v ?? '';
+        const slug = v.slice( 'var(--wp--preset--color--'.length, -1 );
+        return ( themeColors || [] ).find( c => c.slug === slug )?.color ?? v;
+    };
     const {
         title,
         description,
@@ -292,10 +304,10 @@ export default function Edit({ attributes, setAttributes }) {
                     title={__('Colors', 'adaire-blocks-dev2')}
                     initialOpen={false}
                     colorSettings={[
-                        { value: backgroundColor, onChange: (val) => setAttributes({ backgroundColor: val }), label: __('Background', 'adaire-blocks-dev2') },
-                        { value: headerTextColor, onChange: (val) => setAttributes({ headerTextColor: val }), label: __('Title', 'adaire-blocks-dev2') },
-                        { value: textColor, onChange: (val) => setAttributes({ textColor: val }), label: __('Description', 'adaire-blocks-dev2') },
-                        { value: shadowColor, onChange: (val) => setAttributes({ shadowColor: val }), label: __('Shadow', 'adaire-blocks-dev2') },
+                        { value: resolveColor( backgroundColor ), onChange: (val) => setAttributes({ backgroundColor: bindColor( val ) }), label: __('Background', 'adaire-blocks-dev2') },
+                        { value: resolveColor( headerTextColor ), onChange: (val) => setAttributes({ headerTextColor: bindColor( val ) }), label: __('Title', 'adaire-blocks-dev2') },
+                        { value: resolveColor( textColor ), onChange: (val) => setAttributes({ textColor: bindColor( val ) }), label: __('Description', 'adaire-blocks-dev2') },
+                        { value: resolveColor( shadowColor ), onChange: (val) => setAttributes({ shadowColor: bindColor( val ) }), label: __('Shadow', 'adaire-blocks-dev2') },
                     ]}
                 />
                 <PanelBody title={__('Shadow', 'adaire-blocks-dev2')} initialOpen={false}>
