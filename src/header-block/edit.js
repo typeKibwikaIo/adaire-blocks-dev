@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useMemo } from '@wordpress/element';
+﻿import { useState, useRef, useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls, ColorPalette } from '@wordpress/block-editor';
+import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls, ColorPalette, useSettings } from '@wordpress/block-editor';
 import {
     Button, ColorPicker, GradientPicker, PanelBody, Popover,
     RangeControl, SelectControl, TextControl,
@@ -78,6 +78,23 @@ const mobileSlideDirectionOptions = [
     { label: 'Slide from right', value: 'right' },
     { label: 'Slide from left',  value: 'left'  },
 ];
+
+// ─── CSS-variable color binding (live theme sync) ─────────────────────────
+
+function useColorBinding() {
+    const [ themeColors ] = useSettings( 'color.palette.theme' );
+    const bindColor = ( hex ) => {
+        if ( ! hex ) return '';
+        const match = ( themeColors || [] ).find( c => c.color === hex );
+        return match ? `var(--wp--preset--color--${ match.slug })` : hex;
+    };
+    const resolveColor = ( v ) => {
+        if ( ! v || ! v.startsWith( 'var(--wp--preset--color--' ) ) return v ?? '';
+        const slug = v.slice( 'var(--wp--preset--color--'.length, -1 );
+        return ( themeColors || [] ).find( c => c.slug === slug )?.color ?? v;
+    };
+    return { bindColor, resolveColor };
+}
 
 // ─── Background position grid ───────────────────────────────────────────
 
@@ -497,6 +514,7 @@ function FollowUsPreview({ attributes }) {
 // HeaderPreview/ActionsZone, not Edit() itself.
 
 function SocialZone({ attributes, setAttributes, activeZone, setActiveZone }) {
+    const { bindColor, resolveColor } = useColorBinding();
     if ( ! attributes.showSocial ) {
         return null;
     }
@@ -563,9 +581,9 @@ function SocialZone({ attributes, setAttributes, activeZone, setActiveZone }) {
                             />
                             <TextControl label="Link URL" value={ item.url } onChange={ v => updateLink( index, 'url', v ) } />
                             <p style={{ marginBottom: 4 }}>Icon color</p>
-                            <ColorPalette value={ item.iconColor } onChange={ v => updateLink( index, 'iconColor', v || '' ) } />
+                            <ColorPalette value={ resolveColor(item.iconColor) } onChange={ v => updateLink( index, 'iconColor', bindColor(v) ) } />
                             <p style={{ marginBottom: 4 }}>Background color</p>
-                            <ColorPalette value={ item.bgColor } onChange={ v => updateLink( index, 'bgColor', v || '' ) } />
+                            <ColorPalette value={ resolveColor(item.bgColor) } onChange={ v => updateLink( index, 'bgColor', bindColor(v) ) } />
                             <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
                                 <Button variant="secondary" disabled={ index === 0 } onClick={ () => moveLink( index, -1 ) }>Move up</Button>
                                 <Button variant="secondary" disabled={ index === links.length - 1 } onClick={ () => moveLink( index, 1 ) }>Move down</Button>
@@ -934,6 +952,7 @@ function ActionsZone({ attributes, setAttributes, activeZone, setActiveZone, soc
 // A floating chip at bottom-center of the header for background controls.
 
 function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
+    const { bindColor, resolveColor } = useColorBinding();
     const ref    = useRef( null );
     const isOpen = activeZone === 'background';
 
@@ -1033,8 +1052,8 @@ function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
                                         <>
                                             <p style={{ marginBottom: 6 }}>Background color</p>
                                             <ColorPalette
-                                                value={ attributes.backgroundColor }
-                                                onChange={ v => setAttributes({ backgroundColor: v || '#ffffff' }) }
+                                                value={ resolveColor( attributes.backgroundColor ) }
+                                                onChange={ v => setAttributes({ backgroundColor: bindColor(v) || '#ffffff' }) }
                                             />
                                         </>
                                     ) }
@@ -1140,6 +1159,7 @@ function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
 // ─── Main Edit component ─────────────────────────────────────────────────
 
 export default function Edit({ attributes, setAttributes }) {
+    const { bindColor, resolveColor } = useColorBinding();
     const [ activeZone, setActiveZone ] = useState( null );
 
     const blockProps = useBlockProps({
@@ -1303,7 +1323,7 @@ export default function Edit({ attributes, setAttributes }) {
                     <ToggleControl label="Border bottom"   checked={ attributes.borderBottom }    onChange={ v => setAttributes({ borderBottom: v }) } />
                     <RangeControl  label="Border thickness" value={ attributes.borderThickness }  min={ 0 } max={ 10 } onChange={ v => setAttributes({ borderThickness: v }) } />
                     <p style={{ marginBottom: 8 }}>Border color</p>
-                    <ColorPalette value={ attributes.borderColor } onChange={ v => setAttributes({ borderColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.borderColor) } onChange={ v => setAttributes({ borderColor: bindColor(v) }) } />
                     <ToggleControl label="Box shadow" checked={ attributes.boxShadow } onChange={ v => setAttributes({ boxShadow: v }) } />
                 </>
             ),
@@ -1387,7 +1407,7 @@ export default function Edit({ attributes, setAttributes }) {
                             <RangeControl label="Dot size"    value={ attributes.navDotSize != null ? attributes.navDotSize : 6 }    min={ 2 } max={ 20 } onChange={ v => setAttributes({ navDotSize: v }) } />
                             <RangeControl label="Dot spacing" value={ attributes.navDotSpacing != null ? attributes.navDotSpacing : 8 } min={ 0 } max={ 30 } onChange={ v => setAttributes({ navDotSpacing: v }) } />
                             <p style={{ marginBottom: 8 }}>Dot color</p>
-                            <ColorPalette value={ attributes.navDotColor } onChange={ v => setAttributes({ navDotColor: v || '' }) } />
+                            <ColorPalette value={ resolveColor(attributes.navDotColor) } onChange={ v => setAttributes({ navDotColor: bindColor(v) }) } />
                         </>
                     ) }
 
@@ -1452,9 +1472,9 @@ export default function Edit({ attributes, setAttributes }) {
                             <SelectControl label="Icon"  value={ attributes.signInIcon }  options={ iconOptions }     onChange={ v => setAttributes({ signInIcon: v }) } />
                         ) }
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>Sign In colors</p>
-                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ attributes.signInBgColor }     onChange={ v => setAttributes({ signInBgColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ attributes.signInTextColor }   onChange={ v => setAttributes({ signInTextColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ attributes.signInBorderColor } onChange={ v => setAttributes({ signInBorderColor: v || '' }) } />
+                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.signInBgColor) }     onChange={ v => setAttributes({ signInBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.signInTextColor) }   onChange={ v => setAttributes({ signInTextColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.signInBorderColor) } onChange={ v => setAttributes({ signInBorderColor: bindColor(v) }) } />
                         <RangeControl label="Font size" value={ attributes.signInFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signInFontSize: v }) } />
                     </div>
                     {/* Sign Up */}
@@ -1469,9 +1489,9 @@ export default function Edit({ attributes, setAttributes }) {
                             <SelectControl label="Icon"  value={ attributes.signUpIcon }  options={ iconOptions }     onChange={ v => setAttributes({ signUpIcon: v }) } />
                         ) }
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>Sign Up colors</p>
-                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ attributes.signUpBgColor }     onChange={ v => setAttributes({ signUpBgColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ attributes.signUpTextColor }   onChange={ v => setAttributes({ signUpTextColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ attributes.signUpBorderColor } onChange={ v => setAttributes({ signUpBorderColor: v || '' }) } />
+                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.signUpBgColor) }     onChange={ v => setAttributes({ signUpBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.signUpTextColor) }   onChange={ v => setAttributes({ signUpTextColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.signUpBorderColor) } onChange={ v => setAttributes({ signUpBorderColor: bindColor(v) }) } />
                         <RangeControl label="Font size" value={ attributes.signUpFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signUpFontSize: v }) } />
                     </div>
                     {/* CTA */}
@@ -1489,13 +1509,13 @@ export default function Edit({ attributes, setAttributes }) {
                             </>
                         ) }
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>CTA colors</p>
-                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ attributes.ctaBgColor }     onChange={ v => setAttributes({ ctaBgColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ attributes.ctaTextColor }   onChange={ v => setAttributes({ ctaTextColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ attributes.ctaBorderColor } onChange={ v => setAttributes({ ctaBorderColor: v || '' }) } />
+                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.ctaBgColor) }     onChange={ v => setAttributes({ ctaBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.ctaTextColor) }   onChange={ v => setAttributes({ ctaTextColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.ctaBorderColor) } onChange={ v => setAttributes({ ctaBorderColor: bindColor(v) }) } />
                         <RangeControl label="Font size" value={ attributes.ctaFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ ctaFontSize: v }) } />
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>CTA hover colors</p>
-                        <p style={{ marginBottom: 4 }}>Hover background</p><ColorPalette value={ attributes.ctaHoverBgColor }   onChange={ v => setAttributes({ ctaHoverBgColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Hover text</p>       <ColorPalette value={ attributes.ctaHoverTextColor } onChange={ v => setAttributes({ ctaHoverTextColor: v || '' }) } />
+                        <p style={{ marginBottom: 4 }}>Hover background</p><ColorPalette value={ resolveColor(attributes.ctaHoverBgColor) }   onChange={ v => setAttributes({ ctaHoverBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Hover text</p>       <ColorPalette value={ resolveColor(attributes.ctaHoverTextColor) } onChange={ v => setAttributes({ ctaHoverTextColor: bindColor(v) }) } />
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>CTA shape &amp; spacing</p>
                         <RangeControl
                             label="Border radius"
@@ -1560,7 +1580,7 @@ export default function Edit({ attributes, setAttributes }) {
                         <>
                             <div className="components-base-control">
                                 <label className="components-base-control__label">Border color</label>
-                                <ColorPalette value={ attributes.hamburgerBorderColor } onChange={ v => setAttributes({ hamburgerBorderColor: v }) } />
+                                <ColorPalette value={ resolveColor(attributes.hamburgerBorderColor) } onChange={ v => setAttributes({ hamburgerBorderColor: bindColor(v) }) } />
                             </div>
                             <RangeControl label="Border radius" value={ attributes.hamburgerBorderRadius } min={ 0 } max={ 30 } onChange={ v => setAttributes({ hamburgerBorderRadius: v }) } />
                         </>
@@ -1596,20 +1616,20 @@ export default function Edit({ attributes, setAttributes }) {
                     <RangeControl  label="Icon size"        value={ attributes.searchIconSize || 18 }      min={ 12 } max={ 32 } onChange={ v => setAttributes({ searchIconSize: v }) } />
                     <RangeControl  label="Button size"      value={ attributes.searchButtonSize || 38 }    min={ 28 } max={ 60 } onChange={ v => setAttributes({ searchButtonSize: v }) } />
                     <p style={{ marginBottom: 8 }}>Icon color</p>
-                    <ColorPalette value={ attributes.searchIconColor }   onChange={ v => setAttributes({ searchIconColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchIconColor) }   onChange={ v => setAttributes({ searchIconColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Button background</p>
-                    <ColorPalette value={ attributes.searchIconBgColor } onChange={ v => setAttributes({ searchIconBgColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchIconBgColor) } onChange={ v => setAttributes({ searchIconBgColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 4, fontWeight: 600 }}>Input field colors</p>
                     <p style={{ marginBottom: 8 }}>Input background</p>
-                    <ColorPalette value={ attributes.searchInputBgColor } onChange={ v => setAttributes({ searchInputBgColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchInputBgColor) } onChange={ v => setAttributes({ searchInputBgColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Input border</p>
-                    <ColorPalette value={ attributes.searchInputBorderColor } onChange={ v => setAttributes({ searchInputBorderColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchInputBorderColor) } onChange={ v => setAttributes({ searchInputBorderColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Input text</p>
-                    <ColorPalette value={ attributes.searchInputTextColor } onChange={ v => setAttributes({ searchInputTextColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchInputTextColor) } onChange={ v => setAttributes({ searchInputTextColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Placeholder text</p>
-                    <ColorPalette value={ attributes.searchPlaceholderColor } onChange={ v => setAttributes({ searchPlaceholderColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchPlaceholderColor) } onChange={ v => setAttributes({ searchPlaceholderColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Container background</p>
-                    <ColorPalette value={ attributes.searchContainerBgColor } onChange={ v => setAttributes({ searchContainerBgColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchContainerBgColor) } onChange={ v => setAttributes({ searchContainerBgColor: bindColor(v) }) } />
                 </PanelBody>
 
                 <PanelBody title={ __( 'Social Icons', 'header-block' ) } initialOpen={ false }>
@@ -1642,9 +1662,9 @@ export default function Edit({ attributes, setAttributes }) {
                             <SelectControl label={ `Platform ${ index + 1 }` } value={ item.platform } options={ platformOptions.map( p => ({ label: p, value: p }) ) } onChange={ v => updateSocialItem( index, 'platform', v ) } />
                             <TextControl   label="URL"                         value={ item.url }      onChange={ v => updateSocialItem( index, 'url',      v ) } />
                             <p style={{ marginBottom: 4 }}>Icon color</p>
-                            <ColorPalette value={ item.iconColor } onChange={ v => updateSocialItem( index, 'iconColor', v || '' ) } />
+                            <ColorPalette value={ resolveColor(item.iconColor) } onChange={ v => updateSocialItem( index, 'iconColor', bindColor(v) ) } />
                             <p style={{ marginBottom: 4 }}>Background color</p>
-                            <ColorPalette value={ item.bgColor } onChange={ v => updateSocialItem( index, 'bgColor', v || '' ) } />
+                            <ColorPalette value={ resolveColor(item.bgColor) } onChange={ v => updateSocialItem( index, 'bgColor', bindColor(v) ) } />
                             <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
                                 <Button
                                     variant="secondary"
