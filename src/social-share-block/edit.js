@@ -1,10 +1,9 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, ColorPalette } from '@wordpress/block-editor';
 import {
     PanelBody,
-    RangeControl,
-    ColorPicker,
+    RangeControl,
     BaseControl,
     Button,
     TextControl,
@@ -140,10 +139,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <BaseControl label={__('Icon Color', 'social-share-block')}>
-                        <ColorPicker
-                            color={iconColor}
-                            onChangeComplete={(color) => setAttributes({ iconColor: color.hex })}
-                            disableAlpha
+                        <ColorPalette
+                            value={iconColor}
+                            onChange={(v) => setAttributes({ iconColor: v || "" })}
                         />
                     </BaseControl>
 
@@ -161,30 +159,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 <PanelBody title={__('Button Styling', 'social-share-block')} initialOpen={false}>
                     <BaseControl label={__('Background Color', 'social-share-block')}>
-                        <ColorPicker
-                            color={buttonBackgroundColor && buttonBackgroundColor !== 'transparent' ? buttonBackgroundColor : '#000000'}
-                            onChangeComplete={(color) => {
-                                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                                const colorValue = alpha < 1
-                                    ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                                    : color.hex;
-                                setAttributes({ buttonBackgroundColor: colorValue });
-                            }}
-                            enableAlpha={true}
+                        <ColorPalette
+                            value={buttonBackgroundColor || ""}
+                            onChange={(v) => setAttributes({ buttonBackgroundColor: v || "" })}
                         />
                     </BaseControl>
 
                     <BaseControl label={__('Hover Background Color', 'social-share-block')}>
-                        <ColorPicker
-                            color={buttonHoverBackgroundColor && buttonHoverBackgroundColor !== 'transparent' ? buttonHoverBackgroundColor : '#000000'}
-                            onChangeComplete={(color) => {
-                                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                                const colorValue = alpha < 1
-                                    ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                                    : color.hex;
-                                setAttributes({ buttonHoverBackgroundColor: colorValue });
-                            }}
-                            enableAlpha={true}
+                        <ColorPalette
+                            value={buttonHoverBackgroundColor || ""}
+                            onChange={(v) => setAttributes({ buttonHoverBackgroundColor: v || "" })}
                         />
                     </BaseControl>
 
@@ -217,10 +201,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                     {borderWidth > 0 && (
                         <BaseControl label={__('Border Color', 'social-share-block')}>
-                            <ColorPicker
-                                color={borderColor}
-                                onChangeComplete={(color) => setAttributes({ borderColor: color.hex })}
-                                disableAlpha
+                            <ColorPalette
+                                value={borderColor}
+                                onChange={(v) => setAttributes({ borderColor: v || "" })}
                             />
                         </BaseControl>
                     )}

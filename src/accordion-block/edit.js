@@ -1,9 +1,9 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useCallback, useState, useEffect } from '@wordpress/element';
-import { useBlockProps, useInnerBlocksProps, store as blockEditorStore } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps, store as blockEditorStore, ColorPalette } from '@wordpress/block-editor';
 import { createBlock } from '@wordpress/blocks';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { PanelBody, RangeControl, ToggleControl, ColorPalette, Button, ButtonGroup, TextControl, BaseControl } from '@wordpress/components';
+import { PanelBody, RangeControl, ToggleControl, Button, ButtonGroup, TextControl, BaseControl } from '@wordpress/components';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
