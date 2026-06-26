@@ -1,5 +1,5 @@
-﻿import { useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, TextControl, ToggleControl, ColorPicker, SelectControl, RangeControl, BaseControl, Button, __experimentalBoxControl as BoxControl } from '@wordpress/components';
+﻿import { useBlockProps, ColorPalette } from '@wordpress/block-editor';
+import { PanelBody, TextControl, ToggleControl, SelectControl, RangeControl, BaseControl, Button, __experimentalBoxControl as BoxControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
@@ -137,26 +137,16 @@ export default function Edit({ attributes, setAttributes }) {
 
         <PanelBody title="Button Styling" initialOpen={false}>
           <BaseControl label="Button Color">
-            <ColorPicker
-              color={buttonColor}
-              onChangeComplete={(color) => setAttributes({ buttonColor: color.hex })}
-              disableAlpha
+            <ColorPalette
+              value={buttonColor}
+              onChange={(v) => setAttributes({ buttonColor: v || "" })}
             />
           </BaseControl>
 
           <BaseControl label="Button Background Color">
-            <ColorPicker
-              color={buttonBackgroundColor && buttonBackgroundColor !== 'transparent' ? buttonBackgroundColor : '#000000'}
-              onChangeComplete={(color) => {
-                // Default to full opacity if alpha is not specified
-                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                const colorValue = alpha < 1 
-                  ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                  : color.hex;
-                setAttributes({ buttonBackgroundColor: colorValue });
-              }}
-              enableAlpha={true}
-              defaultValue="#000000"
+            <ColorPalette
+              value={buttonBackgroundColor || ""}
+              onChange={(v) => setAttributes({ buttonBackgroundColor: v || "" })}
             />
             {buttonBackgroundColor && buttonBackgroundColor !== 'transparent' && (
               <Button
@@ -171,26 +161,16 @@ export default function Edit({ attributes, setAttributes }) {
           </BaseControl>
 
           <BaseControl label="Hover Text Color">
-            <ColorPicker
-              color={buttonHoverColor}
-              onChangeComplete={(color) => setAttributes({ buttonHoverColor: color.hex })}
-              disableAlpha
+            <ColorPalette
+              value={buttonHoverColor}
+              onChange={(v) => setAttributes({ buttonHoverColor: v || "" })}
             />
           </BaseControl>
 
           <BaseControl label="Hover Background Color">
-            <ColorPicker
-              color={buttonHoverBackgroundColor && buttonHoverBackgroundColor !== 'transparent' ? buttonHoverBackgroundColor : '#000000'}
-              onChangeComplete={(color) => {
-                // Default to full opacity if alpha is not specified
-                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                const colorValue = alpha < 1 
-                  ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                  : color.hex;
-                setAttributes({ buttonHoverBackgroundColor: colorValue });
-              }}
-              enableAlpha={true}
-              defaultValue="#000000"
+            <ColorPalette
+              value={buttonHoverBackgroundColor || ""}
+              onChange={(v) => setAttributes({ buttonHoverBackgroundColor: v || "" })}
             />
             {buttonHoverBackgroundColor && buttonHoverBackgroundColor !== 'transparent' && (
               <Button
@@ -205,10 +185,9 @@ export default function Edit({ attributes, setAttributes }) {
           </BaseControl>
 
           <BaseControl label="Underline Color">
-            <ColorPicker
-              color={underlineColor}
-              onChangeComplete={(color) => setAttributes({ underlineColor: color.hex })}
-              disableAlpha
+            <ColorPalette
+              value={underlineColor}
+              onChange={(v) => setAttributes({ underlineColor: v || "" })}
             />
           </BaseControl>
 
@@ -237,18 +216,16 @@ export default function Edit({ attributes, setAttributes }) {
               />
 
               <BaseControl label="Border Color">
-                <ColorPicker
-                  color={borderColor}
-                  onChangeComplete={(color) => setAttributes({ borderColor: color.hex })}
-                  disableAlpha
+                <ColorPalette
+                  value={borderColor}
+                  onChange={(v) => setAttributes({ borderColor: v || "" })}
                 />
               </BaseControl>
 
               <BaseControl label="Hover Border Color">
-                <ColorPicker
-                  color={buttonHoverBorderColor || borderColor}
-                  onChangeComplete={(color) => setAttributes({ buttonHoverBorderColor: color.hex })}
-                  disableAlpha
+                <ColorPalette
+                  value={buttonHoverBorderColor || borderColor}
+                  onChange={(v) => setAttributes({ buttonHoverBorderColor: v || "" })}
                 />
               </BaseControl>
 

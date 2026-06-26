@@ -1,10 +1,9 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, ColorPalette } from '@wordpress/block-editor';
 import {
     PanelBody,
-    RangeControl,
-    ColorPicker,
+    RangeControl,
     BaseControl,
     Button,
     TextControl,
@@ -139,18 +138,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <BaseControl label={__('Icon Color', 'icon-box-block')}>
-                        <ColorPicker
-                            color={iconColor}
-                            onChangeComplete={(color) => setAttributes({ iconColor: color.hex })}
-                            disableAlpha
+                        <ColorPalette
+                            value={iconColor}
+                            onChange={(v) => setAttributes({ iconColor: v || "" })}
                         />
                     </BaseControl>
 
                     <BaseControl label={__('Icon Hover Color', 'icon-box-block')}>
-                        <ColorPicker
-                            color={iconHoverColor}
-                            onChangeComplete={(color) => setAttributes({ iconHoverColor: color.hex })}
-                            disableAlpha
+                        <ColorPalette
+                            value={iconHoverColor}
+                            onChange={(v) => setAttributes({ iconHoverColor: v || "" })}
                         />
                     </BaseControl>
 
@@ -168,30 +165,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 <PanelBody title={__('Background Settings', 'icon-box-block')} initialOpen={false}>
                     <BaseControl label={__('Background Color', 'icon-box-block')}>
-                        <ColorPicker
-                            color={backgroundColor && backgroundColor !== 'transparent' ? backgroundColor : '#000000'}
-                            onChangeComplete={(color) => {
-                                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                                const colorValue = alpha < 1
-                                    ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                                    : color.hex;
-                                setAttributes({ backgroundColor: colorValue });
-                            }}
-                            enableAlpha={true}
+                        <ColorPalette
+                            value={backgroundColor || ""}
+                            onChange={(v) => setAttributes({ backgroundColor: v || "" })}
                         />
                     </BaseControl>
 
                     <BaseControl label={__('Background Hover Color', 'icon-box-block')}>
-                        <ColorPicker
-                            color={backgroundHoverColor && backgroundHoverColor !== 'transparent' ? backgroundHoverColor : '#000000'}
-                            onChangeComplete={(color) => {
-                                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                                const colorValue = alpha < 1
-                                    ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                                    : color.hex;
-                                setAttributes({ backgroundHoverColor: colorValue });
-                            }}
-                            enableAlpha={true}
+                        <ColorPalette
+                            value={backgroundHoverColor || ""}
+                            onChange={(v) => setAttributes({ backgroundHoverColor: v || "" })}
                         />
                     </BaseControl>
 
@@ -213,10 +196,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                     {borderWidth > 0 && (
                         <BaseControl label={__('Border Color', 'icon-box-block')}>
-                            <ColorPicker
-                                color={borderColor}
-                                onChangeComplete={(color) => setAttributes({ borderColor: color.hex })}
-                                disableAlpha
+                            <ColorPalette
+                                value={borderColor}
+                                onChange={(v) => setAttributes({ borderColor: v || "" })}
                             />
                         </BaseControl>
                     )}

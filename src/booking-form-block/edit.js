@@ -1,8 +1,7 @@
-import { InspectorControls, MediaUpload, MediaUploadCheck, RichText, URLInput, useBlockProps } from '@wordpress/block-editor';
-import { Button, ColorPalette, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl } from '@wordpress/components';
+﻿import { InspectorControls, MediaUpload, MediaUploadCheck, RichText, URLInput, useBlockProps, ColorPalette } from '@wordpress/block-editor';
+import { Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-const colors = [ { name: 'Adaire Red', color: '#d52940' }, { name: 'Dark', color: '#111827' }, { name: 'White', color: '#ffffff' }, { name: 'Blue', color: '#2563eb' } ];
 const fieldTypes = [ 'text', 'email', 'tel', 'date', 'time', 'textarea', 'select', 'checkbox', 'file' ];
 const set = (setAttributes, key) => (value) => setAttributes({ [key]: value });
 const media = (label, value, onChange, allowedTypes = ['image']) => <MediaUploadCheck><MediaUpload allowedTypes={allowedTypes} value={value} onSelect={(m) => onChange(m.url)} render={({ open }) => <Button variant="secondary" onClick={open}>{value ? __('Change ', 'booking-form-block') : __('Select ', 'booking-form-block')}{label}</Button>} /></MediaUploadCheck>;
@@ -56,13 +55,13 @@ export default function Edit({ attributes, setAttributes }) {
         <TextControl label={__('Button width', 'booking-form-block')} help={__('Use CSS values like auto, 100%, 180px.', 'booking-form-block')} value={a.buttonWidth || 'auto'} onChange={set(setAttributes, 'buttonWidth')} />
         <TextControl label={__('Button height', 'booking-form-block')} help={__('Use CSS values like auto, 48px, 3rem.', 'booking-form-block')} value={a.buttonHeight || 'auto'} onChange={set(setAttributes, 'buttonHeight')} />
         <SelectControl label={__('Button hover effect', 'booking-form-block')} value={a.buttonHoverEffect || 'lift'} options={[{ label: 'Lift', value: 'lift' }, { label: 'Glow', value: 'glow' }, { label: 'Darken', value: 'darken' }, { label: 'None', value: 'none' }]} onChange={set(setAttributes, 'buttonHoverEffect')} />
-        <p>{__('Button hover text', 'booking-form-block')}</p><ColorPalette colors={colors} value={a.buttonHoverColor} onChange={(v) => setAttributes({ buttonHoverColor: v || '#ffffff' })} />
-        <p>{__('Button hover background', 'booking-form-block')}</p><ColorPalette colors={colors} value={a.buttonHoverBackgroundColor} onChange={(v) => setAttributes({ buttonHoverBackgroundColor: v || '#111827' })} />
+        <p>{__('Button hover text', 'booking-form-block')}</p><ColorPalette value={a.buttonHoverColor} onChange={(v) => setAttributes({ buttonHoverColor: v || '#ffffff' })} />
+        <p>{__('Button hover background', 'booking-form-block')}</p><ColorPalette value={a.buttonHoverBackgroundColor} onChange={(v) => setAttributes({ buttonHoverBackgroundColor: v || '#111827' })} />
       </PanelBody>
       <PanelBody title={__('Style', 'booking-form-block')} initialOpen={false}>
-        <p>{__('Accent color', 'booking-form-block')}</p><ColorPalette colors={colors} value={a.accentColor} onChange={(v) => setAttributes({ accentColor: v || '#d52940' })} />
-        <p>{__('Background color', 'booking-form-block')}</p><ColorPalette colors={colors} value={a.backgroundColor} onChange={(v) => setAttributes({ backgroundColor: v || '#111827' })} />
-        <p>{__('Text color', 'booking-form-block')}</p><ColorPalette colors={colors} value={a.textColor} onChange={(v) => setAttributes({ textColor: v || '#ffffff' })} />
+        <p>{__('Accent color', 'booking-form-block')}</p><ColorPalette value={a.accentColor} onChange={(v) => setAttributes({ accentColor: v || '#d52940' })} />
+        <p>{__('Background color', 'booking-form-block')}</p><ColorPalette value={a.backgroundColor} onChange={(v) => setAttributes({ backgroundColor: v || '#111827' })} />
+        <p>{__('Text color', 'booking-form-block')}</p><ColorPalette value={a.textColor} onChange={(v) => setAttributes({ textColor: v || '#ffffff' })} />
         <RangeControl label={__('Padding', 'booking-form-block')} value={a.padding || a.formPadding || 28} onChange={(v) => setAttributes({ padding: v, formPadding: v })} min={0} max={120} />
         <RangeControl label={__('Radius', 'booking-form-block')} value={a.borderRadius || a.cardRadius || a.buttonRadius || 18} onChange={(v) => setAttributes({ borderRadius: v, cardRadius: v, buttonRadius: v })} min={0} max={80} />
       </PanelBody>

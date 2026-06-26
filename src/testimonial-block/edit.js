@@ -1,11 +1,10 @@
 ﻿import {
 	useBlockProps,
 	MediaUpload,
-	MediaUploadCheck,
+	MediaUploadCheck, ColorPalette,
 } from "@wordpress/block-editor";
 import {
 	PanelBody,
-	ColorPicker,
 	TextControl,
 	ToggleControl,
 	Button,
@@ -514,30 +513,23 @@ export default function Edit({ attributes, setAttributes }) {
 								: "Navigation arrows will be hidden"
 						}
 					/>
-					{/* <ColorPicker
-						color={textColor}
-						onChangeComplete={(color) =>
-							setAttributes({ textColor: color.hex })
-						}
-						disableAlpha
+					{/* <ColorPalette
+						value={textColor}
+						onChange={(v) => setAttributes({ textColor: v || "" })}
 					/> */}
 
 					<BaseControl label="Arrow Color">
-						<ColorPicker
-							color={arrowColor}
+						<ColorPalette
+							value={arrowColor}
 							label="Arrow Color"
-							onChangeComplete={(color) => {
-								setAttributes({ arrowColor: color.hex });
-							}}
+							onChange={(v) => setAttributes({ arrowColor: v || '' })}
 						/>
 					</BaseControl>
 					<BaseControl label="Dot Color">
-						<ColorPicker
-							color={dotColor}
+						<ColorPalette
+							value={dotColor}
 							label="Dot Color"
-							onChangeComplete={(color) => {
-								setAttributes({ dotColor: color.hex });
-							}}
+							onChange={(v) => setAttributes({ dotColor: v || '' })}
 						/>
 					</BaseControl>
 
@@ -1021,31 +1013,23 @@ export default function Edit({ attributes, setAttributes }) {
 
 				<PanelBody title="Color Settings" initialOpen={false}>
 					<BaseControl label="Text Color" help="Color for quote text, author name, and title">
-						<ColorPicker
-							color={textColor}
-							onChangeComplete={(color) =>
-								setAttributes({ textColor: color.hex })
-							}
-							disableAlpha
+						<ColorPalette
+							value={textColor}
+							onChange={(v) => setAttributes({ textColor: v || "" })}
 						/>
 					</BaseControl>
 
 					<BaseControl label="Card Background Color" help="Background color for testimonial cards">
-						<ColorPicker
-							color={cardBackgroundColor}
-							onChangeComplete={(color) =>
-								setAttributes({ cardBackgroundColor: color.hex })
-							}
-							disableAlpha
+						<ColorPalette
+							value={cardBackgroundColor}
+							onChange={(v) => setAttributes({ cardBackgroundColor: v || "" })}
 						/>
 					</BaseControl>
 
 					<BaseControl label="Block Background Color" help="Background color for the entire testimonial block section">
-						<ColorPicker
-							color={blockBackgroundColor || "#ffffff"}
-							onChangeComplete={(color) =>
-								setAttributes({ blockBackgroundColor: color.hex })
-							}
+						<ColorPalette
+							value={blockBackgroundColor || "#ffffff"}
+							onChange={(v) => setAttributes({ blockBackgroundColor: v || "" })}
 							enableAlpha
 						/>
 					</BaseControl>

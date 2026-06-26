@@ -3,14 +3,13 @@ import { useEffect, useState } from '@wordpress/element';
 import {
 MediaUpload,
 MediaUploadCheck,
-useBlockProps,
+useBlockProps, ColorPalette,
 } from '@wordpress/block-editor';
 import {
 __experimentalBoxControl as BoxControl,
 BaseControl,
 Button,
 ButtonGroup,
-ColorPicker,
 PanelBody,
 Placeholder,
 RangeControl,
@@ -328,32 +327,18 @@ min={ 0 }
 max={ 100 }
 />
 <BaseControl label={ __( 'Background Color', 'video-player-block' ) } __nextHasNoMarginBottom>
-<ColorPicker
-color={ containerBackgroundColor || '#000000' }
-onChangeComplete={ ( color ) => {
-const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-const colorValue = alpha < 1
-? `rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ alpha })`
-: color.hex;
-setAttributes( { containerBackgroundColor: colorValue } );
-} }
-enableAlpha
+<ColorPalette
+value={containerBackgroundColor || ""}
+onChange={ ( v ) => setAttributes( { containerBackgroundColor: v || '' } ) }
 />
 <Button onClick={ () => setAttributes( { containerBackgroundColor: '' } ) } isSmall style={ { marginTop: '8px' } }>
 { __( 'Reset (transparent)', 'video-player-block' ) }
 </Button>
 </BaseControl>
 <BaseControl label={ __( 'Border Color', 'video-player-block' ) } __nextHasNoMarginBottom>
-<ColorPicker
-color={ containerBorderColor || '#e0e0e0' }
-onChangeComplete={ ( color ) => {
-const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-const colorValue = alpha < 1
-? `rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ alpha })`
-: color.hex;
-setAttributes( { containerBorderColor: colorValue } );
-} }
-enableAlpha
+<ColorPalette
+value={containerBorderColor || ""}
+onChange={ ( v ) => setAttributes( { containerBorderColor: v || '' } ) }
 />
 <Button onClick={ () => setAttributes( { containerBorderColor: '' } ) } isSmall style={ { marginTop: '8px' } }>
 { __( 'Reset (none)', 'video-player-block' ) }
