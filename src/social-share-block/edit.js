@@ -15,6 +15,7 @@ import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import './editor.scss';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 const PLATFORMS = [
     { key: 'facebook', defaultIcon: 'bi bi-facebook', defaultLabel: 'Facebook' },
@@ -139,7 +140,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <BaseControl label={__('Icon Color', 'social-share-block')}>
-                        <ColorPalette
+                        <BoundColorPalette
                             value={iconColor}
                             onChange={(v) => setAttributes({ iconColor: v || "" })}
                         />
@@ -159,14 +160,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 <PanelBody title={__('Button Styling', 'social-share-block')} initialOpen={false}>
                     <BaseControl label={__('Background Color', 'social-share-block')}>
-                        <ColorPalette
+                        <BoundColorPalette
                             value={buttonBackgroundColor || ""}
                             onChange={(v) => setAttributes({ buttonBackgroundColor: v || "" })}
                         />
                     </BaseControl>
 
                     <BaseControl label={__('Hover Background Color', 'social-share-block')}>
-                        <ColorPalette
+                        <BoundColorPalette
                             value={buttonHoverBackgroundColor || ""}
                             onChange={(v) => setAttributes({ buttonHoverBackgroundColor: v || "" })}
                         />
@@ -201,7 +202,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                     {borderWidth > 0 && (
                         <BaseControl label={__('Border Color', 'social-share-block')}>
-                            <ColorPalette
+                            <BoundColorPalette
                                 value={borderColor}
                                 onChange={(v) => setAttributes({ borderColor: v || "" })}
                             />

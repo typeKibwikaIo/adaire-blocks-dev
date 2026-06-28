@@ -6,6 +6,7 @@ import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../compon
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import ButtonIcon, { BUTTON_ICON_OPTIONS } from './icons';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 export default function Edit({ attributes, setAttributes }) {
   const [deviceType, setDeviceType] = useState('desktop');
@@ -137,14 +138,14 @@ export default function Edit({ attributes, setAttributes }) {
 
         <PanelBody title="Button Styling" initialOpen={false}>
           <BaseControl label="Button Color">
-            <ColorPalette
+            <BoundColorPalette
               value={buttonColor}
               onChange={(v) => setAttributes({ buttonColor: v || "" })}
             />
           </BaseControl>
 
           <BaseControl label="Button Background Color">
-            <ColorPalette
+            <BoundColorPalette
               value={buttonBackgroundColor || ""}
               onChange={(v) => setAttributes({ buttonBackgroundColor: v || "" })}
             />
@@ -161,14 +162,14 @@ export default function Edit({ attributes, setAttributes }) {
           </BaseControl>
 
           <BaseControl label="Hover Text Color">
-            <ColorPalette
+            <BoundColorPalette
               value={buttonHoverColor}
               onChange={(v) => setAttributes({ buttonHoverColor: v || "" })}
             />
           </BaseControl>
 
           <BaseControl label="Hover Background Color">
-            <ColorPalette
+            <BoundColorPalette
               value={buttonHoverBackgroundColor || ""}
               onChange={(v) => setAttributes({ buttonHoverBackgroundColor: v || "" })}
             />
@@ -185,7 +186,7 @@ export default function Edit({ attributes, setAttributes }) {
           </BaseControl>
 
           <BaseControl label="Underline Color">
-            <ColorPalette
+            <BoundColorPalette
               value={underlineColor}
               onChange={(v) => setAttributes({ underlineColor: v || "" })}
             />
@@ -216,14 +217,14 @@ export default function Edit({ attributes, setAttributes }) {
               />
 
               <BaseControl label="Border Color">
-                <ColorPalette
+                <BoundColorPalette
                   value={borderColor}
                   onChange={(v) => setAttributes({ borderColor: v || "" })}
                 />
               </BaseControl>
 
               <BaseControl label="Hover Border Color">
-                <ColorPalette
+                <BoundColorPalette
                   value={buttonHoverBorderColor || borderColor}
                   onChange={(v) => setAttributes({ buttonHoverBorderColor: v || "" })}
                 />

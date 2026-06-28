@@ -17,6 +17,7 @@ import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import './editor.scss';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 export default function Edit({ attributes, setAttributes, clientId }) {
     const [deviceType, setDeviceType] = useState('desktop');
@@ -138,14 +139,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <BaseControl label={__('Icon Color', 'icon-box-block')}>
-                        <ColorPalette
+                        <BoundColorPalette
                             value={iconColor}
                             onChange={(v) => setAttributes({ iconColor: v || "" })}
                         />
                     </BaseControl>
 
                     <BaseControl label={__('Icon Hover Color', 'icon-box-block')}>
-                        <ColorPalette
+                        <BoundColorPalette
                             value={iconHoverColor}
                             onChange={(v) => setAttributes({ iconHoverColor: v || "" })}
                         />
@@ -165,14 +166,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 <PanelBody title={__('Background Settings', 'icon-box-block')} initialOpen={false}>
                     <BaseControl label={__('Background Color', 'icon-box-block')}>
-                        <ColorPalette
+                        <BoundColorPalette
                             value={backgroundColor || ""}
                             onChange={(v) => setAttributes({ backgroundColor: v || "" })}
                         />
                     </BaseControl>
 
                     <BaseControl label={__('Background Hover Color', 'icon-box-block')}>
-                        <ColorPalette
+                        <BoundColorPalette
                             value={backgroundHoverColor || ""}
                             onChange={(v) => setAttributes({ backgroundHoverColor: v || "" })}
                         />
@@ -196,7 +197,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                     {borderWidth > 0 && (
                         <BaseControl label={__('Border Color', 'icon-box-block')}>
-                            <ColorPalette
+                            <BoundColorPalette
                                 value={borderColor}
                                 onChange={(v) => setAttributes({ borderColor: v || "" })}
                             />
