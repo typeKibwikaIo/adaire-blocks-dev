@@ -22,6 +22,7 @@ import { useBlockLimits } from '../components/useBlockLimits';
 import QuickZone from '../components/QuickZone';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import InspectorTabs from '../components/InspectorTabs';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 const FREE_TIER_ITEM_LIMIT = 3;
 
@@ -513,20 +514,20 @@ export default function Edit({ attributes, setAttributes }) {
 								: "Navigation arrows will be hidden"
 						}
 					/>
-					{/* <ColorPalette
+					{/* <BoundColorPalette
 						value={textColor}
 						onChange={(v) => setAttributes({ textColor: v || "" })}
 					/> */}
 
 					<BaseControl label="Arrow Color">
-						<ColorPalette
+						<BoundColorPalette
 							value={arrowColor}
 							label="Arrow Color"
 							onChange={(v) => setAttributes({ arrowColor: v || '' })}
 						/>
 					</BaseControl>
 					<BaseControl label="Dot Color">
-						<ColorPalette
+						<BoundColorPalette
 							value={dotColor}
 							label="Dot Color"
 							onChange={(v) => setAttributes({ dotColor: v || '' })}
@@ -1013,21 +1014,21 @@ export default function Edit({ attributes, setAttributes }) {
 
 				<PanelBody title="Color Settings" initialOpen={false}>
 					<BaseControl label="Text Color" help="Color for quote text, author name, and title">
-						<ColorPalette
+						<BoundColorPalette
 							value={textColor}
 							onChange={(v) => setAttributes({ textColor: v || "" })}
 						/>
 					</BaseControl>
 
 					<BaseControl label="Card Background Color" help="Background color for testimonial cards">
-						<ColorPalette
+						<BoundColorPalette
 							value={cardBackgroundColor}
 							onChange={(v) => setAttributes({ cardBackgroundColor: v || "" })}
 						/>
 					</BaseControl>
 
 					<BaseControl label="Block Background Color" help="Background color for the entire testimonial block section">
-						<ColorPalette
+						<BoundColorPalette
 							value={blockBackgroundColor || "#ffffff"}
 							onChange={(v) => setAttributes({ blockBackgroundColor: v || "" })}
 							enableAlpha

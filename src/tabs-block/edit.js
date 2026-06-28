@@ -17,6 +17,7 @@ import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 const ALIGN_OPTIONS = [
     { label: __('Left', 'tabs-block'), value: 'flex-start' },
@@ -479,7 +480,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         max={10}
                     />
                     <p>{__('Underline Color', 'tabs-block')}</p>
-                    <ColorPalette 
+                    <BoundColorPalette 
                         value={tabUnderlineColor} 
                         onChange={(v) => setAttributes({ tabUnderlineColor: v })} 
                     />
@@ -487,12 +488,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 <PanelBody title={__('Colors', 'tabs-block')} initialOpen={false}>
                     <p>{__('Tab Title (Inactive)', 'tabs-block')}</p>
-                    <ColorPalette 
+                    <BoundColorPalette 
                         value={tabTitleColor} 
                         onChange={(v) => setAttributes({ tabTitleColor: v })} 
                     />
                     <p>{__('Tab Title (Active)', 'tabs-block')}</p>
-                    <ColorPalette 
+                    <BoundColorPalette 
                         value={tabTitleActiveColor} 
                         onChange={(v) => setAttributes({ tabTitleActiveColor: v })} 
                     />

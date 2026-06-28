@@ -17,6 +17,7 @@ import {
 } from "@wordpress/components";
 import { useState, useMemo } from "@wordpress/element";
 import QuickZone from "../components/QuickZone";
+import BoundColorPalette from '../components/BoundColorPalette';
 
 export default function Edit({ attributes, setAttributes }) {
 	const {
@@ -329,31 +330,31 @@ export default function Edit({ attributes, setAttributes }) {
 
 				<PanelBody title={__("Color Settings", "pricing-comparison-block")} initialOpen={false}>
 					<BaseControl label={__("Background Color", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={backgroundColor}
 							onChange={(value) => setAttributes({ backgroundColor: value })}
 						/>
 					</BaseControl>
 					<BaseControl label={__("Text Color", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={textColor}
 							onChange={(value) => setAttributes({ textColor: value })}
 						/>
 					</BaseControl>
 					<BaseControl label={__("Accent Color", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={accentColor}
 							onChange={(value) => setAttributes({ accentColor: value })}
 						/>
 					</BaseControl>
 					<BaseControl label={__("Muted Text Color", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={mutedTextColor}
 							onChange={(value) => setAttributes({ mutedTextColor: value })}
 						/>
 					</BaseControl>
 					<BaseControl label={__("Border Color", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={borderColor}
 							onChange={(value) => setAttributes({ borderColor: value })}
 						/>
@@ -362,13 +363,13 @@ export default function Edit({ attributes, setAttributes }) {
 					<hr />
 					<p><strong>{__("Cards", "pricing-comparison-block")}</strong></p>
 					<BaseControl label={__("Card Background", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={cardBackground}
 							onChange={(value) => setAttributes({ cardBackground: value })}
 						/>
 					</BaseControl>
 					<BaseControl label={__("Highlighted Card Background", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={highlightBackground}
 							onChange={(value) => setAttributes({ highlightBackground: value })}
 						/>
@@ -377,19 +378,19 @@ export default function Edit({ attributes, setAttributes }) {
 					<hr />
 					<p><strong>{__("Buttons", "pricing-comparison-block")}</strong></p>
 					<BaseControl label={__("Button Background", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={buttonBackground}
 							onChange={(value) => setAttributes({ buttonBackground: value })}
 						/>
 					</BaseControl>
 					<BaseControl label={__("Button Text Color", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={buttonTextColor}
 							onChange={(value) => setAttributes({ buttonTextColor: value })}
 						/>
 					</BaseControl>
 					<BaseControl label={__("Button Outline Color", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={buttonOutlineColor}
 							onChange={(value) => setAttributes({ buttonOutlineColor: value })}
 						/>
@@ -398,19 +399,19 @@ export default function Edit({ attributes, setAttributes }) {
 					<hr />
 					<p><strong>{__("Table & Sticky", "pricing-comparison-block")}</strong></p>
 					<BaseControl label={__("Table Striped Color", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={tableStripedColor}
 							onChange={(value) => setAttributes({ tableStripedColor: value })}
 						/>
 					</BaseControl>
 					<BaseControl label={__("Sticky Background", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={stickyBackground}
 							onChange={(value) => setAttributes({ stickyBackground: value })}
 						/>
 					</BaseControl>
 					<BaseControl label={__("Sticky Border", "pricing-comparison-block")}>
-						<ColorPalette
+						<BoundColorPalette
 							value={stickyBorderColor}
 							onChange={(value) => setAttributes({ stickyBorderColor: value })}
 						/>

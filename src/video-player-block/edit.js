@@ -31,6 +31,7 @@ getYouTubeId,
 getYouTubeSrc,
 } from './helpers';
 import './editor.scss';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 const UNITS = [ 'px', '%', 'rem', 'vw' ];
 const HEIGHT_UNITS = [ 'px', 'rem', 'vw' ];
@@ -327,7 +328,7 @@ min={ 0 }
 max={ 100 }
 />
 <BaseControl label={ __( 'Background Color', 'video-player-block' ) } __nextHasNoMarginBottom>
-<ColorPalette
+<BoundColorPalette
 value={containerBackgroundColor || ""}
 onChange={ ( v ) => setAttributes( { containerBackgroundColor: v || '' } ) }
 />
@@ -336,7 +337,7 @@ onChange={ ( v ) => setAttributes( { containerBackgroundColor: v || '' } ) }
 </Button>
 </BaseControl>
 <BaseControl label={ __( 'Border Color', 'video-player-block' ) } __nextHasNoMarginBottom>
-<ColorPalette
+<BoundColorPalette
 value={containerBorderColor || ""}
 onChange={ ( v ) => setAttributes( { containerBorderColor: v || '' } ) }
 />
