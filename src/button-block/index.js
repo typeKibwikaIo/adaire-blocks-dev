@@ -11,13 +11,15 @@ import './style.scss';
 
 import Edit from './edit';
 import save from './save';
+import deprecated from './deprecated';
 import metadata from './block.json';
 import ButtonIcon from '../icons/button';
 
 registerBlockType(metadata.name, {
 	edit: Edit,
 	save,
+	deprecated,
 	icon: ButtonIcon,
-}); 
+});
 
 

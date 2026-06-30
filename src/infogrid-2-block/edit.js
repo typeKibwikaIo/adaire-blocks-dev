@@ -106,6 +106,24 @@ const BREAKPOINTS = [
     { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks-dev2') }
 ];
 
+// Block-level Font Family control (ADAB-010) — a single, non-responsive
+// choice applied at the block root via the --infogrid-2-font-family custom
+// property, inherited by every text element inside (heading/title/text),
+// unless overridden by a more specific rule. Not per-text-role: this block's
+// existing typography system (TypographySection) only ever exposed
+// size/weight/line-height/letter-spacing/transform per role, never family.
+const FONT_FAMILY_OPTIONS = [
+    { label: 'Default (inherit theme)', value: '' },
+    { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+    { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+    { label: 'Georgia', value: 'Georgia, serif' },
+    { label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+    { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+    { label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+    { label: 'Courier New', value: "'Courier New', Courier, monospace" },
+    { label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
 // Shared font-weight options for the on-canvas QuickZone typography popovers
 // (mirrors the options already used in the Inspector's TypographySection).
 const FONT_WEIGHT_OPTIONS = [
@@ -221,6 +239,7 @@ const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, 
 const Edit = ({ attributes, setAttributes, clientId }) => {
     const {
         blockId,
+        fontFamily,
         items,
         backgroundImage,
         backgroundImageUrl,
@@ -327,7 +346,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 image: null,
                 imageUrl: '',
                 title: 'New Item',
-                text: 'Description goes here.'
+                text: 'Description goes here.',
+                showTitle: true
             }]
         });
     }, [setAttributes]);
@@ -383,6 +403,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     const styleVariables = useMemo(() => {
         const vars = {
+            '--infogrid-2-font-family': fontFamily || 'inherit',
             '--infogrid-2-bg-color': solidBgColor || 'transparent',
             '--infogrid-2-bg-image': backgroundImageUrl ? `url(${backgroundImageUrl})` : 'none',
             '--infogrid-2-overlay-bg-solid': overlayColor || '#000000',
@@ -448,7 +469,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         });
 
         return vars;
-    }, [attributes, solidBgColor, backgroundImageUrl, overlayColor, overlayOpacity, overlayGradient, responsiveMaxWidth]);
+    }, [attributes, fontFamily, solidBgColor, backgroundImageUrl, overlayColor, overlayOpacity, overlayGradient, responsiveMaxWidth]);
 
     // Ensure Bootstrap Icons loads in the editor iframe regardless of hook timing
     useEffect(() => {
@@ -464,6 +485,15 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     // Scoped per-device styles injected directly into the editor, bypassing media-query
     // breakpoints that don't match the editor canvas width. This makes all controls
     // immediately reflect in the preview when the user changes them or switches device.
+    //
+    // Every declaration below is `!important`. `[data-block="..."] .some-class` and
+    // style.scss's `.adaire-infogrid-2-container .some-class` are both two-selector
+    // descendant rules with identical (0,2,0) specificity, so without `!important`
+    // the winner depended on stylesheet load order — which is exactly what made
+    // colors/typography look "inconsistent" between the editor and the frontend (the
+    // two environments don't load editor.css/style-index.css in the same relative
+    // order). `!important` here makes this rule win unconditionally, so the editor
+    // preview always reflects the breakpoint actually selected in the device toggle.
     const editorStyle = useMemo(() => {
         const g = (attr) => { const v = attr?.[deviceType]; return (v !== undefined && v !== null) ? v : attr?.desktop; };
         const s = (attr, side) => { const v = attr?.[deviceType]?.[side]; return (v !== undefined && v !== null) ? v : attr?.desktop?.[side]; };
@@ -473,41 +503,42 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         const b = `[data-block="${clientId}"]`;
         return [
             `${b}{`,
-            `padding-top:${s(responsivePadding,'top')||''};`,
-            `padding-right:${s(responsivePadding,'right')||''};`,
-            `padding-bottom:${s(responsivePadding,'bottom')||''};`,
-            `padding-left:${s(responsivePadding,'left')||''};`,
-            `margin-top:${s(responsiveMargin,'top')||''};`,
-            `margin-right:${s(responsiveMargin,'right')||''};`,
-            `margin-bottom:${s(responsiveMargin,'bottom')||''};`,
-            `margin-left:${s(responsiveMargin,'left')||''};`,
-            `min-height:${g(responsiveMinHeight)||''};}`,
+            `padding-top:${s(responsivePadding,'top')||''} !important;`,
+            `padding-right:${s(responsivePadding,'right')||''} !important;`,
+            `padding-bottom:${s(responsivePadding,'bottom')||''} !important;`,
+            `padding-left:${s(responsivePadding,'left')||''} !important;`,
+            `margin-top:${s(responsiveMargin,'top')||''} !important;`,
+            `margin-right:${s(responsiveMargin,'right')||''} !important;`,
+            `margin-bottom:${s(responsiveMargin,'bottom')||''} !important;`,
+            `margin-left:${s(responsiveMargin,'left')||''} !important;`,
+            `min-height:${g(responsiveMinHeight)||''} !important;}`,
             `${b} .adaire-infogrid-2-content{`,
-            `grid-template-columns:repeat(${g(responsiveGridColumns)||3},1fr);`,
-            `gap:${g(responsiveGridGap)||'30px'};}`,
+            `display:flex !important;flex-wrap:wrap !important;`,
+            `gap:${g(responsiveGridGap)||'30px'} !important;}`,
             `${b} .adaire-infogrid-2-item{`,
-            `padding-top:${s(responsiveItemPadding,'top')||''};`,
-            `padding-right:${s(responsiveItemPadding,'right')||''};`,
-            `padding-bottom:${s(responsiveItemPadding,'bottom')||''};`,
-            `padding-left:${s(responsiveItemPadding,'left')||''};`,
-            `align-items:${flexAlign};text-align:${textAlign};border-radius:${g(responsiveItemBorderRadius)||'12px'};}`,
+            `flex:1 1 max(calc((100% - (${g(responsiveGridColumns)||3} - 1) * ${g(responsiveGridGap)||'30px'}) / ${g(responsiveGridColumns)||3}),120px) !important;box-sizing:border-box !important;`,
+            `padding-top:${s(responsiveItemPadding,'top')||''} !important;`,
+            `padding-right:${s(responsiveItemPadding,'right')||''} !important;`,
+            `padding-bottom:${s(responsiveItemPadding,'bottom')||''} !important;`,
+            `padding-left:${s(responsiveItemPadding,'left')||''} !important;`,
+            `align-items:${flexAlign} !important;text-align:${textAlign} !important;border-radius:${g(responsiveItemBorderRadius)||'12px'} !important;}`,
             `${b} .adaire-infogrid-2-item-icon{`,
-            `color:${g(responsiveIconColor)||'#ffffff'};`,
-            `font-size:${g(responsiveIconSize)||'32px'};}`,
+            `color:${g(responsiveIconColor)||'#ffffff'} !important;`,
+            `font-size:${g(responsiveIconSize)||'32px'} !important;}`,
             `${b} .adaire-infogrid-2-item-title{`,
-            `font-size:${g(attributes.responsiveTitleFontSize)||'24px'};`,
-            `font-weight:${g(attributes.responsiveTitleFontWeight)||'600'};`,
-            `line-height:${g(attributes.responsiveTitleLineHeight)||'1.4'};`,
-            `color:${g(attributes.responsiveTitleColor)||'#ffffff'};}`,
+            `font-size:${g(attributes.responsiveTitleFontSize)||'24px'} !important;`,
+            `font-weight:${g(attributes.responsiveTitleFontWeight)||'600'} !important;`,
+            `line-height:${g(attributes.responsiveTitleLineHeight)||'1.4'} !important;`,
+            `color:${g(attributes.responsiveTitleColor)||'#ffffff'} !important;}`,
             `${b} .adaire-infogrid-2-item-text{`,
-            `font-size:${g(attributes.responsiveTextFontSize)||'16px'};`,
-            `font-weight:${g(attributes.responsiveTextFontWeight)||'400'};`,
-            `line-height:${g(attributes.responsiveTextLineHeight)||'1.6'};`,
-            `color:${g(attributes.responsiveTextColor)||'#cccccc'};}`,
+            `font-size:${g(attributes.responsiveTextFontSize)||'16px'} !important;`,
+            `font-weight:${g(attributes.responsiveTextFontWeight)||'400'} !important;`,
+            `line-height:${g(attributes.responsiveTextLineHeight)||'1.6'} !important;`,
+            `color:${g(attributes.responsiveTextColor)||'#cccccc'} !important;}`,
             `${b} .adaire-infogrid-2-heading{`,
-            `font-size:${g(attributes.responsiveHeadingFontSize)||'40px'};`,
-            `font-weight:${g(attributes.responsiveHeadingFontWeight)||'700'};`,
-            `color:${g(attributes.responsiveHeadingColor)||'#ffffff'};}`,
+            `font-size:${g(attributes.responsiveHeadingFontSize)||'40px'} !important;`,
+            `font-weight:${g(attributes.responsiveHeadingFontWeight)||'700'} !important;`,
+            `color:${g(attributes.responsiveHeadingColor)||'#ffffff'} !important;}`,
         ].join('');
     }, [deviceType, clientId, attributes, responsivePadding, responsiveMargin, responsiveMinHeight,
         responsiveGridColumns, responsiveGridGap, responsiveItemPadding, responsiveContentAlignment,
@@ -663,6 +694,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody title={__('Layout Settings', 'adaire-blocks-dev2')}>
+                    <ToggleControl
+                        label={__('Show Heading', 'adaire-blocks-dev2')}
+                        checked={showHeading !== false}
+                        onChange={(val) => setAttributes({ showHeading: val })}
+                        help={__('Hide the main heading above the grid items.', 'adaire-blocks-dev2')}
+                    />
+
                     <p>{__('Container Width', 'adaire-blocks-dev2')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {CONTAINER_MODES.map((mode) => (
@@ -737,6 +775,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody title={__('Typography Settings', 'adaire-blocks-dev2')} initialOpen={false}>
+                    <SelectControl
+                        label={__('Font Family', 'adaire-blocks-dev2')}
+                        value={fontFamily || ''}
+                        options={FONT_FAMILY_OPTIONS}
+                        onChange={(val) => setAttributes({ fontFamily: val })}
+                        help={__('Applies to the entire block (heading, item title, and item text) unless overridden by theme styles.', 'adaire-blocks-dev2')}
+                    />
                     <TypographySection
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
@@ -858,7 +903,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     </Button>
 
                     <div className="adaire-infogrid-2-controls">
-                        {items.map((item, index) => (
+                        {(items || []).map((item, index) => (
                             <Card key={item.id}>
                                 <CardHeader>
                                     <Flex justify="space-between" align="center" style={{ width: '100%' }}>
@@ -868,7 +913,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                         <FlexItem>
                                             <ButtonGroup>
                                                 <Button icon={chevronUp} onClick={() => moveItem(index, -1)} disabled={index === 0} size="small" />
-                                                <Button icon={chevronDown} onClick={() => moveItem(index, 1)} disabled={index === items.length - 1} size="small" />
+                                                <Button icon={chevronDown} onClick={() => moveItem(index, 1)} disabled={index === (items || []).length - 1} size="small" />
                                                 <Button icon={trash} onClick={() => deleteItem(item.id)} isDestructive size="small" />
                                             </ButtonGroup>
                                         </FlexItem>
@@ -923,6 +968,11 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                         label={__('Title', 'adaire-blocks-dev2')}
                                         value={item.title}
                                         onChange={(val) => updateItem(item.id, 'title', val)}
+                                    />
+                                    <ToggleControl
+                                        label={__('Show Title', 'adaire-blocks-dev2')}
+                                        checked={item.showTitle !== false}
+                                        onChange={(val) => updateItem(item.id, 'showTitle', val)}
                                     />
                                     <TextareaControl
                                         label={__('Text', 'adaire-blocks-dev2')}
@@ -981,7 +1031,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         </QuickZone>
                     )}
                     <div className="adaire-infogrid-2-content">
-                        {items.map((item) => (
+                        {(items || []).map((item) => (
                             <div key={item.id} className="adaire-infogrid-2-item">
                                 <QuickZone
                                     id={`infogrid2-icon-${item.id}`}
@@ -1053,23 +1103,32 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     activeZone={activeZone}
                                     setActiveZone={setActiveZone}
                                     content={
-                                        <QuickTypographyControls
-                                            attributes={attributes}
-                                            updateResponsiveAttribute={updateResponsiveAttribute}
-                                            deviceType={deviceType}
-                                            fontSizeAttr="responsiveTitleFontSize"
-                                            fontWeightAttr="responsiveTitleFontWeight"
-                                            colorAttr="responsiveTitleColor"
-                                        />
+                                        <>
+                                            <ToggleControl
+                                                label={__('Show Title', 'adaire-blocks-dev2')}
+                                                checked={item.showTitle !== false}
+                                                onChange={(val) => updateItem(item.id, 'showTitle', val)}
+                                            />
+                                            <QuickTypographyControls
+                                                attributes={attributes}
+                                                updateResponsiveAttribute={updateResponsiveAttribute}
+                                                deviceType={deviceType}
+                                                fontSizeAttr="responsiveTitleFontSize"
+                                                fontWeightAttr="responsiveTitleFontWeight"
+                                                colorAttr="responsiveTitleColor"
+                                            />
+                                        </>
                                     }
                                 >
-                                    <RichText
-                                        tagName="h3"
-                                        className="adaire-infogrid-2-item-title"
-                                        value={item.title}
-                                        onChange={(val) => updateItem(item.id, 'title', val)}
-                                        placeholder={__('Enter title...', 'adaire-blocks-dev2')}
-                                    />
+                                    {item.showTitle !== false && (
+                                        <RichText
+                                            tagName="h3"
+                                            className="adaire-infogrid-2-item-title"
+                                            value={item.title}
+                                            onChange={(val) => updateItem(item.id, 'title', val)}
+                                            placeholder={__('Enter title...', 'adaire-blocks-dev2')}
+                                        />
+                                    )}
                                 </QuickZone>
                                 <QuickZone
                                     id={`infogrid2-text-${item.id}`}

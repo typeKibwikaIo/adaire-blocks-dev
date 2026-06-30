@@ -45,6 +45,10 @@
             "type": "string",
             "default": "#503AA8"
         },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
+        },
         "paddingTop": {
             "type": "number",
             "default": 60
@@ -161,6 +165,11 @@
                         "showBrandName": false,
                         "brandName": "",
                         "description": "We create amazing digital experiences for businesses worldwide.",
+                        "taglineFontSize": -1,
+                        "taglineFontWeight": "",
+                        "taglineLineHeight": -1,
+                        "taglineLetterSpacing": -1,
+                        "taglineColor": "",
                         "showCta": true,
                         "ctaText": "Get Started",
                         "ctaUrl": "#",
@@ -212,7 +221,7 @@
                         "listStyle": "plain",
                         "linkUnderline": false,
                         "itemSpacing": 12,
-                        "linkColor": "#9b8ee0",
+                        "linkColor": "",
                         "linkHoverColor": "#ffffff",
                         "linkHoverUnderlineColor": "",
                         "linkHoverBackgroundColor": "",
@@ -250,7 +259,7 @@
                         "listStyle": "plain",
                         "linkUnderline": false,
                         "itemSpacing": 12,
-                        "linkColor": "#9b8ee0",
+                        "linkColor": "",
                         "linkHoverColor": "#ffffff",
                         "linkHoverUnderlineColor": "",
                         "linkHoverBackgroundColor": "",
@@ -293,7 +302,7 @@
                         ],
                         "displayStyle": "vertical",
                         "iconSize": 24,
-                        "iconColor": "#9b8ee0",
+                        "iconColor": "",
                         "iconBgColor": "",
                         "socialHoverColor": "#ffffff",
                         "socialHoverBackgroundColor": "#503AA8",

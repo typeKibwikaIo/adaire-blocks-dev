@@ -102,6 +102,34 @@
                 "bigDesktop": "24px"
             }
         },
+        "headingResponsiveLineHeight": {
+            "type": "object",
+            "default": {
+                "mobile": "1.15",
+                "tablet": "1.15",
+                "smallLaptop": "1.15",
+                "desktop": "1.15",
+                "bigDesktop": "1.15"
+            }
+        },
+        "headingResponsiveLetterSpacing": {
+            "type": "object",
+            "default": {
+                "mobile": "normal",
+                "tablet": "normal",
+                "smallLaptop": "normal",
+                "desktop": "normal",
+                "bigDesktop": "normal"
+            }
+        },
+        "headingTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
+        },
         "postsPerPage": {
             "type": "number",
             "default": 6

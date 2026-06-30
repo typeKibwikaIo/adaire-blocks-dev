@@ -10,7 +10,8 @@
     "html": false,
     "anchor": true,
     "align": ["wide", "full"],
-    "customClassName": true
+    "customClassName": true,
+    "spacing": { "margin": true, "padding": true }
   },
   "textdomain": "about-us-block",
   "editorScript": "file:./index.js",
@@ -35,6 +36,36 @@
     "mutedColor":        { "type": "string",  "default": "rgba(99,102,241,0.65)" },
     "dividerColor":      { "type": "string",  "default": "rgba(99,102,241,0.15)" },
     "paddingTop":        { "type": "number",  "default": 64 },
-    "paddingBottom":     { "type": "number",  "default": 64 }
+    "paddingBottom":     { "type": "number",  "default": 64 },
+
+    "fontFamily":             { "type": "string", "default": "" },
+
+    "headingLineHeight":      { "type": "string", "default": "1.0" },
+    "headingLetterSpacing":   { "type": "string", "default": "-0.03em" },
+    "headingTextTransform":   { "type": "string", "default": "none" },
+
+    "taglineLineHeight":      { "type": "string", "default": "1.65" },
+    "taglineLetterSpacing":   { "type": "string", "default": "normal" },
+    "taglineTextTransform":   { "type": "string", "default": "none" },
+
+    "missionLineHeight":      { "type": "string", "default": "1.75" },
+    "missionLetterSpacing":   { "type": "string", "default": "normal" },
+    "missionTextTransform":   { "type": "string", "default": "none" },
+
+    "statementLineHeight":    { "type": "string", "default": "1.38" },
+    "statementLetterSpacing": { "type": "string", "default": "normal" },
+    "statementTextTransform": { "type": "string", "default": "none" },
+
+    "captionLineHeight":      { "type": "string", "default": "1.72" },
+    "captionLetterSpacing":   { "type": "string", "default": "normal" },
+    "captionTextTransform":   { "type": "string", "default": "none" },
+
+    "bodyLineHeight":         { "type": "string", "default": "1.8" },
+    "bodyLetterSpacing":      { "type": "string", "default": "normal" },
+    "bodyTextTransform":      { "type": "string", "default": "none" },
+
+    "closingLineHeight":      { "type": "string", "default": "1.12" },
+    "closingLetterSpacing":   { "type": "string", "default": "-0.02em" },
+    "closingTextTransform":   { "type": "string", "default": "none" }
   }
 }

@@ -17,6 +17,12 @@ export default function save({ attributes }) {
         platformIcons,
         platformLabels,
         tooltipPosition,
+        fontFamily,
+        platformFontSize,
+        platformFontWeight,
+        platformLineHeight,
+        platformLetterSpacing,
+        platformTextTransform,
     } = attributes;
 
     const blockProps = useBlockProps.save({
@@ -34,6 +40,12 @@ export default function save({ attributes }) {
             '--share-border-radius': `${borderRadius}px`,
             '--share-border-width': `${borderWidth}px`,
             '--share-border-color': borderColor,
+            '--share-font-family': fontFamily || '',
+            '--share-platform-font-size': `${platformFontSize ?? 14}px`,
+            '--share-platform-font-weight': platformFontWeight || '400',
+            '--share-platform-line-height': platformLineHeight || '1.4',
+            '--share-platform-letter-spacing': platformLetterSpacing || 'normal',
+            '--share-platform-text-transform': platformTextTransform || 'none',
         },
     });
 

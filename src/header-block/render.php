@@ -127,6 +127,7 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 			: 'space-between';
 
 		$styles = array(
+			'--adaire-header-font-family'              => ! empty( $attributes['fontFamily'] ) ? $attributes['fontFamily'] : 'inherit',
 			'--adaire-header-background'              => $background,
 			'--adaire-header-text-color'               => $attributes['textColor'],
 			'--adaire-header-hover-color'               => $attributes['hoverColor'],
@@ -149,6 +150,8 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 			'--adaire-header-topbar-gap'                 => ( 'space-between' === $attributes['topBarLayout'] ) ? '24px' : '12px',
 			'--adaire-header-social-size'                => $attributes['socialIconSize'] . 'px',
 			'--adaire-header-social-color'                => $attributes['socialIconColor'],
+			'--adaire-header-cart-size'                  => ( ! empty( $attributes['cartIconSize'] ) ? $attributes['cartIconSize'] : 18 ) . 'px',
+			'--adaire-header-payment-size'                => ( ! empty( $attributes['paymentIconSize'] ) ? $attributes['paymentIconSize'] : 22 ) . 'px',
 			'--adaire-header-nav-icon-color'             => $attributes['navIconColor'],
 			'--adaire-header-z-index'                    => $attributes['zIndex'],
 			'--adaire-header-action-radius'              => ( isset( $attributes['buttonBorderRadius'] ) && (int) $attributes['buttonBorderRadius'] >= 0 )
@@ -156,6 +159,8 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 				: adaire_header_get_action_radius( $attributes['buttonShape'] ),
 			'--adaire-header-hamburger-border'           => ! empty( $attributes['hamburgerBorder'] ) ? ( '1px solid ' . $attributes['hamburgerBorderColor'] ) : 'none',
 			'--adaire-header-hamburger-border-radius'    => $attributes['hamburgerBorderRadius'] . 'px',
+			'--adaire-header-hamburger-size'             => ( ! empty( $attributes['hamburgerSize'] ) ? (int) $attributes['hamburgerSize'] : 42 ) . 'px',
+			'--adaire-header-hamburger-order'            => ( isset( $attributes['hamburgerPosition'] ) && 'right' === $attributes['hamburgerPosition'] ) ? '1' : '0',
 			'--adaire-header-search-icon-size'           => ( ! empty( $attributes['searchIconSize'] ) ? $attributes['searchIconSize'] : 18 ) . 'px',
 			'--adaire-header-search-btn-size'            => ( ! empty( $attributes['searchButtonSize'] ) ? $attributes['searchButtonSize'] : 38 ) . 'px',
 		);
@@ -180,6 +185,12 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 		}
 		if ( ! empty( $attributes['searchContainerBgColor'] ) ) {
 			$styles['--adaire-header-search-container-bg'] = $attributes['searchContainerBgColor'];
+		}
+		if ( ! empty( $attributes['cartIconColor'] ) ) {
+			$styles['--adaire-header-cart-color'] = $attributes['cartIconColor'];
+		}
+		if ( ! empty( $attributes['paymentIconColor'] ) ) {
+			$styles['--adaire-header-payment-color'] = $attributes['paymentIconColor'];
 		}
 		if ( ! empty( $attributes['navShowDots'] ) ) {
 			$styles['--adaire-header-dot-size']    = ( ! empty( $attributes['navDotSize'] ) ? $attributes['navDotSize'] : 6 ) . 'px';
@@ -332,6 +343,102 @@ if ( ! function_exists( 'adaire_header_social_icon_svg' ) ) {
 		}
 
 		return '<svg class="adaire-header-social-icon" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' . $paths[ $key ] . '</svg>';
+	}
+}
+
+if ( ! function_exists( 'adaire_header_cart_icon_svg' ) ) {
+	/**
+	 * PHP port of icon-utils.js CartIcon() — same path data, mirrored
+	 * byte-for-byte (ADAB-016).
+	 */
+	function adaire_header_cart_icon_svg() {
+		$c = 'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+
+		return '<svg class="adaire-header-icon adaire-header-cart-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">'
+			. '<circle ' . $c . ' cx="9" cy="21" r="1" /><circle ' . $c . ' cx="19" cy="21" r="1" />'
+			. '<path ' . $c . ' d="M2.5 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21.5 8H5.1" />'
+			. '</svg>';
+	}
+}
+
+if ( ! function_exists( 'adaire_header_payment_icon_svg' ) ) {
+	/**
+	 * PHP port of icon-utils.js's paymentIconPaths/PaymentIcon — same shapes,
+	 * mirrored byte-for-byte (ADAB-016). Falls back to a single-letter
+	 * placeholder for any method name that isn't one of the known ones.
+	 */
+	function adaire_header_payment_icon_svg( $method ) {
+		$key = strtolower( (string) $method );
+
+		$paths = array(
+			'visa'             => '<rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="15.5" text-anchor="middle" font-size="7" font-weight="700" font-style="italic" fill="currentColor" stroke="none">VISA</text>',
+			'mastercard'       => '<rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="12" r="4.2" fill="currentColor" opacity="0.55"/><circle cx="14.5" cy="12" r="4.2" fill="currentColor" opacity="0.85"/>',
+			'paypal'           => '<rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path fill="currentColor" stroke="none" d="M9.3 8.2h3.1c1.9 0 3.1 1 2.8 2.7-.3 1.9-1.8 2.9-3.7 2.9h-1.1l-.5 2.8H8l1.3-8.4Zm1.5 4.2h.8c.9 0 1.6-.4 1.7-1.3.1-.8-.4-1.1-1.3-1.1h-.7l-.5 2.4Z"/>',
+			'american express' => '<rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="currentColor" opacity="0.12" stroke="currentColor" stroke-width="1.5"/><text x="12" y="15" text-anchor="middle" font-size="5.5" font-weight="700" fill="currentColor" stroke="none">AMEX</text>',
+			'apple pay'        => '<rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="15" text-anchor="middle" font-size="5.5" font-weight="700" fill="currentColor" stroke="none">Pay</text>',
+			'google pay'       => '<rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="15" text-anchor="middle" font-size="5" font-weight="700" fill="currentColor" stroke="none">GPay</text>',
+		);
+
+		if ( empty( $paths[ $key ] ) ) {
+			$initial = '' !== $method ? mb_substr( $method, 0, 1 ) : '?';
+			return '<span class="adaire-header-payment-fallback">' . esc_html( $initial ) . '</span>';
+		}
+
+		return '<svg class="adaire-header-payment-icon" width="1.6em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' . $paths[ $key ] . '</svg>';
+	}
+}
+
+if ( ! function_exists( 'adaire_header_render_cart' ) ) {
+	/**
+	 * WooCommerce cart icon (ADAB-016). Guarded behind class_exists(
+	 * 'WooCommerce' ) so sites without WooCommerce never get a broken/fatal
+	 * link — they get a non-functional placeholder icon instead (same
+	 * visual slot, so layout doesn't jump if WooCommerce is later
+	 * installed), with no count badge and no link.
+	 */
+	function adaire_header_render_cart( $attributes ) {
+		if ( empty( $attributes['showCartIcon'] ) ) {
+			return '';
+		}
+
+		$show_count = ! isset( $attributes['cartShowCount'] ) || $attributes['cartShowCount'];
+		$icon_html  = adaire_header_cart_icon_svg();
+
+		if ( class_exists( 'WooCommerce' ) && function_exists( 'wc_get_cart_url' ) ) {
+			$count = function_exists( 'WC' ) && WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
+			$badge = ( $show_count ) ? '<span class="adaire-header-cart-count">' . esc_html( $count ) . '</span>' : '';
+
+			return '<a class="adaire-header-cart" href="' . esc_url( wc_get_cart_url() ) . '" aria-label="' . esc_attr__( 'View cart', 'header-block' ) . '">' . $icon_html . $badge . '</a>';
+		}
+
+		// WooCommerce not active — render a non-functional placeholder so the
+		// toggle never fatals or links somewhere broken. No count badge since
+		// there's no real cart to count.
+		return '<span class="adaire-header-cart is-disabled" aria-hidden="true">' . $icon_html . '</span>';
+	}
+}
+
+if ( ! function_exists( 'adaire_header_render_payment_icons' ) ) {
+	/**
+	 * Payment method trust badges (ADAB-016). Mirrors
+	 * adaire_header_render_socials()'s structure but for the paymentIcons
+	 * array (method name only, no per-icon URL/color — these are static
+	 * badges, not links).
+	 */
+	function adaire_header_render_payment_icons( $attributes ) {
+		if ( empty( $attributes['showPaymentIcons'] ) ) {
+			return '';
+		}
+
+		$icons = ( isset( $attributes['paymentIcons'] ) && is_array( $attributes['paymentIcons'] ) ) ? $attributes['paymentIcons'] : array();
+
+		$out = '<div class="adaire-header-payment-icons">';
+		foreach ( $icons as $item ) {
+			$method = isset( $item['method'] ) ? $item['method'] : '';
+			$out   .= '<span aria-label="' . esc_attr( $method ) . '">' . adaire_header_payment_icon_svg( $method ) . '</span>';
+		}
+		$out .= '</div>';
+		return $out;
 	}
 }
 
@@ -894,6 +1001,20 @@ if ( in_array( $social_placement, array( 'topbar-left', 'topbar-right' ), true )
 	$social_placement = 'actions';
 }
 
+// Cart icon / payment icons (ADAB-016) — same four-zone placement system as
+// socials above, with the same topbar-dependent fallback to 'actions'.
+$cart_html      = adaire_header_render_cart( $attributes );
+$cart_placement = isset( $attributes['cartIconPlacement'] ) ? $attributes['cartIconPlacement'] : 'actions';
+if ( in_array( $cart_placement, array( 'topbar-left', 'topbar-right' ), true ) && empty( $attributes['showTopBar'] ) ) {
+	$cart_placement = 'actions';
+}
+
+$payment_html      = adaire_header_render_payment_icons( $attributes );
+$payment_placement = isset( $attributes['paymentIconPlacement'] ) ? $attributes['paymentIconPlacement'] : 'actions';
+if ( in_array( $payment_placement, array( 'topbar-left', 'topbar-right' ), true ) && empty( $attributes['showTopBar'] ) ) {
+	$payment_placement = 'actions';
+}
+
 // Top bar "Follow Us" (req #8).
 $follow_html     = adaire_header_render_follow_us( $attributes );
 $follow_position = ( isset( $attributes['topBarFollowPosition'] ) && 'left' === $attributes['topBarFollowPosition'] ) ? 'left' : 'right';
@@ -928,6 +1049,18 @@ if ( ! empty( $attributes['showTopBar'] ) ) {
 		$topbar_right .= $social_html;
 	}
 
+	if ( 'topbar-left' === $payment_placement ) {
+		$topbar_left .= $payment_html;
+	} elseif ( 'topbar-right' === $payment_placement ) {
+		$topbar_right .= $payment_html;
+	}
+
+	if ( 'topbar-left' === $cart_placement ) {
+		$topbar_left .= $cart_html;
+	} elseif ( 'topbar-right' === $cart_placement ) {
+		$topbar_right .= $cart_html;
+	}
+
 	$html .= '<div class="adaire-header-topbar">';
 	$html .= $topbar_left;
 	$html .= $topbar_right;
@@ -939,6 +1072,12 @@ $html .= adaire_header_render_mobile_toggle( $attributes, $nav_dom_id );
 
 if ( 'before-nav' === $social_placement ) {
 	$html .= $social_html;
+}
+if ( 'before-nav' === $payment_placement ) {
+	$html .= $payment_html;
+}
+if ( 'before-nav' === $cart_placement ) {
+	$html .= $cart_html;
 }
 
 if ( 'split' === $attributes['layout'] ) {
@@ -969,6 +1108,12 @@ if ( 'actions' === $social_placement ) {
 $html .= adaire_header_render_action( $attributes['showSignIn'], $attributes['signInText'], $attributes['signInUrl'], $attributes['signInNewTab'], $attributes['signInStyle'], $attributes['signInIcon'], __( 'Sign in', 'header-block' ), 'left', 'signin', $show_icon_signin );
 $html .= adaire_header_render_action( $attributes['showSignUp'], $attributes['signUpText'], $attributes['signUpUrl'], $attributes['signUpNewTab'], $attributes['signUpStyle'], $attributes['signUpIcon'], __( 'Sign up', 'header-block' ), 'left', 'signup', $show_icon_signup );
 $html .= adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'header-block' ), $attributes['ctaIconPosition'], 'cta', $show_icon_cta );
+if ( 'actions' === $payment_placement ) {
+	$html .= $payment_html;
+}
+if ( 'actions' === $cart_placement ) {
+	$html .= $cart_html;
+}
 if ( 'end' === $search_position ) {
 	$html .= $search_html;
 }

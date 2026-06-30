@@ -25,6 +25,27 @@ const SOCIAL_SVGS = {
 
 const getIconSvg = (platform) => SOCIAL_SVGS[platform] || SOCIAL_SVGS.twitter;
 
+// Block-level Font Family control (ADAB-010) — one choice for the whole
+// footer, applied via the --footer-font-family custom property at the block
+// root. Not per-text-role: none of this block's existing typography surface
+// (the unschema'd `typography` object's baseFontSize/headingFontSize/
+// *FontWeight keys, wired in render.php but never exposed by any Inspector
+// control) ever covered font family either — `typography.fontFamily`
+// defaults to 'inherit' and has always been dead/unreachable from the UI.
+// This new top-level `fontFamily` attribute + control is what actually lets
+// a user change it; render.php prefers it over the legacy typography.fontFamily.
+const FONT_FAMILY_OPTIONS = [
+    { label: 'Default (inherit theme)', value: '' },
+    { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+    { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+    { label: 'Georgia', value: 'Georgia, serif' },
+    { label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+    { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+    { label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+    { label: 'Courier New', value: "'Courier New', Courier, monospace" },
+    { label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
 // Effective "show brand name text" state — mirrors
 // adaire_footer_render_brand_column_content()'s PHP fallback exactly so the
 // editor canvas and the live site never disagree: if the column has never
@@ -156,7 +177,7 @@ const widgetAreaOptions = [
 export default function Edit({ attributes, setAttributes }) {
     const {
         backgroundColor, backgroundImage, backgroundGradient, backgroundType,
-        textColor, accentColor,
+        textColor, accentColor, fontFamily,
         paddingTop, paddingBottom, marginTop, marginBottom, maxWidth,
         showTopBar, showColumnsSection, showBottomBar,
         topBar, columnsSection, bottomBar,
@@ -173,8 +194,9 @@ export default function Edit({ attributes, setAttributes }) {
             color: textColor || '#ffffff',
             paddingTop: `${paddingTop}px`, paddingBottom: `${paddingBottom}px`,
             marginTop:  `${marginTop}px`,  marginBottom:  `${marginBottom}px`,
-            '--footer-accent-color': accentColor || '#D52940',
+            '--footer-accent-color': accentColor || '#503AA8',
             '--footer-max-width': `${maxWidth}px`,
+            '--footer-font-family': fontFamily || 'inherit',
         },
     });
 
@@ -527,6 +549,13 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Footer Styling ──────────────────────────────────── */}
                 <PanelBody title={__('Footer Styling', 'website-footer-block')} initialOpen={true}>
+                    <SelectControl
+                        label="Font family"
+                        value={fontFamily || ''}
+                        options={FONT_FAMILY_OPTIONS}
+                        onChange={(v) => setAttributes({ fontFamily: v })}
+                        help="Applies to the entire footer block unless overridden by theme styles."
+                    />
                     {backgroundControls}
                     <div style={{ marginBottom: 16 }}>
                         <label>Text Color</label>
@@ -707,6 +736,58 @@ export default function Edit({ attributes, setAttributes }) {
                                     onChange={(v) => updateColumn(column.id, { brandLogoWidth: v })} />
                             </>
                         )}
+                    </PanelBody>
+                ))}
+
+                {/* ── Tagline (ADAB-012) ───────────────────────────────── */}
+                {/* The brand column's existing `description` field is the de
+                    facto tagline (it's never used for anything else), so we
+                    reuse it for the text itself rather than adding a second,
+                    confusingly-similar free-text attribute — but we expose it
+                    here under an explicit "Tagline" label/panel plus its own
+                    typography + color controls, none of which existed before. */}
+                {showColumnsSection && columnsSection.columns.filter(col => col.type === 'brand').map((column) => (
+                    <PanelBody key={column.id} title={__('Tagline', 'website-footer-block')} initialOpen={false}>
+                        <TextControl
+                            label={__('Tagline text', 'website-footer-block')}
+                            value={column.description || ''}
+                            onChange={(v) => updateColumn(column.id, { description: v })}
+                            help={__('Shown under the brand name/logo. Also editable directly on canvas.', 'website-footer-block')}
+                        />
+                        <RangeControl
+                            label={__('Font Size (px)', 'website-footer-block')}
+                            value={column.taglineFontSize != null && column.taglineFontSize >= 0 ? column.taglineFontSize : 14}
+                            min={10} max={32}
+                            onChange={(v) => updateColumn(column.id, { taglineFontSize: v })}
+                        />
+                        <SelectControl
+                            label={__('Font Weight', 'website-footer-block')}
+                            value={column.taglineFontWeight || '400'}
+                            options={[
+                                { label: 'Light (300)',    value: '300' },
+                                { label: 'Normal (400)',   value: '400' },
+                                { label: 'Medium (500)',   value: '500' },
+                                { label: 'Semi-Bold (600)', value: '600' },
+                                { label: 'Bold (700)',     value: '700' },
+                            ]}
+                            onChange={(v) => updateColumn(column.id, { taglineFontWeight: v })}
+                        />
+                        <RangeControl
+                            label={__('Line Height', 'website-footer-block')}
+                            value={column.taglineLineHeight != null && column.taglineLineHeight >= 0 ? column.taglineLineHeight : 1.6}
+                            min={1} max={2.5} step={0.1}
+                            onChange={(v) => updateColumn(column.id, { taglineLineHeight: v })}
+                        />
+                        <RangeControl
+                            label={__('Letter Spacing (px)', 'website-footer-block')}
+                            value={column.taglineLetterSpacing != null && column.taglineLetterSpacing >= 0 ? column.taglineLetterSpacing : 0}
+                            min={0} max={5} step={0.5}
+                            onChange={(v) => updateColumn(column.id, { taglineLetterSpacing: v })}
+                        />
+                        <div style={{ marginBottom: 4 }}>
+                            <label>{__('Tagline Color', 'website-footer-block')}</label>
+                            <ColorPicker color={column.taglineColor || ''} onChangeComplete={(c) => updateColumn(column.id, { taglineColor: c.hex })} disableAlpha />
+                        </div>
                     </PanelBody>
                 ))}
 
@@ -1436,7 +1517,23 @@ export default function Edit({ attributes, setAttributes }) {
                                                         )}
                                                         <RichText tagName="p" className="website-footer-block__brand-description"
                                                             value={column.description} onChange={(v) => updateColumn(column.id, { description: v })}
-                                                            placeholder="Brand description…" />
+                                                            placeholder="Brand description…"
+                                                            style={{
+                                                                // Tagline typography/color (ADAB-012) — routed through CSS
+                                                                // vars (consumed by style.scss's &__brand-description rule)
+                                                                // rather than literal style props, same reasoning as the
+                                                                // link/social-icon hover-state comments elsewhere in this
+                                                                // file: keeps room for a future hover state without an
+                                                                // inline literal out-specificity-ing it.
+                                                                '--tagline-font-size': (column.taglineFontSize != null && column.taglineFontSize >= 0) ? `${column.taglineFontSize}px` : undefined,
+                                                                '--tagline-font-weight': column.taglineFontWeight || undefined,
+                                                                '--tagline-line-height': (column.taglineLineHeight != null && column.taglineLineHeight >= 0) ? column.taglineLineHeight : undefined,
+                                                                '--tagline-letter-spacing': (column.taglineLetterSpacing != null && column.taglineLetterSpacing >= 0) ? `${column.taglineLetterSpacing}px` : undefined,
+                                                                '--tagline-color': column.taglineColor || undefined,
+                                                                // Only override the legacy 0.9 dimming once a color is
+                                                                // explicitly chosen — see style.scss comment.
+                                                                '--tagline-opacity': column.taglineColor ? 1 : undefined,
+                                                            }} />
                                                         {column.showCta && (
                                                             <RichText tagName="a"
                                                                 className={`website-footer-block__cta website-footer-block__cta--${column.ctaStyle}`}
@@ -1533,7 +1630,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 value={column.newsletterButtonText} onChange={(v) => updateColumn(column.id, { newsletterButtonText: v })}
                                                                 placeholder={__('Subscribe', 'website-footer-block')} withoutInteractiveFormatting
                                                                 style={{
-                                                                    backgroundColor: column.newsletterButtonColor || 'var(--footer-accent-color, #D52940)',
+                                                                    backgroundColor: column.newsletterButtonColor || 'var(--footer-accent-color, #503AA8)',
                                                                     color: column.newsletterButtonTextColor || '#ffffff',
                                                                 }} />
                                                         </div>
@@ -1600,9 +1697,9 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 <span
                                                                     className={`website-footer-block__buttons-item website-footer-block__buttons-item--${item.style || 'solid'}`}
                                                                     style={{
-                                                                        backgroundColor: (item.style || 'solid') === 'solid' ? (item.backgroundColor || 'var(--footer-accent-color, #D52940)') : 'transparent',
+                                                                        backgroundColor: (item.style || 'solid') === 'solid' ? (item.backgroundColor || 'var(--footer-accent-color, #503AA8)') : 'transparent',
                                                                         color: item.textColor || ((item.style || 'solid') === 'solid' ? '#ffffff' : 'inherit'),
-                                                                        borderColor: item.backgroundColor || 'var(--footer-accent-color, #D52940)',
+                                                                        borderColor: item.backgroundColor || 'var(--footer-accent-color, #503AA8)',
                                                                         borderRadius: (item.borderRadius != null && item.borderRadius >= 0) ? `${item.borderRadius}px` : undefined,
                                                                         transition: `all ${(item.transitionDuration != null && item.transitionDuration >= 0) ? item.transitionDuration : 300}ms ease`,
                                                                         '--buttons-hover-bg': item.hoverBackgroundColor || undefined,

@@ -1,5 +1,5 @@
 import { MediaUpload, MediaUploadCheck, RichText, URLInput, useBlockProps } from '@wordpress/block-editor';
-import { BaseControl, Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl } from '@wordpress/components';
+import { BaseControl, Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import { useDispatch } from '@wordpress/data';
@@ -23,6 +23,79 @@ import {
 
 const set = (setAttributes, key) => (value) => setAttributes({ [key]: value });
 const media = (label, value, onChange, allowedTypes = ['image']) => <MediaUploadCheck><MediaUpload allowedTypes={allowedTypes} value={value} onSelect={(m) => onChange(m.url)} render={({ open }) => <Button variant="secondary" onClick={open}>{value ? __('Change ', 'saas-hero-block') : __('Select ', 'saas-hero-block')}{label}</Button>} /></MediaUploadCheck>;
+
+const FONT_FAMILY_OPTIONS = [
+  { label: 'Default (inherit theme)', value: '' },
+  { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+  { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+  { label: 'Georgia', value: 'Georgia, serif' },
+  { label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+  { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+  { label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+  { label: 'Courier New', value: "'Courier New', Courier, monospace" },
+  { label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
+const TEXT_TRANSFORM_OPTIONS = [
+  { label: __('None', 'saas-hero-block'), value: 'none' },
+  { label: __('Uppercase', 'saas-hero-block'), value: 'uppercase' },
+  { label: __('Lowercase', 'saas-hero-block'), value: 'lowercase' },
+  { label: __('Capitalize', 'saas-hero-block'), value: 'capitalize' },
+];
+
+const FONT_WEIGHT_OPTIONS = [
+  { label: __('Thin (100)', 'saas-hero-block'), value: '100' },
+  { label: __('Extra Light (200)', 'saas-hero-block'), value: '200' },
+  { label: __('Light (300)', 'saas-hero-block'), value: '300' },
+  { label: __('Normal (400)', 'saas-hero-block'), value: '400' },
+  { label: __('Medium (500)', 'saas-hero-block'), value: '500' },
+  { label: __('Semi Bold (600)', 'saas-hero-block'), value: '600' },
+  { label: __('Bold (700)', 'saas-hero-block'), value: '700' },
+  { label: __('Extra Bold (800)', 'saas-hero-block'), value: '800' },
+  { label: __('Black (900)', 'saas-hero-block'), value: '900' },
+];
+
+// ─── Reusable per-role typography subsection — title + (optional) Font Size
+// + Font Weight + Line Height + Letter Spacing + Text Transform, all bound
+// to `${prefix}FontSize` / `${prefix}FontWeight` / etc. on `attributes`.
+// `hasFontSize` is false for bodyText, which has no FontSize attribute in
+// block.json (its size is controlled by the legacy global `fontSize`). ────
+function TypographySubsection({ title, a, setAttributes, prefix, hasFontSize = true }) {
+  return (
+    <>
+      <p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{title}</p>
+      {hasFontSize && (
+        <TextControl
+          label={__('Font size', 'saas-hero-block')}
+          value={a[`${prefix}FontSize`] || ''}
+          onChange={set(setAttributes, `${prefix}FontSize`)}
+        />
+      )}
+      <SelectControl
+        label={__('Font weight', 'saas-hero-block')}
+        value={a[`${prefix}FontWeight`] || '400'}
+        options={FONT_WEIGHT_OPTIONS}
+        onChange={set(setAttributes, `${prefix}FontWeight`)}
+      />
+      <UnitControl
+        label={__('Line height', 'saas-hero-block')}
+        value={a[`${prefix}LineHeight`] || ''}
+        onChange={set(setAttributes, `${prefix}LineHeight`)}
+      />
+      <UnitControl
+        label={__('Letter spacing', 'saas-hero-block')}
+        value={a[`${prefix}LetterSpacing`] || ''}
+        onChange={set(setAttributes, `${prefix}LetterSpacing`)}
+      />
+      <SelectControl
+        label={__('Text transform', 'saas-hero-block')}
+        value={a[`${prefix}TextTransform`] || 'none'}
+        options={TEXT_TRANSFORM_OPTIONS}
+        onChange={set(setAttributes, `${prefix}TextTransform`)}
+      />
+    </>
+  );
+}
 
 // ─── Generic add/remove/reorder list editor used by every repeater-style
 // inspector panel (Trusted By, Ratings, Security features, FAQ). ──────────
@@ -154,6 +227,25 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
       <AdaireColorControl label={__('Accent color', 'saas-hero-block')} value={a.accentColor} onChange={(v) => setAttributes({ accentColor: v || '#6366f1' })} />
       <AdaireColorControl label={__('Text color', 'saas-hero-block')} value={a.textColor} onChange={(v) => setAttributes({ textColor: v || '#111827' })} />
       <RangeControl label={__('Font size', 'saas-hero-block')} value={a.fontSize || 16} onChange={set(setAttributes, 'fontSize')} min={10} max={80} />
+
+      <SelectControl
+        label={__('Font family', 'saas-hero-block')}
+        value={a.fontFamily || ''}
+        options={FONT_FAMILY_OPTIONS}
+        onChange={set(setAttributes, 'fontFamily')}
+        help={__('Applies to all text in this block.', 'saas-hero-block')}
+      />
+
+      <TypographySubsection title={__('Eyebrow', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="eyebrow" />
+      <TypographySubsection title={__('Heading', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="heading" />
+      <TypographySubsection title={__('Body text', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="bodyText" hasFontSize={false} />
+      <TypographySubsection title={__('Pill', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="pill" />
+      <TypographySubsection title={__('Button', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="button" />
+      <TypographySubsection title={__('Trust bar title', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="trustTitle" />
+      <TypographySubsection title={__('Trust logos', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="trustLogo" />
+      <TypographySubsection title={__('Micro copy', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="microCopy" />
+      <TypographySubsection title={__('Security title', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="securityTitle" />
+      <TypographySubsection title={__('FAQ title', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="faqTitle" />
     </>
   );
 
@@ -741,11 +833,11 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
                 <RichText tagName="p" className="adaire-saas-hero__trust-title" value={a.trustBarTitle} onChange={set(setAttributes, 'trustBarTitle')} />
                 <div className="adaire-saas-hero__trust-logos-wrap">
                   <div className="adaire-saas-hero__trust-logos">
-                    {trustItemsResolved.map((item, i) => <TrustLogo key={i} item={item} />)}
+                    {(trustItemsResolved || []).map((item, i) => <TrustLogo key={i} item={item} />)}
                   </div>
                   {a.trustCarousel && (
                     <div className="adaire-saas-hero__trust-logos adaire-saas-hero__trust-logos--clone" aria-hidden="true">
-                      {trustItemsResolved.map((item, i) => <TrustLogo key={`clone-${i}`} item={item} />)}
+                      {(trustItemsResolved || []).map((item, i) => <TrustLogo key={`clone-${i}`} item={item} />)}
                     </div>
                   )}
                 </div>

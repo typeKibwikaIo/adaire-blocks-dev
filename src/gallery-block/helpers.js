@@ -34,6 +34,12 @@ export const getGalleryStyles = ( attributes ) => {
 		aspectRatio,
 		imageBorderRadius,
 		containerMaxWidth,
+		fontFamily,
+		captionFontSize,
+		captionFontWeight,
+		captionLineHeight,
+		captionLetterSpacing,
+		captionTextTransform,
 	} = attributes;
 
 	const styles = {
@@ -42,6 +48,12 @@ export const getGalleryStyles = ( attributes ) => {
 		'--gb-aspect-ratio': aspectRatio && aspectRatio !== 'auto' ? aspectRatio : 'auto',
 		'--gb-radius': `${ imageBorderRadius ?? 8 }px`,
 		'--container-max-width': getUnitValue( containerMaxWidth?.desktop, 1200, 'px' ),
+		'--gb-font-family': fontFamily || 'inherit',
+		'--gb-caption-font-size': `${ captionFontSize ?? 13 }px`,
+		'--gb-caption-font-weight': captionFontWeight || '400',
+		'--gb-caption-line-height': captionLineHeight || 'normal',
+		'--gb-caption-letter-spacing': captionLetterSpacing || 'normal',
+		'--gb-caption-text-transform': captionTextTransform || 'none',
 	};
 
 	DEVICES.filter( ( device ) => device !== 'desktop' ).forEach( ( device ) => {

@@ -1,6 +1,7 @@
 .adaire-header-block {
     position: relative;
     z-index: var(--adaire-header-z-index, 50);
+    font-family: var(--adaire-header-font-family, inherit);
     background-color: var(--adaire-header-background, #ffffff);
     background-image: var(--adaire-header-bg-image, none);
     background-size: var(--adaire-header-bg-size, cover);
@@ -28,6 +29,20 @@
     &.is-hidden-on-scroll {
         transform: translateY(-100%);
     }
+}
+
+// ADAB-009: WordPress's global layout styles (the theme's block-gap setting,
+// applied via the `.is-layout-flow`/`.is-layout-constrained` selectors WP
+// core injects into every block theme) add an automatic margin-top to any
+// block that follows another block in the content flow. For a site Header
+// that's meant to sit flush against the content below it, this shows up as
+// an unwanted, theme-controlled gap between the header and the next block —
+// even though neither block sets a margin of its own. `!important` is
+// required since WP's own block-gap rule has equal selector specificity and
+// can otherwise win on load order; this only zeroes the gap immediately
+// after the header, it doesn't touch spacing anywhere else on the page.
+.adaire-header-block + * {
+    margin-block-start: 0 !important;
 }
 
 .adaire-header-topbar {
@@ -410,13 +425,22 @@
 
 .adaire-header-mobile-toggle {
     display: none;
-    width: 42px;
-    height: 42px;
+    align-items: center;
+    justify-content: center;
+    width: var(--adaire-header-hamburger-size, 42px);
+    height: var(--adaire-header-hamburger-size, 42px);
     padding: 0;
     border: var(--adaire-header-hamburger-border, 1px solid var(--adaire-header-border-color, #e5e7eb));
     border-radius: var(--adaire-header-hamburger-border-radius, 10px);
     background: transparent;
     cursor: pointer;
+    // Left/right placement (ADAB-015) — the button is always the first DOM
+    // child of .adaire-header-inner; on mobile that grid becomes
+    // `auto 1fr auto`, so `order` is what actually moves it to the opposite
+    // end without touching the shared, frozen markup. Default (0) keeps it
+    // in its natural first-column ("left") position; "right" moves it after
+    // the 1fr nav column (the grid's last `auto` column).
+    order: var(--adaire-header-hamburger-order, 0);
 
     span {
         display: block;
@@ -424,6 +448,48 @@
         height: 2px;
         margin: 4px auto;
         background: var(--adaire-header-text-color, #111827);
+        transition: transform 0.2s ease, opacity 0.2s ease, border-radius 0.2s ease;
+    }
+
+    // ── Dots style (req: "at least three icon styles") ──────────────────
+    // Re-purposes the 3 shared, unstyled <span> children (no DOM/markup
+    // changes possible — they're hardcoded identically in edit.js,
+    // render.php and save.js/deprecated.js) into 3 small stacked dots via
+    // nth-child, since the spans carry no individual classes of their own.
+    &.icon-style-dots {
+        span {
+            width: 5px;
+            height: 5px;
+            margin: 3px auto;
+            border-radius: 50%;
+        }
+    }
+
+    // ── Plus / X style ────────────────────────────────────────────────────
+    // Collapses the 3 bars into a centered plus sign using absolute
+    // positioning so the cross lines up exactly regardless of button size:
+    // the first span becomes the horizontal bar, the second is rotated 90°
+    // and stacked exactly on top of it to form the vertical bar, and the
+    // third is hidden — turning 3 bars into a single "+" using CSS only.
+    &.icon-style-plus {
+        position: relative;
+
+        span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 18px;
+            margin: 0;
+            transform: translate(-50%, -50%);
+
+            &:nth-child(2) {
+                transform: translate(-50%, -50%) rotate(90deg);
+            }
+
+            &:nth-child(3) {
+                display: none;
+            }
+        }
     }
 }
 
@@ -634,6 +700,76 @@
     background: rgba(148, 163, 184, 0.14);
 }
 
+// ─── WooCommerce cart icon (ADAB-016) ───────────────────────────────────────
+// Mirrors .adaire-header-socials' sizing/structure so it looks at home next
+// to socials/actions wherever it's placed.
+.adaire-header-cart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--adaire-header-cart-size, 18px) + 12px);
+    height: calc(var(--adaire-header-cart-size, 18px) + 12px);
+    color: var(--adaire-header-cart-color, var(--adaire-header-text-color, #111827));
+    text-decoration: none;
+
+    .adaire-header-cart-icon {
+        width: var(--adaire-header-cart-size, 18px);
+        height: var(--adaire-header-cart-size, 18px);
+    }
+
+    &.is-disabled {
+        cursor: default;
+        opacity: 0.55;
+    }
+}
+
+.adaire-header-cart-count {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--adaire-header-hover-color, #2563eb);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+// ─── Payment method icons (ADAB-016) ────────────────────────────────────────
+.adaire-header-payment-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--adaire-header-payment-color, var(--adaire-header-text-color, #111827));
+    }
+
+    .adaire-header-payment-icon {
+        width: calc(var(--adaire-header-payment-size, 22px) * 1.6);
+        height: var(--adaire-header-payment-size, 22px);
+    }
+
+    .adaire-header-payment-fallback {
+        width: var(--adaire-header-payment-size, 22px);
+        height: var(--adaire-header-payment-size, 22px);
+        border-radius: 4px;
+        background: rgba(148, 163, 184, 0.14);
+        font-size: calc(var(--adaire-header-payment-size, 22px) * 0.55);
+        font-weight: 700;
+    }
+}
+
 // Top bar "Follow Us" (req #8).
 .adaire-header-follow-us {
     display: inline-flex;
@@ -674,7 +810,7 @@ a.adaire-header-follow-us:focus {
     }
 
     .adaire-header-mobile-toggle {
-        display: block;
+        display: flex;
     }
 
     .adaire-header-logo {
@@ -740,6 +876,15 @@ a.adaire-header-follow-us:focus {
 
     .adaire-header-action,
     .adaire-header-socials {
+        display: none;
+    }
+
+    // Payment trust badges are decorative, so they're dropped on mobile the
+    // same way socials are above, to keep the collapsed header from
+    // overflowing. The cart icon stays visible (ADAB-016) — unlike socials
+    // it's a functional link mobile shoppers expect to reach without
+    // opening the menu.
+    .adaire-header-payment-icons {
         display: none;
     }
 

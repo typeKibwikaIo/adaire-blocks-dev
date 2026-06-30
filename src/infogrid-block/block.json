@@ -34,7 +34,8 @@
                     "tagline": "Faster, safer supply chains",
                     "description": "Automate production and distribution workflows, improve traceability, and reduce stockouts while meeting compliance across labeling and safety standards.",
                     "useIcon": false,
-                    "iconClass": ""
+                    "iconClass": "",
+                    "showTitle": true
                 },
                 {
                     "id": 2,
@@ -42,7 +43,8 @@
                     "tagline": "Trusted products, lower cost",
                     "description": "Streamline product development cycles, optimize ingredient sourcing, and ensure regulatory compliance across global markets.",
                     "useIcon": false,
-                    "iconClass": ""
+                    "iconClass": "",
+                    "showTitle": true
                 },
                 {
                     "id": 3,
@@ -50,7 +52,8 @@
                     "tagline": "Fewer returns, higher margin",
                     "description": "Enhance customer experience with accurate sizing, reduce returns through better product information, and optimize inventory management.",
                     "useIcon": false,
-                    "iconClass": ""
+                    "iconClass": "",
+                    "showTitle": true
                 },
                 {
                     "id": 4,
@@ -58,7 +61,8 @@
                     "tagline": "Simpler service journeys",
                     "description": "Improve customer service with comprehensive product documentation, spare parts management, and streamlined warranty processes.",
                     "useIcon": false,
-                    "iconClass": ""
+                    "iconClass": "",
+                    "showTitle": true
                 },
                 {
                     "id": 5,
@@ -66,7 +70,8 @@
                     "tagline": "More profitable growth",
                     "description": "Drive conversion with rich product content, optimize merchandising decisions, and create seamless omnichannel experiences.",
                     "useIcon": false,
-                    "iconClass": ""
+                    "iconClass": "",
+                    "showTitle": true
                 },
                 {
                     "id": 6,
@@ -74,7 +79,8 @@
                     "tagline": "Compliant, tailored engagement",
                     "description": "Navigate complex regulatory requirements, personalize customer communications, and build trust through transparency.",
                     "useIcon": false,
-                    "iconClass": ""
+                    "iconClass": "",
+                    "showTitle": true
                 }
             ]
         },
@@ -173,6 +179,10 @@
         "layoutStyle": {
             "type": "string",
             "default": "default"
+        },
+        "itemsPerRow": {
+            "type": "number",
+            "default": 3
         },
         "containerMode": {
             "type": "string",
