@@ -30,7 +30,7 @@ Your migration tool has been completely refactored to use a **fast, reliable que
 ## How It Works
 
 ```
-1. Fetch all posts with GutenBlocks Blocks
+1. Fetch all posts with Adaire Blocks
 2. Build queue
 3. For each post in queue:
    ├── Clean up previous resources
@@ -59,7 +59,7 @@ Your migration tool has been completely refactored to use a **fast, reliable que
 
 ## Usage
 
-1. Go to **GutenBlocks Blocks → Migration**
+1. Go to **Adaire Blocks → Migration**
 2. Click **Start Migration**
 3. Watch the queue process posts one by one
 4. See real-time stats update

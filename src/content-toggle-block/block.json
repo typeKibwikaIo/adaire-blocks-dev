@@ -125,6 +125,22 @@
             "type": "string",
             "default": "600"
         },
+        "pillLineHeight": {
+            "type": "string",
+            "default": "normal"
+        },
+        "pillLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "pillTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
+        },
         "contentBackgroundColor": {
             "type": "string",
             "default": "#0a0e27"

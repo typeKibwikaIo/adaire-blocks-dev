@@ -15,6 +15,7 @@ import {
 	ToggleControl,
 	SelectControl,
 	__experimentalBoxControl as BoxControl,
+	__experimentalUnitControl as UnitControl,
 } from "@wordpress/components";
 import { useEffect, useState } from "@wordpress/element";
 import { plus, trash, arrowUp, arrowDown } from "@wordpress/icons";
@@ -37,6 +38,88 @@ const formatDimensionValue = (dimension, fallbackValue, fallbackUnit) => {
 	const unit = dimension?.unit ?? fallbackUnit;
 	return `${value}${unit}`;
 };
+
+const FONT_FAMILY_OPTIONS = [
+	{ label: 'Default (inherit theme)', value: '' },
+	{ label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+	{ label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+	{ label: 'Georgia', value: 'Georgia, serif' },
+	{ label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+	{ label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+	{ label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+	{ label: 'Courier New', value: "'Courier New', Courier, monospace" },
+	{ label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
+const TEXT_TRANSFORM_OPTIONS = [
+	{ label: __("None", "pricing-table-block"), value: "none" },
+	{ label: __("Uppercase", "pricing-table-block"), value: "uppercase" },
+	{ label: __("Lowercase", "pricing-table-block"), value: "lowercase" },
+	{ label: __("Capitalize", "pricing-table-block"), value: "capitalize" },
+];
+
+const FONT_WEIGHT_OPTIONS = [
+	{ label: __("Default", "pricing-table-block"), value: "" },
+	{ label: __("Light (300)", "pricing-table-block"), value: "300" },
+	{ label: __("Normal (400)", "pricing-table-block"), value: "400" },
+	{ label: __("Medium (500)", "pricing-table-block"), value: "500" },
+	{ label: __("Semi Bold (600)", "pricing-table-block"), value: "600" },
+	{ label: __("Bold (700)", "pricing-table-block"), value: "700" },
+	{ label: __("Extra Bold (800)", "pricing-table-block"), value: "800" },
+];
+
+/**
+ * Renders the five non-font-size typography controls (font weight, line
+ * height, letter spacing, text transform) shared by every text role in
+ * this block. Font size keeps its existing per-breakpoint RangeControl UI
+ * above each of these blocks; these four are flat (non-responsive)
+ * attributes, matching the precedent set by button-block where categorical
+ * typography values (weight/transform) stay flat even inside an otherwise
+ * fully-responsive block.
+ */
+function TypographySubsection({ label, prefix, attributes, setAttributes }) {
+	const weightKey = `${prefix}FontWeight`;
+	const lineHeightKey = `${prefix}LineHeight`;
+	const letterSpacingKey = `${prefix}LetterSpacing`;
+	const textTransformKey = `${prefix}TextTransform`;
+
+	return (
+		<div className="adaire-pricing-table__typography-subsection" style={{ marginTop: "16px" }}>
+			<p>
+				<strong>{label}</strong>
+			</p>
+			<SelectControl
+				label={__("Font Weight", "pricing-table-block")}
+				value={attributes[weightKey] || ""}
+				options={FONT_WEIGHT_OPTIONS}
+				onChange={(value) => setAttributes({ [weightKey]: value })}
+			/>
+			<UnitControl
+				label={__("Line Height", "pricing-table-block")}
+				value={attributes[lineHeightKey] || ""}
+				onChange={(value) => setAttributes({ [lineHeightKey]: value })}
+				units={[
+					{ value: "", label: __("Default", "pricing-table-block") },
+				]}
+			/>
+			<UnitControl
+				label={__("Letter Spacing", "pricing-table-block")}
+				value={attributes[letterSpacingKey] || ""}
+				onChange={(value) => setAttributes({ [letterSpacingKey]: value })}
+				units={[
+					{ value: "em", label: "em" },
+					{ value: "px", label: "px" },
+				]}
+			/>
+			<SelectControl
+				label={__("Text Transform", "pricing-table-block")}
+				value={attributes[textTransformKey] || "none"}
+				options={TEXT_TRANSFORM_OPTIONS}
+				onChange={(value) => setAttributes({ [textTransformKey]: value })}
+			/>
+		</div>
+	);
+}
 
 const convertColorToRgba = (color, opacity) => {
 	if (!color) return "";
@@ -117,6 +200,52 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		cardBorderWidth,
 		cardTextAlignment,
 		cardButtonAlignment,
+		fontFamily,
+		headingFontWeight,
+		headingLineHeight,
+		headingLetterSpacing,
+		headingTextTransform,
+		subheadingFontWeight,
+		subheadingLineHeight,
+		subheadingLetterSpacing,
+		subheadingTextTransform,
+		toggleFontWeight,
+		toggleLineHeight,
+		toggleLetterSpacing,
+		toggleTextTransform,
+		badgeFontWeight,
+		badgeLineHeight,
+		badgeLetterSpacing,
+		badgeTextTransform,
+		planNameFontWeight,
+		planNameLineHeight,
+		planNameLetterSpacing,
+		planNameTextTransform,
+		planTaglineFontSize,
+		planTaglineFontWeight,
+		planTaglineLineHeight,
+		planTaglineLetterSpacing,
+		planTaglineTextTransform,
+		pricePrefixFontWeight,
+		pricePrefixLineHeight,
+		pricePrefixLetterSpacing,
+		pricePrefixTextTransform,
+		priceFontWeight,
+		priceLineHeight,
+		priceLetterSpacing,
+		priceTextTransform,
+		priceSuffixFontWeight,
+		priceSuffixLineHeight,
+		priceSuffixLetterSpacing,
+		priceSuffixTextTransform,
+		featureFontWeight,
+		featureLineHeight,
+		featureLetterSpacing,
+		featureTextTransform,
+		buttonFontWeight,
+		buttonLineHeight,
+		buttonLetterSpacing,
+		buttonTextTransform,
 	} = attributes;
 
 
@@ -476,6 +605,78 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				100,
 				"%",
 			),
+
+			"--pricing-font-family": fontFamily || "inherit",
+
+			"--pricing-heading-font-weight": headingFontWeight || "600",
+			"--pricing-heading-line-height": headingLineHeight || "1.1",
+			"--pricing-heading-letter-spacing": headingLetterSpacing || "normal",
+			"--pricing-heading-text-transform": headingTextTransform || "none",
+
+			"--pricing-subheading-font-weight": subheadingFontWeight || "400",
+			"--pricing-subheading-line-height": subheadingLineHeight || "1.6",
+			"--pricing-subheading-letter-spacing": subheadingLetterSpacing || "normal",
+			"--pricing-subheading-text-transform": subheadingTextTransform || "none",
+
+			"--pricing-toggle-font-weight": toggleFontWeight || "400",
+			"--pricing-toggle-line-height": toggleLineHeight || "1.2",
+			"--pricing-toggle-letter-spacing": toggleLetterSpacing || "normal",
+			"--pricing-toggle-text-transform": toggleTextTransform || "none",
+
+			"--pricing-badge-font-weight": badgeFontWeight || "600",
+			"--pricing-badge-line-height": badgeLineHeight || "normal",
+			"--pricing-badge-letter-spacing": badgeLetterSpacing || "0.04em",
+			"--pricing-badge-text-transform": badgeTextTransform || "uppercase",
+
+			"--pricing-plan-name-font-weight": planNameFontWeight || "700",
+			"--pricing-plan-name-line-height": planNameLineHeight || "1.08",
+			"--pricing-plan-name-letter-spacing": planNameLetterSpacing || "-0.03em",
+			"--pricing-plan-name-text-transform": planNameTextTransform || "none",
+
+			"--pricing-plan-tagline-size": formatDimensionValue(
+				planTaglineFontSize?.desktop,
+				14,
+				"px",
+			),
+			"--pricing-plan-tagline-size-tablet": formatDimensionValue(
+				planTaglineFontSize?.tablet,
+				14,
+				"px",
+			),
+			"--pricing-plan-tagline-size-mobile": formatDimensionValue(
+				planTaglineFontSize?.mobile,
+				14,
+				"px",
+			),
+			"--pricing-plan-tagline-font-weight": planTaglineFontWeight || "400",
+			"--pricing-plan-tagline-line-height": planTaglineLineHeight || "1.45",
+			"--pricing-plan-tagline-letter-spacing": planTaglineLetterSpacing || "normal",
+			"--pricing-plan-tagline-text-transform": planTaglineTextTransform || "none",
+
+			"--pricing-price-prefix-font-weight": pricePrefixFontWeight || "500",
+			"--pricing-price-prefix-line-height": pricePrefixLineHeight || "normal",
+			"--pricing-price-prefix-letter-spacing": pricePrefixLetterSpacing || "normal",
+			"--pricing-price-prefix-text-transform": pricePrefixTextTransform || "none",
+
+			"--pricing-price-font-weight": priceFontWeight || "700",
+			"--pricing-price-line-height": priceLineHeight || "1",
+			"--pricing-price-letter-spacing": priceLetterSpacing || "-0.05em",
+			"--pricing-price-text-transform": priceTextTransform || "none",
+
+			"--pricing-price-suffix-font-weight": priceSuffixFontWeight || "400",
+			"--pricing-price-suffix-line-height": priceSuffixLineHeight || "normal",
+			"--pricing-price-suffix-letter-spacing": priceSuffixLetterSpacing || "normal",
+			"--pricing-price-suffix-text-transform": priceSuffixTextTransform || "none",
+
+			"--pricing-feature-font-weight": featureFontWeight || "400",
+			"--pricing-feature-line-height": featureLineHeight || "1.45",
+			"--pricing-feature-letter-spacing": featureLetterSpacing || "normal",
+			"--pricing-feature-text-transform": featureTextTransform || "none",
+
+			"--pricing-button-font-weight": buttonFontWeight || "600",
+			"--pricing-button-line-height": buttonLineHeight || "1",
+			"--pricing-button-letter-spacing": buttonLetterSpacing || "normal",
+			"--pricing-button-text-transform": buttonTextTransform || "none",
 		},
 	});
 
@@ -998,6 +1199,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					title={__("Typography", "pricing-table-block")}
 					initialOpen={false}
 				>
+					<SelectControl
+						label={__("Font Family", "pricing-table-block")}
+						value={fontFamily || ""}
+						options={FONT_FAMILY_OPTIONS}
+						onChange={(value) => setAttributes({ fontFamily: value })}
+						help={__("Applies to all text in this block.", "pricing-table-block")}
+					/>
+
 					<p>
 						<strong>{__("Heading", "pricing-table-block")}</strong>
 					</p>
@@ -1016,6 +1225,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={96}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Heading Style", "pricing-table-block")}
+						prefix="heading"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Subheading", "pricing-table-block")}</strong>
@@ -1035,6 +1250,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={48}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Subheading Style", "pricing-table-block")}
+						prefix="subheading"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Plan Name", "pricing-table-block")}</strong>
@@ -1054,6 +1275,36 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={48}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Plan Name Style", "pricing-table-block")}
+						prefix="planName"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
+
+					<p style={{ marginTop: "16px" }}>
+						<strong>{__("Plan Tagline", "pricing-table-block")}</strong>
+					</p>
+					{DEVICE_TYPES.map((device) => (
+						<RangeControl
+							key={`plan-tagline-${device.key}`}
+							label={device.label}
+							value={
+								planTaglineFontSize?.[device.key]?.value || 14
+							}
+							onChange={(value) =>
+								updateFontSize("planTaglineFontSize", device.key, value)
+							}
+							min={10}
+							max={32}
+						/>
+					))}
+					<TypographySubsection
+						label={__("Plan Tagline Style", "pricing-table-block")}
+						prefix="planTagline"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Price", "pricing-table-block")}</strong>
@@ -1073,6 +1324,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={80}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Price Style", "pricing-table-block")}
+						prefix="price"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Features", "pricing-table-block")}</strong>
@@ -1092,6 +1349,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={32}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Features Style", "pricing-table-block")}
+						prefix="feature"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Button", "pricing-table-block")}</strong>
@@ -1111,6 +1374,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={32}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Button Style", "pricing-table-block")}
+						prefix="button"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Price Suffix", "pricing-table-block")}</strong>
@@ -1134,6 +1403,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={32}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Price Suffix Style", "pricing-table-block")}
+						prefix="priceSuffix"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Price Prefix", "pricing-table-block")}</strong>
@@ -1157,6 +1432,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={32}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Price Prefix Style", "pricing-table-block")}
+						prefix="pricePrefix"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Badge Text", "pricing-table-block")}</strong>
@@ -1180,6 +1461,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={24}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Badge Text Style", "pricing-table-block")}
+						prefix="badge"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Billing Toggle", "pricing-table-block")}</strong>
@@ -1203,13 +1490,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							max={32}
 						/>
 					))}
+					<TypographySubsection
+						label={__("Billing Toggle Style", "pricing-table-block")}
+						prefix="toggle"
+						attributes={attributes}
+						setAttributes={setAttributes}
+					/>
 
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Price Prefix", "pricing-table-block")}</strong>
 					</p>
 					{DEVICE_TYPES.map((device) => (
 						<RangeControl
-							key={`price-prefix-${device.key}`}
+							key={`price-prefix-2-${device.key}`}
 							label={device.label}
 							value={
 								pricePrefixFontSize?.[device.key]?.value ||
@@ -1232,7 +1525,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					</p>
 					{DEVICE_TYPES.map((device) => (
 						<RangeControl
-							key={`badge-${device.key}`}
+							key={`badge-2-${device.key}`}
 							label={device.label}
 							value={
 								badgeFontSize?.[device.key]?.value ||

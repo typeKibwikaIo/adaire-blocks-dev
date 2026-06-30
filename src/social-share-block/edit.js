@@ -1,21 +1,34 @@
-﻿import { __ } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { useBlockProps, ColorPalette } from '@wordpress/block-editor';
+import { useBlockProps } from '@wordpress/block-editor';
 import {
     PanelBody,
-    RangeControl,
+    RangeControl,
     BaseControl,
     Button,
     TextControl,
     SelectControl,
     ToggleControl,
     __experimentalBoxControl as BoxControl,
+    __experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import './editor.scss';
 import BoundColorPalette from '../components/BoundColorPalette';
+
+const FONT_FAMILY_OPTIONS = [
+    { label: 'Default (inherit theme)', value: '' },
+    { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+    { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+    { label: 'Georgia', value: 'Georgia, serif' },
+    { label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+    { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+    { label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+    { label: 'Courier New', value: "'Courier New', Courier, monospace" },
+    { label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
 
 const PLATFORMS = [
     { key: 'facebook', defaultIcon: 'bi bi-facebook', defaultLabel: 'Facebook' },
@@ -49,6 +62,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         platformIcons,
         platformLabels,
         tooltipPosition,
+        fontFamily,
+        platformFontSize,
+        platformFontWeight,
+        platformLineHeight,
+        platformLetterSpacing,
+        platformTextTransform,
     } = attributes;
 
     if (!blockId) {
@@ -69,6 +88,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--share-border-radius': `${borderRadius}px`,
             '--share-border-width': `${borderWidth}px`,
             '--share-border-color': borderColor,
+            '--share-font-family': fontFamily || '',
+            '--share-platform-font-size': `${platformFontSize ?? 14}px`,
+            '--share-platform-font-weight': platformFontWeight || '400',
+            '--share-platform-line-height': platformLineHeight || '1.4',
+            '--share-platform-letter-spacing': platformLetterSpacing || 'normal',
+            '--share-platform-text-transform': platformTextTransform || 'none',
         },
     });
 
@@ -210,6 +235,66 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
                 </PanelBody>
 
+                <PanelBody title={__('Typography', 'social-share-block')} initialOpen={false}>
+                    <RangeControl
+                        label={__('Platform Label Font Size (px)', 'social-share-block')}
+                        value={platformFontSize}
+                        onChange={(value) => setAttributes({ platformFontSize: value })}
+                        min={8}
+                        max={32}
+                        step={1}
+                    />
+
+                    <SelectControl
+                        label={__('Platform Label Font Weight', 'social-share-block')}
+                        value={platformFontWeight}
+                        options={[
+                            { label: 'Thin (100)', value: '100' },
+                            { label: 'Extra Light (200)', value: '200' },
+                            { label: 'Light (300)', value: '300' },
+                            { label: 'Normal (400)', value: '400' },
+                            { label: 'Medium (500)', value: '500' },
+                            { label: 'Semi Bold (600)', value: '600' },
+                            { label: 'Bold (700)', value: '700' },
+                            { label: 'Extra Bold (800)', value: '800' },
+                            { label: 'Black (900)', value: '900' },
+                        ]}
+                        onChange={(value) => setAttributes({ platformFontWeight: value })}
+                    />
+
+                    <UnitControl
+                        label={__('Platform Label Line Height', 'social-share-block')}
+                        value={platformLineHeight}
+                        onChange={(value) => setAttributes({ platformLineHeight: value })}
+                    />
+
+                    <UnitControl
+                        label={__('Platform Label Letter Spacing', 'social-share-block')}
+                        value={platformLetterSpacing}
+                        onChange={(value) => setAttributes({ platformLetterSpacing: value })}
+                    />
+
+                    <SelectControl
+                        label={__('Platform Label Text Transform', 'social-share-block')}
+                        value={platformTextTransform}
+                        options={[
+                            { label: 'None', value: 'none' },
+                            { label: 'Uppercase', value: 'uppercase' },
+                            { label: 'Lowercase', value: 'lowercase' },
+                            { label: 'Capitalize', value: 'capitalize' },
+                        ]}
+                        onChange={(value) => setAttributes({ platformTextTransform: value })}
+                    />
+
+                    <SelectControl
+                        label={__('Font Family', 'social-share-block')}
+                        value={fontFamily || ''}
+                        options={FONT_FAMILY_OPTIONS}
+                        onChange={(value) => setAttributes({ fontFamily: value })}
+                        help={__('Applies to the share platform labels.', 'social-share-block')}
+                    />
+                </PanelBody>
+
                 <PanelBody title={__('Platform Settings', 'social-share-block')} initialOpen={true}>
                     <SelectControl
                         label={__('Tooltip Position', 'social-share-block')}
@@ -230,7 +315,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 checked={enabledPlatforms[platform.key] || false}
                                 onChange={() => handlePlatformToggle(platform.key)}
                             />
-                            
+
                             {enabledPlatforms[platform.key] && (
                                 <>
                                     <BaseControl label={__('Icon', 'social-share-block')} style={{ marginTop: '12px' }}>
@@ -370,7 +455,3 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         </>
     );
 }
-
-
-
-

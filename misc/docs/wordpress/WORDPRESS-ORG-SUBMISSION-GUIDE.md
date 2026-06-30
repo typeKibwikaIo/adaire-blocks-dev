@@ -53,7 +53,7 @@ Check your main plugin file (`adaire-blocks.php`) has these headers:
 ```php
 <?php
 /**
- * Plugin Name: GutenBlocks Blocks
+ * Plugin Name: Adaire Blocks
  * Plugin URI: https://adaire.digital/adaire-blocks
  * Description: A powerful WordPress plugin for creating visually stunning, high-performance websites with custom Gutenberg blocks and GSAP animations.
  * Version: 1.1.0
@@ -263,7 +263,7 @@ svn status
 
 ```bash
 # Commit to trunk (this makes it live!)
-svn commit -m "Initial commit of GutenBlocks Blocks v1.1.0"
+svn commit -m "Initial commit of Adaire Blocks v1.1.0"
 
 # Enter your WordPress.org username and password when prompted
 ```
@@ -391,5 +391,5 @@ If you get stuck at any step, the WordPress.org plugin review team is helpful:
 
 **Good luck with your submission! 🚀**
 
-*This guide was created for GutenBlocks Blocks plugin submission.*
+*This guide was created for Adaire Blocks plugin submission.*
 

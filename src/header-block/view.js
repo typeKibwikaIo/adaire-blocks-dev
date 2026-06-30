@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     [data-header-uid="${uid}"] .adaire-header-nav { display: flex !important; position: static !important; transform: none !important; width: auto !important; }
                 }
                 @media (max-width: ${breakpoint}px) {
-                    [data-header-uid="${uid}"] .adaire-header-mobile-toggle { display: block !important; }
+                    [data-header-uid="${uid}"] .adaire-header-mobile-toggle { display: flex !important; }
                     [data-header-uid="${uid}"] .adaire-header-nav { display: none; }
                     [data-header-uid="${uid}"].is-mobile-menu-open .adaire-header-nav { display: flex; }
                 }

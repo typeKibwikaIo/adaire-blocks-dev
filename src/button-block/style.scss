@@ -45,7 +45,10 @@
     background-color: var(--button-bg-color, transparent);
     font-size: var(--button-font-size, 18px);
     font-weight: var(--button-font-weight, 500);
-    font-family: inherit;
+    line-height: var(--button-line-height, normal);
+    letter-spacing: var(--button-letter-spacing, normal);
+    text-transform: var(--button-text-transform, none);
+    font-family: var(--button-font-family, inherit);
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -62,6 +65,8 @@
     // Tablet responsive
     @media (max-width: 1024px) {
       font-size: var(--button-font-size-tablet, 16px);
+      line-height: var(--button-line-height-tablet, normal);
+      letter-spacing: var(--button-letter-spacing-tablet, normal);
       padding-top: var(--button-padding-top-tablet, 8px);
       padding-right: var(--button-padding-right-tablet, 16px);
       padding-bottom: var(--button-padding-bottom-tablet, 8px);
@@ -71,6 +76,8 @@
     // Mobile responsive
     @media (max-width: 768px) {
       font-size: var(--button-font-size-mobile, 14px);
+      line-height: var(--button-line-height-mobile, normal);
+      letter-spacing: var(--button-letter-spacing-mobile, normal);
       padding-top: var(--button-padding-top-mobile, 6px);
       padding-right: var(--button-padding-right-mobile, 12px);
       padding-bottom: var(--button-padding-bottom-mobile, 6px);
@@ -80,6 +87,8 @@
     // Smartwatch responsive
     @media (max-width: 320px) {
       font-size: var(--button-font-size-watch, 12px);
+      line-height: var(--button-line-height-watch, normal);
+      letter-spacing: var(--button-letter-spacing-watch, normal);
       padding-top: var(--button-padding-top-watch, 4px);
       padding-right: var(--button-padding-right-watch, 8px);
       padding-bottom: var(--button-padding-bottom-watch, 4px);
@@ -143,12 +152,26 @@
       }
     }
 
+    // ADAB-014: border-width/-style/-color are intentionally still scoped to
+    // this variant only, even though the controls for them are now always
+    // visible in the inspector (see edit.js). borderWidth defaults to 2px
+    // and has existed as an attribute since before this block had any
+    // deprecated.js entries, so it's explicitly stored as 2 on essentially
+    // every already-published button — including --underline/--fill/
+    // --gradient/--glass instances that have never rendered a border.
+    // style.scss is global (not versioned per saved post the way save()
+    // output is via the `deprecated` array), so making border-width/-color/
+    // -style apply to those other variants here would put a visible border
+    // on every existing non-border button site-wide with no way to freeze
+    // the old look for old content. If a "border on any style" feature is
+    // wanted later, it needs its own explicit opt-in attribute (e.g. a
+    // boolean) rather than repurposing the existing always-set values.
     &--border {
       border-width: var(--button-border-width, 2px);
       border-style: var(--button-border-style, solid);
       border-color: var(--button-border-color, #ff4242);
       border-radius: var(--button-border-radius, 4px);
-      
+
       &:hover {
         background-color: var(--button-hover-border-color, var(--button-border-color, #ff4242));
         border-color: var(--button-hover-border-color, var(--button-border-color, #ff4242));

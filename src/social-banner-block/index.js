@@ -2,6 +2,7 @@
 import './style.scss';
 import Edit from './edit';
 import save from './save';
+import deprecated from './deprecated';
 import metadata from './block.json';
 import SocialBannerIcon from '../icons/social-banner';
 
@@ -15,6 +16,7 @@ if (getBlockType(metadata.name)) {
 registerBlockType(metadata.name, {
     edit: Edit,
     save,
+    deprecated,
     icon: SocialBannerIcon,
 });
 

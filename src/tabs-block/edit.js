@@ -9,9 +9,11 @@ import {
     ButtonGroup,
     TextControl,
     SelectControl,
-    ColorPicker
+    ColorPicker,
+    __experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import './editor.scss';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
@@ -32,6 +34,25 @@ const EASE_OPTIONS = [
     { label: 'power4.out', value: 'power4.out' },
     { label: 'elastic.out', value: 'elastic.out(1, 0.5)' },
     { label: 'back.out', value: 'back.out(1.2)' },
+];
+
+const TEXT_TRANSFORM_OPTIONS = [
+    { label: __('None', 'tabs-block'), value: 'none' },
+    { label: __('Uppercase', 'tabs-block'), value: 'uppercase' },
+    { label: __('Lowercase', 'tabs-block'), value: 'lowercase' },
+    { label: __('Capitalize', 'tabs-block'), value: 'capitalize' },
+];
+
+const FONT_FAMILY_OPTIONS = [
+    { label: __('Default (inherit theme)', 'tabs-block'), value: '' },
+    { label: __('Arial', 'tabs-block'), value: 'Arial, Helvetica, sans-serif' },
+    { label: __('Helvetica', 'tabs-block'), value: 'Helvetica, Arial, sans-serif' },
+    { label: __('Georgia', 'tabs-block'), value: 'Georgia, serif' },
+    { label: __('Times New Roman', 'tabs-block'), value: "'Times New Roman', Times, serif" },
+    { label: __('Verdana', 'tabs-block'), value: 'Verdana, Geneva, sans-serif' },
+    { label: __('Trebuchet MS', 'tabs-block'), value: "'Trebuchet MS', sans-serif" },
+    { label: __('Courier New', 'tabs-block'), value: "'Courier New', Courier, monospace" },
+    { label: __('System UI', 'tabs-block'), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
 ];
 
 const FREE_TIER_ITEM_LIMIT = 3;
@@ -57,6 +78,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         tabTitleFontSize,
         tabTitleFontWeight,
         tabTitleActiveFontWeight,
+        tabTitleLineHeight,
+        tabTitleLetterSpacing,
+        tabTitleTextTransform,
+        fontFamily,
         tabGap,
         underlineHeight,
         contentPaddingTop,
@@ -99,6 +124,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--tab-title-size-watch': `${tabTitleFontSize?.smartwatch ?? 12}px`,
             '--tab-title-weight': tabTitleFontWeight,
             '--tab-title-active-weight': tabTitleActiveFontWeight,
+            '--tab-title-line-height': `${getDeviceValue(tabTitleLineHeight, 'desktop', 'normal')}`,
+            '--tab-title-line-height-tablet': `${getDeviceValue(tabTitleLineHeight, 'tablet', 'normal')}`,
+            '--tab-title-line-height-mobile': `${getDeviceValue(tabTitleLineHeight, 'mobile', 'normal')}`,
+            '--tab-title-line-height-watch': `${getDeviceValue(tabTitleLineHeight, 'smartwatch', 'normal')}`,
+            '--tab-title-letter-spacing': `${getDeviceValue(tabTitleLetterSpacing, 'desktop', '-0.01em')}`,
+            '--tab-title-letter-spacing-tablet': `${getDeviceValue(tabTitleLetterSpacing, 'tablet', '-0.01em')}`,
+            '--tab-title-letter-spacing-mobile': `${getDeviceValue(tabTitleLetterSpacing, 'mobile', '-0.01em')}`,
+            '--tab-title-letter-spacing-watch': `${getDeviceValue(tabTitleLetterSpacing, 'smartwatch', '-0.01em')}`,
+            '--tab-title-text-transform': `${getDeviceValue(tabTitleTextTransform, 'desktop', 'none')}`,
+            '--tab-title-text-transform-tablet': `${getDeviceValue(tabTitleTextTransform, 'tablet', 'none')}`,
+            '--tab-title-text-transform-mobile': `${getDeviceValue(tabTitleTextTransform, 'mobile', 'none')}`,
+            '--tab-title-text-transform-watch': `${getDeviceValue(tabTitleTextTransform, 'smartwatch', 'none')}`,
+            '--tabs-font-family': fontFamily || 'inherit',
             '--tab-gap': `${tabGap?.desktop ?? tabGap ?? 32}px`,
             '--tab-gap-tablet': `${tabGap?.tablet ?? 24}px`,
             '--tab-gap-mobile': `${tabGap?.mobile ?? 16}px`,
@@ -469,6 +507,32 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             >{weight}</Button>
                         ))}
                     </ButtonGroup>
+
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Line Height / Letter Spacing Device', 'tabs-block')} />
+
+                    <UnitControl
+                        label={__('Line Height', 'tabs-block')}
+                        value={getDeviceValue(tabTitleLineHeight, deviceType, 'normal')}
+                        onChange={(v) => setAttributes({ tabTitleLineHeight: updateDeviceAttribute(tabTitleLineHeight, deviceType, v) })}
+                    />
+                    <UnitControl
+                        label={__('Letter Spacing', 'tabs-block')}
+                        value={getDeviceValue(tabTitleLetterSpacing, deviceType, '-0.01em')}
+                        onChange={(v) => setAttributes({ tabTitleLetterSpacing: updateDeviceAttribute(tabTitleLetterSpacing, deviceType, v) })}
+                    />
+                    <SelectControl
+                        label={__('Text Transform', 'tabs-block')}
+                        value={getDeviceValue(tabTitleTextTransform, deviceType, 'none')}
+                        options={TEXT_TRANSFORM_OPTIONS}
+                        onChange={(v) => setAttributes({ tabTitleTextTransform: updateDeviceAttribute(tabTitleTextTransform, deviceType, v) })}
+                    />
+                    <SelectControl
+                        label={__('Font Family', 'tabs-block')}
+                        value={fontFamily || ''}
+                        options={FONT_FAMILY_OPTIONS}
+                        onChange={(v) => setAttributes({ fontFamily: v })}
+                        help={__('Applies to the tab title labels.', 'tabs-block')}
+                    />
                 </PanelBody>
 
                 <PanelBody title={__('Underline', 'tabs-block')} initialOpen={false}>

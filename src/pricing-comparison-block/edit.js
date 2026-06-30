@@ -14,10 +14,78 @@ import {
 	RangeControl,
 	BaseControl,
 	__experimentalBoxControl as BoxControl,
+	__experimentalUnitControl as UnitControl,
 } from "@wordpress/components";
 import { useState, useMemo } from "@wordpress/element";
 import QuickZone from "../components/QuickZone";
 import BoundColorPalette from '../components/BoundColorPalette';
+
+const FONT_FAMILY_OPTIONS = [
+	{ label: 'Default (inherit theme)', value: '' },
+	{ label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+	{ label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+	{ label: 'Georgia', value: 'Georgia, serif' },
+	{ label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+	{ label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+	{ label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+	{ label: 'Courier New', value: "'Courier New', Courier, monospace" },
+	{ label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
+const TEXT_TRANSFORM_OPTIONS = [
+	{ label: 'None', value: 'none' },
+	{ label: 'Uppercase', value: 'uppercase' },
+	{ label: 'Lowercase', value: 'lowercase' },
+	{ label: 'Capitalize', value: 'capitalize' },
+];
+
+const FONT_WEIGHT_OPTIONS = [
+	{ label: 'Thin (100)', value: '100' },
+	{ label: 'Extra Light (200)', value: '200' },
+	{ label: 'Light (300)', value: '300' },
+	{ label: 'Normal (400)', value: '400' },
+	{ label: 'Medium (500)', value: '500' },
+	{ label: 'Semi Bold (600)', value: '600' },
+	{ label: 'Bold (700)', value: '700' },
+	{ label: 'Extra Bold (800)', value: '800' },
+	{ label: 'Black (900)', value: '900' },
+];
+
+function TypographyControls( { attributes, setAttributes, prefix } ) {
+	const set = ( key ) => ( value ) => setAttributes( { [ key ]: value } );
+	const a = attributes;
+	return (
+		<>
+			<TextControl
+				label={ __( "Font size", "pricing-comparison-block" ) }
+				value={ a[ `${ prefix }FontSize` ] }
+				onChange={ set( `${ prefix }FontSize` ) }
+			/>
+			<SelectControl
+				label={ __( "Font weight", "pricing-comparison-block" ) }
+				value={ a[ `${ prefix }FontWeight` ] }
+				options={ FONT_WEIGHT_OPTIONS }
+				onChange={ set( `${ prefix }FontWeight` ) }
+			/>
+			<UnitControl
+				label={ __( "Line height", "pricing-comparison-block" ) }
+				value={ a[ `${ prefix }LineHeight` ] }
+				onChange={ set( `${ prefix }LineHeight` ) }
+			/>
+			<UnitControl
+				label={ __( "Letter spacing", "pricing-comparison-block" ) }
+				value={ a[ `${ prefix }LetterSpacing` ] }
+				onChange={ set( `${ prefix }LetterSpacing` ) }
+			/>
+			<SelectControl
+				label={ __( "Text transform", "pricing-comparison-block" ) }
+				value={ a[ `${ prefix }TextTransform` ] }
+				options={ TEXT_TRANSFORM_OPTIONS }
+				onChange={ set( `${ prefix }TextTransform` ) }
+			/>
+		</>
+	);
+}
 
 export default function Edit({ attributes, setAttributes }) {
 	const {
@@ -51,6 +119,52 @@ export default function Edit({ attributes, setAttributes }) {
 		stickyLabel,
 		showSticky,
 		tableStripedColor,
+		fontFamily,
+		headingFontSize,
+		headingFontWeight,
+		headingLineHeight,
+		headingLetterSpacing,
+		headingTextTransform,
+		subheadingFontSize,
+		subheadingFontWeight,
+		subheadingLineHeight,
+		subheadingLetterSpacing,
+		subheadingTextTransform,
+		cardTitleFontSize,
+		cardTitleFontWeight,
+		cardTitleLineHeight,
+		cardTitleLetterSpacing,
+		cardTitleTextTransform,
+		cardDescriptionFontSize,
+		cardDescriptionFontWeight,
+		cardDescriptionLineHeight,
+		cardDescriptionLetterSpacing,
+		cardDescriptionTextTransform,
+		priceFontSize,
+		priceFontWeight,
+		priceLineHeight,
+		priceLetterSpacing,
+		priceTextTransform,
+		ctaFontSize,
+		ctaFontWeight,
+		ctaLineHeight,
+		ctaLetterSpacing,
+		ctaTextTransform,
+		featureLabelFontSize,
+		featureLabelFontWeight,
+		featureLabelLineHeight,
+		featureLabelLetterSpacing,
+		featureLabelTextTransform,
+		featureSectionTitleFontSize,
+		featureSectionTitleFontWeight,
+		featureSectionTitleLineHeight,
+		featureSectionTitleLetterSpacing,
+		featureSectionTitleTextTransform,
+		guaranteeFontSize,
+		guaranteeFontWeight,
+		guaranteeLineHeight,
+		guaranteeLetterSpacing,
+		guaranteeTextTransform,
 	} = attributes;
 
 	// Use internal state for the active group in the editor
@@ -86,6 +200,62 @@ export default function Edit({ attributes, setAttributes }) {
 			"--pc-container-max-width": `${
 				containerMaxWidth?.desktop?.value ?? 1200
 			}${containerMaxWidth?.desktop?.unit ?? "px"}`,
+
+			"--pc-font-family": fontFamily || "inherit",
+
+			"--pc-heading-font-size": headingFontSize || "clamp(24px, 3vw, 40px)",
+			"--pc-heading-font-weight": headingFontWeight || "700",
+			"--pc-heading-line-height": headingLineHeight || "normal",
+			"--pc-heading-letter-spacing": headingLetterSpacing || "normal",
+			"--pc-heading-text-transform": headingTextTransform || "none",
+
+			"--pc-subheading-font-size": subheadingFontSize || "12px",
+			"--pc-subheading-font-weight": subheadingFontWeight || "400",
+			"--pc-subheading-line-height": subheadingLineHeight || "normal",
+			"--pc-subheading-letter-spacing": subheadingLetterSpacing || "0.08em",
+			"--pc-subheading-text-transform": subheadingTextTransform || "uppercase",
+
+			"--pc-card-title-font-size": cardTitleFontSize || "18px",
+			"--pc-card-title-font-weight": cardTitleFontWeight || "600",
+			"--pc-card-title-line-height": cardTitleLineHeight || "normal",
+			"--pc-card-title-letter-spacing": cardTitleLetterSpacing || "normal",
+			"--pc-card-title-text-transform": cardTitleTextTransform || "none",
+
+			"--pc-card-description-font-size": cardDescriptionFontSize || "14px",
+			"--pc-card-description-font-weight": cardDescriptionFontWeight || "400",
+			"--pc-card-description-line-height": cardDescriptionLineHeight || "1.5",
+			"--pc-card-description-letter-spacing": cardDescriptionLetterSpacing || "normal",
+			"--pc-card-description-text-transform": cardDescriptionTextTransform || "none",
+
+			"--pc-price-font-size": priceFontSize || "30px",
+			"--pc-price-font-weight": priceFontWeight || "700",
+			"--pc-price-line-height": priceLineHeight || "normal",
+			"--pc-price-letter-spacing": priceLetterSpacing || "normal",
+			"--pc-price-text-transform": priceTextTransform || "none",
+
+			"--pc-cta-font-size": ctaFontSize || "14px",
+			"--pc-cta-font-weight": ctaFontWeight || "600",
+			"--pc-cta-line-height": ctaLineHeight || "normal",
+			"--pc-cta-letter-spacing": ctaLetterSpacing || "normal",
+			"--pc-cta-text-transform": ctaTextTransform || "none",
+
+			"--pc-feature-label-font-size": featureLabelFontSize || "13px",
+			"--pc-feature-label-font-weight": featureLabelFontWeight || "500",
+			"--pc-feature-label-line-height": featureLabelLineHeight || "1.4",
+			"--pc-feature-label-letter-spacing": featureLabelLetterSpacing || "normal",
+			"--pc-feature-label-text-transform": featureLabelTextTransform || "none",
+
+			"--pc-feature-section-title-font-size": featureSectionTitleFontSize || "11px",
+			"--pc-feature-section-title-font-weight": featureSectionTitleFontWeight || "700",
+			"--pc-feature-section-title-line-height": featureSectionTitleLineHeight || "normal",
+			"--pc-feature-section-title-letter-spacing": featureSectionTitleLetterSpacing || "0.08em",
+			"--pc-feature-section-title-text-transform": featureSectionTitleTextTransform || "uppercase",
+
+			"--pc-guarantee-font-size": guaranteeFontSize || "14px",
+			"--pc-guarantee-font-weight": guaranteeFontWeight || "400",
+			"--pc-guarantee-line-height": guaranteeLineHeight || "1.5",
+			"--pc-guarantee-letter-spacing": guaranteeLetterSpacing || "normal",
+			"--pc-guarantee-text-transform": guaranteeTextTransform || "none",
 		},
 	});
 
@@ -302,6 +472,43 @@ export default function Edit({ attributes, setAttributes }) {
 						]}
 						onChange={(value) => setAttributes({ displayMode: value })}
 					/>
+				</PanelBody>
+
+				<PanelBody title={__("Typography", "pricing-comparison-block")} initialOpen={false}>
+					<SelectControl
+						label={__("Font Family", "pricing-comparison-block")}
+						value={fontFamily || ''}
+						options={FONT_FAMILY_OPTIONS}
+						onChange={(value) => setAttributes({ fontFamily: value })}
+						help={__("Applies to all text in this block.", "pricing-comparison-block")}
+					/>
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Heading", "pricing-comparison-block")}</p>
+					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="heading" />
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Subheading", "pricing-comparison-block")}</p>
+					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="subheading" />
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Plan Name", "pricing-comparison-block")}</p>
+					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="cardTitle" />
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Plan Description", "pricing-comparison-block")}</p>
+					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="cardDescription" />
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Price", "pricing-comparison-block")}</p>
+					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="price" />
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("CTA / Button Text", "pricing-comparison-block")}</p>
+					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="cta" />
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Feature List Label", "pricing-comparison-block")}</p>
+					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="featureLabel" />
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Feature Section Title", "pricing-comparison-block")}</p>
+					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="featureSectionTitle" />
+
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Guarantee Text", "pricing-comparison-block")}</p>
+					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="guarantee" />
 				</PanelBody>
 
 				<PanelBody title={__("Spacing & Style", "pricing-comparison-block")} initialOpen={false}>

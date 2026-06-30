@@ -5,7 +5,7 @@
 
 .adaire-about {
 	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	font-family: var( --ab-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif );
 	width: 100%;
 
 	*,
@@ -43,15 +43,18 @@
 	.adaire-about__heading {
 		font-size: clamp( 52px, 9vw, 104px );
 		font-weight: 700;
-		line-height: 1.0;
-		letter-spacing: -0.03em;
+		line-height: var( --ab-heading-line-height, 1.0 );
+		letter-spacing: var( --ab-heading-letter-spacing, -0.03em );
+		text-transform: var( --ab-heading-text-transform, none );
 		color: var( --ab-text, #fff );
 		margin: 0 0 28px;
 	}
 
 	.adaire-about__tagline {
 		font-size: 14px;
-		line-height: 1.65;
+		line-height: var( --ab-tagline-line-height, 1.65 );
+		letter-spacing: var( --ab-tagline-letter-spacing, normal );
+		text-transform: var( --ab-tagline-text-transform, none );
 		color: var( --ab-muted, rgba( 255, 255, 255, 0.6 ) );
 		max-width: 320px;
 		margin: 0 0 40px;
@@ -59,7 +62,9 @@
 
 	.adaire-about__mission {
 		font-size: 13px;
-		line-height: 1.75;
+		line-height: var( --ab-mission-line-height, 1.75 );
+		letter-spacing: var( --ab-mission-letter-spacing, normal );
+		text-transform: var( --ab-mission-text-transform, none );
 		color: var( --ab-muted, rgba( 255, 255, 255, 0.5 ) );
 		max-width: 440px;
 		border-top: 1px solid var( --ab-divider, rgba( 255, 255, 255, 0.1 ) );
@@ -101,7 +106,9 @@
 
 	.adaire-about__statement {
 		font-size: clamp( 22px, 3.2vw, 38px );
-		line-height: 1.38;
+		line-height: var( --ab-statement-line-height, 1.38 );
+		letter-spacing: var( --ab-statement-letter-spacing, normal );
+		text-transform: var( --ab-statement-text-transform, none );
 		font-weight: 400;
 		color: var( --ab-text, #fff );
 		max-width: 940px;
@@ -157,7 +164,9 @@
 
 	.adaire-about__caption {
 		font-size: 14px;
-		line-height: 1.72;
+		line-height: var( --ab-caption-line-height, 1.72 );
+		letter-spacing: var( --ab-caption-letter-spacing, normal );
+		text-transform: var( --ab-caption-text-transform, none );
 		color: var( --ab-muted, rgba( 255, 255, 255, 0.65 ) );
 		margin: 0;
 		max-width: 320px;
@@ -165,7 +174,9 @@
 
 	.adaire-about__body {
 		font-size: 15px;
-		line-height: 1.8;
+		line-height: var( --ab-body-line-height, 1.8 );
+		letter-spacing: var( --ab-body-letter-spacing, normal );
+		text-transform: var( --ab-body-text-transform, none );
 		color: var( --ab-muted, rgba( 255, 255, 255, 0.7 ) );
 		margin: 0;
 		padding-top: 4px;
@@ -182,8 +193,9 @@
 	.adaire-about__closing {
 		font-size: clamp( 32px, 5.5vw, 68px );
 		font-weight: 700;
-		line-height: 1.12;
-		letter-spacing: -0.02em;
+		line-height: var( --ab-closing-line-height, 1.12 );
+		letter-spacing: var( --ab-closing-letter-spacing, -0.02em );
+		text-transform: var( --ab-closing-text-transform, none );
 		color: var( --ab-text, #fff );
 		max-width: 880px;
 		margin: 0;

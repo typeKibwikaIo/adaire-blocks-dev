@@ -39,7 +39,7 @@
         },
         "buttonBackgroundColor": {
             "type": "string",
-            "default": "transparent"
+            "default": ""
         },
         "buttonHoverColor": {
             "type": "string",
@@ -47,15 +47,15 @@
         },
         "buttonHoverBackgroundColor": {
             "type": "string",
-            "default": "transparent"
+            "default": ""
         },
         "buttonStyle": {
             "type": "string",
-            "default": "underline"
+            "default": "fill"
         },
         "underlineColor": {
             "type": "string",
-            "default": "#ff4242"
+            "default": ""
         },
         "blurAmount": {
             "type": "number",
@@ -162,15 +162,41 @@
         },
         "borderColor": {
             "type": "string",
-            "default": "#ff4242"
+            "default": ""
         },
         "buttonHoverBorderColor": {
             "type": "string",
-            "default": "#ff4242"
+            "default": ""
         },
         "borderStyle": {
             "type": "string",
             "default": "solid"
+        },
+        "lineHeight": {
+            "type": "object",
+            "default": {
+                "desktop": "normal",
+                "tablet": "normal",
+                "mobile": "normal",
+                "smartwatch": "normal"
+            }
+        },
+        "letterSpacing": {
+            "type": "object",
+            "default": {
+                "desktop": "normal",
+                "tablet": "normal",
+                "mobile": "normal",
+                "smartwatch": "normal"
+            }
+        },
+        "textTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
         }
     }
 }

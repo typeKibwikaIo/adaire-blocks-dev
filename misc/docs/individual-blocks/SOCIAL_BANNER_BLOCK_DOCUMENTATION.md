@@ -280,7 +280,7 @@ Each icon entry has the following settings:
 
 ## 📄 License
 
-This block is part of the GutenBlocks Blocks plugin and follows the same license terms.
+This block is part of the Adaire Blocks plugin and follows the same license terms.
 
 ---
 

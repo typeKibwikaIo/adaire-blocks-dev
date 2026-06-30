@@ -14,6 +14,29 @@
       grid-template-columns: 1fr !important;
     }
   }
+
+  // Width options (Full / Wide / Contained).
+  //
+  // These are applied via our own modifier class (instead of relying solely
+  // on the active theme's alignwide/alignfull CSS) so the three options
+  // render identically in the editor and on the frontend regardless of
+  // whether the theme declares `add_theme_support( 'align-wide' )`.
+  &--width-contained {
+    max-width: var( --wp--style--global--content-size, 800px );
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &--width-wide {
+    max-width: var( --wp--style--global--wide-size, 1280px );
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &--width-full {
+    max-width: none;
+    width: 100%;
+  }
 }
 
 .adaire-column {
@@ -113,4 +136,52 @@
       fill: #7c6de8;
     }
   }
+
+  &.is-active {
+    border-color: #7c6de8;
+    background: #f5f3ff;
+
+    svg rect {
+      fill: #7c6de8;
+    }
+  }
+}
+
+// Inspector "Columns" panel (editor only) — add/remove columns and
+// switch between preset layouts after the row already has content.
+.adaire-row-columns-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e1e1e;
+  margin: 0 0 8px;
+}
+
+.adaire-row-columns-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  .components-button {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+.adaire-row-columns-label {
+  font-size: 12px;
+  color: #757575;
+  margin: 0 0 10px;
+}
+
+.adaire-row-columns-widths {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.adaire-row-columns-presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }

@@ -76,6 +76,37 @@
             "type": "string",
             "default": "600"
         },
+        "tabTitleLineHeight": {
+            "type": "object",
+            "default": {
+                "desktop": "normal",
+                "tablet": "normal",
+                "mobile": "normal",
+                "smartwatch": "normal"
+            }
+        },
+        "tabTitleLetterSpacing": {
+            "type": "object",
+            "default": {
+                "desktop": "-0.01em",
+                "tablet": "-0.01em",
+                "mobile": "-0.01em",
+                "smartwatch": "-0.01em"
+            }
+        },
+        "tabTitleTextTransform": {
+            "type": "object",
+            "default": {
+                "desktop": "none",
+                "tablet": "none",
+                "mobile": "none",
+                "smartwatch": "none"
+            }
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
+        },
         "tabGap": {
             "type": "object",
             "default": {

@@ -1,6 +1,6 @@
-# GutenBlocks Blocks Release Process Documentation
+# Adaire Blocks Release Process Documentation
 
-This document outlines the complete process for releasing a new version of GutenBlocks Blocks. Follow these steps carefully for every release to ensure consistency and completeness.
+This document outlines the complete process for releasing a new version of Adaire Blocks. Follow these steps carefully for every release to ensure consistency and completeness.
 
 ## make sure to add all new blocks to the changelogs, release notes, mds and txts
 
@@ -54,7 +54,7 @@ Before starting the release process, ensure:
 **Template Structure**:
 ```json
 {
-    "name": "GutenBlocks Blocks",
+    "name": "Adaire Blocks",
     "version": "X.Y.Z",
     "download_url": "https://github.com/helloadaire/Adaire-Blocks/releases/download/vX.Y.Z.alpha/adaire-blocks.X.Y.Z.alpha.zip",
     "sections": {

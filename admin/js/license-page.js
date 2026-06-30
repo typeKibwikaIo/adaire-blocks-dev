@@ -1,5 +1,5 @@
 /**
- * License Management JavaScript for GutenBlocks
+ * License Management JavaScript for Adaire Blocks
  *
  * @package AdaireBlocks
  */
@@ -104,7 +104,7 @@
                     this.saveActivationResult(licenseKey, combinedData);
                 })
                 .catch(error => {
-                    console.error('[GutenBlocks License] Activation Process Error:', {
+                    console.error('[Adaire Blocks License] Activation Process Error:', {
                         error: error,
                         message: error.message,
                         stack: error.stack,
@@ -144,7 +144,7 @@
                                         }
                                     });
                                     const errorMsg = errorMessages.join('; ') || 'License validation failed';
-                                    console.error('[GutenBlocks License] Validation Error:', {
+                                    console.error('[Adaire Blocks License] Validation Error:', {
                                         errorMessages: errorMessages,
                                         fullResponse: jsonData,
                                         url: fullUrl,
@@ -155,7 +155,7 @@
                                     resolve(jsonData.data);
                                 }
                             } else {
-                                console.error('[GutenBlocks License] Validation Failed:', {
+                                console.error('[Adaire Blocks License] Validation Failed:', {
                                     message: jsonData.message,
                                     fullResponse: jsonData,
                                     url: fullUrl,
@@ -165,7 +165,7 @@
                                 reject(new Error(jsonData.message || 'License validation failed'));
                             }
                         } catch (e) {
-                            console.error('[GutenBlocks License] Validation Parse Error:', {
+                            console.error('[Adaire Blocks License] Validation Parse Error:', {
                                 error: e,
                                 responseText: text,
                                 url: fullUrl,
@@ -176,7 +176,7 @@
                     });
                 })
                 .catch(error => {
-                    console.error('[GutenBlocks License] Validation Network Error:', {
+                    console.error('[Adaire Blocks License] Validation Network Error:', {
                         error: error,
                         message: error.message,
                         stack: error.stack,
@@ -207,7 +207,7 @@
                                 const validationData = jsonData.data.data || jsonData.data;
                                 resolve(validationData);
                             } else {
-                                console.error('[GutenBlocks License] Post-Activation Validation Failed:', {
+                                console.error('[Adaire Blocks License] Post-Activation Validation Failed:', {
                                     message: jsonData.message,
                                     fullResponse: jsonData,
                                     url: fullUrl,
@@ -217,7 +217,7 @@
                                 reject(new Error(jsonData.message || 'Post-activation validation failed'));
                             }
                         } catch (e) {
-                            console.error('[GutenBlocks License] Post-Activation Validation Parse Error:', {
+                            console.error('[Adaire Blocks License] Post-Activation Validation Parse Error:', {
                                 error: e,
                                 responseText: text,
                                 url: fullUrl,
@@ -228,7 +228,7 @@
                     });
                 })
                 .catch(error => {
-                    console.error('[GutenBlocks License] Post-Activation Validation Network Error:', {
+                    console.error('[Adaire Blocks License] Post-Activation Validation Network Error:', {
                         error: error,
                         message: error.message,
                         stack: error.stack,
@@ -265,7 +265,7 @@
                                         }
                                     });
                                     const errorMsg = errorMessages.join('; ') || 'License activation failed';
-                                    console.error('[GutenBlocks License] Activation Error:', {
+                                    console.error('[Adaire Blocks License] Activation Error:', {
                                         errorMessages: errorMessages,
                                         fullResponse: jsonData,
                                         url: fullUrl,
@@ -293,7 +293,7 @@
                                         };
                                         resolve(activationResult);
                                     } else {
-                                        console.error('[GutenBlocks License] Activation Failed - No Token:', {
+                                        console.error('[Adaire Blocks License] Activation Failed - No Token:', {
                                             fullResponse: jsonData,
                                             url: fullUrl,
                                             status: response.status
@@ -301,7 +301,7 @@
                                         reject(new Error('License activation failed - no token received'));
                                     }
                                 } else {
-                                    console.error('[GutenBlocks License] Activation Failed - No Data:', {
+                                    console.error('[Adaire Blocks License] Activation Failed - No Data:', {
                                         fullResponse: jsonData,
                                         url: fullUrl,
                                         status: response.status
@@ -309,7 +309,7 @@
                                     reject(new Error('License activation failed - no data received'));
                                 }
                             } else {
-                                console.error('[GutenBlocks License] Activation Failed:', {
+                                console.error('[Adaire Blocks License] Activation Failed:', {
                                     message: jsonData.message,
                                     fullResponse: jsonData,
                                     url: fullUrl,
@@ -319,7 +319,7 @@
                                 reject(new Error(jsonData.message || 'License activation failed'));
                             }
                         } catch (e) {
-                            console.error('[GutenBlocks License] Activation Parse Error:', {
+                            console.error('[Adaire Blocks License] Activation Parse Error:', {
                                 error: e,
                                 responseText: text,
                                 url: fullUrl,
@@ -330,7 +330,7 @@
                     });
                 })
                 .catch(error => {
-                    console.error('[GutenBlocks License] Activation Network Error:', {
+                    console.error('[Adaire Blocks License] Activation Network Error:', {
                         error: error,
                         message: error.message,
                         stack: error.stack,
@@ -389,7 +389,7 @@
                                     }
                                 });
                                 const errorMsg = errorMessages.join('; ') || 'License deactivation failed';
-                                console.error('[GutenBlocks License] Deactivation Error:', {
+                                console.error('[Adaire Blocks License] Deactivation Error:', {
                                     errorMessages: errorMessages,
                                     fullResponse: jsonData,
                                     url: fullUrl,
@@ -406,7 +406,7 @@
                                 this.saveDeactivationResult();
                             }
                         } else {
-                            console.error('[GutenBlocks License] Deactivation Failed:', {
+                            console.error('[Adaire Blocks License] Deactivation Failed:', {
                                 message: jsonData.message,
                                 fullResponse: jsonData,
                                 url: fullUrl,
@@ -416,7 +416,7 @@
                             this.showMessage('error', jsonData.message || 'License deactivation failed');
                         }
                     } catch (e) {
-                        console.error('[GutenBlocks License] Deactivation Parse Error:', {
+                        console.error('[Adaire Blocks License] Deactivation Parse Error:', {
                             error: e,
                             responseText: text,
                             url: fullUrl,
@@ -427,7 +427,7 @@
                 });
             })
             .catch(error => {
-                console.error('[GutenBlocks License] Deactivation Network Error:', {
+                console.error('[Adaire Blocks License] Deactivation Network Error:', {
                     error: error,
                     message: error.message,
                     stack: error.stack,
@@ -482,7 +482,7 @@
                                     }
                                 });
                                 const errorMsg = errorMessages.join('; ') || 'License validation failed';
-                                console.error('[GutenBlocks License] Validation Error:', {
+                                console.error('[Adaire Blocks License] Validation Error:', {
                                     errorMessages: errorMessages,
                                     fullResponse: jsonData,
                                     url: fullUrl,
@@ -496,7 +496,7 @@
                                 this.updateLicenseData(jsonData.data);
                             }
                         } else {
-                            console.error('[GutenBlocks License] Validation Failed:', {
+                            console.error('[Adaire Blocks License] Validation Failed:', {
                                 message: jsonData.message,
                                 fullResponse: jsonData,
                                 url: fullUrl,
@@ -506,7 +506,7 @@
                             this.showMessage('error', jsonData.message || 'License validation failed');
                         }
                     } catch (e) {
-                        console.error('[GutenBlocks License] Validation Parse Error:', {
+                        console.error('[Adaire Blocks License] Validation Parse Error:', {
                             error: e,
                             responseText: text,
                             url: fullUrl,
@@ -517,7 +517,7 @@
                 });
             })
             .catch(error => {
-                console.error('[GutenBlocks License] Validation Network Error:', {
+                console.error('[Adaire Blocks License] Validation Network Error:', {
                     error: error,
                     message: error.message,
                     stack: error.stack,
@@ -603,7 +603,7 @@
                     }
                 },
                 error: (xhr, status, error) => {
-                    console.error('[GutenBlocks License] Save Deactivation AJAX Error:', {
+                    console.error('[Adaire Blocks License] Save Deactivation AJAX Error:', {
                         xhr: xhr,
                         status: status,
                         error: error,
@@ -636,7 +636,7 @@
                     }
                 },
                 error: (xhr, status, error) => {
-                    console.error('[GutenBlocks License] Update License Data AJAX Error:', {
+                    console.error('[Adaire Blocks License] Update License Data AJAX Error:', {
                         xhr: xhr,
                         status: status,
                         error: error,
@@ -677,7 +677,7 @@
                     }
                 },
                 error: (xhr, status, error) => {
-                    console.error('[GutenBlocks License] Save Activation AJAX Error:', {
+                    console.error('[Adaire Blocks License] Save Activation AJAX Error:', {
                         xhr: xhr,
                         status: status,
                         error: error,
@@ -763,7 +763,7 @@
 						<div class="adaire-license-input-group">
 							<label for="license-key">License Key</label>
 							<input type="text" id="license-key" name="license_key" placeholder="Enter your license key" value="${(data && data.licenseKey) ? this.escapeHtml(data.licenseKey) : ''}" required>
-							<p class="description">Enter your GutenBlocks license key to activate the plugin.</p>
+							<p class="description">Enter your Adaire Blocks license key to activate the plugin.</p>
 						</div>
 						<div class="adaire-license-actions">
 							<button type="submit" class="button button-primary" id="activate-license">
@@ -802,7 +802,7 @@
 					hour12: true
 				});
 			} catch(e) {
-				console.log('GutenBlocks License: Date formatting error:', e, dateStr);
+				console.log('Adaire Blocks License: Date formatting error:', e, dateStr);
 				return dateStr;
 			}
 		}

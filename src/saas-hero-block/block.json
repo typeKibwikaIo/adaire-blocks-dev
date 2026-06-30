@@ -5,10 +5,11 @@
   "version": "0.2.0",
   "title": "SaaS Hero",
   "category": "adaire-layout-hero",
-  "description": "SaaS Hero block for GutenBlocks.",
+  "description": "SaaS Hero block for Adaire Blocks.",
   "supports": {
     "html": false,
-    "anchor": true
+    "anchor": true,
+    "spacing": { "margin": true, "padding": true }
   },
   "textdomain": "saas-hero-block",
   "editorScript": "file:./index.js",
@@ -155,6 +156,67 @@
 
     "fontSize": { "type": "number", "default": 16 },
     "padding": { "type": "number", "default": 80 },
-    "borderRadius": { "type": "number", "default": 12 }
+    "borderRadius": { "type": "number", "default": 12 },
+
+    "fontFamily": { "type": "string", "default": "inherit" },
+
+    "eyebrowFontSize": { "type": "string", "default": "14px" },
+    "eyebrowFontWeight": { "type": "string", "default": "600" },
+    "eyebrowLineHeight": { "type": "string", "default": "normal" },
+    "eyebrowLetterSpacing": { "type": "string", "default": "1px" },
+    "eyebrowTextTransform": { "type": "string", "default": "uppercase" },
+
+    "headingFontSize": { "type": "string", "default": "clamp(36px, 5vw, 64px)" },
+    "headingFontWeight": { "type": "string", "default": "800" },
+    "headingLineHeight": { "type": "string", "default": "1.2" },
+    "headingLetterSpacing": { "type": "string", "default": "normal" },
+    "headingTextTransform": { "type": "string", "default": "none" },
+
+    "bodyTextLineHeight": { "type": "string", "default": "1.6" },
+    "bodyTextLetterSpacing": { "type": "string", "default": "normal" },
+    "bodyTextTextTransform": { "type": "string", "default": "none" },
+    "bodyTextFontWeight": { "type": "string", "default": "400" },
+
+    "pillFontSize": { "type": "string", "default": "14px" },
+    "pillFontWeight": { "type": "string", "default": "600" },
+    "pillLineHeight": { "type": "string", "default": "normal" },
+    "pillLetterSpacing": { "type": "string", "default": "normal" },
+    "pillTextTransform": { "type": "string", "default": "none" },
+
+    "buttonFontSize": { "type": "string", "default": "16px" },
+    "buttonFontWeight": { "type": "string", "default": "600" },
+    "buttonLineHeight": { "type": "string", "default": "normal" },
+    "buttonLetterSpacing": { "type": "string", "default": "normal" },
+    "buttonTextTransform": { "type": "string", "default": "none" },
+
+    "trustTitleFontSize": { "type": "string", "default": "14px" },
+    "trustTitleFontWeight": { "type": "string", "default": "600" },
+    "trustTitleLineHeight": { "type": "string", "default": "normal" },
+    "trustTitleLetterSpacing": { "type": "string", "default": "1px" },
+    "trustTitleTextTransform": { "type": "string", "default": "uppercase" },
+
+    "trustLogoFontSize": { "type": "string", "default": "16px" },
+    "trustLogoFontWeight": { "type": "string", "default": "600" },
+    "trustLogoLineHeight": { "type": "string", "default": "normal" },
+    "trustLogoLetterSpacing": { "type": "string", "default": "normal" },
+    "trustLogoTextTransform": { "type": "string", "default": "none" },
+
+    "microCopyFontSize": { "type": "string", "default": "14px" },
+    "microCopyFontWeight": { "type": "string", "default": "400" },
+    "microCopyLineHeight": { "type": "string", "default": "normal" },
+    "microCopyLetterSpacing": { "type": "string", "default": "normal" },
+    "microCopyTextTransform": { "type": "string", "default": "none" },
+
+    "securityTitleFontSize": { "type": "string", "default": "22px" },
+    "securityTitleFontWeight": { "type": "string", "default": "700" },
+    "securityTitleLineHeight": { "type": "string", "default": "normal" },
+    "securityTitleLetterSpacing": { "type": "string", "default": "normal" },
+    "securityTitleTextTransform": { "type": "string", "default": "none" },
+
+    "faqTitleFontSize": { "type": "string", "default": "22px" },
+    "faqTitleFontWeight": { "type": "string", "default": "700" },
+    "faqTitleLineHeight": { "type": "string", "default": "normal" },
+    "faqTitleLetterSpacing": { "type": "string", "default": "normal" },
+    "faqTitleTextTransform": { "type": "string", "default": "none" }
   }
 }

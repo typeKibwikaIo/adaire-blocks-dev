@@ -29,6 +29,10 @@
             "type": "string",
             "default": ""
         },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
+        },
         "containerMode": {
             "type": "string",
             "default": "constrained"
@@ -42,7 +46,8 @@
                     "image": null,
                     "imageUrl": "",
                     "title": "Fast Performance",
-                    "text": "Experience blazing fast speeds with our optimized engine."
+                    "text": "Experience blazing fast speeds with our optimized engine.",
+                    "showTitle": true
                 },
                 {
                     "id": 2,
@@ -50,7 +55,8 @@
                     "image": null,
                     "imageUrl": "",
                     "title": "Secure Design",
-                    "text": "Your data is protected by industry-leading security protocols."
+                    "text": "Your data is protected by industry-leading security protocols.",
+                    "showTitle": true
                 },
                 {
                     "id": 3,
@@ -58,7 +64,8 @@
                     "image": null,
                     "imageUrl": "",
                     "title": "Powerful Analytics",
-                    "text": "Track performance, understand your audience, and make smarter decisions with real-time insights."
+                    "text": "Track performance, understand your audience, and make smarter decisions with real-time insights.",
+                    "showTitle": true
                 }
             ]
         },

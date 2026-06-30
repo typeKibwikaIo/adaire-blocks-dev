@@ -7,8 +7,8 @@ class Adaire_Patterns {
 
     public static function init() {
         register_block_pattern_category( 'adaire-blocks-templates', array(
-            'label'       => __( 'GutenBlocks Templates', 'adaire-blocks' ),
-            'description' => __( 'Starter page templates built with GutenBlocks.', 'adaire-blocks' ),
+            'label'       => __( 'Adaire Blocks Templates', 'adaire-blocks' ),
+            'description' => __( 'Starter page templates built with Adaire Blocks.', 'adaire-blocks' ),
         ) );
 
         $pattern_dir = ADAIRE_BLOCKS_PLUGIN_PATH . 'patterns/';

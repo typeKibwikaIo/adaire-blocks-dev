@@ -48,6 +48,18 @@ const BREAKPOINTS = [
 	{ name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'posts-grid-block') },
 ];
 
+const FONT_FAMILY_OPTIONS = [
+	{ label: 'Default (inherit theme)', value: '' },
+	{ label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+	{ label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+	{ label: 'Georgia', value: 'Georgia, serif' },
+	{ label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+	{ label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+	{ label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+	{ label: 'Courier New', value: "'Courier New', Courier, monospace" },
+	{ label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
 const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
     const [headingDeviceType, setHeadingDeviceType] = useState('desktop');
@@ -65,6 +77,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         headingUnderlineColor,
         headingResponsiveUnderlineWidth,
         headingResponsiveMarginBottom,
+        headingResponsiveLineHeight,
+        headingResponsiveLetterSpacing,
+        headingTextTransform,
+        fontFamily,
         postsPerPage,
         enablePagination,
         paginationStyle,
@@ -341,6 +357,18 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             '--adaire-posts-grid-heading-margin-bottom-smallLaptop': headingResponsiveMarginBottom?.smallLaptop || '24px',
             '--adaire-posts-grid-heading-margin-bottom-desktop': headingResponsiveMarginBottom?.desktop || '24px',
             '--adaire-posts-grid-heading-margin-bottom-bigDesktop': headingResponsiveMarginBottom?.bigDesktop || '24px',
+            '--adaire-posts-grid-heading-line-height-mobile': headingResponsiveLineHeight?.mobile || '1.15',
+            '--adaire-posts-grid-heading-line-height-tablet': headingResponsiveLineHeight?.tablet || '1.15',
+            '--adaire-posts-grid-heading-line-height-smallLaptop': headingResponsiveLineHeight?.smallLaptop || '1.15',
+            '--adaire-posts-grid-heading-line-height-desktop': headingResponsiveLineHeight?.desktop || '1.15',
+            '--adaire-posts-grid-heading-line-height-bigDesktop': headingResponsiveLineHeight?.bigDesktop || '1.15',
+            '--adaire-posts-grid-heading-letter-spacing-mobile': headingResponsiveLetterSpacing?.mobile || 'normal',
+            '--adaire-posts-grid-heading-letter-spacing-tablet': headingResponsiveLetterSpacing?.tablet || 'normal',
+            '--adaire-posts-grid-heading-letter-spacing-smallLaptop': headingResponsiveLetterSpacing?.smallLaptop || 'normal',
+            '--adaire-posts-grid-heading-letter-spacing-desktop': headingResponsiveLetterSpacing?.desktop || 'normal',
+            '--adaire-posts-grid-heading-letter-spacing-bigDesktop': headingResponsiveLetterSpacing?.bigDesktop || 'normal',
+            '--adaire-posts-grid-heading-text-transform': headingTextTransform || 'none',
+            '--adaire-posts-grid-font-family': fontFamily || '',
         }
     });
 
@@ -517,6 +545,38 @@ return (
                                 value={headingResponsiveMarginBottom?.[headingDeviceType] || ''}
                                 onChange={(value) => updateResponsiveAttribute('headingResponsiveMarginBottom', headingDeviceType, value)}
                                 help={__('Controls the spacing below the heading.', 'posts-grid-block')}
+                            />
+
+                            <UnitControl
+                                label={__('Line Height', 'posts-grid-block')}
+                                value={headingResponsiveLineHeight?.[headingDeviceType] || ''}
+                                onChange={(value) => updateResponsiveAttribute('headingResponsiveLineHeight', headingDeviceType, value)}
+                            />
+
+                            <UnitControl
+                                label={__('Letter Spacing', 'posts-grid-block')}
+                                value={headingResponsiveLetterSpacing?.[headingDeviceType] || ''}
+                                onChange={(value) => updateResponsiveAttribute('headingResponsiveLetterSpacing', headingDeviceType, value)}
+                            />
+
+                            <SelectControl
+                                label={__('Text Transform', 'posts-grid-block')}
+                                value={headingTextTransform}
+                                options={[
+                                    { label: __('None', 'posts-grid-block'), value: 'none' },
+                                    { label: __('Uppercase', 'posts-grid-block'), value: 'uppercase' },
+                                    { label: __('Lowercase', 'posts-grid-block'), value: 'lowercase' },
+                                    { label: __('Capitalize', 'posts-grid-block'), value: 'capitalize' },
+                                ]}
+                                onChange={(value) => setAttributes({ headingTextTransform: value })}
+                            />
+
+                            <SelectControl
+                                label={__('Font Family', 'posts-grid-block')}
+                                value={fontFamily}
+                                options={FONT_FAMILY_OPTIONS}
+                                onChange={(value) => setAttributes({ fontFamily: value })}
+                                help={__('Applies to the entire block.', 'posts-grid-block')}
                             />
                         </>
                     )}
