@@ -41,8 +41,7 @@
       "upgradeMessage": "Upgrade to Premium for advanced filtering and custom templates."
     },
     "posts-carousel-block": {
-      "enabled": true,
-      "upgradeMessage": "Upgrade to Premium for advanced carousel features."
+      "enabled": false
     },
     "tabs-block": {
       "enabled": true,
@@ -56,8 +55,7 @@
       "upgradeMessage": "Tab Panel Block works with the Tabs Block for creating tabbed interfaces."
     },
     "animation-scroll-block": {
-      "enabled": true,
-      "upgradeMessage": "Upgrade to Premium for advanced animation features."
+      "enabled": false
     },
     "content-toggle-block": {
       "enabled": true,

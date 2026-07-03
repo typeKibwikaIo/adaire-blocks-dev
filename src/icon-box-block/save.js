@@ -1,4 +1,4 @@
-﻿import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 export default function save({ attributes }) {
     const {
@@ -8,10 +8,9 @@ export default function save({ attributes }) {
         chosenIcon,
         iconSize,
         iconColor,
-        iconHoverColor,
         backgroundColor,
         backgroundHoverColor,
-        padding,
+        textColor,
         borderRadius,
         borderWidth,
         borderColor,
@@ -26,111 +25,101 @@ export default function save({ attributes }) {
         paddingRight,
         paddingBottom,
         paddingLeft,
+        title,
+        description,
+        showButton,
+        buttonText,
+        buttonBgColor,
+        buttonTextColor,
     } = attributes;
 
-    // Don't render if neither icon type is set
-    if ((!chosenIcon || chosenIcon.trim() === '') && (!iconSvg || iconSvg.trim() === '')) {
-        return null;
-    }
+    const pt = paddingTop?.desktop ?? 40;
+    const pr = paddingRight?.desktop ?? 40;
+    const pb = paddingBottom?.desktop ?? 40;
+    const pl = paddingLeft?.desktop ?? 40;
 
     const blockProps = useBlockProps.save({
         className: `adaire-icon-box adaire-icon-box--align-${alignment}`,
         id: blockId || undefined,
         style: {
-            outline: 'none',
-            border: 'none',
-            borderStyle: 'none',
-            boxShadow: 'none',
-            '--icon-size': `${iconSize}px`,
-            '--icon-color': iconColor,
-            '--icon-hover-color': iconHoverColor,
-            '--icon-bg': backgroundColor,
-            '--icon-bg-hover': backgroundHoverColor,
-            '--icon-padding-top': `${paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-            '--icon-padding-right': `${paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-            '--icon-padding-bottom': `${paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-            '--icon-padding-left': `${paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-            '--icon-padding-top-tablet': `${paddingTop?.tablet ?? paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-            '--icon-padding-right-tablet': `${paddingRight?.tablet ?? paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-            '--icon-padding-bottom-tablet': `${paddingBottom?.tablet ?? paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-            '--icon-padding-left-tablet': `${paddingLeft?.tablet ?? paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-            '--icon-padding-top-mobile': `${paddingTop?.mobile ?? paddingTop?.tablet ?? paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-            '--icon-padding-right-mobile': `${paddingRight?.mobile ?? paddingRight?.tablet ?? paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-            '--icon-padding-bottom-mobile': `${paddingBottom?.mobile ?? paddingBottom?.tablet ?? paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-            '--icon-padding-left-mobile': `${paddingLeft?.mobile ?? paddingLeft?.tablet ?? paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-            '--icon-border-radius': `${borderRadius}px`,
-            '--icon-border-width': `${borderWidth}px`,
-            '--icon-border-color': borderColor,
-            marginTop: `${marginTop?.desktop ?? 0}px`,
-            marginRight: `${marginRight?.desktop ?? 0}px`,
-            marginBottom: `${marginBottom?.desktop ?? 0}px`,
-            marginLeft: `${marginLeft?.desktop ?? 0}px`,
+            '--icon-card-bg'      : backgroundColor || '#503AA8',
+            '--icon-card-bg-hover': backgroundHoverColor || '#3d2c8d',
+            '--icon-card-radius'  : `${borderRadius ?? 16}px`,
+            '--icon-card-pt'      : `${paddingTop?.desktop  ?? 40}px`,
+            '--icon-card-pr'      : `${paddingRight?.desktop ?? 40}px`,
+            '--icon-card-pb'      : `${paddingBottom?.desktop ?? 40}px`,
+            '--icon-card-pl'      : `${paddingLeft?.desktop  ?? 40}px`,
+            '--icon-card-pt-t'    : `${paddingTop?.tablet  ?? pt}px`,
+            '--icon-card-pr-t'    : `${paddingRight?.tablet ?? pr}px`,
+            '--icon-card-pb-t'    : `${paddingBottom?.tablet ?? pb}px`,
+            '--icon-card-pl-t'    : `${paddingLeft?.tablet  ?? pl}px`,
+            '--icon-card-pt-m'    : `${paddingTop?.mobile  ?? paddingTop?.tablet  ?? pt}px`,
+            '--icon-card-pr-m'    : `${paddingRight?.mobile ?? paddingRight?.tablet ?? pr}px`,
+            '--icon-card-pb-m'    : `${paddingBottom?.mobile ?? paddingBottom?.tablet ?? pb}px`,
+            '--icon-card-pl-m'    : `${paddingLeft?.mobile  ?? paddingLeft?.tablet  ?? pl}px`,
+            '--icon-color'        : iconColor || '#ffffff',
+            '--icon-size'         : `${iconSize ?? 64}px`,
+            '--icon-border-width' : `${borderWidth ?? 0}px`,
+            '--icon-border-color' : borderColor || 'transparent',
+            color                 : textColor || '#ffffff',
+            marginTop             : `${marginTop?.desktop ?? 0}px`,
+            marginRight           : `${marginRight?.desktop ?? 0}px`,
+            marginBottom          : `${marginBottom?.desktop ?? 0}px`,
+            marginLeft            : `${marginLeft?.desktop ?? 0}px`,
         },
     });
 
-    const IconWrapper = linkUrl ? 'a' : 'div';
-    const linkProps = linkUrl ? {
-        href: linkUrl,
-        target: linkTarget === '_blank' ? '_blank' : undefined,
-        rel: linkTarget === '_blank' ? 'noopener noreferrer' : undefined,
-    } : {};
+    const hasIcon = (chosenIcon && chosenIcon.trim()) || (iconSvg && iconSvg.trim());
 
     return (
         <div {...blockProps}>
-            <IconWrapper
-                    className="adaire-icon-box__wrapper"
-                    {...linkProps}
-                    style={{
-                        '--icon-size': `${iconSize}px`,
-                        '--icon-color': iconColor,
-                        '--icon-hover-color': iconHoverColor,
-                        '--icon-bg': backgroundColor,
-                        '--icon-bg-hover': backgroundHoverColor,
-                        '--icon-padding-top': `${paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-                        '--icon-padding-right': `${paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-                        '--icon-padding-bottom': `${paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-                        '--icon-padding-left': `${paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-                        '--icon-padding-top-tablet': `${paddingTop?.tablet ?? paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-                        '--icon-padding-right-tablet': `${paddingRight?.tablet ?? paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-                        '--icon-padding-bottom-tablet': `${paddingBottom?.tablet ?? paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-                        '--icon-padding-left-tablet': `${paddingLeft?.tablet ?? paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-                        '--icon-padding-top-mobile': `${paddingTop?.mobile ?? paddingTop?.tablet ?? paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-                        '--icon-padding-right-mobile': `${paddingRight?.mobile ?? paddingRight?.tablet ?? paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-                        '--icon-padding-bottom-mobile': `${paddingBottom?.mobile ?? paddingBottom?.tablet ?? paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-                        '--icon-padding-left-mobile': `${paddingLeft?.mobile ?? paddingLeft?.tablet ?? paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-                        '--icon-border-radius': `${borderRadius}px`,
-                        '--icon-border-width': `${borderWidth}px`,
-                        '--icon-border-color': borderColor,
-                    }}
-                >
+            {hasIcon && (
+                <div className="adaire-icon-box__icon-area">
                     {chosenIcon && chosenIcon.trim() ? (
                         <i
                             className={`adaire-icon-box__icon ${chosenIcon}`}
-                            style={{
-                                fontSize: `${iconSize}px`,
-                                color: iconColor,
-                                '--icon-hover-color': iconHoverColor,
-                            }}
                             aria-label={iconName || 'Icon'}
                         ></i>
-                    ) : iconSvg && iconSvg.trim() ? (
+                    ) : (
                         <span
                             className="adaire-icon-box__icon"
-                            style={{
-                                width: `${iconSize}px`,
-                                height: `${iconSize}px`,
-                                fontSize: `${iconSize}px`,
-                                color: iconColor,
-                                '--icon-hover-color': iconHoverColor,
-                            }}
                             dangerouslySetInnerHTML={{ __html: iconSvg }}
                             aria-label={iconName || 'Icon'}
                         />
-                    ) : null}
-            </IconWrapper>
+                    )}
+                </div>
+            )}
+
+            {title && (
+                <RichText.Content
+                    tagName="h3"
+                    className="adaire-icon-box__title"
+                    value={title}
+                />
+            )}
+
+            {description && (
+                <RichText.Content
+                    tagName="p"
+                    className="adaire-icon-box__description"
+                    value={description}
+                />
+            )}
+
+            {showButton !== false && buttonText && (
+                <a
+                    className="adaire-icon-box__btn"
+                    href={linkUrl || '#'}
+                    target={linkTarget === '_blank' ? '_blank' : undefined}
+                    rel={linkTarget === '_blank' ? 'noopener noreferrer' : undefined}
+                    style={{
+                        backgroundColor: buttonBgColor || '#ffffff',
+                        color: buttonTextColor || '#503AA8',
+                    }}
+                >
+                    {buttonText}
+                </a>
+            )}
         </div>
     );
 }
-
-
-

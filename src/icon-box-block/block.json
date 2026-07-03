@@ -40,36 +40,40 @@
         },
         "iconSize": {
             "type": "number",
-            "default": 48
+            "default": 64
         },
         "iconColor": {
             "type": "string",
-            "default": "#333333"
+            "default": "#ffffff"
         },
         "iconHoverColor": {
             "type": "string",
-            "default": "#000000"
+            "default": "#ffffff"
         },
         "backgroundColor": {
             "type": "string",
-            "default": "transparent"
+            "default": "#503AA8"
         },
         "backgroundHoverColor": {
             "type": "string",
-            "default": "transparent"
+            "default": "#3d2c8d"
+        },
+        "textColor": {
+            "type": "string",
+            "default": "#ffffff"
         },
         "padding": {
             "type": "object",
             "default": {
-                "top": "20px",
-                "right": "20px",
-                "bottom": "20px",
-                "left": "20px"
+                "top": "40px",
+                "right": "40px",
+                "bottom": "40px",
+                "left": "40px"
             }
         },
         "borderRadius": {
             "type": "number",
-            "default": 0
+            "default": 16
         },
         "borderWidth": {
             "type": "number",
@@ -81,7 +85,7 @@
         },
         "alignment": {
             "type": "string",
-            "default": "center"
+            "default": "left"
         },
         "linkUrl": {
             "type": "string",
@@ -126,33 +130,33 @@
         "paddingTop": {
             "type": "object",
             "default": {
-                "desktop": 0,
-                "tablet": 0,
-                "mobile": 0
+                "desktop": 40,
+                "tablet": 32,
+                "mobile": 24
             }
         },
         "paddingRight": {
             "type": "object",
             "default": {
-                "desktop": 0,
-                "tablet": 0,
-                "mobile": 0
+                "desktop": 40,
+                "tablet": 32,
+                "mobile": 24
             }
         },
         "paddingBottom": {
             "type": "object",
             "default": {
-                "desktop": 0,
-                "tablet": 0,
-                "mobile": 0
+                "desktop": 40,
+                "tablet": 32,
+                "mobile": 24
             }
         },
         "paddingLeft": {
             "type": "object",
             "default": {
-                "desktop": 0,
-                "tablet": 0,
-                "mobile": 0
+                "desktop": 40,
+                "tablet": 32,
+                "mobile": 24
             }
         },
         "title": {
@@ -162,6 +166,22 @@
         "description": {
             "type": "string",
             "default": "Blazing performance with zero compromises — built for modern teams that move fast."
+        },
+        "showButton": {
+            "type": "boolean",
+            "default": true
+        },
+        "buttonText": {
+            "type": "string",
+            "default": "Learn More"
+        },
+        "buttonBgColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "buttonTextColor": {
+            "type": "string",
+            "default": "#503AA8"
         },
         "responsiveIconSize": {
             "type": "object",
