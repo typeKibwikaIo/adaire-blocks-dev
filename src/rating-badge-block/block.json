@@ -60,9 +60,24 @@
         "badges": {
             "type": "array",
             "default": [
-                { "icon": "bi bi-star-fill", "imageUrl": "", "text": "4.8/5", "subtext": "500+ App Store reviews" },
-                { "icon": "bi bi-star-fill", "imageUrl": "", "text": "4.7/5", "subtext": "1,200+ Google Play reviews" },
-                { "icon": "bi bi-trophy-fill", "imageUrl": "", "text": "Excellent", "subtext": "Rated on Trustpilot" }
+                {
+                    "icon": "bi bi-star-fill",
+                    "imageUrl": "",
+                    "text": "4.8/5",
+                    "subtext": "500+ App Store reviews"
+                },
+                {
+                    "icon": "bi bi-star-fill",
+                    "imageUrl": "",
+                    "text": "4.7/5",
+                    "subtext": "1,200+ Google Play reviews"
+                },
+                {
+                    "icon": "bi bi-trophy-fill",
+                    "imageUrl": "",
+                    "text": "Excellent",
+                    "subtext": "Rated on Trustpilot"
+                }
             ]
         }
     },
