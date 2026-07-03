@@ -1,5 +1,5 @@
 ADAIRE BLOCKS — FREE TIER BLOCK CATALOG
-23 blocks across 16 categories
+22 blocks across 16 categories
 (5 structural sub-blocks — Column, Accordion Item, Tab Panel, Content Toggle Panel,
 Card Scroll Item — are excluded; they only exist inside their parent block, not as
 standalone inserter entries.)
@@ -16,7 +16,7 @@ EXPANDABLE CONTENT
 CONTENT & INFO
 - Scroll Animation
   Animations that trigger as visitors scroll through the page.
-- Feature Box
+- Icon Box
   Features, services, or benefits shown with icons, titles, and descriptions in a
   grid layout.
 
@@ -58,9 +58,6 @@ BLOG & CONTENT
   WordPress posts in a responsive grid with customizable layouts and filters.
 
 MARKETING & CONVERSION
-- Plan Comparison
-  Pricing plans compared with feature tables, audience tabs, and a sticky
-  choose-plan bar.
 - Pricing Plans
   Showcases pricing packages, subscriptions, or service plans.
 

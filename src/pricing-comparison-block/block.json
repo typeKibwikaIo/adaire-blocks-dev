@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/pricing-comparison-block",
     "version": "0.1.0",
-    "title": "Plan Comparison (Free)",
+    "title": "Plan Comparison",
     "category": "adaire-marketing-conversion",
     "description": "Compare pricing plans with feature tables, audience tabs, and a sticky choose-plan bar.",
     "supports": {

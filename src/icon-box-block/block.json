@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/icon-box-block",
     "version": "0.1.0",
-    "title": "Feature Box (Free)",
+    "title": "Icon Box (Free)",
     "category": "adaire-content-info",
     "description": "Display features, services, or benefits with customizable icons, titles, and descriptions in a grid layout.",
     "example": {},

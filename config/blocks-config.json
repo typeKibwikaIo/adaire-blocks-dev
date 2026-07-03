@@ -89,10 +89,6 @@
       "enabled": true,
       "upgradeMessage": "Upgrade to Premium for more footer layouts and styling."
     },
-    "pricing-comparison-block": {
-      "enabled": true,
-      "upgradeMessage": "Upgrade to Premium for advanced comparison features and more plan groups."
-    },
     "pricing-table-block": {
       "enabled": true,
       "upgradeMessage": "Responsive pricing tables with card grid and fully customizable styling."
@@ -122,6 +118,15 @@
     }
   },
   "premium": {
+    "pricing-comparison-block": {
+      "enabled": true,
+      "features": [
+        "unlimited-plan-groups",
+        "audience-tabs",
+        "sticky-cta-bar",
+        "advanced-styling"
+      ]
+    },
     "accordion-block": {
       "enabled": true,
       "features": [

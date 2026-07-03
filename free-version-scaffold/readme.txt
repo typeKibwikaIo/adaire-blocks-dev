@@ -52,7 +52,6 @@ Get started with our powerful, no-cost foundation. These blocks are yours foreve
 * **Card Slider (Free) & Card Scroll Item Block (Free):** A scroll-animated row of cards for showcasing content.
 * **Footer (Free):** A configurable site footer with menu and layout options.
 * **Pricing Plans (Free):** Responsive pricing tables with a monthly/yearly toggle, card grid, and customizable styling.
-* **Plan Comparison (Free):** A feature comparison table across multiple plans.
 * **Blog Post Grid (Free):** Display your latest articles or portfolio items in a beautiful, animated grid. Includes multiple layout options, category filtering, and smooth GSAP entrance animations.
 * **Blog Post Slider (Free):** A draggable, interactive carousel for posts, featuring the same powerful customization and filtering as the Blog Post Grid.
 * **Feature Grid (Free):** A grid layout with background image support, overlay controls, and flexible content areas.
@@ -61,7 +60,7 @@ Get started with our powerful, no-cost foundation. These blocks are yours foreve
 * **Content Switcher (Free) & Content Toggle Panel (Free):** A unique pill-style toggle for switching between two distinct content states within the same area.
 * **Video Player (Free):** Embed YouTube videos with a clean, lightweight player.
 * **Scroll Animation (Free):** Add scroll-triggered animations to any content. Simply wrap your existing blocks, and bring them to life.
-* **Feature Box (Free):** Display an icon with customizable styling, powered by a vast library of UXWing icons.
+* **Icon Box (Free):** Display an icon with customizable styling, powered by a vast library of UXWing icons.
 * **Social Banner (Free):** A sticky, side-mounted social banner that stays with the user as they scroll—perfect for driving engagement.
 * **Share Buttons (Free):** A customizable social sharing button with platform selection and a handy tooltip.
 * **Reviews (Free):** Showcase client reviews in a sleek, auto-playing carousel to build social proof.
@@ -100,6 +99,7 @@ For when your projects need that extra "wow" factor. Stunning, professional bloc
 * **Modal Block (Premium):** Create sleek popups for signups, announcements, CTAs, videos, and forms.
 * **Case Studies Block (Premium):** A dynamic case studies grid with GSAP FLIP animations and filtering.
 * **Testimonial 3 (Premium):** The ultimate testimonial block with maximum impact and customization.
+* **Plan Comparison (Premium):** A feature comparison table across multiple plans, with audience tabs and a sticky choose-plan bar.
 
 And more blocks and templates are in active development—because your website should never stop evolving.
 
@@ -163,6 +163,8 @@ Visit our website at https://adaireblocks.com or reach out through the WordPress
 * Renamed the plugin from "Adaire Blocks" to "Guten-Blocks" across all user-facing text: plugin name, inserter categories, block titles, admin screens, and documentation.
 * Every Free-tier block now displays with a "(Free)" suffix in the inserter (e.g. Row → Row (Free), Timeline → Timeline (Free)), so it's clear at a glance which blocks belong to the free version. A few names were also shortened for clarity: Customer Reviews → Reviews (Free), Website Footer → Footer (Free), Header → Header Menu (Free), Advanced Feature Grid → Feature Grid (Free).
 * NOTE — frontend-only release: this pass covers display text only. Internal namespaces, block registration names (e.g. `create-block/row-block`), and other technical slugs still use the old "adaire"/"Adaire Blocks" naming and were intentionally left unchanged. A follow-up backend renaming phase will need to update those slugs — that's a bigger, breaking-change-risk pass (affects saved post content, migrations, and third-party integrations) and is scheduled separately, not part of 1.2.7.
+* Renamed the Feature Box block to Icon Box (Free) for clarity.
+* Moved Plan Comparison from Free to Premium — it's no longer included in the free tier.
 
 = 1.2.6 =
 * Corrected the published Free block list to match what actually ships in the plugin. Previously undocumented free blocks now listed: Header, SaaS Hero, Row, About Us, Timeline, Gallery, Card Scroll, Card Scroll Item, Website Footer, Pricing Table, Pricing Comparison, Content Toggle Panel, and Tab Panel.
