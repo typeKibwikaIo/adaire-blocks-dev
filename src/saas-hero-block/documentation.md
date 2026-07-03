@@ -4,10 +4,10 @@
 
 The **SaaS Hero** block (`create-block/saas-hero-block`) is a focused hero section for
 software products, startups, and landing pages: an eyebrow label, headline, supporting
-text, a configurable call-to-action, an optional hero image, and a set of purely
-decorative background effects. It does not include a Trusted-By logo bar, a rating/
-app-store badge strip, a security/feature grid, or an FAQ accordion — those either were
-removed or now live in their own dedicated blocks (see **Rating Badges** below).
+text, a configurable call-to-action, an optional hero image, a rating/app-store badge
+strip, and a set of purely decorative background effects. It does not include a
+Trusted-By logo bar, a security/feature grid, or an FAQ accordion — those were removed
+(see **Removed sections & migration** below).
 
 ## Adding the Block
 
@@ -44,6 +44,13 @@ removed or now live in their own dedicated blocks (see **Rating Badges** below).
 - **Hero Image** — image picker.
 - **Image Position** — Below Text or Above Text (centered layout only; split layouts
   already imply left/right position via Layout Style).
+
+### Ratings & Badges
+- **Show ratings / app-store badges** — toggles a row of badges above the headline
+  (e.g. a star rating, an app-store score, a review count).
+- **Alignment** — Left, Center, or Right.
+- Each badge has an icon (Bootstrap Icons, via the same picker used elsewhere in this
+  plugin) or an uploaded image, plus a text/subtext line (e.g. "5.0/5" / "Reviews").
 
 ### Hero Effects & Decorations
 Purely decorative, `aria-hidden`, CSS-only (no JavaScript), and respect
@@ -87,17 +94,12 @@ Purely decorative, `aria-hidden`, CSS-only (no JavaScript), and respect
 ### Removed sections & migration
 
 Earlier versions of this block also included a Trusted-By logo bar, a Security/partner
-feature grid, and an FAQ accordion, plus a rating/app-store badge strip. All four were
-removed from this block:
-
-- **Trusted By**, the **Security Panel** (feature grid), and the **FAQ accordion** were
-  dropped outright.
-- **Rating Badges** was extracted into its own standalone block — see
-  `src/rating-badge-block/documentation.md`. Add a Rating Badges block wherever you
-  previously relied on the hero's built-in badge strip.
+feature grid, and an FAQ accordion. All three were dropped outright — Ratings & Badges
+was considered for the same treatment (a separate standalone `rating-badge-block` now
+also exists) but was kept inline here since it's still actively used.
 
 Pages saved with the old sections are handled by a block deprecation
-(`deprecated.js`, entry `v3`): opening them in the editor validates against the old
+(`deprecated.js`, entry `v4`): opening them in the editor validates against the old
 markup so they don't show "invalid content." Since this is a static block, their
 frontend HTML keeps rendering exactly as before until the page is re-saved in the
 editor — at which point the removed sections' content is dropped (there's no automatic
@@ -112,6 +114,5 @@ sections no longer exist).
   or with a small illustrative image below the CTA.
 - Turn on at most one or two Hero Effects at a time — stacking several (e.g. glow +
   floating elements + animated accents) can get visually noisy.
-- If you need a Trusted-By logo row, a rating/review badge strip, or an FAQ section,
-  add the corresponding dedicated block below the hero instead (e.g. the Client Logos
-  block or the new Rating Badges block).
+- If you need a Trusted-By logo row or an FAQ section, add the corresponding dedicated
+  block below the hero instead (e.g. the Client Logos block or an Accordion block).

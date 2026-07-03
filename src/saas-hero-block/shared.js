@@ -162,14 +162,6 @@ export function getStyleVars(a) {
 		'--ad-media-spacing': `${a.mediaSpacing ?? 48}px`,
 		'--ad-media-shadow': a.mediaShadow === false ? 'none' : '0 20px 60px rgba(0, 0, 0, 0.15)',
 
-		// Trusted By / Logo Names
-		'--ad-trust-item-width': a.trustItemWidth ? `${a.trustItemWidth}px` : 'auto',
-		'--ad-trust-item-gap': `${a.trustItemGap ?? 32}px`,
-		'--ad-trust-logo-max-height': `${a.trustLogoMaxHeight ?? 32}px`,
-		'--ad-trust-carousel-speed': `${a.trustCarouselSpeed ?? 30}s`,
-		'--ad-trust-visible-items': `${a.trustCarouselVisibleItems ?? 5}`,
-		'--ad-trust-dir': a.trustCarouselDirection === 'right' ? '1' : '-1',
-
 		// Hero Effects & Decorations
 		'--ad-effect-gradient-overlay': `linear-gradient(135deg, ${a.effectGradientOverlayColor1 || '#6366f1'}, ${a.effectGradientOverlayColor2 || '#8b5cf6'})`,
 		'--ad-effect-gradient-overlay-opacity': `${(a.effectGradientOverlayOpacity ?? 30) / 100}`,
@@ -177,10 +169,6 @@ export function getStyleVars(a) {
 
 		// Ratings badges
 		'--ad-rating-align': alignToFlex(a.ratingBadgesAlignment),
-
-		// Security panel
-		'--ad-security-bg': a.securityPanelBg || '#f8fafc',
-		'--ad-security-color': a.securityPanelTextColor || '#111827',
 	};
 
 	// ── Typography (ADAB-010) ──────────────────────────────────────────
@@ -222,35 +210,12 @@ export function getStyleVars(a) {
 		styleVars['--ad-button-letter-spacing'] = a.buttonLetterSpacing || 'normal';
 		styleVars['--ad-button-text-transform'] = a.buttonTextTransform || 'none';
 
-		styleVars['--ad-trust-title-font-size'] = a.trustTitleFontSize || '14px';
-		styleVars['--ad-trust-title-font-weight'] = a.trustTitleFontWeight || '600';
-		styleVars['--ad-trust-title-line-height'] = a.trustTitleLineHeight || 'normal';
-		styleVars['--ad-trust-title-letter-spacing'] = a.trustTitleLetterSpacing || '1px';
-		styleVars['--ad-trust-title-text-transform'] = a.trustTitleTextTransform || 'uppercase';
-
-		styleVars['--ad-trust-logo-font-size'] = a.trustLogoFontSize || '16px';
-		styleVars['--ad-trust-logo-font-weight'] = a.trustLogoFontWeight || '600';
-		styleVars['--ad-trust-logo-line-height'] = a.trustLogoLineHeight || 'normal';
-		styleVars['--ad-trust-logo-letter-spacing'] = a.trustLogoLetterSpacing || 'normal';
-		styleVars['--ad-trust-logo-text-transform'] = a.trustLogoTextTransform || 'none';
-
 		styleVars['--ad-micro-copy-font-size'] = a.microCopyFontSize || '14px';
 		styleVars['--ad-micro-copy-font-weight'] = a.microCopyFontWeight || '400';
 		styleVars['--ad-micro-copy-line-height'] = a.microCopyLineHeight || 'normal';
 		styleVars['--ad-micro-copy-letter-spacing'] = a.microCopyLetterSpacing || 'normal';
 		styleVars['--ad-micro-copy-text-transform'] = a.microCopyTextTransform || 'none';
 
-		styleVars['--ad-security-title-font-size'] = a.securityTitleFontSize || '22px';
-		styleVars['--ad-security-title-font-weight'] = a.securityTitleFontWeight || '700';
-		styleVars['--ad-security-title-line-height'] = a.securityTitleLineHeight || 'normal';
-		styleVars['--ad-security-title-letter-spacing'] = a.securityTitleLetterSpacing || 'normal';
-		styleVars['--ad-security-title-text-transform'] = a.securityTitleTextTransform || 'none';
-
-		styleVars['--ad-faq-title-font-size'] = a.faqTitleFontSize || '22px';
-		styleVars['--ad-faq-title-font-weight'] = a.faqTitleFontWeight || '700';
-		styleVars['--ad-faq-title-line-height'] = a.faqTitleLineHeight || 'normal';
-		styleVars['--ad-faq-title-letter-spacing'] = a.faqTitleLetterSpacing || 'normal';
-		styleVars['--ad-faq-title-text-transform'] = a.faqTitleTextTransform || 'none';
 	}
 
 	return styleVars;

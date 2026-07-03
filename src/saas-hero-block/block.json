@@ -123,34 +123,10 @@
     "buttonLetterSpacing": { "type": "string", "default": "normal" },
     "buttonTextTransform": { "type": "string", "default": "none" },
 
-    "trustTitleFontSize": { "type": "string", "default": "14px" },
-    "trustTitleFontWeight": { "type": "string", "default": "600" },
-    "trustTitleLineHeight": { "type": "string", "default": "normal" },
-    "trustTitleLetterSpacing": { "type": "string", "default": "1px" },
-    "trustTitleTextTransform": { "type": "string", "default": "uppercase" },
-
-    "trustLogoFontSize": { "type": "string", "default": "16px" },
-    "trustLogoFontWeight": { "type": "string", "default": "600" },
-    "trustLogoLineHeight": { "type": "string", "default": "normal" },
-    "trustLogoLetterSpacing": { "type": "string", "default": "normal" },
-    "trustLogoTextTransform": { "type": "string", "default": "none" },
-
     "microCopyFontSize": { "type": "string", "default": "14px" },
     "microCopyFontWeight": { "type": "string", "default": "400" },
     "microCopyLineHeight": { "type": "string", "default": "normal" },
     "microCopyLetterSpacing": { "type": "string", "default": "normal" },
-    "microCopyTextTransform": { "type": "string", "default": "none" },
-
-    "securityTitleFontSize": { "type": "string", "default": "22px" },
-    "securityTitleFontWeight": { "type": "string", "default": "700" },
-    "securityTitleLineHeight": { "type": "string", "default": "normal" },
-    "securityTitleLetterSpacing": { "type": "string", "default": "normal" },
-    "securityTitleTextTransform": { "type": "string", "default": "none" },
-
-    "faqTitleFontSize": { "type": "string", "default": "22px" },
-    "faqTitleFontWeight": { "type": "string", "default": "700" },
-    "faqTitleLineHeight": { "type": "string", "default": "normal" },
-    "faqTitleLetterSpacing": { "type": "string", "default": "normal" },
-    "faqTitleTextTransform": { "type": "string", "default": "none" }
+    "microCopyTextTransform": { "type": "string", "default": "none" }
   }
 }

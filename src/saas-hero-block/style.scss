@@ -8,9 +8,9 @@
 // the iframe initializes), and on the frontend the PHP enqueues can be
 // skipped, deferred, or stripped by caching/optimization plugins. A plain
 // CSS `@import` here is resolved by the browser inside *whatever* document
-// this compiled stylesheet ends up in, so the rating-badge and
-// security-feature icons load correctly in the editor, in the Inspector,
-// and on the published page alike — independent of PHP enqueue timing.
+// this compiled stylesheet ends up in, so the rating-badge icons load
+// correctly in the editor, in the Inspector, and on the published page
+// alike — independent of PHP enqueue timing.
 // Same fix already applied to infogrid-2-block/style.scss for the same bug.
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
 
@@ -168,10 +168,7 @@
   &__container,
   &__pill,
   &__ratings,
-  &__content,
-  &__trust-bar,
-  &__security,
-  &__faq {
+  &__content {
     position: relative;
     z-index: 1;
   }
@@ -434,250 +431,6 @@
     }
   }
 
-  // ── Trusted By / Logo Names ─────────────────────────────────────────────
-  &__trust-bar {
-    margin-top: 64px;
-    padding-top: 40px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-
-  &__trust-title {
-    font-size: var(--ad-trust-title-font-size, 14px);
-    font-weight: var(--ad-trust-title-font-weight, 600);
-    line-height: var(--ad-trust-title-line-height, normal);
-    color: var(--ad-accent);
-    margin-bottom: 24px;
-    text-transform: var(--ad-trust-title-text-transform, uppercase);
-    letter-spacing: var(--ad-trust-title-letter-spacing, 1px);
-  }
-
-  &__trust-logos-wrap {
-    overflow: hidden;
-  }
-
-  &__trust-logos {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: var(--ad-trust-item-gap, 32px);
-    opacity: 0.7;
-  }
-
-  &__trust-bar.trust-layout-one-per-line &__trust-logos {
-    flex-direction: column;
-  }
-
-  &__trust-logo,
-  &__trust-logo-text {
-    font-size: var(--ad-trust-logo-font-size, 16px);
-    font-weight: var(--ad-trust-logo-font-weight, 600);
-    line-height: var(--ad-trust-logo-line-height, normal);
-    letter-spacing: var(--ad-trust-logo-letter-spacing, normal);
-    text-transform: var(--ad-trust-logo-text-transform, none);
-    color: var(--ad-color);
-  }
-
-  &__trust-logo {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--ad-trust-item-width, auto);
-    text-decoration: none;
-    color: inherit;
-  }
-
-  &__trust-logo-img {
-    max-height: var(--ad-trust-logo-max-height, 32px);
-    width: auto;
-    object-fit: contain;
-  }
-
-  // Pure-CSS marquee: the logo list is duplicated in the DOM (see edit.js /
-  // save.js), and both copies scroll together via one transform animation —
-  // this gives a seamless infinite loop with zero JavaScript.
-  &__trust-bar.is-carousel {
-    .adaire-saas-hero__trust-logos-wrap {
-      display: flex;
-      flex-wrap: nowrap;
-      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    }
-
-    .adaire-saas-hero__trust-logos {
-      flex-wrap: nowrap;
-      flex-shrink: 0;
-      animation: adaire-hero-marquee var(--ad-trust-carousel-speed, 30s) linear infinite;
-    }
-
-    .adaire-saas-hero__trust-logo {
-      flex: 0 0 calc(100% / var(--ad-trust-visible-items, 5));
-    }
-
-    &.is-autoplay-off .adaire-saas-hero__trust-logos {
-      animation-play-state: paused;
-    }
-
-    &.is-pause-on-hover:hover .adaire-saas-hero__trust-logos {
-      animation-play-state: paused;
-    }
-  }
-
-  // ── Security / partner trust panel ───────────────────────────────────────
-  &__security {
-    margin-top: 64px;
-    padding: 40px;
-    border-radius: var(--ad-radius, 12px);
-    background: var(--ad-security-bg, #f8fafc);
-    color: var(--ad-security-color, #111827);
-    text-align: center;
-  }
-
-  &__security-title {
-    font-size: var(--ad-security-title-font-size, 22px);
-    font-weight: var(--ad-security-title-font-weight, 700);
-    line-height: var(--ad-security-title-line-height, normal);
-    letter-spacing: var(--ad-security-title-letter-spacing, normal);
-    text-transform: var(--ad-security-title-text-transform, none);
-    margin-bottom: 12px;
-  }
-
-  &__security-text {
-    max-width: 640px;
-    margin: 0 auto 32px;
-    opacity: 0.8;
-    line-height: 1.6;
-  }
-
-  &__security-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    text-align: left;
-  }
-
-  // Card treatment: real background/border/shadow so each feature reads as
-  // a distinct card rather than bare icon + text floating in the panel.
-  &__security-card {
-    padding: 24px;
-    background: #ffffff;
-    border: 1px solid rgba(17, 24, 39, 0.07);
-    border-radius: calc(var(--ad-radius, 12px) * 0.75);
-    box-shadow: 0 4px 16px rgba(17, 24, 39, 0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 30px rgba(17, 24, 39, 0.09);
-    }
-
-    h4 {
-      font-size: 15px;
-      font-weight: 700;
-      margin: 8px 0 6px;
-    }
-
-    p {
-      font-size: 13px;
-      opacity: 0.75;
-      line-height: 1.5;
-      margin: 0;
-    }
-  }
-
-  // Same accent-tinted icon-chip pattern as the rating badges above, kept
-  // visually consistent across both modernized sections.
-  &__security-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    font-size: 21px;
-    line-height: 1;
-    background: rgba(99, 102, 241, 0.12);
-    background: color-mix(in srgb, var(--ad-accent, #6366f1) 12%, transparent);
-    color: var(--ad-accent, #6366f1);
-    overflow: hidden;
-  }
-
-  &__security-icon-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: inherit;
-  }
-
-  // ── FAQ accordion ─────────────────────────────────────────────────────
-  // Native <details>/<summary> — zero JS for expand/collapse, identical in
-  // the editor canvas and on the published page.
-  &__faq {
-    margin-top: 64px;
-    max-width: 760px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  &__faq-title {
-    font-size: var(--ad-faq-title-font-size, 22px);
-    font-weight: var(--ad-faq-title-font-weight, 700);
-    line-height: var(--ad-faq-title-line-height, normal);
-    letter-spacing: var(--ad-faq-title-letter-spacing, normal);
-    text-transform: var(--ad-faq-title-text-transform, none);
-    text-align: center;
-    margin-bottom: 24px;
-  }
-
-  &__faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  &__faq-item {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: var(--ad-radius, 12px);
-    padding: 4px 20px;
-    text-align: left;
-
-    & + & {
-      margin-top: 0;
-    }
-  }
-
-  &__faq-question {
-    cursor: pointer;
-    list-style: none;
-    padding: 16px 0;
-    font-weight: 600;
-    position: relative;
-
-    &::-webkit-details-marker {
-      display: none;
-    }
-
-    &::after {
-      content: '+';
-      position: absolute;
-      right: 4px;
-      top: 14px;
-      font-size: 20px;
-      transition: transform 0.2s ease;
-    }
-  }
-
-  &__faq-item[open] &__faq-question::after {
-    transform: rotate(45deg);
-  }
-
-  &__faq-answer {
-    padding: 0 0 18px;
-    opacity: 0.8;
-    line-height: 1.6;
-  }
-
   // ── Layout variants ──────────────────────────────────────────────────
   &.layout-split-left,
   &.layout-split-right {
@@ -772,14 +525,6 @@
       flex-direction: column;
     }
 
-    &__security-grid {
-      grid-template-columns: 1fr;
-    }
-
-    &__trust-bar.is-carousel .adaire-saas-hero__trust-logo {
-      flex: 0 0 calc(100% / 2.5);
-    }
-
     &.layout-split-left,
     &.layout-split-right {
       .adaire-saas-hero__content {
@@ -800,15 +545,6 @@
         order: 1 !important;
       }
     }
-  }
-}
-
-@keyframes adaire-hero-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(calc(100% * var(--ad-trust-dir, -1)));
   }
 }
 
@@ -833,8 +569,7 @@
 @media (prefers-reduced-motion: reduce) {
   .adaire-saas-hero {
     &__fx--floating .float,
-    &__fx--accent,
-    &__trust-bar.is-carousel .adaire-saas-hero__trust-logos {
+    &__fx--accent {
       animation: none !important;
     }
   }
@@ -870,8 +605,8 @@
   }
 
   // Wraps the "upload badge image" button + its "remove image" button for
-  // ratingBadges / securityFeatures items, so they sit on one row instead
-  // of stacking full-width like the rest of the field controls.
+  // ratingBadges items, so they sit on one row instead of stacking
+  // full-width like the rest of the field controls.
   &__media-row {
     display: flex;
     align-items: center;
@@ -900,7 +635,7 @@
   margin-top: 8px;
 }
 
-// ── Bootstrap Icon Picker modal (Ratings & Security Panel) ───────────────
+// ── Bootstrap Icon Picker modal (Ratings) ─────────────────────────────────
 // Same modal styling pattern used by the other blocks' BootstrapIconPicker
 // (icon-box-block, our-process-block, etc.) — kept here rather than a new
 // editor.scss since this block already keeps all editor-only chrome in
