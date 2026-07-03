@@ -68,6 +68,29 @@
     max-width: none;
     width: 100%;
   }
+
+  // Width options (Full / Wide / Contained).
+  //
+  // These are applied via our own modifier class (instead of relying solely
+  // on the active theme's alignwide/alignfull CSS) so the three options
+  // render identically in the editor and on the frontend regardless of
+  // whether the theme declares `add_theme_support( 'align-wide' )`.
+  &--width-contained {
+    max-width: var( --wp--style--global--content-size, 800px );
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &--width-wide {
+    max-width: var( --wp--style--global--wide-size, 1280px );
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &--width-full {
+    max-width: none;
+    width: 100%;
+  }
 }
 
 .adaire-column {

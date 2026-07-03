@@ -280,6 +280,20 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TypographySubsection title={ __( 'Milestone title' ) } a={ a } set={ set } prefix="itemTitle" />
 					<TypographySubsection title={ __( 'Milestone description' ) } a={ a } set={ set } prefix="itemDesc" />
 				</PanelBody>
+				<PanelBody title={ __( 'Typography', 'timeline-block' ) } initialOpen={ false }>
+					<SelectControl
+						label={ __( 'Font family' ) }
+						value={ a.fontFamily || '' }
+						options={ FONT_FAMILY_OPTIONS }
+						onChange={ set( 'fontFamily' ) }
+						help={ __( 'Applies to all text in this block.' ) }
+					/>
+					<TypographySubsection title={ __( 'Eyebrow' ) }        a={ a } set={ set } prefix="eyebrow" />
+					<TypographySubsection title={ __( 'Section title' ) }  a={ a } set={ set } prefix="sectionTitle" />
+					<TypographySubsection title={ __( 'Section description' ) } a={ a } set={ set } prefix="sectionDesc" />
+					<TypographySubsection title={ __( 'Milestone title' ) } a={ a } set={ set } prefix="itemTitle" />
+					<TypographySubsection title={ __( 'Milestone description' ) } a={ a } set={ set } prefix="itemDesc" />
+				</PanelBody>
 				<PanelBody title={ __( 'Spacing', 'timeline-block' ) } initialOpen={ false }>
 					<RangeControl
 						label={ __( 'Padding top (px)', 'timeline-block' ) }

@@ -181,4 +181,14 @@ Visit our website at https://adaireblocks.com or reach out through the WordPress
 == Upgrade Notice ==
 
 = 1.2.6 =
-Documentation-only correction to the Free block list — no fun
+Documentation-only correction to the Free block list — no functional changes. If you were relying on the previously (incorrectly) advertised free Call to Action or Logo blocks, those have always required Plus.
+
+== Additional Information ==
+
+**Made with ❤️ by Adaire Digital**
+
+Visit [Adaire Blocks](https://adaireblocks.com/ "Professional WordPress Development") for more information about our services and products.
+
+**Support and Documentation**
+
+For detailed documentation, tutorials, and support, please visit our website or contact us through the WordPress.org support forums.
