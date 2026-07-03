@@ -2,7 +2,6 @@
 import {
 	useBlockProps,
 	RichText,
-	InspectorControls,
 	PanelColorSettings,
 } from "@wordpress/block-editor";
 import {
@@ -20,6 +19,7 @@ import {
 import { useEffect, useState } from "@wordpress/element";
 import { plus, trash, arrowUp, arrowDown } from "@wordpress/icons";
 import QuickZone from "../components/QuickZone";
+import InspectorTabs from "../components/InspectorTabs";
 import "./editor.scss";
 
 const DEVICE_TYPES = [
@@ -620,7 +620,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	return (
 		<>
-			<InspectorControls>
+			<InspectorTabs attributes={attributes} setAttributes={setAttributes}>
 				<PanelBody title={__("Layout", "pricing-table-block")} initialOpen={true}>
 					<p>{__("Container Width", "pricing-table-block")}</p>
 					<ButtonGroup>
@@ -1336,7 +1336,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					/>
 
 				</PanelBody>
-			</InspectorControls>
+			</InspectorTabs>
 
 			<div {...blockProps}>
 				<div className={containerClasses}>
