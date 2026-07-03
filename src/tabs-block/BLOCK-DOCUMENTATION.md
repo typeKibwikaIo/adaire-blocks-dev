@@ -73,7 +73,7 @@ Colors use the site's Global Styles palette (via BoundColorPalette), so tabs fol
 
 Switching tabs in the editor plays the real transition, so you can feel the difference immediately.
 
-> **Free version:** animation settings are a paid feature. Free sites always use the default smooth transition (0.6s); the controls are visible but locked with an upgrade notice.
+> **Free version:** animation settings are a paid feature. Free sites always use the default smooth transition (0.6s) and the Animation panel is hidden entirely — no upsell UI is shown (WordPress.org guidelines).
 
 ## What Visitors Experience
 
@@ -146,7 +146,7 @@ Per block instance:
 
 Runtime config is injected by `adaire-blocks.php` as `window.adaireBlocksConfig` (`{ isPremium, blocks: { 'tabs-block': { limits, upgradeMessage } } }`), sourced from `config/blocks-config.json`.
 
-- **Animation lock**: `config/blocks-config.json` → `free['tabs-block'].limits.customAnimations: false`. When `!isPremium && customAnimations === false`, the Animation controls are disabled behind an `UpgradeNotice` **and** a `useEffect` force-resets `animationDuration`/`animationEase` to defaults (belt-and-braces — saved markup can't smuggle custom values into free). Because it's config-driven, the GutenBlocks.com freemium distribution can unlock it without a rebuild.
+- **Animation lock**: `config/blocks-config.json` → `free['tabs-block'].limits.customAnimations: false`. When `!isPremium && customAnimations === false`, the Animation panel is **hidden entirely** (no upsell UI — WordPress.org disallows it) **and** a `useEffect` force-resets `animationDuration`/`animationEase` to defaults (belt-and-braces — saved markup can't smuggle custom values into free). Because it's config-driven, the GutenBlocks.com freemium distribution can unlock it without a rebuild.
 - **Tab count limit**: `useBlockLimits('tabs-block', tabs, 'tab')` respects `limits.maxItems` if ever set in config (none currently).
 
 ## Transforms & Legacy Content Switcher
@@ -160,7 +160,7 @@ The legacy blocks (`content-toggle-block`, `content-toggle-panel-block`) remain 
 | | Free (wp.org / gutenblocks.com) | Plus / Premium |
 |---|---|---|
 | Display title | Tabbed Content **Free** | Tabbed Content |
-| Animation controls | Locked (defaults enforced) | Unlocked |
+| Animation controls | Hidden (defaults enforced, no upsell UI) | Shown |
 
 The free title comes from `FREE_TITLE_OVERRIDES` in `scripts/generate-free-version.js`, which patches the *copied* `block.json` before the free build — so it lands in the free manifest and settings page, while the dev source keeps the paid title. (The editor bundle tree-shakes the JSON import down to `metadata.name`; the displayed title always comes from the server-registered `block.json`.)
 

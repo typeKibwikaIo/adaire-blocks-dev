@@ -626,34 +626,30 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
                 </PanelBody>
 
-                {/* ————— LAYOUT TAB: Animation (freemium-gated) ————— */}
-                <PanelBody title={__('Animation', 'tabs-block')} initialOpen={false}>
-                    <p style={helpTextStyle}>
-                        {__('Controls how panels fade and slide when switching tabs.', 'tabs-block')}
-                    </p>
-                    {animationLocked && (
-                        <UpgradeNotice
-                            variant="full"
-                            message={__('Upgrade to customize the animation and transition between tabs.', 'tabs-block')}
+                {/* ————— LAYOUT TAB: Animation ————— */}
+                {/* Hidden entirely in the free tier (no upsell UI — not
+                    allowed on WordPress.org); free uses the defaults. */}
+                {!animationLocked && (
+                    <PanelBody title={__('Animation', 'tabs-block')} initialOpen={false}>
+                        <p style={helpTextStyle}>
+                            {__('Controls how panels fade and slide when switching tabs.', 'tabs-block')}
+                        </p>
+                        <RangeControl
+                            label={__('Duration (seconds)', 'tabs-block')}
+                            value={animationDuration}
+                            onChange={(v) => setAttributes({ animationDuration: v })}
+                            min={0.1}
+                            max={2}
+                            step={0.1}
                         />
-                    )}
-                    <RangeControl
-                        label={__('Duration (seconds)', 'tabs-block')}
-                        value={animationDuration}
-                        onChange={(v) => setAttributes({ animationDuration: v })}
-                        min={0.1}
-                        max={2}
-                        step={0.1}
-                        disabled={animationLocked}
-                    />
-                    <SelectControl
-                        label={__('Transition Feel', 'tabs-block')}
-                        value={animationEase}
-                        options={EASE_OPTIONS}
-                        onChange={(v) => setAttributes({ animationEase: v })}
-                        disabled={animationLocked}
-                    />
-                </PanelBody>
+                        <SelectControl
+                            label={__('Transition Feel', 'tabs-block')}
+                            value={animationEase}
+                            options={EASE_OPTIONS}
+                            onChange={(v) => setAttributes({ animationEase: v })}
+                        />
+                    </PanelBody>
+                )}
 
                 {/* ————— STYLE TAB: colors (auto-sorted by InspectorTabs) ————— */}
                 {!isPills && (

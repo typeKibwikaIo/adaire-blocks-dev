@@ -168,6 +168,51 @@ function enqueue_bootstrap_icons_editor() {
 add_action( 'enqueue_block_editor_assets', 'enqueue_bootstrap_icons_editor' );
 add_action( 'admin_enqueue_scripts', 'enqueue_bootstrap_icons_editor' );
 
+/**
+ * Expose the free-tier block configuration to editor JavaScript.
+ *
+ * Blocks read window.adaireBlocksConfig (and the matching editor setting via
+ * useBlockLimits) to enforce free-tier limits — e.g. tabs-block locks its
+ * animation controls when limits.customAnimations is false, gallery-block
+ * caps images via limits.maxItems. Without this the free build silently
+ * behaves as if unrestricted. Shape mirrors the dev/premium plugin:
+ * { isPremium, pluginVersion, blocks: { name: { enabled, limits, upgradeMessage } } }.
+ */
+function adaire_blocks_localize_editor_config() {
+    $blocks_config = array();
+    $config_file   = ADAIRE_BLOCKS_PLUGIN_PATH . 'config/blocks-config.json';
+
+    if ( file_exists( $config_file ) ) {
+        $config_data = json_decode( file_get_contents( $config_file ), true );
+        $free_blocks = isset( $config_data['free'] ) && is_array( $config_data['free'] )
+            ? $config_data['free']
+            : array();
+
+        foreach ( $free_blocks as $block_name => $block_config ) {
+            $blocks_config[ $block_name ] = array(
+                'enabled'        => ! empty( $block_config['enabled'] ),
+                'limits'         => isset( $block_config['limits'] ) ? $block_config['limits'] : array(),
+                'upgradeMessage' => isset( $block_config['upgradeMessage'] ) ? $block_config['upgradeMessage'] : '',
+            );
+        }
+    }
+
+    $editor_config = array(
+        'isPremium'     => false,
+        'pluginVersion' => 'free',
+        'blocks'        => $blocks_config,
+    );
+
+    wp_localize_script( 'wp-block-editor', 'adaireBlocksConfig', $editor_config );
+
+    // Also add to editor settings for the useBlockLimits hook
+    add_filter( 'block_editor_settings_all', function ( $settings ) use ( $editor_config ) {
+        $settings['adaireBlocksConfig'] = $editor_config;
+        return $settings;
+    } );
+}
+add_action( 'enqueue_block_editor_assets', 'adaire_blocks_localize_editor_config' );
+
 // Bootstrap admin settings (register menu, assets, etc.)
 if (is_admin() || wp_doing_ajax() || (defined('REST_REQUEST') && REST_REQUEST)) {
     require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/settings-page.php';
