@@ -76,10 +76,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		containerMaxWidth,
 		heading,
 		subheading,
-		billingMode,
-		monthlyLabel,
-		yearlyLabel,
-		yearlyBadgeText,
 		cards = [],
 		backgroundColor,
 		cardBackgroundColor,
@@ -97,7 +93,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		buttonHoverBackgroundColor,
 		cardHoverBackgroundColor,
 		cardHoverTextColor,
-		yearlyBadgeBackgroundColor,
 		buttonGlowColor,
 		buttonGlowOpacity,
 		headingFontSize,
@@ -107,9 +102,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		featureFontSize,
 		buttonFontSize,
 		priceSuffixFontSize,
-		toggleFontSize,
 		pricePrefixFontSize,
-		badgeFontSize,
 		gridColumns,
 		gridGap,
 		cardPadding,
@@ -169,7 +162,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				tagline: __("Describe this plan", "pricing-table-block"),
 				currency: "$",
 				monthlyPrice: "49",
-				yearlyPrice: "490",
 				priceSuffix: "/mo",
 				features: [__("Add a feature", "pricing-table-block")],
 				buttonLabel: __("Select Plan", "pricing-table-block"),
@@ -232,7 +224,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	const blockProps = useBlockProps({
 		id: blockId || undefined,
-		className: `adaire-pricing-table adaire-pricing-table--billing-${billingMode}`,
+		className: "adaire-pricing-table",
 		style: {
 			"--pricing-bg": backgroundColor,
 			"--pricing-card-bg": cardBackgroundColor,
@@ -253,7 +245,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			"--pricing-button-glow": buttonGlowColor
 				? convertColorToRgba(buttonGlowColor, buttonGlowOpacity ?? 25)
 				: "",
-			"--pricing-badge-bg": yearlyBadgeBackgroundColor,
 			"--pricing-heading-size": formatDimensionValue(
 				headingFontSize?.desktop,
 				40,
@@ -359,21 +350,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				12,
 				"px",
 			),
-			"--pricing-toggle-size": formatDimensionValue(
-				toggleFontSize?.desktop,
-				14,
-				"px",
-			),
-			"--pricing-toggle-size-tablet": formatDimensionValue(
-				toggleFontSize?.tablet,
-				13,
-				"px",
-			),
-			"--pricing-toggle-size-mobile": formatDimensionValue(
-				toggleFontSize?.mobile,
-				12,
-				"px",
-			),
 			"--pricing-price-prefix-size": formatDimensionValue(
 				pricePrefixFontSize?.desktop,
 				18,
@@ -387,51 +363,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			"--pricing-price-prefix-size-mobile": formatDimensionValue(
 				pricePrefixFontSize?.mobile,
 				14,
-				"px",
-			),
-			"--pricing-badge-font-size": formatDimensionValue(
-				badgeFontSize?.desktop,
-				11,
-				"px",
-			),
-			"--pricing-badge-font-size-tablet": formatDimensionValue(
-				badgeFontSize?.tablet,
-				11,
-				"px",
-			),
-			"--pricing-badge-font-size-mobile": formatDimensionValue(
-				badgeFontSize?.mobile,
-				10,
-				"px",
-			),
-			"--pricing-price-prefix-size": formatDimensionValue(
-				pricePrefixFontSize?.desktop,
-				18,
-				"px",
-			),
-			"--pricing-price-prefix-size-tablet": formatDimensionValue(
-				pricePrefixFontSize?.tablet,
-				16,
-				"px",
-			),
-			"--pricing-price-prefix-size-mobile": formatDimensionValue(
-				pricePrefixFontSize?.mobile,
-				14,
-				"px",
-			),
-			"--pricing-badge-font-size": formatDimensionValue(
-				badgeFontSize?.desktop,
-				11,
-				"px",
-			),
-			"--pricing-badge-font-size-tablet": formatDimensionValue(
-				badgeFontSize?.tablet,
-				10,
-				"px",
-			),
-			"--pricing-badge-font-size-mobile": formatDimensionValue(
-				badgeFontSize?.mobile,
-				9,
 				"px",
 			),
 			"--pricing-price-justify":
@@ -631,28 +562,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 
 				<PanelBody
-					title={__("Billing Toggle", "pricing-table-block")}
-					initialOpen={true}
-				>
-					<TextControl
-						label={__("Monthly Label", "pricing-table-block")}
-						value={monthlyLabel}
-						onChange={(value) => setAttributes({ monthlyLabel: value })}
-					/>
-					<TextControl
-						label={__("Yearly Label", "pricing-table-block")}
-						value={yearlyLabel}
-						onChange={(value) => setAttributes({ yearlyLabel: value })}
-					/>
-					<TextControl
-						label={__("Yearly Badge Text", "pricing-table-block")}
-						value={yearlyBadgeText}
-						onChange={(value) => setAttributes({ yearlyBadgeText: value })}
-						help={__("Optional badge shown beside yearly label.", "pricing-table-block")}
-					/>
-				</PanelBody>
-
-				<PanelBody
 					title={__("Cards", "pricing-table-block")}
 					initialOpen={false}
 				>
@@ -716,13 +625,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									value={card.monthlyPrice}
 									onChange={(value) =>
 										updateCard(index, { monthlyPrice: value })
-									}
-								/>
-								<TextControl
-									label={__("Yearly Price", "pricing-table-block")}
-									value={card.yearlyPrice}
-									onChange={(value) =>
-										updateCard(index, { yearlyPrice: value })
 									}
 								/>
 								<TextControl
@@ -918,12 +820,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							value: buttonGlowColor,
 							onChange: (value) => setAttributes({ buttonGlowColor: value }),
 							label: __("Button Glow", "pricing-table-block"),
-						},
-						{
-							value: yearlyBadgeBackgroundColor,
-							onChange: (value) =>
-								setAttributes({ yearlyBadgeBackgroundColor: value }),
-							label: __("Yearly Badge Background", "pricing-table-block"),
 						},
 					]}
 				/>
@@ -1158,97 +1054,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						/>
 					))}
 
-					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Badge Text", "pricing-table-block")}</strong>
-					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`badge-${device.key}`}
-							label={device.label}
-							value={
-								badgeFontSize?.[device.key]?.value ||
-								(device.key === "desktop"
-									? 11
-									: device.key === "tablet"
-										? 10
-										: 9)
-							}
-							onChange={(value) =>
-								updateFontSize("badgeFontSize", device.key, value)
-							}
-							min={8}
-							max={24}
-						/>
-					))}
-
-					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Billing Toggle", "pricing-table-block")}</strong>
-					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`toggle-${device.key}`}
-							label={device.label}
-							value={
-								toggleFontSize?.[device.key]?.value ||
-								(device.key === "desktop"
-									? 14
-									: device.key === "tablet"
-										? 13
-										: 12)
-							}
-							onChange={(value) =>
-								updateFontSize("toggleFontSize", device.key, value)
-							}
-							min={10}
-							max={32}
-						/>
-					))}
-
-					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Price Prefix", "pricing-table-block")}</strong>
-					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`price-prefix-${device.key}`}
-							label={device.label}
-							value={
-								pricePrefixFontSize?.[device.key]?.value ||
-								(device.key === "desktop"
-									? 18
-									: device.key === "tablet"
-										? 16
-										: 14)
-							}
-							onChange={(value) =>
-								updateFontSize("pricePrefixFontSize", device.key, value)
-							}
-							min={10}
-							max={32}
-						/>
-					))}
-
-					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Badge Text", "pricing-table-block")}</strong>
-					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`badge-${device.key}`}
-							label={device.label}
-							value={
-								badgeFontSize?.[device.key]?.value ||
-								(device.key === "desktop"
-									? 11
-									: device.key === "tablet"
-										? 11
-										: 10)
-							}
-							onChange={(value) =>
-								updateFontSize("badgeFontSize", device.key, value)
-							}
-							min={8}
-							max={24}
-						/>
-					))}
 				</PanelBody>
 			</InspectorControls>
 
@@ -1269,67 +1074,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							placeholder={__("Enter subheadingâ€¦", "pricing-table-block")}
 							className="adaire-pricing-table__subheading"
 						/>
-					</div>
-
-					<div className="adaire-pricing-table__billing-toggle" aria-label={__("Billing toggle", "pricing-table-block")}>
-						<QuickZone
-							id="billing-monthly-label"
-							label="Monthly Label"
-							activeZone={activeZone}
-							setActiveZone={setActiveZone}
-							content={
-								<TextControl
-									label={__("Monthly Label", "pricing-table-block")}
-									value={monthlyLabel}
-									onChange={(value) => setAttributes({ monthlyLabel: value })}
-								/>
-							}
-						>
-							<button
-								type="button"
-								className={`adaire-pricing-table__billing-option ${
-									billingMode === "monthly" ? "is-active" : ""
-								}`}
-								onClick={() => setAttributes({ billingMode: "monthly" })}
-							>
-								{monthlyLabel}
-							</button>
-						</QuickZone>
-						<QuickZone
-							id="billing-yearly-label"
-							label="Yearly Label"
-							activeZone={activeZone}
-							setActiveZone={setActiveZone}
-							content={
-								<>
-									<TextControl
-										label={__("Yearly Label", "pricing-table-block")}
-										value={yearlyLabel}
-										onChange={(value) => setAttributes({ yearlyLabel: value })}
-									/>
-									<TextControl
-										label={__("Yearly Badge Text", "pricing-table-block")}
-										value={yearlyBadgeText}
-										onChange={(value) => setAttributes({ yearlyBadgeText: value })}
-									/>
-								</>
-							}
-						>
-							<button
-								type="button"
-								className={`adaire-pricing-table__billing-option ${
-									billingMode === "yearly" ? "is-active" : ""
-								}`}
-								onClick={() => setAttributes({ billingMode: "yearly" })}
-							>
-								<span>{yearlyLabel}</span>
-								{yearlyBadgeText && (
-									<span className="adaire-pricing-table__billing-badge">
-										{yearlyBadgeText}
-									</span>
-								)}
-							</button>
-						</QuickZone>
 					</div>
 
 					<div className="adaire-pricing-table__grid">
@@ -1391,13 +1135,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 												}
 											/>
 											<TextControl
-												label={__("Yearly Price", "pricing-table-block")}
-												value={card.yearlyPrice}
-												onChange={(value) =>
-													updateCard(cardIndex, { yearlyPrice: value })
-												}
-											/>
-											<TextControl
 												label={__("Price Suffix", "pricing-table-block")}
 												value={card.priceSuffix}
 												onChange={(value) =>
@@ -1412,11 +1149,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 										<span className="adaire-pricing-table__price-currency">
 											{card.currency}
 										</span>
-										<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--monthly">
+										<span className="adaire-pricing-table__price-value">
 											{card.monthlyPrice}
-										</span>
-										<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--yearly">
-											{card.yearlyPrice}
 										</span>
 										<span className="adaire-pricing-table__price-suffix">
 											{card.priceSuffix}

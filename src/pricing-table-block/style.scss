@@ -105,75 +105,6 @@
         }
     }
 
-    &__billing-toggle {
-        align-self: center;
-        display: inline-flex;
-        align-items: center;
-        padding: 4px;
-        border-radius: 999px;
-        border: 1px solid rgba(15, 23, 42, 0.15);
-        background-color: #ffffff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-        gap: 4px;
-    }
-
-    &__billing-option {
-        position: relative;
-        border: none;
-        background: transparent;
-        padding: 6px 14px;
-        border-radius: 999px;
-        font-size: var(--pricing-toggle-size, 14px);
-        line-height: 1.2;
-        cursor: pointer;
-        color: #0f172a;
-        display: inline-flex;
-        align-items: center;
-        transition:
-            background-color 0.2s ease,
-            color 0.2s ease,
-            transform 0.15s ease;
-
-        @media (max-width: 1024px) {
-            font-size: var(--pricing-toggle-size-tablet,
-                    var(--pricing-toggle-size, 14px));
-        }
-
-        @media (max-width: 768px) {
-            font-size: var(--pricing-toggle-size-mobile,
-                    var(--pricing-toggle-size-tablet, 13px));
-        }
-
-        &.is-active {
-            background-color: #111827;
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
-    }
-
-    &__billing-badge {
-        display: inline-flex;
-        margin-left: 8px;
-        padding: 2px 8px;
-        border-radius: 999px;
-        background-color: var(--pricing-badge-bg, #503AA8);
-        color: #ffffff;
-        font-size: var(--pricing-badge-font-size, 11px);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-
-        @media (max-width: 1024px) {
-            font-size: var(--pricing-badge-font-size-tablet,
-                    var(--pricing-badge-font-size, 11px));
-        }
-
-        @media (max-width: 768px) {
-            font-size: var(--pricing-badge-font-size-mobile,
-                    var(--pricing-badge-font-size-tablet, 10px));
-        }
-    }
-
     &__grid {
         display: grid;
         width: 100%;
@@ -393,10 +324,6 @@
             font-size: var(--pricing-price-size-mobile,
                     var(--pricing-price-size-tablet, 28px));
         }
-
-        &--yearly {
-            display: none;
-        }
     }
 
     &__price-suffix {
@@ -483,24 +410,5 @@
             outline: 2px solid #111827;
             outline-offset: 2px;
         }
-    }
-}
-
-// Billing state visibility
-.adaire-pricing-table--billing-monthly {
-    .adaire-pricing-table__price-value--monthly {
-        display: inline-block;
-    }
-    .adaire-pricing-table__price-value--yearly {
-        display: none;
-    }
-}
-
-.adaire-pricing-table--billing-yearly {
-    .adaire-pricing-table__price-value--monthly {
-        display: none;
-    }
-    .adaire-pricing-table__price-value--yearly {
-        display: inline-block;
     }
 }

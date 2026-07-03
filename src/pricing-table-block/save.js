@@ -103,10 +103,6 @@ export default function save({ attributes }) {
 		containerMaxWidth,
 		heading,
 		subheading,
-		billingMode,
-		monthlyLabel,
-		yearlyLabel,
-		yearlyBadgeText,
 		cards = [],
 		showComparisonTable,
 		comparisonDisclaimer,
@@ -135,9 +131,7 @@ export default function save({ attributes }) {
 		featureFontSize,
 		buttonFontSize,
 		priceSuffixFontSize,
-		toggleFontSize,
 		pricePrefixFontSize,
-		badgeFontSize,
 		gridColumns,
 		gridGap,
 		cardPadding,
@@ -145,7 +139,6 @@ export default function save({ attributes }) {
 		cardBorderWidth,
 		cardTextAlignment,
 		cardButtonAlignment,
-		yearlyBadgeBackgroundColor,
 		buttonGlowColor,
 		buttonGlowOpacity,
 	} = attributes;
@@ -160,7 +153,7 @@ export default function save({ attributes }) {
 
 	const blockProps = useBlockProps.save({
 		id: blockId || undefined,
-		className: `adaire-pricing-table adaire-pricing-table--billing-${billingMode}`,
+		className: "adaire-pricing-table",
 		style: {
 			"--pricing-bg": backgroundColor,
 			"--pricing-card-bg": cardBackgroundColor,
@@ -178,7 +171,6 @@ export default function save({ attributes }) {
 			"--pricing-button-bg-hover": buttonHoverBackgroundColor,
 			"--pricing-card-hover-bg": cardHoverBackgroundColor,
 			"--pricing-card-hover-text": cardHoverTextColor,
-			"--pricing-badge-bg": yearlyBadgeBackgroundColor,
 			"--pricing-heading-size": formatDimensionValue(
 				headingFontSize?.desktop,
 				40,
@@ -284,21 +276,6 @@ export default function save({ attributes }) {
 				12,
 				"px",
 			),
-			"--pricing-toggle-size": formatDimensionValue(
-				toggleFontSize?.desktop,
-				14,
-				"px",
-			),
-			"--pricing-toggle-size-tablet": formatDimensionValue(
-				toggleFontSize?.tablet,
-				13,
-				"px",
-			),
-			"--pricing-toggle-size-mobile": formatDimensionValue(
-				toggleFontSize?.mobile,
-				12,
-				"px",
-			),
 			"--pricing-price-prefix-size": formatDimensionValue(
 				pricePrefixFontSize?.desktop,
 				18,
@@ -312,51 +289,6 @@ export default function save({ attributes }) {
 			"--pricing-price-prefix-size-mobile": formatDimensionValue(
 				pricePrefixFontSize?.mobile,
 				14,
-				"px",
-			),
-			"--pricing-badge-font-size": formatDimensionValue(
-				badgeFontSize?.desktop,
-				11,
-				"px",
-			),
-			"--pricing-badge-font-size-tablet": formatDimensionValue(
-				badgeFontSize?.tablet,
-				11,
-				"px",
-			),
-			"--pricing-badge-font-size-mobile": formatDimensionValue(
-				badgeFontSize?.mobile,
-				10,
-				"px",
-			),
-			"--pricing-price-prefix-size": formatDimensionValue(
-				pricePrefixFontSize?.desktop,
-				18,
-				"px",
-			),
-			"--pricing-price-prefix-size-tablet": formatDimensionValue(
-				pricePrefixFontSize?.tablet,
-				16,
-				"px",
-			),
-			"--pricing-price-prefix-size-mobile": formatDimensionValue(
-				pricePrefixFontSize?.mobile,
-				14,
-				"px",
-			),
-			"--pricing-badge-font-size": formatDimensionValue(
-				badgeFontSize?.desktop,
-				11,
-				"px",
-			),
-			"--pricing-badge-font-size-tablet": formatDimensionValue(
-				badgeFontSize?.tablet,
-				10,
-				"px",
-			),
-			"--pricing-badge-font-size-mobile": formatDimensionValue(
-				badgeFontSize?.mobile,
-				9,
 				"px",
 			),
 			"--pricing-grid-columns": `${gridColumnsDesktop}`,
@@ -430,35 +362,6 @@ export default function save({ attributes }) {
 					/>
 				</div>
 
-				<div
-					className="adaire-pricing-table__billing-toggle"
-					aria-label="Billing toggle"
-				>
-					<button
-						type="button"
-						className={`adaire-pricing-table__billing-option ${
-							billingMode === "monthly" ? "is-active" : ""
-						}`}
-						data-billing="monthly"
-					>
-						{monthlyLabel}
-					</button>
-					<button
-						type="button"
-						className={`adaire-pricing-table__billing-option ${
-							billingMode === "yearly" ? "is-active" : ""
-						}`}
-						data-billing="yearly"
-					>
-						<span>{yearlyLabel}</span>
-						{yearlyBadgeText && (
-							<span className="adaire-pricing-table__billing-badge">
-								{yearlyBadgeText}
-							</span>
-						)}
-					</button>
-				</div>
-
 				<div className="adaire-pricing-table__grid">
 					{cards.map((card, index) => (
 						<div
@@ -484,11 +387,8 @@ export default function save({ attributes }) {
 								<span className="adaire-pricing-table__price-currency">
 									{card.currency}
 								</span>
-								<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--monthly">
+								<span className="adaire-pricing-table__price-value">
 									{card.monthlyPrice}
-								</span>
-								<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--yearly">
-									{card.yearlyPrice}
 								</span>
 								<span className="adaire-pricing-table__price-suffix">
 									{card.priceSuffix}
