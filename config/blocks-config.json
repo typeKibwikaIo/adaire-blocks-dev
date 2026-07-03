@@ -46,7 +46,10 @@
     },
     "tabs-block": {
       "enabled": true,
-      "upgradeMessage": "Upgrade to Premium for unlimited tabs and advanced features."
+      "limits": {
+        "customAnimations": false
+      },
+      "upgradeMessage": "Upgrade to customize the animation and transition between tabs."
     },
     "tab-panel-block": {
       "enabled": true,
@@ -58,11 +61,11 @@
     },
     "content-toggle-block": {
       "enabled": true,
-      "upgradeMessage": "Upgrade to Premium for advanced content toggle features."
+      "upgradeMessage": "Legacy block — its functionality is now part of the Tabbed Content block (Pills style)."
     },
     "content-toggle-panel-block": {
       "enabled": true,
-      "upgradeMessage": "Content Toggle Panel Block works with the Content Toggle Block."
+      "upgradeMessage": "Legacy block — works with existing Content Switcher blocks only."
     },
     "social-share-block": {
       "enabled": true,
