@@ -15,23 +15,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         let currentActiveIndex = initialActiveTab;
         
-        // Calculate and set minimum height based on tallest panel
         const panelsWrapper = tabBlock.querySelector('.adaire-tabs__panels');
-        let maxHeight = 0;
-        
-        // Temporarily show all panels to measure their heights
-        contentPanels.forEach((panel) => {
-            gsap.set(panel, { display: 'block', position: 'relative', opacity: 0, visibility: 'hidden' });
-            const height = panel.scrollHeight;
-            if (height > maxHeight) {
-                maxHeight = height;
-            }
-        });
-        
-        // Set minimum height on the wrapper
-        if (panelsWrapper && maxHeight > 0) {
-            panelsWrapper.style.minHeight = `${maxHeight}px`;
-        }
+
+        // Panel visibility is class-driven with !important rules, so a
+        // hidden panel can only be measured by overriding those rules with
+        // inline !important declarations for the duration of the read.
+        const measurePanelHeight = (panel) => {
+            if (!panel) return 0;
+            const overrides = [
+                ['display', 'block'],
+                ['position', 'absolute'],
+                ['height', 'auto'],
+                ['overflow', 'visible'],
+                ['visibility', 'hidden'],
+            ];
+            overrides.forEach(([prop, value]) => panel.style.setProperty(prop, value, 'important'));
+            const height = panel.offsetHeight;
+            overrides.forEach(([prop]) => panel.style.removeProperty(prop));
+            return height;
+        };
         
         // Now hide all panels except the active one
         contentPanels.forEach((panel, index) => {
@@ -58,12 +60,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Initialize underline position
         function updateUnderline(tabElement, immediate = false) {
-            if (!tabElement) return;
-            
+            if (!tabElement || !underline) return;
+
             // Check if we're in vertical layout
             const tabLayout = tabBlock.getAttribute('data-tab-layout');
             if (tabLayout === 'vertical') {
                 // In vertical layout, we don't use the moving underline
+                return;
+            }
+
+            // Pill style has no moving underline (element isn't rendered)
+            if (tabBlock.getAttribute('data-tab-style') === 'pills') {
                 return;
             }
             
@@ -100,7 +107,31 @@ document.addEventListener('DOMContentLoaded', function() {
             const oldPanel = contentPanels[currentActiveIndex];
             const newPanel = contentPanels[index];
             const newTab = tabs[index];
-            
+
+            // Animate the wrapper between the outgoing and incoming panel
+            // heights so content below the block is pushed smoothly instead
+            // of jumping when panels differ in height.
+            if (panelsWrapper && !immediate && newPanel !== oldPanel) {
+                gsap.killTweensOf(panelsWrapper);
+                const startHeight = panelsWrapper.offsetHeight;
+                const targetHeight = measurePanelHeight(newPanel);
+
+                if (targetHeight > 0 && targetHeight !== startHeight) {
+                    gsap.set(panelsWrapper, { height: startHeight, overflow: 'hidden' });
+                    gsap.to(panelsWrapper, {
+                        height: targetHeight,
+                        // Full switch = fade-out (0.5×) + fade-in (0.6×)
+                        duration: duration * 1.1,
+                        ease: 'power2.inOut',
+                        onComplete: () => {
+                            gsap.set(panelsWrapper, { clearProps: 'height,overflow' });
+                        },
+                    });
+                } else {
+                    gsap.set(panelsWrapper, { clearProps: 'height,overflow' });
+                }
+            }
+
             // Update tab buttons
             tabs.forEach((tab, i) => {
                 if (i === index) {

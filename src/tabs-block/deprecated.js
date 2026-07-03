@@ -1,6 +1,15 @@
 /**
  * Tabbed Content (tabs-block) deprecations — most recent first.
  *
+ * v2  Frozen copy of the save() that shipped before the Content Switcher
+ *     merge added the pill tab style plus content/wrapper styling. The
+ *     current save() unconditionally emits the new pill/content/wrapper
+ *     custom properties and a data-tab-style attribute, so markup stored
+ *     before the merge no longer matches it. All new attributes are
+ *     additive with defaults that reproduce the old rendering (underline
+ *     style, transparent backgrounds, zero padding), so `migrate` is an
+ *     identity function.
+ *
  * v1  Frozen copy of the save() that shipped before ADAB-010 added full
  *     typography controls (line-height, letter-spacing, text-transform) for
  *     the tab title labels, plus a block-level Font Family control —
@@ -18,6 +27,136 @@
  *     parsing a deprecated entry that omits one).
  */
 import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { getDeviceValue } from '../components/DeviceSwitcher';
+
+const deprecatedV2 = {
+    migrate(attributes) {
+        return attributes;
+    },
+
+    save({ attributes }) {
+        const {
+            blockId,
+            tabs,
+            activeTab,
+            tabTitleColor,
+            tabTitleActiveColor,
+            tabUnderlineColor,
+            tabTitleFontSize,
+            tabTitleFontWeight,
+            tabTitleActiveFontWeight,
+            tabTitleLineHeight,
+            tabTitleLetterSpacing,
+            tabTitleTextTransform,
+            fontFamily,
+            tabGap,
+            underlineHeight,
+            contentPaddingTop,
+            contentPaddingRight,
+            contentPaddingBottom,
+            contentPaddingLeft,
+            tabsAlign,
+            animationDuration,
+            animationEase,
+            containerMode,
+            containerMaxWidth,
+            marginTop,
+            marginRight,
+            marginBottom,
+            marginLeft,
+            tabLayout,
+            tabPosition,
+            verticalActiveBgColor,
+        } = attributes;
+
+        const getBackgroundColor = (color) => {
+            if (!color) return 'rgba(59, 130, 246, 0.05)';
+            return color;
+        };
+
+        const blockProps = useBlockProps.save({
+            className: 'adaire-tabs',
+            'data-block-id': blockId,
+            'data-animation-duration': animationDuration,
+            'data-animation-ease': animationEase,
+            'data-active-tab': activeTab,
+            'data-tab-layout': tabLayout,
+            style: {
+                '--tab-title-color': tabTitleColor,
+                '--tab-title-active-color': tabTitleActiveColor,
+                '--tab-underline-color': tabUnderlineColor,
+                '--tab-title-size': `${tabTitleFontSize}px`,
+                '--tab-title-weight': tabTitleFontWeight,
+                '--tab-title-active-weight': tabTitleActiveFontWeight,
+                '--tab-title-line-height': `${getDeviceValue(tabTitleLineHeight, 'desktop', 'normal')}`,
+                '--tab-title-line-height-tablet': `${getDeviceValue(tabTitleLineHeight, 'tablet', 'normal')}`,
+                '--tab-title-line-height-mobile': `${getDeviceValue(tabTitleLineHeight, 'mobile', 'normal')}`,
+                '--tab-title-line-height-watch': `${getDeviceValue(tabTitleLineHeight, 'smartwatch', 'normal')}`,
+                '--tab-title-letter-spacing': `${getDeviceValue(tabTitleLetterSpacing, 'desktop', '-0.01em')}`,
+                '--tab-title-letter-spacing-tablet': `${getDeviceValue(tabTitleLetterSpacing, 'tablet', '-0.01em')}`,
+                '--tab-title-letter-spacing-mobile': `${getDeviceValue(tabTitleLetterSpacing, 'mobile', '-0.01em')}`,
+                '--tab-title-letter-spacing-watch': `${getDeviceValue(tabTitleLetterSpacing, 'smartwatch', '-0.01em')}`,
+                '--tab-title-text-transform': `${getDeviceValue(tabTitleTextTransform, 'desktop', 'none')}`,
+                '--tab-title-text-transform-tablet': `${getDeviceValue(tabTitleTextTransform, 'tablet', 'none')}`,
+                '--tab-title-text-transform-mobile': `${getDeviceValue(tabTitleTextTransform, 'mobile', 'none')}`,
+                '--tab-title-text-transform-watch': `${getDeviceValue(tabTitleTextTransform, 'smartwatch', 'none')}`,
+                '--tabs-font-family': fontFamily || 'inherit',
+                '--tab-gap': `${tabGap}px`,
+                '--underline-height': `${underlineHeight}px`,
+                '--content-padding-top': `${contentPaddingTop}px`,
+                '--content-padding-right': `${contentPaddingRight}px`,
+                '--content-padding-bottom': `${contentPaddingBottom}px`,
+                '--content-padding-left': `${contentPaddingLeft}px`,
+                '--tabs-align': tabsAlign,
+                '--container-max-width': `${containerMaxWidth?.desktop?.value ?? containerMaxWidth?.value ?? 1200}${containerMaxWidth?.desktop?.unit ?? containerMaxWidth?.unit ?? 'px'}`,
+                '--container-max-width-tablet': `${containerMaxWidth?.tablet?.value ?? 100}${containerMaxWidth?.tablet?.unit ?? '%'}`,
+                '--container-max-width-mobile': `${containerMaxWidth?.mobile?.value ?? 100}${containerMaxWidth?.mobile?.unit ?? '%'}`,
+                '--tab-layout': tabLayout,
+                '--tab-position': tabPosition,
+                '--vertical-active-bg-color': getBackgroundColor(verticalActiveBgColor),
+            },
+        });
+
+        return (
+            <div {...blockProps} data-tab-layout={tabLayout} data-tab-position={tabPosition}>
+                <div
+                    className={`adaire-tabs__container ${containerMode === 'constrained' ? 'is-constrained' : ''} ${tabLayout === 'vertical' ? 'is-vertical' : ''} ${tabPosition === 'bottom' ? 'is-bottom' : ''} ${tabPosition === 'right' ? 'is-right' : ''}`}
+                    style={{
+                        marginTop: `${marginTop}px`,
+                        marginRight: `${marginRight}px`,
+                        marginBottom: `${marginBottom}px`,
+                        marginLeft: `${marginLeft}px`,
+                    }}
+                >
+                    <div className="adaire-tabs__header">
+                        <div className="adaire-tabs__list" role="tablist">
+                            {(tabs || []).map((tab, index) => (
+                                <button
+                                    key={tab.id}
+                                    className={`adaire-tabs__tab ${activeTab === index ? 'is-active' : ''}`}
+                                    data-tab-index={index}
+                                    role="tab"
+                                    aria-selected={activeTab === index}
+                                    aria-controls={`${blockId}-panel-${index}`}
+                                    id={`${blockId}-tab-${index}`}
+                                >
+                                    {tab.title}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="adaire-tabs__underline" />
+                    </div>
+
+                    <div className="adaire-tabs__content-wrapper">
+                        <div className="adaire-tabs__panels">
+                            <InnerBlocks.Content />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    },
+};
 
 const deprecatedV1 = {
     migrate(attributes) {
@@ -132,4 +271,4 @@ const deprecatedV1 = {
     },
 };
 
-export default [deprecatedV1];
+export default [deprecatedV2, deprecatedV1];
