@@ -53,6 +53,8 @@ export default function save( { attributes: a } ) {
 			'--tl-item-title-line-height'    : a.itemTitleLineHeight    || '1.3',
 			'--tl-item-title-letter-spacing' : a.itemTitleLetterSpacing || 'normal',
 			'--tl-item-title-text-transform' : a.itemTitleTextTransform || 'none',
+			// Must mirror edit.js exactly since this block saves static markup.
+			'--tl-item-title-color'         : a.itemTitleColor || a.textColor || '#ffffff',
 
 			'--tl-item-desc-font-size'      : a.itemDescFontSize      || '15px',
 			'--tl-item-desc-font-weight'    : a.itemDescFontWeight    || '400',

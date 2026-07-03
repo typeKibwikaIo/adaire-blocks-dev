@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/testimonial-block",
     "version": "0.1.0",
-    "title": "Customer Reviews",
+    "title": "Reviews (Free)",
     "category": "adaire-testimonial",
     "description": "Display customer testimonials with quotes, author info, and ratings to build trust.",
     "example": {},
@@ -21,6 +21,18 @@
         "textColor": {
             "type": "string",
             "default": "#000000"
+        },
+        "quoteColor": {
+            "type": "string",
+            "default": ""
+        },
+        "authorNameColor": {
+            "type": "string",
+            "default": ""
+        },
+        "authorTitleColor": {
+            "type": "string",
+            "default": ""
         },
         "arrowColor": {
             "type": "string",

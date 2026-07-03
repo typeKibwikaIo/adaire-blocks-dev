@@ -761,7 +761,25 @@ if ( ! function_exists( 'adaire_header_render_nav' ) ) {
 			$close_btn  = '<button class="adaire-header-mobile-close" type="button" aria-label="' . esc_attr__( 'Close menu', 'header-block' ) . '">' . $close_icon . '</button>';
 		}
 
-		return '<nav' . $id_attr . ' class="adaire-header-nav is-' . esc_attr( $attributes['navOrientation'] ) . '" aria-label="' . esc_attr__( 'Header navigation', 'header-block' ) . '">' . $close_btn . $inner . '</nav>';
+		// Mobile-only CTA — reuses the existing "Get started" CTA settings
+		// (showCta/ctaText/ctaUrl/ctaStyle/etc.), which otherwise only ever
+		// render in .adaire-header-actions, a container hidden entirely on
+		// mobile (see the `.adaire-header-action, .adaire-header-socials {
+		// display: none }` rule in style.scss). Without this, the CTA had no
+		// way to reach a mobile visitor at all. Gated on $nav_id (same as
+		// $close_btn above) so the split layout's second nav half — called
+		// with $nav_id === '' — doesn't render a duplicate. Shown for every
+		// mobileMenuStyle (dropdown/slide-in/overlay), not just slide-in/
+		// overlay like the close button, since dropdown mode benefits from
+		// it too.
+		$mobile_cta = '';
+		if ( $nav_id && ! empty( $attributes['showCta'] ) ) {
+			$show_icon_cta_mobile = ! isset( $attributes['showCtaIcon'] ) || $attributes['showCtaIcon'];
+			$cta_html              = adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'header-block' ), $attributes['ctaIconPosition'], 'cta', $show_icon_cta_mobile );
+			$mobile_cta             = '<div class="adaire-header-nav-mobile-cta">' . $cta_html . '</div>';
+		}
+
+		return '<nav' . $id_attr . ' class="adaire-header-nav is-' . esc_attr( $attributes['navOrientation'] ) . '" aria-label="' . esc_attr__( 'Header navigation', 'header-block' ) . '">' . $close_btn . $inner . $mobile_cta . '</nav>';
 	}
 }
 

@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/tabs-block",
     "version": "0.1.0",
-    "title": "Tabbed Content",
+    "title": "Tabbed Content (Free)",
     "category": "adaire-content-tabs",
     "description": "Organize content into clickable tabs with smooth transitions and custom styling for better page organization.",
     "supports": {

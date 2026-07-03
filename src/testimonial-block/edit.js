@@ -68,6 +68,9 @@ export default function Edit({ attributes, setAttributes }) {
 	
 	const {
 		textColor,
+		quoteColor,
+		authorNameColor,
+		authorTitleColor,
 		arrowColor,
 		dotColor,
 		fontSize,
@@ -120,6 +123,9 @@ export default function Edit({ attributes, setAttributes }) {
 	const splideRef = useRef(null);
 	const splideInstanceRef = useRef(null);
 	const updateTimeoutRef = useRef(null);
+	// Cleanup for the editor-canvas resize listener set up below — see the
+	// comment by `editorWindow` for why this can't just be `window.resize`.
+	const editorResizeCleanupRef = useRef(null);
 
 	const blockProps = useBlockProps({
 		className: "ad-carousel-text-block",
@@ -127,6 +133,12 @@ export default function Edit({ attributes, setAttributes }) {
 			color: textColor || "#000000",
 			fontSize: `${fontSize || 16}px`,
 			"--text-color": textColor || "#000000",
+			// Independent color overrides for quote / author name / author title —
+			// each falls back to the shared textColor (old single-control
+			// behavior) so content saved before this split keeps its look.
+			"--quote-color": quoteColor || textColor || "#333333",
+			"--author-name-color": authorNameColor || textColor || "#333333",
+			"--author-title-color": authorTitleColor || textColor || "#666666",
 			"--font-size": `${fontSize || 16}px`,
 			"--card-gap": `${gap || 30}px`,
 			"--logo-size": `${logoSize || 60}px`,
@@ -254,11 +266,38 @@ export default function Edit({ attributes, setAttributes }) {
 					// Use requestAnimationFrame for smoother updates
 					requestAnimationFrame(() => {
 						try {
+							if (!splideRef.current) {
+								return;
+							}
+
+							// The block editor canvas is rendered inside its own
+							// <iframe> (WP 5.9+), but this script itself executes in
+							// the top-level wp-admin page's JS context — so the bare
+							// global `window` here is the ADMIN page's window, not
+							// the iframe's. `window.innerWidth`/`matchMedia` always
+							// reflected the admin window's width, completely
+							// unrelated to how wide the canvas/device-preview
+							// actually is, so the editor's slide count never matched
+							// what the card width CSS (which IS scoped correctly,
+							// since plain CSS media queries run against whatever
+							// document they're attached to) was doing — 3 desktop
+							// slides got squeezed into a tablet/mobile-width canvas,
+							// shrinking each card to a sliver.
+							//
+							// `ownerDocument.defaultView` resolves to the iframe's
+							// own window for any node living inside it (same pattern
+							// Splide's own source uses internally for instanceof
+							// checks), so reading width from there instead fixes
+							// both the initial perPage and, via the resize listener
+							// below, keeps it correct if the canvas is resized (or
+							// the device-preview toggle is changed) after mount.
+							const editorWindow = splideRef.current.ownerDocument?.defaultView || window;
+
 							// Determine current screen size and appropriate slides per view for editor
 							const getCurrentSlidesPerView = () => {
-								if (window.innerWidth >= 1024) {
+								if (editorWindow.innerWidth >= 1024) {
 									return slidesPerViewDesktop || 3;
-								} else if (window.innerWidth >= 768) {
+								} else if (editorWindow.innerWidth >= 768) {
 									return slidesPerViewTablet || 2;
 								} else {
 									return slidesPerViewMobile || 1;
@@ -267,9 +306,9 @@ export default function Edit({ attributes, setAttributes }) {
 
 							// Determine current gap based on screen size
 							const getCurrentGap = () => {
-								if (window.innerWidth >= 1024) {
+								if (editorWindow.innerWidth >= 1024) {
 									return cardGap?.desktop?.value ?? 30;
-								} else if (window.innerWidth >= 768) {
+								} else if (editorWindow.innerWidth >= 768) {
 									return cardGap?.tablet?.value ?? 20;
 								} else {
 									return cardGap?.mobile?.value ?? 15;
@@ -328,22 +367,42 @@ export default function Edit({ attributes, setAttributes }) {
 								resetProgress: false,
 								speed: 600,
 								easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-								breakpoints: {
-									1023: {
-										perPage: slidesPerViewTablet || 2,
-										gap: cardGap?.tablet?.value ?? 20,
-									},
-									767: {
-										perPage: slidesPerViewMobile || 1,
-										gap: cardGap?.mobile?.value ?? 15,
-									}
-								}
+								// No `breakpoints` option here — Splide's internal
+								// breakpoint engine also calls a bare `matchMedia`,
+								// which resolves against the same wrong (admin-page)
+								// window as the `window.innerWidth` checks above, so
+								// it could never have self-corrected. perPage/gap are
+								// instead kept in sync manually via the resize
+								// listener below, scoped to the iframe's own window.
 							});
-							
+
 							// Mount the Splide instance
 							splideInstance.mount();
 							splideInstanceRef.current = splideInstance;
-							
+
+							// Keep perPage/gap correct if the canvas is resized after
+							// mount — e.g. the Desktop/Tablet/Mobile preview toggle,
+							// opening/closing the Inspector sidebar, or an actual
+							// window resize. Listening on `editorWindow` (the
+							// iframe's own window) rather than the admin page's
+							// `window` is what makes this fire for those cases.
+							let resizeTimeout;
+							const handleEditorResize = () => {
+								clearTimeout(resizeTimeout);
+								resizeTimeout = setTimeout(() => {
+									if (splideInstanceRef.current) {
+										splideInstanceRef.current.options.perPage = getCurrentSlidesPerView();
+										splideInstanceRef.current.options.gap = getCurrentGap();
+										splideInstanceRef.current.refresh();
+									}
+								}, 250);
+							};
+							editorWindow.addEventListener('resize', handleEditorResize);
+							editorResizeCleanupRef.current = () => {
+								clearTimeout(resizeTimeout);
+								editorWindow.removeEventListener('resize', handleEditorResize);
+							};
+
 						} catch (error) {
 							console.error('Error creating Splide in editor:', error);
 						}
@@ -356,6 +415,10 @@ export default function Edit({ attributes, setAttributes }) {
 		return () => {
 			if (updateTimeoutRef.current) {
 				clearTimeout(updateTimeoutRef.current);
+			}
+			if (editorResizeCleanupRef.current) {
+				editorResizeCleanupRef.current();
+				editorResizeCleanupRef.current = null;
 			}
 			if (splideInstanceRef.current) {
 				splideInstanceRef.current.destroy();
@@ -1100,10 +1163,24 @@ export default function Edit({ attributes, setAttributes }) {
 				</PanelBody>
 
 				<PanelBody title="Color Settings" initialOpen={false}>
-					<BaseControl label="Text Color" help="Color for quote text, author name, and title">
+					<BaseControl label="Quote (Description) Color" help="Color for the review/quote text only">
 						<BoundColorPalette
-							value={textColor}
-							onChange={(v) => setAttributes({ textColor: v || "" })}
+							value={quoteColor || textColor}
+							onChange={(v) => setAttributes({ quoteColor: v || "" })}
+						/>
+					</BaseControl>
+
+					<BaseControl label="Author Name Color" help="Color for the author's name only">
+						<BoundColorPalette
+							value={authorNameColor || textColor}
+							onChange={(v) => setAttributes({ authorNameColor: v || "" })}
+						/>
+					</BaseControl>
+
+					<BaseControl label="Author Title Color" help="Color for the author's title/position only">
+						<BoundColorPalette
+							value={authorTitleColor || textColor}
+							onChange={(v) => setAttributes({ authorTitleColor: v || "" })}
 						/>
 					</BaseControl>
 

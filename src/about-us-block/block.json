@@ -3,7 +3,7 @@
   "apiVersion": 3,
   "name": "create-block/about-us-block",
   "version": "0.1.0",
-  "title": "About Us",
+  "title": "About Us (Free)",
   "category": "adaire-business",
   "description": "Editorial-style About Us section with hero heading, large statement, asymmetric image grid, body copy, and closing CTA.",
   "supports": {

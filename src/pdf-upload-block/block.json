@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "PDF Upload",
   "category": "adaire-media",
-  "description": "PDF Upload block for Adaire Blocks.",
+  "description": "PDF Upload block for Guten-Blocks.",
   "supports": {
     "html": false,
     "anchor": true

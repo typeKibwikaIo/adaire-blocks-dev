@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/button-block",
     "version": "0.1.0",
-    "title": "Button",
+    "title": "Button (Free)",
     "category": "adaire-start-actions",
     "description": "Create stylish call-to-action buttons with customizable styles, animations, and link destinations.",
     "example": {},

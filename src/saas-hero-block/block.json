@@ -3,9 +3,9 @@
   "apiVersion": 3,
   "name": "create-block/saas-hero-block",
   "version": "0.2.0",
-  "title": "SaaS Hero",
+  "title": "SaaS Hero (Free)",
   "category": "adaire-layout-hero",
-  "description": "SaaS Hero block for Adaire Blocks.",
+  "description": "SaaS Hero block for Guten-Blocks.",
   "supports": {
     "html": false,
     "anchor": true,

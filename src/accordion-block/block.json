@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/accordion-block",
     "version": "0.1.0",
-    "title": "Accordion Block",
+    "title": "Accordion (Free)",
     "category": "adaire-content-expandable",
     "description": "Create collapsible FAQ sections with smooth animations and customizable styling for organizing content.",
     "supports": {

@@ -6,7 +6,11 @@ body.adaire-header-no-scroll {
     position: relative;
     z-index: var(--adaire-header-z-index, 50);
     font-family: var(--adaire-header-font-family, inherit);
-    background-color: var(--adaire-header-background, #ffffff);
+    // Was `background-color`, which only accepts <color> values — when
+    // --adaire-header-background held a gradient() string the whole
+    // declaration was invalid and silently dropped, so the gradient never
+    // painted. `background` (shorthand) accepts both colors and gradients.
+    background: var(--adaire-header-background, #ffffff);
     background-image: var(--adaire-header-bg-image, none);
     background-size: var(--adaire-header-bg-size, cover);
     background-position: var(--adaire-header-bg-position, center center);
@@ -298,6 +302,14 @@ body.adaire-header-no-scroll {
     flex-shrink: 0;
 }
 
+// Wraps the mobile-only CTA rendered inside .adaire-header-nav by
+// render.php (adaire_header_render_nav()). Hidden by default — it only
+// ever shows inside the open dropdown/slide-in/overlay panel below the
+// ≤782px breakpoint (see the override there).
+.adaire-header-nav-mobile-cta {
+    display: none;
+}
+
 // Menu-indicator dots (req #3) — opt-in only; navShowDots gates the CSS
 // vars in render.php, so this rule simply has nothing to style unless a
 // dot span is actually present in the markup.
@@ -429,6 +441,11 @@ body.adaire-header-no-scroll {
 
 .adaire-header-mobile-toggle {
     display: none;
+    // Without this, the 3 bar <span>s become flex items laid out in a row
+    // (the default flex-direction) the moment the mobile media query below
+    // switches this to display:flex — they showed as 3 horizontal dashes
+    // side by side instead of stacking into a hamburger icon.
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     width: var(--adaire-header-hamburger-size, 42px);
@@ -448,9 +465,10 @@ body.adaire-header-no-scroll {
 
     span {
         display: block;
-        width: 18px;
-        height: 2px;
-        margin: 4px auto;
+        width: 20px;
+        height: 3px;
+        margin: 3px auto;
+        border-radius: 3px;
         background: var(--adaire-header-text-color, #111827);
         transition: transform 0.2s ease, opacity 0.2s ease, border-radius 0.2s ease;
     }
@@ -861,15 +879,46 @@ a.adaire-header-follow-us:focus {
         text-align: center;
     }
 
+    // Listed explicitly (instead of relying on the bare `.adaire-header-inner`
+    // selector below) because the desktop, non-media-query layout modifiers
+    // above (`&.layout-horizontal`, `&.layout-minimal`, etc.) carry a higher
+    // specificity (0,2,0 — two classes) than a bare `.adaire-header-inner`
+    // (0,1,0 — one class). Media queries don't add specificity, so without
+    // repeating every modifier class here, `.layout-horizontal`/`.layout-
+    // minimal` headers kept their desktop `display:flex` at every width —
+    // the mobile-only grid rule simply never won the cascade for them. That
+    // left the toggle/logo/nav as plain flex children in a `space-between`
+    // row, so the opened nav dropdown rendered as a shrunk, mispositioned
+    // flex item instead of a full-width panel below the row.
     .adaire-header-inner,
+    .adaire-header-inner.layout-horizontal,
     .adaire-header-inner.layout-split,
     .adaire-header-inner.layout-centered,
-    .adaire-header-inner.layout-stacked {
+    .adaire-header-inner.layout-stacked,
+    .adaire-header-inner.layout-minimal {
         display: grid;
         grid-template-columns: auto 1fr auto;
         gap: 14px;
         width: min(100% - 28px, var(--adaire-header-max-width, 1200px));
         text-align: left;
+    }
+
+    // `.adaire-header-inner` has 4+ DOM children (toggle, logo, nav, actions
+    // — plus optional before-nav social/payment/cart and a center search
+    // slot) but only 3 grid columns. `.adaire-header-nav` needs a full free
+    // row for its `grid-column: 1/-1`, so CSS Grid's auto-placement cursor
+    // skips the rest of row 1 (it never backfills earlier rows) and pushes
+    // whatever comes after nav in the markup — `.adaire-header-actions`,
+    // i.e. the search button and any other leftover icons — onto a brand
+    // new row 3, below the opened nav panel. That's what rendered as a
+    // stray, disconnected icon row hanging under the dropdown card. Pinning
+    // every top-bar element to row 1 and the nav to row 2 removes the
+    // ambiguity so nothing can fall through to a phantom row 3.
+    .adaire-header-mobile-toggle,
+    .adaire-header-logo,
+    .adaire-header-search-slot,
+    .adaire-header-actions {
+        grid-row: 1;
     }
 
     .adaire-header-mobile-toggle {
@@ -890,6 +939,7 @@ a.adaire-header-follow-us:focus {
 
     .adaire-header-nav {
         display: none;
+        grid-row: 2;
         grid-column: 1 / -1;
         width: 100%;
         flex-direction: column;
@@ -983,6 +1033,24 @@ a.adaire-header-follow-us:focus {
     .adaire-header-action,
     .adaire-header-socials {
         display: none;
+    }
+
+    // Re-shows the mobile CTA wrapper (and the action link inside it, which
+    // the blanket `.adaire-header-action { display: none }` rule above would
+    // otherwise also catch — `.adaire-header-nav-mobile-cta .adaire-header-
+    // action` is two classes deep so it naturally wins regardless of source
+    // order). Centered in overlay mode automatically, since
+    // `.adaire-header-nav` already has `align-items: center` there.
+    .adaire-header-nav-mobile-cta {
+        display: flex;
+        justify-content: center;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--adaire-header-border-color, #e5e7eb);
+    }
+
+    .adaire-header-nav-mobile-cta .adaire-header-action {
+        display: inline-flex;
     }
 
     // Payment trust badges are decorative, so they're dropped on mobile the

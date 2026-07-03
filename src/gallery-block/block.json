@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/gallery-block",
     "version": "0.1.0",
-    "title": "Gallery",
+    "title": "Gallery (Free)",
     "category": "adaire-media-images",
     "description": "Add one to many images and arrange them in a flexible grid or masonry layout.",
     "example": {},

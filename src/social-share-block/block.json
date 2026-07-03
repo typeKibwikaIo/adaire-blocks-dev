@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/social-share-block",
     "version": "0.1.0",
-    "title": "Share Buttons",
+    "title": "Share Buttons (Free)",
     "category": "adaire-social-engagement",
     "description": "Add social media share buttons for Facebook, Twitter, LinkedIn, and other platforms.",
     "example": {},

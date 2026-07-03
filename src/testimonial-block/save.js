@@ -3,6 +3,9 @@
 export default function save({ attributes }) {
 	const {
 		textColor,
+		quoteColor,
+		authorNameColor,
+		authorTitleColor,
 		arrowColor,
 		dotColor,
 		fontSize,
@@ -60,6 +63,11 @@ export default function save({ attributes }) {
 			color: textColor || "#000000",
 			fontSize: `${fontSize || 16}px`,
 			"--text-color": textColor || "#000000",
+			// Independent color overrides for quote / author name / author title —
+			// must mirror edit.js exactly since this block saves static markup.
+			"--quote-color": quoteColor || textColor || "#333333",
+			"--author-name-color": authorNameColor || textColor || "#333333",
+			"--author-title-color": authorTitleColor || textColor || "#666666",
 			"--card-gap": `${gap || 30}px`,
 			"--logo-size": `${logoSize || 60}px`,
 			"--arrow-color": arrowColor,

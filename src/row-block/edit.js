@@ -90,7 +90,7 @@ const PRESETS = [
 export default function Edit( { attributes, setAttributes, clientId } ) {
   const { layout: layoutAttr, align } = attributes;
 
-  const { columnWidths = [] } = attributes;
+  const { columnWidths = [], gap = 16, verticalAlign = '', mobileColumns = '' } = attributes;
   const gridTemplateColumns = columnWidths.length
     ? columnWidths.map( ( w ) => `${ w }fr` ).join( ' ' )
     : '1fr';
@@ -114,12 +114,47 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
           ) ) }
         </ToggleGroupControl>
       </PanelBody>
+      <PanelBody title={ __( 'Spacing & Alignment', 'adaire-row' ) } initialOpen={ false }>
+        <RangeControl
+          label={ __( 'Gap Between Columns (px)', 'adaire-row' ) }
+          value={ gap }
+          onChange={ ( value ) => setAttributes( { gap: value } ) }
+          min={ 0 }
+          max={ 80 }
+          help={ __( 'Set to 0 to remove the space columns leave on the sides.', 'adaire-row' ) }
+        />
+        <ToggleGroupControl
+          label={ __( 'Vertical Alignment', 'adaire-row' ) }
+          value={ verticalAlign || 'stretch' }
+          isBlock
+          onChange={ ( value ) => setAttributes( { verticalAlign: value === 'stretch' ? '' : value } ) }
+          help={ __( 'Controls how columns line up when they have different heights. Updates instantly.', 'adaire-row' ) }
+        >
+          <ToggleGroupControlOption value="stretch" label={ __( 'Stretch', 'adaire-row' ) } />
+          <ToggleGroupControlOption value="top" label={ __( 'Top', 'adaire-row' ) } />
+          <ToggleGroupControlOption value="center" label={ __( 'Center', 'adaire-row' ) } />
+          <ToggleGroupControlOption value="bottom" label={ __( 'Bottom', 'adaire-row' ) } />
+        </ToggleGroupControl>
+        { columnWidths.length > 1 && (
+          <ToggleGroupControl
+            label={ __( 'Mobile Columns', 'adaire-row' ) }
+            value={ mobileColumns || 'auto' }
+            isBlock
+            onChange={ ( value ) => setAttributes( { mobileColumns: value === 'auto' ? '' : value } ) }
+            help={ __( 'Auto wraps as many columns as fit. 1 stacks columns into a single column on phones. 2 keeps exactly two per row.', 'adaire-row' ) }
+          >
+            <ToggleGroupControlOption value="auto" label={ __( 'Auto', 'adaire-row' ) } />
+            <ToggleGroupControlOption value="1" label={ __( '1 per row', 'adaire-row' ) } />
+            <ToggleGroupControlOption value="2" label={ __( '2 per row', 'adaire-row' ) } />
+          </ToggleGroupControl>
+        ) }
+      </PanelBody>
     </InspectorControls>
   );
 
   const blockProps = useBlockProps( {
-    className: `adaire-row adaire-row--cols-${ columnWidths.length } ${ getRowWidthClass( align ) }`,
-    style: { gridTemplateColumns },
+    className: `adaire-row adaire-row--cols-${ columnWidths.length } ${ getRowWidthClass( align ) } ${ verticalAlign ? `adaire-row--valign-${ verticalAlign }` : '' } ${ mobileColumns ? `adaire-row--mobile-cols-${ mobileColumns }` : '' }`,
+    style: { gridTemplateColumns, gap: `${ gap }px` },
   } );
 
   // Use the store name string — compatible with all Gutenberg versions.

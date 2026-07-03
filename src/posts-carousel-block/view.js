@@ -1063,7 +1063,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="adaire-posts-carousel__image">
                     ${imageUrl ? 
                         `<img src="${imageUrl}" alt="${post.title.rendered}" loading="lazy" />` :
-                        `<div class="adaire-posts-carousel__placeholder"><span>No Image</span></div>`
+                        `<div class="adaire-posts-carousel__image-placeholder"><span>No Image</span></div>`
                     }
                 </div>
                 <div class="adaire-posts-carousel__content">

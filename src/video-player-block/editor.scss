@@ -32,6 +32,18 @@
         &.is-constrained {
             max-width: var(--container-max-width, 1200px) ;
         }
+
+        // QuickZone wraps __content in a plain block-level div (.adaire-qz)
+        // with no explicit height. That broke the percentage-height chain
+        // from this container (explicit height) down to __content's
+        // height:100% and, in turn, the video iframe/video's height:100% —
+        // percentage heights only resolve against an ancestor with an
+        // explicit (non-auto) height. The video was rendering at its
+        // fallback intrinsic size (roughly half the container) with the
+        // rest of the styled container showing as empty space below it.
+        > .adaire-qz {
+            height: 100%;
+        }
     }
 
     // Responsive container max-width for tablet
@@ -202,9 +214,109 @@
     }
 
     /**
-     * Editor-specific adjustments
-     * Add visual aids for better editing experience
+     * "Choose your video" empty-state placeholder
+     * Shown in the editor canvas until a video/image source is picked,
+     * instead of a blank/broken embed. Sits inside __content, so the
+     * container's own background color / border / radius / shadow
+     * (Container Settings panel) still shows through underneath it.
      */
+    &__choose-placeholder {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(120% 140% at 30% 20%, #4b5568 0%, #232733 45%, #14161f 100%);
+        color: #ffffff;
+        overflow: hidden;
+    }
+
+    &__choose-badge {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px 5px 8px;
+        border-radius: 999px;
+        background: rgba(17, 24, 39, 0.55);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+    }
+
+    &__choose-badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ec4899;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+    &__choose-center {
+        position: relative; // stack above __editor-remote-thumb (see below)
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        max-width: 80%;
+        text-align: center;
+    }
+
+    &__choose-play {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        flex-shrink: 0;
+    }
+
+    &__choose-text {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    /**
+     * Editor-only YouTube/Vimeo preview (see EditorRemotePreview in edit.js).
+     * A live third-party iframe reliably fails to load inside the block
+     * editor's own canvas iframe (YouTube throws "Error 153"), so the editor
+     * shows a static thumbnail + play badge instead. The frontend
+     * (save.js/view.js) is untouched and still embeds the real player.
+     */
+    &__editor-remote-preview {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(120% 140% at 30% 20%, #4b5568 0%, #232733 45%, #14161f 100%);
+        color: #ffffff;
+        overflow: hidden;
+    }
+
+    &__editor-remote-thumb {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.5);
+    }
 
     // Add subtle border in editor to show block boundaries
 	&.is-selected {

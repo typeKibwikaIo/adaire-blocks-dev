@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/pricing-comparison-block",
     "version": "0.1.0",
-    "title": "Plan Comparison",
+    "title": "Plan Comparison (Free)",
     "category": "adaire-marketing-conversion",
     "description": "Compare pricing plans with feature tables, audience tabs, and a sticky choose-plan bar.",
     "supports": {
@@ -38,11 +38,11 @@
         },
         "subheadingText": {
             "type": "string",
-            "default": "Adaire Blocks website builder"
+            "default": "Guten-Blocks website builder"
         },
         "linkText": {
             "type": "string",
-            "default": "Discover Adaire Blocks Pro"
+            "default": "Discover Guten-Blocks Pro"
         },
         "linkUrl": {
             "type": "string",
@@ -85,7 +85,7 @@
                             "badgeText": "",
                             "highlight": false,
                             "metaItems": [
-                                "0 Adaire Blocks credits",
+                                "0 Guten-Blocks credits",
                                 "1 site"
                             ]
                         },
@@ -103,7 +103,7 @@
                             "badgeText": "",
                             "highlight": false,
                             "metaItems": [
-                                "0 Adaire Blocks credits",
+                                "0 Guten-Blocks credits",
                                 "1 site"
                             ]
                         },
@@ -121,7 +121,7 @@
                             "badgeText": "",
                             "highlight": false,
                             "metaItems": [
-                                "0 Adaire Blocks credits",
+                                "0 Guten-Blocks credits",
                                 "3 sites"
                             ]
                         },
@@ -139,7 +139,7 @@
                             "badgeText": "Best value",
                             "highlight": true,
                             "metaItems": [
-                                "25,000 monthly Adaire Blocks credits",
+                                "25,000 monthly Guten-Blocks credits",
                                 "1 site"
                             ]
                         }
@@ -340,7 +340,7 @@
                             "badgeText": "",
                             "highlight": false,
                             "metaItems": [
-                                "0 Adaire Blocks credits",
+                                "0 Guten-Blocks credits",
                                 "3 sites"
                             ]
                         },
@@ -358,7 +358,7 @@
                             "badgeText": "",
                             "highlight": false,
                             "metaItems": [
-                                "0 Adaire Blocks credits",
+                                "0 Guten-Blocks credits",
                                 "10 sites"
                             ]
                         },
@@ -376,7 +376,7 @@
                             "badgeText": "Most popular",
                             "highlight": true,
                             "metaItems": [
-                                "5,000 Adaire Blocks credits",
+                                "5,000 Guten-Blocks credits",
                                 "25 sites"
                             ]
                         },
@@ -394,7 +394,7 @@
                             "badgeText": "",
                             "highlight": false,
                             "metaItems": [
-                                "10,000 Adaire Blocks credits",
+                                "10,000 Guten-Blocks credits",
                                 "100 sites"
                             ]
                         }

@@ -176,6 +176,10 @@ export default function Edit( { attributes, setAttributes } ) {
 			'--tl-item-title-line-height'    : a.itemTitleLineHeight    || '1.3',
 			'--tl-item-title-letter-spacing' : a.itemTitleLetterSpacing || 'normal',
 			'--tl-item-title-text-transform' : a.itemTitleTextTransform || 'none',
+			// Milestone title (e.g. "Seamless Onboarding") used to share
+			// --tl-text with the block's overall section title — falls back to
+			// textColor so existing content keeps its current look.
+			'--tl-item-title-color'         : a.itemTitleColor || a.textColor || '#ffffff',
 
 			'--tl-item-desc-font-size'      : a.itemDescFontSize      || '15px',
 			'--tl-item-desc-font-weight'    : a.itemDescFontWeight    || '400',
@@ -237,9 +241,29 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 				<PanelBody title={ __( 'Colors', 'timeline-block' ) } initialOpen={ false }>
 					<ColorPicker
+						label={ __( 'Background Color', 'timeline-block' ) }
+						value={ attributes.backgroundColor }
+						onChange={ ( value ) => setAttributes( { backgroundColor: value } ) }
+					/>
+					<ColorPicker
 						label={ __( 'Accent Color', 'timeline-block' ) }
 						value={ attributes.accentColor }
 						onChange={ ( value ) => setAttributes( { accentColor: value } ) }
+					/>
+					<ColorPicker
+						label={ __( 'Section Header Color', 'timeline-block' ) }
+						value={ attributes.textColor }
+						onChange={ ( value ) => setAttributes( { textColor: value } ) }
+					/>
+					<ColorPicker
+						label={ __( 'Milestone Title Color', 'timeline-block' ) }
+						value={ attributes.itemTitleColor }
+						onChange={ ( value ) => setAttributes( { itemTitleColor: value } ) }
+					/>
+					<ColorPicker
+						label={ __( 'Description Color', 'timeline-block' ) }
+						value={ attributes.descriptionColor }
+						onChange={ ( value ) => setAttributes( { descriptionColor: value } ) }
 					/>
 				</PanelBody>
 				<PanelBody title={ __( 'Typography', 'timeline-block' ) } initialOpen={ false }>

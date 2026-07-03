@@ -1,0 +1,91 @@
+ADAIRE BLOCKS — FREE TIER BLOCK CATALOG
+23 blocks across 16 categories
+(5 structural sub-blocks — Column, Accordion Item, Tab Panel, Content Toggle Panel,
+Card Scroll Item — are excluded; they only exist inside their parent block, not as
+standalone inserter entries.)
+
+BUSINESS
+- About Us
+  Editorial-style About Us section with hero heading, large statement, asymmetric
+  image grid, body copy, and closing CTA.
+
+EXPANDABLE CONTENT
+- Accordion Block
+  Collapsible FAQ sections with smooth animations and customizable styling.
+
+CONTENT & INFO
+- Scroll Animation
+  Animations that trigger as visitors scroll through the page.
+- Feature Box
+  Features, services, or benefits shown with icons, titles, and descriptions in a
+  grid layout.
+
+START & ACTIONS
+- Button
+  Call-to-action buttons with customizable styles, animations, and link
+  destinations.
+
+INTERACTIVE
+- Card Slider
+  Cards displayed in a horizontal scrolling layout.
+
+TABS & CONTENT
+- Content Switcher
+  Lets users switch between two or more pieces of content.
+- Tabbed Content
+  Organizes content into clickable tabs with smooth transitions.
+
+MEDIA & IMAGES
+- Gallery
+  One to many images arranged in a flexible grid or masonry layout.
+
+LAYOUT & NAVIGATION
+- Header
+  Responsive site headers with logo, navigation, CTA, search, social icons, top
+  bar, sticky behavior, and mobile hamburger menu.
+
+INFORMATION BLOCKS
+- Advanced Feature Grid
+  Enhanced feature grid with additional design and layout options.
+- Timeline
+  Vertical alternating or horizontal timeline with customizable items, icons,
+  colors, and section header.
+
+BLOG & CONTENT
+- Blog Post Slider
+  WordPress posts in a sliding carousel with navigation controls.
+- Blog Post Grid
+  WordPress posts in a responsive grid with customizable layouts and filters.
+
+MARKETING & CONVERSION
+- Plan Comparison
+  Pricing plans compared with feature tables, audience tabs, and a sticky
+  choose-plan bar.
+- Pricing Plans
+  Showcases pricing packages, subscriptions, or service plans.
+
+LAYOUT SECTIONS
+- Row
+  A row container with configurable column layouts.
+- Website Footer
+  Fully controllable, inline-editable footer with top bar, columns, and bottom
+  bar zones.
+
+LAYOUT & HERO
+- SaaS Hero
+  Hero section built for SaaS landing pages.
+
+SOCIAL & ENGAGEMENT
+- Social Media Banner
+  Social links in a floating or fixed banner with customizable styling.
+- Share Buttons
+  Social sharing buttons for Facebook, Twitter, LinkedIn, and other platforms.
+
+TESTIMONIALS
+- Customer Reviews
+  Customer testimonials with quotes, author info, and ratings to build trust.
+
+MEDIA & VIDEOS
+- Video Player
+  Embeds and plays videos from YouTube, Vimeo, or uploaded files with
+  customizable controls.

@@ -787,7 +787,7 @@ export default function Edit({ attributes, setAttributes }) {
                         />
                         <div style={{ marginBottom: 4 }}>
                             <label>{__('Tagline Color', 'website-footer-block')}</label>
-                            <ColorPicker color={column.taglineColor || ''} onChangeComplete={(c) => updateColumn(column.id, { taglineColor: c.hex })} disableAlpha />
+                            <BoundColorPalette value={column.taglineColor || ''} onChange={(v) => updateColumn(column.id, { taglineColor: v || '' })} />
                         </div>
                     </PanelBody>
                 ))}

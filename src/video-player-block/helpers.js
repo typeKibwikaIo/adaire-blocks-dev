@@ -33,6 +33,7 @@ export const getVideoPlayerStyles = ( attributes ) => {
 		containerBackgroundColor,
 		containerBorderColor,
 		containerBorderWidth,
+		containerBorderEnabled,
 		containerShadowIntensity,
 		marginTop,
 		marginRight,
@@ -50,8 +51,18 @@ export const getVideoPlayerStyles = ( attributes ) => {
 		'--container-height': getUnitValue( getContainerHeightForDevice( containerHeight, 'desktop' ), 315, 'px' ),
 		'--container-border-radius': `${ containerBorderRadius ?? 20 }px`,
 		'--container-background-color': containerBackgroundColor || 'transparent',
-		'--container-border-color': containerBorderColor || 'transparent',
-		'--container-border-width': `${ containerBorderWidth ?? 0 }px`,
+		// Border only renders when explicitly enabled via the 'Show Border'
+		// toggle. This is deliberate, not redundant with the 0/'' defaults
+		// above: this block saves static markup, so containerBorderWidth/
+		// containerBorderColor values set (even briefly, e.g. during earlier
+		// testing/dev) before those defaults were corrected are permanently
+		// baked into already-published posts and survive any future default
+		// change. Gating on a brand-new boolean (which is undefined -> false
+		// on every pre-existing post, since it never existed to be saved)
+		// retroactively turns the border off everywhere until a user
+		// explicitly opts back in on a given block.
+		'--container-border-color': containerBorderEnabled ? ( containerBorderColor || 'transparent' ) : 'transparent',
+		'--container-border-width': `${ containerBorderEnabled ? ( containerBorderWidth ?? 0 ) : 0 }px`,
 		'--container-shadow-intensity': containerShadowIntensity ?? 0,
 	};
 

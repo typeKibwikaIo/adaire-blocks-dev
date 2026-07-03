@@ -27,6 +27,11 @@ import { desktop, tablet, mobile } from '@wordpress/icons';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
 
+// Sample image used only for the editor's "no posts yet" demo cards below —
+// never used in the saved/frontend output, which always pulls the real
+// featured image (or the styled placeholder) from the WordPress REST API.
+const DEMO_IMAGE_URL = 'https://static.wixstatic.com/media/4b9d2b_2c368161aa454e99912d895d1d2baa70~mv2.png/v1/fill/w_704,h_488,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/4b9d2b_2c368161aa454e99912d895d1d2baa70~mv2.png';
+
 const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
     const [activeZone, setActiveZone] = useState(null);
@@ -1150,12 +1155,12 @@ return (
                                 <div className="adaire-posts-carousel__item">
                                     <div className="adaire-posts-carousel__image">
                                     {post.featured_media ? (
-                                        <img 
-                                            src={post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '/placeholder.jpg'} 
+                                        <img
+                                            src={post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '/placeholder.jpg'}
                                             alt={post.title.rendered}
                                         />
                                     ) : (
-                                            <div className="adaire-posts-carousel__placeholder">
+                                            <div className="adaire-posts-carousel__image-placeholder">
                                                 <span>{__('No Image', 'posts-carousel-block')}</span>
                                         </div>
                                     )}
@@ -1178,29 +1183,76 @@ return (
                                 </div>
                             </div>
                         )) : (
-                            // Fallback preview when no posts are available
-                            Array.from({ length: Math.max(1, Math.min(postsPerPage, 4)) }, (_, index) => (
-                                <div 
-                                    key={`preview-${index}`} 
+                            // Demo preview shown before any real posts are available (e.g. on a
+                            // fresh install). Uses varied sample copy and the block's real
+                            // excerpt/meta fields so the inserter preview and first-insert state
+                            // actually showcase what the block can do, instead of a bare
+                            // "No Image" / "Sample Post Title" card repeated four times.
+                            [
+                                {
+                                    category: __('Design', 'posts-carousel-block'),
+                                    title: __('5 Layout Trends Shaping Modern Websites', 'posts-carousel-block'),
+                                    excerpt: __('From bold typography to asymmetric grids, see the trends defining how websites look and feel this year.', 'posts-carousel-block'),
+                                    author: 'Jamie Lee',
+                                    date: 'Jun 12, 2026',
+                                    readTime: 4,
+                                },
+                                {
+                                    category: __('Development', 'posts-carousel-block'),
+                                    title: __('A Practical Guide to Faster Page Loads', 'posts-carousel-block'),
+                                    excerpt: __('Simple, high-impact techniques for shaving seconds off your load time without a full rebuild.', 'posts-carousel-block'),
+                                    author: 'Priya Shah',
+                                    date: 'Jun 5, 2026',
+                                    readTime: 6,
+                                },
+                                {
+                                    category: __('Marketing', 'posts-carousel-block'),
+                                    title: __('Turning Blog Traffic Into Newsletter Signups', 'posts-carousel-block'),
+                                    excerpt: __('The small on-page changes that make readers actually want to hear from you again.', 'posts-carousel-block'),
+                                    author: 'Marcus Webb',
+                                    date: 'May 28, 2026',
+                                    readTime: 5,
+                                },
+                                {
+                                    category: __('Business', 'posts-carousel-block'),
+                                    title: __('What We Learned Shipping 100 Client Sites', 'posts-carousel-block'),
+                                    excerpt: __('The patterns that kept showing up, and the mistakes worth avoiding on your next project.', 'posts-carousel-block'),
+                                    author: 'Alicia Kim',
+                                    date: 'May 19, 2026',
+                                    readTime: 7,
+                                },
+                            ].slice(0, Math.max(1, Math.min(postsPerPage, 4))).map((demoPost, index) => (
+                                <div
+                                    key={`preview-${index}`}
                                     className="adaire-posts-carousel__slide"
                                     style={{ cursor: 'pointer' }}
-                                    title="Preview - Entire card will be clickable on frontend"
+                                    title={__('Demo content — your real posts will appear here once published', 'posts-carousel-block')}
                                 >
                                     <div className="adaire-posts-carousel__item">
                                         <div className="adaire-posts-carousel__image">
-                                            <div className="adaire-posts-carousel__placeholder">
-                                                <span>{__('No Image', 'posts-carousel-block')}</span>
-                                        </div>
+                                            <img src={DEMO_IMAGE_URL} alt={demoPost.title} />
                                     </div>
                                         <div className="adaire-posts-carousel__content">
                                             <div className="adaire-posts-carousel__categories">
                                                 <span className="adaire-posts-carousel__category-tag">
-                                                    {showCategories && categories.length > 0 ? categories[0].name : 'ARTICLE'}
+                                                    {showCategories && categories.length > 0 ? categories[0].name : demoPost.category}
                                                 </span>
                                             </div>
                                             <h3 className="adaire-posts-carousel__title">
-                                                {__('Sample Post Title', 'posts-carousel-block')}
+                                                {demoPost.title}
                                         </h3>
+                                            {showExcerpt && (
+                                                <p className="adaire-posts-carousel__excerpt">
+                                                    {demoPost.excerpt}
+                                                </p>
+                                            )}
+                                            {(showDate || showAuthor || showReadTime) && (
+                                                <div className="adaire-posts-carousel__meta">
+                                                    {showDate && <span className="adaire-posts-carousel__date">{demoPost.date}</span>}
+                                                    {showAuthor && <span className="adaire-posts-carousel__author">{demoPost.author}</span>}
+                                                    {showReadTime && <span className="adaire-posts-carousel__read-time">{demoPost.readTime} min read</span>}
+                                                </div>
+                                            )}
                                             </div>
                                     </div>
                                 </div>

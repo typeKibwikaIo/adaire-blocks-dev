@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
-import { PanelBody, RangeControl } from '@wordpress/components';
+import { PanelBody, RangeControl, __experimentalToggleGroupControl as ToggleGroupControl, __experimentalToggleGroupControlOption as ToggleGroupControlOption } from '@wordpress/components';
 import { select, useDispatch } from '@wordpress/data';
 
 const MIN_COLUMN_WIDTH = 5;
@@ -53,10 +53,14 @@ function redistributeWidths( targetClientId, newWidth, siblings ) {
 }
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { width } = attributes;
+	const { width, horizontalAlign = '', verticalAlign = '' } = attributes;
 
 	const blockProps = useBlockProps( {
-		className: 'adaire-column',
+		className: [
+			'adaire-column',
+			horizontalAlign && `adaire-column--halign-${ horizontalAlign }`,
+			verticalAlign && `adaire-column--valign-${ verticalAlign }`,
+		].filter( Boolean ).join( ' ' ),
 	} );
 
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
@@ -99,6 +103,30 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						max={ 100 }
 						help={ __( 'Other columns in this row adjust automatically to fill the remaining space.', 'adaire-column' ) }
 					/>
+				</PanelBody>
+				<PanelBody title={ __( 'Alignment', 'adaire-column' ) } initialOpen={ false }>
+					<ToggleGroupControl
+						label={ __( 'Horizontal Alignment', 'adaire-column' ) }
+						value={ horizontalAlign || 'stretch' }
+						isBlock
+						onChange={ ( value ) => setAttributes( { horizontalAlign: value === 'stretch' ? '' : value } ) }
+						help={ __( 'Aligns this column\'s content. Updates instantly.', 'adaire-column' ) }
+					>
+						<ToggleGroupControlOption value="stretch" label={ __( 'Stretch', 'adaire-column' ) } />
+						<ToggleGroupControlOption value="left" label={ __( 'Left', 'adaire-column' ) } />
+						<ToggleGroupControlOption value="center" label={ __( 'Center', 'adaire-column' ) } />
+						<ToggleGroupControlOption value="right" label={ __( 'Right', 'adaire-column' ) } />
+					</ToggleGroupControl>
+					<ToggleGroupControl
+						label={ __( 'Vertical Alignment', 'adaire-column' ) }
+						value={ verticalAlign || 'top' }
+						isBlock
+						onChange={ ( value ) => setAttributes( { verticalAlign: value === 'top' ? '' : value } ) }
+					>
+						<ToggleGroupControlOption value="top" label={ __( 'Top', 'adaire-column' ) } />
+						<ToggleGroupControlOption value="center" label={ __( 'Center', 'adaire-column' ) } />
+						<ToggleGroupControlOption value="bottom" label={ __( 'Bottom', 'adaire-column' ) } />
+					</ToggleGroupControl>
 				</PanelBody>
 			</InspectorControls>
 			<div { ...innerBlocksProps } />

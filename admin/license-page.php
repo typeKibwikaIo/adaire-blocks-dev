@@ -115,8 +115,8 @@ class AdaireBlocksLicensePage {
             
             <div class="adaire-license-container" data-license-key="<?php echo esc_attr($license_data['license_key'] ?? ''); ?>">
                 <div class="adaire-license-header">
-                    <h2>Adaire Blocks License</h2>
-                    <p class="description">Manage your Adaire Blocks license activation and status.</p>
+                    <h2>Guten-Blocks License</h2>
+                    <p class="description">Manage your Guten-Blocks license activation and status.</p>
                 </div>
                 
                 <div class="adaire-license-content">
@@ -186,7 +186,7 @@ class AdaireBlocksLicensePage {
                                                placeholder="Enter your license key"
                                                value="<?php echo esc_attr($license_data['license_key'] ?? ''); ?>"
                                                required>
-                                        <p class="description">Enter your Adaire Blocks license key to activate the plugin.</p>
+                                        <p class="description">Enter your Guten-Blocks license key to activate the plugin.</p>
                                     </div>
                                     
                                     <div class="adaire-license-actions">

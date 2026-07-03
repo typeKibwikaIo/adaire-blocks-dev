@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Adaire Blocks
+ * Plugin Name:       Guten-Blocks
  * Description:       A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.
  * Version:           1.2.6
  * Requires at least: 6.7
@@ -275,7 +275,7 @@ function adaire_blocks_license_notice() {
 	?>
 	<div class="notice notice-warning is-dismissible">
 		<p>
-			<strong>Adaire Blocks:</strong> 
+			<strong>Guten-Blocks:</strong> 
 			Your license is not active. 
 			<a href="<?php echo esc_url($license_page_url); ?>">Activate your license</a> 
 			to unlock all features and receive updates.
@@ -296,7 +296,7 @@ function adaire_blocks_license_error_notice($message) {
 	?>
 	<div class="notice notice-error is-dismissible">
 		<p>
-			<strong>Adaire Blocks License Error:</strong> 
+			<strong>Guten-Blocks License Error:</strong> 
 			<?php echo esc_html($message); ?>
 			<a href="<?php echo esc_url($license_page_url); ?>">Check your license</a>
 		</p>
@@ -1702,8 +1702,8 @@ add_action( 'init', function() {
  */
 add_action( 'init', function() {
 	register_nav_menus( array(
-		'adaire-blocks-primary' => __( 'Adaire Blocks — Primary Navigation', 'adaire-blocks' ),
-		'adaire-blocks-footer'  => __( 'Adaire Blocks — Footer Navigation', 'adaire-blocks' ),
+		'adaire-blocks-primary' => __( 'Guten-Blocks — Primary Navigation', 'adaire-blocks' ),
+		'adaire-blocks-footer'  => __( 'Guten-Blocks — Footer Navigation', 'adaire-blocks' ),
 	) );
 } );
 
@@ -1718,8 +1718,8 @@ add_action( 'init', function() {
 		register_sidebar( array(
 			'id'            => 'adaire-footer-widget-' . $i,
 			/* translators: %d: widget area number. */
-			'name'          => sprintf( __( 'Adaire Blocks — Footer Widget Area %d', 'adaire-blocks' ), $i ),
-			'description'   => __( 'Used by the Adaire Blocks Footer block\'s Widget Area column type.', 'adaire-blocks' ),
+			'name'          => sprintf( __( 'Guten-Blocks — Footer Widget Area %d', 'adaire-blocks' ), $i ),
+			'description'   => __( 'Used by the Guten-Blocks Footer block\'s Widget Area column type.', 'adaire-blocks' ),
 			'before_widget' => '<div class="website-footer-block__widget %1$s">',
 			'after_widget'  => '</div>',
 			'before_title'  => '<h4 class="website-footer-block__widget-title">',
@@ -1737,137 +1737,137 @@ function adaire_blocks_register_block_categories( $categories, $editor_context )
 	$custom_categories = array(
 		array(
 			'slug'  => 'adaire-blocks-premium',
-			'title' => __( 'Adaire Blocks PREMIUM', 'adaire-blocks' ),
+			'title' => __( 'Guten-Blocks PREMIUM', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blocks-plus',
-			'title' => __( 'Adaire Blocks PLUS', 'adaire-blocks' ),
+			'title' => __( 'Guten-Blocks PLUS', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blocks-free',
-			'title' => __( 'Adaire Blocks FREE', 'adaire-blocks' ),
+			'title' => __( 'Guten-Blocks FREE', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blocks-alignment-layout-structure',
-			'title' => __( 'Alignment, Layout & Structure (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Alignment, Layout & Structure (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-hero-sections',
-			'title' => __( 'Hero & Navigation (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Hero & Navigation (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-layout-sections',
-			'title' => __( 'Layout Sections (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Layout Sections (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-marketing',
-			'title' => __( 'Marketing (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Marketing (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-media',
-			'title' => __( 'Media (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Media (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-business',
-			'title' => __( 'Business (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Business (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-testimonial',
-			'title' => __( 'Testimonials (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Testimonials (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-social',
-			'title' => __( 'Social (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Social (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blog-publishing',
-			'title' => __( 'Blog & Publishing (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Blog & Publishing (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-start-actions',
-			'title' => __( 'Start & Actions (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Start & Actions (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-information-blocks',
-			'title' => __( 'Information Blocks (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Information Blocks (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-effects-interactions',
-			'title' => __( 'Effects & Interactions (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Effects & Interactions (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-interactive',
-			'title' => __( 'Interactive (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Interactive (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-layout-navigation',
-			'title' => __( 'Layout & Navigation (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Layout & Navigation (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blog-content',
-			'title' => __( 'Blog & Content (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Blog & Content (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-content-expandable',
-			'title' => __( 'Expandable Content (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Expandable Content (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-content-info',
-			'title' => __( 'Content & Info (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Content & Info (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-content-tabs',
-			'title' => __( 'Tabs & Content (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Tabs & Content (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-layout-hero',
-			'title' => __( 'Layout & Hero (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Layout & Hero (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-marketing-conversion',
-			'title' => __( 'Marketing & Conversion (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Marketing & Conversion (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-media-images',
-			'title' => __( 'Media & Images (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Media & Images (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-media-videos',
-			'title' => __( 'Media & Videos (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Media & Videos (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-reviews-trust',
-			'title' => __( 'Reviews & Trust (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Reviews & Trust (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-social-engagement',
-			'title' => __( 'Social & Engagement (Adaire Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Social & Engagement (Guten-Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 	);

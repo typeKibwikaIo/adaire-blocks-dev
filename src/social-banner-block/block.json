@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/social-banner-block",
     "version": "0.1.0",
-    "title": "Social Media Banner",
+    "title": "Social Banner (Free)",
     "category": "adaire-social-engagement",
     "description": "Display social media links in a floating or fixed banner with customizable styling.",
     "example": {},

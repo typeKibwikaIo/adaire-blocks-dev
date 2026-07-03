@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/posts-grid-block",
     "version": "0.1.0",
-    "title": "Blog Post Grid",
+    "title": "Blog Post Grid (Free)",
     "category": "adaire-blog-content",
     "description": "Display WordPress blog posts in a responsive grid with customizable layouts and filters.",
     "supports": {

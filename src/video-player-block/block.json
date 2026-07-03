@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/video-player-block",
     "version": "0.1.0",
-    "title": "Video Player",
+    "title": "Video Player (Free)",
     "category": "adaire-media-videos",
     "description": "Embed and play videos from YouTube, Vimeo, or upload your own video files with customizable controls.",
     "supports": {
@@ -90,6 +90,10 @@
         "containerBorderWidth": {
             "type": "number",
             "default": 0
+        },
+        "containerBorderEnabled": {
+            "type": "boolean",
+            "default": false
         },
         "containerShadowIntensity": {
             "type": "number",

@@ -51,6 +51,98 @@ onClick={ () => onChange( unit ) }
 </ButtonGroup>
 );
 
+// Whether the block currently has an actual video/media source selected.
+// Mirrors what would end up in the iframe/video `src` for each videoType —
+// used to decide when to show the "choose a video" placeholder instead of
+// a blank/broken embed (no ID yet means an embed URL like
+// "youtube.com/embed/?mute=0..." with nothing to play).
+const isMediaConfigured = ( attributes ) => {
+const { videoType, ytVideoId, vimeoVideoId, mediaFileUrl, videoFileUrl } = attributes;
+
+if ( videoType === 'youtube' ) {
+return !! ytVideoId;
+}
+if ( videoType === 'vimeo' ) {
+return !! vimeoVideoId;
+}
+return !! ( mediaFileUrl || videoFileUrl );
+};
+
+// Editor-only empty state shown until a video/image source is chosen —
+// mirrors the "Choose Your Video" placeholder pattern (badge + centered
+// play button) instead of leaving the canvas showing a blank/broken embed.
+const VideoChoosePlaceholder = () => (
+<div className="ad-video-player__choose-placeholder">
+<span className="ad-video-player__choose-badge">
+<span className="ad-video-player__choose-badge-dot" aria-hidden="true" />
+{ __( 'Video Placeholder', 'video-player-block' ) }
+</span>
+<div className="ad-video-player__choose-center">
+<span className="ad-video-player__choose-play" aria-hidden="true">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="#111827"><path d="M8 5v14l11-7z" /></svg>
+</span>
+<p className="ad-video-player__choose-text">{ __( 'Choose your video', 'video-player-block' ) }</p>
+</div>
+</div>
+);
+
+// YouTube/Vimeo iframes routinely fail to load inside the block editor's own
+// canvas iframe — YouTube throws "Error 153 / Video player configuration
+// error" there specifically, while the exact same embed URL works fine once
+// the page is published (a real embed can't reliably tell "editor sandbox
+// iframe" from "an untrusted site framing us" from the outside, so YouTube
+// blocks it defensively). Rather than fight that, the editor shows a static
+// thumbnail preview instead of a live third-party iframe — YouTube's
+// thumbnail URL is a predictable, no-auth image; Vimeo has no such pattern,
+// so its thumbnail is fetched once via their public oEmbed endpoint.
+const EditorRemotePreview = ( { attributes } ) => {
+const { videoType, ytVideoId, vimeoVideoId } = attributes;
+const [ vimeoThumb, setVimeoThumb ] = useState( '' );
+
+useEffect( () => {
+if ( videoType !== 'vimeo' || ! vimeoVideoId ) {
+return;
+}
+let cancelled = false;
+setVimeoThumb( '' );
+fetch( `https://vimeo.com/api/oembed.json?url=${ encodeURIComponent( `https://vimeo.com/${ vimeoVideoId }` ) }` )
+.then( ( res ) => ( res.ok ? res.json() : null ) )
+.then( ( data ) => {
+if ( ! cancelled && data?.thumbnail_url ) {
+setVimeoThumb( data.thumbnail_url );
+}
+} )
+.catch( () => {} );
+return () => { cancelled = true; };
+}, [ videoType, vimeoVideoId ] );
+
+const thumbUrl = videoType === 'youtube' && ytVideoId
+? `https://img.youtube.com/vi/${ ytVideoId }/hqdefault.jpg`
+: videoType === 'vimeo'
+? vimeoThumb
+: '';
+
+return (
+<div className="ad-video-player__editor-remote-preview">
+{ thumbUrl && (
+<img
+className="ad-video-player__editor-remote-thumb"
+src={ thumbUrl }
+alt=""
+/>
+) }
+<div className="ad-video-player__choose-center">
+<span className="ad-video-player__choose-play" aria-hidden="true">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="#111827"><path d="M8 5v14l11-7z" /></svg>
+</span>
+<p className="ad-video-player__choose-text">
+{ __( 'Preview unavailable in the editor — plays normally once published', 'video-player-block' ) }
+</p>
+</div>
+</div>
+);
+};
+
 const VideoPreview = ( { attributes } ) => {
 const {
 autoplay,
@@ -62,6 +154,14 @@ mute,
 videoFileUrl,
 videoType,
 } = attributes;
+
+if ( ! isMediaConfigured( attributes ) ) {
+return <VideoChoosePlaceholder />;
+}
+
+if ( videoType === 'youtube' || videoType === 'vimeo' ) {
+return <EditorRemotePreview attributes={ attributes } />;
+}
 
 if ( videoType === 'upload' && mediaKind === 'video' ) {
 return (
@@ -79,41 +179,12 @@ preload="metadata"
 );
 }
 
-if ( videoType === 'upload' && mediaKind === 'image' ) {
 return (
 <img
 src={ mediaFileUrl || videoFileUrl }
 alt=""
 loading="lazy"
 style={ { width: '100%', height: 'auto' } }
-/>
-);
-}
-
-if ( videoType === 'youtube' ) {
-return (
-<iframe
-width="100%"
-height="100%"
-src={ getYouTubeSrc( attributes ) }
-title="YouTube video player"
-allow="autoplay; fullscreen;"
-frameBorder="0"
-allowFullScreen
-loading="lazy"
-/>
-);
-}
-
-return (
-<iframe
-src={ getVimeoSrc( attributes ) }
-width="100%"
-height="100%"
-frameBorder="0"
-allow="autoplay; fullscreen; picture-in-picture"
-allowFullScreen
-loading="lazy"
 />
 );
 };
@@ -128,6 +199,7 @@ containerBorderRadius,
 containerBackgroundColor,
 containerBorderColor,
 containerBorderWidth,
+containerBorderEnabled,
 containerShadowIntensity,
 containerHeight,
 containerMaxWidth,
@@ -336,6 +408,14 @@ onChange={ ( v ) => setAttributes( { containerBackgroundColor: v || '' } ) }
 { __( 'Reset (transparent)', 'video-player-block' ) }
 </Button>
 </BaseControl>
+<ToggleControl
+label={ __( 'Show Border', 'video-player-block' ) }
+checked={ !! containerBorderEnabled }
+onChange={ ( value ) => setAttributes( { containerBorderEnabled: value } ) }
+help={ __( 'Off by default so an old Border Width/Color value never shows unexpectedly.', 'video-player-block' ) }
+/>
+{ containerBorderEnabled && (
+<>
 <BaseControl label={ __( 'Border Color', 'video-player-block' ) } __nextHasNoMarginBottom>
 <BoundColorPalette
 value={containerBorderColor || ""}
@@ -352,6 +432,8 @@ onChange={ ( value ) => setAttributes( { containerBorderWidth: Number( value ) }
 min={ 0 }
 max={ 20 }
 />
+</>
+) }
 <RangeControl
 label={ __( 'Shadow Intensity', 'video-player-block' ) }
 value={ containerShadowIntensity ?? 0 }
