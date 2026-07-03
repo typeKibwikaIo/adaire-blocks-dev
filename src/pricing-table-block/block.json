@@ -53,23 +53,7 @@
         },
         "subheading": {
             "type": "string",
-            "default": "Choose the plan that best fits your project, switch between monthly and yearly billing at any time."
-        },
-        "billingMode": {
-            "type": "string",
-            "default": "monthly"
-        },
-        "monthlyLabel": {
-            "type": "string",
-            "default": "Monthly"
-        },
-        "yearlyLabel": {
-            "type": "string",
-            "default": "Yearly"
-        },
-        "yearlyBadgeText": {
-            "type": "string",
-            "default": "Save 20%"
+            "default": "Choose the plan that best fits your project."
         },
         "cards": {
             "type": "array",
@@ -80,7 +64,6 @@
                     "tagline": "For small projects",
                     "currency": "$",
                     "monthlyPrice": "19",
-                    "yearlyPrice": "190",
                     "priceSuffix": "/mo",
                     "features": [
                         "2GB Bandwidth",
@@ -99,7 +82,6 @@
                     "tagline": "Best for growing teams",
                     "currency": "$",
                     "monthlyPrice": "49",
-                    "yearlyPrice": "490",
                     "priceSuffix": "/mo",
                     "features": [
                         "10GB Bandwidth",
@@ -118,7 +100,6 @@
                     "tagline": "For large organizations",
                     "currency": "$",
                     "monthlyPrice": "99",
-                    "yearlyPrice": "990",
                     "priceSuffix": "/mo",
                     "features": [
                         "Unlimited Bandwidth",
@@ -308,23 +289,6 @@
                 }
             }
         },
-        "badgeFontSize": {
-            "type": "object",
-            "default": {
-                "desktop": {
-                    "value": 11,
-                    "unit": "px"
-                },
-                "tablet": {
-                    "value": 10,
-                    "unit": "px"
-                },
-                "mobile": {
-                    "value": 9,
-                    "unit": "px"
-                }
-            }
-        },
         "gridColumns": {
             "type": "object",
             "default": {
@@ -374,28 +338,7 @@
             "type": "string",
             "default": ""
         },
-        "yearlyBadgeBackgroundColor": {
-            "type": "string",
-            "default": "#503AA8"
-        },
         "priceSuffixFontSize": {
-            "type": "object",
-            "default": {
-                "desktop": {
-                    "value": 14,
-                    "unit": "px"
-                },
-                "tablet": {
-                    "value": 13,
-                    "unit": "px"
-                },
-                "mobile": {
-                    "value": 12,
-                    "unit": "px"
-                }
-            }
-        },
-        "toggleFontSize": {
             "type": "object",
             "default": {
                 "desktop": {
