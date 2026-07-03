@@ -1,15 +1,15 @@
 <?php
 register_block_pattern( 'adaire-blocks/landing-page', array(
     'title'         => __( 'Home Page', 'adaire-blocks' ),
-    'description'   => __( 'SaaS hero, advanced features grid, pricing plans, customer reviews, and card slider.', 'adaire-blocks' ),
+    'description'   => __( 'SaaS hero, advanced features grid, pricing plans, timeline, and customer reviews.', 'adaire-blocks' ),
     'categories'    => array( 'adaire-blocks-templates' ),
-    'keywords'      => array( 'home', 'landing', 'saas', 'hero', 'features', 'pricing', 'reviews' ),
+    'keywords'      => array( 'home', 'landing', 'saas', 'hero', 'features', 'pricing', 'timeline', 'reviews' ),
     'blockTypes'    => array( 'core/post-content' ),
     'templateTypes' => array( 'page' ),
     'viewportWidth' => 1400,
     'content'       => '<!-- wp:create-block/saas-hero-block /-->
-<!-- wp:create-block/infogrid-2-block /-->
-<!-- wp:create-block/pricing-table-block /-->
-<!-- wp:create-block/testimonial-block /-->
-<!-- wp:create-block/card-scroll-block --><!-- wp:create-block/card-scroll-item-block {"title":"Discover the Product","description":"Get a feel for what makes our platform different — explore the features that teams love most."} --><!-- /wp:create-block/card-scroll-item-block --><!-- wp:create-block/card-scroll-item-block {"title":"Set Up in Minutes","description":"Connect your tools, import your content, and go live faster than you thought possible."} --><!-- /wp:create-block/card-scroll-item-block --><!-- wp:create-block/card-scroll-item-block {"title":"Grow with Confidence","description":"Scale your presence knowing our infrastructure handles the load so you never miss a beat."} --><!-- /wp:create-block/card-scroll-item-block --><!-- /wp:create-block/card-scroll-block -->',
+<!-- wp:create-block/infogrid-2-block {"containerMode":"constrained","responsiveMaxWidth":{"mobile":{"value":100,"unit":"%"},"tablet":{"value":100,"unit":"%"},"smallLaptop":{"value":1340,"unit":"px"},"desktop":{"value":1340,"unit":"px"},"bigDesktop":{"value":1340,"unit":"px"}}} /-->
+<!-- wp:create-block/pricing-table-block {"containerMode":"constrained","containerMaxWidth":{"desktop":{"value":1340,"unit":"px"},"tablet":{"value":100,"unit":"%"},"mobile":{"value":100,"unit":"%"}}} /-->
+<!-- wp:create-block/timeline-block /-->
+<!-- wp:create-block/testimonial-block {"containerMode":"constrained","containerMaxWidth":{"desktop":{"value":1340,"unit":"px"},"tablet":{"value":100,"unit":"%"},"mobile":{"value":100,"unit":"%"}}} /-->',
 ) );

@@ -1,3 +1,19 @@
+// Self-contained Bootstrap Icons font import.
+//
+// Why: the plugin also enqueues Bootstrap Icons via PHP (wp_enqueue_scripts /
+// enqueue_block_editor_assets in adaire-blocks.php), but relying on that alone
+// has proven unreliable for icon-using blocks — the block editor canvas
+// renders inside an <iframe> (a separate document that only picks up
+// stylesheets present in the parent admin document's <head> at the moment
+// the iframe initializes), and on the frontend the PHP enqueues can be
+// skipped, deferred, or stripped by caching/optimization plugins. A plain
+// CSS `@import` here is resolved by the browser inside *whatever* document
+// this compiled stylesheet ends up in, so the rating-badge and
+// security-feature icons load correctly in the editor, in the Inspector,
+// and on the published page alike — independent of PHP enqueue timing.
+// Same fix already applied to infogrid-2-block/style.scss for the same bug.
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
 .adaire-saas-hero {
   position: relative;
   padding: var(--ad-padding, 80px) 20px;

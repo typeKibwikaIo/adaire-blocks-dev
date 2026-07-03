@@ -1,6 +1,6 @@
-﻿import { __ } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 import {
     PanelBody,
     RangeControl,
@@ -8,8 +8,8 @@ import {
     BaseControl,
     Button,
     TextControl,
-    TextareaControl,
     SelectControl,
+    ToggleControl,
     ButtonGroup,
     __experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
@@ -17,6 +17,7 @@ import { desktop, tablet, mobile } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import AdaireColorControl from '../components/AdaireColorControl';
 import './editor.scss';
 
 export default function Edit({ attributes, setAttributes, clientId }) {
@@ -31,10 +32,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         chosenIcon,
         iconSize,
         iconColor,
-        iconHoverColor,
         backgroundColor,
         backgroundHoverColor,
-        padding,
+        textColor,
         borderRadius,
         borderWidth,
         borderColor,
@@ -49,60 +49,59 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         paddingRight,
         paddingBottom,
         paddingLeft,
-        responsiveIconSize,
+        title,
+        description,
+        showButton,
+        buttonText,
+        buttonBgColor,
+        buttonTextColor,
     } = attributes;
 
     if (!blockId) {
         setAttributes({ blockId: clientId });
     }
 
+    const pt = paddingTop?.desktop ?? 40;
+    const pr = paddingRight?.desktop ?? 40;
+    const pb = paddingBottom?.desktop ?? 40;
+    const pl = paddingLeft?.desktop ?? 40;
+
     const blockProps = useBlockProps({
         className: `adaire-icon-box adaire-icon-box--align-${alignment}`,
         style: {
-            outline: 'none',
-            border: 'none',
-            boxShadow: 'none',
-            '--icon-size': `${iconSize}px`,
-            '--icon-size-tablet': `${responsiveIconSize?.tablet ?? iconSize ?? 48}px`,
-            '--icon-size-mobile': `${responsiveIconSize?.mobile ?? iconSize ?? 48}px`,
-            '--icon-size-watch': `${responsiveIconSize?.smartwatch ?? iconSize ?? 48}px`,
-            '--icon-color': iconColor,
-            '--icon-hover-color': iconHoverColor,
-            '--icon-bg': backgroundColor,
-            '--icon-bg-hover': backgroundHoverColor,
-            '--icon-padding-top': `${paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-            '--icon-padding-right': `${paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-            '--icon-padding-bottom': `${paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-            '--icon-padding-left': `${paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-            '--icon-padding-top-tablet': `${paddingTop?.tablet ?? paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-            '--icon-padding-right-tablet': `${paddingRight?.tablet ?? paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-            '--icon-padding-bottom-tablet': `${paddingBottom?.tablet ?? paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-            '--icon-padding-left-tablet': `${paddingLeft?.tablet ?? paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-            '--icon-padding-top-mobile': `${paddingTop?.mobile ?? paddingTop?.tablet ?? paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-            '--icon-padding-right-mobile': `${paddingRight?.mobile ?? paddingRight?.tablet ?? paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-            '--icon-padding-bottom-mobile': `${paddingBottom?.mobile ?? paddingBottom?.tablet ?? paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-            '--icon-padding-left-mobile': `${paddingLeft?.mobile ?? paddingLeft?.tablet ?? paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-            '--icon-border-radius': `${borderRadius}px`,
-            '--icon-border-width': `${borderWidth}px`,
-            '--icon-border-color': borderColor,
-            marginTop: `${marginTop?.desktop ?? 0}px`,
-            marginRight: `${marginRight?.desktop ?? 0}px`,
-            marginBottom: `${marginBottom?.desktop ?? 0}px`,
-            marginLeft: `${marginLeft?.desktop ?? 0}px`,
+            '--icon-card-bg'      : backgroundColor || '#503AA8',
+            '--icon-card-bg-hover': backgroundHoverColor || '#3d2c8d',
+            '--icon-card-radius'  : `${borderRadius ?? 16}px`,
+            '--icon-card-pt'      : `${paddingTop?.desktop  ?? 40}px`,
+            '--icon-card-pr'      : `${paddingRight?.desktop ?? 40}px`,
+            '--icon-card-pb'      : `${paddingBottom?.desktop ?? 40}px`,
+            '--icon-card-pl'      : `${paddingLeft?.desktop  ?? 40}px`,
+            '--icon-card-pt-t'    : `${paddingTop?.tablet  ?? pt}px`,
+            '--icon-card-pr-t'    : `${paddingRight?.tablet ?? pr}px`,
+            '--icon-card-pb-t'    : `${paddingBottom?.tablet ?? pb}px`,
+            '--icon-card-pl-t'    : `${paddingLeft?.tablet  ?? pl}px`,
+            '--icon-card-pt-m'    : `${paddingTop?.mobile  ?? paddingTop?.tablet  ?? pt}px`,
+            '--icon-card-pr-m'    : `${paddingRight?.mobile ?? paddingRight?.tablet ?? pr}px`,
+            '--icon-card-pb-m'    : `${paddingBottom?.mobile ?? paddingBottom?.tablet ?? pb}px`,
+            '--icon-card-pl-m'    : `${paddingLeft?.mobile  ?? paddingLeft?.tablet  ?? pl}px`,
+            '--icon-color'        : iconColor || '#ffffff',
+            '--icon-size'         : `${iconSize ?? 64}px`,
+            '--icon-border-width' : `${borderWidth ?? 0}px`,
+            '--icon-border-color' : borderColor || 'transparent',
+            color                 : textColor || '#ffffff',
+            marginTop             : `${marginTop?.desktop ?? 0}px`,
+            marginRight           : `${marginRight?.desktop ?? 0}px`,
+            marginBottom          : `${marginBottom?.desktop ?? 0}px`,
+            marginLeft            : `${marginLeft?.desktop ?? 0}px`,
         },
     });
 
-    const IconWrapper = linkUrl ? 'a' : 'div';
-    const linkProps = linkUrl ? {
-        href: linkUrl,
-        target: linkTarget === '_blank' ? '_blank' : undefined,
-        rel: linkTarget === '_blank' ? 'noopener noreferrer' : undefined,
-    } : {};
+    const hasIcon = (chosenIcon && chosenIcon.trim()) || (iconSvg && iconSvg.trim());
 
     return (
         <>
-            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody title={__('Icon Settings', 'icon-box-block')} initialOpen={true}>
+            <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
+                <PanelBody title={__('Icon', 'icon-box-block')} initialOpen={true}>
                     <BaseControl label={__('Bootstrap Icon', 'icon-box-block')}>
                         <Button
                             onClick={() => setIsIconPickerOpen(true)}
@@ -133,169 +132,147 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     <RangeControl
                         label={__('Icon Size', 'icon-box-block')}
                         value={iconSize}
-                        onChange={(value) => setAttributes({ iconSize: value })}
+                        onChange={(v) => setAttributes({ iconSize: v })}
                         min={16}
                         max={200}
                     />
 
-                    <BaseControl label={__('Icon Color', 'icon-box-block')}>
-                        <ColorPicker
-                            color={iconColor}
-                            onChangeComplete={(color) => setAttributes({ iconColor: color.hex })}
-                            disableAlpha
-                        />
-                    </BaseControl>
-
-                    <BaseControl label={__('Icon Hover Color', 'icon-box-block')}>
-                        <ColorPicker
-                            color={iconHoverColor}
-                            onChangeComplete={(color) => setAttributes({ iconHoverColor: color.hex })}
-                            disableAlpha
-                        />
-                    </BaseControl>
+                    <AdaireColorControl
+                        label={__('Icon Color', 'icon-box-block')}
+                        value={iconColor}
+                        onChange={(v) => setAttributes({ iconColor: v })}
+                    />
 
                     <SelectControl
-                        label={__('Icon Alignment', 'icon-box-block')}
+                        label={__('Alignment', 'icon-box-block')}
                         value={alignment}
                         options={[
                             { label: __('Left', 'icon-box-block'), value: 'left' },
                             { label: __('Center', 'icon-box-block'), value: 'center' },
-                            { label: __('Right', 'icon-box-block'), value: 'right' }
+                            { label: __('Right', 'icon-box-block'), value: 'right' },
                         ]}
-                        onChange={(value) => setAttributes({ alignment: value })}
+                        onChange={(v) => setAttributes({ alignment: v })}
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Background Settings', 'icon-box-block')} initialOpen={false}>
-                    <BaseControl label={__('Background Color', 'icon-box-block')}>
-                        <ColorPicker
-                            color={backgroundColor && backgroundColor !== 'transparent' ? backgroundColor : '#000000'}
-                            onChangeComplete={(color) => {
-                                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                                const colorValue = alpha < 1
-                                    ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                                    : color.hex;
-                                setAttributes({ backgroundColor: colorValue });
-                            }}
-                            enableAlpha={true}
-                        />
-                    </BaseControl>
-
-                    <BaseControl label={__('Background Hover Color', 'icon-box-block')}>
-                        <ColorPicker
-                            color={backgroundHoverColor && backgroundHoverColor !== 'transparent' ? backgroundHoverColor : '#000000'}
-                            onChangeComplete={(color) => {
-                                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                                const colorValue = alpha < 1
-                                    ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                                    : color.hex;
-                                setAttributes({ backgroundHoverColor: colorValue });
-                            }}
-                            enableAlpha={true}
-                        />
-                    </BaseControl>
-
-                    <RangeControl
-                        label={__('Border Radius', 'icon-box-block')}
-                        value={borderRadius}
-                        onChange={(value) => setAttributes({ borderRadius: value })}
-                        min={0}
-                        max={100}
+                <PanelBody title={__('Card Style', 'icon-box-block')} initialOpen={false}>
+                    <AdaireColorControl
+                        label={__('Background Color', 'icon-box-block')}
+                        value={backgroundColor}
+                        onChange={(v) => setAttributes({ backgroundColor: v })}
                     />
-
+                    <AdaireColorControl
+                        label={__('Background Hover Color', 'icon-box-block')}
+                        value={backgroundHoverColor}
+                        onChange={(v) => setAttributes({ backgroundHoverColor: v })}
+                    />
+                    <AdaireColorControl
+                        label={__('Text Color', 'icon-box-block')}
+                        value={textColor}
+                        onChange={(v) => setAttributes({ textColor: v })}
+                    />
                     <RangeControl
-                        label={__('Border Width', 'icon-box-block')}
+                        label={__('Border Radius (px)', 'icon-box-block')}
+                        value={borderRadius}
+                        onChange={(v) => setAttributes({ borderRadius: v })}
+                        min={0}
+                        max={60}
+                    />
+                    <RangeControl
+                        label={__('Border Width (px)', 'icon-box-block')}
                         value={borderWidth}
-                        onChange={(value) => setAttributes({ borderWidth: value })}
+                        onChange={(v) => setAttributes({ borderWidth: v })}
                         min={0}
                         max={10}
                     />
-
                     {borderWidth > 0 && (
-                        <BaseControl label={__('Border Color', 'icon-box-block')}>
-                            <ColorPicker
-                                color={borderColor}
-                                onChangeComplete={(color) => setAttributes({ borderColor: color.hex })}
-                                disableAlpha
-                            />
-                        </BaseControl>
+                        <AdaireColorControl
+                            label={__('Border Color', 'icon-box-block')}
+                            value={borderColor}
+                            onChange={(v) => setAttributes({ borderColor: v })}
+                        />
                     )}
                 </PanelBody>
 
-                <PanelBody title={__('Link Settings', 'icon-box-block')} initialOpen={false}>
-                    <TextControl
-                        label={__('Link URL', 'icon-box-block')}
-                        value={linkUrl}
-                        onChange={(value) => setAttributes({ linkUrl: value })}
-                        placeholder="https://example.com"
+                <PanelBody title={__('Button', 'icon-box-block')} initialOpen={false}>
+                    <ToggleControl
+                        label={__('Show Button', 'icon-box-block')}
+                        checked={showButton !== false}
+                        onChange={(v) => setAttributes({ showButton: v })}
                     />
-
-                    <SelectControl
-                        label={__('Link Target', 'icon-box-block')}
-                        value={linkTarget}
-                        options={[
-                            { label: __('Same Window', 'icon-box-block'), value: '_self' },
-                            { label: __('New Window', 'icon-box-block'), value: '_blank' },
-                        ]}
-                        onChange={(value) => setAttributes({ linkTarget: value })}
-                    />
+                    {showButton !== false && (
+                        <>
+                            <TextControl
+                                label={__('Button Text', 'icon-box-block')}
+                                value={buttonText || ''}
+                                onChange={(v) => setAttributes({ buttonText: v })}
+                            />
+                            <TextControl
+                                label={__('Button URL', 'icon-box-block')}
+                                value={linkUrl || ''}
+                                onChange={(v) => setAttributes({ linkUrl: v })}
+                                placeholder="https://"
+                            />
+                            <SelectControl
+                                label={__('Open in', 'icon-box-block')}
+                                value={linkTarget}
+                                options={[
+                                    { label: __('Same window', 'icon-box-block'), value: '_self' },
+                                    { label: __('New window', 'icon-box-block'), value: '_blank' },
+                                ]}
+                                onChange={(v) => setAttributes({ linkTarget: v })}
+                            />
+                            <AdaireColorControl
+                                label={__('Button Background', 'icon-box-block')}
+                                value={buttonBgColor}
+                                onChange={(v) => setAttributes({ buttonBgColor: v })}
+                            />
+                            <AdaireColorControl
+                                label={__('Button Text Color', 'icon-box-block')}
+                                value={buttonTextColor}
+                                onChange={(v) => setAttributes({ buttonTextColor: v })}
+                            />
+                        </>
+                    )}
                 </PanelBody>
 
                 <PanelBody title={__('Spacing', 'icon-box-block')} initialOpen={false}>
-                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Margin', 'icon-box-block')}</p>
                     <ButtonGroup style={{ marginBottom: '12px' }}>
-                        <Button
-                            isPressed={deviceType === 'desktop'}
-                            onClick={() => setDeviceType('desktop')}
-                            icon={desktop}
-                        />
-                        <Button
-                            isPressed={deviceType === 'tablet'}
-                            onClick={() => setDeviceType('tablet')}
-                            icon={tablet}
-                        />
-                        <Button
-                            isPressed={deviceType === 'mobile'}
-                            onClick={() => setDeviceType('mobile')}
-                            icon={mobile}
-                        />
+                        <Button isPressed={deviceType === 'desktop'} onClick={() => setDeviceType('desktop')} icon={desktop} />
+                        <Button isPressed={deviceType === 'tablet'}  onClick={() => setDeviceType('tablet')}  icon={tablet}  />
+                        <Button isPressed={deviceType === 'mobile'}  onClick={() => setDeviceType('mobile')}  icon={mobile}  />
                     </ButtonGroup>
+
+                    <BoxControl
+                        label={__('Padding', 'icon-box-block')}
+                        values={{
+                            top:    paddingTop?.[deviceType]    ?? paddingTop?.desktop    ?? 40,
+                            right:  paddingRight?.[deviceType]  ?? paddingRight?.desktop  ?? 40,
+                            bottom: paddingBottom?.[deviceType] ?? paddingBottom?.desktop ?? 40,
+                            left:   paddingLeft?.[deviceType]   ?? paddingLeft?.desktop   ?? 40,
+                        }}
+                        onChange={(v) => setAttributes({
+                            paddingTop:    { ...paddingTop,    [deviceType]: parseInt(v.top)    || 0 },
+                            paddingRight:  { ...paddingRight,  [deviceType]: parseInt(v.right)  || 0 },
+                            paddingBottom: { ...paddingBottom, [deviceType]: parseInt(v.bottom) || 0 },
+                            paddingLeft:   { ...paddingLeft,   [deviceType]: parseInt(v.left)   || 0 },
+                        })}
+                    />
 
                     <BoxControl
                         label={__('Margin', 'icon-box-block')}
                         values={{
-                            top: marginTop?.[deviceType] ?? marginTop?.desktop ?? 0,
-                            right: marginRight?.[deviceType] ?? marginRight?.desktop ?? 0,
+                            top:    marginTop?.[deviceType]    ?? marginTop?.desktop    ?? 0,
+                            right:  marginRight?.[deviceType]  ?? marginRight?.desktop  ?? 0,
                             bottom: marginBottom?.[deviceType] ?? marginBottom?.desktop ?? 0,
-                            left: marginLeft?.[deviceType] ?? marginLeft?.desktop ?? 0,
+                            left:   marginLeft?.[deviceType]   ?? marginLeft?.desktop   ?? 0,
                         }}
-                        onChange={(value) => {
-                            setAttributes({
-                                marginTop: { ...marginTop, [deviceType]: value.top },
-                                marginRight: { ...marginRight, [deviceType]: value.right },
-                                marginBottom: { ...marginBottom, [deviceType]: value.bottom },
-                                marginLeft: { ...marginLeft, [deviceType]: value.left },
-                            });
-                        }}
-                    />
-
-                    <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>{__('Padding', 'icon-box-block')}</p>
-                    <BoxControl
-                        label={__('Padding', 'icon-box-block')}
-                        values={{
-                            top: paddingTop?.[deviceType] ?? paddingTop?.desktop ?? 0,
-                            right: paddingRight?.[deviceType] ?? paddingRight?.desktop ?? 0,
-                            bottom: paddingBottom?.[deviceType] ?? paddingBottom?.desktop ?? 0,
-                            left: paddingLeft?.[deviceType] ?? paddingLeft?.desktop ?? 0,
-                        }}
-                        onChange={(value) => {
-                            setAttributes({
-                                paddingTop: { ...paddingTop, [deviceType]: value.top },
-                                paddingRight: { ...paddingRight, [deviceType]: value.right },
-                                paddingBottom: { ...paddingBottom, [deviceType]: value.bottom },
-                                paddingLeft: { ...paddingLeft, [deviceType]: value.left },
-                            });
-                        }}
+                        onChange={(v) => setAttributes({
+                            marginTop:    { ...marginTop,    [deviceType]: parseInt(v.top)    || 0 },
+                            marginRight:  { ...marginRight,  [deviceType]: parseInt(v.right)  || 0 },
+                            marginBottom: { ...marginBottom, [deviceType]: parseInt(v.bottom) || 0 },
+                            marginLeft:   { ...marginLeft,   [deviceType]: parseInt(v.left)   || 0 },
+                        })}
                     />
                 </PanelBody>
             </InspectorTabs>
@@ -307,90 +284,83 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 currentIcon={chosenIcon}
             />
 
-
-
-
             <div {...blockProps}>
-                <QuickZone
-                    id="icon"
-                    label="Icon"
-                    activeZone={activeZone}
-                    setActiveZone={setActiveZone}
-                    content={
-                        <>
-                            <Button
-                                onClick={() => setIsIconPickerOpen(true)}
-                                variant="secondary"
-                                style={{ width: '100%', marginBottom: '12px' }}
-                            >
-                                {chosenIcon ? __('Change Icon', 'icon-box-block') : __('Choose Bootstrap Icon', 'icon-box-block')}
-                            </Button>
-                            <RangeControl
-                                label={__('Icon Size', 'icon-box-block')}
-                                value={iconSize}
-                                onChange={(value) => setAttributes({ iconSize: value })}
-                                min={16}
-                                max={200}
-                            />
-                        </>
-                    }
-                >
-                    {chosenIcon || iconSvg ? (
-                        <IconWrapper
-                            className="adaire-icon-box__wrapper"
-                            {...linkProps}
-                            style={{
-                                '--icon-size': `${iconSize}px`,
-                                '--icon-color': iconColor,
-                                '--icon-hover-color': iconHoverColor,
-                                '--icon-bg': backgroundColor,
-                                '--icon-bg-hover': backgroundHoverColor,
-                                '--icon-padding-top': `${paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-                                '--icon-padding-right': `${paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-                                '--icon-padding-bottom': `${paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-                                '--icon-padding-left': `${paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-                                '--icon-padding-top-tablet': `${paddingTop?.tablet ?? paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-                                '--icon-padding-right-tablet': `${paddingRight?.tablet ?? paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-                                '--icon-padding-bottom-tablet': `${paddingBottom?.tablet ?? paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-                                '--icon-padding-left-tablet': `${paddingLeft?.tablet ?? paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-                                '--icon-padding-top-mobile': `${paddingTop?.mobile ?? paddingTop?.tablet ?? paddingTop?.desktop ?? paddingTop ?? padding?.top ?? 20}px`,
-                                '--icon-padding-right-mobile': `${paddingRight?.mobile ?? paddingRight?.tablet ?? paddingRight?.desktop ?? paddingRight ?? padding?.right ?? 20}px`,
-                                '--icon-padding-bottom-mobile': `${paddingBottom?.mobile ?? paddingBottom?.tablet ?? paddingBottom?.desktop ?? paddingBottom ?? padding?.bottom ?? 20}px`,
-                                '--icon-padding-left-mobile': `${paddingLeft?.mobile ?? paddingLeft?.tablet ?? paddingLeft?.desktop ?? paddingLeft ?? padding?.left ?? 20}px`,
-                                '--icon-border-radius': `${borderRadius}px`,
-                                '--icon-border-width': `${borderWidth}px`,
-                                '--icon-border-color': borderColor,
-                            }}
-                        >
-                            {chosenIcon ? (
-                                <i
-                                    className={`adaire-icon-box__icon ${chosenIcon}`}
-                                    style={{
-                                        fontSize: `${iconSize}px`,
-                                    }}
-                                ></i>
+                {hasIcon && (
+                    <QuickZone
+                        id="icon"
+                        label="Icon"
+                        activeZone={activeZone}
+                        setActiveZone={setActiveZone}
+                        content={
+                            <>
+                                <Button
+                                    onClick={() => setIsIconPickerOpen(true)}
+                                    variant="secondary"
+                                    style={{ width: '100%', marginBottom: '8px' }}
+                                >
+                                    {__('Change Icon', 'icon-box-block')}
+                                </Button>
+                                <RangeControl
+                                    label={__('Icon Size', 'icon-box-block')}
+                                    value={iconSize}
+                                    onChange={(v) => setAttributes({ iconSize: v })}
+                                    min={16}
+                                    max={200}
+                                />
+                            </>
+                        }
+                    >
+                        <div className="adaire-icon-box__icon-area">
+                            {chosenIcon && chosenIcon.trim() ? (
+                                <i className={`adaire-icon-box__icon ${chosenIcon}`}></i>
                             ) : iconSvg ? (
                                 <span
                                     className="adaire-icon-box__icon"
-                                    style={{
-                                        width: `${iconSize}px`,
-                                        height: `${iconSize}px`,
-                                        fontSize: `${iconSize}px`,
-                                    }}
                                     dangerouslySetInnerHTML={{ __html: iconSvg }}
                                 />
                             ) : null}
-                        </IconWrapper>
-                    ) : (
-                        <div className="adaire-icon-box__placeholder">
-                            <p>{__('Choose an icon from the Icon Settings panel', 'icon-box-block')}</p>
                         </div>
-                    )}
-                </QuickZone>
+                    </QuickZone>
+                )}
+
+                {!hasIcon && (
+                    <button
+                        className="adaire-icon-box__add-icon"
+                        onClick={() => setIsIconPickerOpen(true)}
+                        type="button"
+                    >
+                        {__('+ Add Icon', 'icon-box-block')}
+                    </button>
+                )}
+
+                <RichText
+                    tagName="h3"
+                    className="adaire-icon-box__title"
+                    value={title}
+                    onChange={(v) => setAttributes({ title: v })}
+                    placeholder={__('Card title…', 'icon-box-block')}
+                />
+
+                <RichText
+                    tagName="p"
+                    className="adaire-icon-box__description"
+                    value={description}
+                    onChange={(v) => setAttributes({ description: v })}
+                    placeholder={__('Description…', 'icon-box-block')}
+                />
+
+                {showButton !== false && (
+                    <span
+                        className="adaire-icon-box__btn"
+                        style={{
+                            backgroundColor: buttonBgColor || '#ffffff',
+                            color: buttonTextColor || '#503AA8',
+                        }}
+                    >
+                        {buttonText || __('Learn More', 'icon-box-block')}
+                    </span>
+                )}
             </div>
         </>
     );
 }
-
-
-

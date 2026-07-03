@@ -17,8 +17,7 @@
 			"upgradeMessage": "Upgrade to Premium for advanced video player features."
 		},
 		"icon-box-block": {
-			"enabled": false,
-			"upgradeMessage": "Upgrade to Premium for advanced icon box features."
+			"enabled": true
 		},
 		"social-banner-block": {
 			"enabled": true,
