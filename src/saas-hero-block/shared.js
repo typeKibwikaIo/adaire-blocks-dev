@@ -5,24 +5,6 @@
  * both the editor canvas and the published page.
  */
 
-// ─── Trusted-By: normalize to a structured list ───────────────────────────
-// New content uses `trustItems` (array of { name, logoUrl, url }). Older
-// content (saved before this rewrite) only has the flat `trustLogos`
-// newline-separated string — still honored here so nothing already
-// published silently loses its trust bar.
-export function getTrustItems( a ) {
-	if ( Array.isArray( a.trustItems ) && a.trustItems.length > 0 ) {
-		return a.trustItems;
-	}
-	if ( a.trustLogos ) {
-		return a.trustLogos
-			.split( '\n' )
-			.map( ( line ) => ( { name: line.trim(), logoUrl: '', url: '' } ) )
-			.filter( ( item ) => item.name );
-	}
-	return [];
-}
-
 // ─── Small numeric helpers ──────────────────────────────────────────────
 // A few attributes (ctaBorderRadius, mediaBorderRadius) use -1 as "inherit
 // the block's global radius" so that's distinguishable from "explicitly 0".
@@ -157,121 +139,9 @@ export function getStyleVars( a ) {
 		'--ad-media-spacing': `${ a.mediaSpacing ?? 48 }px`,
 		'--ad-media-shadow': a.mediaShadow === false ? 'none' : '0 20px 60px rgba(0, 0, 0, 0.15)',
 
-		// Trusted By / Logo Names
-		'--ad-trust-item-width': a.trustItemWidth ? `${ a.trustItemWidth }px` : 'auto',
-		'--ad-trust-item-gap': `${ a.trustItemGap ?? 32 }px`,
-		'--ad-trust-logo-max-height': `${ a.trustLogoMaxHeight ?? 32 }px`,
-		'--ad-trust-carousel-speed': `${ a.trustCarouselSpeed ?? 30 }s`,
-		'--ad-trust-visible-items': `${ a.trustCarouselVisibleItems ?? 5 }`,
-		'--ad-trust-dir': a.trustCarouselDirection === 'right' ? '1' : '-1',
-
 		// Hero Effects & Decorations
 		'--ad-effect-gradient-overlay': `linear-gradient(135deg, ${ a.effectGradientOverlayColor1 || '#6366f1' }, ${ a.effectGradientOverlayColor2 || '#8b5cf6' })`,
 		'--ad-effect-gradient-overlay-opacity': `${ ( a.effectGradientOverlayOpacity ?? 30 ) / 100 }`,
 		'--ad-effect-glow-color': a.effectGlowColor || '#6366f1',
-
-		// Ratings badges
-		'--ad-rating-align': alignToFlex( a.ratingBadgesAlignment ),
-
-		// Security panel
-		'--ad-security-bg': a.securityPanelBg || '#f8fafc',
-		'--ad-security-color': a.securityPanelTextColor || '#111827',
 	};
-}
-
-// ─── Presentation pieces shared verbatim between edit.js and save.js ──────
-// None of these need RichText — they're either plain repeater output or
-// (for FAQ) a native <details>/<summary> disclosure that needs no JS at all
-// on the frontend.
-
-export function TrustLogo( { item } ) {
-	const inner = item.logoUrl
-		? <img src={ item.logoUrl } alt={ item.name || '' } className="adaire-saas-hero__trust-logo-img" loading="lazy" />
-		: <span className="adaire-saas-hero__trust-logo-text">{ item.name }</span>;
-	return item.url
-		? <a href={ item.url } className="adaire-saas-hero__trust-logo">{ inner }</a>
-		: <span className="adaire-saas-hero__trust-logo">{ inner }</span>;
-}
-
-// ─── Rating Badges & Security Panel: icon resolution ──────────────────────
-// Both sections moved from emoji glyphs to real Bootstrap Icons classes
-// (e.g. "bi bi-star-fill"), and both items can alternatively use an uploaded
-// image instead of an icon. Content saved before this change still carries
-// the old shape — a legacy `iconType` keyword for ratings, a raw emoji
-// character for security features — so these maps translate old values to
-// an equivalent Bootstrap icon instead of rendering blank or an emoji.
-const LEGACY_RATING_ICON_MAP = {
-	star: 'bi bi-star-fill',
-	badge: 'bi bi-trophy-fill',
-	appstore: 'bi bi-apple',
-	googleplay: 'bi bi-google-play',
-};
-
-const LEGACY_SECURITY_ICON_MAP = {
-	'🔒': 'bi bi-lock-fill',
-	'🏦': 'bi bi-bank',
-	'🛡️': 'bi bi-shield-fill-check',
-	'🛡': 'bi bi-shield-fill-check',
-	'💳': 'bi bi-credit-card-fill',
-	'🔑': 'bi bi-key-fill',
-	'📞': 'bi bi-telephone-fill',
-};
-
-export function resolveRatingIcon( badge ) {
-	if ( badge.icon && badge.icon.indexOf( 'bi-' ) !== -1 ) {
-		return badge.icon;
-	}
-	if ( badge.iconType && LEGACY_RATING_ICON_MAP[ badge.iconType ] ) {
-		return LEGACY_RATING_ICON_MAP[ badge.iconType ];
-	}
-	return 'bi bi-star-fill';
-}
-
-export function resolveFeatureIcon( feature ) {
-	if ( feature.icon && feature.icon.indexOf( 'bi-' ) !== -1 ) {
-		return feature.icon;
-	}
-	if ( feature.icon && LEGACY_SECURITY_ICON_MAP[ feature.icon ] ) {
-		return LEGACY_SECURITY_ICON_MAP[ feature.icon ];
-	}
-	return 'bi bi-shield-check';
-}
-
-export function RatingBadgeView( { badge } ) {
-	return (
-		<div className="adaire-saas-hero__rating-badge">
-			<span className="adaire-saas-hero__rating-icon" aria-hidden="true">
-				{ badge.imageUrl
-					? <img src={ badge.imageUrl } alt="" className="adaire-saas-hero__rating-icon-img" loading="lazy" />
-					: <i className={ resolveRatingIcon( badge ) } /> }
-			</span>
-			<span className="adaire-saas-hero__rating-copy">
-				<strong>{ badge.text }</strong>
-				<small>{ badge.subtext }</small>
-			</span>
-		</div>
-	);
-}
-
-export function SecurityFeatureView( { feature } ) {
-	return (
-		<div className="adaire-saas-hero__security-card">
-			<span className="adaire-saas-hero__security-icon" aria-hidden="true">
-				{ feature.imageUrl
-					? <img src={ feature.imageUrl } alt="" className="adaire-saas-hero__security-icon-img" loading="lazy" />
-					: <i className={ resolveFeatureIcon( feature ) } /> }
-			</span>
-			<h4>{ feature.title }</h4>
-			<p>{ feature.text }</p>
-		</div>
-	);
-}
-
-export function FaqItemView( { item, defaultOpen } ) {
-	return (
-		<details className="adaire-saas-hero__faq-item" open={ defaultOpen || undefined }>
-			<summary className="adaire-saas-hero__faq-question">{ item.question }</summary>
-			<div className="adaire-saas-hero__faq-answer">{ item.answer }</div>
-		</details>
-	);
 }

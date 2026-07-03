@@ -1,0 +1,70 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "create-block/rating-badge-block",
+    "version": "0.1.0",
+    "title": "Rating Badges",
+    "category": "adaire-reviews-trust",
+    "description": "Display star-rating and app-store style badges to build trust.",
+    "supports": {
+        "html": false,
+        "anchor": true,
+        "align": [
+            "wide",
+            "full"
+        ],
+        "customClassName": true
+    },
+    "textdomain": "rating-badge-block",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style-index.css",
+    "attributes": {
+        "blockId": {
+            "type": "string",
+            "default": ""
+        },
+        "containerMode": {
+            "type": "string",
+            "default": "constrained"
+        },
+        "containerMaxWidth": {
+            "type": "object",
+            "default": {
+                "desktop": {
+                    "value": 1200,
+                    "unit": "px"
+                },
+                "tablet": {
+                    "value": 100,
+                    "unit": "%"
+                },
+                "mobile": {
+                    "value": 100,
+                    "unit": "%"
+                }
+            }
+        },
+        "alignment": {
+            "type": "string",
+            "default": "center"
+        },
+        "accentColor": {
+            "type": "string",
+            "default": "#6366f1"
+        },
+        "textColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "badges": {
+            "type": "array",
+            "default": [
+                { "icon": "bi bi-star-fill", "imageUrl": "", "text": "4.8/5", "subtext": "500+ App Store reviews" },
+                { "icon": "bi bi-star-fill", "imageUrl": "", "text": "4.7/5", "subtext": "1,200+ Google Play reviews" },
+                { "icon": "bi bi-trophy-fill", "imageUrl": "", "text": "Excellent", "subtext": "Rated on Trustpilot" }
+            ]
+        }
+    },
+    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#6366F1\"/>\n<path d=\"M12 4.5L14.12 9.3L19.5 9.9L15.5 13.47L16.62 18.75L12 16.05L7.38 18.75L8.5 13.47L4.5 9.9L9.88 9.3L12 4.5Z\" fill=\"white\"/>\n</svg>"
+}

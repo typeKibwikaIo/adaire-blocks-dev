@@ -94,11 +94,15 @@
     },
     "pricing-table-block": {
       "enabled": true,
-      "upgradeMessage": "Responsive pricing tables with monthly/yearly toggle, card grid, and fully customizable styling."
+      "upgradeMessage": "Responsive pricing tables with card grid and fully customizable styling."
     },
     "saas-hero-block": {
       "enabled": true,
       "upgradeMessage": "Upgrade to Premium for advanced hero layouts, animations, and additional media frame styles."
+    },
+    "rating-badge-block": {
+      "enabled": true,
+      "upgradeMessage": "Upgrade to Premium for advanced rating badge styles and layouts."
     },
     "timeline-block": {
       "enabled": true,

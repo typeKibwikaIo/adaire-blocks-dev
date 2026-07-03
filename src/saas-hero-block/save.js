@@ -1,12 +1,7 @@
 import { RichText, useBlockProps } from '@wordpress/block-editor';
 import {
-  getTrustItems,
   getStyleVars,
   getBgTypeClass,
-  TrustLogo,
-  RatingBadgeView,
-  SecurityFeatureView,
-  FaqItemView,
 } from './shared';
 
 // Mirrors edit.js's render tree exactly (same shared.js helpers + presentation
@@ -14,14 +9,11 @@ import {
 // QuickZone/inspector wrappers — so the editor canvas and the published page
 // can never visually drift apart.
 export default function save({ attributes: a }) {
-  const trustItemsResolved = getTrustItems(a);
-
   const blockProps = useBlockProps.save({
     className: [
       'adaire-saas-hero',
       `layout-${a.layoutStyle || 'centered'}`,
       getBgTypeClass(a),
-      a.trustCarousel ? 'has-trust-carousel' : '',
       a.effectFloatingElements ? 'has-floating-elements' : '',
     ].filter(Boolean).join(' '),
     style: getStyleVars(a),
@@ -49,12 +41,6 @@ export default function save({ attributes: a }) {
         {a.showPill && a.pillText && (
           <div className="adaire-saas-hero__pill">
             <RichText.Content tagName="span" value={a.pillText} />
-          </div>
-        )}
-
-        {a.showRatingBadges && (
-          <div className="adaire-saas-hero__ratings">
-            {(a.ratingBadges || []).map((badge, i) => <RatingBadgeView key={i} badge={badge} />)}
           </div>
         )}
 
@@ -108,43 +94,6 @@ export default function save({ attributes: a }) {
             </div>
           )}
         </div>
-
-        {a.showTrustBar && trustItemsResolved.length > 0 && (
-          <div className={`adaire-saas-hero__trust-bar trust-layout-${a.trustLayout || 'row'} ${a.trustCarousel ? 'is-carousel' : ''} ${a.trustCarousel && a.trustCarouselAutoplay === false ? 'is-autoplay-off' : ''} ${a.trustCarousel && a.trustCarouselPauseOnHover === false ? '' : 'is-pause-on-hover'}`}>
-            {a.trustBarTitle && <RichText.Content tagName="p" className="adaire-saas-hero__trust-title" value={a.trustBarTitle} />}
-            <div className="adaire-saas-hero__trust-logos-wrap">
-              <div className="adaire-saas-hero__trust-logos">
-                {trustItemsResolved.map((item, i) => <TrustLogo key={i} item={item} />)}
-              </div>
-              {a.trustCarousel && (
-                <div className="adaire-saas-hero__trust-logos adaire-saas-hero__trust-logos--clone" aria-hidden="true">
-                  {trustItemsResolved.map((item, i) => <TrustLogo key={`clone-${i}`} item={item} />)}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {a.showSecurityPanel && (
-          <div className="adaire-saas-hero__security">
-            <h3 className="adaire-saas-hero__security-title">
-              {a.securityPanelTitle}{a.securityPanelPartnerName ? ` ${a.securityPanelPartnerName}` : ''}
-            </h3>
-            {a.securityPanelText && <p className="adaire-saas-hero__security-text">{a.securityPanelText}</p>}
-            <div className="adaire-saas-hero__security-grid">
-              {(a.securityFeatures || []).map((feature, i) => <SecurityFeatureView key={i} feature={feature} />)}
-            </div>
-          </div>
-        )}
-
-        {a.showFaq && (
-          <div className="adaire-saas-hero__faq">
-            {a.faqTitle && <h3 className="adaire-saas-hero__faq-title">{a.faqTitle}</h3>}
-            <div className="adaire-saas-hero__faq-list">
-              {(a.faqItems || []).map((item, i) => <FaqItemView key={i} item={item} defaultOpen={a.faqOpenFirst !== false && i === 0} />)}
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );
