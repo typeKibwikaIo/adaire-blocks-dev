@@ -419,6 +419,203 @@
         "buttonGlowOpacity": {
             "type": "number",
             "default": 25
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
+        },
+        "headingFontWeight": {
+            "type": "string",
+            "default": "600"
+        },
+        "headingLineHeight": {
+            "type": "string",
+            "default": "1.1"
+        },
+        "headingLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "headingTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "subheadingFontWeight": {
+            "type": "string",
+            "default": "400"
+        },
+        "subheadingLineHeight": {
+            "type": "string",
+            "default": "1.6"
+        },
+        "subheadingLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "subheadingTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "toggleFontWeight": {
+            "type": "string",
+            "default": "400"
+        },
+        "toggleLineHeight": {
+            "type": "string",
+            "default": "1.2"
+        },
+        "toggleLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "toggleTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "badgeFontWeight": {
+            "type": "string",
+            "default": "600"
+        },
+        "badgeLineHeight": {
+            "type": "string",
+            "default": "normal"
+        },
+        "badgeLetterSpacing": {
+            "type": "string",
+            "default": "0.04em"
+        },
+        "badgeTextTransform": {
+            "type": "string",
+            "default": "uppercase"
+        },
+        "planNameFontWeight": {
+            "type": "string",
+            "default": "700"
+        },
+        "planNameLineHeight": {
+            "type": "string",
+            "default": "1.08"
+        },
+        "planNameLetterSpacing": {
+            "type": "string",
+            "default": "-0.03em"
+        },
+        "planNameTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "planTaglineFontSize": {
+            "type": "object",
+            "default": {
+                "desktop": {
+                    "value": 14,
+                    "unit": "px"
+                },
+                "tablet": {
+                    "value": 14,
+                    "unit": "px"
+                },
+                "mobile": {
+                    "value": 14,
+                    "unit": "px"
+                }
+            }
+        },
+        "planTaglineFontWeight": {
+            "type": "string",
+            "default": "400"
+        },
+        "planTaglineLineHeight": {
+            "type": "string",
+            "default": "1.45"
+        },
+        "planTaglineLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "planTaglineTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "pricePrefixFontWeight": {
+            "type": "string",
+            "default": "500"
+        },
+        "pricePrefixLineHeight": {
+            "type": "string",
+            "default": "normal"
+        },
+        "pricePrefixLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "pricePrefixTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "priceFontWeight": {
+            "type": "string",
+            "default": "700"
+        },
+        "priceLineHeight": {
+            "type": "string",
+            "default": "1"
+        },
+        "priceLetterSpacing": {
+            "type": "string",
+            "default": "-0.05em"
+        },
+        "priceTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "priceSuffixFontWeight": {
+            "type": "string",
+            "default": "400"
+        },
+        "priceSuffixLineHeight": {
+            "type": "string",
+            "default": "normal"
+        },
+        "priceSuffixLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "priceSuffixTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "featureFontWeight": {
+            "type": "string",
+            "default": "400"
+        },
+        "featureLineHeight": {
+            "type": "string",
+            "default": "1.45"
+        },
+        "featureLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "featureTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "buttonFontWeight": {
+            "type": "string",
+            "default": "600"
+        },
+        "buttonLineHeight": {
+            "type": "string",
+            "default": "1"
+        },
+        "buttonLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "buttonTextTransform": {
+            "type": "string",
+            "default": "none"
         }
     }
 }

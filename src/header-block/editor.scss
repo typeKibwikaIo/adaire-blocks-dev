@@ -86,6 +86,24 @@
     }
 }
 
+// Editor-only placeholder shown inside .adaire-header-actions when Sign In,
+// Sign Up and the CTA are all switched off (edit.js only renders this span
+// in that case — render.php never does, so the frontend's empty-collapse
+// behavior in style.scss is untouched). Keeps the ActionsZone's QuickZone
+// wrapper from shrinking to 0x0, so its pen pill stays hoverable/clickable
+// and a removed CTA can be added back from the canvas.
+.adaire-header-actions__empty-hint {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 14px;
+    border: 1px dashed #c7d2fe;
+    border-radius: 6px;
+    color: #6366f1;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
 // Background zone — fixed chip at bottom-center of the header
 .adaire-qz-bg {
     position: absolute;
@@ -115,6 +133,40 @@
 
 .wp-block-create-block-header-block:hover .adaire-qz-bg,
 .adaire-qz-bg.adaire-qz-bg--active {
+    opacity: 1;
+}
+
+// Layout zone — fixed chip at top-right of the header. Same always-
+// reachable-on-hover pattern as .adaire-qz-bg above, deliberately NOT tied
+// to any other zone's content, so it can't disappear or become unreachable
+// no matter what's toggled off elsewhere (e.g. every action button removed).
+.adaire-qz-layout {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    z-index: 150;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.15s;
+
+    &:hover { background: rgba(99, 102, 241, 0.85); }
+    svg { flex-shrink: 0; }
+}
+
+.wp-block-create-block-header-block:hover .adaire-qz-layout,
+.adaire-qz-layout.adaire-qz-layout--active {
     opacity: 1;
 }
 

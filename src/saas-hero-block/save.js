@@ -109,16 +109,16 @@ export default function save({ attributes: a }) {
           )}
         </div>
 
-        {a.showTrustBar && trustItemsResolved.length > 0 && (
+        {a.showTrustBar && (trustItemsResolved || []).length > 0 && (
           <div className={`adaire-saas-hero__trust-bar trust-layout-${a.trustLayout || 'row'} ${a.trustCarousel ? 'is-carousel' : ''} ${a.trustCarousel && a.trustCarouselAutoplay === false ? 'is-autoplay-off' : ''} ${a.trustCarousel && a.trustCarouselPauseOnHover === false ? '' : 'is-pause-on-hover'}`}>
             {a.trustBarTitle && <RichText.Content tagName="p" className="adaire-saas-hero__trust-title" value={a.trustBarTitle} />}
             <div className="adaire-saas-hero__trust-logos-wrap">
               <div className="adaire-saas-hero__trust-logos">
-                {trustItemsResolved.map((item, i) => <TrustLogo key={i} item={item} />)}
+                {(trustItemsResolved || []).map((item, i) => <TrustLogo key={i} item={item} />)}
               </div>
               {a.trustCarousel && (
                 <div className="adaire-saas-hero__trust-logos adaire-saas-hero__trust-logos--clone" aria-hidden="true">
-                  {trustItemsResolved.map((item, i) => <TrustLogo key={`clone-${i}`} item={item} />)}
+                  {(trustItemsResolved || []).map((item, i) => <TrustLogo key={`clone-${i}`} item={item} />)}
                 </div>
               )}
             </div>

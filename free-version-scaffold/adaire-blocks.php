@@ -3,7 +3,7 @@
  * Plugin Name: Adaire Blocks
  * Plugin URI: https://adaire.digital/adaire-blocks/
  * Description: Professional WordPress blocks for Gutenberg editor with GSAP animations and modern design.
- * Version: 1.2.4
+ * Version: 1.2.6
  * Author: Adaire
  * Author URI: https://adaire.digital/
  * License: GPL-3.0
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('ADAIRE_BLOCKS_VERSION', '1.2.2');
+define('ADAIRE_BLOCKS_VERSION', '1.2.6');
 define('ADAIRE_BLOCKS_PLUGIN_FILE', __FILE__);
 define('ADAIRE_BLOCKS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));

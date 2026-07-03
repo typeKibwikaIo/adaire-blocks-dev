@@ -1,4 +1,5 @@
 ﻿import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { getDeviceValue } from '../components/DeviceSwitcher';
 
 export default function save({ attributes }) {
     const {
@@ -11,6 +12,10 @@ export default function save({ attributes }) {
         tabTitleFontSize,
         tabTitleFontWeight,
         tabTitleActiveFontWeight,
+        tabTitleLineHeight,
+        tabTitleLetterSpacing,
+        tabTitleTextTransform,
+        fontFamily,
         tabGap,
         underlineHeight,
         contentPaddingTop,
@@ -51,6 +56,19 @@ export default function save({ attributes }) {
             '--tab-title-size': `${tabTitleFontSize}px`,
             '--tab-title-weight': tabTitleFontWeight,
             '--tab-title-active-weight': tabTitleActiveFontWeight,
+            '--tab-title-line-height': `${getDeviceValue(tabTitleLineHeight, 'desktop', 'normal')}`,
+            '--tab-title-line-height-tablet': `${getDeviceValue(tabTitleLineHeight, 'tablet', 'normal')}`,
+            '--tab-title-line-height-mobile': `${getDeviceValue(tabTitleLineHeight, 'mobile', 'normal')}`,
+            '--tab-title-line-height-watch': `${getDeviceValue(tabTitleLineHeight, 'smartwatch', 'normal')}`,
+            '--tab-title-letter-spacing': `${getDeviceValue(tabTitleLetterSpacing, 'desktop', '-0.01em')}`,
+            '--tab-title-letter-spacing-tablet': `${getDeviceValue(tabTitleLetterSpacing, 'tablet', '-0.01em')}`,
+            '--tab-title-letter-spacing-mobile': `${getDeviceValue(tabTitleLetterSpacing, 'mobile', '-0.01em')}`,
+            '--tab-title-letter-spacing-watch': `${getDeviceValue(tabTitleLetterSpacing, 'smartwatch', '-0.01em')}`,
+            '--tab-title-text-transform': `${getDeviceValue(tabTitleTextTransform, 'desktop', 'none')}`,
+            '--tab-title-text-transform-tablet': `${getDeviceValue(tabTitleTextTransform, 'tablet', 'none')}`,
+            '--tab-title-text-transform-mobile': `${getDeviceValue(tabTitleTextTransform, 'mobile', 'none')}`,
+            '--tab-title-text-transform-watch': `${getDeviceValue(tabTitleTextTransform, 'smartwatch', 'none')}`,
+            '--tabs-font-family': fontFamily || 'inherit',
             '--tab-gap': `${tabGap}px`,
             '--underline-height': `${underlineHeight}px`,
             '--content-padding-top': `${contentPaddingTop}px`,

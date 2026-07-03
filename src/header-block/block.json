@@ -99,10 +99,13 @@
         "navFontWeight": { "type": "string", "default": "500" },
         "letterSpacing": { "type": "number", "default": 0 },
         "textTransform": { "type": "string", "default": "none" },
+        "fontFamily": { "type": "string", "default": "" },
         "zIndex": { "type": "number", "default": 50 },
         "hamburgerBorder": { "type": "boolean", "default": true },
         "hamburgerBorderColor": { "type": "string", "default": "#e5e7eb" },
         "hamburgerBorderRadius": { "type": "number", "default": 10 },
+        "hamburgerPosition": { "type": "string", "default": "left" },
+        "hamburgerSize": { "type": "number", "default": 42 },
         "signInBgColor": { "type": "string", "default": "#ffffff" },
         "signInTextColor": { "type": "string", "default": "#6366f1" },
         "signInBorderColor": { "type": "string", "default": "#6366f1" },
@@ -139,7 +142,7 @@
         "ctaBorderRadius": { "type": "number", "default": -1 },
         "ctaPaddingVertical": { "type": "number", "default": -1 },
         "ctaPaddingHorizontal": { "type": "number", "default": -1 },
-        "buttonBorderRadius": { "type": "number", "default": 30 },
+        "buttonBorderRadius": { "type": "number", "default": -1 },
         "buttonPaddingVertical": { "type": "number", "default": 4 },
 
         "searchLayoutStyle": { "type": "string", "default": "icon-only" },
@@ -158,6 +161,18 @@
         "topBarFollowIcon": { "type": "string", "default": "none" },
         "topBarFollowIconPosition": { "type": "string", "default": "left" },
         "topBarFollowPosition": { "type": "string", "default": "right" },
-        "topBarFollowNewTab": { "type": "boolean", "default": false }
+        "topBarFollowNewTab": { "type": "boolean", "default": false },
+
+        "showCartIcon": { "type": "boolean", "default": false },
+        "cartIconPlacement": { "type": "string", "default": "actions" },
+        "cartIconSize": { "type": "number", "default": 18 },
+        "cartIconColor": { "type": "string", "default": "" },
+        "cartShowCount": { "type": "boolean", "default": true },
+
+        "showPaymentIcons": { "type": "boolean", "default": false },
+        "paymentIcons": { "type": "array", "default": [{"method":"Visa"},{"method":"Mastercard"},{"method":"PayPal"}] },
+        "paymentIconPlacement": { "type": "string", "default": "actions" },
+        "paymentIconSize": { "type": "number", "default": 22 },
+        "paymentIconColor": { "type": "string", "default": "" }
     }
 }

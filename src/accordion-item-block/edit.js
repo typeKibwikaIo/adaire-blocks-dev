@@ -1,11 +1,55 @@
 ﻿import { __ } from '@wordpress/i18n';
-import { useBlockProps, useInnerBlocksProps, RichText } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps, RichText, InspectorControls } from '@wordpress/block-editor';
 import { useSelect, useDispatch, useRegistry } from '@wordpress/data';
 import { useCallback } from '@wordpress/element';
+import {
+    PanelBody,
+    SelectControl,
+    __experimentalUnitControl as UnitControl,
+} from '@wordpress/components';
 import './style.scss';
 
+const TEXT_TRANSFORM_OPTIONS = [
+    { label: __( 'None', 'accordion-item-block' ), value: 'none' },
+    { label: __( 'Uppercase', 'accordion-item-block' ), value: 'uppercase' },
+    { label: __( 'Lowercase', 'accordion-item-block' ), value: 'lowercase' },
+    { label: __( 'Capitalize', 'accordion-item-block' ), value: 'capitalize' },
+];
+
+const FONT_FAMILY_OPTIONS = [
+    { label: __( 'Default (inherit theme)', 'accordion-item-block' ), value: '' },
+    { label: __( 'Arial', 'accordion-item-block' ), value: 'Arial, Helvetica, sans-serif' },
+    { label: __( 'Helvetica', 'accordion-item-block' ), value: 'Helvetica, Arial, sans-serif' },
+    { label: __( 'Georgia', 'accordion-item-block' ), value: 'Georgia, serif' },
+    { label: __( 'Times New Roman', 'accordion-item-block' ), value: "'Times New Roman', Times, serif" },
+    { label: __( 'Verdana', 'accordion-item-block' ), value: 'Verdana, Geneva, sans-serif' },
+    { label: __( 'Trebuchet MS', 'accordion-item-block' ), value: "'Trebuchet MS', sans-serif" },
+    { label: __( 'Courier New', 'accordion-item-block' ), value: "'Courier New', Courier, monospace" },
+    { label: __( 'System UI', 'accordion-item-block' ), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
+const FONT_WEIGHT_OPTIONS = [
+    { label: __( 'Default (inherit)', 'accordion-item-block' ), value: '' },
+    { label: '300', value: '300' },
+    { label: '400', value: '400' },
+    { label: '500', value: '500' },
+    { label: '600', value: '600' },
+    { label: '700', value: '700' },
+    { label: '800', value: '800' },
+];
+
 export default function Edit({ attributes, clientId, setAttributes }) {
-    const { title, itemId, itemIndex } = attributes;
+    const {
+        title,
+        itemId,
+        itemIndex,
+        fontSize,
+        fontWeight,
+        lineHeight,
+        letterSpacing,
+        textTransform,
+        fontFamily,
+    } = attributes;
 
     // Get parent accordion block state
         const { parentClientId, parentItems, parentAllowMultiple, isOpen, currentItem } = useSelect((select) => {
@@ -99,6 +143,14 @@ export default function Edit({ attributes, clientId, setAttributes }) {
         className: `adaire-accordion__item${isOpen ? ' is-open' : ''}`,
         'data-item-id': itemId,
         'data-item-index': itemIndex,
+        style: {
+            ...(fontSize ? { '--acc-title-size': fontSize } : {}),
+            ...(fontWeight ? { '--acc-title-weight': fontWeight } : {}),
+            '--acc-item-title-line-height': lineHeight || '1.4',
+            '--acc-item-title-letter-spacing': letterSpacing || 'normal',
+            '--acc-item-title-text-transform': textTransform || 'none',
+            '--acc-item-title-font-family': fontFamily || 'inherit',
+        },
     });
 
     const innerBlocksProps = useInnerBlocksProps(
@@ -117,10 +169,51 @@ export default function Edit({ attributes, clientId, setAttributes }) {
     );
 
     return (
-        <div {...blockProps}>
-            <button 
-                type="button" 
-                className="adaire-accordion__header" 
+        <>
+            <InspectorControls>
+                <PanelBody title={__( 'Title Typography', 'accordion-item-block' )} initialOpen={false}>
+                    <UnitControl
+                        label={__( 'Font Size', 'accordion-item-block' )}
+                        value={fontSize}
+                        onChange={(value) => setAttributes({ fontSize: value })}
+                        help={__( 'Leave blank to use the accordion block\'s title size.', 'accordion-item-block' )}
+                    />
+                    <SelectControl
+                        label={__( 'Font Weight', 'accordion-item-block' )}
+                        value={fontWeight || ''}
+                        options={FONT_WEIGHT_OPTIONS}
+                        onChange={(value) => setAttributes({ fontWeight: value })}
+                        help={__( 'Leave blank to use the accordion block\'s title weight.', 'accordion-item-block' )}
+                    />
+                    <UnitControl
+                        label={__( 'Line Height', 'accordion-item-block' )}
+                        value={lineHeight}
+                        onChange={(value) => setAttributes({ lineHeight: value })}
+                    />
+                    <UnitControl
+                        label={__( 'Letter Spacing', 'accordion-item-block' )}
+                        value={letterSpacing}
+                        onChange={(value) => setAttributes({ letterSpacing: value })}
+                    />
+                    <SelectControl
+                        label={__( 'Text Transform', 'accordion-item-block' )}
+                        value={textTransform}
+                        options={TEXT_TRANSFORM_OPTIONS}
+                        onChange={(value) => setAttributes({ textTransform: value })}
+                    />
+                    <SelectControl
+                        label={__( 'Font Family', 'accordion-item-block' )}
+                        value={fontFamily || ''}
+                        options={FONT_FAMILY_OPTIONS}
+                        onChange={(value) => setAttributes({ fontFamily: value })}
+                        help={__( 'Applies to this item\'s title only.', 'accordion-item-block' )}
+                    />
+                </PanelBody>
+            </InspectorControls>
+            <div {...blockProps}>
+            <button
+                type="button"
+                className="adaire-accordion__header"
                 onClick={toggleOpen}
             >
                 <RichText
@@ -148,7 +241,8 @@ export default function Edit({ attributes, clientId, setAttributes }) {
                 </span>
             </button>
             <div {...innerBlocksProps} />
-        </div>
+            </div>
+        </>
     );
 }
 

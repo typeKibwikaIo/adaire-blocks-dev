@@ -148,16 +148,18 @@
         border: none;
         border-bottom: var(--underline-height, 3px) solid transparent;
         padding: 16px 0;
-        font-family: inherit; // Respect site/user theme font
+        font-family: var(--tabs-font-family, inherit); // Respect site/user theme font, or user-selected override
         font-size: var(--tab-title-size, 18px);
         font-weight: var(--tab-title-weight, 500);
+        line-height: var(--tab-title-line-height, normal);
         color: var(--tab-title-color, #aeb4cf);
         cursor: pointer;
         position: relative;
         white-space: nowrap;
         outline: none;
         transform: scale(1);
-        letter-spacing: -0.01em;
+        letter-spacing: var(--tab-title-letter-spacing, -0.01em);
+        text-transform: var(--tab-title-text-transform, none);
         
         // Smooth transitions for all interactive states
         transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1),

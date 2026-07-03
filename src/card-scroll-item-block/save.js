@@ -22,6 +22,17 @@ export default function save({ attributes }) {
         textColor,
         imageBackgroundSize,
         imageBackgroundPosition,
+        titleFontSize,
+        titleFontWeight,
+        titleLineHeight,
+        titleLetterSpacing,
+        titleTextTransform,
+        descriptionFontSize,
+        descriptionFontWeight,
+        descriptionLineHeight,
+        descriptionLetterSpacing,
+        descriptionTextTransform,
+        fontFamily,
     } = attributes;
 
     const blockProps = useBlockProps.save({
@@ -42,6 +53,21 @@ export default function save({ attributes }) {
                 if (responsiveCardWidth[br]) acc[`--card-width-${br}`] = responsiveCardWidth[br];
                 return acc;
             }, {}),
+            // Per-card typography overrides — see edit.js for an explanation of
+            // why title/description font-size, font-weight, and line-height
+            // reuse the parent card-scroll-block's `--current-title-*` /
+            // `--current-desc-*` variable names.
+            ...(titleFontSize ? { '--current-title-size': titleFontSize } : {}),
+            ...(titleFontWeight ? { '--current-title-weight': titleFontWeight } : {}),
+            ...(titleLineHeight ? { '--current-title-lh': titleLineHeight } : {}),
+            '--card-title-letter-spacing': titleLetterSpacing || 'normal',
+            '--card-title-text-transform': titleTextTransform || 'none',
+            ...(descriptionFontSize ? { '--current-desc-size': descriptionFontSize } : {}),
+            ...(descriptionFontWeight ? { '--current-desc-weight': descriptionFontWeight } : {}),
+            ...(descriptionLineHeight ? { '--current-desc-lh': descriptionLineHeight } : {}),
+            '--card-desc-letter-spacing': descriptionLetterSpacing || 'normal',
+            '--card-desc-text-transform': descriptionTextTransform || 'none',
+            '--card-font-family': fontFamily || 'inherit',
         }
     });
 

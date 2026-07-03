@@ -25,7 +25,7 @@
         radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), transparent 28%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0)),
         var(--pricing-bg, #f5f5f7);
-    font-family: inherit;
+    font-family: var(--pricing-font-family, inherit);
     color: inherit;
     padding: 60px 20px;
     box-sizing: border-box !important;
@@ -72,8 +72,10 @@
 
     &__heading {
         font-size: var(--pricing-heading-size, 32px);
-        line-height: 1.1;
-        font-weight: 600;
+        line-height: var(--pricing-heading-line-height, 1.1);
+        font-weight: var(--pricing-heading-font-weight, 600);
+        letter-spacing: var(--pricing-heading-letter-spacing, normal);
+        text-transform: var(--pricing-heading-text-transform, none);
         margin: 0;
         color: var(--pricing-heading-color, #111827);
 
@@ -90,7 +92,10 @@
 
     &__subheading {
         font-size: var(--pricing-subheading-size, 16px);
-        line-height: 1.6;
+        line-height: var(--pricing-subheading-line-height, 1.6);
+        font-weight: var(--pricing-subheading-font-weight, 400);
+        letter-spacing: var(--pricing-subheading-letter-spacing, normal);
+        text-transform: var(--pricing-subheading-text-transform, none);
         margin: 0;
         color: var(--pricing-subheading-color, #6b7280);
 
@@ -124,7 +129,10 @@
         padding: 6px 14px;
         border-radius: 999px;
         font-size: var(--pricing-toggle-size, 14px);
-        line-height: 1.2;
+        line-height: var(--pricing-toggle-line-height, 1.2);
+        font-weight: var(--pricing-toggle-font-weight, 400);
+        letter-spacing: var(--pricing-toggle-letter-spacing, normal);
+        text-transform: var(--pricing-toggle-text-transform, none);
         cursor: pointer;
         color: #0f172a;
         display: inline-flex;
@@ -159,9 +167,10 @@
         background-color: var(--pricing-badge-bg, #503AA8);
         color: #ffffff;
         font-size: var(--pricing-badge-font-size, 11px);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        font-weight: var(--pricing-badge-font-weight, 600);
+        line-height: var(--pricing-badge-line-height, normal);
+        text-transform: var(--pricing-badge-text-transform, uppercase);
+        letter-spacing: var(--pricing-badge-letter-spacing, 0.04em);
 
         @media (max-width: 1024px) {
             font-size: var(--pricing-badge-font-size-tablet,
@@ -329,9 +338,10 @@
     &__plan-name {
         margin: 0;
         font-size: var(--pricing-plan-name-size, 18px);
-        font-weight: 700;
-        line-height: 1.08;
-        letter-spacing: -0.03em;
+        font-weight: var(--pricing-plan-name-font-weight, 700);
+        line-height: var(--pricing-plan-name-line-height, 1.08);
+        letter-spacing: var(--pricing-plan-name-letter-spacing, -0.03em);
+        text-transform: var(--pricing-plan-name-text-transform, none);
         color: var(--pricing-plan-name-color, #111827);
 
         @media (max-width: 1024px) {
@@ -347,9 +357,22 @@
 
     &__plan-tagline {
         margin: 0;
-        font-size: 14px;
-        line-height: 1.45;
+        font-size: var(--pricing-plan-tagline-size, 14px);
+        font-weight: var(--pricing-plan-tagline-font-weight, 400);
+        line-height: var(--pricing-plan-tagline-line-height, 1.45);
+        letter-spacing: var(--pricing-plan-tagline-letter-spacing, normal);
+        text-transform: var(--pricing-plan-tagline-text-transform, none);
         color: var(--pricing-subheading-color, #6b7280);
+
+        @media (max-width: 1024px) {
+            font-size: var(--pricing-plan-tagline-size-tablet,
+                    var(--pricing-plan-tagline-size, 14px));
+        }
+
+        @media (max-width: 768px) {
+            font-size: var(--pricing-plan-tagline-size-mobile,
+                    var(--pricing-plan-tagline-size-tablet, 14px));
+        }
     }
 
     &__price {
@@ -364,7 +387,10 @@
 
     &__price-currency {
         font-size: var(--pricing-price-prefix-size, 16px);
-        font-weight: 500;
+        font-weight: var(--pricing-price-prefix-font-weight, 500);
+        line-height: var(--pricing-price-prefix-line-height, normal);
+        letter-spacing: var(--pricing-price-prefix-letter-spacing, normal);
+        text-transform: var(--pricing-price-prefix-text-transform, none);
         transform: translateY(1px);
 
         @media (max-width: 1024px) {
@@ -380,9 +406,10 @@
 
     &__price-value {
         font-size: var(--pricing-price-size, 32px);
-        font-weight: 700;
-        line-height: 1;
-        letter-spacing: -0.05em;
+        font-weight: var(--pricing-price-font-weight, 700);
+        line-height: var(--pricing-price-line-height, 1);
+        letter-spacing: var(--pricing-price-letter-spacing, -0.05em);
+        text-transform: var(--pricing-price-text-transform, none);
 
         @media (max-width: 1024px) {
             font-size: var(--pricing-price-size-tablet,
@@ -401,6 +428,10 @@
 
     &__price-suffix {
         font-size: var(--pricing-price-suffix-size, 14px);
+        font-weight: var(--pricing-price-suffix-font-weight, 400);
+        line-height: var(--pricing-price-suffix-line-height, normal);
+        letter-spacing: var(--pricing-price-suffix-letter-spacing, normal);
+        text-transform: var(--pricing-price-suffix-text-transform, none);
         color: var(--pricing-subheading-color, #6b7280);
         margin-left: 4px;
 
@@ -423,6 +454,9 @@
         flex-direction: column;
         gap: 10px;
         font-size: var(--pricing-feature-size, 14px);
+        font-weight: var(--pricing-feature-font-weight, 400);
+        letter-spacing: var(--pricing-feature-letter-spacing, normal);
+        text-transform: var(--pricing-feature-text-transform, none);
         color: var(--pricing-feature-color, #4b5563);
         align-items: var(--pricing-features-align, flex-start);
         border-top: 1px solid rgba(148, 163, 184, 0.2);
@@ -442,7 +476,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            line-height: 1.45;
+            line-height: var(--pricing-feature-line-height, 1.45);
             color: inherit;
         }
     }
@@ -463,8 +497,10 @@
         cursor: pointer;
         text-decoration: none;
         font-size: var(--pricing-button-size, 14px);
-        font-weight: 600;
-        line-height: 1;
+        font-weight: var(--pricing-button-font-weight, 600);
+        line-height: var(--pricing-button-line-height, 1);
+        letter-spacing: var(--pricing-button-letter-spacing, normal);
+        text-transform: var(--pricing-button-text-transform, none);
         color: var(--pricing-button-text, #ffffff);
         background-color: var(--pricing-button-bg, #111827);
         border-radius: max(var(--pricing-card-radius, 6px), 8px);

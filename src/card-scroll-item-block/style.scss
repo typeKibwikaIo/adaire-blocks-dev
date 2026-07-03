@@ -1,0 +1,35 @@
+// Card Scroll Item (card-scroll-item-block) styles.
+//
+// This block previously had no stylesheet of its own — all visual styling
+// (font-size, font-weight, line-height, padding, etc.) is set by the parent
+// card-scroll-block via CSS custom properties declared on
+// `.adaire-card-scroll__card-title` / `.adaire-card-scroll__card-description`
+// in card-scroll-block/style.scss.
+//
+// ADAB-010 adds per-card typography override controls (font size, font
+// weight, line height, letter spacing, text transform per text role, plus
+// one block-level font family). Font-size/weight/line-height reuse the
+// parent's own `--current-title-*` / `--current-desc-*` variable names —
+// edit.js/save.js redeclare those names on this card's own root element only
+// when the corresponding attribute is set, and the CSS custom property
+// cascade (closest declaration wins) lets a single card override the
+// slider-wide value without touching the parent block's files. Letter
+// spacing, text transform, and font family aren't exposed as variables by
+// the parent at all, so this stylesheet declares the rules that consume this
+// card's own `--card-title-*` / `--card-desc-*` / `--card-font-family`
+// variables directly.
+.adaire-card-scroll__card {
+    .adaire-card-scroll__card-title,
+    .adaire-card-scroll__card-title h2 {
+        letter-spacing: var(--card-title-letter-spacing, normal);
+        text-transform: var(--card-title-text-transform, none);
+        font-family: var(--card-font-family, inherit);
+    }
+
+    .adaire-card-scroll__card-description,
+    .adaire-card-scroll__card-description p {
+        letter-spacing: var(--card-desc-letter-spacing, normal);
+        text-transform: var(--card-desc-text-transform, none);
+        font-family: var(--card-font-family, inherit);
+    }
+}

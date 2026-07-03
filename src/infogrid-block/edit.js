@@ -129,6 +129,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         containerMode,
         containerMaxWidth,
         layoutStyle,
+        itemsPerRow,
         responsivePadding
     } = attributes;
 
@@ -193,6 +194,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             '--infogrid-description-font-size': `${descriptionFontSize}px`,
             '--infogrid-item-padding': `${itemPadding}px`,
             '--infogrid-gap': `${gap}px`,
+            '--infogrid-items-per-row': itemsPerRow || 3,
             '--container-max-width': `${containerMaxWidth?.desktop?.value ?? 1200}${containerMaxWidth?.desktop?.unit ?? 'px'}`,
             '--container-max-width-mobile': `${containerMaxWidth?.mobile?.value ?? 100}${containerMaxWidth?.mobile?.unit ?? '%'}`,
             '--container-max-width-tablet': `${containerMaxWidth?.tablet?.value ?? 100}${containerMaxWidth?.tablet?.unit ?? '%'}`,
@@ -329,6 +331,11 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     value={item.title}
                                     onChange={(value) => updateItem(item.id, 'title', value)}
                                 />
+                                <ToggleControl
+                                    label={__('Show Title', 'infogrid-block')}
+                                    checked={item.showTitle !== false}
+                                    onChange={(value) => updateItem(item.id, 'showTitle', value)}
+                                />
                                 <TextControl
                                     label={__('Tagline', 'infogrid-block')}
                                     value={item.tagline}
@@ -455,7 +462,26 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         >
                             {__('Alternate', 'infogrid-block')}
                         </Button>
+                        <Button
+                            isPrimary={layoutStyle === 'grid'}
+                            isSecondary={layoutStyle !== 'grid'}
+                            onClick={() => setAttributes({ layoutStyle: 'grid' })}
+                        >
+                            {__('Flexible Grid', 'infogrid-block')}
+                        </Button>
                     </ButtonGroup>
+
+                    {layoutStyle === 'grid' && (
+                        <RangeControl
+                            label={__('Items Per Row (Desktop)', 'infogrid-block')}
+                            help={__('Items are distributed evenly and wrap to new rows automatically — no fixed positions, so any number of items lays out cleanly. Tablet shows up to 2 per row and mobile stacks to 1.', 'infogrid-block')}
+                            value={itemsPerRow || 3}
+                            onChange={(value) => setAttributes({ itemsPerRow: value })}
+                            min={1}
+                            max={6}
+                            step={1}
+                        />
+                    )}
                 </PanelBody>
 
                 {/* Color Settings */}
@@ -629,6 +655,11 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                             value={item.title}
                                             onChange={(value) => updateItem(item.id, 'title', value)}
                                         />
+                                        <ToggleControl
+                                            label={__('Show Title', 'infogrid-block')}
+                                            checked={item.showTitle !== false}
+                                            onChange={(value) => updateItem(item.id, 'showTitle', value)}
+                                        />
                                         <TextControl
                                             label={__('Tagline', 'infogrid-block')}
                                             value={item.tagline}
@@ -671,15 +702,17 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             >
                             <div className="adaire-infogrid__item-content">
                                 <div className="adaire-infogrid__item-header">
-                                    {item.useIcon && item.iconClass ? (
-                                        <span
-                                            className="adaire-infogrid__item-title adaire-infogrid__item-title--icon"
-                                            aria-label={item.title}
-                                        >
-                                            <i className={item.iconClass}></i>
-                                        </span>
-                                    ) : (
-                                        <span className="adaire-infogrid__item-title">{item.title}</span>
+                                    {item.showTitle !== false && (
+                                        item.useIcon && item.iconClass ? (
+                                            <span
+                                                className="adaire-infogrid__item-title adaire-infogrid__item-title--icon"
+                                                aria-label={item.title}
+                                            >
+                                                <i className={item.iconClass}></i>
+                                            </span>
+                                        ) : (
+                                            <span className="adaire-infogrid__item-title">{item.title}</span>
+                                        )
                                     )}
                                     <span className="adaire-infogrid__item-icon">
                                         {expandedItem === item.id ? 'Ã—' : '+'}

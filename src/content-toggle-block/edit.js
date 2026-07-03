@@ -12,6 +12,7 @@ import {
     TextControl,
     SelectControl,
     BaseControl,
+    __experimentalUnitControl as UnitControl,
 } from "@wordpress/components";
 import { useEffect, useState } from "@wordpress/element";
 import { plus, trash, arrowUp, arrowDown, desktop, tablet, mobile } from "@wordpress/icons";
@@ -46,6 +47,25 @@ const DEVICE_TYPES = [
     { key: "desktop", label: __("Desktop", "content-toggle-block") },
     { key: "tablet", label: __("Tablet", "content-toggle-block") },
     { key: "mobile", label: __("Mobile", "content-toggle-block") },
+];
+
+const TEXT_TRANSFORM_OPTIONS = [
+    { label: __("None", "content-toggle-block"), value: "none" },
+    { label: __("Uppercase", "content-toggle-block"), value: "uppercase" },
+    { label: __("Lowercase", "content-toggle-block"), value: "lowercase" },
+    { label: __("Capitalize", "content-toggle-block"), value: "capitalize" },
+];
+
+const FONT_FAMILY_OPTIONS = [
+    { label: __("Default (inherit theme)", "content-toggle-block"), value: "" },
+    { label: __("Arial", "content-toggle-block"), value: "Arial, Helvetica, sans-serif" },
+    { label: __("Helvetica", "content-toggle-block"), value: "Helvetica, Arial, sans-serif" },
+    { label: __("Georgia", "content-toggle-block"), value: "Georgia, serif" },
+    { label: __("Times New Roman", "content-toggle-block"), value: "'Times New Roman', Times, serif" },
+    { label: __("Verdana", "content-toggle-block"), value: "Verdana, Geneva, sans-serif" },
+    { label: __("Trebuchet MS", "content-toggle-block"), value: "'Trebuchet MS', sans-serif" },
+    { label: __("Courier New", "content-toggle-block"), value: "'Courier New', Courier, monospace" },
+    { label: __("System UI", "content-toggle-block"), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
 ];
 
 const UNIT_OPTIONS = ["px", "%", "rem", "vw"];
@@ -108,6 +128,10 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
         pillFontSize,
         pillFontWeight,
         pillActiveFontWeight,
+        pillLineHeight,
+        pillLetterSpacing,
+        pillTextTransform,
+        fontFamily,
         contentBackgroundColor,
         contentPadding,
         contentBorderRadius,
@@ -258,6 +282,10 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
             "--pill-font-size": `${pillFontSize}px`,
             "--pill-font-weight": pillFontWeight,
             "--pill-active-font-weight": pillActiveFontWeight,
+            "--pill-line-height": pillLineHeight || "normal",
+            "--pill-letter-spacing": pillLetterSpacing || "normal",
+            "--pill-text-transform": pillTextTransform || "none",
+            "--content-toggle-font-family": fontFamily || "inherit",
             "--content-bg": contentBackgroundColor,
             "--content-padding-top": `${contentPadding?.top ?? 40}px`,
             "--content-padding-right": `${contentPadding?.right ?? 40}px`,
@@ -691,6 +719,33 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                             { label: "700", value: "700" },
                         ]}
                         onChange={(value) => setAttributes({ pillActiveFontWeight: value })}
+                    />
+
+                    <UnitControl
+                        label={__("Line Height", "content-toggle-block")}
+                        value={pillLineHeight}
+                        onChange={(value) => setAttributes({ pillLineHeight: value })}
+                    />
+
+                    <UnitControl
+                        label={__("Letter Spacing", "content-toggle-block")}
+                        value={pillLetterSpacing}
+                        onChange={(value) => setAttributes({ pillLetterSpacing: value })}
+                    />
+
+                    <SelectControl
+                        label={__("Text Transform", "content-toggle-block")}
+                        value={pillTextTransform}
+                        options={TEXT_TRANSFORM_OPTIONS}
+                        onChange={(value) => setAttributes({ pillTextTransform: value })}
+                    />
+
+                    <SelectControl
+                        label={__("Font Family", "content-toggle-block")}
+                        value={fontFamily || ""}
+                        options={FONT_FAMILY_OPTIONS}
+                        onChange={(value) => setAttributes({ fontFamily: value })}
+                        help={__("Applies to the toggle pill labels.", "content-toggle-block")}
                     />
 
                     <BaseControl label={__("Padding", "content-toggle-block")}>

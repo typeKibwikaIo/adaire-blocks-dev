@@ -22,6 +22,7 @@ export default function save({ attributes }) {
         hoverAnimation,
         animationDuration,
         animationEasing,
+        fontFamily,
     } = attributes;
 
     // Don't render if no icon entries
@@ -64,6 +65,7 @@ export default function save({ attributes }) {
             '--banner-padding-right-big-desktop': responsivePadding?.bigDesktop?.right || responsivePadding?.desktop?.right || '0px',
             '--banner-padding-bottom-big-desktop': responsivePadding?.bigDesktop?.bottom || responsivePadding?.desktop?.bottom || '0px',
             '--banner-padding-left-big-desktop': responsivePadding?.bigDesktop?.left || responsivePadding?.desktop?.left || '0px',
+            '--banner-font-family': fontFamily || 'inherit',
         },
     });
 

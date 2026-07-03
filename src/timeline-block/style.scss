@@ -4,7 +4,7 @@
 
 .adaire-timeline {
 	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+	font-family: var( --tl-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif );
 	width: 100%;
 	overflow: hidden;
 
@@ -23,25 +23,31 @@
 	}
 
 	.adaire-timeline__eyebrow {
-		font-size: 11px;
-		font-weight: 700;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
+		font-size: var( --tl-eyebrow-font-size, 11px );
+		font-weight: var( --tl-eyebrow-font-weight, 700 );
+		line-height: var( --tl-eyebrow-line-height, normal );
+		letter-spacing: var( --tl-eyebrow-letter-spacing, 0.14em );
+		text-transform: var( --tl-eyebrow-text-transform, uppercase );
 		color: var( --tl-eyebrow, #aeb4cf );
 		margin: 0 0 14px;
 	}
 
 	.adaire-timeline__section-title {
-		font-size: clamp( 26px, 3.5vw, 42px );
-		font-weight: 700;
-		line-height: 1.18;
+		font-size: var( --tl-section-title-font-size, clamp( 26px, 3.5vw, 42px ) );
+		font-weight: var( --tl-section-title-font-weight, 700 );
+		line-height: var( --tl-section-title-line-height, 1.18 );
+		letter-spacing: var( --tl-section-title-letter-spacing, normal );
+		text-transform: var( --tl-section-title-text-transform, none );
 		color: var( --tl-text, #fff );
 		margin: 0 0 16px;
 	}
 
 	.adaire-timeline__section-desc {
-		font-size: 16px;
-		line-height: 1.75;
+		font-size: var( --tl-section-desc-font-size, 16px );
+		font-weight: var( --tl-section-desc-font-weight, 400 );
+		line-height: var( --tl-section-desc-line-height, 1.75 );
+		letter-spacing: var( --tl-section-desc-letter-spacing, normal );
+		text-transform: var( --tl-section-desc-text-transform, none );
 		color: var( --tl-desc, #aeb4cf );
 		margin: 0 auto;
 		max-width: 560px;
@@ -76,16 +82,21 @@
 
 	// ── Shared: Item content ───────────────────────────────────────────────
 	.adaire-timeline__item-title {
-		font-size: 18px;
-		font-weight: 700;
-		line-height: 1.3;
+		font-size: var( --tl-item-title-font-size, 18px );
+		font-weight: var( --tl-item-title-font-weight, 700 );
+		line-height: var( --tl-item-title-line-height, 1.3 );
+		letter-spacing: var( --tl-item-title-letter-spacing, normal );
+		text-transform: var( --tl-item-title-text-transform, none );
 		color: var( --tl-text, #fff );
 		margin: 0 0 10px;
 	}
 
 	.adaire-timeline__item-desc {
-		font-size: 15px;
-		line-height: 1.75;
+		font-size: var( --tl-item-desc-font-size, 15px );
+		font-weight: var( --tl-item-desc-font-weight, 400 );
+		line-height: var( --tl-item-desc-line-height, 1.75 );
+		letter-spacing: var( --tl-item-desc-letter-spacing, normal );
+		text-transform: var( --tl-item-desc-text-transform, none );
 		color: var( --tl-desc, #aeb4cf );
 		margin: 0;
 	}

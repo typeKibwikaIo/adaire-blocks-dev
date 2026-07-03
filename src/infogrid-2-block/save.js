@@ -3,6 +3,7 @@
 export default function save({ attributes }) {
     const {
         blockId,
+        fontFamily,
         items,
         backgroundImageUrl,
         overlayType,
@@ -34,6 +35,7 @@ export default function save({ attributes }) {
 
     const generateVariables = () => {
         const vars = {
+            '--infogrid-2-font-family': fontFamily || 'inherit',
             '--infogrid-2-bg-color': solidBgColor || 'transparent',
             '--infogrid-2-bg-image': backgroundImageUrl ? `url(${backgroundImageUrl})` : 'none',
             '--infogrid-2-overlay-bg-solid': overlayColor || 'transparent',
@@ -137,7 +139,7 @@ export default function save({ attributes }) {
                     />
                 )}
                 <div className="adaire-infogrid-2-content">
-                    {items.map((item) => (
+                    {(items || []).map((item) => (
                         <div key={item.id} className="adaire-infogrid-2-item">
                             {item.imageUrl ? (
                                 <div className="adaire-infogrid-2-item-icon">
@@ -148,11 +150,13 @@ export default function save({ attributes }) {
                                     <i className={item.icon}></i>
                                 </div>
                             )}
-                            <RichText.Content
-                                tagName="h3"
-                                className="adaire-infogrid-2-item-title"
-                                value={item.title}
-                            />
+                            {item.showTitle !== false && (
+                                <RichText.Content
+                                    tagName="h3"
+                                    className="adaire-infogrid-2-item-title"
+                                    value={item.title}
+                                />
+                            )}
                             <RichText.Content
                                 tagName="p"
                                 className="adaire-infogrid-2-item-text"
