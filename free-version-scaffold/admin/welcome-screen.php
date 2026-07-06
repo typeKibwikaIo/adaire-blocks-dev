@@ -168,7 +168,6 @@ class Adaire_Welcome_Screen {
         $nonce       = wp_create_nonce( 'adaire_create_page' );
         $ajax_url    = admin_url( 'admin-ajax.php' );
         $docs_url    = 'https://adaire.digital/docs/';
-        $support_url = 'https://adaire.digital/support/';
 
         $is_block_theme = function_exists( 'wp_is_block_theme' ) && wp_is_block_theme();
         $theme_name      = wp_get_theme()->get( 'Name' );
@@ -180,6 +179,7 @@ class Adaire_Welcome_Screen {
         // Sidebar / quick-action destinations.
         $settings_url  = admin_url( 'admin.php?page=adaire-blocks-settings' );
         $migration_url = admin_url( 'admin.php?page=adaire-blocks-migration' );
+        $support_page_url = admin_url( 'admin.php?page=adaire-blocks-support' );
         $themes_url    = admin_url( 'themes.php' );
         $exit_url      = admin_url();
 
@@ -258,12 +258,13 @@ class Adaire_Welcome_Screen {
                 'image' => $preview_images['landing'],
             ),
             array(
-                'href'  => $support_url,
-                'tag'   => __( 'Help', 'adaire-blocks' ),
-                'title' => __( 'Support', 'adaire-blocks' ),
-                'desc'  => __( 'Submit a ticket or browse answered questions.', 'adaire-blocks' ),
-                'cta'   => __( 'Get support', 'adaire-blocks' ),
-                'image' => $preview_images['services'],
+                'href'     => $support_page_url,
+                'tag'      => __( 'Help', 'adaire-blocks' ),
+                'title'    => __( 'Support', 'adaire-blocks' ),
+                'desc'     => __( 'Get in touch with our support team directly.', 'adaire-blocks' ),
+                'cta'      => __( 'Get support', 'adaire-blocks' ),
+                'image'    => $preview_images['services'],
+                'external' => false,
             ),
         );
         ?>
@@ -629,9 +630,8 @@ class Adaire_Welcome_Screen {
                         <span class="adaire-shell-link-label"><?php echo self::icon( 'book-open' ); ?> <?php esc_html_e( 'Documentation', 'adaire-blocks' ); ?></span>
                         <span class="adaire-shell-ext-icon"><?php echo self::icon( 'external-link' ); ?></span>
                     </a>
-                    <a href="<?php echo esc_url( $support_url ); ?>" target="_blank" rel="noopener" class="adaire-shell-link adaire-shell-link-ext">
-                        <span class="adaire-shell-link-label"><?php echo self::icon( 'message-circle' ); ?> <?php esc_html_e( 'Support', 'adaire-blocks' ); ?></span>
-                        <span class="adaire-shell-ext-icon"><?php echo self::icon( 'external-link' ); ?></span>
+                    <a href="<?php echo esc_url( $support_page_url ); ?>" class="adaire-shell-link">
+                        <?php echo self::icon( 'message-circle' ); ?> <?php esc_html_e( 'Support', 'adaire-blocks' ); ?>
                     </a>
                 </nav>
 
@@ -849,8 +849,8 @@ class Adaire_Welcome_Screen {
             <p class="adaire-section-subtitle"><?php esc_html_e( 'Guides and support to help you get more out of Guten-Blocks.', 'adaire-blocks' ); ?></p>
 
             <div class="adaire-resources">
-                <?php foreach ( $resources as $i => $res ) : ?>
-                <a href="<?php echo esc_url( $res['href'] ); ?>" target="_blank" rel="noopener" class="adaire-resource adaire-fade" style="transition-delay:<?php echo esc_attr( $i * 0.06 ); ?>s">
+                <?php foreach ( $resources as $i => $res ) : $res_is_external = ! isset( $res['external'] ) || $res['external']; ?>
+                <a href="<?php echo esc_url( $res['href'] ); ?>" <?php echo $res_is_external ? 'target="_blank" rel="noopener"' : ''; ?> class="adaire-resource adaire-fade" style="transition-delay:<?php echo esc_attr( $i * 0.06 ); ?>s">
                     <div class="adaire-resource-media">
                         <img src="<?php echo esc_url( $res['image'] ); ?>" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
                         <span class="adaire-resource-tag"><?php echo esc_html( $res['tag'] ); ?></span>

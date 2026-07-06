@@ -2010,7 +2010,8 @@ function enqueue_bootstrap_icons_assets() {
         has_block( 'create-block/our-process-block', $post ) ||
         has_block( 'create-block/social-share-block', $post ) ||
         has_block( 'create-block/infogrid-2-block', $post ) ||
-        has_block( 'create-block/saas-hero-block', $post )
+        has_block( 'create-block/saas-hero-block', $post ) ||
+        has_block( 'create-block/rating-badge-block', $post )
     ) {
         // Enqueue Bootstrap Icons CSS from CDN
         wp_enqueue_style(

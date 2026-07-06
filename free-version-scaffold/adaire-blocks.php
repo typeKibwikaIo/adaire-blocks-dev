@@ -141,7 +141,8 @@ function enqueue_bootstrap_icons_assets() {
         has_block( 'create-block/social-banner-block', $post ) ||
         has_block( 'create-block/social-share-block', $post ) ||
         has_block( 'create-block/our-process-block', $post ) ||
-        has_block( 'create-block/infogrid-2-block', $post )
+        has_block( 'create-block/infogrid-2-block', $post ) ||
+        has_block( 'create-block/rating-badge-block', $post )
     ) {
         // Enqueue Bootstrap Icons CSS from CDN
         wp_enqueue_style(
@@ -224,6 +225,9 @@ if (is_admin() || wp_doing_ajax() || (defined('REST_REQUEST') && REST_REQUEST)) 
 if (is_admin()) {
     // Include block migration tool
     require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/block-migration.php';
+
+    // Support page
+    require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/support-page.php';
 
     // Deactivation feedback modal
     require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/deactivation-modal.php';
