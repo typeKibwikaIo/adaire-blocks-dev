@@ -3,7 +3,7 @@
  * Plugin Name: Guten-Blocks
  * Plugin URI: https://adaire.digital/adaire-blocks/
  * Description: Professional WordPress blocks for Gutenberg editor with GSAP animations and modern design.
- * Version: 1.2.6
+ * Version: 1.2.8
  * Author: Adaire
  * Author URI: https://adaire.digital/
  * License: GPL-3.0

@@ -4,7 +4,7 @@ Donate link: https://adaireblocks.com/
 Tags: blocks, gutenberg, gsap, animation, layout
 Requires at least: 6.7
 Tested up to: 6.8
-Stable tag: 1.2.6
+Stable tag: 1.2.8
 Requires PHP: 7.4
 License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -22,7 +22,7 @@ Guten-Blocks flips the model. Start with our powerful free blocks. Then, as your
 
 It's cheaper. It's smarter. It's Unbundled—our way of delivering value by separating blocks into thoughtful tiers instead of one bloated package.
 
-**💰 Pay for Only What You Use™**
+**Pay for Only What You Use™**
 
 * **Free:** A complete foundation of essential blocks to build beautiful, animated websites. No cost. Ever.
 * **Plus:** Unlock advanced blocks individually—starting at $0.25/month. Need just a Mega Menu or a Pricing Table? Pay for only that block.
@@ -30,7 +30,7 @@ It's cheaper. It's smarter. It's Unbundled—our way of delivering value by sepa
 
 No bloat. No forced bundles. You're in control.
 
-**✨ Why Choose Guten-Blocks? The Unbundled Philosophy**
+**Why Choose Guten-Blocks? The Unbundled Philosophy**
 
 * **Pay for Only What You Use™:** Our unique model means you're never forced to buy a "pro pack" of 50 widgets just to get the three you actually need. Start free. Add blocks individually. Save money.
 * **Just the Essentials, Always Evolving:** We don't give you 80 widgets. We give you a thoughtfully curated collection of versatile blocks that solve real-world design challenges. And as your needs grow, so will our library—with more blocks and full website templates on the horizon.
@@ -39,7 +39,7 @@ No bloat. No forced bundles. You're in control.
 * **100% Gutenberg Native:** Work entirely within the familiar WordPress editor. No new interfaces to learn, no clunky page builder cruft. Just your blocks, your content, and—soon—your templates.
 * **Full Creative Control:** Every block comes with intuitive customization options in the block sidebar—colors, typography, animation speeds, layout settings, and responsive controls.
 
-**✅ Free Blocks – Build a Beautiful Site at No Cost**
+**Free Blocks – Build a Beautiful Site at No Cost**
 
 Get started with our powerful, no-cost foundation. These blocks are yours forever, free.
 
@@ -53,26 +53,27 @@ Get started with our powerful, no-cost foundation. These blocks are yours foreve
 * **Footer (Free):** A configurable site footer with menu and layout options.
 * **Pricing Plans (Free):** Responsive pricing tables with a monthly/yearly toggle, card grid, and customizable styling.
 * **Blog Post Grid (Free):** Display your latest articles or portfolio items in a beautiful, animated grid. Includes multiple layout options, category filtering, and smooth GSAP entrance animations.
-* **Blog Post Slider (Free):** A draggable, interactive carousel for posts, featuring the same powerful customization and filtering as the Blog Post Grid.
 * **Feature Grid (Free):** A grid layout with background image support, overlay controls, and flexible content areas.
 * **Tabbed Content (Free) & Tab Panel (Free):** Organize content into beautiful, tabbed interfaces with smooth GSAP transitions between panels.
 * **Accordion (Free):** Build configurable, animated accordions to neatly organize FAQs or multi-section content.
 * **Content Switcher (Free) & Content Toggle Panel (Free):** A unique pill-style toggle for switching between two distinct content states within the same area.
 * **Video Player (Free):** Embed YouTube videos with a clean, lightweight player.
-* **Scroll Animation (Free):** Add scroll-triggered animations to any content. Simply wrap your existing blocks, and bring them to life.
 * **Icon Box (Free):** Display an icon with customizable styling, powered by a vast library of UXWing icons.
 * **Social Banner (Free):** A sticky, side-mounted social banner that stays with the user as they scroll—perfect for driving engagement.
 * **Share Buttons (Free):** A customizable social sharing button with platform selection and a handy tooltip.
 * **Reviews (Free):** Showcase client reviews in a sleek, auto-playing carousel to build social proof.
+* **Rating Badges (Free):** Display trust-building rating and review badges with customizable styling.
 * **Button (Free):** A simple, yet fully customizable button block with link, target, and styling options.
 
-**📈 Pay as You Grow**
+**Pay as You Grow**
 Start with our free blocks, then add exactly the functionality you need—only when you need it.
 
-**⭐ Plus Blocks – Advanced Functionality, Starting at $0.25/Month**
+**Plus Blocks – Advanced Functionality, Starting at $0.25/Month**
 Take your designs further. Need only one? Pay for only one.
 
 * **Mega Menu Block (Plus):** A sleek, animated mega menu powered by React and GSAP. Perfect for complex navigation.
+* **Blog Post Slider (Plus):** A draggable, interactive carousel for posts, featuring the same powerful customization and filtering as the Blog Post Grid.
+* **Scroll Animation (Plus):** Add scroll-triggered animations to any content. Simply wrap your existing blocks, and bring them to life.
 * **Counter Block (Plus):** Show important statistics and metrics with style.
 * **Map Block (Plus):** Embed beautiful, responsive maps in any page or post.
 * **Swiper Carousel Block (Plus):** Create beautiful, touch-friendly sliders for images, content, testimonials, products, and more.
@@ -90,7 +91,7 @@ Take your designs further. Need only one? Pay for only one.
 * **Contact Cards Block (Plus):** Display contact information in a clean card layout.
 * **Horizontal Scroll Carousel Block (Plus):** Scroll-scrubbed horizontal track with pinned section and configurable cards.
 
-**💎 Premium Blocks – Agency-Grade Tools**
+**Premium Blocks – Agency-Grade Tools**
 For when your projects need that extra "wow" factor. Stunning, professional blocks for the most demanding sites.
 
 * **Particles Block (Premium):** Add motion and depth with animated particle backgrounds.
@@ -103,7 +104,7 @@ For when your projects need that extra "wow" factor. Stunning, professional bloc
 
 And more blocks and templates are in active development—because your website should never stop evolving.
 
-**🚀 Performance You Can Feel**
+**Performance You Can Feel**
 Guten-Blocks is built for the modern web. We leverage the power of GSAP for animations that are not only beautiful but also highly performant, ensuring smooth 60fps interactions. Our code is lean, our blocks are focused, and your site stays fast.
 
 * Accessibility-friendly: Semantic HTML and keyboard navigation support.
@@ -111,7 +112,7 @@ Guten-Blocks is built for the modern web. We leverage the power of GSAP for anim
 * Low CLS: Optimized to avoid layout shifts.
 * SEO-aware: Clean, semantic output.
 
-**🔧 System Requirements**
+**System Requirements**
 
 * WordPress 6.7 or higher
 * PHP 7.4 or higher (8.0+ recommended)
@@ -159,12 +160,18 @@ Visit our website at https://adaireblocks.com or reach out through the WordPress
 
 == Changelog ==
 
+= 1.2.8 =
+* Improved the plugin deactivation flow: the deactivation survey now has a refreshed design, contextual follow-up questions based on your answer, a clear success state, and a working close button.
+* Deactivation feedback is now sent through a dedicated server-side handler, so responses are processed reliably without depending on a third-party client-side script.
+* Fixed a display issue in the deactivation modal (explicit SVG dimensions and inline fallback styles) that could cause the header icon to render incorrectly on some sites.
+
 = 1.2.7 =
-* Renamed the plugin from "Adaire Blocks" to "Guten-Blocks" across all user-facing text: plugin name, inserter categories, block titles, admin screens, and documentation.
-* Every Free-tier block now displays with a "(Free)" suffix in the inserter (e.g. Row → Row (Free), Timeline → Timeline (Free)), so it's clear at a glance which blocks belong to the free version. A few names were also shortened for clarity: Customer Reviews → Reviews (Free), Website Footer → Footer (Free), Header → Header Menu (Free), Advanced Feature Grid → Feature Grid (Free).
-* NOTE — frontend-only release: this pass covers display text only. Internal namespaces, block registration names (e.g. `create-block/row-block`), and other technical slugs still use the old "adaire"/"Adaire Blocks" naming and were intentionally left unchanged. A follow-up backend renaming phase will need to update those slugs — that's a bigger, breaking-change-risk pass (affects saved post content, migrations, and third-party integrations) and is scheduled separately, not part of 1.2.7.
+* Adaire Blocks is now Guten-Blocks. The plugin name, inserter categories, block titles, admin screens, and documentation have all been updated to reflect the new name.
+* Every Free-tier block now displays with a "(Free)" suffix in the inserter, so it's clear at a glance which blocks are included at no cost. A few names were also shortened for clarity: Customer Reviews is now Reviews (Free), Website Footer is now Footer (Free), Header is now Header Menu (Free), and Advanced Feature Grid is now Feature Grid (Free).
 * Renamed the Feature Box block to Icon Box (Free) for clarity.
-* Moved Plan Comparison from Free to Premium — it's no longer included in the free tier.
+* Moved Plan Comparison from Free to Premium — it is no longer included in the Free tier.
+* Complete list of blocks included in the Free version: Header Menu, SaaS Hero, Row, About Us, Timeline, Gallery, Card Slider, Card Scroll Item, Footer, Pricing Plans, Blog Post Grid, Feature Grid, Tabbed Content, Tab Panel, Accordion, Content Switcher, Content Toggle Panel, Video Player, Icon Box, Social Banner, Share Buttons, Reviews, Rating Badges, and Button.
+* This is a frontend, user-facing rename only. Internal namespaces, block registration names (e.g. `create-block/row-block`), and other technical slugs still use the previous "adaire" naming and were intentionally left unchanged. A separate backend renaming phase, including the plugin slug, is planned for a future release.
 
 = 1.2.6 =
 * Corrected the published Free block list to match what actually ships in the plugin. Previously undocumented free blocks now listed: Header, SaaS Hero, Row, About Us, Timeline, Gallery, Card Scroll, Card Scroll Item, Website Footer, Pricing Table, Pricing Comparison, Content Toggle Panel, and Tab Panel.
@@ -182,12 +189,18 @@ Visit our website at https://adaireblocks.com or reach out through the WordPress
 
 == Upgrade Notice ==
 
+= 1.2.8 =
+Improved deactivation feedback flow and a display fix for the deactivation modal. No action required.
+
+= 1.2.7 =
+Adaire Blocks is now Guten-Blocks. Plugin name, block titles, and admin screens are updated; no functional changes and no action required.
+
 = 1.2.6 =
 Documentation-only correction to the Free block list — no functional changes. If you were relying on the previously (incorrectly) advertised free Call to Action or Logo blocks, those have always required Plus.
 
 == Additional Information ==
 
-**Made with ❤️ by Adaire Digital**
+**Made by Adaire Digital**
 
 Visit [Adaire Blocks](https://adaireblocks.com/ "Professional WordPress Development") for more information about our services and products.
 
