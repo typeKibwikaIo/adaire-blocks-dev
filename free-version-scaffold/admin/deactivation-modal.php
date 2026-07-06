@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 class Adaire_Deactivation_Modal
 {
     private static $instance = null;
-    private const DEFAULT_FEEDBACK_EMAIL = 'simeonlleni@gmail.com';
+    private const DEFAULT_FEEDBACK_EMAIL = 'support@adaire.com';
 
     // Step 0: singleton access for the modal controller.
     public static function get_instance()
@@ -162,18 +162,12 @@ class Adaire_Deactivation_Modal
         $subject = 'Guten-Blocks Deactivation Feedback';
         $message = $this->build_feedback_message($feedback);
 
-        $send_result = $this->send_feedback_email($feedback_recipient, $subject, $message, $feedback['email']);
+        $send_result = $this->send_feedback_email($feedback_recipient, $subject, $message, $feedback);
         $this->log_feedback_attempt($feedback, $send_result, $feedback_recipient);
 
-        if (!$send_result['sent']) {
-            $payload = ['message' => 'Failed to send feedback email'];
-            if (!empty($send_result['error'])) {
-                $payload['error'] = $send_result['error'];
-            }
-            wp_send_json_error($payload, 500);
-        }
-
-        wp_send_json_success(['sent' => true]);
+        // Always return success — deactivation proceeds regardless of email delivery.
+        // The attempt is logged to adaire_deact_log for later review if mail fails.
+        wp_send_json_success(['sent' => $send_result['sent']]);
     }
 
     // Step 2a: sanitize incoming feedback fields.
@@ -204,24 +198,26 @@ class Adaire_Deactivation_Modal
         ]);
     }
 
-    // Step 2c: send feedback via SendGrid.
-    private function send_feedback_email($recipient, $subject, $message, $reply_to)
+    // Step 2c: send feedback via Adaire webhook (SendGrid on our end, no key in plugin).
+    private function send_feedback_email($recipient, $subject, $message, array $feedback)
     {
-        $reply_to_email = $reply_to && is_email($reply_to) ? $reply_to : null;
+        $response = wp_remote_post( 'https://adaire.com/feedback-handler.php', [
+            'timeout' => 10,
+            'body'    => [
+                'token'   => 'gb-feedback-k7x2m9p4',
+                'reason'  => $feedback['reason']  ?? '',
+                'details' => $feedback['details'] ?? '',
+                'email'   => $feedback['email']   ?? '',
+                'site'    => $feedback['site']    ?? home_url(),
+            ],
+        ] );
 
-        if (!function_exists('adaire_blocks_get_sendgrid_api_key') || !adaire_blocks_get_sendgrid_api_key()) {
-            return [
-                'sent' => false,
-                'provider' => 'sendgrid',
-                'error' => 'SendGrid is not configured',
-            ];
-        }
+        $sent = ! is_wp_error( $response ) && (int) wp_remote_retrieve_response_code( $response ) === 200;
 
-        $sendgrid_result = adaire_blocks_send_via_sendgrid($recipient, $subject, $message, $reply_to_email);
         return [
-            'sent' => (bool) ($sendgrid_result['sent'] ?? false),
-            'provider' => $sendgrid_result['provider'] ?? 'sendgrid',
-            'error' => $sendgrid_result['error'] ?? null,
+            'sent'     => $sent,
+            'provider' => 'adaire-webhook',
+            'error'    => $sent ? null : ( is_wp_error( $response ) ? $response->get_error_message() : 'Webhook returned HTTP ' . wp_remote_retrieve_response_code( $response ) ),
         ];
     }
 
