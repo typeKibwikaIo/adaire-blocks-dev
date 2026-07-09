@@ -26,7 +26,9 @@ import {
 import { useState, useEffect, createElement } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import { getBlockType } from '@wordpress/blocks';
 import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
 
 // Custom icons for small laptop and big desktop (match other blocks in repo)
@@ -48,6 +50,15 @@ const BREAKPOINTS = [
 	{ name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'posts-grid-block') },
 ];
 
+// Shared DeviceSwitcher tiers, derived from the same BREAKPOINTS list above.
+const FIVE_TIERS = BREAKPOINTS.map((bp) => ({ key: bp.name, label: bp.label, icon: bp.icon }));
+
+const THREE_TIERS = [
+	{ key: 'desktop', label: __('Desktop', 'posts-grid-block'), icon: desktop },
+	{ key: 'tablet', label: __('Tablet', 'posts-grid-block'), icon: tablet },
+	{ key: 'mobile', label: __('Mobile', 'posts-grid-block'), icon: mobile },
+];
+
 const FONT_FAMILY_OPTIONS = [
 	{ label: 'Default (inherit theme)', value: '' },
 	{ label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
@@ -64,7 +75,21 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
     const [headingDeviceType, setHeadingDeviceType] = useState('desktop');
     const [activeZone, setActiveZone] = useState(null);
-    
+
+    // Resets the given responsive attributes back to their block.json defaults —
+    // existing values only, nothing new is added.
+    const resetToDefaults = (keys) => {
+        const blockType = getBlockType('create-block/posts-grid-block');
+        const defaults = blockType?.attributes || {};
+        const resetValues = {};
+        keys.forEach((key) => {
+            if (defaults[key] && 'default' in defaults[key]) {
+                resetValues[key] = defaults[key].default;
+            }
+        });
+        setAttributes(resetValues);
+    };
+
     const {
         blockId,
         showHeading,
@@ -465,7 +490,7 @@ return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 {/* Heading Settings */}
-                <PanelBody title={__('Heading', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Heading', 'posts-grid-block')} initialOpen={false}>
                     <PanelRow>
                         <ToggleControl
                             label={__('Enable Heading', 'posts-grid-block')}
@@ -473,49 +498,61 @@ return (
                             onChange={(value) => setAttributes({ showHeading: value })}
                         />
                     </PanelRow>
+                </PanelBody>
 
-                    {showHeading && (
-                        <>
-                            <p style={{ marginTop: '8px', marginBottom: '8px', fontWeight: 600 }}>
-                                {__('Responsive Heading Settings', 'posts-grid-block')}
-                            </p>
-                            <ButtonGroup style={{ marginBottom: '12px' }}>
-                                {BREAKPOINTS.map((bp) => (
-                                    <Button
-                                        key={bp.name}
-                                        icon={bp.icon}
-                                        isPrimary={headingDeviceType === bp.name}
-                                        onClick={() => setHeadingDeviceType(bp.name)}
-                                        label={bp.label}
-                                    />
-                                ))}
-                            </ButtonGroup>
+                {showHeading && (
+                    <PanelBody section="layout" title={__('Heading Layout', 'posts-grid-block')} initialOpen={false}>
+                        <DeviceSwitcher
+                            deviceType={headingDeviceType}
+                            setDeviceType={setHeadingDeviceType}
+                            label={__('Responsive Heading Settings', 'posts-grid-block')}
+                            tiers={FIVE_TIERS}
+                            onReset={() => resetToDefaults([
+                                'headingResponsiveAlign', 'headingResponsiveTextAlign',
+                            ])}
+                        />
 
-                            <SelectControl
-                                label={__('Alignment (block)', 'posts-grid-block')}
-                                value={headingResponsiveAlign?.[headingDeviceType] || 'flex-start'}
-                                options={[
-                                    { label: __('Left', 'posts-grid-block'), value: 'flex-start' },
-                                    { label: __('Center', 'posts-grid-block'), value: 'center' },
-                                    { label: __('Right', 'posts-grid-block'), value: 'flex-end' },
-                                ]}
-                                onChange={(value) => updateResponsiveAttribute('headingResponsiveAlign', headingDeviceType, value)}
-                                help={__('Controls how the heading block is positioned within the container.', 'posts-grid-block')}
-                            />
+                        <SelectControl
+                            label={__('Alignment (block)', 'posts-grid-block')}
+                            value={headingResponsiveAlign?.[headingDeviceType] || 'flex-start'}
+                            options={[
+                                { label: __('Left', 'posts-grid-block'), value: 'flex-start' },
+                                { label: __('Center', 'posts-grid-block'), value: 'center' },
+                                { label: __('Right', 'posts-grid-block'), value: 'flex-end' },
+                            ]}
+                            onChange={(value) => updateResponsiveAttribute('headingResponsiveAlign', headingDeviceType, value)}
+                            help={__('Controls how the heading block is positioned within the container.', 'posts-grid-block')}
+                        />
 
-                            <SelectControl
-                                label={__('Text Align', 'posts-grid-block')}
-                                value={headingResponsiveTextAlign?.[headingDeviceType] || 'left'}
-                                options={[
-                                    { label: __('Left', 'posts-grid-block'), value: 'left' },
-                                    { label: __('Center', 'posts-grid-block'), value: 'center' },
-                                    { label: __('Right', 'posts-grid-block'), value: 'right' },
-                                ]}
-                                onChange={(value) => updateResponsiveAttribute('headingResponsiveTextAlign', headingDeviceType, value)}
-                            />
+                        <SelectControl
+                            label={__('Text Align', 'posts-grid-block')}
+                            value={headingResponsiveTextAlign?.[headingDeviceType] || 'left'}
+                            options={[
+                                { label: __('Left', 'posts-grid-block'), value: 'left' },
+                                { label: __('Center', 'posts-grid-block'), value: 'center' },
+                                { label: __('Right', 'posts-grid-block'), value: 'right' },
+                            ]}
+                            onChange={(value) => updateResponsiveAttribute('headingResponsiveTextAlign', headingDeviceType, value)}
+                        />
+                    </PanelBody>
+                )}
 
-                            <UnitControl
-                                label={__('Font Size', 'posts-grid-block')}
+                {showHeading && (
+                    <PanelBody section="style" priority="high" title={__('Heading Typography', 'posts-grid-block')} initialOpen={false}>
+                        <DeviceSwitcher
+                            deviceType={headingDeviceType}
+                            setDeviceType={setHeadingDeviceType}
+                            tiers={FIVE_TIERS}
+                            onReset={() => resetToDefaults([
+                                'headingResponsiveFontSize', 'headingResponsiveFontWeight',
+                                'headingResponsiveUnderlineWidth', 'headingResponsiveMarginBottom',
+                                'headingResponsiveLineHeight', 'headingResponsiveLetterSpacing',
+                                'headingTextTransform',
+                            ])}
+                        />
+
+                        <UnitControl
+                            label={__('Font Size', 'posts-grid-block')}
                                 value={headingResponsiveFontSize?.[headingDeviceType] || ''}
                                 onChange={(value) => updateResponsiveAttribute('headingResponsiveFontSize', headingDeviceType, value)}
                             />
@@ -578,12 +615,11 @@ return (
                                 onChange={(value) => setAttributes({ fontFamily: value })}
                                 help={__('Applies to the entire block.', 'posts-grid-block')}
                             />
-                        </>
-                    )}
-                </PanelBody>
+                    </PanelBody>
+                )}
 
                 {/* Content Settings */}
-                <PanelBody title={__('Content Settings', 'posts-grid-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Content Settings', 'posts-grid-block')} initialOpen={true}>
                     <TextControl
                         label={__('Posts Per Page', 'posts-grid-block')}
                         type="number"
@@ -680,7 +716,7 @@ return (
                 </PanelBody>
 
                 {/* Category Selection */}
-                <PanelBody title={__('Category Selection', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Category Selection', 'posts-grid-block')} initialOpen={false}>
                     <p>{__('Select categories to filter posts:', 'posts-grid-block')}</p>
                     <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ddd', padding: '10px' }}>
                         {categories.map(category => (
@@ -705,7 +741,7 @@ return (
                 </PanelBody>
 
                 {/* Layout Settings */}
-                <PanelBody title={__('Layout Settings', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Layout Settings', 'posts-grid-block')} initialOpen={false}>
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Layout Type', 'posts-grid-block')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {[
@@ -745,7 +781,9 @@ return (
                             ]}
                             onChange={(value) => setAttributes({ textAlign: value })}
                         />
+                </PanelBody>
 
+                <PanelBody section="style" priority="medium" title={__('Card & Image Style', 'posts-grid-block')} initialOpen={false}>
                     <RangeControl
                         label={__('Card Gap', 'posts-grid-block')}
                         value={cardGap}
@@ -825,7 +863,7 @@ return (
                 </PanelBody>
 
                 {/* Filtering Settings */}
-                <PanelBody title={__('Filtering Settings', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Filtering Settings', 'posts-grid-block')} initialOpen={false}>
                     <PanelRow>
                         <ToggleControl
                             label={__('Enable Category Filtering', 'posts-grid-block')}
@@ -837,7 +875,7 @@ return (
                 </PanelBody>
 
                 {/* Typography Settings */}
-                <PanelBody title={__('Typography Settings', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography Settings', 'posts-grid-block')} initialOpen={false}>
                     <TextControl
                         label={__('Title Font Size (px)', 'posts-grid-block')}
                         type="number"
@@ -904,6 +942,8 @@ return (
 
                 {/* Color Settings */}
                 <PanelColorSettings
+                    section="style"
+                    priority="high"
                     title={__('Color Settings', 'posts-grid-block')}
                     colorSettings={[
                         ...(showHeading ? [
@@ -947,7 +987,7 @@ return (
                 />
 
                 {/* Animation Settings */}
-                <PanelBody title={__('Animation Settings', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Animation Settings', 'posts-grid-block')} initialOpen={false}>
                     <PanelRow>
                         <ToggleControl
                             label={__('Enable Animations', 'posts-grid-block')}
@@ -1049,7 +1089,7 @@ return (
                 </PanelBody>
 
                 {/* Container Settings */}
-                <PanelBody title={__('Container Settings', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Container Settings', 'posts-grid-block')} initialOpen={false}>
                     <ButtonGroup>
                         {[
                             { label: __('Full Width', 'posts-grid-block'), value: 'full' },
@@ -1066,26 +1106,12 @@ return (
                     {containerMode === 'constrained' && (
                         <>
                             <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>{__('Max Width', 'posts-grid-block')}</p>
-                            <ButtonGroup style={{ marginBottom: '12px' }}>
-                                <Button
-                                    icon={desktop}
-                                    isPrimary={deviceType === 'desktop'}
-                                    onClick={() => setDeviceType('desktop')}
-                                    label={__('Desktop', 'posts-grid-block')}
-                                />
-                                <Button
-                                    icon={tablet}
-                                    isPrimary={deviceType === 'tablet'}
-                                    onClick={() => setDeviceType('tablet')}
-                                    label={__('Tablet', 'posts-grid-block')}
-                                />
-                                <Button
-                                    icon={mobile}
-                                    isPrimary={deviceType === 'mobile'}
-                                    onClick={() => setDeviceType('mobile')}
-                                    label={__('Mobile', 'posts-grid-block')}
-                                />
-                            </ButtonGroup>
+                            <DeviceSwitcher
+                                deviceType={deviceType}
+                                setDeviceType={setDeviceType}
+                                tiers={THREE_TIERS}
+                                onReset={() => resetToDefaults(['containerMaxWidth'])}
+                            />
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 <TextControl
                                     type="number"
@@ -1122,27 +1148,16 @@ return (
                         </>
                     )}
 
-                    <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>{__('Margins', 'posts-grid-block')}</p>
-                    <ButtonGroup style={{ marginBottom: '12px' }}>
-                        <Button
-                            icon={desktop}
-                            isPrimary={deviceType === 'desktop'}
-                            onClick={() => setDeviceType('desktop')}
-                            label={__('Desktop', 'posts-grid-block')}
-                        />
-                        <Button
-                            icon={tablet}
-                            isPrimary={deviceType === 'tablet'}
-                            onClick={() => setDeviceType('tablet')}
-                            label={__('Tablet', 'posts-grid-block')}
-                        />
-                        <Button
-                            icon={mobile}
-                            isPrimary={deviceType === 'mobile'}
-                            onClick={() => setDeviceType('mobile')}
-                            label={__('Mobile', 'posts-grid-block')}
-                        />
-                    </ButtonGroup>
+                </PanelBody>
+
+                <PanelBody section="style" priority="medium" title={__('Container Spacing', 'posts-grid-block')} initialOpen={false}>
+                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Margins', 'posts-grid-block')}</p>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        tiers={THREE_TIERS}
+                        onReset={() => resetToDefaults(['marginTop', 'marginRight', 'marginBottom', 'marginLeft'])}
+                    />
                     <BoxControl
                         values={{
                             top: marginTop?.[deviceType] ?? 0,

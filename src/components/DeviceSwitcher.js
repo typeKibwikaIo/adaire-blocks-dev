@@ -1,23 +1,38 @@
-﻿import { Button, ButtonGroup } from "@wordpress/components";
+import { Button, ButtonGroup } from "@wordpress/components";
 import { useEffect, useState } from "@wordpress/element";
 import { desktop, tablet, mobile } from "@wordpress/icons";
+import { __ } from "@wordpress/i18n";
+
+// Default tier set (back-compat with every existing DeviceSwitcher call site).
+// Blocks with a different tier count (e.g. 3-tier, or +smallLaptop/bigDesktop)
+// pass their own `tiers` array instead.
+const DEFAULT_TIERS = [
+	{ key: "desktop", label: "Desktop", icon: desktop },
+	{ key: "tablet", label: "Tablet", icon: tablet },
+	{ key: "mobile", label: "Mobile", icon: mobile },
+	{ key: "smartwatch", label: "Watch", icon: null, glyph: "⌚" },
+];
 
 /**
  * DeviceSwitcher Component
- * A reusable device switcher for responsive controls across blocks
- * 
- * @param {Object} props - Component props
- * @param {string} props.deviceType - Current selected device type
- * @param {Function} props.setDeviceType - Function to update device type
- * @param {string} props.label - Optional label for the switcher
+ * The one shared responsive device switcher used across every Gutenblocks block.
+ *
+ * @param {Object} props
+ * @param {string} props.deviceType - Current selected device key
+ * @param {Function} props.setDeviceType - Called with the new device key
+ * @param {string} [props.label] - Optional label above the switcher
+ * @param {Array} [props.tiers] - Ordered list of { key, label, icon?, glyph? } tiers.
+ *                                 Defaults to desktop/tablet/mobile/smartwatch.
+ * @param {Function} [props.onReset] - If provided, renders a "Reset to default"
+ *                                     button next to the switcher that calls this.
  */
-export default function DeviceSwitcher({ deviceType, setDeviceType, label }) {
+export default function DeviceSwitcher({ deviceType, setDeviceType, label, tiers = DEFAULT_TIERS, onReset }) {
 	const [activeDevice, setActiveDevice] = useState(() => {
 		if (typeof window === "undefined") {
-			return deviceType || "desktop";
+			return deviceType || tiers[0]?.key;
 		}
 
-		return window.localStorage.getItem("adaireResponsiveDevice") || deviceType || "desktop";
+		return window.localStorage.getItem("adaireResponsiveDevice") || deviceType || tiers[0]?.key;
 	});
 
 	useEffect(() => {
@@ -60,39 +75,29 @@ export default function DeviceSwitcher({ deviceType, setDeviceType, label }) {
 
 	return (
 		<>
-			{label && (
-				<p style={{ fontWeight: 600, marginBottom: "8px" }}>{label}</p>
+			{(label || onReset) && (
+				<div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+					{label && <p style={{ fontWeight: 600, margin: 0 }}>{label}</p>}
+					{onReset && (
+						<Button variant="link" onClick={onReset} style={{ fontSize: "12px" }}>
+							{__("Reset to default")}
+						</Button>
+					)}
+				</div>
 			)}
 			<ButtonGroup style={{ marginBottom: "12px", display: "flex" }}>
-				<Button
-					icon={desktop}
-					isPrimary={activeDevice === "desktop"}
-					onClick={() => updateDevice("desktop")}
-					label="Desktop"
-					aria-label="Switch to desktop view"
-				/>
-				<Button
-					icon={tablet}
-					isPrimary={activeDevice === "tablet"}
-					onClick={() => updateDevice("tablet")}
-					label="Tablet"
-					aria-label="Switch to tablet view"
-				/>
-				<Button
-					icon={mobile}
-					isPrimary={activeDevice === "mobile"}
-					onClick={() => updateDevice("mobile")}
-					label="Mobile"
-					aria-label="Switch to mobile view"
-				/>
-				<Button
-					isPrimary={activeDevice === "smartwatch"}
-					onClick={() => updateDevice("smartwatch")}
-					label="Watch"
-					aria-label="Switch to smartwatch view"
-				>
-					âŒš
-				</Button>
+				{tiers.map((tier) => (
+					<Button
+						key={tier.key}
+						icon={tier.icon || undefined}
+						isPrimary={activeDevice === tier.key}
+						onClick={() => updateDevice(tier.key)}
+						label={tier.label}
+						aria-label={`Switch to ${tier.label} view`}
+					>
+						{!tier.icon && tier.glyph}
+					</Button>
+				))}
 			</ButtonGroup>
 		</>
 	);
@@ -101,7 +106,7 @@ export default function DeviceSwitcher({ deviceType, setDeviceType, label }) {
 /**
  * DeviceControlInput Component
  * A reusable input control for device-specific values
- * 
+ *
  * @param {Object} props - Component props
  * @param {string} props.deviceType - Current selected device type
  * @param {Object} props.attribute - The attribute object containing device-specific values
@@ -110,13 +115,13 @@ export default function DeviceSwitcher({ deviceType, setDeviceType, label }) {
  * @param {Array} props.units - Available unit options (default: ['px', '%', 'rem', 'vw'])
  * @param {string} props.label - Optional label for the input
  */
-export function DeviceControlInput({ 
-	deviceType, 
-	attribute, 
-	onAttributeChange, 
+export function DeviceControlInput({
+	deviceType,
+	attribute,
+	onAttributeChange,
 	defaults = { desktop: { value: 1200, unit: 'px' }, tablet: { value: 100, unit: '%' }, mobile: { value: 100, unit: '%' }, smartwatch: { value: 100, unit: '%' } },
 	units = ['px', '%', 'rem', 'vw'],
-	label 
+	label
 }) {
 	const currentValue = attribute?.[deviceType];
 	const defaultForDevice = defaults[deviceType] || defaults.desktop;
@@ -159,7 +164,7 @@ export function DeviceControlInput({
 
 /**
  * Helper function to get device-specific value with fallback
- * 
+ *
  * @param {Object} attribute - The attribute object containing device-specific values
  * @param {string} device - The device type to get value for
  * @param {*} defaultValue - Default value if attribute is missing
@@ -171,7 +176,7 @@ export function getDeviceValue(attribute, device, defaultValue) {
 
 /**
  * Helper function to update device-specific attribute
- * 
+ *
  * @param {Object} currentAttr - Current attribute object
  * @param {string} device - Device type to update
  * @param {*} newValue - New value for the device
@@ -186,7 +191,7 @@ export function updateDeviceAttribute(currentAttr, device, newValue) {
 
 /**
  * Helper function to generate CSS variables for device-specific values
- * 
+ *
  * @param {Object} attribute - The attribute object containing device-specific values
  * @param {string} cssVarName - Base CSS variable name
  * @param {Object} defaults - Default values for each device
@@ -201,4 +206,25 @@ export function generateDeviceCSSVariables(attribute, cssVarName, defaults) {
 	};
 }
 
+/**
+ * Flat-suffixed attribute adapter (e.g. slidesPerViewMobile/Tablet/Desktop).
+ * Lets a block with per-device attributes named `${prefix}${Device}` drive the
+ * same DeviceSwitcher-based UI as blocks using a single nested-object attribute,
+ * without changing the block's attribute shape.
+ *
+ * @param {string} device - device key, e.g. "mobile"
+ * @returns {string} the flat attribute suffix, e.g. "Mobile"
+ */
+function capitalize( device ) {
+	return device.charAt( 0 ).toUpperCase() + device.slice( 1 );
+}
 
+export function getFlatDeviceValue( attributes, prefix, device, defaultValue ) {
+	const key = `${ prefix }${ capitalize( device ) }`;
+	return attributes?.[ key ] ?? defaultValue;
+}
+
+export function setFlatDeviceValue( setAttributes, prefix, device, value ) {
+	const key = `${ prefix }${ capitalize( device ) }`;
+	setAttributes( { [ key ]: value } );
+}

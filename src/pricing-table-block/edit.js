@@ -621,7 +621,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	return (
 		<>
 			<InspectorTabs attributes={attributes} setAttributes={setAttributes}>
-				<PanelBody title={__("Layout", "pricing-table-block")} initialOpen={true}>
+				<PanelBody section="layout" title={__("Layout", "pricing-table-block")} initialOpen={true}>
 					<p>{__("Container Width", "pricing-table-block")}</p>
 					<ButtonGroup>
 						{CONTAINER_MODES.map((mode) => (
@@ -763,6 +763,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 
 				<PanelBody
+					section="content"
 					title={__("Cards", "pricing-table-block")}
 					initialOpen={false}
 				>

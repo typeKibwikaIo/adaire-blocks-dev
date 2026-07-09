@@ -6,7 +6,7 @@
     "title": "Flip Card",
     "category": "adaire-interactive",
     "description": "Interactive card that flips to reveal additional information.",
-    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_77_2)\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#D52940\"/>\n<g clip-path=\"url(#clip1_77_2)\">\n<rect x=\"3.5\" y=\"3.5\" width=\"11\" height=\"13\" stroke=\"white\"/>\n<rect x=\"9.5\" y=\"8.5\" width=\"11\" height=\"13\" stroke=\"white\"/>\n</g>\n</g>\n<defs>\n<clipPath id=\"clip0_77_2\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"white\"/>\n</clipPath>\n<clipPath id=\"clip1_77_2\">\n<rect width=\"24\" height=\"24\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>",
+    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n<g clip-path=\"url(#clip0_77_2)\">\r\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#D52940\"/>\r\n<g clip-path=\"url(#clip1_77_2)\">\r\n<rect x=\"3.5\" y=\"3.5\" width=\"11\" height=\"13\" stroke=\"white\"/>\r\n<rect x=\"9.5\" y=\"8.5\" width=\"11\" height=\"13\" stroke=\"white\"/>\r\n</g>\r\n</g>\r\n<defs>\r\n<clipPath id=\"clip0_77_2\">\r\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"white\"/>\r\n</clipPath>\r\n<clipPath id=\"clip1_77_2\">\r\n<rect width=\"24\" height=\"24\" fill=\"white\"/>\r\n</clipPath>\r\n</defs>\r\n</svg>",
     "example": {},
     "supports": {
         "html": false,

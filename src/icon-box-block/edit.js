@@ -13,11 +13,19 @@ import {
     __experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import { getBlockType } from '@wordpress/blocks';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher from '../components/DeviceSwitcher';
 import BoundColorPalette from '../components/BoundColorPalette';
 import './editor.scss';
+
+const THREE_TIERS = [
+    { key: 'desktop', label: __('Desktop', 'icon-box-block'), icon: desktop },
+    { key: 'tablet', label: __('Tablet', 'icon-box-block'), icon: tablet },
+    { key: 'mobile', label: __('Mobile', 'icon-box-block'), icon: mobile },
+];
 
 export default function Edit({ attributes, setAttributes, clientId }) {
     const [deviceType, setDeviceType] = useState('desktop');
@@ -60,6 +68,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         setAttributes({ blockId: clientId });
     }
 
+    // Resets the given responsive attributes back to their block.json defaults —
+    // existing values only, nothing new is added.
+    const resetToDefaults = (keys) => {
+        const blockType = getBlockType('create-block/icon-box-block');
+        const defaults = blockType?.attributes || {};
+        const resetValues = {};
+        keys.forEach((key) => {
+            if (defaults[key] && 'default' in defaults[key]) {
+                resetValues[key] = defaults[key].default;
+            }
+        });
+        setAttributes(resetValues);
+    };
+
     const pt = paddingTop?.desktop ?? 40;
     const pr = paddingRight?.desktop ?? 40;
     const pb = paddingBottom?.desktop ?? 40;
@@ -100,7 +122,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     return (
         <>
             <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
-                <PanelBody title={__('Icon', 'icon-box-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Icon', 'icon-box-block')} initialOpen={true}>
                     <BaseControl label={__('Bootstrap Icon', 'icon-box-block')}>
                         <Button
                             onClick={() => setIsIconPickerOpen(true)}
@@ -127,7 +149,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             </Button>
                         )}
                     </BaseControl>
+                </PanelBody>
 
+                <PanelBody section="layout" title={__('Layout', 'icon-box-block')} initialOpen={false}>
+                    <SelectControl
+                        label={__('Alignment', 'icon-box-block')}
+                        value={alignment}
+                        options={[
+                            { label: __('Left', 'icon-box-block'), value: 'left' },
+                            { label: __('Center', 'icon-box-block'), value: 'center' },
+                            { label: __('Right', 'icon-box-block'), value: 'right' },
+                        ]}
+                        onChange={(v) => setAttributes({ alignment: v })}
+                    />
+                </PanelBody>
+
+                <PanelBody section="style" priority="high" title={__('Icon Style', 'icon-box-block')} initialOpen={false}>
                     <RangeControl
                         label={__('Icon Size', 'icon-box-block')}
                         value={iconSize}
@@ -142,20 +179,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             onChange={(v) => setAttributes({ iconColor: v || "" })}
                         />
                     </BaseControl>
-
-                    <SelectControl
-                        label={__('Alignment', 'icon-box-block')}
-                        value={alignment}
-                        options={[
-                            { label: __('Left', 'icon-box-block'), value: 'left' },
-                            { label: __('Center', 'icon-box-block'), value: 'center' },
-                            { label: __('Right', 'icon-box-block'), value: 'right' },
-                        ]}
-                        onChange={(v) => setAttributes({ alignment: v })}
-                    />
                 </PanelBody>
 
-                <PanelBody title={__('Card Style', 'icon-box-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Card Style', 'icon-box-block')} initialOpen={false}>
                     <BaseControl label={__('Background Color', 'icon-box-block')}>
                         <BoundColorPalette
                             value={backgroundColor || ""}
@@ -198,7 +224,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
                 </PanelBody>
 
-                <PanelBody title={__('Button', 'icon-box-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Button', 'icon-box-block')} initialOpen={false}>
                     <ToggleControl
                         label={__('Show Button', 'icon-box-block')}
                         checked={showButton !== false}
@@ -226,28 +252,34 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 ]}
                                 onChange={(v) => setAttributes({ linkTarget: v })}
                             />
-                            <BaseControl label={__('Button Background', 'icon-box-block')}>
-                                <BoundColorPalette
-                                    value={buttonBgColor || ""}
-                                    onChange={(v) => setAttributes({ buttonBgColor: v || "" })}
-                                />
-                            </BaseControl>
-                            <BaseControl label={__('Button Text Color', 'icon-box-block')}>
-                                <BoundColorPalette
-                                    value={buttonTextColor || ""}
-                                    onChange={(v) => setAttributes({ buttonTextColor: v || "" })}
-                                />
-                            </BaseControl>
                         </>
                     )}
                 </PanelBody>
 
-                <PanelBody title={__('Spacing', 'icon-box-block')} initialOpen={false}>
-                    <ButtonGroup style={{ marginBottom: '12px' }}>
-                        <Button isPressed={deviceType === 'desktop'} onClick={() => setDeviceType('desktop')} icon={desktop} />
-                        <Button isPressed={deviceType === 'tablet'}  onClick={() => setDeviceType('tablet')}  icon={tablet}  />
-                        <Button isPressed={deviceType === 'mobile'}  onClick={() => setDeviceType('mobile')}  icon={mobile}  />
-                    </ButtonGroup>
+                {showButton !== false && (
+                    <PanelBody section="style" priority="high" title={__('Button Style', 'icon-box-block')} initialOpen={false}>
+                        <BaseControl label={__('Button Background', 'icon-box-block')}>
+                            <BoundColorPalette
+                                value={buttonBgColor || ""}
+                                onChange={(v) => setAttributes({ buttonBgColor: v || "" })}
+                            />
+                        </BaseControl>
+                        <BaseControl label={__('Button Text Color', 'icon-box-block')}>
+                            <BoundColorPalette
+                                value={buttonTextColor || ""}
+                                onChange={(v) => setAttributes({ buttonTextColor: v || "" })}
+                            />
+                        </BaseControl>
+                    </PanelBody>
+                )}
+
+                <PanelBody section="style" priority="medium" title={__('Spacing', 'icon-box-block')} initialOpen={false}>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        tiers={THREE_TIERS}
+                        onReset={() => resetToDefaults(['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft'])}
+                    />
 
                     <BoxControl
                         label={__('Padding', 'icon-box-block')}

@@ -11,9 +11,17 @@ import {
 	__experimentalBoxControl as BoxControl,
 } from "@wordpress/components";
 import { desktop, tablet, mobile } from "@wordpress/icons";
+import { getBlockType } from "@wordpress/blocks";
 import InspectorTabs from "../components/InspectorTabs";
+import DeviceSwitcher from "../components/DeviceSwitcher";
 import QuickZone from "../components/QuickZone";
 import "./editor.scss";
+
+const THREE_TIERS = [
+	{ key: "desktop", label: __("Desktop", "animation-scroll-block"), icon: desktop },
+	{ key: "tablet", label: __("Tablet", "animation-scroll-block"), icon: tablet },
+	{ key: "mobile", label: __("Mobile", "animation-scroll-block"), icon: mobile },
+];
 
 const ANIMATION_TYPES = [
 	{ label: __("Fade In", "animation-scroll-block"), value: "fade-in" },
@@ -76,6 +84,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	if (!blockId) {
 		setAttributes({ blockId: clientId });
 	}
+
+	// Resets the given responsive attributes back to their block.json defaults —
+	// existing values only, nothing new is added.
+	const resetToDefaults = (keys) => {
+		const blockType = getBlockType("create-block/animation-scroll-block");
+		const defaults = blockType?.attributes || {};
+		const resetValues = {};
+		keys.forEach((key) => {
+			if (defaults[key] && "default" in defaults[key]) {
+				resetValues[key] = defaults[key].default;
+			}
+		});
+		setAttributes(resetValues);
+	};
 
 	// Apply animation preview in editor
 	useEffect(() => {
@@ -276,7 +298,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody title={__("Animation Settings", "animation-scroll-block")} initialOpen={true}>
+				<PanelBody section="style" priority="medium" title={__("Animation Settings", "animation-scroll-block")} initialOpen={true}>
 					<SelectControl
 						label={__("Animation Type", "animation-scroll-block")}
 						value={animationType}
@@ -372,6 +394,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 
 				<PanelBody
+					section="layout"
 					title={__("Container Settings", "animation-scroll-block")}
 					initialOpen={false}
 				>
@@ -402,26 +425,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							<p style={{ marginTop: "16px", marginBottom: "8px", fontWeight: 600 }}>
 								{__("Max Width", "animation-scroll-block")}
 							</p>
-							<ButtonGroup style={{ marginBottom: "12px" }}>
-								<Button
-									icon={desktop}
-									isPrimary={deviceType === "desktop"}
-									onClick={() => setDeviceType("desktop")}
-									label={__("Desktop", "animation-scroll-block")}
-								/>
-								<Button
-									icon={tablet}
-									isPrimary={deviceType === "tablet"}
-									onClick={() => setDeviceType("tablet")}
-									label={__("Tablet", "animation-scroll-block")}
-								/>
-								<Button
-									icon={mobile}
-									isPrimary={deviceType === "mobile"}
-									onClick={() => setDeviceType("mobile")}
-									label={__("Mobile", "animation-scroll-block")}
-								/>
-							</ButtonGroup>
+							<DeviceSwitcher
+								deviceType={deviceType}
+								setDeviceType={setDeviceType}
+								tiers={THREE_TIERS}
+								onReset={() => resetToDefaults(["containerMaxWidth"])}
+							/>
 							<div style={{ display: "flex", gap: "8px" }}>
 								<RangeControl
 									label={__("Max Width Value", "animation-scroll-block")}
@@ -478,32 +487,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 
 				<PanelBody
+					section="style"
+					priority="medium"
 					title={__("Margins", "animation-scroll-block")}
 					initialOpen={false}
 				>
-					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Device", "animation-scroll-block")}
-					</p>
-					<ButtonGroup style={{ marginBottom: "12px" }}>
-						<Button
-							icon={desktop}
-							isPrimary={deviceType === "desktop"}
-							onClick={() => setDeviceType("desktop")}
-							label={__("Desktop", "animation-scroll-block")}
-						/>
-						<Button
-							icon={tablet}
-							isPrimary={deviceType === "tablet"}
-							onClick={() => setDeviceType("tablet")}
-							label={__("Tablet", "animation-scroll-block")}
-						/>
-						<Button
-							icon={mobile}
-							isPrimary={deviceType === "mobile"}
-							onClick={() => setDeviceType("mobile")}
-							label={__("Mobile", "animation-scroll-block")}
-						/>
-					</ButtonGroup>
+					<DeviceSwitcher
+						deviceType={deviceType}
+						setDeviceType={setDeviceType}
+						label={__("Device", "animation-scroll-block")}
+						tiers={THREE_TIERS}
+						onReset={() => resetToDefaults(["marginTop", "marginRight", "marginBottom", "marginLeft"])}
+					/>
 					<BoxControl
 						label={__("Margin", "animation-scroll-block")}
 						values={{
@@ -536,32 +531,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 
 				<PanelBody
+					section="style"
+					priority="medium"
 					title={__("Padding", "animation-scroll-block")}
 					initialOpen={false}
 				>
-					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Device", "animation-scroll-block")}
-					</p>
-					<ButtonGroup style={{ marginBottom: "12px" }}>
-						<Button
-							icon={desktop}
-							isPrimary={deviceType === "desktop"}
-							onClick={() => setDeviceType("desktop")}
-							label={__("Desktop", "animation-scroll-block")}
-						/>
-						<Button
-							icon={tablet}
-							isPrimary={deviceType === "tablet"}
-							onClick={() => setDeviceType("tablet")}
-							label={__("Tablet", "animation-scroll-block")}
-						/>
-						<Button
-							icon={mobile}
-							isPrimary={deviceType === "mobile"}
-							onClick={() => setDeviceType("mobile")}
-							label={__("Mobile", "animation-scroll-block")}
-						/>
-					</ButtonGroup>
+					<DeviceSwitcher
+						deviceType={deviceType}
+						setDeviceType={setDeviceType}
+						label={__("Device", "animation-scroll-block")}
+						tiers={THREE_TIERS}
+						onReset={() => resetToDefaults(["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"])}
+					/>
 					<BoxControl
 						label={__("Padding", "animation-scroll-block")}
 						values={{

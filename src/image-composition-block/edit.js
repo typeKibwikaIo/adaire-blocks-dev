@@ -12,9 +12,18 @@ import {
 	ButtonGroup,
 } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
+import { getBlockType } from '@wordpress/blocks';
 import { desktop, tablet, mobile, plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
 import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
+
+const FOUR_TIERS = [
+	{ key: 'desktop', label: __('Desktop', 'image-composition-block'), icon: desktop },
+	{ key: 'tablet', label: __('Tablet', 'image-composition-block'), icon: tablet },
+	{ key: 'mobile', label: __('Mobile', 'image-composition-block'), icon: mobile },
+	{ key: 'smartwatch', label: __('Watch', 'image-composition-block'), glyph: '⌚' },
+];
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
 	const {
@@ -34,6 +43,20 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 			setAttributes({ blockId: `image-composition-${clientId}` });
 		}
 	}, [blockId, clientId, setAttributes]);
+
+	// Resets the given responsive attributes back to their block.json defaults —
+	// existing values only, nothing new is added.
+	const resetToDefaults = (keys) => {
+		const blockType = getBlockType('create-block/image-composition-block');
+		const defaults = blockType?.attributes || {};
+		const resetValues = {};
+		keys.forEach((key) => {
+			if (defaults[key] && 'default' in defaults[key]) {
+				resetValues[key] = defaults[key].default;
+			}
+		});
+		setAttributes(resetValues);
+	};
 
 	const blockProps = useBlockProps({
 		className: 'adaire-image-composition',
@@ -86,7 +109,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody title={__('Images', 'image-composition-block')} initialOpen={true}>
+				<PanelBody section="content" title={__('Images', 'image-composition-block')} initialOpen={true}>
 					<Button
 						variant="primary"
 						icon={plus}
@@ -199,7 +222,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					))}
 				</PanelBody>
 
-				<PanelBody title={__('Layout', 'image-composition-block')} initialOpen={false}>
+				<PanelBody section="style" priority="medium" title={__('Spacing', 'image-composition-block')} initialOpen={false}>
 					<RangeControl
 						label={__('Gap between images (px)', 'image-composition-block')}
 						value={gap}
@@ -216,7 +239,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 				</PanelBody>
 
-				<PanelBody title={__('Container', 'image-composition-block')} initialOpen={false}>
+				<PanelBody section="layout" title={__('Container', 'image-composition-block')} initialOpen={false}>
 					<p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Mode', 'image-composition-block')}</p>
 					<ButtonGroup style={{ marginBottom: '16px' }}>
 						{[
@@ -239,30 +262,12 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 							<p style={{ marginTop: 8, marginBottom: 8, fontWeight: 600 }}>
 								{__('Max width', 'image-composition-block')}
 							</p>
-							<ButtonGroup style={{ marginBottom: 12 }}>
-								<Button
-									icon={desktop}
-									isPrimary={deviceType === 'desktop'}
-									onClick={() => setDeviceType('desktop')}
-								/>
-								<Button
-									icon={tablet}
-									isPrimary={deviceType === 'tablet'}
-									onClick={() => setDeviceType('tablet')}
-								/>
-								<Button
-									icon={mobile}
-									isPrimary={deviceType === 'mobile'}
-									onClick={() => setDeviceType('mobile')}
-								/>
-								<Button
-									isPrimary={deviceType === 'smartwatch'}
-									onClick={() => setDeviceType('smartwatch')}
-									label={__('Watch', 'image-composition-block')}
-								>
-									âŒš
-								</Button>
-							</ButtonGroup>
+							<DeviceSwitcher
+								deviceType={deviceType}
+								setDeviceType={setDeviceType}
+								tiers={FOUR_TIERS}
+								onReset={() => resetToDefaults(['containerMaxWidth'])}
+							/>
 							<div style={{ display: 'flex', gap: 8 }}>
 								<TextControl
 									type="number"

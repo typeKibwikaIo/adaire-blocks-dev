@@ -24,8 +24,16 @@ import {
 import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import { getBlockType } from '@wordpress/blocks';
 import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
+
+const THREE_TIERS = [
+    { key: 'desktop', label: __('Desktop', 'posts-carousel-block'), icon: desktop },
+    { key: 'tablet', label: __('Tablet', 'posts-carousel-block'), icon: tablet },
+    { key: 'mobile', label: __('Mobile', 'posts-carousel-block'), icon: mobile },
+];
 
 // Sample image used only for the editor's "no posts yet" demo cards below —
 // never used in the saved/frontend output, which always pulls the real
@@ -35,7 +43,21 @@ const DEMO_IMAGE_URL = 'https://static.wixstatic.com/media/4b9d2b_2c368161aa454e
 const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
     const [activeZone, setActiveZone] = useState(null);
-    
+
+    // Resets the given responsive attributes back to their block.json defaults —
+    // existing values only, nothing new is added.
+    const resetToDefaults = (keys) => {
+        const blockType = getBlockType('create-block/posts-carousel-block');
+        const defaults = blockType?.attributes || {};
+        const resetValues = {};
+        keys.forEach((key) => {
+            if (defaults[key] && 'default' in defaults[key]) {
+                resetValues[key] = defaults[key].default;
+            }
+        });
+        setAttributes(resetValues);
+    };
+
     const {
         blockId,
         postsPerPage,
@@ -365,7 +387,7 @@ return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 {/* Content Settings */}
-                <PanelBody title={__('Content Settings', 'posts-carousel-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Content Settings', 'posts-carousel-block')} initialOpen={true}>
                     <TextControl
                         label={__('Posts Per Page', 'posts-carousel-block')}
                         type="number"
@@ -462,7 +484,7 @@ return (
                 </PanelBody>
 
                 {/* Category Selection */}
-                <PanelBody title={__('Category Selection', 'posts-carousel-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Category Selection', 'posts-carousel-block')} initialOpen={false}>
                     <p>{__('Select categories to filter posts:', 'posts-carousel-block')}</p>
                     <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ddd', padding: '10px' }}>
                         {categories.map(category => (
@@ -487,7 +509,7 @@ return (
                 </PanelBody>
 
                 {/* Layout Settings */}
-                <PanelBody title={__('Layout Settings', 'posts-carousel-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Layout Settings', 'posts-carousel-block')} initialOpen={false}>
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Layout Type', 'posts-carousel-block')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {[
@@ -576,7 +598,9 @@ return (
                             ]}
                             onChange={(value) => setAttributes({ textAlign: value })}
                         />
+                </PanelBody>
 
+                <PanelBody section="style" priority="medium" title={__('Card & Image Style', 'posts-carousel-block')} initialOpen={false}>
                     <RangeControl
                         label={__('Card Gap', 'posts-carousel-block')}
                         value={cardGap}
@@ -656,7 +680,7 @@ return (
                 </PanelBody>
 
                 {/* Filtering Settings */}
-                <PanelBody title={__('Filtering Settings', 'posts-carousel-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Filtering Settings', 'posts-carousel-block')} initialOpen={false}>
                     <PanelRow>
                         <ToggleControl
                             label={__('Enable Category Filtering', 'posts-carousel-block')}
@@ -668,7 +692,7 @@ return (
                 </PanelBody>
 
                 {/* Typography Settings */}
-                <PanelBody title={__('Typography Settings', 'posts-carousel-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography Settings', 'posts-carousel-block')} initialOpen={false}>
                     <TextControl
                         label={__('Title Font Size (px)', 'posts-carousel-block')}
                         type="number"
@@ -735,6 +759,8 @@ return (
 
                 {/* Color Settings */}
                 <PanelColorSettings
+                    section="style"
+                    priority="high"
                     title={__('Color Settings', 'posts-carousel-block')}
                     colorSettings={[
                         {
@@ -776,7 +802,7 @@ return (
                 />
 
                 {/* Drag Cursor Settings */}
-                <PanelBody title={__('Drag Cursor Settings', 'posts-carousel-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Drag Cursor Settings', 'posts-carousel-block')} initialOpen={false}>
                     <TextControl
                         label={__('Cursor Text', 'posts-carousel-block')}
                         value={dragCursorText}
@@ -832,7 +858,7 @@ return (
                 </PanelBody>
 
                 {/* Animation Settings */}
-                <PanelBody title={__('Animation Settings', 'posts-carousel-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Animation Settings', 'posts-carousel-block')} initialOpen={false}>
                     <PanelRow>
                         <ToggleControl
                             label={__('Enable Animations', 'posts-carousel-block')}
@@ -934,7 +960,7 @@ return (
                 </PanelBody>
 
                 {/* Container Settings */}
-                <PanelBody title={__('Container Settings', 'posts-carousel-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Container Settings', 'posts-carousel-block')} initialOpen={false}>
                     <ButtonGroup>
                         {[
                             { label: __('Full Width', 'posts-carousel-block'), value: 'full' },
@@ -951,26 +977,12 @@ return (
                     {containerMode === 'constrained' && (
                         <>
                             <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>{__('Max Width', 'posts-carousel-block')}</p>
-                            <ButtonGroup style={{ marginBottom: '12px' }}>
-                                <Button
-                                    icon={desktop}
-                                    isPrimary={deviceType === 'desktop'}
-                                    onClick={() => setDeviceType('desktop')}
-                                    label={__('Desktop', 'posts-carousel-block')}
-                                />
-                                <Button
-                                    icon={tablet}
-                                    isPrimary={deviceType === 'tablet'}
-                                    onClick={() => setDeviceType('tablet')}
-                                    label={__('Tablet', 'posts-carousel-block')}
-                                />
-                                <Button
-                                    icon={mobile}
-                                    isPrimary={deviceType === 'mobile'}
-                                    onClick={() => setDeviceType('mobile')}
-                                    label={__('Mobile', 'posts-carousel-block')}
-                                />
-                            </ButtonGroup>
+                            <DeviceSwitcher
+                                deviceType={deviceType}
+                                setDeviceType={setDeviceType}
+                                tiers={THREE_TIERS}
+                                onReset={() => resetToDefaults(['containerMaxWidth'])}
+                            />
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 <TextControl
                                     type="number"
@@ -1007,27 +1019,16 @@ return (
                         </>
                     )}
 
-                    <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>{__('Margins', 'posts-carousel-block')}</p>
-                    <ButtonGroup style={{ marginBottom: '12px' }}>
-                        <Button
-                            icon={desktop}
-                            isPrimary={deviceType === 'desktop'}
-                            onClick={() => setDeviceType('desktop')}
-                            label={__('Desktop', 'posts-carousel-block')}
-                        />
-                        <Button
-                            icon={tablet}
-                            isPrimary={deviceType === 'tablet'}
-                            onClick={() => setDeviceType('tablet')}
-                            label={__('Tablet', 'posts-carousel-block')}
-                        />
-                        <Button
-                            icon={mobile}
-                            isPrimary={deviceType === 'mobile'}
-                            onClick={() => setDeviceType('mobile')}
-                            label={__('Mobile', 'posts-carousel-block')}
-                        />
-                    </ButtonGroup>
+                </PanelBody>
+
+                <PanelBody section="style" priority="medium" title={__('Container Spacing', 'posts-carousel-block')} initialOpen={false}>
+                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Margins', 'posts-carousel-block')}</p>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        tiers={THREE_TIERS}
+                        onReset={() => resetToDefaults(['marginTop', 'marginRight', 'marginBottom', 'marginLeft'])}
+                    />
                     <BoxControl
                         values={{
                             top: marginTop?.[deviceType] ?? 0,
@@ -1050,26 +1051,12 @@ return (
                     />
 
                     <p style={{ marginTop: '24px', marginBottom: '8px', fontWeight: 600 }}>{__('Container Padding', 'posts-carousel-block')}</p>
-                    <ButtonGroup style={{ marginBottom: '12px' }}>
-                        <Button
-                            icon={desktop}
-                            isPrimary={deviceType === 'desktop'}
-                            onClick={() => setDeviceType('desktop')}
-                            label={__('Desktop', 'posts-carousel-block')}
-                        />
-                        <Button
-                            icon={tablet}
-                            isPrimary={deviceType === 'tablet'}
-                            onClick={() => setDeviceType('tablet')}
-                            label={__('Tablet', 'posts-carousel-block')}
-                        />
-                        <Button
-                            icon={mobile}
-                            isPrimary={deviceType === 'mobile'}
-                            onClick={() => setDeviceType('mobile')}
-                            label={__('Mobile', 'posts-carousel-block')}
-                        />
-                    </ButtonGroup>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        tiers={THREE_TIERS}
+                        onReset={() => resetToDefaults(['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'])}
+                    />
                     <BoxControl
                         values={{
                             top: paddingTop?.[deviceType] ?? 0,

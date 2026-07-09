@@ -1,7 +1,7 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useCallback, useState, useEffect } from '@wordpress/element';
 import { useBlockProps, useInnerBlocksProps, store as blockEditorStore, ColorPalette } from '@wordpress/block-editor';
-import { createBlock } from '@wordpress/blocks';
+import { createBlock, getBlockType } from '@wordpress/blocks';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { PanelBody, RangeControl, ToggleControl, Button, ButtonGroup, TextControl, BaseControl } from '@wordpress/components';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
@@ -268,6 +268,25 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
         setAttributes({ items: next });
     }, [items, allowMultipleOpen, setAttributes]);
 
+    // Resets every responsive attribute back to its block.json default —
+    // existing values only, nothing new is added.
+    const RESPONSIVE_ATTRS = [
+        'chevronSize', 'titleFontSize', 'contentFontSize', 'gap', 'radius',
+        'padding', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
+        'marginHorizontal', 'containerMaxWidth',
+    ];
+    const resetResponsiveDefaults = () => {
+        const blockType = getBlockType( 'create-block/accordion-block' );
+        const defaults = blockType?.attributes || {};
+        const resetValues = {};
+        RESPONSIVE_ATTRS.forEach( ( key ) => {
+            if ( defaults[ key ] && 'default' in defaults[ key ] ) {
+                resetValues[ key ] = defaults[ key ].default;
+            }
+        } );
+        setAttributes( resetValues );
+    };
+
     const updatePadding = (device, property, value) => {
         // Handle backward compatibility - if padding is in old format, convert it
         let currentPadding = padding;
@@ -353,14 +372,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody title={ __('Responsive Settings', 'accordion-block') } initialOpen={ false }>
-                    <DeviceSwitcher 
-                        deviceType={deviceType} 
+                <PanelBody section="layout" title={ __('Responsive Settings', 'accordion-block') } initialOpen={ false }>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
                         setDeviceType={setDeviceType}
                         label="Device Preview"
+                        onReset={ resetResponsiveDefaults }
                     />
                 </PanelBody>
-                <PanelBody title={ __('Container Settings', 'accordion-block') } initialOpen={ true }>
+                <PanelBody section="layout" title={ __('Container Settings', 'accordion-block') } initialOpen={ true }>
                     <ButtonGroup>
                         { [
                             { label: __('Full width', 'accordion-block'), value: 'full' },
@@ -428,21 +448,34 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         </>
                     )}
                 </PanelBody>
-                <PanelBody title={ __('Items', 'accordion-block') } initialOpen={ true }>
-                    <Button 
-                        isPrimary 
+                <PanelBody section="content" title={ __('Items', 'accordion-block') } initialOpen={ true }>
+                    <Button
+                        isPrimary
                         onClick={ addItem }
                         disabled={ isLimitReached }
                     >
                         { __('Add Item', 'accordion-block') }
                     </Button>
                     { showUpgradeNotice && (
-                        <UpgradeNotice 
+                        <UpgradeNotice
                             variant="inline"
                             itemType="accordion"
                             message={upgradeMessage}
                         />
                     ) }
+                    <ToggleControl
+                        label={ __('Allow multiple open', 'accordion-block') }
+                        checked={ allowMultipleOpen }
+                        onChange={ (v) => setAttributes( { allowMultipleOpen: v } ) }
+                    />
+                    <ToggleControl
+                        label={ __('First item open by default', 'accordion-block') }
+                        checked={ firstItemOpenByDefault !== false }
+                        onChange={ (v) => setAttributes( { firstItemOpenByDefault: v } ) }
+                        help={ __('When enabled, the first accordion item will be open when the page loads.', 'accordion-block') }
+                    />
+                </PanelBody>
+                <PanelBody section="style" priority="medium" title={ __('Item Spacing', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Gap', 'accordion-block') }
                         value={ getDeviceValue(gap, deviceType, deviceType === 'desktop' ? 12 : deviceType === 'tablet' ? 10 : deviceType === 'mobile' ? 8 : 6) }
@@ -489,19 +522,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         min={ 0 }
                         max={ 48 }
                     />
-                    <ToggleControl
-                        label={ __('Allow multiple open', 'accordion-block') }
-                        checked={ allowMultipleOpen }
-                        onChange={ (v) => setAttributes( { allowMultipleOpen: v } ) }
-                    />
-                    <ToggleControl
-                        label={ __('First item open by default', 'accordion-block') }
-                        checked={ firstItemOpenByDefault !== false }
-                        onChange={ (v) => setAttributes( { firstItemOpenByDefault: v } ) }
-                        help={ __('When enabled, the first accordion item will be open when the page loads.', 'accordion-block') }
-                    />
                 </PanelBody>
-                <PanelBody title={ __('Typography', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="high" title={ __('Typography', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Title size', 'accordion-block') }
                         value={ getDeviceValue(titleFontSize, deviceType, deviceType === 'desktop' ? 20 : deviceType === 'tablet' ? 18 : deviceType === 'mobile' ? 16 : 14) }
@@ -539,7 +561,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         ) ) }
                     </ButtonGroup>
                 </PanelBody>
-                <PanelBody title={ __('Colors', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="high" title={ __('Colors', 'accordion-block') } initialOpen={ false }>
                     <p>{ __('Title', 'accordion-block') }</p>
                     <BoundColorPalette value={ titleColor } onChange={ (v)=> setAttributes({ titleColor: v }) } />
                     <p>{ __('Content', 'accordion-block') }</p>
@@ -569,7 +591,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         step={ 1 }
                     />
                 </PanelBody>
-                <PanelBody title={ __('Spacing & Margins', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Spacing & Margins', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Margin Top', 'accordion-block') }
                         value={ getDeviceValue(marginTop, deviceType, 0) }
@@ -606,7 +628,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         max={ 100 }
                     />
                 </PanelBody>
-                <PanelBody title={ __('Effects', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Effects', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Shadow Intensity', 'accordion-block') }
                         value={ shadowIntensity }
@@ -616,7 +638,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         step={ 0.01 }
                     />
                 </PanelBody>
-                <PanelBody title={ __('Animation', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Animation', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Duration (ms)', 'accordion-block') }
                         value={ animationDuration }

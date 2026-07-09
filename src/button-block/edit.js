@@ -134,8 +134,8 @@ export default function Edit({ attributes, setAttributes }) {
 
   return (
     <>
-      <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-        <PanelBody title="Button Settings" initialOpen={true}>
+      <InspectorTabs attributes={ attributes } setAttributes={ setAttributes } skipBuiltinControls={ ['zIndex'] }>
+        <PanelBody section="content" title="Button Settings" initialOpen={true}>
           <TextControl
             label="Button Text"
             value={buttonText}
@@ -159,7 +159,7 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
-        <PanelBody title="Responsive Settings" initialOpen={false}>
+        <PanelBody section="layout" title="Responsive Settings" initialOpen={false}>
           <DeviceSwitcher
             deviceType={deviceType}
             setDeviceType={setDeviceType}
@@ -167,7 +167,54 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
-        <PanelBody title="Button Styling" initialOpen={false}>
+        <PanelBody section="layout" title="Button Variant" initialOpen={false}>
+          <SelectControl
+            label="Button Style"
+            value={buttonStyle}
+            options={[
+              { label: 'Underline', value: 'underline' },
+              { label: 'Background Fill', value: 'fill' },
+              { label: 'Border', value: 'border' },
+              { label: 'Gradient', value: 'gradient' },
+              { label: 'Glass Effect', value: 'glass' }
+            ]}
+            onChange={(value) => setAttributes({ buttonStyle: value })}
+          />
+        </PanelBody>
+
+        <PanelBody section="layout" title="Icon Settings" initialOpen={false}>
+          <ToggleControl
+            label="Show Icon"
+            checked={showIcon}
+            onChange={(value) => setAttributes({ showIcon: value })}
+            help={showIcon ? 'Icon will be visible' : 'Icon will be hidden'}
+          />
+
+          {showIcon && (
+            <>
+              <SelectControl
+                label="Icon"
+                value={iconType || 'arrow-diagonal'}
+                options={BUTTON_ICON_OPTIONS}
+                onChange={(value) => setAttributes({ iconType: value })}
+              />
+
+              <SelectControl
+                label="Icon Position"
+                value={iconPosition || 'right'}
+                options={[
+                  { label: 'Right of text', value: 'right' },
+                  { label: 'Left of text', value: 'left' },
+                  { label: 'Inline (no gap)', value: 'inline' }
+                ]}
+                onChange={(value) => setAttributes({ iconPosition: value })}
+                help="Left/Right move the icon using flex order; Inline keeps it after the text but removes the spacing gap."
+              />
+            </>
+          )}
+        </PanelBody>
+
+        <PanelBody section="style" priority="high" title="Colors" initialOpen={false}>
           <BaseControl label="Button Color">
             <BoundColorPalette
               value={buttonColor}
@@ -271,42 +318,6 @@ export default function Edit({ attributes, setAttributes }) {
             )}
           </BaseControl>
 
-          <SelectControl
-            label="Button Style"
-            value={buttonStyle}
-            options={[
-              { label: 'Underline', value: 'underline' },
-              { label: 'Background Fill', value: 'fill' },
-              { label: 'Border', value: 'border' },
-              { label: 'Gradient', value: 'gradient' },
-              { label: 'Glass Effect', value: 'glass' }
-            ]}
-            onChange={(value) => setAttributes({ buttonStyle: value })}
-          />
-
-          {/*
-            ADAB-014: border controls used to be gated behind
-            `buttonStyle === 'border'`. They're now always visible — the
-            underlying borderWidth/borderColor/borderStyle/buttonHoverBorderColor
-            attributes apply visually to the --border variant's rendering in
-            style.scss (unchanged from before, see comment there for why
-            border rendering itself stays scoped to that one variant), but
-            users on any other style can still pre-configure border values
-            here ahead of switching styles, or use them if a future style
-            variant reads them. Surfacing them for every buttonStyle just
-            removes a controls/attributes mismatch (the attributes already
-            existed unconditionally; only the UI was gated).
-          */}
-          <RangeControl
-            label="Border Width (px)"
-            value={borderWidth}
-            onChange={(value) => setAttributes({ borderWidth: value })}
-            min={0}
-            max={10}
-            step={1}
-            help={buttonStyle !== 'border' ? 'Only visually applied when Button Style is set to "Border".' : undefined}
-          />
-
           <BaseControl
             label="Border Color"
             help={!borderColor ? "Inheriting the theme's secondary color." : undefined}
@@ -344,6 +355,31 @@ export default function Edit({ attributes, setAttributes }) {
               </Button>
             )}
           </BaseControl>
+        </PanelBody>
+
+        <PanelBody section="style" priority="medium" title="Border & Effects" initialOpen={false}>
+          {/*
+            ADAB-014: border controls used to be gated behind
+            `buttonStyle === 'border'`. They're now always visible — the
+            underlying borderWidth/borderColor/borderStyle/buttonHoverBorderColor
+            attributes apply visually to the --border variant's rendering in
+            style.scss (unchanged from before, see comment there for why
+            border rendering itself stays scoped to that one variant), but
+            users on any other style can still pre-configure border values
+            here ahead of switching styles, or use them if a future style
+            variant reads them. Surfacing them for every buttonStyle just
+            removes a controls/attributes mismatch (the attributes already
+            existed unconditionally; only the UI was gated).
+          */}
+          <RangeControl
+            label="Border Width (px)"
+            value={borderWidth}
+            onChange={(value) => setAttributes({ borderWidth: value })}
+            min={0}
+            max={10}
+            step={1}
+            help={buttonStyle !== 'border' ? 'Only visually applied when Button Style is set to "Border".' : undefined}
+          />
 
           <SelectControl
             label="Border Style"
@@ -362,6 +398,15 @@ export default function Edit({ attributes, setAttributes }) {
           />
 
           <RangeControl
+            label="Border Radius (px)"
+            value={borderRadius}
+            onChange={(value) => setAttributes({ borderRadius: value })}
+            min={0}
+            max={50}
+            step={1}
+          />
+
+          <RangeControl
             label="Blur Amount (px)"
             value={blurAmount}
             onChange={(value) => setAttributes({ blurAmount: value })}
@@ -370,6 +415,22 @@ export default function Edit({ attributes, setAttributes }) {
             step={1}
           />
 
+          <SelectControl
+            label="Hover Animation"
+            value={hoverAnimation}
+            options={[
+              { label: 'Slide Underline', value: 'slide-underline' },
+              { label: 'Scale', value: 'scale' },
+              { label: 'Bounce', value: 'bounce' },
+              { label: 'Glow', value: 'glow' },
+              { label: 'Shake', value: 'shake' },
+              { label: 'None', value: 'none' }
+            ]}
+            onChange={(value) => setAttributes({ hoverAnimation: value })}
+          />
+        </PanelBody>
+
+        <PanelBody section="style" priority="high" title="Typography" initialOpen={false}>
           <RangeControl
             label={`Font Size (px) - ${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)}`}
             value={getDeviceFontSize()}
@@ -411,51 +472,27 @@ export default function Edit({ attributes, setAttributes }) {
             help="Applies to the button label."
           />
 
-          <ToggleControl
-            label="Show Icon"
-            checked={showIcon}
-            onChange={(value) => setAttributes({ showIcon: value })}
-            help={showIcon ? 'Icon will be visible' : 'Icon will be hidden'}
-          />
-
-          {showIcon && (
-            <>
-              <SelectControl
-                label="Icon"
-                value={iconType || 'arrow-diagonal'}
-                options={BUTTON_ICON_OPTIONS}
-                onChange={(value) => setAttributes({ iconType: value })}
-              />
-
-              <SelectControl
-                label="Icon Position"
-                value={iconPosition || 'right'}
-                options={[
-                  { label: 'Right of text', value: 'right' },
-                  { label: 'Left of text', value: 'left' },
-                  { label: 'Inline (no gap)', value: 'inline' }
-                ]}
-                onChange={(value) => setAttributes({ iconPosition: value })}
-                help="Left/Right move the icon using flex order; Inline keeps it after the text but removes the spacing gap."
-              />
-            </>
-          )}
-
           <SelectControl
-            label="Hover Animation"
-            value={hoverAnimation}
+            label="Font Weight"
+            value={fontWeight}
             options={[
-              { label: 'Slide Underline', value: 'slide-underline' },
-              { label: 'Scale', value: 'scale' },
-              { label: 'Bounce', value: 'bounce' },
-              { label: 'Glow', value: 'glow' },
-              { label: 'Shake', value: 'shake' },
-              { label: 'None', value: 'none' }
+              { label: 'Thin (100)', value: '100' },
+              { label: 'Extra Light (200)', value: '200' },
+              { label: 'Light (300)', value: '300' },
+              { label: 'Normal (400)', value: '400' },
+              { label: 'Medium (500)', value: '500' },
+              { label: 'Semi Bold (600)', value: '600' },
+              { label: 'Bold (700)', value: '700' },
+              { label: 'Extra Bold (800)', value: '800' },
+              { label: 'Black (900)', value: '900' }
             ]}
-            onChange={(value) => setAttributes({ hoverAnimation: value })}
+            onChange={(value) => setAttributes({ fontWeight: value })}
+            help="Choose the font weight for the button text."
           />
+        </PanelBody>
 
-             <BoxControl
+        <PanelBody section="style" priority="medium" title="Spacing" initialOpen={false}>
+          <BoxControl
             label={`Button Padding (${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)})`}
             values={getDevicePadding()}
             onChange={(value) => setAttributes({ buttonPadding: updateDeviceAttribute(buttonPadding, deviceType, value) })}
@@ -476,7 +513,15 @@ export default function Edit({ attributes, setAttributes }) {
               { value: 'rem', label: 'rem', default: 0 },
             ]}
           />
+        </PanelBody>
 
+        <PanelBody section="advanced" title="Block Settings" initialOpen={false}>
+          <TextControl
+            label="Block ID"
+            value={blockId}
+            onChange={(value) => setAttributes({ blockId: value })}
+            help="Add a custom ID to this block for CSS targeting or anchor links."
+          />
           <RangeControl
             label="Z-Index"
             value={zIndex}
@@ -484,42 +529,6 @@ export default function Edit({ attributes, setAttributes }) {
             min={0}
             max={100}
             step={1}
-          />
-
-          <RangeControl
-            label="Border Radius (px)"
-            value={borderRadius}
-            onChange={(value) => setAttributes({ borderRadius: value })}
-            min={0}
-            max={50}
-            step={1}
-          />
-
-          <SelectControl
-            label="Font Weight"
-            value={fontWeight}
-            options={[
-              { label: 'Thin (100)', value: '100' },
-              { label: 'Extra Light (200)', value: '200' },
-              { label: 'Light (300)', value: '300' },
-              { label: 'Normal (400)', value: '400' },
-              { label: 'Medium (500)', value: '500' },
-              { label: 'Semi Bold (600)', value: '600' },
-              { label: 'Bold (700)', value: '700' },
-              { label: 'Extra Bold (800)', value: '800' },
-              { label: 'Black (900)', value: '900' }
-            ]}
-            onChange={(value) => setAttributes({ fontWeight: value })}
-            help="Choose the font weight for the button text."
-          />
-        </PanelBody>
-
-        <PanelBody title="Block Settings" initialOpen={false}>
-          <TextControl
-            label="Block ID"
-            value={blockId}
-            onChange={(value) => setAttributes({ blockId: value })}
-            help="Add a custom ID to this block for CSS targeting or anchor links."
           />
         </PanelBody>
       </InspectorTabs>
