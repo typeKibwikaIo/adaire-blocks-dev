@@ -1,7 +1,7 @@
-# GutenBlocks Blocks License System Implementation
+# Adaire Blocks License System Implementation
 
 ## Overview
-A comprehensive license activation system has been added to the GutenBlocks Blocks plugin that integrates with the provided API endpoints for license validation, activation, and deactivation.
+A comprehensive license activation system has been added to the Adaire Blocks plugin that integrates with the provided API endpoints for license validation, activation, and deactivation.
 
 ## Components Implemented
 
@@ -16,7 +16,7 @@ A comprehensive license activation system has been added to the GutenBlocks Bloc
   - Automatic license validation every 24 hours
 
 ### 2. Admin Interface (`admin/license-page.php`)
-- **License Management Page**: Accessible via GutenBlocks Blocks > License
+- **License Management Page**: Accessible via Adaire Blocks > License
 - **Features**:
   - License status display with activation counts
   - License key input and activation
@@ -90,7 +90,7 @@ The following blocks are protected and require active license:
 - `adaire-blocks.php` (MODIFIED)
 
 ## Usage
-1. Users can access license management via **GutenBlocks Blocks > License** in WordPress admin
+1. Users can access license management via **Adaire Blocks > License** in WordPress admin
 2. Enter license key and click "Activate License"
 3. System validates with API and stores activation token
 4. Premium blocks become available immediately

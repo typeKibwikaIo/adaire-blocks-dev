@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/website-footer-block",
     "version": "0.1.0",
-    "title": "Website Footer",
+    "title": "Footer (Free)",
     "category": "adaire-layout-sections",
     "description": "A fully controllable, inline-editable footer with three zones: top bar, columns section, and bottom bar.",
     "example": {},
@@ -44,6 +44,10 @@
         "accentColor": {
             "type": "string",
             "default": "#503AA8"
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
         },
         "paddingTop": {
             "type": "number",
@@ -161,6 +165,11 @@
                         "showBrandName": false,
                         "brandName": "",
                         "description": "We create amazing digital experiences for businesses worldwide.",
+                        "taglineFontSize": -1,
+                        "taglineFontWeight": "",
+                        "taglineLineHeight": -1,
+                        "taglineLetterSpacing": -1,
+                        "taglineColor": "",
                         "showCta": true,
                         "ctaText": "Get Started",
                         "ctaUrl": "#",
@@ -212,7 +221,7 @@
                         "listStyle": "plain",
                         "linkUnderline": false,
                         "itemSpacing": 12,
-                        "linkColor": "#9b8ee0",
+                        "linkColor": "",
                         "linkHoverColor": "#ffffff",
                         "linkHoverUnderlineColor": "",
                         "linkHoverBackgroundColor": "",
@@ -250,7 +259,7 @@
                         "listStyle": "plain",
                         "linkUnderline": false,
                         "itemSpacing": 12,
-                        "linkColor": "#9b8ee0",
+                        "linkColor": "",
                         "linkHoverColor": "#ffffff",
                         "linkHoverUnderlineColor": "",
                         "linkHoverBackgroundColor": "",
@@ -293,7 +302,7 @@
                         ],
                         "displayStyle": "vertical",
                         "iconSize": 24,
-                        "iconColor": "#9b8ee0",
+                        "iconColor": "",
                         "iconBgColor": "",
                         "socialHoverColor": "#ffffff",
                         "socialHoverBackgroundColor": "#503AA8",

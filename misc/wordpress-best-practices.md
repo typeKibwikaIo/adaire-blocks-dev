@@ -1,6 +1,6 @@
 # WordPress Best Practices Guide
 
-This document outlines the WordPress coding standards and best practices used in the GutenBlocks Blocks plugin.
+This document outlines the WordPress coding standards and best practices used in the Adaire Blocks plugin.
 
 ## Table of Contents
 1. [Enqueuing Scripts and Styles](#enqueuing-scripts-and-styles)
@@ -326,5 +326,5 @@ Before submitting code, ensure:
 ---
 
 **Last Updated:** 2024
-**Maintained by:** GutenBlocks Blocks Development Team
+**Maintained by:** Adaire Blocks Development Team
 

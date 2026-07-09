@@ -25,6 +25,7 @@ export default function save({ attributes }) {
         containerMode,
         containerMaxWidth,
         layoutStyle,
+        itemsPerRow,
         responsivePadding
     } = attributes;
 
@@ -50,6 +51,7 @@ export default function save({ attributes }) {
             '--infogrid-description-font-size': `${descriptionFontSize}px`,
             '--infogrid-item-padding': `${itemPadding}px`,
             '--infogrid-gap': `${gap}px`,
+            '--infogrid-items-per-row': itemsPerRow || 3,
             '--container-max-width': `${containerMaxWidth?.desktop?.value ?? 1200}${containerMaxWidth?.desktop?.unit ?? 'px'}`,
             '--container-max-width-mobile': `${containerMaxWidth?.mobile?.value ?? 100}${containerMaxWidth?.mobile?.unit ?? '%'}`,
             '--container-max-width-tablet': `${containerMaxWidth?.tablet?.value ?? 100}${containerMaxWidth?.tablet?.unit ?? '%'}`,
@@ -91,15 +93,17 @@ export default function save({ attributes }) {
                         >
                             <div className="adaire-infogrid__item-content">
                                 <div className="adaire-infogrid__item-header">
-                                    {item.useIcon && item.iconClass ? (
-                                        <span
-                                            className="adaire-infogrid__item-title adaire-infogrid__item-title--icon"
-                                            aria-label={item.title}
-                                        >
-                                            <i className={item.iconClass}></i>
-                                        </span>
-                                    ) : (
-                                        <span className="adaire-infogrid__item-title">{item.title}</span>
+                                    {item.showTitle !== false && (
+                                        item.useIcon && item.iconClass ? (
+                                            <span
+                                                className="adaire-infogrid__item-title adaire-infogrid__item-title--icon"
+                                                aria-label={item.title}
+                                            >
+                                                <i className={item.iconClass}></i>
+                                            </span>
+                                        ) : (
+                                            <span className="adaire-infogrid__item-title">{item.title}</span>
+                                        )
                                     )}
                                     <button className="adaire-infogrid__item-toggle" aria-label="Toggle details">
                                         <span className="adaire-infogrid__item-icon">+</span>

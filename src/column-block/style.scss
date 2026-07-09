@@ -4,6 +4,19 @@
   min-width: 0;
   box-sizing: border-box;
   min-height: 80px;
+  display: flex;
+  flex-direction: column;
+
+  // Horizontal alignment of this column's own content. Default (no
+  // modifier class) keeps the existing stretch-to-full-width behavior.
+  &--halign-left { align-items: flex-start; }
+  &--halign-center { align-items: center; }
+  &--halign-right { align-items: flex-end; }
+
+  // Vertical alignment of this column's own content. Default (no
+  // modifier class) keeps content top-aligned, as before.
+  &--valign-center { justify-content: center; }
+  &--valign-bottom { justify-content: flex-end; }
 
   // Empty state styling
   &:empty::before {

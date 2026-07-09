@@ -42,6 +42,7 @@
     width: var(--infogrid-2-block-width-desktop, 100%);
     margin-left: auto;
     margin-right: auto;
+    font-family: var(--infogrid-2-font-family, inherit);
     background-color: var(--infogrid-2-bg-color, transparent);
     background-size: var(--infogrid-2-bg-size, cover);
     background-position: var(--infogrid-2-bg-position, center);
@@ -117,8 +118,17 @@
     }
 
     .adaire-infogrid-2-content {
-        display: grid;
-        grid-template-columns: repeat(var(--infogrid-2-grid-columns-desktop, 3), 1fr);
+        // Flexbox (not CSS Grid) is deliberate: with grid, an incomplete last
+        // row (e.g. 4 items at 3 configured columns) leaves dangling empty
+        // cells because auto-fit only collapses columns that are empty across
+        // EVERY row, not columns that are merely empty in the last row. Flex
+        // layout operates per-row, so `flex-grow` on each item below naturally
+        // redistributes a short row's leftover width across whichever items
+        // actually landed on it — fixing both "fewer items than columns" and
+        // "items don't evenly divide into columns" without JS or per-count
+        // CSS selectors.
+        display: flex;
+        flex-wrap: wrap;
         gap: var(--infogrid-2-grid-gap-desktop, 30px);
         width: 100%;
         max-width: var(--infogrid-2-grid-width-desktop, 1200px);
@@ -128,6 +138,8 @@
     }
 
     .adaire-infogrid-2-item {
+        box-sizing: border-box;
+        flex: 1 1 max(calc((100% - (var(--infogrid-2-grid-columns-desktop, 3) - 1) * var(--infogrid-2-grid-gap-desktop, 30px)) / var(--infogrid-2-grid-columns-desktop, 3)), 120px);
         padding-top: var(--infogrid-2-item-padding-top-desktop, 30px);
         padding-right: var(--infogrid-2-item-padding-right-desktop, 30px);
         padding-bottom: var(--infogrid-2-item-padding-bottom-desktop, 30px);
@@ -298,7 +310,6 @@
         }
 
         .adaire-infogrid-2-content {
-            grid-template-columns: repeat(var(--infogrid-2-grid-columns-mobile, var(--infogrid-2-grid-columns-desktop)), 1fr);
             gap: var(--infogrid-2-grid-gap-mobile, var(--infogrid-2-grid-gap-desktop));
             max-width: var(--infogrid-2-grid-width-mobile, var(--infogrid-2-grid-width-desktop));
             margin-left: var(--infogrid-2-content-ml-mobile, var(--infogrid-2-content-ml-desktop));
@@ -307,6 +318,7 @@
         }
 
         .adaire-infogrid-2-item {
+            flex: 1 1 max(calc((100% - (var(--infogrid-2-grid-columns-mobile, var(--infogrid-2-grid-columns-desktop, 3)) - 1) * var(--infogrid-2-grid-gap-mobile, var(--infogrid-2-grid-gap-desktop, 30px))) / var(--infogrid-2-grid-columns-mobile, var(--infogrid-2-grid-columns-desktop, 3))), 120px);
             padding-top: var(--infogrid-2-item-padding-top-mobile, var(--infogrid-2-item-padding-top-desktop));
             padding-right: var(--infogrid-2-item-padding-right-mobile, var(--infogrid-2-item-padding-right-desktop));
             padding-bottom: var(--infogrid-2-item-padding-bottom-mobile, var(--infogrid-2-item-padding-bottom-desktop));
@@ -379,7 +391,6 @@
         }
 
         .adaire-infogrid-2-content {
-            grid-template-columns: repeat(var(--infogrid-2-grid-columns-tablet, var(--infogrid-2-grid-columns-desktop)), 1fr);
             gap: var(--infogrid-2-grid-gap-tablet, var(--infogrid-2-grid-gap-desktop));
             max-width: var(--infogrid-2-grid-width-tablet, var(--infogrid-2-grid-width-desktop));
             margin-left: var(--infogrid-2-content-ml-tablet, var(--infogrid-2-content-ml-desktop));
@@ -388,6 +399,7 @@
         }
 
         .adaire-infogrid-2-item {
+            flex: 1 1 max(calc((100% - (var(--infogrid-2-grid-columns-tablet, var(--infogrid-2-grid-columns-desktop, 3)) - 1) * var(--infogrid-2-grid-gap-tablet, var(--infogrid-2-grid-gap-desktop, 30px))) / var(--infogrid-2-grid-columns-tablet, var(--infogrid-2-grid-columns-desktop, 3))), 120px);
             padding-top: var(--infogrid-2-item-padding-top-tablet, var(--infogrid-2-item-padding-top-desktop));
             padding-right: var(--infogrid-2-item-padding-right-tablet, var(--infogrid-2-item-padding-right-desktop));
             padding-bottom: var(--infogrid-2-item-padding-bottom-tablet, var(--infogrid-2-item-padding-bottom-desktop));
@@ -459,7 +471,6 @@
         }
 
         .adaire-infogrid-2-content {
-            grid-template-columns: repeat(var(--infogrid-2-grid-columns-small-laptop, var(--infogrid-2-grid-columns-desktop)), 1fr);
             gap: var(--infogrid-2-grid-gap-small-laptop, var(--infogrid-2-grid-gap-desktop));
             max-width: var(--infogrid-2-grid-width-small-laptop, var(--infogrid-2-grid-width-desktop));
             margin-left: var(--infogrid-2-content-ml-small-laptop, var(--infogrid-2-content-ml-desktop));
@@ -468,14 +479,15 @@
         }
 
         .adaire-infogrid-2-item {
+            flex: 1 1 max(calc((100% - (var(--infogrid-2-grid-columns-small-laptop, var(--infogrid-2-grid-columns-desktop, 3)) - 1) * var(--infogrid-2-grid-gap-small-laptop, var(--infogrid-2-grid-gap-desktop, 30px))) / var(--infogrid-2-grid-columns-small-laptop, var(--infogrid-2-grid-columns-desktop, 3))), 120px);
             padding-top: var(--infogrid-2-item-padding-top-small-laptop, var(--infogrid-2-item-padding-top-desktop));
             padding-right: var(--infogrid-2-item-padding-right-small-laptop, var(--infogrid-2-item-padding-right-desktop));
             padding-bottom: var(--infogrid-2-item-padding-bottom-small-laptop, var(--infogrid-2-item-padding-bottom-desktop));
             padding-left: var(--infogrid-2-item-padding-left-small-laptop, var(--infogrid-2-item-padding-left-desktop));
-            border-width: var(--infogrid-2-item-bw-small-laptop, var(--infogrid-2-item-bw-desktop));
-            border-style: var(--infogrid-2-item-bs-small-laptop, var(--infogrid-2-item-bs-desktop));
-            border-color: var(--infogrid-2-item-bc-small-laptop, var(--infogrid-2-item-bc-desktop));
+            border: var(--infogrid-2-item-bw-small-laptop, var(--infogrid-2-item-bw-desktop, 1px)) var(--infogrid-2-item-bs-small-laptop, var(--infogrid-2-item-bs-desktop, solid)) var(--infogrid-2-item-bc-small-laptop, var(--infogrid-2-item-bc-desktop, #ffffff33)) !important;
             border-radius: var(--infogrid-2-item-border-radius-small-laptop, var(--infogrid-2-item-border-radius-desktop, 12px));
+            outline: none !important;
+            box-shadow: none !important;
             text-align: var(--infogrid-2-item-text-align-small-laptop, var(--infogrid-2-item-text-align-desktop, left));
         }
 
@@ -506,85 +518,19 @@
     }
 }
 
-@include desktop {
-    .adaire-infogrid-2-container {
-        width: var(--infogrid-2-block-width-desktop, var(--infogrid-2-block-width-desktop));
-        min-height: var(--infogrid-2-min-height-desktop, var(--infogrid-2-min-height-desktop));
-        padding-top: var(--infogrid-2-padding-top-desktop, var(--infogrid-2-padding-top-desktop));
-        padding-right: var(--infogrid-2-padding-right-desktop, var(--infogrid-2-padding-right-desktop));
-        padding-bottom: var(--infogrid-2-padding-bottom-desktop, var(--infogrid-2-padding-bottom-desktop));
-        padding-left: var(--infogrid-2-padding-left-desktop, var(--infogrid-2-padding-left-desktop));
-
-        &.is-constrained .adaire-infogrid-2-wrapper {
-            max-width: var(--infogrid-2-container-max-width-desktop, var(--infogrid-2-container-max-width, 1200px));
-        }
-        margin-top: var(--infogrid-2-margin-top-desktop, var(--infogrid-2-margin-top-desktop));
-        margin-right: var(--infogrid-2-margin-right-desktop, var(--infogrid-2-margin-right-desktop));
-        margin-bottom: var(--infogrid-2-margin-bottom-desktop, var(--infogrid-2-margin-bottom-desktop));
-        margin-left: var(--infogrid-2-margin-left-desktop, var(--infogrid-2-margin-left-desktop));
-
-            .adaire-infogrid-2-wrapper {
-            align-items: var(--infogrid-2-heading-alignment-flex-desktop, var(--infogrid-2-heading-alignment-flex-desktop));
-            text-align: var(--infogrid-2-heading-alignment-desktop, var(--infogrid-2-heading-alignment-desktop));
-            }
-
-            .adaire-infogrid-2-heading {
-            margin-bottom: var(--infogrid-2-heading-margin-bottom-desktop, var(--infogrid-2-heading-margin-bottom-desktop));
-            font-size: var(--infogrid-2-heading-font-size-desktop, var(--infogrid-2-heading-font-size-desktop));
-            font-weight: var(--infogrid-2-heading-font-weight-desktop, var(--infogrid-2-heading-font-weight-desktop));
-            line-height: var(--infogrid-2-heading-line-height-desktop, var(--infogrid-2-heading-line-height-desktop));
-            letter-spacing: var(--infogrid-2-heading-letter-spacing-desktop, var(--infogrid-2-heading-letter-spacing-desktop));
-            text-transform: var(--infogrid-2-heading-text-transform-desktop, var(--infogrid-2-heading-text-transform-desktop));
-            color: var(--infogrid-2-heading-color-desktop, var(--infogrid-2-heading-color-desktop));
-            }
-
-            .adaire-infogrid-2-content {
-            grid-template-columns: repeat(var(--infogrid-2-grid-columns-desktop, var(--infogrid-2-grid-columns-desktop)), 1fr);
-            gap: var(--infogrid-2-grid-gap-desktop, var(--infogrid-2-grid-gap-desktop));
-            max-width: var(--infogrid-2-grid-width-desktop, var(--infogrid-2-grid-width-desktop));
-            margin-left: var(--infogrid-2-content-ml-desktop, var(--infogrid-2-content-ml-desktop));
-            margin-right: var(--infogrid-2-content-mr-desktop, var(--infogrid-2-content-mr-desktop));
-            justify-content: var(--infogrid-2-content-alignment-desktop, var(--infogrid-2-content-alignment-desktop));
-            }
-
-            .adaire-infogrid-2-item {
-            padding-top: var(--infogrid-2-item-padding-top-desktop, var(--infogrid-2-item-padding-top-desktop));
-            padding-right: var(--infogrid-2-item-padding-right-desktop, var(--infogrid-2-item-padding-right-desktop));
-            padding-bottom: var(--infogrid-2-item-padding-bottom-desktop, var(--infogrid-2-item-padding-bottom-desktop));
-            padding-left: var(--infogrid-2-item-padding-left-desktop, var(--infogrid-2-item-padding-left-desktop));
-            border-width: var(--infogrid-2-item-bw-desktop, var(--infogrid-2-item-bw-desktop));
-            border-style: var(--infogrid-2-item-bs-desktop, var(--infogrid-2-item-bs-desktop));
-            border-color: var(--infogrid-2-item-bc-desktop, var(--infogrid-2-item-bc-desktop));
-            border-radius: var(--infogrid-2-item-border-radius-desktop, 12px);
-            text-align: var(--infogrid-2-item-text-align-desktop, left);
-            }
-
-            .adaire-infogrid-2-item-icon {
-            color: var(--infogrid-2-icon-color-desktop, var(--infogrid-2-icon-color-desktop));
-            font-size: var(--infogrid-2-icon-size-desktop, var(--infogrid-2-icon-size-desktop));
-            }
-
-            .adaire-infogrid-2-item-title {
-            margin-bottom: var(--infogrid-2-title-margin-bottom-desktop, var(--infogrid-2-title-margin-bottom-desktop));
-            font-size: var(--infogrid-2-title-font-size-desktop, var(--infogrid-2-title-font-size-desktop));
-            font-weight: var(--infogrid-2-title-font-weight-desktop, var(--infogrid-2-title-font-weight-desktop));
-            line-height: var(--infogrid-2-title-line-height-desktop, var(--infogrid-2-title-line-height-desktop));
-            letter-spacing: var(--infogrid-2-title-letter-spacing-desktop, var(--infogrid-2-title-letter-spacing-desktop));
-            text-transform: var(--infogrid-2-title-text-transform-desktop, var(--infogrid-2-title-text-transform-desktop));
-            color: var(--infogrid-2-title-color-desktop, var(--infogrid-2-title-color-desktop));
-            }
-
-            .adaire-infogrid-2-item-text {
-            margin-bottom: var(--infogrid-2-text-margin-bottom-desktop, var(--infogrid-2-text-margin-bottom-desktop));
-            font-size: var(--infogrid-2-text-font-size-desktop, var(--infogrid-2-text-font-size-desktop));
-            font-weight: var(--infogrid-2-text-font-weight-desktop, var(--infogrid-2-text-font-weight-desktop));
-            line-height: var(--infogrid-2-text-line-height-desktop, var(--infogrid-2-text-line-height-desktop));
-            letter-spacing: var(--infogrid-2-text-letter-spacing-desktop, var(--infogrid-2-text-letter-spacing-desktop));
-            text-transform: var(--infogrid-2-text-text-transform-desktop, var(--infogrid-2-text-text-transform-desktop));
-            color: var(--infogrid-2-text-color-desktop, var(--infogrid-2-text-color-desktop));
-        }
-    }
-}
+// NOTE: there is intentionally no `@include desktop { ... }` block here.
+// The unconditional `.adaire-infogrid-2-container` rules above (outside any
+// media query) already ARE the desktop styles — they read the very same
+// `-desktop` custom properties. A previous version of this file additionally
+// wrapped a copy of those same rules in `@media (min-width: 1301px) and
+// (max-width: 1920px)` with every fallback self-referencing its own variable
+// (e.g. `var(--infogrid-2-title-color-desktop, var(--infogrid-2-title-color-desktop))`),
+// which is a no-op fallback: if the variable was ever unset the property
+// resolved to nothing instead of a real value, so text/colors could vanish
+// or look unstyled specifically at the desktop breakpoint while mobile/tablet
+// (which correctly fall back through to `-desktop`) kept showing the last
+// good value — exactly the "inconsistent across breakpoints" symptom this
+// fixes. Removed as dead weight rather than repaired in place.
 
 @include big-desktop {
     .adaire-infogrid-2-container {
@@ -619,7 +565,6 @@
         }
 
         .adaire-infogrid-2-content {
-            grid-template-columns: repeat(var(--infogrid-2-grid-columns-big-desktop, var(--infogrid-2-grid-columns-desktop)), 1fr);
             gap: var(--infogrid-2-grid-gap-big-desktop, var(--infogrid-2-grid-gap-desktop));
             max-width: var(--infogrid-2-grid-width-big-desktop, var(--infogrid-2-grid-width-desktop));
             margin-left: var(--infogrid-2-content-ml-big-desktop, var(--infogrid-2-content-ml-desktop));
@@ -628,14 +573,15 @@
         }
 
         .adaire-infogrid-2-item {
+            flex: 1 1 max(calc((100% - (var(--infogrid-2-grid-columns-big-desktop, var(--infogrid-2-grid-columns-desktop, 3)) - 1) * var(--infogrid-2-grid-gap-big-desktop, var(--infogrid-2-grid-gap-desktop, 30px))) / var(--infogrid-2-grid-columns-big-desktop, var(--infogrid-2-grid-columns-desktop, 3))), 120px);
             padding-top: var(--infogrid-2-item-padding-top-big-desktop, var(--infogrid-2-item-padding-top-desktop));
             padding-right: var(--infogrid-2-item-padding-right-big-desktop, var(--infogrid-2-item-padding-right-desktop));
             padding-bottom: var(--infogrid-2-item-padding-bottom-big-desktop, var(--infogrid-2-item-padding-bottom-desktop));
             padding-left: var(--infogrid-2-item-padding-left-big-desktop, var(--infogrid-2-item-padding-left-desktop));
-            border-width: var(--infogrid-2-item-bw-big-desktop, var(--infogrid-2-item-bw-desktop));
-            border-style: var(--infogrid-2-item-bs-big-desktop, var(--infogrid-2-item-bs-desktop));
-            border-color: var(--infogrid-2-item-bc-big-desktop, var(--infogrid-2-item-bc-desktop));
+            border: var(--infogrid-2-item-bw-big-desktop, var(--infogrid-2-item-bw-desktop, 1px)) var(--infogrid-2-item-bs-big-desktop, var(--infogrid-2-item-bs-desktop, solid)) var(--infogrid-2-item-bc-big-desktop, var(--infogrid-2-item-bc-desktop, #ffffff33)) !important;
             border-radius: var(--infogrid-2-item-border-radius-big-desktop, var(--infogrid-2-item-border-radius-desktop, 12px));
+            outline: none !important;
+            box-shadow: none !important;
             text-align: var(--infogrid-2-item-text-align-big-desktop, var(--infogrid-2-item-text-align-desktop, left));
         }
 

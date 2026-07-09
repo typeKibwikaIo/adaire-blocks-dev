@@ -1,11 +1,10 @@
 ﻿import {
 	useBlockProps,
 	MediaUpload,
-	MediaUploadCheck,
+	MediaUploadCheck, ColorPalette,
 } from "@wordpress/block-editor";
 import {
 	PanelBody,
-	ColorPicker,
 	TextControl,
 	ToggleControl,
 	Button,
@@ -13,6 +12,7 @@ import {
 	ButtonGroup,
 	SelectControl,
 	RangeControl,
+	__experimentalUnitControl as UnitControl,
 } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import { useEffect, useRef, useCallback, useState } from "@wordpress/element";
@@ -23,8 +23,37 @@ import { useBlockLimits } from '../components/useBlockLimits';
 import QuickZone from '../components/QuickZone';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import InspectorTabs from '../components/InspectorTabs';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 const FREE_TIER_ITEM_LIMIT = 3;
+
+const TEXT_TRANSFORM_OPTIONS = [
+	{ label: __('None', 'testimonial-block'), value: 'none' },
+	{ label: __('Uppercase', 'testimonial-block'), value: 'uppercase' },
+	{ label: __('Lowercase', 'testimonial-block'), value: 'lowercase' },
+	{ label: __('Capitalize', 'testimonial-block'), value: 'capitalize' },
+];
+
+const FONT_FAMILY_OPTIONS = [
+	{ label: __('Default (inherit theme)', 'testimonial-block'), value: '' },
+	{ label: __('Arial', 'testimonial-block'), value: 'Arial, Helvetica, sans-serif' },
+	{ label: __('Helvetica', 'testimonial-block'), value: 'Helvetica, Arial, sans-serif' },
+	{ label: __('Georgia', 'testimonial-block'), value: 'Georgia, serif' },
+	{ label: __('Times New Roman', 'testimonial-block'), value: "'Times New Roman', Times, serif" },
+	{ label: __('Verdana', 'testimonial-block'), value: 'Verdana, Geneva, sans-serif' },
+	{ label: __('Trebuchet MS', 'testimonial-block'), value: "'Trebuchet MS', sans-serif" },
+	{ label: __('Courier New', 'testimonial-block'), value: "'Courier New', Courier, monospace" },
+	{ label: __('System UI', 'testimonial-block'), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
+const FONT_WEIGHT_OPTIONS = [
+	{ label: '300', value: '300' },
+	{ label: '400', value: '400' },
+	{ label: '500', value: '500' },
+	{ label: '600', value: '600' },
+	{ label: '700', value: '700' },
+	{ label: '800', value: '800' },
+];
 
 export default function Edit({ attributes, setAttributes }) {
 	const [deviceType, setDeviceType] = useState('desktop');
@@ -39,6 +68,9 @@ export default function Edit({ attributes, setAttributes }) {
 	
 	const {
 		textColor,
+		quoteColor,
+		authorNameColor,
+		authorTitleColor,
 		arrowColor,
 		dotColor,
 		fontSize,
@@ -67,11 +99,33 @@ export default function Edit({ attributes, setAttributes }) {
 		responsivePaddingBottom,
 		headingFontSize,
 		contentFontSize,
+		quoteFontWeight,
+		quoteLineHeight,
+		quoteLetterSpacing,
+		quoteTextTransform,
+		authorNameFontWeight,
+		authorNameLineHeight,
+		authorNameLetterSpacing,
+		authorNameTextTransform,
+		authorTitleFontSize,
+		authorTitleFontWeight,
+		authorTitleLineHeight,
+		authorTitleLetterSpacing,
+		authorTitleTextTransform,
+		companyNameFontSize,
+		companyNameFontWeight,
+		companyNameLineHeight,
+		companyNameLetterSpacing,
+		companyNameTextTransform,
+		fontFamily,
 	} = attributes;
 
 	const splideRef = useRef(null);
 	const splideInstanceRef = useRef(null);
 	const updateTimeoutRef = useRef(null);
+	// Cleanup for the editor-canvas resize listener set up below — see the
+	// comment by `editorWindow` for why this can't just be `window.resize`.
+	const editorResizeCleanupRef = useRef(null);
 
 	const blockProps = useBlockProps({
 		className: "ad-carousel-text-block",
@@ -79,6 +133,12 @@ export default function Edit({ attributes, setAttributes }) {
 			color: textColor || "#000000",
 			fontSize: `${fontSize || 16}px`,
 			"--text-color": textColor || "#000000",
+			// Independent color overrides for quote / author name / author title —
+			// each falls back to the shared textColor (old single-control
+			// behavior) so content saved before this split keeps its look.
+			"--quote-color": quoteColor || textColor || "#333333",
+			"--author-name-color": authorNameColor || textColor || "#333333",
+			"--author-title-color": authorTitleColor || textColor || "#666666",
 			"--font-size": `${fontSize || 16}px`,
 			"--card-gap": `${gap || 30}px`,
 			"--logo-size": `${logoSize || 60}px`,
@@ -118,6 +178,45 @@ export default function Edit({ attributes, setAttributes }) {
 			"--content-font-size-tablet": `${contentFontSize?.tablet ?? 16}px`,
 			"--content-font-size-mobile": `${contentFontSize?.mobile ?? 16}px`,
 			"--content-font-size-watch": `${contentFontSize?.smartwatch ?? 16}px`,
+			// Quote (content) typography — font-weight/line-height are
+			// responsive (4 breakpoints) to match contentFontSize's own
+			// shape; letter-spacing/text-transform stay flat per convention.
+			"--quote-font-weight": `${quoteFontWeight?.desktop ?? '400'}`,
+			"--quote-font-weight-tablet": `${quoteFontWeight?.tablet ?? '400'}`,
+			"--quote-font-weight-mobile": `${quoteFontWeight?.mobile ?? '400'}`,
+			"--quote-font-weight-watch": `${quoteFontWeight?.smartwatch ?? '400'}`,
+			"--quote-line-height": `${quoteLineHeight?.desktop ?? '1.6'}`,
+			"--quote-line-height-tablet": `${quoteLineHeight?.tablet ?? '1.6'}`,
+			"--quote-line-height-mobile": `${quoteLineHeight?.mobile ?? '1.6'}`,
+			"--quote-line-height-watch": `${quoteLineHeight?.smartwatch ?? '1.6'}`,
+			"--quote-letter-spacing": quoteLetterSpacing || 'normal',
+			"--quote-text-transform": quoteTextTransform || 'none',
+			// Author name (heading) typography — font-weight/line-height are
+			// responsive (4 breakpoints) to match headingFontSize's own shape.
+			"--author-name-font-weight": `${authorNameFontWeight?.desktop ?? '700'}`,
+			"--author-name-font-weight-tablet": `${authorNameFontWeight?.tablet ?? '700'}`,
+			"--author-name-font-weight-mobile": `${authorNameFontWeight?.mobile ?? '700'}`,
+			"--author-name-font-weight-watch": `${authorNameFontWeight?.smartwatch ?? '700'}`,
+			"--author-name-line-height": `${authorNameLineHeight?.desktop ?? '1.5'}`,
+			"--author-name-line-height-tablet": `${authorNameLineHeight?.tablet ?? '1.5'}`,
+			"--author-name-line-height-mobile": `${authorNameLineHeight?.mobile ?? '1.5'}`,
+			"--author-name-line-height-watch": `${authorNameLineHeight?.smartwatch ?? '1.5'}`,
+			"--author-name-letter-spacing": authorNameLetterSpacing || 'normal',
+			"--author-name-text-transform": authorNameTextTransform || 'none',
+			// Author title — no prior attribute/shape existed for this role,
+			// so it stays flat (matching the block's other singular controls).
+			"--author-title-font-size": authorTitleFontSize || '14px',
+			"--author-title-font-weight": authorTitleFontWeight || '400',
+			"--author-title-line-height": authorTitleLineHeight || '1.5',
+			"--author-title-letter-spacing": authorTitleLetterSpacing || 'normal',
+			"--author-title-text-transform": authorTitleTextTransform || 'none',
+			// Company name (logo placeholder fallback) — flat, fallback-only role.
+			"--company-name-font-size": companyNameFontSize || '18px',
+			"--company-name-font-weight": companyNameFontWeight || '700',
+			"--company-name-line-height": companyNameLineHeight || '1.5',
+			"--company-name-letter-spacing": companyNameLetterSpacing || '1px',
+			"--company-name-text-transform": companyNameTextTransform || 'none',
+			"--testimonial-font-family": fontFamily || 'inherit',
 			...(blockBackgroundColor && { background: blockBackgroundColor })
 		},
 		'data-slides-per-view': slidesPerView || 3,
@@ -167,11 +266,38 @@ export default function Edit({ attributes, setAttributes }) {
 					// Use requestAnimationFrame for smoother updates
 					requestAnimationFrame(() => {
 						try {
+							if (!splideRef.current) {
+								return;
+							}
+
+							// The block editor canvas is rendered inside its own
+							// <iframe> (WP 5.9+), but this script itself executes in
+							// the top-level wp-admin page's JS context — so the bare
+							// global `window` here is the ADMIN page's window, not
+							// the iframe's. `window.innerWidth`/`matchMedia` always
+							// reflected the admin window's width, completely
+							// unrelated to how wide the canvas/device-preview
+							// actually is, so the editor's slide count never matched
+							// what the card width CSS (which IS scoped correctly,
+							// since plain CSS media queries run against whatever
+							// document they're attached to) was doing — 3 desktop
+							// slides got squeezed into a tablet/mobile-width canvas,
+							// shrinking each card to a sliver.
+							//
+							// `ownerDocument.defaultView` resolves to the iframe's
+							// own window for any node living inside it (same pattern
+							// Splide's own source uses internally for instanceof
+							// checks), so reading width from there instead fixes
+							// both the initial perPage and, via the resize listener
+							// below, keeps it correct if the canvas is resized (or
+							// the device-preview toggle is changed) after mount.
+							const editorWindow = splideRef.current.ownerDocument?.defaultView || window;
+
 							// Determine current screen size and appropriate slides per view for editor
 							const getCurrentSlidesPerView = () => {
-								if (window.innerWidth >= 1024) {
+								if (editorWindow.innerWidth >= 1024) {
 									return slidesPerViewDesktop || 3;
-								} else if (window.innerWidth >= 768) {
+								} else if (editorWindow.innerWidth >= 768) {
 									return slidesPerViewTablet || 2;
 								} else {
 									return slidesPerViewMobile || 1;
@@ -180,9 +306,9 @@ export default function Edit({ attributes, setAttributes }) {
 
 							// Determine current gap based on screen size
 							const getCurrentGap = () => {
-								if (window.innerWidth >= 1024) {
+								if (editorWindow.innerWidth >= 1024) {
 									return cardGap?.desktop?.value ?? 30;
-								} else if (window.innerWidth >= 768) {
+								} else if (editorWindow.innerWidth >= 768) {
 									return cardGap?.tablet?.value ?? 20;
 								} else {
 									return cardGap?.mobile?.value ?? 15;
@@ -241,22 +367,42 @@ export default function Edit({ attributes, setAttributes }) {
 								resetProgress: false,
 								speed: 600,
 								easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-								breakpoints: {
-									1023: {
-										perPage: slidesPerViewTablet || 2,
-										gap: cardGap?.tablet?.value ?? 20,
-									},
-									767: {
-										perPage: slidesPerViewMobile || 1,
-										gap: cardGap?.mobile?.value ?? 15,
-									}
-								}
+								// No `breakpoints` option here — Splide's internal
+								// breakpoint engine also calls a bare `matchMedia`,
+								// which resolves against the same wrong (admin-page)
+								// window as the `window.innerWidth` checks above, so
+								// it could never have self-corrected. perPage/gap are
+								// instead kept in sync manually via the resize
+								// listener below, scoped to the iframe's own window.
 							});
-							
+
 							// Mount the Splide instance
 							splideInstance.mount();
 							splideInstanceRef.current = splideInstance;
-							
+
+							// Keep perPage/gap correct if the canvas is resized after
+							// mount — e.g. the Desktop/Tablet/Mobile preview toggle,
+							// opening/closing the Inspector sidebar, or an actual
+							// window resize. Listening on `editorWindow` (the
+							// iframe's own window) rather than the admin page's
+							// `window` is what makes this fire for those cases.
+							let resizeTimeout;
+							const handleEditorResize = () => {
+								clearTimeout(resizeTimeout);
+								resizeTimeout = setTimeout(() => {
+									if (splideInstanceRef.current) {
+										splideInstanceRef.current.options.perPage = getCurrentSlidesPerView();
+										splideInstanceRef.current.options.gap = getCurrentGap();
+										splideInstanceRef.current.refresh();
+									}
+								}, 250);
+							};
+							editorWindow.addEventListener('resize', handleEditorResize);
+							editorResizeCleanupRef.current = () => {
+								clearTimeout(resizeTimeout);
+								editorWindow.removeEventListener('resize', handleEditorResize);
+							};
+
 						} catch (error) {
 							console.error('Error creating Splide in editor:', error);
 						}
@@ -269,6 +415,10 @@ export default function Edit({ attributes, setAttributes }) {
 		return () => {
 			if (updateTimeoutRef.current) {
 				clearTimeout(updateTimeoutRef.current);
+			}
+			if (editorResizeCleanupRef.current) {
+				editorResizeCleanupRef.current();
+				editorResizeCleanupRef.current = null;
 			}
 			if (splideInstanceRef.current) {
 				splideInstanceRef.current.destroy();
@@ -514,30 +664,23 @@ export default function Edit({ attributes, setAttributes }) {
 								: "Navigation arrows will be hidden"
 						}
 					/>
-					{/* <ColorPicker
-						color={textColor}
-						onChangeComplete={(color) =>
-							setAttributes({ textColor: color.hex })
-						}
-						disableAlpha
+					{/* <BoundColorPalette
+						value={textColor}
+						onChange={(v) => setAttributes({ textColor: v || "" })}
 					/> */}
 
 					<BaseControl label="Arrow Color">
-						<ColorPicker
-							color={arrowColor}
+						<BoundColorPalette
+							value={arrowColor}
 							label="Arrow Color"
-							onChangeComplete={(color) => {
-								setAttributes({ arrowColor: color.hex });
-							}}
+							onChange={(v) => setAttributes({ arrowColor: v || '' })}
 						/>
 					</BaseControl>
 					<BaseControl label="Dot Color">
-						<ColorPicker
-							color={dotColor}
+						<BoundColorPalette
+							value={dotColor}
 							label="Dot Color"
-							onChangeComplete={(color) => {
-								setAttributes({ dotColor: color.hex });
-							}}
+							onChange={(v) => setAttributes({ dotColor: v || '' })}
 						/>
 					</BaseControl>
 
@@ -1020,32 +1163,38 @@ export default function Edit({ attributes, setAttributes }) {
 				</PanelBody>
 
 				<PanelBody title="Color Settings" initialOpen={false}>
-					<BaseControl label="Text Color" help="Color for quote text, author name, and title">
-						<ColorPicker
-							color={textColor}
-							onChangeComplete={(color) =>
-								setAttributes({ textColor: color.hex })
-							}
-							disableAlpha
+					<BaseControl label="Quote (Description) Color" help="Color for the review/quote text only">
+						<BoundColorPalette
+							value={quoteColor || textColor}
+							onChange={(v) => setAttributes({ quoteColor: v || "" })}
+						/>
+					</BaseControl>
+
+					<BaseControl label="Author Name Color" help="Color for the author's name only">
+						<BoundColorPalette
+							value={authorNameColor || textColor}
+							onChange={(v) => setAttributes({ authorNameColor: v || "" })}
+						/>
+					</BaseControl>
+
+					<BaseControl label="Author Title Color" help="Color for the author's title/position only">
+						<BoundColorPalette
+							value={authorTitleColor || textColor}
+							onChange={(v) => setAttributes({ authorTitleColor: v || "" })}
 						/>
 					</BaseControl>
 
 					<BaseControl label="Card Background Color" help="Background color for testimonial cards">
-						<ColorPicker
-							color={cardBackgroundColor}
-							onChangeComplete={(color) =>
-								setAttributes({ cardBackgroundColor: color.hex })
-							}
-							disableAlpha
+						<BoundColorPalette
+							value={cardBackgroundColor}
+							onChange={(v) => setAttributes({ cardBackgroundColor: v || "" })}
 						/>
 					</BaseControl>
 
 					<BaseControl label="Block Background Color" help="Background color for the entire testimonial block section">
-						<ColorPicker
-							color={blockBackgroundColor || "#ffffff"}
-							onChangeComplete={(color) =>
-								setAttributes({ blockBackgroundColor: color.hex })
-							}
+						<BoundColorPalette
+							value={blockBackgroundColor || "#ffffff"}
+							onChange={(v) => setAttributes({ blockBackgroundColor: v || "" })}
 							enableAlpha
 						/>
 					</BaseControl>
@@ -1082,6 +1231,129 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={(v) => setAttributes({ contentFontSize: updateDeviceAttribute(contentFontSize, deviceType, v) })}
 						min={10}
 						max={36}
+					/>
+
+					<hr style={{ margin: '20px 0' }} />
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Quote', 'testimonial-block')}</p>
+					<SelectControl
+						label={__('Font Weight', 'testimonial-block')}
+						value={getDeviceValue(quoteFontWeight, deviceType, '400')}
+						options={FONT_WEIGHT_OPTIONS}
+						onChange={(v) => setAttributes({ quoteFontWeight: updateDeviceAttribute(quoteFontWeight, deviceType, v) })}
+					/>
+					<UnitControl
+						label={__('Line Height', 'testimonial-block')}
+						value={getDeviceValue(quoteLineHeight, deviceType, '1.6')}
+						onChange={(v) => setAttributes({ quoteLineHeight: updateDeviceAttribute(quoteLineHeight, deviceType, v) })}
+					/>
+					<UnitControl
+						label={__('Letter Spacing', 'testimonial-block')}
+						value={quoteLetterSpacing}
+						onChange={(v) => setAttributes({ quoteLetterSpacing: v })}
+					/>
+					<SelectControl
+						label={__('Text Transform', 'testimonial-block')}
+						value={quoteTextTransform}
+						options={TEXT_TRANSFORM_OPTIONS}
+						onChange={(v) => setAttributes({ quoteTextTransform: v })}
+					/>
+
+					<hr style={{ margin: '20px 0' }} />
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Author Name', 'testimonial-block')}</p>
+					<SelectControl
+						label={__('Font Weight', 'testimonial-block')}
+						value={getDeviceValue(authorNameFontWeight, deviceType, '700')}
+						options={FONT_WEIGHT_OPTIONS}
+						onChange={(v) => setAttributes({ authorNameFontWeight: updateDeviceAttribute(authorNameFontWeight, deviceType, v) })}
+					/>
+					<UnitControl
+						label={__('Line Height', 'testimonial-block')}
+						value={getDeviceValue(authorNameLineHeight, deviceType, '1.5')}
+						onChange={(v) => setAttributes({ authorNameLineHeight: updateDeviceAttribute(authorNameLineHeight, deviceType, v) })}
+					/>
+					<UnitControl
+						label={__('Letter Spacing', 'testimonial-block')}
+						value={authorNameLetterSpacing}
+						onChange={(v) => setAttributes({ authorNameLetterSpacing: v })}
+					/>
+					<SelectControl
+						label={__('Text Transform', 'testimonial-block')}
+						value={authorNameTextTransform}
+						options={TEXT_TRANSFORM_OPTIONS}
+						onChange={(v) => setAttributes({ authorNameTextTransform: v })}
+					/>
+
+					<hr style={{ margin: '20px 0' }} />
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Author Title', 'testimonial-block')}</p>
+					<UnitControl
+						label={__('Font Size', 'testimonial-block')}
+						value={authorTitleFontSize}
+						onChange={(v) => setAttributes({ authorTitleFontSize: v })}
+					/>
+					<SelectControl
+						label={__('Font Weight', 'testimonial-block')}
+						value={authorTitleFontWeight}
+						options={FONT_WEIGHT_OPTIONS}
+						onChange={(v) => setAttributes({ authorTitleFontWeight: v })}
+					/>
+					<UnitControl
+						label={__('Line Height', 'testimonial-block')}
+						value={authorTitleLineHeight}
+						onChange={(v) => setAttributes({ authorTitleLineHeight: v })}
+					/>
+					<UnitControl
+						label={__('Letter Spacing', 'testimonial-block')}
+						value={authorTitleLetterSpacing}
+						onChange={(v) => setAttributes({ authorTitleLetterSpacing: v })}
+					/>
+					<SelectControl
+						label={__('Text Transform', 'testimonial-block')}
+						value={authorTitleTextTransform}
+						options={TEXT_TRANSFORM_OPTIONS}
+						onChange={(v) => setAttributes({ authorTitleTextTransform: v })}
+					/>
+
+					<hr style={{ margin: '20px 0' }} />
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Company Name', 'testimonial-block')}</p>
+					<p style={{ marginTop: '-8px', marginBottom: '8px', fontSize: '12px', color: '#666' }}>
+						{__('Used as a text fallback when no company logo is uploaded.', 'testimonial-block')}
+					</p>
+					<UnitControl
+						label={__('Font Size', 'testimonial-block')}
+						value={companyNameFontSize}
+						onChange={(v) => setAttributes({ companyNameFontSize: v })}
+					/>
+					<SelectControl
+						label={__('Font Weight', 'testimonial-block')}
+						value={companyNameFontWeight}
+						options={FONT_WEIGHT_OPTIONS}
+						onChange={(v) => setAttributes({ companyNameFontWeight: v })}
+					/>
+					<UnitControl
+						label={__('Line Height', 'testimonial-block')}
+						value={companyNameLineHeight}
+						onChange={(v) => setAttributes({ companyNameLineHeight: v })}
+					/>
+					<UnitControl
+						label={__('Letter Spacing', 'testimonial-block')}
+						value={companyNameLetterSpacing}
+						onChange={(v) => setAttributes({ companyNameLetterSpacing: v })}
+					/>
+					<SelectControl
+						label={__('Text Transform', 'testimonial-block')}
+						value={companyNameTextTransform}
+						options={TEXT_TRANSFORM_OPTIONS}
+						onChange={(v) => setAttributes({ companyNameTextTransform: v })}
+					/>
+
+					<hr style={{ margin: '20px 0' }} />
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Block', 'testimonial-block')}</p>
+					<SelectControl
+						label={__('Font Family', 'testimonial-block')}
+						value={fontFamily || ''}
+						options={FONT_FAMILY_OPTIONS}
+						onChange={(v) => setAttributes({ fontFamily: v })}
+						help={__('Applies to all text in this block.', 'testimonial-block')}
 					/>
 				</PanelBody>
 

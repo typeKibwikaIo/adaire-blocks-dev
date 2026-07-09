@@ -1,0 +1,1099 @@
+// Self-contained Bootstrap Icons font import.
+//
+// Why: the plugin also enqueues Bootstrap Icons via PHP (wp_enqueue_scripts /
+// enqueue_block_editor_assets in adaire-blocks.php), but relying on that alone
+// has proven unreliable for icon-using blocks — the block editor canvas
+// renders inside an <iframe> (a separate document that only picks up
+// stylesheets present in the parent admin document's <head> at the moment
+// the iframe initializes), and on the frontend the PHP enqueues can be
+// skipped, deferred, or stripped by caching/optimization plugins. A plain
+// CSS `@import` here is resolved by the browser inside *whatever* document
+// this compiled stylesheet ends up in, so the rating-badge and
+// security-feature icons load correctly in the editor, in the Inspector,
+// and on the published page alike — independent of PHP enqueue timing.
+// Same fix already applied to infogrid-2-block/style.scss for the same bug.
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+.adaire-saas-hero {
+  position: relative;
+  padding: var(--ad-padding, 80px) 20px;
+  background-color: var(--ad-bg-color, #ffffff);
+  color: var(--ad-color);
+  font-family: var(--ad-font-family, inherit);
+  overflow: hidden;
+
+  // Background type — three discrete layers gated by class, instead of one
+  // shorthand var with no real consumer for the image case (the original bug).
+  &.bg-type-gradient {
+    background-image: var(--ad-bg-gradient);
+  }
+
+  &.bg-type-image {
+    background-image: var(--ad-bg-image);
+    background-size: var(--ad-bg-image-size, cover);
+    background-position: var(--ad-bg-image-position, center);
+    background-repeat: var(--ad-bg-image-repeat, no-repeat);
+  }
+
+  &.is-block-selected {
+    outline: 2px solid var(--ad-accent, #6366f1);
+    outline-offset: -2px;
+  }
+
+  // ── Hero Effects & Decorations ──────────────────────────────────────────
+  // Purely decorative (aria-hidden), absolutely positioned behind content,
+  // each independently optional and cheap (no JS, CSS-only).
+  &__fx {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+
+    &--dots {
+      background-image: radial-gradient(currentColor 1.5px, transparent 1.5px);
+      background-size: 22px 22px;
+      opacity: 0.12;
+    }
+
+    &--gradient-overlay {
+      background-image: var(--ad-effect-gradient-overlay);
+      opacity: var(--ad-effect-gradient-overlay-opacity, 0.3);
+    }
+
+    &--blur {
+      &::before {
+        content: '';
+        position: absolute;
+        top: -10%;
+        right: -10%;
+        width: 50%;
+        height: 50%;
+        border-radius: 50%;
+        background: var(--ad-accent, #6366f1);
+        opacity: 0.25;
+        filter: blur(60px);
+      }
+    }
+
+    &--glow {
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 60%;
+        height: 60%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, var(--ad-effect-glow-color, #6366f1) 0%, transparent 70%);
+        opacity: 0.35;
+      }
+    }
+
+    &--shapes .shape {
+      position: absolute;
+      border: 2px solid currentColor;
+      opacity: 0.15;
+
+      &-1 {
+        top: 8%;
+        left: 6%;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+      }
+
+      &-2 {
+        bottom: 12%;
+        right: 8%;
+        width: 90px;
+        height: 90px;
+        border-radius: 16px;
+        transform: rotate(20deg);
+      }
+
+      &-3 {
+        top: 40%;
+        right: 18%;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        transform: rotate(-15deg);
+      }
+    }
+
+    &--floating .float {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--ad-accent, #6366f1);
+      opacity: 0.4;
+      animation: adaire-hero-float 6s ease-in-out infinite;
+
+      &-1 {
+        top: 18%;
+        left: 12%;
+        animation-delay: 0s;
+      }
+
+      &-2 {
+        top: 65%;
+        left: 22%;
+        width: 10px;
+        height: 10px;
+        animation-delay: 1.2s;
+      }
+
+      &-3 {
+        top: 30%;
+        right: 14%;
+        width: 18px;
+        height: 18px;
+        animation-delay: 2.4s;
+      }
+    }
+
+    &--accent {
+      background: linear-gradient(90deg, transparent, var(--ad-accent, #6366f1), transparent);
+      height: 2px;
+      top: auto;
+      bottom: 0;
+      opacity: 0.5;
+      background-size: 200% 100%;
+      animation: adaire-hero-accent-sweep 6s linear infinite;
+    }
+  }
+
+  &__container,
+  &__pill,
+  &__ratings,
+  &__content,
+  &__trust-bar,
+  &__security,
+  &__faq {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background: var(--ad-pill-bg, #dbeafe);
+    color: var(--ad-pill-color, #1e40af);
+    border-radius: 20px;
+    font-size: var(--ad-pill-font-size, 14px);
+    font-weight: var(--ad-pill-font-weight, 600);
+    line-height: var(--ad-pill-line-height, normal);
+    letter-spacing: var(--ad-pill-letter-spacing, normal);
+    text-transform: var(--ad-pill-text-transform, none);
+    margin-bottom: 24px;
+  }
+
+  // ── Ratings & app-store badges strip ─────────────────────────────────────
+  &__ratings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: var(--ad-rating-align, center);
+    margin-bottom: 24px;
+  }
+
+  &__rating-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px 10px 10px;
+    border-radius: 14px;
+    background: rgba(99, 102, 241, 0.05);
+    background: color-mix(in srgb, var(--ad-accent, #6366f1) 5%, transparent);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    border: 1px solid color-mix(in srgb, var(--ad-accent, #6366f1) 10%, transparent);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(17, 24, 39, 0.08);
+    }
+  }
+
+  // Icon chip: accent-tinted rounded square, real Bootstrap Icons glyph
+  // (color inherits from currentColor via the --ad-accent var) instead of
+  // the old plain emoji text. An uploaded badge image renders in the same
+  // slot at the same footprint, so layout never shifts between the two modes.
+  &__rating-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 17px;
+    line-height: 1;
+    background: rgba(99, 102, 241, 0.12);
+    background: color-mix(in srgb, var(--ad-accent, #6366f1) 12%, transparent);
+    color: var(--ad-accent, #6366f1);
+    overflow: hidden;
+  }
+
+  &__rating-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: inherit;
+  }
+
+  &__rating-copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+
+    strong {
+      font-size: 14px;
+    }
+
+    small {
+      opacity: 0.65;
+      font-size: 12px;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+  }
+
+  &__text {
+    max-width: 700px;
+  }
+
+  &__eyebrow {
+    font-size: var(--ad-eyebrow-font-size, 14px);
+    font-weight: var(--ad-eyebrow-font-weight, 600);
+    line-height: var(--ad-eyebrow-line-height, normal);
+    text-transform: var(--ad-eyebrow-text-transform, uppercase);
+    letter-spacing: var(--ad-eyebrow-letter-spacing, 1px);
+    color: var(--ad-accent);
+    margin-bottom: 16px;
+  }
+
+  &__heading {
+    font-size: var(--ad-heading-font-size, clamp(36px, 5vw, 64px));
+    font-weight: var(--ad-heading-font-weight, 800);
+    line-height: var(--ad-heading-line-height, 1.2);
+    letter-spacing: var(--ad-heading-letter-spacing, normal);
+    text-transform: var(--ad-heading-text-transform, none);
+    margin-bottom: 16px;
+
+    &.has-gradient {
+      background: linear-gradient(135deg, var(--ad-gradient-start, #6366f1), var(--ad-gradient-end, #8b5cf6));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+
+  &__text {
+    font-size: var(--ad-font-size, 18px);
+    font-weight: var(--ad-body-text-font-weight, 400);
+    line-height: var(--ad-body-text-line-height, 1.6);
+    letter-spacing: var(--ad-body-text-letter-spacing, normal);
+    text-transform: var(--ad-body-text-text-transform, none);
+    opacity: 0.9;
+    margin-bottom: 32px;
+  }
+
+  &__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ad-cta-gap, 16px);
+    justify-content: var(--ad-cta-align, center);
+    margin-top: 32px;
+  }
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ad-cta-padding-v, 14px) var(--ad-cta-padding-h, 32px);
+    font-size: var(--ad-button-font-size, 16px);
+    font-weight: var(--ad-button-font-weight, 600);
+    line-height: var(--ad-button-line-height, normal);
+    letter-spacing: var(--ad-button-letter-spacing, normal);
+    text-transform: var(--ad-button-text-transform, none);
+    border-radius: var(--ad-cta-radius, var(--ad-radius, 12px));
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &--primary {
+      background: var(--ad-button-primary-bg, var(--ad-accent));
+      color: var(--ad-button-primary-color, #ffffff);
+      border: 2px solid var(--ad-button-primary-bg, var(--ad-accent));
+
+      &:hover {
+        background: var(--ad-button-hover-bg, #111827);
+        color: var(--ad-button-hover-color, #ffffff);
+        border-color: var(--ad-button-hover-border, #111827);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    &--secondary {
+      background: var(--ad-button-secondary-bg, #ffffff);
+      color: var(--ad-button-secondary-color, #111827);
+      border: 2px solid var(--ad-button-secondary-bg, #ffffff);
+
+      &:hover {
+        background: var(--ad-button-hover-bg, #111827);
+        color: var(--ad-button-hover-color, #ffffff);
+        border-color: var(--ad-button-hover-border, #111827);
+      }
+    }
+  }
+
+  &__email-form {
+    display: flex;
+    gap: 12px;
+    max-width: 500px;
+    width: 100%;
+
+    input {
+      flex: 1;
+      padding: var(--ad-cta-padding-v, 14px) 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: var(--ad-cta-radius, var(--ad-radius, 12px));
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: var(--ad-accent);
+      }
+    }
+
+    button {
+      padding: var(--ad-cta-padding-v, 14px) var(--ad-cta-padding-h, 32px);
+      background: var(--ad-button-primary-bg, var(--ad-accent));
+      color: var(--ad-button-primary-color, #ffffff);
+      border: none;
+      border-radius: var(--ad-cta-radius, var(--ad-radius, 12px));
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: var(--ad-button-hover-bg, #111827);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  &__micro-copy {
+    font-size: var(--ad-micro-copy-font-size, 14px);
+    font-weight: var(--ad-micro-copy-font-weight, 400);
+    line-height: var(--ad-micro-copy-line-height, normal);
+    letter-spacing: var(--ad-micro-copy-letter-spacing, normal);
+    text-transform: var(--ad-micro-copy-text-transform, none);
+    opacity: 0.7;
+    margin-top: 12px;
+  }
+
+  // ── Media asset ───────────────────────────────────────────────────────
+  &__media {
+    margin-top: var(--ad-media-spacing, 48px);
+    width: 100%;
+    position: relative;
+    z-index: 1;
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--ad-media-radius, var(--ad-radius, 12px));
+      box-shadow: var(--ad-media-shadow, 0 20px 60px rgba(0, 0, 0, 0.15));
+    }
+
+    &--right {
+      order: 2;
+    }
+
+    &--left {
+      order: 0;
+    }
+  }
+
+  // ── Trusted By / Logo Names ─────────────────────────────────────────────
+  &__trust-bar {
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  &__trust-title {
+    font-size: var(--ad-trust-title-font-size, 14px);
+    font-weight: var(--ad-trust-title-font-weight, 600);
+    line-height: var(--ad-trust-title-line-height, normal);
+    color: var(--ad-accent);
+    margin-bottom: 24px;
+    text-transform: var(--ad-trust-title-text-transform, uppercase);
+    letter-spacing: var(--ad-trust-title-letter-spacing, 1px);
+  }
+
+  &__trust-logos-wrap {
+    overflow: hidden;
+  }
+
+  &__trust-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--ad-trust-item-gap, 32px);
+    opacity: 0.7;
+  }
+
+  &__trust-bar.trust-layout-one-per-line &__trust-logos {
+    flex-direction: column;
+  }
+
+  &__trust-logo,
+  &__trust-logo-text {
+    font-size: var(--ad-trust-logo-font-size, 16px);
+    font-weight: var(--ad-trust-logo-font-weight, 600);
+    line-height: var(--ad-trust-logo-line-height, normal);
+    letter-spacing: var(--ad-trust-logo-letter-spacing, normal);
+    text-transform: var(--ad-trust-logo-text-transform, none);
+    color: var(--ad-color);
+  }
+
+  &__trust-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ad-trust-item-width, auto);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &__trust-logo-img {
+    max-height: var(--ad-trust-logo-max-height, 32px);
+    width: auto;
+    object-fit: contain;
+  }
+
+  // Pure-CSS marquee: the logo list is duplicated in the DOM (see edit.js /
+  // save.js), and both copies scroll together via one transform animation —
+  // this gives a seamless infinite loop with zero JavaScript.
+  &__trust-bar.is-carousel {
+    .adaire-saas-hero__trust-logos-wrap {
+      display: flex;
+      flex-wrap: nowrap;
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+
+    .adaire-saas-hero__trust-logos {
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      animation: adaire-hero-marquee var(--ad-trust-carousel-speed, 30s) linear infinite;
+    }
+
+    .adaire-saas-hero__trust-logo {
+      flex: 0 0 calc(100% / var(--ad-trust-visible-items, 5));
+    }
+
+    &.is-autoplay-off .adaire-saas-hero__trust-logos {
+      animation-play-state: paused;
+    }
+
+    &.is-pause-on-hover:hover .adaire-saas-hero__trust-logos {
+      animation-play-state: paused;
+    }
+  }
+
+  // ── Security / partner trust panel ───────────────────────────────────────
+  &__security {
+    margin-top: 64px;
+    padding: 40px;
+    border-radius: var(--ad-radius, 12px);
+    background: var(--ad-security-bg, #f8fafc);
+    color: var(--ad-security-color, #111827);
+    text-align: center;
+  }
+
+  &__security-title {
+    font-size: var(--ad-security-title-font-size, 22px);
+    font-weight: var(--ad-security-title-font-weight, 700);
+    line-height: var(--ad-security-title-line-height, normal);
+    letter-spacing: var(--ad-security-title-letter-spacing, normal);
+    text-transform: var(--ad-security-title-text-transform, none);
+    margin-bottom: 12px;
+  }
+
+  &__security-text {
+    max-width: 640px;
+    margin: 0 auto 32px;
+    opacity: 0.8;
+    line-height: 1.6;
+  }
+
+  &__security-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    text-align: left;
+  }
+
+  // Card treatment: real background/border/shadow so each feature reads as
+  // a distinct card rather than bare icon + text floating in the panel.
+  &__security-card {
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid rgba(17, 24, 39, 0.07);
+    border-radius: calc(var(--ad-radius, 12px) * 0.75);
+    box-shadow: 0 4px 16px rgba(17, 24, 39, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(17, 24, 39, 0.09);
+    }
+
+    h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 8px 0 6px;
+    }
+
+    p {
+      font-size: 13px;
+      opacity: 0.75;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+
+  // Same accent-tinted icon-chip pattern as the rating badges above, kept
+  // visually consistent across both modernized sections.
+  &__security-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    font-size: 21px;
+    line-height: 1;
+    background: rgba(99, 102, 241, 0.12);
+    background: color-mix(in srgb, var(--ad-accent, #6366f1) 12%, transparent);
+    color: var(--ad-accent, #6366f1);
+    overflow: hidden;
+  }
+
+  &__security-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: inherit;
+  }
+
+  // ── FAQ accordion ─────────────────────────────────────────────────────
+  // Native <details>/<summary> — zero JS for expand/collapse, identical in
+  // the editor canvas and on the published page.
+  &__faq {
+    margin-top: 64px;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__faq-title {
+    font-size: var(--ad-faq-title-font-size, 22px);
+    font-weight: var(--ad-faq-title-font-weight, 700);
+    line-height: var(--ad-faq-title-line-height, normal);
+    letter-spacing: var(--ad-faq-title-letter-spacing, normal);
+    text-transform: var(--ad-faq-title-text-transform, none);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  &__faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__faq-item {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--ad-radius, 12px);
+    padding: 4px 20px;
+    text-align: left;
+
+    & + & {
+      margin-top: 0;
+    }
+  }
+
+  &__faq-question {
+    cursor: pointer;
+    list-style: none;
+    padding: 16px 0;
+    font-weight: 600;
+    position: relative;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::after {
+      content: '+';
+      position: absolute;
+      right: 4px;
+      top: 14px;
+      font-size: 20px;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  &__faq-item[open] &__faq-question::after {
+    transform: rotate(45deg);
+  }
+
+  &__faq-answer {
+    padding: 0 0 18px;
+    opacity: 0.8;
+    line-height: 1.6;
+  }
+
+  // ── Layout variants ──────────────────────────────────────────────────
+  &.layout-split-left,
+  &.layout-split-right {
+    .adaire-saas-hero__content {
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      gap: 48px;
+    }
+
+    .adaire-saas-hero__text {
+      flex: 1;
+      max-width: 500px;
+    }
+
+    .adaire-saas-hero__cta {
+      justify-content: flex-start;
+    }
+
+    // The second selector here covers the editor canvas only: edit.js wraps
+    // the media preview in a <QuickZone>, which renders its own outer
+    // .adaire-qz div around .adaire-saas-hero__media. That wrapper — not
+    // .adaire-saas-hero__media itself — is the actual direct child of
+    // .adaire-saas-hero__content, i.e. the real flex item. `order`/`flex`
+    // only affect direct flex children, so without targeting .adaire-qz too,
+    // every rule below silently no-ops in the editor: the media box never
+    // moves, while .adaire-saas-hero__text (a real direct child) still
+    // shifts via its own order — which is exactly why "Split Layout (Left)"
+    // looked fine (image defaults to order 0, already on the left) while
+    // "Split Layout (Right)" didn't (image stayed at order 0 instead of
+    // moving past the text). save.js has no such wrapper, so
+    // .adaire-saas-hero__media alone is enough on the front end.
+    .adaire-saas-hero__media,
+    .adaire-saas-hero__content > .adaire-qz {
+      flex: 1;
+      min-width: 0; // flex items default to min-width: auto, which lets the
+      // image's intrinsic size stop it from shrinking and overflow the row —
+      // the classic "flex child with an <img> won't shrink" bug. Without this,
+      // whichever side the media lands on (order: 1 for split-left, order: 2
+      // for split-right, set just below) can blow past the container edge
+      // instead of sharing space with the text column. min-width: 0 lets it
+      // shrink to fit on BOTH sides.
+      max-width: 100%;
+      margin-top: 0;
+    }
+  }
+
+  &.layout-split-right {
+    .adaire-saas-hero__media,
+    .adaire-saas-hero__content > .adaire-qz {
+      order: 2;
+    }
+
+    .adaire-saas-hero__text {
+      order: 1;
+    }
+  }
+
+  &.layout-split-left {
+    .adaire-saas-hero__media,
+    .adaire-saas-hero__content > .adaire-qz {
+      order: 1;
+    }
+
+    .adaire-saas-hero__text {
+      order: 2;
+    }
+  }
+
+  // ── Responsive ───────────────────────────────────────────────────────
+  @media (max-width: 768px) {
+    padding: 60px 16px;
+
+    &__heading {
+      font-size: clamp(28px, 8vw, 42px);
+    }
+
+    &__text {
+      font-size: 16px;
+    }
+
+    &__cta {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    &__button {
+      width: 100%;
+    }
+
+    &__email-form {
+      flex-direction: column;
+    }
+
+    &__security-grid {
+      grid-template-columns: 1fr;
+    }
+
+    &__trust-bar.is-carousel .adaire-saas-hero__trust-logo {
+      flex: 0 0 calc(100% / 2.5);
+    }
+
+    &.layout-split-left,
+    &.layout-split-right {
+      .adaire-saas-hero__content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .adaire-saas-hero__cta {
+        justify-content: center;
+      }
+
+      .adaire-saas-hero__media,
+      .adaire-saas-hero__content > .adaire-qz {
+        order: 2 !important;
+      }
+
+      .adaire-saas-hero__text {
+        order: 1 !important;
+      }
+    }
+  }
+}
+
+@keyframes adaire-hero-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(100% * var(--ad-trust-dir, -1)));
+  }
+}
+
+@keyframes adaire-hero-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes adaire-hero-accent-sweep {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adaire-saas-hero {
+    &__fx--floating .float,
+    &__fx--accent,
+    &__trust-bar.is-carousel .adaire-saas-hero__trust-logos {
+      animation: none !important;
+    }
+  }
+}
+
+// ── Editor-only inspector chrome (RepeaterField, QuickZone helper text) ──
+// These classes never appear in save.js output, so they're inert on the
+// published page — kept here since this block has no separate editor.scss.
+.adaire-repeater {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  &__item {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  &__row-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  &__index {
+    font-weight: 600;
+    font-size: 12px;
+    opacity: 0.6;
+    margin-right: 4px;
+  }
+
+  // Wraps the "upload badge image" button + its "remove image" button for
+  // ratingBadges / securityFeatures items, so they sit on one row instead
+  // of stacking full-width like the rest of the field controls.
+  &__media-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+}
+
+.adaire-qz-subhead {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.6;
+  margin: 16px 0 8px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.adaire-help-note {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-top: 8px;
+}
+
+// ── Bootstrap Icon Picker modal (Ratings & Security Panel) ───────────────
+// Same modal styling pattern used by the other blocks' BootstrapIconPicker
+// (icon-box-block, our-process-block, etc.) — kept here rather than a new
+// editor.scss since this block already keeps all editor-only chrome in
+// this one stylesheet (see note above .adaire-repeater).
+.adaire-bootstrap-icon-picker {
+  .components-modal__content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    overflow: hidden;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  &__search {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+
+    input {
+      padding: 12px 16px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      width: 100%;
+
+      &:focus {
+        border-color: #0073aa;
+        box-shadow: 0 0 0 1px #0073aa;
+      }
+    }
+  }
+
+  &__count {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #666;
+    text-align: right;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px;
+    margin: 0 -8px;
+    height: 250px;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+
+      &:hover {
+        background: #a1a1a1;
+      }
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 12px;
+    border: 1.5px solid #e5e5e5;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    min-height: 140px;
+    position: relative;
+
+    &:hover {
+      border-color: #0073aa;
+      background: #f8f9fa;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 115, 170, 0.15);
+    }
+
+    &.is-selected {
+      border-color: #0073aa;
+      background: #e7f5f9;
+      box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.2);
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        background: #0073aa;
+        border-radius: 50%;
+      }
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+      }
+    }
+
+    i {
+      font-size: 32px;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      display: block;
+    }
+  }
+
+  &__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    word-break: break-word;
+    line-height: 1.3;
+  }
+
+  &__class {
+    font-size: 11px;
+    color: #666;
+    font-family: monospace;
+    word-break: break-all;
+    opacity: 0.8;
+  }
+
+  &__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+  }
+
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  &__page-info {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+    flex: 1;
+    justify-content: center;
+  }
+
+  &__page-jump {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 12px;
+
+    input {
+      width: 60px;
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-align: center;
+    }
+  }
+}

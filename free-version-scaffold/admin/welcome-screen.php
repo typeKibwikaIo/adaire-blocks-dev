@@ -54,7 +54,7 @@ class Adaire_Welcome_Screen {
     public static function add_menu_page() {
         add_submenu_page(
             'adaire-blocks-settings',
-            __( 'Welcome to GutenBlocks', 'adaire-blocks' ),
+            __( 'Welcome to Guten-Blocks', 'adaire-blocks' ),
             __( 'Welcome / Quick Start', 'adaire-blocks' ),
             'manage_options',
             'adaire-blocks-welcome',
@@ -168,7 +168,6 @@ class Adaire_Welcome_Screen {
         $nonce       = wp_create_nonce( 'adaire_create_page' );
         $ajax_url    = admin_url( 'admin-ajax.php' );
         $docs_url    = 'https://adaire.digital/docs/';
-        $support_url = 'https://adaire.digital/support/';
 
         $is_block_theme = function_exists( 'wp_is_block_theme' ) && wp_is_block_theme();
         $theme_name      = wp_get_theme()->get( 'Name' );
@@ -180,6 +179,7 @@ class Adaire_Welcome_Screen {
         // Sidebar / quick-action destinations.
         $settings_url  = admin_url( 'admin.php?page=adaire-blocks-settings' );
         $migration_url = admin_url( 'admin.php?page=adaire-blocks-migration' );
+        $support_page_url = admin_url( 'admin.php?page=adaire-blocks-support' );
         $themes_url    = admin_url( 'themes.php' );
         $exit_url      = admin_url();
 
@@ -258,12 +258,13 @@ class Adaire_Welcome_Screen {
                 'image' => $preview_images['landing'],
             ),
             array(
-                'href'  => $support_url,
-                'tag'   => __( 'Help', 'adaire-blocks' ),
-                'title' => __( 'Support', 'adaire-blocks' ),
-                'desc'  => __( 'Submit a ticket or browse answered questions.', 'adaire-blocks' ),
-                'cta'   => __( 'Get support', 'adaire-blocks' ),
-                'image' => $preview_images['services'],
+                'href'     => $support_page_url,
+                'tag'      => __( 'Help', 'adaire-blocks' ),
+                'title'    => __( 'Support', 'adaire-blocks' ),
+                'desc'     => __( 'Get in touch with our support team directly.', 'adaire-blocks' ),
+                'cta'      => __( 'Get support', 'adaire-blocks' ),
+                'image'    => $preview_images['services'],
+                'external' => false,
             ),
         );
         ?>
@@ -608,7 +609,7 @@ class Adaire_Welcome_Screen {
             <aside class="adaire-shell-sidebar">
                 <div class="adaire-shell-brand">
                     <span class="adaire-shell-brand-mark"><?php echo self::icon( 'brand-mark' ); ?></span>
-                    <span class="adaire-shell-brand-name"><?php esc_html_e( 'GutenBlocks', 'adaire-blocks' ); ?></span>
+                    <span class="adaire-shell-brand-name"><?php esc_html_e( 'Guten-Blocks', 'adaire-blocks' ); ?></span>
                 </div>
 
                 <nav class="adaire-shell-nav">
@@ -629,9 +630,8 @@ class Adaire_Welcome_Screen {
                         <span class="adaire-shell-link-label"><?php echo self::icon( 'book-open' ); ?> <?php esc_html_e( 'Documentation', 'adaire-blocks' ); ?></span>
                         <span class="adaire-shell-ext-icon"><?php echo self::icon( 'external-link' ); ?></span>
                     </a>
-                    <a href="<?php echo esc_url( $support_url ); ?>" target="_blank" rel="noopener" class="adaire-shell-link adaire-shell-link-ext">
-                        <span class="adaire-shell-link-label"><?php echo self::icon( 'message-circle' ); ?> <?php esc_html_e( 'Support', 'adaire-blocks' ); ?></span>
-                        <span class="adaire-shell-ext-icon"><?php echo self::icon( 'external-link' ); ?></span>
+                    <a href="<?php echo esc_url( $support_page_url ); ?>" class="adaire-shell-link">
+                        <?php echo self::icon( 'message-circle' ); ?> <?php esc_html_e( 'Support', 'adaire-blocks' ); ?>
                     </a>
                 </nav>
 
@@ -641,7 +641,7 @@ class Adaire_Welcome_Screen {
                     <a href="<?php echo esc_url( $exit_url ); ?>" class="adaire-shell-exit">
                         <?php echo self::icon( 'arrow-left' ); ?> <?php esc_html_e( 'Exit to WordPress', 'adaire-blocks' ); ?>
                     </a>
-                    <span class="adaire-shell-version">GutenBlocks v<?php echo esc_html( ADAIRE_BLOCKS_VERSION ); ?></span>
+                    <span class="adaire-shell-version">Guten-Blocks v<?php echo esc_html( ADAIRE_BLOCKS_VERSION ); ?></span>
                 </div>
             </aside>
 
@@ -652,7 +652,7 @@ class Adaire_Welcome_Screen {
                 <div class="adaire-hero-grid">
                     <div class="adaire-hero-inner">
                         <span class="adaire-pill"><span class="adaire-pill-icon"><?php echo self::icon( 'sparkle' ); ?></span> <?php esc_html_e( 'Free plan', 'adaire-blocks' ); ?></span>
-                        <h1 class="adaire-hero-title"><?php esc_html_e( 'Welcome to', 'adaire-blocks' ); ?> <span class="adaire-accent">GutenBlocks</span></h1>
+                        <h1 class="adaire-hero-title"><?php esc_html_e( 'Welcome to', 'adaire-blocks' ); ?> <span class="adaire-accent">Guten-Blocks</span></h1>
                         <p class="adaire-hero-sub"><?php esc_html_e( 'Create a starter page from a ready-made layout, or explore the full block library directly in the editor.', 'adaire-blocks' ); ?></p>
                         <div class="adaire-hero-actions">
                             <a href="#adaire-templates" class="adaire-btn adaire-btn-primary">
@@ -672,11 +672,11 @@ class Adaire_Welcome_Screen {
                                 <span class="adaire-hero-shot-dot"></span>
                                 <span class="adaire-hero-shot-dot"></span>
                             </div>
-                            <img src="<?php echo esc_url( $hero_image_url ); ?>" alt="<?php esc_attr_e( 'A GutenBlocks block in the WordPress editor', 'adaire-blocks' ); ?>" loading="eager" decoding="async" />
-                            <span class="adaire-hero-shot-tag"><?php echo self::icon( 'sparkle' ); ?> <?php esc_html_e( 'Built with GutenBlocks', 'adaire-blocks' ); ?></span>
+                            <img src="<?php echo esc_url( $hero_image_url ); ?>" alt="<?php esc_attr_e( 'A Guten-Blocks block in the WordPress editor', 'adaire-blocks' ); ?>" loading="eager" decoding="async" />
+                            <span class="adaire-hero-shot-tag"><?php echo self::icon( 'sparkle' ); ?> <?php esc_html_e( 'Built with Guten-Blocks', 'adaire-blocks' ); ?></span>
                         </div>
                         <div class="adaire-hero-shot-float">
-                            <img src="<?php echo esc_url( $showcase_image_url ); ?>" alt="<?php esc_attr_e( 'Another GutenBlocks block layout', 'adaire-blocks' ); ?>" loading="lazy" decoding="async" />
+                            <img src="<?php echo esc_url( $showcase_image_url ); ?>" alt="<?php esc_attr_e( 'Another Guten-Blocks block layout', 'adaire-blocks' ); ?>" loading="lazy" decoding="async" />
                         </div>
                     </div>
                 </div>
@@ -794,7 +794,7 @@ class Adaire_Welcome_Screen {
                     <span class="adaire-swatch adaire-swatch-4"><?php echo self::icon( 'sync' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Migration Tool', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Move old blocks over to GutenBlocks', 'adaire-blocks' ); ?></p>
+                        <p><?php esc_html_e( 'Move old blocks over to Guten-Blocks', 'adaire-blocks' ); ?></p>
                     </div>
                     <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
                 </a>
@@ -830,7 +830,7 @@ class Adaire_Welcome_Screen {
                     <span class="adaire-swatch adaire-swatch-4"><?php echo self::icon( 'sync' ); ?></span>
                     <div>
                         <h3><?php esc_html_e( 'Migration Tool', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Move old blocks over to GutenBlocks', 'adaire-blocks' ); ?></p>
+                        <p><?php esc_html_e( 'Move old blocks over to Guten-Blocks', 'adaire-blocks' ); ?></p>
                     </div>
                     <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
                 </a>
@@ -846,11 +846,11 @@ class Adaire_Welcome_Screen {
             <?php endif; ?>
 
             <p class="adaire-section-title"><?php esc_html_e( 'Expand Your Toolkit', 'adaire-blocks' ); ?></p>
-            <p class="adaire-section-subtitle"><?php esc_html_e( 'Guides and support to help you get more out of GutenBlocks.', 'adaire-blocks' ); ?></p>
+            <p class="adaire-section-subtitle"><?php esc_html_e( 'Guides and support to help you get more out of Guten-Blocks.', 'adaire-blocks' ); ?></p>
 
             <div class="adaire-resources">
-                <?php foreach ( $resources as $i => $res ) : ?>
-                <a href="<?php echo esc_url( $res['href'] ); ?>" target="_blank" rel="noopener" class="adaire-resource adaire-fade" style="transition-delay:<?php echo esc_attr( $i * 0.06 ); ?>s">
+                <?php foreach ( $resources as $i => $res ) : $res_is_external = ! isset( $res['external'] ) || $res['external']; ?>
+                <a href="<?php echo esc_url( $res['href'] ); ?>" <?php echo $res_is_external ? 'target="_blank" rel="noopener"' : ''; ?> class="adaire-resource adaire-fade" style="transition-delay:<?php echo esc_attr( $i * 0.06 ); ?>s">
                     <div class="adaire-resource-media">
                         <img src="<?php echo esc_url( $res['image'] ); ?>" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
                         <span class="adaire-resource-tag"><?php echo esc_html( $res['tag'] ); ?></span>
@@ -887,11 +887,11 @@ class Adaire_Welcome_Screen {
                     ),
                     array(
                         'q' => __( 'Can I edit the templates after they\'re created?', 'adaire-blocks' ),
-                        'a' => __( 'Yes. Every template is just regular GutenBlocks blocks on a draft page. Open it in the editor and replace any text, image, or section.', 'adaire-blocks' ),
+                        'a' => __( 'Yes. Every template is just regular Adaire blocks on a draft page. Open it in the editor and replace any text, image, or section.', 'adaire-blocks' ),
                     ),
                     array(
                         'q' => __( 'What\'s the difference between the free and paid blocks?', 'adaire-blocks' ),
-                        'a' => __( 'The free plan includes a curated set of layout, hero, and content blocks. Visit GutenBlocks Settings to see which blocks are included and what upgrading unlocks.', 'adaire-blocks' ),
+                        'a' => __( 'The free plan includes a curated set of layout, hero, and content blocks. Visit Guten-Blocks Settings to see which blocks are included and what upgrading unlocks.', 'adaire-blocks' ),
                     ),
                     array(
                         'q' => __( 'Why doesn\'t my theme show header/footer editing?', 'adaire-blocks' ),

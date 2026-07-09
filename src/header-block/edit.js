@@ -1,14 +1,14 @@
-import { useState, useRef, useEffect, useMemo } from '@wordpress/element';
+﻿import { useState, useRef, useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls, ColorPalette, useSettings } from '@wordpress/block-editor';
 import {
-    Button, ColorPicker, PanelBody, Popover,
+    Button, ColorPicker, GradientPicker, PanelBody, Popover,
     RangeControl, SelectControl, TextControl,
-    ToggleControl, ColorPalette,
+    ToggleControl,
 } from '@wordpress/components';
 import QuickZone, { PenIcon, CloseIcon, isMediaLibraryOpen } from '../components/QuickZone';
 import { __ } from '@wordpress/i18n';
-import HeaderIcon, { iconOptions, SocialIcon } from './icon-utils';
+import HeaderIcon, { iconOptions, SocialIcon, CartIcon, PaymentIcon, paymentMethodOptions } from './icon-utils';
 import InspectorTabs from '../components/InspectorTabs';
 import { boxToCss } from '../components/spacing-utils';
 
@@ -54,6 +54,35 @@ const buttonShapeOptions = [
 
 const platformOptions = ['Facebook','Instagram','X','YouTube','LinkedIn','TikTok'];
 
+// ADAB-016 — cart icon / payment icons share the same four-zone placement
+// system already used by socialPlacement, so the icons can live wherever
+// socials already can (with header buttons, before nav, or either side of
+// the top bar) instead of inventing a separate positioning mechanism.
+const iconPlacementOptions = [
+    { label: 'With header buttons', value: 'actions'      },
+    { label: 'Before navigation',    value: 'before-nav'   },
+    { label: 'Top bar — left',       value: 'topbar-left'  },
+    { label: 'Top bar — right',      value: 'topbar-right' },
+];
+
+// Block-level Font Family control (ADAB-010) — one choice for the whole
+// header, applied via the --adaire-header-font-family custom property at
+// the block root. Not per-text-role: this block's existing typography
+// controls (Nav font size/weight, Letter spacing, Text transform) are flat
+// attributes, not the TypographySection-per-role pattern, and none of them
+// ever covered font family — that's the gap this control fills.
+const FONT_FAMILY_OPTIONS = [
+    { label: 'Default (inherit theme)', value: '' },
+    { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+    { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+    { label: 'Georgia', value: 'Georgia, serif' },
+    { label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+    { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+    { label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+    { label: 'Courier New', value: "'Courier New', Courier, monospace" },
+    { label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
 const topBarJustifyMap = {
     'space-between': 'space-between',
     'left':          'flex-start',
@@ -78,6 +107,28 @@ const mobileSlideDirectionOptions = [
     { label: 'Slide from right', value: 'right' },
     { label: 'Slide from left',  value: 'left'  },
 ];
+
+const hamburgerPositionOptions = [
+    { label: 'Left',  value: 'left'  },
+    { label: 'Right', value: 'right' },
+];
+
+// ─── CSS-variable color binding (live theme sync) ─────────────────────────
+
+function useColorBinding() {
+    const [ themeColors ] = useSettings( 'color.palette.theme' );
+    const bindColor = ( hex ) => {
+        if ( ! hex ) return '';
+        const match = ( themeColors || [] ).find( c => c.color === hex );
+        return match ? `var(--wp--preset--color--${ match.slug })` : hex;
+    };
+    const resolveColor = ( v ) => {
+        if ( ! v || ! v.startsWith( 'var(--wp--preset--color--' ) ) return v ?? '';
+        const slug = v.slice( 'var(--wp--preset--color--'.length, -1 );
+        return ( themeColors || [] ).find( c => c.slug === slug )?.color ?? v;
+    };
+    return { bindColor, resolveColor };
+}
 
 // ─── Background position grid ───────────────────────────────────────────
 
@@ -153,6 +204,7 @@ function getHeaderStyle( attributes ) {
     const topBarJustify = topBarJustifyMap[ attributes.topBarLayout ] || 'space-between';
 
     const styles = {
+        '--adaire-header-font-family':       attributes.fontFamily || 'inherit',
         '--adaire-header-background':        background,
         '--adaire-header-text-color':        attributes.textColor,
         '--adaire-header-hover-color':       attributes.hoverColor,
@@ -177,9 +229,11 @@ function getHeaderStyle( attributes ) {
         '--adaire-header-social-color':      attributes.socialIconColor,
         '--adaire-header-nav-icon-color':    attributes.navIconColor,
         '--adaire-header-z-index':           attributes.zIndex,
-        '--adaire-header-action-radius':     getActionRadius( attributes.buttonShape ),
+        '--adaire-header-action-radius':     ( attributes.buttonBorderRadius != null && attributes.buttonBorderRadius >= 0 ) ? `${ attributes.buttonBorderRadius }px` : getActionRadius( attributes.buttonShape ),
         '--adaire-header-hamburger-border':       attributes.hamburgerBorder ? '1px solid ' + attributes.hamburgerBorderColor : 'none',
         '--adaire-header-hamburger-border-radius': `${ attributes.hamburgerBorderRadius }px`,
+        '--adaire-header-hamburger-size':    `${ attributes.hamburgerSize || 42 }px`,
+        '--adaire-header-hamburger-order':   attributes.hamburgerPosition === 'right' ? '1' : '0',
         '--adaire-header-search-icon-size':  `${ attributes.searchIconSize || 18 }px`,
         '--adaire-header-search-btn-size':   `${ attributes.searchButtonSize || 38 }px`,
     };
@@ -196,6 +250,13 @@ function getHeaderStyle( attributes ) {
         styles['--adaire-header-dot-spacing'] = `${ attributes.navDotSpacing != null ? attributes.navDotSpacing : 8 }px`;
         if ( attributes.navDotColor ) styles['--adaire-header-dot-color'] = attributes.navDotColor;
     }
+    // ADAB-016 — cart icon / payment icons sizing & color, same optional
+    // override pattern as social icons (CSS var only set when non-empty;
+    // style.scss falls back to a sensible default otherwise).
+    styles['--adaire-header-cart-size']    = `${ attributes.cartIconSize || 18 }px`;
+    if ( attributes.cartIconColor ) styles['--adaire-header-cart-color'] = attributes.cartIconColor;
+    styles['--adaire-header-payment-size'] = `${ attributes.paymentIconSize || 22 }px`;
+    if ( attributes.paymentIconColor ) styles['--adaire-header-payment-color'] = attributes.paymentIconColor;
     if ( attributes.ctaHoverBgColor )   styles['--adaire-header-cta-hover-bg']   = attributes.ctaHoverBgColor;
     if ( attributes.ctaHoverTextColor ) styles['--adaire-header-cta-hover-text'] = attributes.ctaHoverTextColor;
     if ( attributes.ctaBorderRadius != null && attributes.ctaBorderRadius >= 0 )       styles['--adaire-header-cta-radius']     = `${ attributes.ctaBorderRadius }px`;
@@ -468,6 +529,45 @@ function SocialPreview({ attributes }) {
     );
 }
 
+// ─── WooCommerce cart icon preview (ADAB-016) ───────────────────────────
+// Editor-only preview — there's no live cart count to show on canvas, so a
+// static placeholder badge stands in for it (mirrors how SearchPreview's
+// input is a non-functional stand-in too). The real count/link only exist
+// on the frontend, and only when WooCommerce is actually active.
+
+function CartPreview({ attributes }) {
+    if ( ! attributes.showCartIcon ) {
+        return null;
+    }
+
+    return (
+        <span className="adaire-header-cart">
+            <CartIcon />
+            { attributes.cartShowCount !== false && (
+                <span className="adaire-header-cart-count">0</span>
+            ) }
+        </span>
+    );
+}
+
+// ─── Payment icons preview (ADAB-016) ───────────────────────────────────
+
+function PaymentIconsPreview({ attributes }) {
+    if ( ! attributes.showPaymentIcons ) {
+        return null;
+    }
+
+    return (
+        <div className="adaire-header-payment-icons">
+            { ( attributes.paymentIcons || [] ).map( ( item, i ) => (
+                <span key={ i }>
+                    <PaymentIcon method={ item.method } />
+                </span>
+            ) ) }
+        </div>
+    );
+}
+
 // ─── Top bar "Follow Us" preview (req #8) ───────────────────────────────
 
 function FollowUsPreview({ attributes }) {
@@ -497,6 +597,7 @@ function FollowUsPreview({ attributes }) {
 // HeaderPreview/ActionsZone, not Edit() itself.
 
 function SocialZone({ attributes, setAttributes, activeZone, setActiveZone }) {
+    const { bindColor, resolveColor } = useColorBinding();
     if ( ! attributes.showSocial ) {
         return null;
     }
@@ -563,9 +664,9 @@ function SocialZone({ attributes, setAttributes, activeZone, setActiveZone }) {
                             />
                             <TextControl label="Link URL" value={ item.url } onChange={ v => updateLink( index, 'url', v ) } />
                             <p style={{ marginBottom: 4 }}>Icon color</p>
-                            <ColorPalette value={ item.iconColor } onChange={ v => updateLink( index, 'iconColor', v || '' ) } />
+                            <ColorPalette value={ resolveColor(item.iconColor) } onChange={ v => updateLink( index, 'iconColor', bindColor(v) ) } />
                             <p style={{ marginBottom: 4 }}>Background color</p>
-                            <ColorPalette value={ item.bgColor } onChange={ v => updateLink( index, 'bgColor', v || '' ) } />
+                            <ColorPalette value={ resolveColor(item.bgColor) } onChange={ v => updateLink( index, 'bgColor', bindColor(v) ) } />
                             <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
                                 <Button variant="secondary" disabled={ index === 0 } onClick={ () => moveLink( index, -1 ) }>Move up</Button>
                                 <Button variant="secondary" disabled={ index === links.length - 1 } onClick={ () => moveLink( index, 1 ) }>Move down</Button>
@@ -579,6 +680,116 @@ function SocialZone({ attributes, setAttributes, activeZone, setActiveZone }) {
             }
         >
             <SocialPreview attributes={ attributes } />
+        </QuickZone>
+    );
+}
+
+// ─── WooCommerce cart icon Quick-Edit zone (ADAB-016) ───────────────────
+// Self-contained like SocialZone — toggle, size, color, and the optional
+// frontend cart-count badge live together here, regardless of which of the
+// 4 shared placement zones the icon is currently rendered into.
+
+function CartZone({ attributes, setAttributes, activeZone, setActiveZone }) {
+    if ( ! attributes.showCartIcon ) {
+        return null;
+    }
+
+    return (
+        <QuickZone
+            id="cart"
+            label="Cart Icon"
+            activeZone={ activeZone }
+            setActiveZone={ setActiveZone }
+            content={
+                <>
+                    <RangeControl label="Icon size" value={ attributes.cartIconSize || 18 } min={ 12 } max={ 40 } onChange={ v => setAttributes({ cartIconSize: v }) } />
+                    <p style={{ marginBottom: 6 }}>Icon color</p>
+                    <ColorPicker color={ attributes.cartIconColor } onChange={ v => setAttributes({ cartIconColor: v }) } enableAlpha />
+                    <ToggleControl
+                        label="Show cart item count badge"
+                        checked={ attributes.cartShowCount !== false }
+                        onChange={ v => setAttributes({ cartShowCount: v }) }
+                        help={ __( 'Requires WooCommerce to be active to show a real count on the frontend.', 'header-block' ) }
+                    />
+                </>
+            }
+        >
+            <CartPreview attributes={ attributes } />
+        </QuickZone>
+    );
+}
+
+// ─── Payment icons Quick-Edit zone (ADAB-016) ───────────────────────────
+// Mirrors SocialZone's repeatable-array pattern exactly, but for payment
+// methods instead of social platforms (no URL field — these are static
+// trust badges, not links).
+
+function PaymentZone({ attributes, setAttributes, activeZone, setActiveZone }) {
+    if ( ! attributes.showPaymentIcons ) {
+        return null;
+    }
+
+    const icons = attributes.paymentIcons || [];
+
+    const updateIcon = ( index, key, value ) => {
+        const next = [ ...icons ];
+        next[ index ] = { ...next[ index ], [ key ]: value };
+        setAttributes({ paymentIcons: next });
+    };
+
+    const moveIcon = ( index, delta ) => {
+        const target = index + delta;
+        if ( target < 0 || target >= icons.length ) {
+            return;
+        }
+        const next = [ ...icons ];
+        [ next[ index ], next[ target ] ] = [ next[ target ], next[ index ] ];
+        setAttributes({ paymentIcons: next });
+    };
+
+    const removeIcon = ( index ) => {
+        setAttributes({ paymentIcons: icons.filter( ( _, i ) => i !== index ) });
+    };
+
+    const addIcon = () => {
+        setAttributes({ paymentIcons: [ ...icons, { method: 'Visa' } ] });
+    };
+
+    return (
+        <QuickZone
+            id="payment"
+            label="Payment Icons"
+            activeZone={ activeZone }
+            setActiveZone={ setActiveZone }
+            content={
+                <>
+                    <RangeControl label="Icon size" value={ attributes.paymentIconSize || 22 } min={ 14 } max={ 48 } onChange={ v => setAttributes({ paymentIconSize: v }) } />
+                    <p style={{ marginBottom: 6 }}>Icon color</p>
+                    <ColorPicker color={ attributes.paymentIconColor } onChange={ v => setAttributes({ paymentIconColor: v }) } enableAlpha />
+
+                    <hr />
+
+                    { icons.map( ( item, index ) => (
+                        <div className="adaire-header-control-group" key={ index }>
+                            <SelectControl
+                                label={ `Icon ${ index + 1 }` }
+                                value={ item.method }
+                                options={ paymentMethodOptions.map( p => ( { label: p, value: p } ) ) }
+                                onChange={ v => updateIcon( index, 'method', v ) }
+                            />
+                            <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
+                                <Button variant="secondary" disabled={ index === 0 } onClick={ () => moveIcon( index, -1 ) }>Move up</Button>
+                                <Button variant="secondary" disabled={ index === icons.length - 1 } onClick={ () => moveIcon( index, 1 ) }>Move down</Button>
+                            </div>
+                            <Button isDestructive variant="link" onClick={ () => removeIcon( index ) }>Remove icon</Button>
+                        </div>
+                    ) ) }
+
+                    <Button variant="secondary" onClick={ addIcon }>Add payment icon</Button>
+                </>
+            }
+        >
+            <PaymentIconsPreview attributes={ attributes } />
         </QuickZone>
     );
 }
@@ -729,6 +940,18 @@ function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone })
     const followPosition = attributes.topBarFollowPosition === 'left' ? 'left' : 'right';
     const searchPosition = attributes.searchPosition || 'start';
 
+    // ADAB-016 — cart/payment icons fall back to the 'actions' zone exactly
+    // like social icons do when a topbar-dependent placement is chosen but
+    // the top bar itself is off, so they never just silently disappear.
+    const rawCartPlacement = attributes.cartIconPlacement || 'actions';
+    const effectiveCartPlacement = (
+        ( rawCartPlacement === 'topbar-left' || rawCartPlacement === 'topbar-right' ) && ! attributes.showTopBar
+    ) ? 'actions' : rawCartPlacement;
+    const rawPaymentPlacement = attributes.paymentIconPlacement || 'actions';
+    const effectivePaymentPlacement = (
+        ( rawPaymentPlacement === 'topbar-left' || rawPaymentPlacement === 'topbar-right' ) && ! attributes.showTopBar
+    ) ? 'actions' : rawPaymentPlacement;
+
     return (
         <>
             { attributes.showTopBar && (
@@ -736,14 +959,20 @@ function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone })
                     <RichText tagName="span" value={ attributes.topBarLeft }  onChange={ v => setAttributes({ topBarLeft: v }) }  placeholder="Top bar left" />
                     { followPosition === 'left' && <FollowUsPreview attributes={ attributes } /> }
                     { effectiveSocialPlacement === 'topbar-left' && <SocialZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
+                    { effectiveCartPlacement === 'topbar-left' && <CartZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
+                    { effectivePaymentPlacement === 'topbar-left' && <PaymentZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
                     <RichText tagName="span" value={ attributes.topBarRight } onChange={ v => setAttributes({ topBarRight: v }) } placeholder="Top bar right" />
                     { followPosition === 'right' && <FollowUsPreview attributes={ attributes } /> }
                     { effectiveSocialPlacement === 'topbar-right' && <SocialZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
+                    { effectiveCartPlacement === 'topbar-right' && <CartZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
+                    { effectivePaymentPlacement === 'topbar-right' && <PaymentZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
                 </div>
             ) }
 
             <div className={ `adaire-header-inner layout-${ attributes.layout }` }>
                 { effectiveSocialPlacement === 'before-nav' && <SocialZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
+                { effectiveCartPlacement === 'before-nav' && <CartZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
+                { effectivePaymentPlacement === 'before-nav' && <PaymentZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
                 <button
                     className={ `adaire-header-mobile-toggle${ attributes.hamburgerIconStyle && attributes.hamburgerIconStyle !== 'bars' ? ` icon-style-${ attributes.hamburgerIconStyle }` : '' }` }
                     type="button"
@@ -780,6 +1009,8 @@ function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone })
                     activeZone={ activeZone }
                     setActiveZone={ setActiveZone }
                     socialPlacement={ effectiveSocialPlacement }
+                    cartPlacement={ effectiveCartPlacement }
+                    paymentPlacement={ effectivePaymentPlacement }
                     searchPosition={ searchPosition }
                 />
             </div>
@@ -791,6 +1022,7 @@ function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone })
             ) }
 
             <BgZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } />
+            <LayoutZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } />
         </>
     );
 }
@@ -852,7 +1084,27 @@ function LogoZone({ attributes, setAttributes, activeZone, setActiveZone }) {
 
 // ─── Actions Quick-Edit Zone ─────────────────────────────────────────────
 
-function ActionsZone({ attributes, setAttributes, activeZone, setActiveZone, socialPlacement, searchPosition }) {
+function ActionsZone({ attributes, setAttributes, activeZone, setActiveZone, socialPlacement, cartPlacement, paymentPlacement, searchPosition }) {
+    // style.scss collapses an empty .adaire-header-actions to display:none
+    // so the nav can reclaim the freed space on the frontend — but that same
+    // rule also loads in the editor, where it shrinks this zone's QuickZone
+    // wrapper to 0x0 once Sign In, Sign Up and the CTA are all switched off.
+    // A 0x0 element has nothing for the mouse to hover, so the pen trigger
+    // becomes permanently unreachable and the only way back in is the
+    // Inspector. Render a visible placeholder whenever nothing else would,
+    // so the zone always keeps a hoverable footprint and the pen stays
+    // clickable — this is what lets a user re-add a removed CTA from the
+    // canvas instead of only via the sidebar.
+    const hasAnyAction = Boolean(
+        ( searchPosition === 'start' || searchPosition === 'end' ) ||
+        ( socialPlacement === 'actions' && attributes.showSocial ) ||
+        attributes.showSignIn ||
+        attributes.showSignUp ||
+        attributes.showCta ||
+        ( paymentPlacement === 'actions' && attributes.showPaymentIcons ) ||
+        ( cartPlacement === 'actions' && attributes.showCartIcon )
+    );
+
     return (
         <QuickZone
             id="actions"
@@ -924,7 +1176,12 @@ function ActionsZone({ attributes, setAttributes, activeZone, setActiveZone, soc
                         }
                     </span>
                 ) }
+                { paymentPlacement === 'actions' && <PaymentZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
+                { cartPlacement === 'actions' && <CartZone attributes={ attributes } setAttributes={ setAttributes } activeZone={ activeZone } setActiveZone={ setActiveZone } /> }
                 { searchPosition === 'end' && <SearchPreview attributes={ attributes } /> }
+                { ! hasAnyAction && (
+                    <span className="adaire-header-actions__empty-hint">+ Add buttons</span>
+                ) }
             </div>
         </QuickZone>
     );
@@ -934,6 +1191,7 @@ function ActionsZone({ attributes, setAttributes, activeZone, setActiveZone, soc
 // A floating chip at bottom-center of the header for background controls.
 
 function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
+    const { bindColor, resolveColor } = useColorBinding();
     const ref    = useRef( null );
     const isOpen = activeZone === 'background';
 
@@ -1033,18 +1291,21 @@ function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
                                         <>
                                             <p style={{ marginBottom: 6 }}>Background color</p>
                                             <ColorPalette
-                                                value={ attributes.backgroundColor }
-                                                onChange={ v => setAttributes({ backgroundColor: v || '#ffffff' }) }
+                                                value={ resolveColor( attributes.backgroundColor ) }
+                                                onChange={ v => setAttributes({ backgroundColor: bindColor(v) || '#ffffff' }) }
                                             />
                                         </>
                                     ) }
 
                                     { getEffectiveBackgroundType( attributes ) === 'gradient' && (
-                                        <TextControl
-                                            label="Gradient CSS"
-                                            value={ attributes.gradientBackground }
-                                            onChange={ v => setAttributes({ gradientBackground: v }) }
-                                        />
+                                        <div>
+                                            <p style={{ marginBottom: 6 }}>Gradient</p>
+                                            <GradientPicker
+                                                value={ attributes.gradientBackground }
+                                                onChange={ v => setAttributes({ gradientBackground: v || 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' }) }
+                                                clearable={ false }
+                                            />
+                                        </div>
                                     ) }
 
                                     { getEffectiveBackgroundType( attributes ) === 'image' && (
@@ -1134,9 +1395,123 @@ function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
+// ─── Header Layout Quick-Edit chip ───────────────────────────────────────
+// A floating chip at top-right of the header, always reachable on hover —
+// independent of whatever Sign In/Sign Up/CTA/social/etc. are currently
+// shown or hidden (unlike ActionsZone, this one isn't anchored to the
+// actions row, so it can never collapse along with it). Exists specifically
+// so the main header layout settings — and, most importantly, re-enabling a
+// CTA the user removed — are never stranded Inspector-only just because
+// every other on-canvas zone tied to that content vanished with it.
+
+function LayoutZone({ attributes, setAttributes, activeZone, setActiveZone }) {
+    const ref    = useRef( null );
+    const isOpen = activeZone === 'layout';
+
+    const toggle = ( e ) => {
+        e.stopPropagation();
+        setActiveZone( isOpen ? null : 'layout' );
+    };
+
+    // Same close management as BgZone — suppress WP auto-close so the
+    // popover behaves consistently with every other quick-edit chip.
+    useEffect( () => {
+        if ( ! isOpen ) return;
+        const handleKeyDown = ( e ) => {
+            if ( e.key === 'Escape' ) setActiveZone( null );
+        };
+        const handleMouseDown = ( e ) => {
+            if ( ref.current && ref.current.contains( e.target ) ) return;
+            if ( e.target.closest && e.target.closest( '.adaire-header-qpop, .adaire-qpop, .components-popover__content' ) ) return;
+            setTimeout( () => {
+                if ( isMediaLibraryOpen() ) return;
+                setActiveZone( null );
+            }, 0 );
+        };
+        document.addEventListener( 'keydown', handleKeyDown );
+        document.addEventListener( 'mousedown', handleMouseDown, true );
+        return () => {
+            document.removeEventListener( 'keydown', handleKeyDown );
+            document.removeEventListener( 'mousedown', handleMouseDown, true );
+        };
+    }, [ isOpen, setActiveZone ] );
+
+    const LayoutIcon = () => (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="4" y1="6" x2="20" y2="6"/>
+            <line x1="4" y1="12" x2="20" y2="12"/>
+            <line x1="4" y1="18" x2="20" y2="18"/>
+            <circle cx="8" cy="6" r="2" fill="currentColor" stroke="none"/>
+            <circle cx="16" cy="12" r="2" fill="currentColor" stroke="none"/>
+            <circle cx="10" cy="18" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+    );
+
+    return (
+        <>
+            <button
+                ref={ ref }
+                type="button"
+                className={ `adaire-qz-layout${ isOpen ? ' adaire-qz-layout--active' : '' }` }
+                onClick={ toggle }
+                title="Edit header layout"
+            >
+                <LayoutIcon />
+                Layout
+            </button>
+
+            { isOpen && ref.current && (
+                <Popover
+                    anchor={ ref.current }
+                    placement="bottom"
+                    className="adaire-header-qpop"
+                    onFocusOutside={ () => {} }
+                    focusOnMount="firstElement"
+                    shift
+                    flip
+                >
+                    <div className="adaire-header-qpop__inner">
+                        <div className="adaire-header-qpop__head">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span className="adaire-header-qpop__icon"><LayoutIcon /></span>
+                                <span className="adaire-header-qpop__title">Layout</span>
+                            </div>
+                            <button
+                                type="button"
+                                className="adaire-header-qpop__close"
+                                onClick={ () => setActiveZone( null ) }
+                            >
+                                <CloseIcon />
+                            </button>
+                        </div>
+                        <div className="adaire-header-qpop__body">
+                            <SelectControl label="Layout"          value={ attributes.layout }         options={ layoutOptions } onChange={ v => setAttributes({ layout: v }) } />
+                            <SelectControl label="Sticky behavior" value={ attributes.stickyBehavior } options={ stickyOptions } onChange={ v => setAttributes({ stickyBehavior: v }) } />
+
+                            <hr />
+
+                            <p className="adaire-header-qpop__section-label">CTA Button</p>
+                            <ToggleControl label="Show" checked={ attributes.showCta } onChange={ v => setAttributes({ showCta: v }) } />
+                            { attributes.showCta && (
+                                <>
+                                    <TextControl label="Text" value={ attributes.ctaText } onChange={ v => setAttributes({ ctaText: v }) } />
+                                    <TextControl label="URL"  value={ attributes.ctaUrl }  onChange={ v => setAttributes({ ctaUrl: v }) } />
+                                    <SelectControl label="Style" value={ attributes.ctaStyle } options={ ctaStyleOptions } onChange={ v => setAttributes({ ctaStyle: v }) } />
+                                    <SelectControl label="Button shape" value={ attributes.buttonShape } options={ buttonShapeOptions } onChange={ v => setAttributes({ buttonShape: v }) } />
+                                </>
+                            ) }
+                        </div>
+                    </div>
+                </Popover>
+            ) }
+        </>
+    );
+}
+
 // ─── Main Edit component ─────────────────────────────────────────────────
 
 export default function Edit({ attributes, setAttributes }) {
+    const { bindColor, resolveColor } = useColorBinding();
     const [ activeZone, setActiveZone ] = useState( null );
 
     const blockProps = useBlockProps({
@@ -1193,7 +1568,11 @@ export default function Edit({ attributes, setAttributes }) {
                             ) }
 
                             { getEffectiveBackgroundType( attributes ) === 'gradient' && (
-                                <TextControl label="Gradient CSS" value={ attributes.gradientBackground } onChange={ v => setAttributes({ gradientBackground: v }) } />
+                                <GradientPicker
+                                    value={ attributes.gradientBackground }
+                                    onChange={ v => setAttributes({ gradientBackground: v || 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' }) }
+                                    clearable={ false }
+                                />
                             ) }
 
                             { getEffectiveBackgroundType( attributes ) === 'image' && (
@@ -1281,6 +1660,13 @@ export default function Edit({ attributes, setAttributes }) {
             priority: 'high',
             content: (
                 <>
+                    <SelectControl
+                        label="Font family"
+                        value={ attributes.fontFamily || '' }
+                        options={ FONT_FAMILY_OPTIONS }
+                        onChange={ v => setAttributes({ fontFamily: v }) }
+                        help="Applies to the entire header block unless overridden by theme styles."
+                    />
                     <RangeControl label="Nav font size"   value={ attributes.navFontSize }   min={ 10 } max={ 32 } onChange={ v => setAttributes({ navFontSize: v }) } />
                     <SelectControl label="Nav font weight" value={ attributes.navFontWeight } options={ [{ label: 'Regular', value: '400' }, { label: 'Medium', value: '500' }, { label: 'Semi Bold', value: '600' }, { label: 'Bold', value: '700' }] } onChange={ v => setAttributes({ navFontWeight: v }) } />
                     <RangeControl label="Letter spacing"  value={ attributes.letterSpacing }  min={ -2 } max={ 8 } step={ 0.1 } onChange={ v => setAttributes({ letterSpacing: v }) } />
@@ -1296,7 +1682,7 @@ export default function Edit({ attributes, setAttributes }) {
                     <ToggleControl label="Border bottom"   checked={ attributes.borderBottom }    onChange={ v => setAttributes({ borderBottom: v }) } />
                     <RangeControl  label="Border thickness" value={ attributes.borderThickness }  min={ 0 } max={ 10 } onChange={ v => setAttributes({ borderThickness: v }) } />
                     <p style={{ marginBottom: 8 }}>Border color</p>
-                    <ColorPalette value={ attributes.borderColor } onChange={ v => setAttributes({ borderColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.borderColor) } onChange={ v => setAttributes({ borderColor: bindColor(v) }) } />
                     <ToggleControl label="Box shadow" checked={ attributes.boxShadow } onChange={ v => setAttributes({ boxShadow: v }) } />
                 </>
             ),
@@ -1344,7 +1730,6 @@ export default function Edit({ attributes, setAttributes }) {
                     <ToggleControl label="Show tagline"        checked={ attributes.showTagline }  onChange={ v => setAttributes({ showTagline: v }) } />
                     { attributes.showTagline && <TextControl label="Tagline" value={ attributes.tagline } onChange={ v => setAttributes({ tagline: v }) } /> }
                     <RangeControl  label="Logo width"          value={ attributes.logoWidth }       min={ 40 } max={ 360 } onChange={ v => setAttributes({ logoWidth: v }) } />
-                    <RangeControl  label="Mobile logo width"   value={ attributes.mobileLogoWidth } min={ 40 } max={ 260 } onChange={ v => setAttributes({ mobileLogoWidth: v }) } />
                     <ToggleControl label="Link logo to homepage" checked={ attributes.linkLogoHome } onChange={ v => setAttributes({ linkLogoHome: v }) } />
                     { attributes.linkLogoHome && <TextControl label="Logo URL" value={ attributes.logoUrl } onChange={ v => setAttributes({ logoUrl: v }) } /> }
                 </PanelBody>
@@ -1381,7 +1766,7 @@ export default function Edit({ attributes, setAttributes }) {
                             <RangeControl label="Dot size"    value={ attributes.navDotSize != null ? attributes.navDotSize : 6 }    min={ 2 } max={ 20 } onChange={ v => setAttributes({ navDotSize: v }) } />
                             <RangeControl label="Dot spacing" value={ attributes.navDotSpacing != null ? attributes.navDotSpacing : 8 } min={ 0 } max={ 30 } onChange={ v => setAttributes({ navDotSpacing: v }) } />
                             <p style={{ marginBottom: 8 }}>Dot color</p>
-                            <ColorPalette value={ attributes.navDotColor } onChange={ v => setAttributes({ navDotColor: v || '' }) } />
+                            <ColorPalette value={ resolveColor(attributes.navDotColor) } onChange={ v => setAttributes({ navDotColor: bindColor(v) }) } />
                         </>
                     ) }
 
@@ -1446,9 +1831,9 @@ export default function Edit({ attributes, setAttributes }) {
                             <SelectControl label="Icon"  value={ attributes.signInIcon }  options={ iconOptions }     onChange={ v => setAttributes({ signInIcon: v }) } />
                         ) }
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>Sign In colors</p>
-                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ attributes.signInBgColor }     onChange={ v => setAttributes({ signInBgColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ attributes.signInTextColor }   onChange={ v => setAttributes({ signInTextColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ attributes.signInBorderColor } onChange={ v => setAttributes({ signInBorderColor: v || '' }) } />
+                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.signInBgColor) }     onChange={ v => setAttributes({ signInBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.signInTextColor) }   onChange={ v => setAttributes({ signInTextColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.signInBorderColor) } onChange={ v => setAttributes({ signInBorderColor: bindColor(v) }) } />
                         <RangeControl label="Font size" value={ attributes.signInFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signInFontSize: v }) } />
                     </div>
                     {/* Sign Up */}
@@ -1463,9 +1848,9 @@ export default function Edit({ attributes, setAttributes }) {
                             <SelectControl label="Icon"  value={ attributes.signUpIcon }  options={ iconOptions }     onChange={ v => setAttributes({ signUpIcon: v }) } />
                         ) }
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>Sign Up colors</p>
-                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ attributes.signUpBgColor }     onChange={ v => setAttributes({ signUpBgColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ attributes.signUpTextColor }   onChange={ v => setAttributes({ signUpTextColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ attributes.signUpBorderColor } onChange={ v => setAttributes({ signUpBorderColor: v || '' }) } />
+                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.signUpBgColor) }     onChange={ v => setAttributes({ signUpBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.signUpTextColor) }   onChange={ v => setAttributes({ signUpTextColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.signUpBorderColor) } onChange={ v => setAttributes({ signUpBorderColor: bindColor(v) }) } />
                         <RangeControl label="Font size" value={ attributes.signUpFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signUpFontSize: v }) } />
                     </div>
                     {/* CTA */}
@@ -1483,13 +1868,13 @@ export default function Edit({ attributes, setAttributes }) {
                             </>
                         ) }
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>CTA colors</p>
-                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ attributes.ctaBgColor }     onChange={ v => setAttributes({ ctaBgColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ attributes.ctaTextColor }   onChange={ v => setAttributes({ ctaTextColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ attributes.ctaBorderColor } onChange={ v => setAttributes({ ctaBorderColor: v || '' }) } />
+                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.ctaBgColor) }     onChange={ v => setAttributes({ ctaBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.ctaTextColor) }   onChange={ v => setAttributes({ ctaTextColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.ctaBorderColor) } onChange={ v => setAttributes({ ctaBorderColor: bindColor(v) }) } />
                         <RangeControl label="Font size" value={ attributes.ctaFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ ctaFontSize: v }) } />
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>CTA hover colors</p>
-                        <p style={{ marginBottom: 4 }}>Hover background</p><ColorPalette value={ attributes.ctaHoverBgColor }   onChange={ v => setAttributes({ ctaHoverBgColor: v || '' }) } />
-                        <p style={{ marginBottom: 4 }}>Hover text</p>       <ColorPalette value={ attributes.ctaHoverTextColor } onChange={ v => setAttributes({ ctaHoverTextColor: v || '' }) } />
+                        <p style={{ marginBottom: 4 }}>Hover background</p><ColorPalette value={ resolveColor(attributes.ctaHoverBgColor) }   onChange={ v => setAttributes({ ctaHoverBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Hover text</p>       <ColorPalette value={ resolveColor(attributes.ctaHoverTextColor) } onChange={ v => setAttributes({ ctaHoverTextColor: bindColor(v) }) } />
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>CTA shape &amp; spacing</p>
                         <RangeControl
                             label="Border radius"
@@ -1511,10 +1896,34 @@ export default function Edit({ attributes, setAttributes }) {
                             onChange={ v => setAttributes({ ctaPaddingHorizontal: v == null ? -1 : v }) }
                         />
                     </div>
-                    <SelectControl label="Button shape" value={ attributes.buttonShape } options={ buttonShapeOptions } onChange={ v => setAttributes({ buttonShape: v }) } help={ __( 'Applies to Sign In, Sign Up and CTA buttons', 'header-block' ) } />
+                    <SelectControl
+                        label="Button shape"
+                        value={ attributes.buttonShape }
+                        options={ buttonShapeOptions }
+                        onChange={ v => setAttributes({ buttonShape: v }) }
+                        help={
+                            // ADAB-017: the CTA has its own Border radius / padding
+                            // overrides above (ctaBorderRadius, ctaPaddingVertical,
+                            // ctaPaddingHorizontal). Once any of those is set, it wins
+                            // over this shared control for the CTA specifically — say
+                            // so here instead of letting the change silently appear to
+                            // do nothing.
+                            ( attributes.ctaBorderRadius != null && attributes.ctaBorderRadius >= 0 )
+                                ? __( 'Applies to Sign In and Sign Up buttons. The CTA has its own Border radius override above (set to ' + attributes.ctaBorderRadius + 'px) — reset it to follow this shape instead.', 'header-block' )
+                                : __( 'Applies to Sign In, Sign Up and CTA buttons', 'header-block' )
+                        }
+                    />
+                    <RangeControl
+                        label="Custom button border radius (overrides shape)"
+                        value={ attributes.buttonBorderRadius != null && attributes.buttonBorderRadius >= 0 ? attributes.buttonBorderRadius : undefined }
+                        min={ 0 } max={ 60 } allowReset resetFallbackValue={ undefined }
+                        onChange={ v => setAttributes({ buttonBorderRadius: v == null ? -1 : v }) }
+                        help={ __( 'Leave unset to use the Button shape default above.', 'header-block' ) }
+                    />
                 </PanelBody>
 
                 <PanelBody title={ __( 'Mobile', 'header-block' ) } initialOpen={ false }>
+                    <RangeControl  label="Mobile logo width"   value={ attributes.mobileLogoWidth } min={ 40 } max={ 260 } onChange={ v => setAttributes({ mobileLogoWidth: v }) } />
                     <SelectControl label="Mobile menu style"    value={ attributes.mobileMenuStyle }     options={ mobileStyleOptions } onChange={ v => setAttributes({ mobileMenuStyle: v }) } />
                     { attributes.mobileMenuStyle === 'slide-in' && (
                         <SelectControl
@@ -1538,6 +1947,19 @@ export default function Edit({ attributes, setAttributes }) {
                         options={ hamburgerIconStyleOptions }
                         onChange={ v => setAttributes({ hamburgerIconStyle: v }) }
                     />
+                    <SelectControl
+                        label="Hamburger position"
+                        value={ attributes.hamburgerPosition || 'left' }
+                        options={ hamburgerPositionOptions }
+                        onChange={ v => setAttributes({ hamburgerPosition: v }) }
+                        help={ __( 'Which side of the mobile header the menu toggle appears on.', 'header-block' ) }
+                    />
+                    <RangeControl
+                        label="Hamburger size"
+                        value={ attributes.hamburgerSize || 42 }
+                        min={ 28 } max={ 64 }
+                        onChange={ v => setAttributes({ hamburgerSize: v }) }
+                    />
                     <ToggleControl
                         label="Close on outside click"
                         checked={ attributes.mobileCloseOnOutsideClick !== false }
@@ -1553,7 +1975,7 @@ export default function Edit({ attributes, setAttributes }) {
                         <>
                             <div className="components-base-control">
                                 <label className="components-base-control__label">Border color</label>
-                                <ColorPalette value={ attributes.hamburgerBorderColor } onChange={ v => setAttributes({ hamburgerBorderColor: v }) } />
+                                <ColorPalette value={ resolveColor(attributes.hamburgerBorderColor) } onChange={ v => setAttributes({ hamburgerBorderColor: bindColor(v) }) } />
                             </div>
                             <RangeControl label="Border radius" value={ attributes.hamburgerBorderRadius } min={ 0 } max={ 30 } onChange={ v => setAttributes({ hamburgerBorderRadius: v }) } />
                         </>
@@ -1589,20 +2011,20 @@ export default function Edit({ attributes, setAttributes }) {
                     <RangeControl  label="Icon size"        value={ attributes.searchIconSize || 18 }      min={ 12 } max={ 32 } onChange={ v => setAttributes({ searchIconSize: v }) } />
                     <RangeControl  label="Button size"      value={ attributes.searchButtonSize || 38 }    min={ 28 } max={ 60 } onChange={ v => setAttributes({ searchButtonSize: v }) } />
                     <p style={{ marginBottom: 8 }}>Icon color</p>
-                    <ColorPalette value={ attributes.searchIconColor }   onChange={ v => setAttributes({ searchIconColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchIconColor) }   onChange={ v => setAttributes({ searchIconColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Button background</p>
-                    <ColorPalette value={ attributes.searchIconBgColor } onChange={ v => setAttributes({ searchIconBgColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchIconBgColor) } onChange={ v => setAttributes({ searchIconBgColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 4, fontWeight: 600 }}>Input field colors</p>
                     <p style={{ marginBottom: 8 }}>Input background</p>
-                    <ColorPalette value={ attributes.searchInputBgColor } onChange={ v => setAttributes({ searchInputBgColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchInputBgColor) } onChange={ v => setAttributes({ searchInputBgColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Input border</p>
-                    <ColorPalette value={ attributes.searchInputBorderColor } onChange={ v => setAttributes({ searchInputBorderColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchInputBorderColor) } onChange={ v => setAttributes({ searchInputBorderColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Input text</p>
-                    <ColorPalette value={ attributes.searchInputTextColor } onChange={ v => setAttributes({ searchInputTextColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchInputTextColor) } onChange={ v => setAttributes({ searchInputTextColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Placeholder text</p>
-                    <ColorPalette value={ attributes.searchPlaceholderColor } onChange={ v => setAttributes({ searchPlaceholderColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchPlaceholderColor) } onChange={ v => setAttributes({ searchPlaceholderColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Container background</p>
-                    <ColorPalette value={ attributes.searchContainerBgColor } onChange={ v => setAttributes({ searchContainerBgColor: v || '' }) } />
+                    <ColorPalette value={ resolveColor(attributes.searchContainerBgColor) } onChange={ v => setAttributes({ searchContainerBgColor: bindColor(v) }) } />
                 </PanelBody>
 
                 <PanelBody title={ __( 'Social Icons', 'header-block' ) } initialOpen={ false }>
@@ -1635,9 +2057,9 @@ export default function Edit({ attributes, setAttributes }) {
                             <SelectControl label={ `Platform ${ index + 1 }` } value={ item.platform } options={ platformOptions.map( p => ({ label: p, value: p }) ) } onChange={ v => updateSocialItem( index, 'platform', v ) } />
                             <TextControl   label="URL"                         value={ item.url }      onChange={ v => updateSocialItem( index, 'url',      v ) } />
                             <p style={{ marginBottom: 4 }}>Icon color</p>
-                            <ColorPalette value={ item.iconColor } onChange={ v => updateSocialItem( index, 'iconColor', v || '' ) } />
+                            <ColorPalette value={ resolveColor(item.iconColor) } onChange={ v => updateSocialItem( index, 'iconColor', bindColor(v) ) } />
                             <p style={{ marginBottom: 4 }}>Background color</p>
-                            <ColorPalette value={ item.bgColor } onChange={ v => updateSocialItem( index, 'bgColor', v || '' ) } />
+                            <ColorPalette value={ resolveColor(item.bgColor) } onChange={ v => updateSocialItem( index, 'bgColor', bindColor(v) ) } />
                             <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
                                 <Button
                                     variant="secondary"
@@ -1672,6 +2094,80 @@ export default function Edit({ attributes, setAttributes }) {
                     </Button>
                     <RangeControl label="Icon size"  value={ attributes.socialIconSize }  min={ 12 } max={ 40 } onChange={ v => setAttributes({ socialIconSize: v }) } />
                     <ColorPicker  color={ attributes.socialIconColor } onChange={ v => setAttributes({ socialIconColor: v }) } enableAlpha />
+                </PanelBody>
+
+                <PanelBody title={ __( 'Cart & Payment Icons', 'header-block' ) } initialOpen={ false }>
+                    {/* WooCommerce cart icon (ADAB-016) */}
+                    <p className="adaire-header-qpop__section-label">Cart icon</p>
+                    <ToggleControl
+                        label="Show cart icon"
+                        checked={ !! attributes.showCartIcon }
+                        onChange={ v => setAttributes({ showCartIcon: v }) }
+                        help={ __( 'Links to the WooCommerce cart when WooCommerce is active. Hidden automatically on sites without WooCommerce.', 'header-block' ) }
+                    />
+                    { attributes.showCartIcon && (
+                        <>
+                            <SelectControl
+                                label="Position"
+                                value={ attributes.cartIconPlacement || 'actions' }
+                                options={ iconPlacementOptions }
+                                onChange={ v => setAttributes({ cartIconPlacement: v }) }
+                                help={ __( 'Top bar placements need "Show top bar" enabled, otherwise they fall back to header buttons.', 'header-block' ) }
+                            />
+                            <ToggleControl
+                                label="Show item count badge"
+                                checked={ attributes.cartShowCount !== false }
+                                onChange={ v => setAttributes({ cartShowCount: v }) }
+                            />
+                            <RangeControl label="Icon size"  value={ attributes.cartIconSize || 18 } min={ 12 } max={ 40 } onChange={ v => setAttributes({ cartIconSize: v }) } />
+                            <p style={{ marginBottom: 8 }}>Icon color</p>
+                            <ColorPalette value={ attributes.cartIconColor } onChange={ v => setAttributes({ cartIconColor: v || '' }) } />
+                        </>
+                    ) }
+
+                    <hr />
+
+                    {/* Payment icons (ADAB-016) */}
+                    <p className="adaire-header-qpop__section-label">Payment icons</p>
+                    <ToggleControl
+                        label="Show payment icons"
+                        checked={ !! attributes.showPaymentIcons }
+                        onChange={ v => setAttributes({ showPaymentIcons: v }) }
+                    />
+                    { attributes.showPaymentIcons && (
+                        <>
+                            <SelectControl
+                                label="Position"
+                                value={ attributes.paymentIconPlacement || 'actions' }
+                                options={ iconPlacementOptions }
+                                onChange={ v => setAttributes({ paymentIconPlacement: v }) }
+                                help={ __( 'Top bar placements need "Show top bar" enabled, otherwise they fall back to header buttons.', 'header-block' ) }
+                            />
+                            { ( attributes.paymentIcons || [] ).map( ( item, index ) => (
+                                <div className="adaire-header-control-group" key={ index }>
+                                    <SelectControl
+                                        label={ `Icon ${ index + 1 }` }
+                                        value={ item.method }
+                                        options={ paymentMethodOptions.map( p => ( { label: p, value: p } ) ) }
+                                        onChange={ v => {
+                                            const next = [ ...( attributes.paymentIcons || [] ) ];
+                                            next[ index ] = { ...next[ index ], method: v };
+                                            setAttributes({ paymentIcons: next });
+                                        } }
+                                    />
+                                    <Button isDestructive variant="link" onClick={ () => setAttributes({ paymentIcons: attributes.paymentIcons.filter( ( _, i ) => i !== index ) }) }>
+                                        Remove icon
+                                    </Button>
+                                </div>
+                            ) ) }
+                            <Button variant="secondary" onClick={ () => setAttributes({ paymentIcons: [ ...( attributes.paymentIcons || [] ), { method: 'Visa' } ] }) }>
+                                Add payment icon
+                            </Button>
+                            <RangeControl label="Icon size"  value={ attributes.paymentIconSize || 22 } min={ 14 } max={ 48 } onChange={ v => setAttributes({ paymentIconSize: v }) } />
+                            <p style={{ marginBottom: 8 }}>Icon color</p>
+                            <ColorPalette value={ attributes.paymentIconColor } onChange={ v => setAttributes({ paymentIconColor: v || '' }) } />
+                        </>
+                    ) }
                 </PanelBody>
 
                 <PanelBody title={ __( 'Top Bar', 'header-block' ) } initialOpen={ false }>

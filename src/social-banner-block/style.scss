@@ -39,7 +39,8 @@
     flex-direction: column;
     align-items: center;
     gap: var(--icon-spacing, 10px);
-    
+    font-family: var(--banner-font-family, inherit);
+
     // Background and border radius
     background-color: var(--banner-background-color, transparent);
     border-radius: var(--banner-background-border-radius, 0);

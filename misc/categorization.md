@@ -1,4 +1,4 @@
-This document shows the categorization of all blocks in the GutenBlocks Blocks plugin. Each block is distinct and appears only in its designated category.
+This document shows the categorization of all blocks in the Adaire Blocks plugin. Each block is distinct and appears only in its designated category.
 
 ## Free Blocks
 

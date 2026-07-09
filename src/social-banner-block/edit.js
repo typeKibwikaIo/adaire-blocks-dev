@@ -83,6 +83,18 @@ const BREAKPOINTS = [
     { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'social-banner-block') }
 ];
 
+const FONT_FAMILY_OPTIONS = [
+    { label: 'Default (inherit theme)', value: '' },
+    { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+    { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+    { label: 'Georgia', value: 'Georgia, serif' },
+    { label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+    { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+    { label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+    { label: 'Courier New', value: "'Courier New', Courier, monospace" },
+    { label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
 export default function Edit({ attributes, setAttributes, clientId }) {
     const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
     const [editingIndex, setEditingIndex] = useState(null);
@@ -110,6 +122,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         hoverAnimation,
         animationDuration,
         animationEasing,
+        fontFamily,
     } = attributes;
 
     if (!blockId) {
@@ -150,6 +163,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--banner-padding-right-big-desktop': responsivePadding?.bigDesktop?.right || responsivePadding?.desktop?.right || '0px',
             '--banner-padding-bottom-big-desktop': responsivePadding?.bigDesktop?.bottom || responsivePadding?.desktop?.bottom || '0px',
             '--banner-padding-left-big-desktop': responsivePadding?.bigDesktop?.left || responsivePadding?.desktop?.left || '0px',
+            '--banner-font-family': fontFamily || 'inherit',
         },
     });
 
@@ -342,6 +356,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
 
+                </PanelBody>
+
+                <PanelBody title={__('Typography', 'social-banner-block')} initialOpen={false}>
+                    <SelectControl
+                        label={__('Font Family', 'social-banner-block')}
+                        value={fontFamily || ''}
+                        options={FONT_FAMILY_OPTIONS}
+                        onChange={(value) => setAttributes({ fontFamily: value })}
+                        help={__('This block has no text content of its own; the font family applies to any inherited text (e.g. ARIA labels rendered by assistive tech) within it.', 'social-banner-block')}
+                    />
                 </PanelBody>
 
                 <PanelBody title={__('Icon Settings', 'social-banner-block')} initialOpen={true}>

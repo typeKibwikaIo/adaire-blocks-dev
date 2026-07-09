@@ -14,6 +14,7 @@ import {
 	ToggleControl,
 	TextControl,
 	Placeholder,
+	__experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 import { image as imageIcon } from '@wordpress/icons';
 import InspectorTabs from '../components/InspectorTabs';
@@ -21,6 +22,18 @@ import DeviceSwitcher from '../components/DeviceSwitcher';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
 import { getGalleryStyles, getColumnsForDevice, mediaToImageItem } from './helpers';
+
+const FONT_FAMILY_OPTIONS = [
+	{ label: 'Default (inherit theme)', value: '' },
+	{ label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+	{ label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+	{ label: 'Georgia', value: 'Georgia, serif' },
+	{ label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+	{ label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+	{ label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+	{ label: 'Courier New', value: "'Courier New', Courier, monospace" },
+	{ label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
 
 export default function Edit( { attributes, setAttributes } ) {
 	const {
@@ -36,6 +49,12 @@ export default function Edit( { attributes, setAttributes } ) {
 		captionsEnabled,
 		containerMode,
 		containerMaxWidth,
+		fontFamily,
+		captionFontSize,
+		captionFontWeight,
+		captionLineHeight,
+		captionLetterSpacing,
+		captionTextTransform,
 	} = attributes;
 
 	const [ device, setDevice ] = useState( 'desktop' );
@@ -211,6 +230,66 @@ export default function Edit( { attributes, setAttributes } ) {
 						label={ __( 'Show image captions', 'gallery-block' ) }
 						checked={ !! captionsEnabled }
 						onChange={ ( value ) => setAttributes( { captionsEnabled: value } ) }
+					/>
+				</PanelBody>
+
+				<PanelBody title={ __( 'Typography', 'gallery-block' ) } initialOpen={ false }>
+					<RangeControl
+						label={ __( 'Caption Font Size (px)', 'gallery-block' ) }
+						value={ captionFontSize }
+						onChange={ ( value ) => setAttributes( { captionFontSize: value } ) }
+						min={ 8 }
+						max={ 32 }
+						step={ 1 }
+					/>
+
+					<SelectControl
+						label={ __( 'Caption Font Weight', 'gallery-block' ) }
+						value={ captionFontWeight }
+						options={ [
+							{ label: 'Thin (100)', value: '100' },
+							{ label: 'Extra Light (200)', value: '200' },
+							{ label: 'Light (300)', value: '300' },
+							{ label: 'Normal (400)', value: '400' },
+							{ label: 'Medium (500)', value: '500' },
+							{ label: 'Semi Bold (600)', value: '600' },
+							{ label: 'Bold (700)', value: '700' },
+							{ label: 'Extra Bold (800)', value: '800' },
+							{ label: 'Black (900)', value: '900' },
+						] }
+						onChange={ ( value ) => setAttributes( { captionFontWeight: value } ) }
+					/>
+
+					<UnitControl
+						label={ __( 'Caption Line Height', 'gallery-block' ) }
+						value={ captionLineHeight }
+						onChange={ ( value ) => setAttributes( { captionLineHeight: value } ) }
+					/>
+
+					<UnitControl
+						label={ __( 'Caption Letter Spacing', 'gallery-block' ) }
+						value={ captionLetterSpacing }
+						onChange={ ( value ) => setAttributes( { captionLetterSpacing: value } ) }
+					/>
+
+					<SelectControl
+						label={ __( 'Caption Text Transform', 'gallery-block' ) }
+						value={ captionTextTransform }
+						options={ [
+							{ label: 'None', value: 'none' },
+							{ label: 'Uppercase', value: 'uppercase' },
+							{ label: 'Lowercase', value: 'lowercase' },
+							{ label: 'Capitalize', value: 'capitalize' },
+						] }
+						onChange={ ( value ) => setAttributes( { captionTextTransform: value } ) }
+					/>
+
+					<SelectControl
+						label={ __( 'Font Family', 'gallery-block' ) }
+						value={ fontFamily || '' }
+						options={ FONT_FAMILY_OPTIONS }
+						onChange={ ( value ) => setAttributes( { fontFamily: value } ) }
+						help={ __( 'Applies to the gallery block (e.g. captions).', 'gallery-block' ) }
 					/>
 				</PanelBody>
 

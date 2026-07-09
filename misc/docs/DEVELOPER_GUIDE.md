@@ -1,4 +1,4 @@
-# GutenBlocks Blocks: Developer Guide
+# Adaire Blocks: Developer Guide
 
 > **Audience:** New developers onboarding to this repo.  
 
@@ -393,7 +393,7 @@ free-version-scaffold/
 │   ├── settings-page.php       ← Settings page (sanitized for free use)
 │   ├── block-migration.php
 │   ├── deactivation-modal.php  ← Feedback modal shown on plugin deactivation
-│   ├── deactivation-log-page.php ← Tools → GutenBlocks Deactivation Logs (SendGrid test)
+│   ├── deactivation-log-page.php ← Tools → Adaire Blocks Deactivation Logs (SendGrid test)
 │   ├── css/
 │   │   ├── deactivation-modal.css
 │   │   └── … (other admin styles)
@@ -512,7 +512,7 @@ When a user deactivates the plugin in WordPress, a feedback modal appears and th
 - `admin/js/deactivation-modal.js`: intercepts the deactivation link, shows modal
 - `admin/css/deactivation-modal.css`: modal styles
 - `includes/sendgrid.php`: `adaire_blocks_send_via_sendgrid()` wrapper
-- `admin/deactivation-log-page.php`: Tools → GutenBlocks Deactivation Logs (for testing)
+- `admin/deactivation-log-page.php`: Tools → Adaire Blocks Deactivation Logs (for testing)
 
 To change the feedback recipient email, edit `admin/deactivation-modal.php` line 9:
 

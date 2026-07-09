@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings page for GutenBlocks
+ * Settings page for Adaire Blocks
  *
  * @package AdaireBlocks
  */
@@ -46,8 +46,8 @@ class AdaireBlocksSettings {
         $svg_icon = 'data:image/svg+xml;base64,' . base64_encode('<svg width="20" height="20" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M408.523 321.353H163.388V393.981H401.889V483.583H195.142C156 483.583 125 516.017 125 556.18V645.814C125 685.978 156 718.411 195.142 718.411H401.889V645.814H201.776V556.18H401.889V645.814H477.941V393.981C477.941 353.818 446.941 321.353 408.523 321.353Z" fill="black"/><path d="M603.247 267.692V357.441H801.292C842.251 357.441 875 389.932 875 429.647V643.346C875 686.658 838.511 718.412 793.842 718.412H592.057C553.348 718.412 522.059 688.102 522.059 650.569V189C566.728 189 603.217 224.381 603.217 267.692H603.247ZM603.247 650.569H793.842V429.647H603.247V650.569Z" fill="black"/></svg>');
         
         add_menu_page(
-            'GutenBlocks',
-            'GutenBlocks',
+            'Guten-Blocks',
+            'Guten-Blocks',
             'manage_options',
             'adaire-blocks-settings',
             array($this, 'settings_page'),
@@ -71,7 +71,7 @@ class AdaireBlocksSettings {
         
         // // Debug: Log settings (only in debug mode)
         // if (defined('WP_DEBUG') && WP_DEBUG) {
-        //     error_log('GutenBlocks Settings: ' . print_r($this->settings, true));
+        //     error_log('Adaire Blocks Settings: ' . print_r($this->settings, true));
         // }
     }
     
@@ -97,7 +97,7 @@ class AdaireBlocksSettings {
     public function sanitize_settings($input) {
         // // Debug: Log what's being submitted (only in debug mode)
         // if (defined('WP_DEBUG') && WP_DEBUG) {
-        //     error_log('GutenBlocks Sanitize Input: ' . print_r($input, true));
+        //     error_log('Adaire Blocks Sanitize Input: ' . print_r($input, true));
         // }
         
         $sanitized = array();
@@ -129,7 +129,7 @@ class AdaireBlocksSettings {
         
         // // Debug: Log what's being saved (only in debug mode)
         // if (defined('WP_DEBUG') && WP_DEBUG) {
-        //     error_log('GutenBlocks Sanitized Output: ' . print_r($sanitized, true));
+        //     error_log('Adaire Blocks Sanitized Output: ' . print_r($sanitized, true));
         // }
         
         return $sanitized;
@@ -292,7 +292,7 @@ class AdaireBlocksSettings {
             
             // // Debug: Log block status (only in debug mode)
             // if (defined('WP_DEBUG') && WP_DEBUG) {
-            //     error_log("GutenBlocks Settings: Block $block_name - enabled: " . ($config->is_block_enabled($block_name) ? 'true' : 'false') . ", premium: " . ($is_premium_block ? 'true' : 'false'));
+            //     error_log("Adaire Blocks Settings: Block $block_name - enabled: " . ($config->is_block_enabled($block_name) ? 'true' : 'false') . ", premium: " . ($is_premium_block ? 'true' : 'false'));
             // }
             
             $blocks[$settings_key] = array(
@@ -424,7 +424,7 @@ class AdaireBlocksSettings {
 
     private function log_registration_failure($message) {
         if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('GutenBlocks Registry: ' . $message);
+            error_log('Adaire Blocks Registry: ' . $message);
         }
     }
 
@@ -608,13 +608,13 @@ class AdaireBlocksSettings {
         
         // Safety check - ensure config is loaded
         if (!$config) {
-            wp_die('Error: GutenBlocks configuration not loaded. Please try refreshing the page.');
+            wp_die('Error: Guten-Blocks configuration not loaded. Please try refreshing the page.');
         }
         
         // // Debug: Log config status (only in debug mode)
         // if (defined('WP_DEBUG') && WP_DEBUG) {
-        //     error_log('GutenBlocks Settings: Config loaded - is_premium: ' . ($config->is_premium() ? 'true' : 'false'));
-        //     error_log('GutenBlocks Settings: Plugin version: ' . $config->get_plugin_version());
+        //     error_log('Adaire Blocks Settings: Config loaded - is_premium: ' . ($config->is_premium() ? 'true' : 'false'));
+        //     error_log('Adaire Blocks Settings: Plugin version: ' . $config->get_plugin_version());
         // }
         
         

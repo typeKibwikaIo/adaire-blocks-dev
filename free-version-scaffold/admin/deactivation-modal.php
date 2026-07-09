@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 class Adaire_Deactivation_Modal
 {
     private static $instance = null;
-    private const DEFAULT_FEEDBACK_EMAIL = 'simeonlleni@gmail.com';
+    private const DEFAULT_FEEDBACK_EMAIL = 'support@adaire.com';
 
     // Step 0: singleton access for the modal controller.
     public static function get_instance()
@@ -137,7 +137,7 @@ class Adaire_Deactivation_Modal
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                         </div>
                         <h4><?php esc_html_e( 'Thanks for the feedback!', 'adaire-blocks' ); ?></h4>
-                        <p><?php esc_html_e( 'We\'ll use it to make GutenBlocks better. See you next time.', 'adaire-blocks' ); ?></p>
+                        <p><?php esc_html_e( 'We\'ll use it to make Guten-Blocks better. See you next time.', 'adaire-blocks' ); ?></p>
                     </div>
 
                 </div><!-- .adaire-modal-body -->
@@ -159,21 +159,15 @@ class Adaire_Deactivation_Modal
         $default_recipient = defined('ADAIRE_FEEDBACK_EMAIL') ? ADAIRE_FEEDBACK_EMAIL : self::DEFAULT_FEEDBACK_EMAIL;
         $feedback_recipient = apply_filters('adaire_blocks_deactivation_feedback_to', $default_recipient, $feedback);
 
-        $subject = 'GutenBlocks Deactivation Feedback';
+        $subject = 'Guten-Blocks Deactivation Feedback';
         $message = $this->build_feedback_message($feedback);
 
-        $send_result = $this->send_feedback_email($feedback_recipient, $subject, $message, $feedback['email']);
+        $send_result = $this->send_feedback_email($feedback_recipient, $subject, $message, $feedback);
         $this->log_feedback_attempt($feedback, $send_result, $feedback_recipient);
 
-        if (!$send_result['sent']) {
-            $payload = ['message' => 'Failed to send feedback email'];
-            if (!empty($send_result['error'])) {
-                $payload['error'] = $send_result['error'];
-            }
-            wp_send_json_error($payload, 500);
-        }
-
-        wp_send_json_success(['sent' => true]);
+        // Always return success — deactivation proceeds regardless of email delivery.
+        // The attempt is logged to adaire_deact_log for later review if mail fails.
+        wp_send_json_success(['sent' => $send_result['sent']]);
     }
 
     // Step 2a: sanitize incoming feedback fields.
@@ -195,7 +189,7 @@ class Adaire_Deactivation_Modal
         $email_text = $feedback['email'] ?: 'Not provided';
 
         return implode("\n", [
-            'A user has deactivated the GutenBlocks Free plugin.',
+            'A user has deactivated the Guten-Blocks Free plugin.',
             '',
             'Site: ' . $feedback['site'],
             'Reason: ' . $reason_text,
@@ -204,24 +198,26 @@ class Adaire_Deactivation_Modal
         ]);
     }
 
-    // Step 2c: send feedback via SendGrid.
-    private function send_feedback_email($recipient, $subject, $message, $reply_to)
+    // Step 2c: send feedback via Adaire webhook (SendGrid on our end, no key in plugin).
+    private function send_feedback_email($recipient, $subject, $message, array $feedback)
     {
-        $reply_to_email = $reply_to && is_email($reply_to) ? $reply_to : null;
+        $response = wp_remote_post( 'https://adaire.com/feedback-handler.php', [
+            'timeout' => 10,
+            'body'    => [
+                'token'   => 'gb-feedback-k7x2m9p4',
+                'reason'  => $feedback['reason']  ?? '',
+                'details' => $feedback['details'] ?? '',
+                'email'   => $feedback['email']   ?? '',
+                'site'    => $feedback['site']    ?? home_url(),
+            ],
+        ] );
 
-        if (!function_exists('adaire_blocks_get_sendgrid_api_key') || !adaire_blocks_get_sendgrid_api_key()) {
-            return [
-                'sent' => false,
-                'provider' => 'sendgrid',
-                'error' => 'SendGrid is not configured',
-            ];
-        }
+        $sent = ! is_wp_error( $response ) && (int) wp_remote_retrieve_response_code( $response ) === 200;
 
-        $sendgrid_result = adaire_blocks_send_via_sendgrid($recipient, $subject, $message, $reply_to_email);
         return [
-            'sent' => (bool) ($sendgrid_result['sent'] ?? false),
-            'provider' => $sendgrid_result['provider'] ?? 'sendgrid',
-            'error' => $sendgrid_result['error'] ?? null,
+            'sent'     => $sent,
+            'provider' => 'adaire-webhook',
+            'error'    => $sent ? null : ( is_wp_error( $response ) ? $response->get_error_message() : 'Webhook returned HTTP ' . wp_remote_retrieve_response_code( $response ) ),
         ];
     }
 

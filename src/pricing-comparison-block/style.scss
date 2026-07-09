@@ -11,7 +11,7 @@
 	--pc-sticky-border: #e5e7eb;
 	--pc-striped: #fafafa;
 	color: inherit;
-	font-family: inherit;
+	font-family: var(--pc-font-family, inherit);
 }
 
 .pc-container {
@@ -33,15 +33,20 @@
 }
 
 .pc-subheading {
-	font-size: 12px;
-	text-transform: uppercase;
-	letter-spacing: 0.08em;
+	font-size: var(--pc-subheading-font-size, 12px);
+	font-weight: var(--pc-subheading-font-weight, 400);
+	line-height: var(--pc-subheading-line-height, normal);
+	text-transform: var(--pc-subheading-text-transform, uppercase);
+	letter-spacing: var(--pc-subheading-letter-spacing, 0.08em);
 	color: var(--pc-muted-text);
 }
 
 .pc-heading {
-	font-size: clamp(24px, 3vw, 40px);
-	font-weight: 700;
+	font-size: var(--pc-heading-font-size, clamp(24px, 3vw, 40px));
+	font-weight: var(--pc-heading-font-weight, 700);
+	line-height: var(--pc-heading-line-height, normal);
+	letter-spacing: var(--pc-heading-letter-spacing, normal);
+	text-transform: var(--pc-heading-text-transform, none);
 	margin: 0;
 }
 
@@ -80,6 +85,11 @@
 	gap: 8px;
 	justify-content: center;
 	color: var(--pc-muted-text);
+	font-size: var(--pc-guarantee-font-size, 14px);
+	font-weight: var(--pc-guarantee-font-weight, 400);
+	line-height: var(--pc-guarantee-line-height, 1.5);
+	letter-spacing: var(--pc-guarantee-letter-spacing, normal);
+	text-transform: var(--pc-guarantee-text-transform, none);
 }
 
 .pc-group {
@@ -131,8 +141,11 @@
 }
 
 .pc-card__title {
-	font-size: 18px;
-	font-weight: 600;
+	font-size: var(--pc-card-title-font-size, 18px);
+	font-weight: var(--pc-card-title-font-weight, 600);
+	line-height: var(--pc-card-title-line-height, normal);
+	letter-spacing: var(--pc-card-title-letter-spacing, normal);
+	text-transform: var(--pc-card-title-text-transform, none);
 }
 
 .pc-card__badge {
@@ -149,8 +162,11 @@
 	color: var(--pc-muted-text);
 	margin: 0;
 	min-height: 44px; // Alignment fix: ensures prices align across cards
-	font-size: 14px;
-	line-height: 1.5;
+	font-size: var(--pc-card-description-font-size, 14px);
+	font-weight: var(--pc-card-description-font-weight, 400);
+	line-height: var(--pc-card-description-line-height, 1.5);
+	letter-spacing: var(--pc-card-description-letter-spacing, normal);
+	text-transform: var(--pc-card-description-text-transform, none);
 }
 
 .pc-card__price {
@@ -160,8 +176,11 @@
 }
 
 .pc-card__amount {
-	font-size: 30px; // Reduced from 36px
-	font-weight: 700;
+	font-size: var(--pc-price-font-size, 30px); // Reduced from 36px
+	font-weight: var(--pc-price-font-weight, 700);
+	line-height: var(--pc-price-line-height, normal);
+	letter-spacing: var(--pc-price-letter-spacing, normal);
+	text-transform: var(--pc-price-text-transform, none);
 }
 
 .pc-card__period {
@@ -219,9 +238,12 @@
 	border: 1px solid var(--pc-button-outline);
 	color: var(--pc-button-outline);
 	text-decoration: none;
-	font-weight: 600;
+	font-weight: var(--pc-cta-font-weight, 600);
 	background: transparent;
-	font-size: 14px;
+	font-size: var(--pc-cta-font-size, 14px);
+	line-height: var(--pc-cta-line-height, normal);
+	letter-spacing: var(--pc-cta-letter-spacing, normal);
+	text-transform: var(--pc-cta-text-transform, none);
 }
 
 .pc-card__button:hover {
@@ -270,10 +292,11 @@
 
 .pc-feature-section__title {
 	margin: 0;
-	font-size: 11px;
-	font-weight: 700;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
+	font-size: var(--pc-feature-section-title-font-size, 11px);
+	font-weight: var(--pc-feature-section-title-font-weight, 700);
+	line-height: var(--pc-feature-section-title-line-height, normal);
+	letter-spacing: var(--pc-feature-section-title-letter-spacing, 0.08em);
+	text-transform: var(--pc-feature-section-title-text-transform, uppercase);
 	color: color-mix(in srgb, var(--pc-muted-text) 70%, #111111 30%);
 }
 
@@ -328,9 +351,11 @@
 }
 
 .pc-feature-list__label {
-	font-size: 13px;
-	font-weight: 500;
-	line-height: 1.4;
+	font-size: var(--pc-feature-label-font-size, 13px);
+	font-weight: var(--pc-feature-label-font-weight, 500);
+	line-height: var(--pc-feature-label-line-height, 1.4);
+	letter-spacing: var(--pc-feature-label-letter-spacing, normal);
+	text-transform: var(--pc-feature-label-text-transform, none);
 }
 
 .pc-feature-list__value {
@@ -429,8 +454,8 @@
 	font-weight: 700;
 	background: transparent;
 	font-size: 13px;
-	text-transform: none; // Match Elementor's sentence case
-	letter-spacing: 0;
+	text-transform: var(--pc-card-title-text-transform, none); // Match Elementor's sentence case
+	letter-spacing: var(--pc-card-title-letter-spacing, 0);
 	padding: 12px 0;
 	border-bottom: 1px solid var(--pc-border);
 }

@@ -8,9 +8,11 @@ import {
 	useBlockProps,
 } from '@wordpress/block-editor';
 import {
+	__experimentalUnitControl as UnitControl,
 	Button,
 	PanelBody,
 	RangeControl,
+	SelectControl,
 	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
@@ -22,6 +24,51 @@ import { useState } from '@wordpress/element';
 function ColorPicker( { label, value, onChange } ) {
 	return (
 		<AdaireColorControl label={ label } value={ value } onChange={ onChange } />
+	);
+}
+
+const TEXT_TRANSFORM_OPTIONS = [
+	{ label: __( 'None' ), value: 'none' },
+	{ label: __( 'Uppercase' ), value: 'uppercase' },
+	{ label: __( 'Lowercase' ), value: 'lowercase' },
+	{ label: __( 'Capitalize' ), value: 'capitalize' },
+];
+
+const FONT_FAMILY_OPTIONS = [
+	{ label: __( 'Default' ), value: '' },
+	{ label: __( 'Arial' ), value: 'Arial, Helvetica, sans-serif' },
+	{ label: __( 'Helvetica' ), value: 'Helvetica, Arial, sans-serif' },
+	{ label: __( 'Georgia' ), value: 'Georgia, serif' },
+	{ label: __( 'Times New Roman' ), value: "'Times New Roman', Times, serif" },
+	{ label: __( 'Verdana' ), value: 'Verdana, Geneva, sans-serif' },
+	{ label: __( 'Trebuchet MS' ), value: "'Trebuchet MS', sans-serif" },
+	{ label: __( 'Courier New' ), value: "'Courier New', Courier, monospace" },
+	{ label: __( 'System UI' ), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
+function TypographySubsection( { title, a, set, prefix } ) {
+	return (
+		<div className="adaire-typography-section" style={ { borderBottom: '1px solid #eee', paddingBottom: 16, marginBottom: 16 } }>
+			{ title && (
+				<p className="adaire-typography-section-name" style={ { fontWeight: 600, marginBottom: 12 } }>{ title }</p>
+			) }
+			<UnitControl
+				label={ __( 'Line height' ) }
+				value={ a[ `${ prefix }LineHeight` ] }
+				onChange={ set( `${ prefix }LineHeight` ) }
+			/>
+			<UnitControl
+				label={ __( 'Letter spacing' ) }
+				value={ a[ `${ prefix }LetterSpacing` ] }
+				onChange={ set( `${ prefix }LetterSpacing` ) }
+			/>
+			<SelectControl
+				label={ __( 'Text transform' ) }
+				value={ a[ `${ prefix }TextTransform` ] }
+				options={ TEXT_TRANSFORM_OPTIONS }
+				onChange={ set( `${ prefix }TextTransform` ) }
+			/>
+		</div>
 	);
 }
 
@@ -83,6 +130,7 @@ export default function Edit( { attributes: a, setAttributes } ) {
 			paddingTop    : `${ a.paddingTop    ?? 64 }px`,
 			paddingBottom : `${ a.paddingBottom ?? 64 }px`,
 			color         : a.textColor       || '#ffffff',
+			'--ab-font-family' : a.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
 		},
 	} );
 
@@ -121,6 +169,23 @@ export default function Edit( { attributes: a, setAttributes } ) {
 							onChange={ set( 'scrollButtonText' ) }
 						/>
 					) }
+				</PanelBody>
+
+				<PanelBody title={ __( 'Typography' ) } initialOpen={ false }>
+					<SelectControl
+						label={ __( 'Font family' ) }
+						value={ a.fontFamily || '' }
+						options={ FONT_FAMILY_OPTIONS }
+						onChange={ set( 'fontFamily' ) }
+						help={ __( 'Applies to all text in this block.' ) }
+					/>
+					<TypographySubsection title={ __( 'Heading' ) }          a={ a } set={ set } prefix="heading" />
+					<TypographySubsection title={ __( 'Tagline' ) }          a={ a } set={ set } prefix="tagline" />
+					<TypographySubsection title={ __( 'Mission' ) }          a={ a } set={ set } prefix="mission" />
+					<TypographySubsection title={ __( 'Statement' ) }        a={ a } set={ set } prefix="statement" />
+					<TypographySubsection title={ __( 'Caption' ) }          a={ a } set={ set } prefix="caption" />
+					<TypographySubsection title={ __( 'Body text' ) }        a={ a } set={ set } prefix="body" />
+					<TypographySubsection title={ __( 'Closing statement' ) } a={ a } set={ set } prefix="closing" />
 				</PanelBody>
 
 				<PanelBody title={ __( 'Images' ) } initialOpen={ false }>

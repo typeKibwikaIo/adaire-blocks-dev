@@ -4,7 +4,7 @@
 
 .adaire-timeline {
 	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+	font-family: var( --tl-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif );
 	width: 100%;
 	overflow: hidden;
 
@@ -23,25 +23,31 @@
 	}
 
 	.adaire-timeline__eyebrow {
-		font-size: 11px;
-		font-weight: 700;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
+		font-size: var( --tl-eyebrow-font-size, 11px );
+		font-weight: var( --tl-eyebrow-font-weight, 700 );
+		line-height: var( --tl-eyebrow-line-height, normal );
+		letter-spacing: var( --tl-eyebrow-letter-spacing, 0.14em );
+		text-transform: var( --tl-eyebrow-text-transform, uppercase );
 		color: var( --tl-eyebrow, #aeb4cf );
 		margin: 0 0 14px;
 	}
 
 	.adaire-timeline__section-title {
-		font-size: clamp( 26px, 3.5vw, 42px );
-		font-weight: 700;
-		line-height: 1.18;
+		font-size: var( --tl-section-title-font-size, clamp( 26px, 3.5vw, 42px ) );
+		font-weight: var( --tl-section-title-font-weight, 700 );
+		line-height: var( --tl-section-title-line-height, 1.18 );
+		letter-spacing: var( --tl-section-title-letter-spacing, normal );
+		text-transform: var( --tl-section-title-text-transform, none );
 		color: var( --tl-text, #fff );
 		margin: 0 0 16px;
 	}
 
 	.adaire-timeline__section-desc {
-		font-size: 16px;
-		line-height: 1.75;
+		font-size: var( --tl-section-desc-font-size, 16px );
+		font-weight: var( --tl-section-desc-font-weight, 400 );
+		line-height: var( --tl-section-desc-line-height, 1.75 );
+		letter-spacing: var( --tl-section-desc-letter-spacing, normal );
+		text-transform: var( --tl-section-desc-text-transform, none );
 		color: var( --tl-desc, #aeb4cf );
 		margin: 0 auto;
 		max-width: 560px;
@@ -76,16 +82,21 @@
 
 	// ── Shared: Item content ───────────────────────────────────────────────
 	.adaire-timeline__item-title {
-		font-size: 18px;
-		font-weight: 700;
-		line-height: 1.3;
-		color: var( --tl-text, #fff );
+		font-size: var( --tl-item-title-font-size, 18px );
+		font-weight: var( --tl-item-title-font-weight, 700 );
+		line-height: var( --tl-item-title-line-height, 1.3 );
+		letter-spacing: var( --tl-item-title-letter-spacing, normal );
+		text-transform: var( --tl-item-title-text-transform, none );
+		color: var( --tl-item-title-color, #fff );
 		margin: 0 0 10px;
 	}
 
 	.adaire-timeline__item-desc {
-		font-size: 15px;
-		line-height: 1.75;
+		font-size: var( --tl-item-desc-font-size, 15px );
+		font-weight: var( --tl-item-desc-font-weight, 400 );
+		line-height: var( --tl-item-desc-line-height, 1.75 );
+		letter-spacing: var( --tl-item-desc-letter-spacing, normal );
+		text-transform: var( --tl-item-desc-text-transform, none );
 		color: var( --tl-desc, #aeb4cf );
 		margin: 0;
 	}
@@ -166,58 +177,32 @@
 			}
 		}
 
-		// ── Mobile: stack all items as [node] [content] ─────────────────
+		// ── Mobile: keep the same alternating left/right zigzag —
+		// just tighten the spacing so it fits narrower screens. Previously
+		// this swapped/hid grid slots so every item (left or right) ended
+		// up rendered as [node][content], collapsing the whole alternating
+		// pattern into one side-aligned list. That's no longer what we want:
+		// the 3-column [slot][center][slot] grid stays intact at every width.
 		@media ( max-width: 768px ) {
-			.adaire-timeline__line {
-				left: 26px;
-				transform: none;
+			.adaire-timeline__item {
+				gap: 14px;
+				margin-bottom: 36px;
 			}
 
-			// Override 3-col grid → 2-col: [node col] [content col]
-			.adaire-timeline__item {
-				grid-template-columns: auto 1fr;
-				gap: 16px;
-				margin-bottom: 36px;
-
-				// is-right: default DOM order is [empty slot][center][content slot]
-				// → hide empty slot, center becomes col-1, content becomes col-2
-				&.is-right {
-					.adaire-timeline__slot:first-child {
-						display: none;
-					}
-					.adaire-timeline__center {
-						grid-column: 1;
-						grid-row: 1;
-					}
-					.adaire-timeline__slot:last-child {
-						grid-column: 2;
-						grid-row: 1;
-					}
-				}
-
-				// is-left: DOM order is [content slot][center][empty slot]
-				// → move center to col-1, move content slot to col-2, hide empty slot
-				&.is-left {
-					.adaire-timeline__slot:last-child {
-						display: none;
-					}
-					.adaire-timeline__center {
-						grid-column: 1;
-						grid-row: 1;
-					}
-					.adaire-timeline__slot:first-child {
-						grid-column: 2;
-						grid-row: 1;
-					}
-					.adaire-timeline__content {
-						text-align: left; // override right-align on mobile
-					}
-				}
+			.adaire-timeline__center {
+				gap: 6px;
 			}
 
 			// Hide arrows on small screens (no space)
 			.adaire-timeline__arrow {
 				display: none;
+			}
+		}
+
+		@media ( max-width: 420px ) {
+			.adaire-timeline__item {
+				gap: 8px;
+				margin-bottom: 28px;
 			}
 		}
 	}

@@ -19,7 +19,7 @@ In this article, we look at the CTA (Call-to-Action) Block, a powerful block tha
 **Main Title** - The primary heading text for the CTA section
 - Editable through RichText in the editor
 - Supports HTML formatting
-- Default: "GutenBlocks Blocks"
+- Default: "Adaire Blocks"
 
 **Subtitle** - The secondary heading text below the main title
 - Editable through RichText in the editor

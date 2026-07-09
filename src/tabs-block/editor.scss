@@ -42,17 +42,23 @@
         pointer-events: auto !important;
     }
     
-    // Editor tab styling
+    // Editor tab styling — keep close to the frontend look; the moving
+    // underline is hidden in the editor, so a static bottom border on the
+    // active tab stands in for it.
     &__tab {
-        // More visible in editor
         &:hover {
             background-color: rgba(0, 0, 0, 0.02);
         }
-        
+
         &.is-active {
-            background-color: rgba(59, 130, 246, 0.05);
-            border-bottom-color: var(--tab-underline-color, #3b82f6);
+            border-bottom-color: var(--tab-underline-color, #503AA8);
         }
+    }
+
+    // Pills draw their own borders — don't tint the pill's bottom edge
+    // with the underline color.
+    &__list--pills .adaire-tabs__tab.is-active {
+        border-bottom-color: var(--pill-active-border, #503AA8);
     }
     
     // Hide underline in editor (too complex to position without JS)
@@ -73,29 +79,46 @@
     &__container.is-vertical,
     [data-tab-layout="vertical"] &__container {
         min-height: 400px;
-        
+
         .adaire-tabs__header {
             display: flex;
             flex-direction: column;
         }
-        
+
         .adaire-tabs__list {
             flex: 1;
             display: flex;
             justify-content: var(--tabs-align, flex-start);
         }
-        
+
+        // In the editor every tab button sits inside a QuickZone wrapper
+        // (.adaire-qz), so the list's flex column stretches the wrapper,
+        // not the button. On the frontend the buttons are direct flex
+        // items and fill the column — mirror that here so the vertical
+        // layout previews the same as it renders on the page.
+        .adaire-tabs__list > .adaire-qz {
+            width: 100%;
+
+            .adaire-tabs__tab {
+                display: block;
+                width: 100%;
+            }
+        }
+
+        // The container's own gap (40px, from the frontend stylesheet)
+        // already separates tabs from content — no extra editor margin,
+        // otherwise the editor shows wider spacing than the page.
         .adaire-tabs__content-wrapper {
             margin-top: 0;
-            margin-left: 20px;
+            margin-left: 0;
         }
     }
-    
+
     // Vertical layout right position in editor
     &__container.is-vertical.is-right {
         .adaire-tabs__content-wrapper {
             margin-left: 0;
-            margin-right: 20px;
+            margin-right: 0;
         }
     }
     

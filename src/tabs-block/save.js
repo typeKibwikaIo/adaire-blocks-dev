@@ -1,4 +1,5 @@
-﻿import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { getDeviceValue } from '../components/DeviceSwitcher';
 
 export default function save({ attributes }) {
     const {
@@ -11,6 +12,10 @@ export default function save({ attributes }) {
         tabTitleFontSize,
         tabTitleFontWeight,
         tabTitleActiveFontWeight,
+        tabTitleLineHeight,
+        tabTitleLetterSpacing,
+        tabTitleTextTransform,
+        fontFamily,
         tabGap,
         underlineHeight,
         contentPaddingTop,
@@ -29,7 +34,24 @@ export default function save({ attributes }) {
         tabLayout,
         tabPosition,
         verticalActiveBgColor,
+        tabStyle,
+        pillStyle,
+        pillBackgroundColor,
+        pillActiveBackgroundColor,
+        pillTextColor,
+        pillActiveTextColor,
+        pillBorderColor,
+        pillActiveBorderColor,
+        pillBorderRadius,
+        pillPadding,
+        contentBackgroundColor,
+        contentBorderRadius,
+        contentWidth,
+        wrapperBackgroundColor,
+        wrapperPadding,
     } = attributes;
+
+    const isPills = tabStyle === 'pills';
 
     // Helper function to ensure we have a valid color with opacity
     const getBackgroundColor = (color) => {
@@ -44,6 +66,7 @@ export default function save({ attributes }) {
         'data-animation-ease': animationEase,
         'data-active-tab': activeTab,
         'data-tab-layout': tabLayout,
+        'data-tab-style': tabStyle,
         style: {
             '--tab-title-color': tabTitleColor,
             '--tab-title-active-color': tabTitleActiveColor,
@@ -51,6 +74,19 @@ export default function save({ attributes }) {
             '--tab-title-size': `${tabTitleFontSize}px`,
             '--tab-title-weight': tabTitleFontWeight,
             '--tab-title-active-weight': tabTitleActiveFontWeight,
+            '--tab-title-line-height': `${getDeviceValue(tabTitleLineHeight, 'desktop', 'normal')}`,
+            '--tab-title-line-height-tablet': `${getDeviceValue(tabTitleLineHeight, 'tablet', 'normal')}`,
+            '--tab-title-line-height-mobile': `${getDeviceValue(tabTitleLineHeight, 'mobile', 'normal')}`,
+            '--tab-title-line-height-watch': `${getDeviceValue(tabTitleLineHeight, 'smartwatch', 'normal')}`,
+            '--tab-title-letter-spacing': `${getDeviceValue(tabTitleLetterSpacing, 'desktop', '-0.01em')}`,
+            '--tab-title-letter-spacing-tablet': `${getDeviceValue(tabTitleLetterSpacing, 'tablet', '-0.01em')}`,
+            '--tab-title-letter-spacing-mobile': `${getDeviceValue(tabTitleLetterSpacing, 'mobile', '-0.01em')}`,
+            '--tab-title-letter-spacing-watch': `${getDeviceValue(tabTitleLetterSpacing, 'smartwatch', '-0.01em')}`,
+            '--tab-title-text-transform': `${getDeviceValue(tabTitleTextTransform, 'desktop', 'none')}`,
+            '--tab-title-text-transform-tablet': `${getDeviceValue(tabTitleTextTransform, 'tablet', 'none')}`,
+            '--tab-title-text-transform-mobile': `${getDeviceValue(tabTitleTextTransform, 'mobile', 'none')}`,
+            '--tab-title-text-transform-watch': `${getDeviceValue(tabTitleTextTransform, 'smartwatch', 'none')}`,
+            '--tabs-font-family': fontFamily || 'inherit',
             '--tab-gap': `${tabGap}px`,
             '--underline-height': `${underlineHeight}px`,
             '--content-padding-top': `${contentPaddingTop}px`,
@@ -64,13 +100,42 @@ export default function save({ attributes }) {
             '--tab-layout': tabLayout,
             '--tab-position': tabPosition,
             '--vertical-active-bg-color': getBackgroundColor(verticalActiveBgColor),
+            '--pill-bg': pillBackgroundColor,
+            '--pill-active-bg': pillActiveBackgroundColor,
+            '--pill-text': pillTextColor,
+            '--pill-active-text': pillActiveTextColor,
+            '--pill-border': pillBorderColor,
+            '--pill-active-border': pillActiveBorderColor,
+            '--pill-border-radius': `${pillBorderRadius ?? 24}px`,
+            '--pill-padding-top': `${pillPadding?.top ?? 12}px`,
+            '--pill-padding-right': `${pillPadding?.right ?? 24}px`,
+            '--pill-padding-bottom': `${pillPadding?.bottom ?? 12}px`,
+            '--pill-padding-left': `${pillPadding?.left ?? 24}px`,
+            '--tabs-content-bg': contentBackgroundColor || 'transparent',
+            '--tabs-content-border-radius': `${contentBorderRadius ?? 0}px`,
+            '--tabs-content-width': `${contentWidth?.desktop?.value ?? 100}${contentWidth?.desktop?.unit ?? '%'}`,
+            '--tabs-content-width-tablet': `${contentWidth?.tablet?.value ?? 100}${contentWidth?.tablet?.unit ?? '%'}`,
+            '--tabs-content-width-mobile': `${contentWidth?.mobile?.value ?? 100}${contentWidth?.mobile?.unit ?? '%'}`,
+            '--wrapper-bg': wrapperBackgroundColor || 'transparent',
+            '--wrapper-padding-top': `${wrapperPadding?.desktop?.top ?? 0}px`,
+            '--wrapper-padding-right': `${wrapperPadding?.desktop?.right ?? 0}px`,
+            '--wrapper-padding-bottom': `${wrapperPadding?.desktop?.bottom ?? 0}px`,
+            '--wrapper-padding-left': `${wrapperPadding?.desktop?.left ?? 0}px`,
+            '--wrapper-padding-top-tablet': `${wrapperPadding?.tablet?.top ?? wrapperPadding?.desktop?.top ?? 0}px`,
+            '--wrapper-padding-right-tablet': `${wrapperPadding?.tablet?.right ?? wrapperPadding?.desktop?.right ?? 0}px`,
+            '--wrapper-padding-bottom-tablet': `${wrapperPadding?.tablet?.bottom ?? wrapperPadding?.desktop?.bottom ?? 0}px`,
+            '--wrapper-padding-left-tablet': `${wrapperPadding?.tablet?.left ?? wrapperPadding?.desktop?.left ?? 0}px`,
+            '--wrapper-padding-top-mobile': `${wrapperPadding?.mobile?.top ?? wrapperPadding?.tablet?.top ?? wrapperPadding?.desktop?.top ?? 0}px`,
+            '--wrapper-padding-right-mobile': `${wrapperPadding?.mobile?.right ?? wrapperPadding?.tablet?.right ?? wrapperPadding?.desktop?.right ?? 0}px`,
+            '--wrapper-padding-bottom-mobile': `${wrapperPadding?.mobile?.bottom ?? wrapperPadding?.tablet?.bottom ?? wrapperPadding?.desktop?.bottom ?? 0}px`,
+            '--wrapper-padding-left-mobile': `${wrapperPadding?.mobile?.left ?? wrapperPadding?.tablet?.left ?? wrapperPadding?.desktop?.left ?? 0}px`,
         },
     });
 
     return (
-        <div {...blockProps} data-tab-layout={tabLayout} data-tab-position={tabPosition}>
-            <div 
-                className={`adaire-tabs__container ${containerMode === 'constrained' ? 'is-constrained' : ''} ${tabLayout === 'vertical' ? 'is-vertical' : ''} ${tabPosition === 'bottom' ? 'is-bottom' : ''} ${tabPosition === 'right' ? 'is-right' : ''}`}
+        <div {...blockProps} data-tab-layout={tabLayout} data-tab-position={tabPosition} data-tab-style={tabStyle}>
+            <div
+                className={`adaire-tabs__container ${containerMode === 'constrained' ? 'is-constrained' : ''} ${tabLayout === 'vertical' ? 'is-vertical' : ''} ${tabPosition === 'bottom' ? 'is-bottom' : ''} ${tabPosition === 'right' ? 'is-right' : ''} ${isPills ? 'is-pills' : ''}`}
                 style={{
                     marginTop: `${marginTop}px`,
                     marginRight: `${marginRight}px`,
@@ -78,8 +143,8 @@ export default function save({ attributes }) {
                     marginLeft: `${marginLeft}px`,
                 }}
             >
-                <div className="adaire-tabs__header">
-                    <div className="adaire-tabs__list" role="tablist">
+                <div className={`adaire-tabs__header ${isPills ? 'is-pills' : ''}`}>
+                    <div className={`adaire-tabs__list ${isPills ? `adaire-tabs__list--pills adaire-tabs__list--pill-${pillStyle}` : ''}`} role="tablist">
                         {(tabs || []).map((tab, index) => (
                             <button
                                 key={tab.id}
@@ -94,7 +159,7 @@ export default function save({ attributes }) {
                             </button>
                         ))}
                     </div>
-                    <div className="adaire-tabs__underline" />
+                    {!isPills && <div className="adaire-tabs__underline" />}
                 </div>
 
                 <div className="adaire-tabs__content-wrapper">
@@ -106,6 +171,3 @@ export default function save({ attributes }) {
         </div>
     );
 }
-
-
-

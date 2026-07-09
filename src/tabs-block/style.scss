@@ -13,9 +13,32 @@
         margin: 0 auto;
         display: flex;
         flex-direction: column;
-        
+        background-color: var(--wrapper-bg, transparent);
+        padding: var(--wrapper-padding-top, 0) var(--wrapper-padding-right, 0) var(--wrapper-padding-bottom, 0) var(--wrapper-padding-left, 0);
+
         &.is-constrained {
             max-width: var(--container-max-width, 1200px);
+        }
+    }
+
+    // Responsive wrapper padding
+    @media (max-width: 1024px) {
+        &__container {
+            padding:
+                var(--wrapper-padding-top-tablet, var(--wrapper-padding-top, 0))
+                var(--wrapper-padding-right-tablet, var(--wrapper-padding-right, 0))
+                var(--wrapper-padding-bottom-tablet, var(--wrapper-padding-bottom, 0))
+                var(--wrapper-padding-left-tablet, var(--wrapper-padding-left, 0));
+        }
+    }
+
+    @media (max-width: 768px) {
+        &__container {
+            padding:
+                var(--wrapper-padding-top-mobile, var(--wrapper-padding-top-tablet, var(--wrapper-padding-top, 0)))
+                var(--wrapper-padding-right-mobile, var(--wrapper-padding-right-tablet, var(--wrapper-padding-right, 0)))
+                var(--wrapper-padding-bottom-mobile, var(--wrapper-padding-bottom-tablet, var(--wrapper-padding-bottom, 0)))
+                var(--wrapper-padding-left-mobile, var(--wrapper-padding-left-tablet, var(--wrapper-padding-left, 0)));
         }
     }
 
@@ -148,16 +171,18 @@
         border: none;
         border-bottom: var(--underline-height, 3px) solid transparent;
         padding: 16px 0;
-        font-family: inherit; // Respect site/user theme font
+        font-family: var(--tabs-font-family, inherit); // Respect site/user theme font, or user-selected override
         font-size: var(--tab-title-size, 18px);
         font-weight: var(--tab-title-weight, 500);
+        line-height: var(--tab-title-line-height, normal);
         color: var(--tab-title-color, #aeb4cf);
         cursor: pointer;
         position: relative;
         white-space: nowrap;
         outline: none;
         transform: scale(1);
-        letter-spacing: -0.01em;
+        letter-spacing: var(--tab-title-letter-spacing, -0.01em);
+        text-transform: var(--tab-title-text-transform, none);
         
         // Smooth transitions for all interactive states
         transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
@@ -206,6 +231,95 @@
         position: relative;
         width: 100%;
         min-height: 200px;
+        background-color: var(--tabs-content-bg, transparent);
+        border-radius: var(--tabs-content-border-radius, 0);
+        max-width: var(--tabs-content-width, 100%);
+        margin: 0 auto;
+    }
+
+    // Responsive content width
+    @media (max-width: 1024px) {
+        &__content-wrapper {
+            max-width: var(--tabs-content-width-tablet, var(--tabs-content-width, 100%));
+        }
+    }
+
+    @media (max-width: 768px) {
+        &__content-wrapper {
+            max-width: var(--tabs-content-width-mobile, var(--tabs-content-width-tablet, var(--tabs-content-width, 100%)));
+        }
+    }
+
+    // Pill tab style (merged from the Content Switcher block)
+    &__header.is-pills {
+        border-bottom: none;
+        border-top: none;
+    }
+
+    &__list--pills {
+        gap: var(--tab-gap, 16px);
+
+        .adaire-tabs__tab {
+            padding: var(--pill-padding-top, 12px) var(--pill-padding-right, 24px) var(--pill-padding-bottom, 12px) var(--pill-padding-left, 24px);
+            background-color: var(--pill-bg, transparent);
+            color: var(--pill-text, #94a3b8);
+            border: 1px solid var(--pill-border, #475569);
+            border-bottom: 1px solid var(--pill-border, #475569);
+            border-radius: var(--pill-border-radius, 24px);
+            transition: all 0.3s ease;
+
+            &:hover {
+                background-color: var(--pill-active-bg, #503AA8);
+                color: var(--pill-active-text, #ffffff);
+                border-color: var(--pill-active-border, #503AA8);
+                transform: scale(1);
+            }
+
+            &.is-active {
+                background-color: var(--pill-active-bg, #503AA8);
+                color: var(--pill-active-text, #ffffff);
+                border-color: var(--pill-active-border, #503AA8);
+                box-shadow: none;
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--pill-active-bg, #503AA8);
+                outline-offset: 2px;
+            }
+        }
+    }
+
+    &__list--pill-rounded {
+        .adaire-tabs__tab {
+            border-radius: 50px;
+        }
+    }
+
+    &__list--pill-outlined {
+        .adaire-tabs__tab {
+            background-color: transparent;
+            border-width: 2px;
+
+            &.is-active,
+            &:hover {
+                background-color: transparent;
+                color: var(--pill-active-bg, #503AA8);
+                border-color: var(--pill-active-bg, #503AA8);
+            }
+        }
+    }
+
+    &__list--pill-filled {
+        .adaire-tabs__tab {
+            background-color: var(--pill-bg, #1e293b);
+            border: none;
+
+            &.is-active,
+            &:hover {
+                background-color: var(--pill-active-bg, #503AA8);
+                color: var(--pill-active-text, #ffffff);
+            }
+        }
     }
     
     // Panels wrapper
@@ -263,7 +377,21 @@
         &__underline {
             display: none;
         }
-        
+
+        // Keep pill look on mobile (base mobile tab rules above assume underline style)
+        &__list--pills .adaire-tabs__tab {
+            padding: calc(var(--pill-padding-top, 12px) * 0.8) calc(var(--pill-padding-right, 24px) * 0.8) calc(var(--pill-padding-bottom, 12px) * 0.8) calc(var(--pill-padding-left, 24px) * 0.8);
+
+            &.is-active {
+                border-bottom-color: var(--pill-active-border, #503AA8);
+                box-shadow: none;
+            }
+        }
+
+        &__list--pill-filled .adaire-tabs__tab {
+            border: none;
+        }
+
         &__content {
             padding-top: calc(var(--content-padding-top, 40px) * 0.75);
             padding-right: calc(var(--content-padding-right, 0px) * 0.75);
@@ -335,7 +463,21 @@
         &__underline {
             display: none;
         }
-        
+
+        // Keep pill look on small mobile
+        &__list--pills .adaire-tabs__tab {
+            padding: calc(var(--pill-padding-top, 12px) * 0.7) calc(var(--pill-padding-right, 24px) * 0.7) calc(var(--pill-padding-bottom, 12px) * 0.7) calc(var(--pill-padding-left, 24px) * 0.7);
+
+            &.is-active {
+                border-bottom-color: var(--pill-active-border, #503AA8);
+                box-shadow: none;
+            }
+        }
+
+        &__list--pill-filled .adaire-tabs__tab {
+            border: none;
+        }
+
         &__content {
             padding-top: calc(var(--content-padding-top, 40px) * 0.5);
             padding-right: 0;

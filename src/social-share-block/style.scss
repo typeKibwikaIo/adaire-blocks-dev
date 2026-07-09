@@ -4,6 +4,7 @@
     outline: none !important;
     border: none !important;
     box-shadow: none !important;
+    font-family: var(--share-font-family, inherit);
 
     &--align-left {
         text-align: left;
@@ -139,8 +140,11 @@
         text-decoration: none;
         color: #333333;
         transition: background-color 0.2s ease;
-        font-size: 14px;
-        line-height: 1.4;
+        font-size: var(--share-platform-font-size, 14px);
+        font-weight: var(--share-platform-font-weight, 400);
+        line-height: var(--share-platform-line-height, 1.4);
+        letter-spacing: var(--share-platform-letter-spacing, normal);
+        text-transform: var(--share-platform-text-transform, none);
 
         &:hover {
             background-color: #f5f5f5;
