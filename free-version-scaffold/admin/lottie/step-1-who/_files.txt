@@ -1,0 +1,6 @@
+﻿Drop your Lottie JSON files here. Name them exactly:
+
+  myself.json        →  "Myself or someone I know"
+  business.json      →  "My business or workplace"
+  client.json        →  "A client"
+  exploring.json     →  "Just exploring"

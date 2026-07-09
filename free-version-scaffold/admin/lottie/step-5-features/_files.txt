@@ -1,0 +1,10 @@
+﻿Drop your Lottie JSON files here. Name them exactly:
+
+  testimonials.json      →  "Testimonials"
+  pricing-table.json     →  "Pricing Table"
+  counter.json           →  "Counter Block"
+  flip-card.json         →  "Flip Card"
+  animation-scroll.json  →  "Animation on Scroll"
+  mega-menu.json         →  "Mega Menu"
+  modal-popup.json       →  "Modal Popup"
+  video-hero.json        →  "Video Hero"
