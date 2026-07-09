@@ -1,6 +1,6 @@
 # 🚀 WordPress.org Submission - Start Here
 
-Welcome! This guide will help you submit GutenBlocks Blocks to WordPress.org.
+Welcome! This guide will help you submit Adaire Blocks to WordPress.org.
 
 ---
 

@@ -103,10 +103,6 @@ export default function save({ attributes }) {
 		containerMaxWidth,
 		heading,
 		subheading,
-		billingMode,
-		monthlyLabel,
-		yearlyLabel,
-		yearlyBadgeText,
 		cards = [],
 		showComparisonTable,
 		comparisonDisclaimer,
@@ -135,9 +131,7 @@ export default function save({ attributes }) {
 		featureFontSize,
 		buttonFontSize,
 		priceSuffixFontSize,
-		toggleFontSize,
 		pricePrefixFontSize,
-		badgeFontSize,
 		gridColumns,
 		gridGap,
 		cardPadding,
@@ -145,9 +139,54 @@ export default function save({ attributes }) {
 		cardBorderWidth,
 		cardTextAlignment,
 		cardButtonAlignment,
-		yearlyBadgeBackgroundColor,
 		buttonGlowColor,
 		buttonGlowOpacity,
+		fontFamily,
+		headingFontWeight,
+		headingLineHeight,
+		headingLetterSpacing,
+		headingTextTransform,
+		subheadingFontWeight,
+		subheadingLineHeight,
+		subheadingLetterSpacing,
+		subheadingTextTransform,
+		toggleFontWeight,
+		toggleLineHeight,
+		toggleLetterSpacing,
+		toggleTextTransform,
+		badgeFontWeight,
+		badgeLineHeight,
+		badgeLetterSpacing,
+		badgeTextTransform,
+		planNameFontWeight,
+		planNameLineHeight,
+		planNameLetterSpacing,
+		planNameTextTransform,
+		planTaglineFontSize,
+		planTaglineFontWeight,
+		planTaglineLineHeight,
+		planTaglineLetterSpacing,
+		planTaglineTextTransform,
+		pricePrefixFontWeight,
+		pricePrefixLineHeight,
+		pricePrefixLetterSpacing,
+		pricePrefixTextTransform,
+		priceFontWeight,
+		priceLineHeight,
+		priceLetterSpacing,
+		priceTextTransform,
+		priceSuffixFontWeight,
+		priceSuffixLineHeight,
+		priceSuffixLetterSpacing,
+		priceSuffixTextTransform,
+		featureFontWeight,
+		featureLineHeight,
+		featureLetterSpacing,
+		featureTextTransform,
+		buttonFontWeight,
+		buttonLineHeight,
+		buttonLetterSpacing,
+		buttonTextTransform,
 	} = attributes;
 
 	const gridColumnsDesktop = gridColumns?.desktop ?? 3;
@@ -160,7 +199,7 @@ export default function save({ attributes }) {
 
 	const blockProps = useBlockProps.save({
 		id: blockId || undefined,
-		className: `adaire-pricing-table adaire-pricing-table--billing-${billingMode}`,
+		className: "adaire-pricing-table",
 		style: {
 			"--pricing-bg": backgroundColor,
 			"--pricing-card-bg": cardBackgroundColor,
@@ -178,7 +217,6 @@ export default function save({ attributes }) {
 			"--pricing-button-bg-hover": buttonHoverBackgroundColor,
 			"--pricing-card-hover-bg": cardHoverBackgroundColor,
 			"--pricing-card-hover-text": cardHoverTextColor,
-			"--pricing-badge-bg": yearlyBadgeBackgroundColor,
 			"--pricing-heading-size": formatDimensionValue(
 				headingFontSize?.desktop,
 				40,
@@ -284,21 +322,6 @@ export default function save({ attributes }) {
 				12,
 				"px",
 			),
-			"--pricing-toggle-size": formatDimensionValue(
-				toggleFontSize?.desktop,
-				14,
-				"px",
-			),
-			"--pricing-toggle-size-tablet": formatDimensionValue(
-				toggleFontSize?.tablet,
-				13,
-				"px",
-			),
-			"--pricing-toggle-size-mobile": formatDimensionValue(
-				toggleFontSize?.mobile,
-				12,
-				"px",
-			),
 			"--pricing-price-prefix-size": formatDimensionValue(
 				pricePrefixFontSize?.desktop,
 				18,
@@ -312,51 +335,6 @@ export default function save({ attributes }) {
 			"--pricing-price-prefix-size-mobile": formatDimensionValue(
 				pricePrefixFontSize?.mobile,
 				14,
-				"px",
-			),
-			"--pricing-badge-font-size": formatDimensionValue(
-				badgeFontSize?.desktop,
-				11,
-				"px",
-			),
-			"--pricing-badge-font-size-tablet": formatDimensionValue(
-				badgeFontSize?.tablet,
-				11,
-				"px",
-			),
-			"--pricing-badge-font-size-mobile": formatDimensionValue(
-				badgeFontSize?.mobile,
-				10,
-				"px",
-			),
-			"--pricing-price-prefix-size": formatDimensionValue(
-				pricePrefixFontSize?.desktop,
-				18,
-				"px",
-			),
-			"--pricing-price-prefix-size-tablet": formatDimensionValue(
-				pricePrefixFontSize?.tablet,
-				16,
-				"px",
-			),
-			"--pricing-price-prefix-size-mobile": formatDimensionValue(
-				pricePrefixFontSize?.mobile,
-				14,
-				"px",
-			),
-			"--pricing-badge-font-size": formatDimensionValue(
-				badgeFontSize?.desktop,
-				11,
-				"px",
-			),
-			"--pricing-badge-font-size-tablet": formatDimensionValue(
-				badgeFontSize?.tablet,
-				10,
-				"px",
-			),
-			"--pricing-badge-font-size-mobile": formatDimensionValue(
-				badgeFontSize?.mobile,
-				9,
 				"px",
 			),
 			"--pricing-grid-columns": `${gridColumnsDesktop}`,
@@ -404,6 +382,78 @@ export default function save({ attributes }) {
 				100,
 				"%",
 			),
+
+			"--pricing-font-family": fontFamily || "inherit",
+
+			"--pricing-heading-font-weight": headingFontWeight || "600",
+			"--pricing-heading-line-height": headingLineHeight || "1.1",
+			"--pricing-heading-letter-spacing": headingLetterSpacing || "normal",
+			"--pricing-heading-text-transform": headingTextTransform || "none",
+
+			"--pricing-subheading-font-weight": subheadingFontWeight || "400",
+			"--pricing-subheading-line-height": subheadingLineHeight || "1.6",
+			"--pricing-subheading-letter-spacing": subheadingLetterSpacing || "normal",
+			"--pricing-subheading-text-transform": subheadingTextTransform || "none",
+
+			"--pricing-toggle-font-weight": toggleFontWeight || "400",
+			"--pricing-toggle-line-height": toggleLineHeight || "1.2",
+			"--pricing-toggle-letter-spacing": toggleLetterSpacing || "normal",
+			"--pricing-toggle-text-transform": toggleTextTransform || "none",
+
+			"--pricing-badge-font-weight": badgeFontWeight || "600",
+			"--pricing-badge-line-height": badgeLineHeight || "normal",
+			"--pricing-badge-letter-spacing": badgeLetterSpacing || "0.04em",
+			"--pricing-badge-text-transform": badgeTextTransform || "uppercase",
+
+			"--pricing-plan-name-font-weight": planNameFontWeight || "700",
+			"--pricing-plan-name-line-height": planNameLineHeight || "1.08",
+			"--pricing-plan-name-letter-spacing": planNameLetterSpacing || "-0.03em",
+			"--pricing-plan-name-text-transform": planNameTextTransform || "none",
+
+			"--pricing-plan-tagline-size": formatDimensionValue(
+				planTaglineFontSize?.desktop,
+				14,
+				"px",
+			),
+			"--pricing-plan-tagline-size-tablet": formatDimensionValue(
+				planTaglineFontSize?.tablet,
+				14,
+				"px",
+			),
+			"--pricing-plan-tagline-size-mobile": formatDimensionValue(
+				planTaglineFontSize?.mobile,
+				14,
+				"px",
+			),
+			"--pricing-plan-tagline-font-weight": planTaglineFontWeight || "400",
+			"--pricing-plan-tagline-line-height": planTaglineLineHeight || "1.45",
+			"--pricing-plan-tagline-letter-spacing": planTaglineLetterSpacing || "normal",
+			"--pricing-plan-tagline-text-transform": planTaglineTextTransform || "none",
+
+			"--pricing-price-prefix-font-weight": pricePrefixFontWeight || "500",
+			"--pricing-price-prefix-line-height": pricePrefixLineHeight || "normal",
+			"--pricing-price-prefix-letter-spacing": pricePrefixLetterSpacing || "normal",
+			"--pricing-price-prefix-text-transform": pricePrefixTextTransform || "none",
+
+			"--pricing-price-font-weight": priceFontWeight || "700",
+			"--pricing-price-line-height": priceLineHeight || "1",
+			"--pricing-price-letter-spacing": priceLetterSpacing || "-0.05em",
+			"--pricing-price-text-transform": priceTextTransform || "none",
+
+			"--pricing-price-suffix-font-weight": priceSuffixFontWeight || "400",
+			"--pricing-price-suffix-line-height": priceSuffixLineHeight || "normal",
+			"--pricing-price-suffix-letter-spacing": priceSuffixLetterSpacing || "normal",
+			"--pricing-price-suffix-text-transform": priceSuffixTextTransform || "none",
+
+			"--pricing-feature-font-weight": featureFontWeight || "400",
+			"--pricing-feature-line-height": featureLineHeight || "1.45",
+			"--pricing-feature-letter-spacing": featureLetterSpacing || "normal",
+			"--pricing-feature-text-transform": featureTextTransform || "none",
+
+			"--pricing-button-font-weight": buttonFontWeight || "600",
+			"--pricing-button-line-height": buttonLineHeight || "1",
+			"--pricing-button-letter-spacing": buttonLetterSpacing || "normal",
+			"--pricing-button-text-transform": buttonTextTransform || "none",
 		},
 	});
 
@@ -428,35 +478,6 @@ export default function save({ attributes }) {
 						value={subheading}
 						className="adaire-pricing-table__subheading"
 					/>
-				</div>
-
-				<div
-					className="adaire-pricing-table__billing-toggle"
-					aria-label="Billing toggle"
-				>
-					<button
-						type="button"
-						className={`adaire-pricing-table__billing-option ${
-							billingMode === "monthly" ? "is-active" : ""
-						}`}
-						data-billing="monthly"
-					>
-						{monthlyLabel}
-					</button>
-					<button
-						type="button"
-						className={`adaire-pricing-table__billing-option ${
-							billingMode === "yearly" ? "is-active" : ""
-						}`}
-						data-billing="yearly"
-					>
-						<span>{yearlyLabel}</span>
-						{yearlyBadgeText && (
-							<span className="adaire-pricing-table__billing-badge">
-								{yearlyBadgeText}
-							</span>
-						)}
-					</button>
 				</div>
 
 				<div className="adaire-pricing-table__grid">
@@ -484,11 +505,8 @@ export default function save({ attributes }) {
 								<span className="adaire-pricing-table__price-currency">
 									{card.currency}
 								</span>
-								<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--monthly">
+								<span className="adaire-pricing-table__price-value">
 									{card.monthlyPrice}
-								</span>
-								<span className="adaire-pricing-table__price-value adaire-pricing-table__price-value--yearly">
-									{card.yearlyPrice}
 								</span>
 								<span className="adaire-pricing-table__price-suffix">
 									{card.priceSuffix}

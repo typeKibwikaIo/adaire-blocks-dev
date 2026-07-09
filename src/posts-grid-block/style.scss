@@ -35,6 +35,7 @@
 	display: flex;
 	justify-content: center;
 	padding-top: 100px;
+	font-family: var(--adaire-posts-grid-font-family, inherit);
 
 	/* Heading (optional) */
 	&__heading-wrap {
@@ -48,7 +49,9 @@
 		font-size: var(--adaire-posts-grid-heading-font-size-desktop, 40px);
 		font-weight: var(--adaire-posts-grid-heading-font-weight-desktop, 600);
 		text-align: var(--adaire-posts-grid-heading-text-align-desktop, left);
-		line-height: 1.15;
+		line-height: var(--adaire-posts-grid-heading-line-height-desktop, 1.15);
+		letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-desktop, normal);
+		text-transform: var(--adaire-posts-grid-heading-text-transform, none);
 		white-space: pre-wrap; /* preserves whitespace + new lines */
 
 		.adaire-text-underline {
@@ -74,6 +77,8 @@
 			font-size: var(--adaire-posts-grid-heading-font-size-desktop, 40px);
 			font-weight: var(--adaire-posts-grid-heading-font-weight-desktop, 600);
 			text-align: var(--adaire-posts-grid-heading-text-align-desktop, left);
+			line-height: var(--adaire-posts-grid-heading-line-height-desktop, 1.15);
+			letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-desktop, normal);
 
 			.adaire-text-underline {
 				background-size: 100% var(--adaire-posts-grid-heading-underline-width-desktop, 8px);
@@ -93,6 +98,8 @@
 			font-size: var(--adaire-posts-grid-heading-font-size-smallLaptop, var(--adaire-posts-grid-heading-font-size-desktop, 40px));
 			font-weight: var(--adaire-posts-grid-heading-font-weight-smallLaptop, var(--adaire-posts-grid-heading-font-weight-desktop, 600));
 			text-align: var(--adaire-posts-grid-heading-text-align-smallLaptop, var(--adaire-posts-grid-heading-text-align-desktop, left));
+			line-height: var(--adaire-posts-grid-heading-line-height-smallLaptop, var(--adaire-posts-grid-heading-line-height-desktop, 1.15));
+			letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-smallLaptop, var(--adaire-posts-grid-heading-letter-spacing-desktop, normal));
 
 			.adaire-text-underline {
 				background-size: 100% var(--adaire-posts-grid-heading-underline-width-smallLaptop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px));
@@ -112,6 +119,8 @@
 			font-size: var(--adaire-posts-grid-heading-font-size-tablet, var(--adaire-posts-grid-heading-font-size-smallLaptop, var(--adaire-posts-grid-heading-font-size-desktop, 40px)));
 			font-weight: var(--adaire-posts-grid-heading-font-weight-tablet, var(--adaire-posts-grid-heading-font-weight-smallLaptop, var(--adaire-posts-grid-heading-font-weight-desktop, 600)));
 			text-align: var(--adaire-posts-grid-heading-text-align-tablet, var(--adaire-posts-grid-heading-text-align-smallLaptop, var(--adaire-posts-grid-heading-text-align-desktop, left)));
+			line-height: var(--adaire-posts-grid-heading-line-height-tablet, var(--adaire-posts-grid-heading-line-height-smallLaptop, var(--adaire-posts-grid-heading-line-height-desktop, 1.15)));
+			letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-tablet, var(--adaire-posts-grid-heading-letter-spacing-smallLaptop, var(--adaire-posts-grid-heading-letter-spacing-desktop, normal)));
 
 			.adaire-text-underline {
 				background-size: 100% var(--adaire-posts-grid-heading-underline-width-tablet, var(--adaire-posts-grid-heading-underline-width-smallLaptop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px)));
@@ -131,6 +140,8 @@
 			font-size: var(--adaire-posts-grid-heading-font-size-mobile, var(--adaire-posts-grid-heading-font-size-tablet, var(--adaire-posts-grid-heading-font-size-desktop, 40px)));
 			font-weight: var(--adaire-posts-grid-heading-font-weight-mobile, var(--adaire-posts-grid-heading-font-weight-tablet, var(--adaire-posts-grid-heading-font-weight-desktop, 600)));
 			text-align: var(--adaire-posts-grid-heading-text-align-mobile, var(--adaire-posts-grid-heading-text-align-tablet, var(--adaire-posts-grid-heading-text-align-desktop, left)));
+			line-height: var(--adaire-posts-grid-heading-line-height-mobile, var(--adaire-posts-grid-heading-line-height-tablet, var(--adaire-posts-grid-heading-line-height-desktop, 1.15)));
+			letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-mobile, var(--adaire-posts-grid-heading-letter-spacing-tablet, var(--adaire-posts-grid-heading-letter-spacing-desktop, normal)));
 
 			.adaire-text-underline {
 				background-size: 100% var(--adaire-posts-grid-heading-underline-width-mobile, var(--adaire-posts-grid-heading-underline-width-tablet, var(--adaire-posts-grid-heading-underline-width-desktop, 8px)));
@@ -150,6 +161,8 @@
 			font-size: var(--adaire-posts-grid-heading-font-size-bigDesktop, var(--adaire-posts-grid-heading-font-size-desktop, 40px));
 			font-weight: var(--adaire-posts-grid-heading-font-weight-bigDesktop, var(--adaire-posts-grid-heading-font-weight-desktop, 600));
 			text-align: var(--adaire-posts-grid-heading-text-align-bigDesktop, var(--adaire-posts-grid-heading-text-align-desktop, left));
+			line-height: var(--adaire-posts-grid-heading-line-height-bigDesktop, var(--adaire-posts-grid-heading-line-height-desktop, 1.15));
+			letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-bigDesktop, var(--adaire-posts-grid-heading-letter-spacing-desktop, normal));
 
 			.adaire-text-underline {
 				background-size: 100% var(--adaire-posts-grid-heading-underline-width-bigDesktop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px));

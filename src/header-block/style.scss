@@ -1,7 +1,16 @@
+body.adaire-header-no-scroll {
+    overflow: hidden;
+}
+
 .adaire-header-block {
     position: relative;
     z-index: var(--adaire-header-z-index, 50);
-    background-color: var(--adaire-header-background, #ffffff);
+    font-family: var(--adaire-header-font-family, inherit);
+    // Was `background-color`, which only accepts <color> values — when
+    // --adaire-header-background held a gradient() string the whole
+    // declaration was invalid and silently dropped, so the gradient never
+    // painted. `background` (shorthand) accepts both colors and gradients.
+    background: var(--adaire-header-background, #ffffff);
     background-image: var(--adaire-header-bg-image, none);
     background-size: var(--adaire-header-bg-size, cover);
     background-position: var(--adaire-header-bg-position, center center);
@@ -28,6 +37,20 @@
     &.is-hidden-on-scroll {
         transform: translateY(-100%);
     }
+}
+
+// ADAB-009: WordPress's global layout styles (the theme's block-gap setting,
+// applied via the `.is-layout-flow`/`.is-layout-constrained` selectors WP
+// core injects into every block theme) add an automatic margin-top to any
+// block that follows another block in the content flow. For a site Header
+// that's meant to sit flush against the content below it, this shows up as
+// an unwanted, theme-controlled gap between the header and the next block —
+// even though neither block sets a margin of its own. `!important` is
+// required since WP's own block-gap rule has equal selector specificity and
+// can otherwise win on load order; this only zeroes the gap immediately
+// after the header, it doesn't touch spacing anywhere else on the page.
+.adaire-header-block + * {
+    margin-block-start: 0 !important;
 }
 
 .adaire-header-topbar {
@@ -279,6 +302,14 @@
     flex-shrink: 0;
 }
 
+// Wraps the mobile-only CTA rendered inside .adaire-header-nav by
+// render.php (adaire_header_render_nav()). Hidden by default — it only
+// ever shows inside the open dropdown/slide-in/overlay panel below the
+// ≤782px breakpoint (see the override there).
+.adaire-header-nav-mobile-cta {
+    display: none;
+}
+
 // Menu-indicator dots (req #3) — opt-in only; navShowDots gates the CSS
 // vars in render.php, so this rule simply has nothing to style unless a
 // dot span is actually present in the markup.
@@ -410,21 +441,126 @@
 
 .adaire-header-mobile-toggle {
     display: none;
-    width: 42px;
-    height: 42px;
+    // Without this, the 3 bar <span>s become flex items laid out in a row
+    // (the default flex-direction) the moment the mobile media query below
+    // switches this to display:flex — they showed as 3 horizontal dashes
+    // side by side instead of stacking into a hamburger icon.
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: var(--adaire-header-hamburger-size, 42px);
+    height: var(--adaire-header-hamburger-size, 42px);
     padding: 0;
     border: var(--adaire-header-hamburger-border, 1px solid var(--adaire-header-border-color, #e5e7eb));
     border-radius: var(--adaire-header-hamburger-border-radius, 10px);
     background: transparent;
     cursor: pointer;
+    // Left/right placement (ADAB-015) — the button is always the first DOM
+    // child of .adaire-header-inner; on mobile that grid becomes
+    // `auto 1fr auto`, so `order` is what actually moves it to the opposite
+    // end without touching the shared, frozen markup. Default (0) keeps it
+    // in its natural first-column ("left") position; "right" moves it after
+    // the 1fr nav column (the grid's last `auto` column).
+    order: var(--adaire-header-hamburger-order, 0);
 
     span {
         display: block;
-        width: 18px;
-        height: 2px;
-        margin: 4px auto;
+        width: 20px;
+        height: 3px;
+        margin: 3px auto;
+        border-radius: 3px;
         background: var(--adaire-header-text-color, #111827);
+        transition: transform 0.2s ease, opacity 0.2s ease, border-radius 0.2s ease;
     }
+
+    // ── Dots style (req: "at least three icon styles") ──────────────────
+    // Re-purposes the 3 shared, unstyled <span> children (no DOM/markup
+    // changes possible — they're hardcoded identically in edit.js,
+    // render.php and save.js/deprecated.js) into 3 small stacked dots via
+    // nth-child, since the spans carry no individual classes of their own.
+    &.icon-style-dots {
+        span {
+            width: 5px;
+            height: 5px;
+            margin: 3px auto;
+            border-radius: 50%;
+        }
+    }
+
+    // ── Plus / X style ────────────────────────────────────────────────────
+    // Collapses the 3 bars into a centered plus sign using absolute
+    // positioning so the cross lines up exactly regardless of button size:
+    // the first span becomes the horizontal bar, the second is rotated 90°
+    // and stacked exactly on top of it to form the vertical bar, and the
+    // third is hidden — turning 3 bars into a single "+" using CSS only.
+    &.icon-style-plus {
+        position: relative;
+
+        span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 18px;
+            margin: 0;
+            transform: translate(-50%, -50%);
+
+            &:nth-child(2) {
+                transform: translate(-50%, -50%) rotate(90deg);
+            }
+
+            &:nth-child(3) {
+                display: none;
+            }
+        }
+    }
+}
+
+.adaire-header-mobile-toggle.icon-style-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin: 3px auto;
+}
+
+.adaire-header-mobile-toggle.icon-style-plus {
+    span:nth-child(1),
+    span:nth-child(3) {
+        display: none;
+    }
+
+    span:nth-child(2) {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        background: transparent;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            background: var(--adaire-header-text-color, #111827);
+        }
+
+        &::before {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        &::after {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+    }
+}
+
+.adaire-header-mobile-close {
+    display: none;
 }
 
 .adaire-header-search {
@@ -634,6 +770,76 @@
     background: rgba(148, 163, 184, 0.14);
 }
 
+// ─── WooCommerce cart icon (ADAB-016) ───────────────────────────────────────
+// Mirrors .adaire-header-socials' sizing/structure so it looks at home next
+// to socials/actions wherever it's placed.
+.adaire-header-cart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--adaire-header-cart-size, 18px) + 12px);
+    height: calc(var(--adaire-header-cart-size, 18px) + 12px);
+    color: var(--adaire-header-cart-color, var(--adaire-header-text-color, #111827));
+    text-decoration: none;
+
+    .adaire-header-cart-icon {
+        width: var(--adaire-header-cart-size, 18px);
+        height: var(--adaire-header-cart-size, 18px);
+    }
+
+    &.is-disabled {
+        cursor: default;
+        opacity: 0.55;
+    }
+}
+
+.adaire-header-cart-count {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--adaire-header-hover-color, #2563eb);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+// ─── Payment method icons (ADAB-016) ────────────────────────────────────────
+.adaire-header-payment-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--adaire-header-payment-color, var(--adaire-header-text-color, #111827));
+    }
+
+    .adaire-header-payment-icon {
+        width: calc(var(--adaire-header-payment-size, 22px) * 1.6);
+        height: var(--adaire-header-payment-size, 22px);
+    }
+
+    .adaire-header-payment-fallback {
+        width: var(--adaire-header-payment-size, 22px);
+        height: var(--adaire-header-payment-size, 22px);
+        border-radius: 4px;
+        background: rgba(148, 163, 184, 0.14);
+        font-size: calc(var(--adaire-header-payment-size, 22px) * 0.55);
+        font-weight: 700;
+    }
+}
+
 // Top bar "Follow Us" (req #8).
 .adaire-header-follow-us {
     display: inline-flex;
@@ -653,6 +859,17 @@ a.adaire-header-follow-us:focus {
     text-decoration: underline;
 }
 
+@keyframes adaire-nav-slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @media (max-width: 782px) {
     .adaire-header-topbar {
         flex-direction: column;
@@ -662,10 +879,23 @@ a.adaire-header-follow-us:focus {
         text-align: center;
     }
 
+    // Listed explicitly (instead of relying on the bare `.adaire-header-inner`
+    // selector below) because the desktop, non-media-query layout modifiers
+    // above (`&.layout-horizontal`, `&.layout-minimal`, etc.) carry a higher
+    // specificity (0,2,0 — two classes) than a bare `.adaire-header-inner`
+    // (0,1,0 — one class). Media queries don't add specificity, so without
+    // repeating every modifier class here, `.layout-horizontal`/`.layout-
+    // minimal` headers kept their desktop `display:flex` at every width —
+    // the mobile-only grid rule simply never won the cascade for them. That
+    // left the toggle/logo/nav as plain flex children in a `space-between`
+    // row, so the opened nav dropdown rendered as a shrunk, mispositioned
+    // flex item instead of a full-width panel below the row.
     .adaire-header-inner,
+    .adaire-header-inner.layout-horizontal,
     .adaire-header-inner.layout-split,
     .adaire-header-inner.layout-centered,
-    .adaire-header-inner.layout-stacked {
+    .adaire-header-inner.layout-stacked,
+    .adaire-header-inner.layout-minimal {
         display: grid;
         grid-template-columns: auto 1fr auto;
         gap: 14px;
@@ -673,8 +903,26 @@ a.adaire-header-follow-us:focus {
         text-align: left;
     }
 
+    // `.adaire-header-inner` has 4+ DOM children (toggle, logo, nav, actions
+    // — plus optional before-nav social/payment/cart and a center search
+    // slot) but only 3 grid columns. `.adaire-header-nav` needs a full free
+    // row for its `grid-column: 1/-1`, so CSS Grid's auto-placement cursor
+    // skips the rest of row 1 (it never backfills earlier rows) and pushes
+    // whatever comes after nav in the markup — `.adaire-header-actions`,
+    // i.e. the search button and any other leftover icons — onto a brand
+    // new row 3, below the opened nav panel. That's what rendered as a
+    // stray, disconnected icon row hanging under the dropdown card. Pinning
+    // every top-bar element to row 1 and the nav to row 2 removes the
+    // ambiguity so nothing can fall through to a phantom row 3.
+    .adaire-header-mobile-toggle,
+    .adaire-header-logo,
+    .adaire-header-search-slot,
+    .adaire-header-actions {
+        grid-row: 1;
+    }
+
     .adaire-header-mobile-toggle {
-        display: block;
+        display: flex;
     }
 
     .adaire-header-logo {
@@ -691,6 +939,7 @@ a.adaire-header-follow-us:focus {
 
     .adaire-header-nav {
         display: none;
+        grid-row: 2;
         grid-column: 1 / -1;
         width: 100%;
         flex-direction: column;
@@ -706,12 +955,17 @@ a.adaire-header-follow-us:focus {
         padding: 12px 8px;
     }
 
-    .adaire-header-block.is-mobile-menu-open .adaire-header-nav {
+    // Dropdown: animate open with keyframes (can't transition from display:none)
+    .adaire-header-block:not(.mobile-slide-in):not(.mobile-overlay).is-mobile-menu-open .adaire-header-nav {
         display: flex;
+        animation: adaire-nav-slide-down 0.22s ease forwards;
     }
 
+    // Slide-in / overlay: always flex so transform transition actually fires;
+    // visibility keeps the panel out of tab order and AT when closed.
     .adaire-header-block.mobile-slide-in .adaire-header-nav,
     .adaire-header-block.mobile-overlay .adaire-header-nav {
+        display: flex;
         position: fixed;
         inset: 0 0 0 auto;
         z-index: calc(var(--adaire-header-z-index, 50) + 1);
@@ -719,7 +973,8 @@ a.adaire-header-follow-us:focus {
         padding: 86px 24px 24px;
         border-radius: 0;
         transform: translateX(100%);
-        transition: transform 0.25s ease;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
+        visibility: hidden;
     }
 
     .adaire-header-block.mobile-overlay .adaire-header-nav {
@@ -730,8 +985,45 @@ a.adaire-header-follow-us:focus {
 
     .adaire-header-block.is-mobile-menu-open.mobile-slide-in .adaire-header-nav,
     .adaire-header-block.is-mobile-menu-open.mobile-overlay .adaire-header-nav {
-        display: flex;
         transform: translateX(0);
+        visibility: visible;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0s;
+    }
+
+    .adaire-header-block.mobile-slide-in.mobile-slide-left .adaire-header-nav {
+        inset: 0 auto 0 0;
+        transform: translateX(-100%);
+    }
+
+    .adaire-header-block.is-mobile-menu-open.mobile-slide-in.mobile-slide-left .adaire-header-nav {
+        transform: translateX(0);
+    }
+
+    .adaire-header-block.mobile-slide-in .adaire-header-mobile-close,
+    .adaire-header-block.mobile-overlay .adaire-header-mobile-close {
+        display: flex;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        color: inherit;
+        border-radius: 8px;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        svg {
+            width: 22px;
+            height: 22px;
+        }
     }
 
     .adaire-header-actions {
@@ -740,6 +1032,33 @@ a.adaire-header-follow-us:focus {
 
     .adaire-header-action,
     .adaire-header-socials {
+        display: none;
+    }
+
+    // Re-shows the mobile CTA wrapper (and the action link inside it, which
+    // the blanket `.adaire-header-action { display: none }` rule above would
+    // otherwise also catch — `.adaire-header-nav-mobile-cta .adaire-header-
+    // action` is two classes deep so it naturally wins regardless of source
+    // order). Centered in overlay mode automatically, since
+    // `.adaire-header-nav` already has `align-items: center` there.
+    .adaire-header-nav-mobile-cta {
+        display: flex;
+        justify-content: center;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--adaire-header-border-color, #e5e7eb);
+    }
+
+    .adaire-header-nav-mobile-cta .adaire-header-action {
+        display: inline-flex;
+    }
+
+    // Payment trust badges are decorative, so they're dropped on mobile the
+    // same way socials are above, to keep the collapsed header from
+    // overflowing. The cart icon stays visible (ADAB-016) — unlike socials
+    // it's a functional link mobile shoppers expect to reach without
+    // opening the menu.
+    .adaire-header-payment-icons {
         display: none;
     }
 

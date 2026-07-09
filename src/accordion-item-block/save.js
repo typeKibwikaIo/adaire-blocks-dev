@@ -1,12 +1,31 @@
 ﻿import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 
 export default function save({ attributes }) {
-    const { title, itemId, itemIndex, open } = attributes;
+    const {
+        title,
+        itemId,
+        itemIndex,
+        open,
+        fontSize,
+        fontWeight,
+        lineHeight,
+        letterSpacing,
+        textTransform,
+        fontFamily,
+    } = attributes;
 
     const blockProps = useBlockProps.save({
         className: `adaire-accordion__item${open ? ' is-open' : ''}`,
         'data-item-id': itemId,
         'data-item-index': itemIndex,
+        style: {
+            ...(fontSize ? { '--acc-title-size': fontSize } : {}),
+            ...(fontWeight ? { '--acc-title-weight': fontWeight } : {}),
+            '--acc-item-title-line-height': lineHeight || '1.4',
+            '--acc-item-title-letter-spacing': letterSpacing || 'normal',
+            '--acc-item-title-text-transform': textTransform || 'none',
+            '--acc-item-title-font-family': fontFamily || 'inherit',
+        },
     });
 
     return (

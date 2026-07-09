@@ -1,5 +1,5 @@
 import { MediaUpload, MediaUploadCheck, RichText, URLInput, useBlockProps } from '@wordpress/block-editor';
-import { BaseControl, Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl } from '@wordpress/components';
+import { BaseControl, Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import { useDispatch } from '@wordpress/data';
@@ -8,21 +8,89 @@ import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import {
-  getTrustItems,
   getStyleVars,
   getBgTypeClass,
   resolveSentinel,
   buildPresetPatch,
   resolveRatingIcon,
-  resolveFeatureIcon,
-  TrustLogo,
   RatingBadgeView,
-  SecurityFeatureView,
-  FaqItemView,
 } from './shared';
 
 const set = (setAttributes, key) => (value) => setAttributes({ [key]: value });
 const media = (label, value, onChange, allowedTypes = ['image']) => <MediaUploadCheck><MediaUpload allowedTypes={allowedTypes} value={value} onSelect={(m) => onChange(m.url)} render={({ open }) => <Button variant="secondary" onClick={open}>{value ? __('Change ', 'saas-hero-block') : __('Select ', 'saas-hero-block')}{label}</Button>} /></MediaUploadCheck>;
+
+const FONT_FAMILY_OPTIONS = [
+  { label: 'Default (inherit theme)', value: '' },
+  { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+  { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+  { label: 'Georgia', value: 'Georgia, serif' },
+  { label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+  { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+  { label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+  { label: 'Courier New', value: "'Courier New', Courier, monospace" },
+  { label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
+const TEXT_TRANSFORM_OPTIONS = [
+  { label: __('None', 'saas-hero-block'), value: 'none' },
+  { label: __('Uppercase', 'saas-hero-block'), value: 'uppercase' },
+  { label: __('Lowercase', 'saas-hero-block'), value: 'lowercase' },
+  { label: __('Capitalize', 'saas-hero-block'), value: 'capitalize' },
+];
+
+const FONT_WEIGHT_OPTIONS = [
+  { label: __('Thin (100)', 'saas-hero-block'), value: '100' },
+  { label: __('Extra Light (200)', 'saas-hero-block'), value: '200' },
+  { label: __('Light (300)', 'saas-hero-block'), value: '300' },
+  { label: __('Normal (400)', 'saas-hero-block'), value: '400' },
+  { label: __('Medium (500)', 'saas-hero-block'), value: '500' },
+  { label: __('Semi Bold (600)', 'saas-hero-block'), value: '600' },
+  { label: __('Bold (700)', 'saas-hero-block'), value: '700' },
+  { label: __('Extra Bold (800)', 'saas-hero-block'), value: '800' },
+  { label: __('Black (900)', 'saas-hero-block'), value: '900' },
+];
+
+// ─── Reusable per-role typography subsection — title + (optional) Font Size
+// + Font Weight + Line Height + Letter Spacing + Text Transform, all bound
+// to `${prefix}FontSize` / `${prefix}FontWeight` / etc. on `attributes`.
+// `hasFontSize` is false for bodyText, which has no FontSize attribute in
+// block.json (its size is controlled by the legacy global `fontSize`). ────
+function TypographySubsection({ title, a, setAttributes, prefix, hasFontSize = true }) {
+  return (
+    <>
+      <p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{title}</p>
+      {hasFontSize && (
+        <TextControl
+          label={__('Font size', 'saas-hero-block')}
+          value={a[`${prefix}FontSize`] || ''}
+          onChange={set(setAttributes, `${prefix}FontSize`)}
+        />
+      )}
+      <SelectControl
+        label={__('Font weight', 'saas-hero-block')}
+        value={a[`${prefix}FontWeight`] || '400'}
+        options={FONT_WEIGHT_OPTIONS}
+        onChange={set(setAttributes, `${prefix}FontWeight`)}
+      />
+      <UnitControl
+        label={__('Line height', 'saas-hero-block')}
+        value={a[`${prefix}LineHeight`] || ''}
+        onChange={set(setAttributes, `${prefix}LineHeight`)}
+      />
+      <UnitControl
+        label={__('Letter spacing', 'saas-hero-block')}
+        value={a[`${prefix}LetterSpacing`] || ''}
+        onChange={set(setAttributes, `${prefix}LetterSpacing`)}
+      />
+      <SelectControl
+        label={__('Text transform', 'saas-hero-block')}
+        value={a[`${prefix}TextTransform`] || 'none'}
+        options={TEXT_TRANSFORM_OPTIONS}
+        onChange={set(setAttributes, `${prefix}TextTransform`)}
+      />
+    </>
+  );
+}
 
 // ─── Generic add/remove/reorder list editor used by every repeater-style
 // inspector panel (Trusted By, Ratings, Security features, FAQ). ──────────
@@ -66,9 +134,7 @@ function RepeaterField({ items, onChange, renderItem, addLabel, newItem }) {
 export default function Edit({ attributes, setAttributes, isSelected, clientId }) {
   const [activeZone, setActiveZone] = useState(null);
   const [ratingIconPickerIndex, setRatingIconPickerIndex] = useState(null);
-  const [securityIconPickerIndex, setSecurityIconPickerIndex] = useState(null);
   const a = attributes;
-  const trustItemsResolved = getTrustItems(a);
 
   // ── Block Interaction: selecting the block should also surface its
   // Inspector settings automatically, in whichever editor shell is hosting
@@ -94,7 +160,6 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
       'adaire-saas-hero',
       `layout-${a.layoutStyle || 'centered'}`,
       getBgTypeClass(a),
-      a.trustCarousel ? 'has-trust-carousel' : '',
       isSelected ? 'is-block-selected' : '',
       a.effectFloatingElements ? 'has-floating-elements' : '',
     ].filter(Boolean).join(' '),
@@ -154,6 +219,21 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
       <AdaireColorControl label={__('Accent color', 'saas-hero-block')} value={a.accentColor} onChange={(v) => setAttributes({ accentColor: v || '#6366f1' })} />
       <AdaireColorControl label={__('Text color', 'saas-hero-block')} value={a.textColor} onChange={(v) => setAttributes({ textColor: v || '#111827' })} />
       <RangeControl label={__('Font size', 'saas-hero-block')} value={a.fontSize || 16} onChange={set(setAttributes, 'fontSize')} min={10} max={80} />
+
+      <SelectControl
+        label={__('Font family', 'saas-hero-block')}
+        value={a.fontFamily || ''}
+        options={FONT_FAMILY_OPTIONS}
+        onChange={set(setAttributes, 'fontFamily')}
+        help={__('Applies to all text in this block.', 'saas-hero-block')}
+      />
+
+      <TypographySubsection title={__('Eyebrow', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="eyebrow" />
+      <TypographySubsection title={__('Heading', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="heading" />
+      <TypographySubsection title={__('Body text', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="bodyText" hasFontSize={false} />
+      <TypographySubsection title={__('Pill', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="pill" />
+      <TypographySubsection title={__('Button', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="button" />
+      <TypographySubsection title={__('Micro copy', 'saas-hero-block')} a={a} setAttributes={setAttributes} prefix="microCopy" />
     </>
   );
 
@@ -225,35 +305,6 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
     </>
   );
 
-  const trustStyleControls = (
-    <>
-      <SelectControl
-        label={__('Logo layout', 'saas-hero-block')}
-        value={a.trustLayout || 'row'}
-        options={[{ label: __('Row (wraps)', 'saas-hero-block'), value: 'row' }, { label: __('One per line', 'saas-hero-block'), value: 'one-per-line' }]}
-        onChange={set(setAttributes, 'trustLayout')}
-      />
-      <RangeControl label={__('Item width (0 = auto)', 'saas-hero-block')} value={a.trustItemWidth || 0} onChange={set(setAttributes, 'trustItemWidth')} min={0} max={320} />
-      <RangeControl label={__('Item spacing', 'saas-hero-block')} value={a.trustItemGap ?? 32} onChange={set(setAttributes, 'trustItemGap')} min={0} max={100} />
-      <RangeControl label={__('Logo max height', 'saas-hero-block')} value={a.trustLogoMaxHeight ?? 32} onChange={set(setAttributes, 'trustLogoMaxHeight')} min={12} max={120} />
-      <ToggleControl label={__('Enable scrolling carousel', 'saas-hero-block')} checked={!!a.trustCarousel} onChange={set(setAttributes, 'trustCarousel')} />
-      {a.trustCarousel && (
-        <>
-          <ToggleControl label={__('Autoplay', 'saas-hero-block')} checked={a.trustCarouselAutoplay !== false} onChange={set(setAttributes, 'trustCarouselAutoplay')} />
-          <RangeControl label={__('Speed (seconds per loop)', 'saas-hero-block')} value={a.trustCarouselSpeed ?? 30} onChange={set(setAttributes, 'trustCarouselSpeed')} min={5} max={120} />
-          <SelectControl
-            label={__('Direction', 'saas-hero-block')}
-            value={a.trustCarouselDirection || 'left'}
-            options={[{ label: 'Left', value: 'left' }, { label: 'Right', value: 'right' }]}
-            onChange={set(setAttributes, 'trustCarouselDirection')}
-          />
-          <ToggleControl label={__('Pause on hover', 'saas-hero-block')} checked={a.trustCarouselPauseOnHover !== false} onChange={set(setAttributes, 'trustCarouselPauseOnHover')} />
-          <RangeControl label={__('Visible items', 'saas-hero-block')} value={a.trustCarouselVisibleItems ?? 5} onChange={set(setAttributes, 'trustCarouselVisibleItems')} min={2} max={10} />
-        </>
-      )}
-    </>
-  );
-
   return (<>
     <InspectorTabs attributes={a} setAttributes={setAttributes}>
       {/* ── Layout tab: content & structure ───────────────────────────── */}
@@ -320,29 +371,6 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
             ]}
             onChange={set(setAttributes, 'imagePosition')}
           />
-        )}
-      </PanelBody>
-
-      <PanelBody title={__('Trusted By', 'saas-hero-block')} initialOpen={false}>
-        <ToggleControl label={__('Show Trust Bar', 'saas-hero-block')} checked={a.showTrustBar} onChange={set(setAttributes, 'showTrustBar')} />
-        {a.showTrustBar && (
-          <>
-            <TextControl label={__('Trust Bar Title', 'saas-hero-block')} value={a.trustBarTitle || ''} onChange={set(setAttributes, 'trustBarTitle')} />
-            <RepeaterField
-              items={trustItemsResolved}
-              onChange={(items) => setAttributes({ trustItems: items })}
-              addLabel={__('Add company', 'saas-hero-block')}
-              newItem={{ name: __('New company', 'saas-hero-block'), logoUrl: '', url: '' }}
-              renderItem={(item, update) => (
-                <>
-                  <TextControl label={__('Name', 'saas-hero-block')} value={item.name || ''} onChange={(v) => update({ name: v })} />
-                  {media(__('logo', 'saas-hero-block'), item.logoUrl, (v) => update({ logoUrl: v }))}
-                  {item.logoUrl && <Button variant="link" isDestructive onClick={() => update({ logoUrl: '' })}>{__('Remove logo (use name text instead)', 'saas-hero-block')}</Button>}
-                  <TextControl label={__('Link URL (optional)', 'saas-hero-block')} value={item.url || ''} onChange={(v) => update({ url: v })} />
-                </>
-              )}
-            />
-          </>
         )}
       </PanelBody>
 
@@ -427,71 +455,6 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
         )}
       </PanelBody>
 
-      <PanelBody title={__('Security Panel', 'saas-hero-block')} initialOpen={false}>
-        <ToggleControl label={__('Show security / partner panel', 'saas-hero-block')} checked={!!a.showSecurityPanel} onChange={set(setAttributes, 'showSecurityPanel')} />
-        {a.showSecurityPanel && (
-          <>
-            <TextControl label={__('Title', 'saas-hero-block')} value={a.securityPanelTitle || ''} onChange={set(setAttributes, 'securityPanelTitle')} />
-            <TextControl label={__('Partner name', 'saas-hero-block')} value={a.securityPanelPartnerName || ''} onChange={set(setAttributes, 'securityPanelPartnerName')} />
-            <TextareaControl label={__('Description', 'saas-hero-block')} value={a.securityPanelText || ''} onChange={set(setAttributes, 'securityPanelText')} />
-            <RepeaterField
-              items={a.securityFeatures}
-              onChange={(items) => setAttributes({ securityFeatures: items })}
-              addLabel={__('Add feature', 'saas-hero-block')}
-              newItem={{ icon: 'bi bi-check-circle-fill', imageUrl: '', title: __('New feature', 'saas-hero-block'), text: '' }}
-              renderItem={(item, update, idx) => (
-                <>
-                  <BaseControl label={__('Icon', 'saas-hero-block')} __nextHasNoMarginBottom>
-                    <Button
-                      variant="secondary"
-                      onClick={() => setSecurityIconPickerIndex(idx)}
-                      style={{ width: '100%', justifyContent: 'flex-start', marginBottom: '8px' }}
-                      disabled={!!item.imageUrl}
-                    >
-                      <i className={resolveFeatureIcon(item)} style={{ marginRight: '8px' }} aria-hidden="true" />
-                      {item.imageUrl ? __('Using uploaded image below', 'saas-hero-block') : __('Choose icon', 'saas-hero-block')}
-                    </Button>
-                  </BaseControl>
-                  <div className="adaire-repeater__media-row">
-                    {media(__('badge image', 'saas-hero-block'), item.imageUrl, (url) => update({ imageUrl: url }))}
-                    {item.imageUrl && (
-                      <Button variant="tertiary" isDestructive size="small" onClick={() => update({ imageUrl: '' })}>
-                        {__('Remove image (use icon instead)', 'saas-hero-block')}
-                      </Button>
-                    )}
-                  </div>
-                  <p className="adaire-help-note">{__('An uploaded image, if set, replaces the icon for this feature.', 'saas-hero-block')}</p>
-                  <TextControl label={__('Title', 'saas-hero-block')} value={item.title || ''} onChange={(v) => update({ title: v })} />
-                  <TextareaControl label={__('Text', 'saas-hero-block')} value={item.text || ''} onChange={(v) => update({ text: v })} />
-                </>
-              )}
-            />
-          </>
-        )}
-      </PanelBody>
-
-      <PanelBody title={__('FAQ', 'saas-hero-block')} initialOpen={false}>
-        <ToggleControl label={__('Show FAQ accordion', 'saas-hero-block')} checked={!!a.showFaq} onChange={set(setAttributes, 'showFaq')} />
-        {a.showFaq && (
-          <>
-            <TextControl label={__('Title', 'saas-hero-block')} value={a.faqTitle || ''} onChange={set(setAttributes, 'faqTitle')} />
-            <ToggleControl label={__('First question open by default', 'saas-hero-block')} checked={a.faqOpenFirst !== false} onChange={set(setAttributes, 'faqOpenFirst')} />
-            <RepeaterField
-              items={a.faqItems}
-              onChange={(items) => setAttributes({ faqItems: items })}
-              addLabel={__('Add question', 'saas-hero-block')}
-              newItem={{ question: __('New question', 'saas-hero-block'), answer: '' }}
-              renderItem={(item, update) => (
-                <>
-                  <TextControl label={__('Question', 'saas-hero-block')} value={item.question || ''} onChange={(v) => update({ question: v })} />
-                  <TextareaControl label={__('Answer', 'saas-hero-block')} value={item.answer || ''} onChange={(v) => update({ answer: v })} />
-                </>
-              )}
-            />
-          </>
-        )}
-      </PanelBody>
-
       {/* ── Style tab (auto-routed by InspectorTabs via title keywords) ── */}
       <PanelBody title={__('Background', 'saas-hero-block')} initialOpen={false}>
         {backgroundControls}
@@ -523,15 +486,6 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
         {mediaControls}
       </PanelBody>
 
-      <PanelBody title={__('Trusted By Spacing & Styling', 'saas-hero-block')} initialOpen={false}>
-        {trustStyleControls}
-      </PanelBody>
-
-      <PanelBody title={__('Security Panel Colors', 'saas-hero-block')} initialOpen={false}>
-        <AdaireColorControl label={__('Panel background', 'saas-hero-block')} value={a.securityPanelBg} onChange={(v) => setAttributes({ securityPanelBg: v || '#f8fafc' })} />
-        <AdaireColorControl label={__('Panel text color', 'saas-hero-block')} value={a.securityPanelTextColor} onChange={(v) => setAttributes({ securityPanelTextColor: v || '#111827' })} />
-      </PanelBody>
-
       <PanelBody title={__('Global Spacing & Radius', 'saas-hero-block')} initialOpen={false}>
         {spacingControls}
       </PanelBody>
@@ -548,19 +502,6 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
         }
       }}
       currentIcon={ratingIconPickerIndex !== null ? (a.ratingBadges || [])[ratingIconPickerIndex]?.icon : ''}
-    />
-
-    <BootstrapIconPicker
-      isOpen={securityIconPickerIndex !== null}
-      onClose={() => setSecurityIconPickerIndex(null)}
-      onSelect={(iconClass) => {
-        if (securityIconPickerIndex !== null) {
-          const next = (a.securityFeatures || []).slice();
-          next[securityIconPickerIndex] = { ...next[securityIconPickerIndex], icon: iconClass };
-          setAttributes({ securityFeatures: next });
-        }
-      }}
-      currentIcon={securityIconPickerIndex !== null ? (a.securityFeatures || [])[securityIconPickerIndex]?.icon : ''}
     />
 
     <section {...blockProps}>
@@ -729,71 +670,6 @@ export default function Edit({ attributes, setAttributes, isSelected, clientId }
             )}
           </div>
 
-          {a.showTrustBar && (
-            <QuickZone
-              id="saas-hero-trust"
-              label={__('Trusted By', 'saas-hero-block')}
-              activeZone={activeZone}
-              setActiveZone={setActiveZone}
-              content={trustStyleControls}
-            >
-              <div className={`adaire-saas-hero__trust-bar trust-layout-${a.trustLayout || 'row'} ${a.trustCarousel ? 'is-carousel' : ''} ${a.trustCarousel && a.trustCarouselAutoplay === false ? 'is-autoplay-off' : ''} ${a.trustCarousel && a.trustCarouselPauseOnHover === false ? '' : 'is-pause-on-hover'}`}>
-                <RichText tagName="p" className="adaire-saas-hero__trust-title" value={a.trustBarTitle} onChange={set(setAttributes, 'trustBarTitle')} />
-                <div className="adaire-saas-hero__trust-logos-wrap">
-                  <div className="adaire-saas-hero__trust-logos">
-                    {trustItemsResolved.map((item, i) => <TrustLogo key={i} item={item} />)}
-                  </div>
-                  {a.trustCarousel && (
-                    <div className="adaire-saas-hero__trust-logos adaire-saas-hero__trust-logos--clone" aria-hidden="true">
-                      {trustItemsResolved.map((item, i) => <TrustLogo key={`clone-${i}`} item={item} />)}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </QuickZone>
-          )}
-
-          {a.showSecurityPanel && (
-            <QuickZone
-              id="saas-hero-security"
-              label={__('Security Panel', 'saas-hero-block')}
-              activeZone={activeZone}
-              setActiveZone={setActiveZone}
-              content={(
-                <>
-                  <AdaireColorControl label={__('Panel background', 'saas-hero-block')} value={a.securityPanelBg} onChange={(v) => setAttributes({ securityPanelBg: v || '#f8fafc' })} />
-                  <AdaireColorControl label={__('Panel text color', 'saas-hero-block')} value={a.securityPanelTextColor} onChange={(v) => setAttributes({ securityPanelTextColor: v || '#111827' })} />
-                </>
-              )}
-            >
-              <div className="adaire-saas-hero__security">
-                <h3 className="adaire-saas-hero__security-title">
-                  {a.securityPanelTitle}{a.securityPanelPartnerName ? ` ${a.securityPanelPartnerName}` : ''}
-                </h3>
-                {a.securityPanelText && <p className="adaire-saas-hero__security-text">{a.securityPanelText}</p>}
-                <div className="adaire-saas-hero__security-grid">
-                  {(a.securityFeatures || []).map((feature, i) => <SecurityFeatureView key={i} feature={feature} />)}
-                </div>
-              </div>
-            </QuickZone>
-          )}
-
-          {a.showFaq && (
-            <QuickZone
-              id="saas-hero-faq"
-              label={__('FAQ', 'saas-hero-block')}
-              activeZone={activeZone}
-              setActiveZone={setActiveZone}
-              content={<TextControl label={__('Title', 'saas-hero-block')} value={a.faqTitle || ''} onChange={set(setAttributes, 'faqTitle')} />}
-            >
-              <div className="adaire-saas-hero__faq">
-                <h3 className="adaire-saas-hero__faq-title">{a.faqTitle}</h3>
-                <div className="adaire-saas-hero__faq-list">
-                  {(a.faqItems || []).map((item, i) => <FaqItemView key={i} item={item} defaultOpen={a.faqOpenFirst !== false && i === 0} />)}
-                </div>
-              </div>
-            </QuickZone>
-          )}
         </div>
       </QuickZone>
     </section>

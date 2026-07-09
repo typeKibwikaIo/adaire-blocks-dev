@@ -1,5 +1,5 @@
 /**
- * AdaireColorControl — shared modern color control for every GutenBlocks block.
+ * AdaireColorControl — shared modern color control for every Adaire Blocks block.
  *
  * Wraps WordPress core <ColorPalette> so every "Appearance" color field gets the
  * same modern UI: a row of preset swatches, a "Custom color" button that opens the
@@ -14,6 +14,7 @@
  *   />
  */
 
+import { useSettings } from '@wordpress/block-editor';
 import { ColorPalette } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import './AdaireColorControl.scss';
@@ -36,17 +37,34 @@ export default function AdaireColorControl( {
 	onChange = () => {},
 	clearable = true,
 	enableAlpha = true,
-	colors = ADAIRE_COLOR_PALETTE,
 } ) {
+	const [ themeColors ] = useSettings( 'color.palette.theme' );
+	const mergedColors = [
+		...( themeColors?.length ? [ { name: __( 'Theme' ), colors: themeColors } ] : [] ),
+		{ name: __( 'Brand' ), colors: ADAIRE_COLOR_PALETTE },
+	];
+
+	const bindColor = ( hex ) => {
+		if ( ! hex ) return '';
+		const match = ( themeColors || [] ).find( c => c.color === hex );
+		return match ? `var(--wp--preset--color--${ match.slug })` : hex;
+	};
+
+	const resolveColor = ( v ) => {
+		if ( ! v || ! v.startsWith( 'var(--wp--preset--color--' ) ) return v ?? '';
+		const slug = v.slice( 'var(--wp--preset--color--'.length, -1 );
+		return ( themeColors || [] ).find( c => c.slug === slug )?.color ?? v;
+	};
+
 	return (
 		<div className="adaire-color-control">
 			{ label ? (
 				<span className="adaire-color-control__label">{ label }</span>
 			) : null }
 			<ColorPalette
-				colors={ colors }
-				value={ value }
-				onChange={ ( next ) => onChange( next ?? '' ) }
+				colors={ mergedColors }
+				value={ resolveColor( value ) }
+				onChange={ ( next ) => onChange( bindColor( next ) ?? '' ) }
 				enableAlpha={ enableAlpha }
 				clearable={ clearable }
 				__experimentalIsRenderedInSidebar

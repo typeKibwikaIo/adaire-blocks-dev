@@ -17,6 +17,14 @@
     "width": {
       "type": "number",
       "default": 100
+    },
+    "horizontalAlign": {
+      "type": "string",
+      "default": ""
+    },
+    "verticalAlign": {
+      "type": "string",
+      "default": ""
     }
   }
 }

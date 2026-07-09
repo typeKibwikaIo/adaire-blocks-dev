@@ -12,6 +12,22 @@
 	justify-content: center;
 	&__content {
 		height: 100%;
+
+		// Browsers render an unstyled <iframe> with a default ~2px inset
+		// border (a legacy UA-stylesheet behavior the `frameBorder="0"`
+		// JSX/HTML attribute no longer reliably suppresses in modern
+		// browsers) — that's what showed up as an unwanted black border
+		// around the video. Reset it explicitly with real CSS.
+		iframe,
+		video,
+		img {
+			display: block !important;
+			width: 100% !important;
+			height: 100% !important;
+			border: none !important;
+			outline: none !important;
+			box-shadow: none !important;
+		}
 	}
 
 	// Container wrapper

@@ -234,6 +234,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		},
 	});
 
+	// Pre-fill new blocks with real demo content (not just an empty placeholder)
+	// so visitors previewing/using the block immediately see something animate
+	// into place, rather than a blank paragraph. The demo mixes text with a
+	// Video Player block on purpose — it's here only to show that *any* block
+	// dropped inside (text, media, whatever) inherits the same scroll
+	// animation, not just paragraphs. Everything is fully editable/removable —
+	// this only affects the initial insert.
 	const innerBlocksProps = useInnerBlocksProps(
 		{ className: "ad-animation-scroll__content", ref: contentRef },
 		{
@@ -241,9 +248,28 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				[
 					"core/group",
 					{},
-					[["core/paragraph", { placeholder: __("Add your animated content...", "animation-scroll-block") }]],
+					[
+						["create-block/video-player-block", {}],
+						[
+							"core/heading",
+							{
+								level: 3,
+								content: __("This content animates into view", "animation-scroll-block"),
+							},
+						],
+						[
+							"core/paragraph",
+							{
+								content: __(
+									"Everything you place inside this block scrolls into the viewport using the animation style you pick in the sidebar — text, images, even a video player, like the example above. Replace any of this with your own content; the animation applies automatically.",
+									"animation-scroll-block"
+								),
+							},
+						],
+					],
 				],
 			],
+			templateLock: false,
 		}
 	);
 

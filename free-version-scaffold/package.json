@@ -1,7 +1,7 @@
 {
   "name": "adaire-blocks-free",
   "version": "1.2.2",
-  "description": "Free version of GutenBlocks - Professional WordPress blocks for Gutenberg editor",
+  "description": "Free version of Adaire Blocks - Professional WordPress blocks for Gutenberg editor",
   "main": "src/index.js",
   "scripts": {
     "prebuild": "node scripts/apply-new-icons.js && node scripts/update-block-icons.js",

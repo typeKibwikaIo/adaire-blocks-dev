@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/gallery-block",
     "version": "0.1.0",
-    "title": "Gallery",
+    "title": "Gallery (Free)",
     "category": "adaire-media-images",
     "description": "Add one to many images and arrange them in a flexible grid or masonry layout.",
     "example": {},
@@ -90,6 +90,30 @@
                     "unit": "%"
                 }
             }
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
+        },
+        "captionFontSize": {
+            "type": "number",
+            "default": 13
+        },
+        "captionFontWeight": {
+            "type": "string",
+            "default": "400"
+        },
+        "captionLineHeight": {
+            "type": "string",
+            "default": "normal"
+        },
+        "captionLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "captionTextTransform": {
+            "type": "string",
+            "default": "none"
         }
     },
     "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#0F9D7C\"/>\n<rect x=\"4\" y=\"4\" width=\"7\" height=\"7\" rx=\"1.2\" fill=\"white\"/>\n<rect x=\"13\" y=\"4\" width=\"7\" height=\"11\" rx=\"1.2\" fill=\"white\" fill-opacity=\"0.85\"/>\n<rect x=\"4\" y=\"13\" width=\"7\" height=\"7\" rx=\"1.2\" fill=\"white\" fill-opacity=\"0.85\"/>\n<rect x=\"13\" y=\"17\" width=\"7\" height=\"3\" rx=\"1.2\" fill=\"white\" fill-opacity=\"0.6\"/>\n</svg>"

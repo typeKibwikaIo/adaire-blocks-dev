@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Free Version Generator for GutenBlocks
+ * Free Version Generator for Adaire Blocks
  *
  * Generates the free version by:
  * 1. Copying every file from free-version-scaffold/ (the authoritative template)
@@ -19,6 +19,16 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync, execFileSync } = require('child_process');
+
+/**
+ * Block titles that differ between distributions. Keys are block folder
+ * names; values replace block.json "title" in the generated free source
+ * before it is built. Paid builds (plus/premium) compile straight from
+ * the dev src/ and keep the original titles.
+ */
+const FREE_TITLE_OVERRIDES = {
+    'tabs-block': 'Tabbed Content Free',
+};
 
 class FreeVersionGenerator {
     constructor() {
@@ -176,6 +186,7 @@ class FreeVersionGenerator {
             if (fs.existsSync(sourceBlockPath)) {
                 this.copyDirectoryRecursive(sourceBlockPath, destBlockPath);
                 console.log(`   ✓ Copied ${blockName}`);
+                this.applyFreeTitleOverride(blockName, destBlockPath);
             }
         });
 
@@ -203,6 +214,29 @@ class FreeVersionGenerator {
         if (fs.existsSync(indexSrc)) {
             fs.copyFileSync(indexSrc, path.join(srcPath, 'index.js'));
         }
+    }
+
+    /**
+     * Rewrite a copied block.json title for the free distribution
+     * (see FREE_TITLE_OVERRIDES). Runs before the free build, so the
+     * override lands in both the bundled editor JS and the manifest.
+     */
+    applyFreeTitleOverride(blockName, destBlockPath) {
+        const overrideTitle = FREE_TITLE_OVERRIDES[blockName];
+        if (!overrideTitle) {
+            return;
+        }
+
+        const blockJsonPath = path.join(destBlockPath, 'block.json');
+        if (!fs.existsSync(blockJsonPath)) {
+            console.log(`   ⚠️  block.json missing for ${blockName}, cannot patch title`);
+            return;
+        }
+
+        const blockJson = JSON.parse(fs.readFileSync(blockJsonPath, 'utf8'));
+        blockJson.title = overrideTitle;
+        fs.writeFileSync(blockJsonPath, JSON.stringify(blockJson, null, 4));
+        console.log(`   ✓ Patched ${blockName} title to "${overrideTitle}"`);
     }
 
     /**
@@ -390,7 +424,7 @@ class FreeVersionGenerator {
         const freePackage = {
             name: 'adaire-blocks-free',
             version: currentVersion,
-            description: 'Free version of GutenBlocks - Professional WordPress blocks for Gutenberg editor',
+            description: 'Free version of Adaire Blocks - Professional WordPress blocks for Gutenberg editor',
             main: 'src/index.js',
             scripts: {
                 prebuild: 'node scripts/apply-new-icons.js && node scripts/update-block-icons.js',
@@ -563,7 +597,7 @@ class FreeVersionGenerator {
 
         const enabledBlocks = this.getEnabledBlocks();
 
-        let indexContent = `// GutenBlocks Free Version - auto-generated, do not edit manually\n\n`;
+        let indexContent = `// Adaire Blocks Free Version - auto-generated, do not edit manually\n\n`;
         enabledBlocks.forEach(blockName => {
             indexContent += `import './${blockName}';\n`;
         });

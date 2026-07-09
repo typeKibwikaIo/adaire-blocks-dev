@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/posts-carousel-block",
     "version": "0.1.0",
-    "title": "Blog Post Slider",
+    "title": "Blog Post Slider (Free)",
     "category": "adaire-blog-content",
     "description": "Display WordPress blog posts in a sliding carousel with navigation controls.",
     "supports": {

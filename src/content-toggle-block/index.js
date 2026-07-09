@@ -2,6 +2,7 @@
 import './style.scss';
 import Edit from './edit';
 import save from './save';
+import deprecated from './deprecated';
 import metadata from './block.json';
 
 // Import icon component
@@ -10,6 +11,7 @@ import ContentToggleIcon from '../icons/content-toggle';
 registerBlockType(metadata.name, {
 	edit: Edit,
 	save,
+	deprecated,
 	icon: ContentToggleIcon,
 });
 

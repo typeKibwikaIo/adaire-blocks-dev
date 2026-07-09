@@ -2,6 +2,7 @@
     width: 100%;
     padding: 0;
     box-sizing: border-box;
+    font-family: var(--content-toggle-font-family, inherit);
 }
 
 .adaire-content-toggle__container {
@@ -65,6 +66,9 @@
     border-radius: var(--pill-border-radius, 24px);
     font-size: var(--pill-font-size, 16px);
     font-weight: var(--pill-font-weight, 500);
+    line-height: var(--pill-line-height, normal);
+    letter-spacing: var(--pill-letter-spacing, normal);
+    text-transform: var(--pill-text-transform, none);
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;

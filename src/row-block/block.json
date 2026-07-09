@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "adaire/row-block",
-  "title": "Row",
+  "title": "Row (Free)",
   "description": "A row container with configurable column layouts.",
   "category": "adaire-layout-sections",
   "icon": "layout",
@@ -25,7 +25,19 @@
     },
     "align": {
       "type": "string",
-      "default": "wide"
+      "default": ""
+    },
+    "gap": {
+      "type": "number",
+      "default": 16
+    },
+    "verticalAlign": {
+      "type": "string",
+      "default": ""
+    },
+    "mobileColumns": {
+      "type": "string",
+      "default": ""
     }
   }
 }

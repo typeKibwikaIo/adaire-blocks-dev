@@ -1,4 +1,4 @@
-=== GutenBlocks - Amazing Blocks for Gutenberg - Need Only One Block, Pay for Only One Block! ===
+=== Adaire Blocks - Amazing Blocks for Gutenberg - Need Only One Block, Pay for Only One Block! ===
 Contributors: adairedigital
 Donate link: https://adaire.digital/
 Tags: blocks, gutenberg, gsap, animation, portfolio
@@ -15,7 +15,7 @@ A powerful WordPress plugin for creating visually stunning, high-performance web
 
 == Description ==
 
-GutenBlocks is a young library of premium-feeling Gutenberg blocks built with modern web technologies - we would love your feedback.. We believe that building a website should not cut into your web development fees - so the library our free blocks should allow you to build an amazing site. Our Plus Blocks are commercial, but priced on a "Pay for what you use" basis - if you need only one Block, you pay for only one Block. Currently we have ready-made sections like accordions, carousels, testimonial sliders, counters. And we are looking to drop a set of new Blocks every week - let us know what we can build! We will fine-tune every color, font, animation, and layout from the native block inspector; build templates, menus, animations and more.
+Adaire Blocks is a young library of premium-feeling Gutenberg blocks built with modern web technologies - we would love your feedback.. We believe that building a website should not cut into your web development fees - so the library our free blocks should allow you to build an amazing site. Our Plus Blocks are commercial, but priced on a "Pay for what you use" basis - if you need only one Block, you pay for only one Block. Currently we have ready-made sections like accordions, carousels, testimonial sliders, counters. And we are looking to drop a set of new Blocks every week - let us know what we can build! We will fine-tune every color, font, animation, and layout from the native block inspector; build templates, menus, animations and more.
 
 
 == Commercial Plugin ==
@@ -138,5 +138,5 @@ For detailed documentation, tutorials, and support, please visit our website or 
 
 **Contributing**
 
-We welcome contributions! If you'd like to contribute to the development of GutenBlocks, please visit our GitHub repository.
+We welcome contributions! If you'd like to contribute to the development of Adaire Blocks, please visit our GitHub repository.
 

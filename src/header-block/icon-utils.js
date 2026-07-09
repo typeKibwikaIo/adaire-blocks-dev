@@ -86,3 +86,83 @@ export function SocialIcon({ platform }) {
         </svg>
     );
 }
+
+// ─── Cart icon (ADAB-016 — WooCommerce cart) ───────────────────────────────
+// Stroke-style glyph, drawn the same way as HeaderIcon above. Mirrored
+// byte-for-byte in render.php's adaire_header_cart_icon_svg() for the
+// frontend. Cart count badge (when present) is a separate <span> appended
+// next to this icon by the caller, not part of the SVG itself.
+
+export function CartIcon() {
+    const c = { stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' };
+    return (
+        <svg className="adaire-header-icon adaire-header-cart-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <circle {...c} cx="9" cy="21" r="1" />
+            <circle {...c} cx="19" cy="21" r="1" />
+            <path {...c} d="M2.5 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21.5 8H5.1" />
+        </svg>
+    );
+}
+
+// ─── Payment method icons (ADAB-016) ───────────────────────────────────────
+// Simplified, generic glyph approximations (rounded card with a brand-ish
+// wordmark/shape) — not exact trademarked logo assets, same approach as the
+// social icons above. Mirrored byte-for-byte in render.php's
+// adaire_header_payment_icon_svg() for the frontend.
+
+export const paymentMethodOptions = ['Visa', 'Mastercard', 'PayPal', 'American Express', 'Apple Pay', 'Google Pay'];
+
+const paymentIconPaths = {
+    visa: (
+        <>
+            <rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <text x="12" y="15.5" textAnchor="middle" fontSize="7" fontWeight="700" fontStyle="italic" fill="currentColor" stroke="none">VISA</text>
+        </>
+    ),
+    mastercard: (
+        <>
+            <rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <circle cx="9.5" cy="12" r="4.2" fill="currentColor" opacity="0.55" />
+            <circle cx="14.5" cy="12" r="4.2" fill="currentColor" opacity="0.85" />
+        </>
+    ),
+    paypal: (
+        <>
+            <rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <path fill="currentColor" stroke="none" d="M9.3 8.2h3.1c1.9 0 3.1 1 2.8 2.7-.3 1.9-1.8 2.9-3.7 2.9h-1.1l-.5 2.8H8l1.3-8.4Zm1.5 4.2h.8c.9 0 1.6-.4 1.7-1.3.1-.8-.4-1.1-1.3-1.1h-.7l-.5 2.4Z" />
+        </>
+    ),
+    'american express': (
+        <>
+            <rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="currentColor" opacity="0.12" stroke="currentColor" strokeWidth="1.5" />
+            <text x="12" y="15" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="currentColor" stroke="none">AMEX</text>
+        </>
+    ),
+    'apple pay': (
+        <>
+            <rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <text x="12" y="15" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="currentColor" stroke="none">Pay</text>
+        </>
+    ),
+    'google pay': (
+        <>
+            <rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <text x="12" y="15" textAnchor="middle" fontSize="5" fontWeight="700" fill="currentColor" stroke="none">GPay</text>
+        </>
+    ),
+};
+
+export function PaymentIcon({ method }) {
+    const key = ( method || '' ).toLowerCase();
+    const path = paymentIconPaths[ key ];
+
+    if ( ! path ) {
+        return <span className="adaire-header-payment-fallback">{ ( method || '?' ).charAt( 0 ) }</span>;
+    }
+
+    return (
+        <svg className="adaire-header-payment-icon" width="1.6em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            { path }
+        </svg>
+    );
+}

@@ -29,7 +29,11 @@ export default function save({ attributes }) {
     borderWidth,
     borderColor,
     borderStyle,
-    buttonHoverBorderColor
+    buttonHoverBorderColor,
+    lineHeight,
+    letterSpacing,
+    textTransform,
+    fontFamily
   } = attributes;
 
   return (
@@ -38,10 +42,17 @@ export default function save({ attributes }) {
       id: blockId || undefined,
       style: {
         '--button-color': buttonColor || '#ffffff',
-        '--button-bg-color': buttonBackgroundColor || 'transparent',
+        // Theme-color inheritance (ADAB-014): an explicit, already-stored
+        // 'transparent' is preserved as-is (it's a valid user choice, not an
+        // "unset" sentinel) — `||` already short-circuits on that truthy
+        // string. Only a genuinely empty/unset value (new block default,
+        // see block.json) falls through to the active theme's primary
+        // palette color, then to the original hardcoded literal so themes
+        // without a `primary` color still render identically to before.
+        '--button-bg-color': buttonBackgroundColor || 'var(--wp--preset--color--primary, #ff4242)',
         '--button-hover-color': buttonHoverColor || '#ffffff',
-        '--button-hover-bg-color': buttonHoverBackgroundColor || 'transparent',
-        '--button-underline-color': underlineColor || '#ff4242',
+        '--button-hover-bg-color': buttonHoverBackgroundColor || 'var(--wp--preset--color--secondary, var(--wp--preset--color--primary, #e63939))',
+        '--button-underline-color': underlineColor || 'var(--wp--preset--color--secondary, #ff4242)',
         '--button-blur': blurAmount ? `${blurAmount}px` : '0px',
         '--button-font-size': `${getDeviceValue(fontSize, 'desktop', 18)}px`,
         '--button-font-size-tablet': `${getDeviceValue(fontSize, 'tablet', 16)}px`,
@@ -83,9 +94,19 @@ export default function save({ attributes }) {
         '--button-border-radius': borderRadius ? `${borderRadius}px` : '0px',
         '--button-font-weight': fontWeight || '500',
         '--button-border-width': borderWidth ? `${borderWidth}px` : '2px',
-        '--button-border-color': borderColor || '#ff4242',
+        '--button-border-color': borderColor || 'var(--wp--preset--color--secondary, #ff4242)',
         '--button-border-style': borderStyle || 'solid',
-        '--button-hover-border-color': buttonHoverBorderColor || borderColor || '#ff4242',
+        '--button-hover-border-color': buttonHoverBorderColor || borderColor || 'var(--wp--preset--color--secondary, #ff4242)',
+        '--button-line-height': getDeviceValue(lineHeight, 'desktop', 'normal'),
+        '--button-line-height-tablet': getDeviceValue(lineHeight, 'tablet', 'normal'),
+        '--button-line-height-mobile': getDeviceValue(lineHeight, 'mobile', 'normal'),
+        '--button-line-height-watch': getDeviceValue(lineHeight, 'smartwatch', 'normal'),
+        '--button-letter-spacing': getDeviceValue(letterSpacing, 'desktop', 'normal'),
+        '--button-letter-spacing-tablet': getDeviceValue(letterSpacing, 'tablet', 'normal'),
+        '--button-letter-spacing-mobile': getDeviceValue(letterSpacing, 'mobile', 'normal'),
+        '--button-letter-spacing-watch': getDeviceValue(letterSpacing, 'smartwatch', 'normal'),
+        '--button-text-transform': textTransform || 'none',
+        '--button-font-family': fontFamily || '',
       }
     })}>
       <a

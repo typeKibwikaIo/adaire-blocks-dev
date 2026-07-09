@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: GutenBlocks
+ * Plugin Name: Guten-Blocks
  * Plugin URI: https://adaire.digital/adaire-blocks/
  * Description: Professional WordPress blocks for Gutenberg editor with GSAP animations and modern design.
- * Version: 1.2.4
+ * Version: 1.2.8
  * Author: Adaire
  * Author URI: https://adaire.digital/
  * License: GPL-3.0
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('ADAIRE_BLOCKS_VERSION', '1.2.2');
+define('ADAIRE_BLOCKS_VERSION', '1.2.6');
 define('ADAIRE_BLOCKS_PLUGIN_FILE', __FILE__);
 define('ADAIRE_BLOCKS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -75,8 +75,8 @@ function adaire_blocks_register_blocks() {
  */
 function adaire_blocks_register_nav_menu_locations() {
     register_nav_menus( array(
-        'adaire-blocks-primary' => __( 'GutenBlocks — Primary Navigation', 'adaire-blocks' ),
-        'adaire-blocks-footer'  => __( 'GutenBlocks — Footer Navigation', 'adaire-blocks' ),
+        'adaire-blocks-primary' => __( 'Guten-Blocks — Primary Navigation', 'adaire-blocks' ),
+        'adaire-blocks-footer'  => __( 'Guten-Blocks — Footer Navigation', 'adaire-blocks' ),
     ) );
 }
 add_action('init', 'adaire_blocks_register_nav_menu_locations');
@@ -86,31 +86,31 @@ function adaire_blocks_register_block_categories( $categories, $editor_context )
     $registered_slugs = wp_list_pluck( $categories, 'slug' );
 
     $custom_categories = array(
-        array( 'slug' => 'adaire-blocks-free', 'title' => __( 'GutenBlocks FREE', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'gutenblocks-alignment-layout-structure', 'title' => __( 'Alignment, Layout & Structure (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-hero-sections', 'title' => __( 'Hero & Navigation (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-layout-sections', 'title' => __( 'Layout Sections (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-marketing', 'title' => __( 'Marketing (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-media', 'title' => __( 'Media (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-business', 'title' => __( 'Business (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-testimonial', 'title' => __( 'Testimonials (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-social', 'title' => __( 'Social (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-blog-publishing', 'title' => __( 'Blog & Publishing (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-start-actions', 'title' => __( 'Start & Actions (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-information-blocks', 'title' => __( 'Information Blocks (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-effects-interactions', 'title' => __( 'Effects & Interactions (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-interactive', 'title' => __( 'Interactive (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-layout-navigation', 'title' => __( 'Layout & Navigation (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-blog-content', 'title' => __( 'Blog & Content (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-content-expandable', 'title' => __( 'Expandable Content (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-content-info', 'title' => __( 'Content & Info (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-content-tabs', 'title' => __( 'Tabs & Content (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-layout-hero', 'title' => __( 'Layout & Hero (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-marketing-conversion', 'title' => __( 'Marketing & Conversion (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-media-images', 'title' => __( 'Media & Images (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-media-videos', 'title' => __( 'Media & Videos (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-reviews-trust', 'title' => __( 'Reviews & Trust (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
-        array( 'slug' => 'adaire-social-engagement', 'title' => __( 'Social & Engagement (GutenBlocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-blocks-free', 'title' => __( 'Guten-Blocks FREE', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-blocks-alignment-layout-structure', 'title' => __( 'Alignment, Layout & Structure (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-hero-sections', 'title' => __( 'Hero & Navigation (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-layout-sections', 'title' => __( 'Layout Sections (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-marketing', 'title' => __( 'Marketing (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-media', 'title' => __( 'Media (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-business', 'title' => __( 'Business (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-testimonial', 'title' => __( 'Testimonials (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-social', 'title' => __( 'Social (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-blog-publishing', 'title' => __( 'Blog & Publishing (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-start-actions', 'title' => __( 'Start & Actions (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-information-blocks', 'title' => __( 'Information Blocks (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-effects-interactions', 'title' => __( 'Effects & Interactions (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-interactive', 'title' => __( 'Interactive (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-layout-navigation', 'title' => __( 'Layout & Navigation (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-blog-content', 'title' => __( 'Blog & Content (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-content-expandable', 'title' => __( 'Expandable Content (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-content-info', 'title' => __( 'Content & Info (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-content-tabs', 'title' => __( 'Tabs & Content (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-layout-hero', 'title' => __( 'Layout & Hero (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-marketing-conversion', 'title' => __( 'Marketing & Conversion (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-media-images', 'title' => __( 'Media & Images (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-media-videos', 'title' => __( 'Media & Videos (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-reviews-trust', 'title' => __( 'Reviews & Trust (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-social-engagement', 'title' => __( 'Social & Engagement (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
     );
 
     $custom_categories_to_add = array();
@@ -141,7 +141,8 @@ function enqueue_bootstrap_icons_assets() {
         has_block( 'create-block/social-banner-block', $post ) ||
         has_block( 'create-block/social-share-block', $post ) ||
         has_block( 'create-block/our-process-block', $post ) ||
-        has_block( 'create-block/infogrid-2-block', $post )
+        has_block( 'create-block/infogrid-2-block', $post ) ||
+        has_block( 'create-block/rating-badge-block', $post )
     ) {
         // Enqueue Bootstrap Icons CSS from CDN
         wp_enqueue_style(
@@ -168,6 +169,51 @@ function enqueue_bootstrap_icons_editor() {
 add_action( 'enqueue_block_editor_assets', 'enqueue_bootstrap_icons_editor' );
 add_action( 'admin_enqueue_scripts', 'enqueue_bootstrap_icons_editor' );
 
+/**
+ * Expose the free-tier block configuration to editor JavaScript.
+ *
+ * Blocks read window.adaireBlocksConfig (and the matching editor setting via
+ * useBlockLimits) to enforce free-tier limits — e.g. tabs-block locks its
+ * animation controls when limits.customAnimations is false, gallery-block
+ * caps images via limits.maxItems. Without this the free build silently
+ * behaves as if unrestricted. Shape mirrors the dev/premium plugin:
+ * { isPremium, pluginVersion, blocks: { name: { enabled, limits, upgradeMessage } } }.
+ */
+function adaire_blocks_localize_editor_config() {
+    $blocks_config = array();
+    $config_file   = ADAIRE_BLOCKS_PLUGIN_PATH . 'config/blocks-config.json';
+
+    if ( file_exists( $config_file ) ) {
+        $config_data = json_decode( file_get_contents( $config_file ), true );
+        $free_blocks = isset( $config_data['free'] ) && is_array( $config_data['free'] )
+            ? $config_data['free']
+            : array();
+
+        foreach ( $free_blocks as $block_name => $block_config ) {
+            $blocks_config[ $block_name ] = array(
+                'enabled'        => ! empty( $block_config['enabled'] ),
+                'limits'         => isset( $block_config['limits'] ) ? $block_config['limits'] : array(),
+                'upgradeMessage' => isset( $block_config['upgradeMessage'] ) ? $block_config['upgradeMessage'] : '',
+            );
+        }
+    }
+
+    $editor_config = array(
+        'isPremium'     => false,
+        'pluginVersion' => 'free',
+        'blocks'        => $blocks_config,
+    );
+
+    wp_localize_script( 'wp-block-editor', 'adaireBlocksConfig', $editor_config );
+
+    // Also add to editor settings for the useBlockLimits hook
+    add_filter( 'block_editor_settings_all', function ( $settings ) use ( $editor_config ) {
+        $settings['adaireBlocksConfig'] = $editor_config;
+        return $settings;
+    } );
+}
+add_action( 'enqueue_block_editor_assets', 'adaire_blocks_localize_editor_config' );
+
 // Bootstrap admin settings (register menu, assets, etc.)
 if (is_admin() || wp_doing_ajax() || (defined('REST_REQUEST') && REST_REQUEST)) {
     require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/settings-page.php';
@@ -179,6 +225,9 @@ if (is_admin() || wp_doing_ajax() || (defined('REST_REQUEST') && REST_REQUEST)) 
 if (is_admin()) {
     // Include block migration tool
     require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/block-migration.php';
+
+    // Support page
+    require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/support-page.php';
 
     // Deactivation feedback modal
     require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/deactivation-modal.php';

@@ -60,21 +60,21 @@ const buildTourSteps = ( blocks ) => {
 			description: getCategorySummary( category, categoryBlocks ),
 			items: categoryBlocks.slice( 0, 8 ).map( ( block ) => ( {
 				label: block.title,
-				description: block.description || 'Use this block to build a reusable GutenBlocks section.',
+				description: block.description || 'Use this block to build a reusable Guten-Blocks section.',
 			} ) ),
 		} )
 	);
 
 	return [
 		{
-			title: 'Welcome to GutenBlocks',
+			title: 'Welcome to Guten-Blocks',
 			description:
 				'This quick tour shows where to find the blocks, how to edit them, and how to use the shared responsive preview system.',
 			items: [
 				{
 					label: 'Add blocks',
 					description:
-						'Click the block inserter and search for GutenBlocks by name or category.',
+						'Click the block inserter and search for Guten-Blocks by name or category.',
 				},
 				{
 					label: 'Edit settings',
@@ -86,7 +86,7 @@ const buildTourSteps = ( blocks ) => {
 		{
 			title: 'Responsive preview',
 			description:
-				'Use the GutenBlocks responsive toolbar to preview Desktop, Tablet, Mobile, and Smartwatch layouts before saving.',
+				'Use the Guten-Blocks responsive toolbar to preview Desktop, Tablet, Mobile, and Smartwatch layouts before saving.',
 			items: [
 				{
 					label: 'Custom dimensions',
@@ -109,7 +109,7 @@ const buildTourSteps = ( blocks ) => {
 				{
 					label: 'Restart this tour',
 					description:
-						'Use the GutenBlocks Guide button in the editor toolbar whenever you want to review these steps again.',
+						'Use the Guten-Blocks Guide button in the editor toolbar whenever you want to review these steps again.',
 				},
 			],
 		},
@@ -179,7 +179,7 @@ function AdaireGetStartedTour() {
 			isSecondary
 			className="adaire-tour-launcher"
 			onClick={ openTour }
-			aria-label="Have a tour of GutenBlocks"
+			aria-label="Have a tour of Guten-Blocks"
 		>
 			Have a tour
 		</Button>
