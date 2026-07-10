@@ -1,0 +1,10 @@
+﻿Drop your Lottie JSON files here. Name them exactly:
+
+  business.json      →  "Business"
+  store.json         →  "Online Store"
+  company.json       →  "Company"
+  blog.json          →  "Blog"
+  landing.json       →  "Landing Page"
+  portfolio.json     →  "Portfolio"
+  booking.json       →  "Booking"
+  other.json         →  "Other"

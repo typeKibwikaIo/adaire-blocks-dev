@@ -1,0 +1,519 @@
+
+
+Gutenblocks onboarding v4 wizard · HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GutenBlocks — Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root{
+    --bg:#F4F8FA;
+    --panel:#FFFFFF;
+    --ink:#14181F;
+    --muted:#6B7280;
+    --accent:#C9463F;
+    --accent-dark:#AE3A34;
+    --line:rgba(20,24,31,0.10);
+    --blue:#CFE3EC;
+    --blue2:#A9CDDD;
+    --coral:#F3D4C7;
+    --coral2:#EAB7A0;
+    --font-display:'Poppins', sans-serif;
+    --font-body:'Inter', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--font-body);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+ 
+  /* ---------- NAV ---------- */
+  nav.topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; border-bottom:1px solid var(--line); background:#fff; flex-shrink:0;
+  }
+  .brand-word{font-family:var(--font-display); font-weight:800; font-size:19px; letter-spacing:-0.02em;}
+  .upgrade-btn{
+    background:var(--accent); color:#fff; padding:9px 18px; border-radius:100px;
+    font-size:13px; font-weight:600; border:none; cursor:pointer;
+  }
+  .upgrade-btn:hover{background:var(--accent-dark);}
+ 
+  /* ---------- PROGRESS ---------- */
+  .progress-track{height:3px; background:var(--line); flex-shrink:0;}
+  .progress-fill{height:100%; width:0%; background:var(--accent);}
+ 
+  /* ---------- STAGE ---------- */
+  main.stage{flex:1; display:flex; min-height:0;}
+  .stage-left{
+    width:46%; padding:64px 60px; display:flex; flex-direction:column; justify-content:center; overflow-y:auto;
+  }
+  .eyebrow-pill{
+    display:inline-flex; align-self:flex-start; font-size:13px; font-weight:600; color:var(--accent-dark);
+    background:rgba(201,70,63,0.1); padding:7px 14px; border-radius:100px; margin-bottom:22px;
+  }
+  h2.step-question{
+    font-family:var(--font-display); font-weight:700; font-size:clamp(22px,2.6vw,30px);
+    letter-spacing:-0.01em; line-height:1.2; max-width:480px;
+  }
+  p.step-sub{font-size:14px; color:var(--muted); margin-top:10px; max-width:440px;}
+ 
+  .options-grid{display:grid; gap:12px; margin-top:32px; max-width:480px;}
+  .options-grid.cols-2{grid-template-columns:1fr 1fr;}
+  .options-grid.cols-4{grid-template-columns:1fr 1fr;}
+ 
+  .opt-card{
+    background:#fff; border:1.4px solid var(--line); border-radius:12px; padding:16px 18px;
+    cursor:pointer; text-align:left; font-family:var(--font-body); font-size:14px; font-weight:500; color:var(--ink);
+    transition:border-color .18s ease, background .18s ease, transform .12s ease;
+    position:relative; display:flex; flex-direction:column; gap:6px;
+  }
+  .opt-card:hover{border-color:rgba(201,70,63,0.4); transform:translateY(-1px);}
+  .opt-card.selected{border-color:var(--accent); background:rgba(201,70,63,0.05);}
+  .opt-card .opt-desc{font-size:12px; color:var(--muted); font-weight:400;}
+  .opt-card .opt-icon{width:20px; height:20px; margin-bottom:4px;}
+  .opt-card .opt-icon svg{width:100%; height:100%;}
+  .opt-card .opt-icon svg *{stroke:var(--accent); fill:none; stroke-width:1.6;}
+  .opt-card .badge{
+    position:absolute; top:10px; right:10px; font-size:9px; font-weight:700; letter-spacing:0.04em;
+    color:var(--accent); background:rgba(201,70,63,0.12); padding:2px 7px; border-radius:5px; text-transform:uppercase;
+  }
+  .opt-card .rec-badge{
+    position:absolute; top:-9px; left:14px; font-size:9.5px; font-weight:700; letter-spacing:0.03em;
+    color:#fff; background:var(--accent); padding:3px 9px; border-radius:100px; text-transform:uppercase;
+  }
+ 
+  /* final step */
+  .final-block{display:none; flex-direction:column; align-items:flex-start;}
+  .final-check{
+    width:52px; height:52px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px;
+  }
+  .final-check svg{width:24px; height:24px; stroke:#fff; stroke-width:2.4; fill:none;}
+  .final-cta{
+    margin-top:30px; background:var(--accent); color:#fff; border:none; padding:15px 30px; border-radius:100px;
+    font-family:var(--font-body); font-weight:600; font-size:14.5px; cursor:pointer;
+  }
+  .final-cta:hover{background:var(--accent-dark);}
+ 
+  /* ---------- SCENE (right) ---------- */
+  .stage-right{width:54%; padding:20px 20px 20px 0;}
+  .scene-panel{
+    height:100%; border-radius:22px; position:relative; overflow:hidden;
+    background:radial-gradient(120% 100% at 20% 0%, var(--blue) 0%, var(--blue2) 60%, var(--coral2) 130%);
+  }
+  #sceneInner{position:absolute; inset:0;}
+ 
+  /* collage cards */
+  .mini-card{
+    position:absolute; background:#fff; border-radius:12px; box-shadow:0 16px 34px -16px rgba(20,24,31,0.3);
+    padding:10px; opacity:0;
+  }
+  .mini-bar{background:#EEF2F5; border-radius:5px; height:8px; margin-bottom:6px;}
+  .mini-bar.wide{width:100%;} .mini-bar.mid{width:70%;} .mini-bar.short{width:45%;}
+  .mini-photo{background:#DCE6EA; border-radius:7px; height:44px; margin-bottom:8px;}
+ 
+  /* word scene */
+  .scene-word-wrap{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:40px;
+  }
+  .scene-frame-box{
+    border:1.6px solid var(--accent); position:relative; width:78%; height:64%; border-radius:2px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .scene-word{
+    font-family:var(--font-display); font-weight:800; color:#fff; text-align:center;
+    font-size:clamp(30px,5.5vw,58px); line-height:1; letter-spacing:-0.02em; text-transform:uppercase;
+  }
+ 
+  /* frame scene (experience) */
+  .swatch-row{position:absolute; bottom:36px; left:50%; transform:translateX(-50%); display:flex; border-radius:10px; overflow:hidden; box-shadow:0 14px 30px -14px rgba(20,24,31,0.35);}
+  .swatch{width:52px; height:40px;}
+ 
+  /* stack scene (template) */
+  .stack-card{
+    position:absolute; left:50%; top:50%; width:280px; height:190px; background:#fff; border-radius:14px;
+    box-shadow:0 20px 45px -18px rgba(20,24,31,0.35); padding:16px;
+  }
+  .stack-card .sc-bar{background:#EEF2F5; border-radius:6px; height:10px; margin-bottom:10px;}
+  .stack-card .sc-photo{background:#DCE6EA; border-radius:8px; height:80px; margin-bottom:10px;}
+ 
+  /* spotlight scene */
+  .spotlight-box{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:70%;
+    background:#fff; border-radius:14px; box-shadow:0 20px 45px -16px rgba(20,24,31,0.3); padding:22px;
+    border:2px solid var(--accent);
+  }
+  .spotlight-box .sp-label{font-size:10px; font-weight:700; letter-spacing:0.06em; color:var(--accent-dark); text-transform:uppercase; margin-bottom:12px;}
+  .sp-field{background:#F5F7F9; border-radius:8px; height:36px; margin-bottom:10px;}
+  .sp-btn{background:var(--accent); color:#fff; border-radius:8px; height:36px; display:flex; align-items:center; justify-content:center; font-size:12.5px; font-weight:600;}
+ 
+  /* complete scene */
+  .complete-frame{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:300px; background:#fff; border-radius:16px;
+    box-shadow:0 24px 55px -18px rgba(20,24,31,0.35); overflow:hidden;
+  }
+  .complete-frame .cf-nav{height:26px; background:#F5F7F9; display:flex; align-items:center; gap:5px; padding:0 10px;}
+  .complete-frame .cf-nav span{width:6px; height:6px; border-radius:50%; background:#D7DDE1;}
+  .complete-frame .cf-body{padding:16px; display:grid; gap:10px;}
+  .cf-hero{height:60px; border-radius:8px; background:linear-gradient(120deg, var(--accent), #E5847D);}
+  .cf-row{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;}
+  .cf-row div{height:34px; border-radius:6px; background:#EEF2F5;}
+  .ring{
+    position:absolute; border:1.4px solid rgba(255,255,255,0.6); border-radius:50%;
+  }
+ 
+  /* ---------- FOOTER ---------- */
+  footer.wizard-footer{
+    display:flex; align-items:center; justify-content:space-between; padding:18px 28px;
+    border-top:1px solid var(--line); background:#fff; flex-shrink:0;
+  }
+  .back-btn{
+    background:none; border:none; font-family:var(--font-body); font-size:13.5px; font-weight:600; color:var(--ink);
+    cursor:pointer; display:flex; align-items:center; gap:6px; opacity:0.7;
+  }
+  .back-btn:hover{opacity:1;}
+  .back-btn:disabled{opacity:0.25; cursor:default;}
+  .footer-right{display:flex; gap:12px;}
+  .skip-btn{
+    background:#fff; border:1.4px solid var(--line); color:var(--ink); font-family:var(--font-body); font-size:13.5px;
+    font-weight:600; padding:10px 18px; border-radius:100px; cursor:pointer;
+  }
+  .skip-btn:hover{border-color:rgba(20,24,31,0.25);}
+  .continue-btn{
+    background:var(--accent); border:none; color:#fff; font-family:var(--font-body); font-size:13.5px;
+    font-weight:600; padding:10px 22px; border-radius:100px; cursor:pointer;
+  }
+  .continue-btn:hover{background:var(--accent-dark);}
+  .continue-btn:disabled{background:#D7DDE1; color:#9aa1a8; cursor:default;}
+ 
+  @media (max-width:900px){
+    main.stage{flex-direction:column; overflow-y:auto;}
+    .stage-left, .stage-right{width:100%;}
+    .stage-right{height:260px; padding:0 20px 20px;}
+  }
+</style>
+</head>
+<body>
+ 
+<nav class="topbar">
+  <span class="brand-word">g.b</span>
+  <button class="upgrade-btn">Upgrade</button>
+</nav>
+ 
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+ 
+<main class="stage">
+  <div class="stage-left">
+    <div id="questionBlock">
+      <div class="eyebrow-pill" id="stepEyebrow"></div>
+      <h2 class="step-question" id="stepQuestion"></h2>
+      <p class="step-sub" id="stepSub"></p>
+      <div class="options-grid" id="optionsGrid"></div>
+    </div>
+ 
+    <div class="final-block" id="finalBlock">
+      <div class="final-check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="eyebrow-pill">You're all set!</div>
+      <h2 class="step-question">Your blocks are ready.</h2>
+      <p class="step-sub">Jump into the editor and start building, or take a quick look at the free block library first.</p>
+      <button class="final-cta">Start Building →</button>
+    </div>
+  </div>
+ 
+  <div class="stage-right">
+    <div class="scene-panel"><div id="sceneInner"></div></div>
+  </div>
+</main>
+ 
+<footer class="wizard-footer">
+  <button class="back-btn" id="backBtn">← Back</button>
+  <div class="footer-right">
+    <button class="skip-btn" id="skipBtn">Skip</button>
+    <button class="continue-btn" id="continueBtn" disabled>Continue</button>
+  </div>
+</footer>
+ 
+<script>
+const steps = [
+  {
+    eyebrow:"Hey 👋 Let's get your blocks set up.",
+    question:"Who are you building for?",
+    sub:"",
+    type:"single",
+    options:[
+      {label:"Myself or someone I know"},
+      {label:"My business or workplace"},
+      {label:"A client"},
+      {label:"Just exploring"}
+    ],
+    scene:"collage"
+  },
+  {
+    eyebrow:"Got it! We'll keep things simple.",
+    question:"What is your site about?",
+    sub:"Choose anything that applies.",
+    type:"multi",
+    cols:2,
+    options:[
+      {label:"Small/Med Business", icon:"briefcase"},
+      {label:"Online store", icon:"store"},
+      {label:"Company site", icon:"building"},
+      {label:"Blog", icon:"doc"},
+      {label:"Landing page", icon:"layout"},
+      {label:"Portfolio", icon:"image"},
+      {label:"Booking", icon:"calendar"},
+      {label:"Other", icon:"search"}
+    ],
+    scene:"word"
+  },
+  {
+    eyebrow:"This helps us tailor the editor.",
+    question:"How experienced are you with Gutenberg blocks?",
+    sub:"This helps us adjust the editor to your workflow.",
+    type:"single",
+    options:[
+      {label:"I'm just getting started"},
+      {label:"I have some experience"},
+      {label:"I'm very comfortable with blocks"}
+    ],
+    scene:"frame"
+  },
+  {
+    eyebrow:"Glad you're here!",
+    question:"Start with a template that fits your needs",
+    sub:"Every template works natively with Gutenberg.",
+    type:"single",
+    options:[
+      {label:"Blank Canvas", desc:"A flexible canvas you shape from the ground up"},
+      {label:"Business Starter", desc:"A ready-to-start layout with smart blocks", rec:true}
+    ],
+    scene:"stack"
+  },
+  {
+    eyebrow:"Almost there.",
+    question:"What do you want to include in your site?",
+    sub:"We'll use this to tailor block suggestions for you.",
+    type:"multi",
+    cols:2,
+    options:[
+      {label:"Pricing Table", included:true},
+      {label:"Testimonials", included:true},
+      {label:"Contact Form"},
+      {label:"Countdown Timer"},
+      {label:"AI Suggestions"},
+      {label:"Image Gallery"},
+      {label:"Custom Code"},
+      {label:"WooCommerce"}
+    ],
+    scene:"spotlight"
+  },
+  { final:true, scene:"complete" }
+];
+ 
+const icons = {
+  briefcase:'<rect x="3" y="7" width="18" height="12" rx="1"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/>',
+  store:'<path d="M3 9l1-5h16l1 5"/><rect x="4" y="9" width="16" height="11"/>',
+  building:'<rect x="5" y="3" width="14" height="18"/><line x1="9" y1="8" x2="9" y2="8"/><line x1="15" y1="8" x2="15" y2="8"/>',
+  doc:'<rect x="5" y="3" width="14" height="18" rx="1"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/>',
+  layout:'<rect x="3" y="4" width="18" height="16" rx="1"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  image:'<rect x="3" y="4" width="18" height="16" rx="1"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-11 9"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="1"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/>',
+  search:'<circle cx="10.5" cy="10.5" r="6.5"/><line x1="16" y1="16" x2="21" y2="21"/>'
+};
+ 
+let current = 0;
+const selections = {};
+ 
+const els = {
+  eyebrow: document.getElementById('stepEyebrow'),
+  question: document.getElementById('stepQuestion'),
+  sub: document.getElementById('stepSub'),
+  grid: document.getElementById('optionsGrid'),
+  qBlock: document.getElementById('questionBlock'),
+  finalBlock: document.getElementById('finalBlock'),
+  scene: document.getElementById('sceneInner'),
+  progress: document.getElementById('progressFill'),
+  back: document.getElementById('backBtn'),
+  skip: document.getElementById('skipBtn'),
+  cont: document.getElementById('continueBtn')
+};
+ 
+function updateProgress(){
+  const pct = ((current)/(steps.length-1))*100;
+  gsap.to(els.progress, {width: pct+'%', duration:0.5, ease:'power2.out'});
+}
+ 
+function canContinue(step){
+  if(step.final) return true;
+  if(step.type==='single') return !!selections[current];
+  return true; // multi always continuable
+}
+ 
+function renderOptions(step){
+  els.grid.innerHTML = '';
+  els.grid.className = 'options-grid' + (step.cols===2 ? ' cols-2' : '');
+  step.options.forEach((opt, i)=>{
+    const card = document.createElement('button');
+    card.className = 'opt-card';
+    const isSelected = step.type==='single' ? selections[current]===i : (selections[current]||[]).includes(i);
+    if(isSelected) card.classList.add('selected');
+    let inner = '';
+    if(opt.rec) inner += `<span class="rec-badge">Recommended</span>`;
+    if(opt.icon) inner += `<span class="opt-icon"><svg viewBox="0 0 24 24">${icons[opt.icon]}</svg></span>`;
+    inner += `<span>${opt.label}</span>`;
+    if(opt.desc) inner += `<span class="opt-desc">${opt.desc}</span>`;
+    if(opt.included) inner += `<span class="badge">Included</span>`;
+    card.innerHTML = inner;
+    card.addEventListener('click', ()=>{
+      if(step.type==='single'){
+        selections[current] = i;
+      } else {
+        const arr = selections[current] || [];
+        const idx = arr.indexOf(i);
+        if(idx>-1) arr.splice(idx,1); else arr.push(i);
+        selections[current] = arr;
+      }
+      renderOptions(step);
+      updateScene(step, i, opt);
+      els.cont.disabled = !canContinue(step);
+    });
+    els.grid.appendChild(card);
+    gsap.fromTo(card, {opacity:0, y:10}, {opacity:1, y:0, duration:0.4, delay:i*0.04, ease:'power2.out'});
+  });
+}
+ 
+function sceneCollage(){
+  els.scene.innerHTML = `
+    <div class="mini-card" style="width:140px; top:14%; left:10%;"><div class="mini-photo"></div><div class="mini-bar wide"></div><div class="mini-bar short"></div></div>
+    <div class="mini-card" style="width:150px; top:44%; left:6%;"><div class="mini-bar mid"></div><div class="mini-bar wide"></div><div class="mini-photo" style="height:34px;"></div></div>
+    <div class="mini-card" style="width:150px; top:20%; right:8%;"><div class="mini-photo"></div><div class="mini-bar wide"></div></div>
+    <div class="mini-card" style="width:150px; top:56%; right:12%;"><div class="mini-bar short"></div><div class="mini-photo" style="height:50px;"></div></div>
+  `;
+  gsap.fromTo(els.scene.children, {opacity:0, y:24, scale:0.94}, {opacity:1, y:0, scale:1, duration:0.6, stagger:0.08, ease:'power3.out'});
+}
+ 
+function sceneWord(word){
+  els.scene.innerHTML = `
+    <div class="scene-word-wrap">
+      <div class="scene-frame-box"><div class="scene-word" id="sw">${word || 'YOUR SITE'}</div></div>
+    </div>`;
+  gsap.fromTo('.scene-frame-box', {opacity:0, scale:0.92}, {opacity:1, scale:1, duration:0.6, ease:'power3.out'});
+  gsap.fromTo('#sw', {opacity:0, y:14}, {opacity:1, y:0, duration:0.5, delay:0.1});
+}
+ 
+function sceneFrame(){
+  els.scene.innerHTML = `
+    <div class="scene-word-wrap"><div class="scene-frame-box"><div class="scene-word">BLOCKS</div></div></div>
+    <div class="swatch-row">
+      <div class="swatch" style="background:#fff;"></div>
+      <div class="swatch" style="background:#C9463F;"></div>
+      <div class="swatch" style="background:#4C8DFF;"></div>
+    </div>`;
+  gsap.fromTo('.scene-frame-box', {opacity:0, scale:0.92}, {opacity:1, scale:1, duration:0.6, ease:'power3.out'});
+  gsap.fromTo('.swatch-row', {opacity:0, y:16}, {opacity:1, y:0, duration:0.5, delay:0.2});
+}
+ 
+function sceneStack(){
+  els.scene.innerHTML = `
+    <div class="stack-card" style="transform:translate(-50%,-50%) rotate(6deg) translateX(30px); opacity:0;"><div class="sc-photo"></div><div class="sc-bar" style="width:60%;"></div><div class="sc-bar" style="width:85%;"></div></div>
+    <div class="stack-card" style="transform:translate(-50%,-50%) rotate(-4deg) translateX(-24px); opacity:0;"><div class="sc-photo"></div><div class="sc-bar" style="width:50%;"></div><div class="sc-bar" style="width:75%;"></div></div>
+    <div class="stack-card" style="transform:translate(-50%,-50%) rotate(0deg); opacity:0;"><div class="sc-photo" style="background:linear-gradient(120deg,#C9463F,#E5847D);"></div><div class="sc-bar" style="width:65%;"></div><div class="sc-bar" style="width:90%;"></div></div>
+  `;
+  const cards = els.scene.children;
+  gsap.to(cards[0], {opacity:0.5, duration:0.6, ease:'power3.out'});
+  gsap.to(cards[1], {opacity:0.75, duration:0.6, delay:0.1, ease:'power3.out'});
+  gsap.to(cards[2], {opacity:1, duration:0.6, delay:0.2, ease:'power3.out'});
+}
+ 
+function sceneSpotlight(){
+  els.scene.innerHTML = `
+    <div class="spotlight-box">
+      <div class="sp-label">Contact Form</div>
+      <div class="sp-field"></div>
+      <div class="sp-field"></div>
+      <div class="sp-btn">Join →</div>
+    </div>`;
+  gsap.fromTo('.spotlight-box', {opacity:0, scale:0.9}, {opacity:1, scale:1, duration:0.55, ease:'back.out(1.6)'});
+}
+ 
+function sceneComplete(){
+  els.scene.innerHTML = `
+    <div class="ring" style="width:180px; height:180px; left:50%; top:50%; transform:translate(-50%,-50%); opacity:0;"></div>
+    <div class="ring" style="width:260px; height:260px; left:50%; top:50%; transform:translate(-50%,-50%); opacity:0;"></div>
+    <div class="complete-frame">
+      <div class="cf-nav"><span></span><span></span><span></span></div>
+      <div class="cf-body"><div class="cf-hero"></div><div class="cf-row"><div></div><div></div><div></div></div></div>
+    </div>`;
+  gsap.to(els.scene.querySelectorAll('.ring'), {opacity:1, duration:1, stagger:0.15, ease:'power1.out'});
+  gsap.fromTo('.complete-frame', {opacity:0, y:20, scale:0.94}, {opacity:1, y:0, scale:1, duration:0.6, ease:'back.out(1.5)', delay:0.1});
+}
+ 
+function updateScene(step, optIndex, opt){
+  if(step.scene==='word' && opt) sceneWord(opt.label);
+}
+ 
+function renderScene(step){
+  const tl = gsap.timeline();
+  tl.to(els.scene, {opacity:0, duration:0.2, onComplete:()=>{
+    if(step.scene==='collage') sceneCollage();
+    else if(step.scene==='word') sceneWord();
+    else if(step.scene==='frame') sceneFrame();
+    else if(step.scene==='stack') sceneStack();
+    else if(step.scene==='spotlight') sceneSpotlight();
+    else if(step.scene==='complete') sceneComplete();
+  }})
+  .to(els.scene, {opacity:1, duration:0.25});
+}
+ 
+function renderStep(){
+  const step = steps[current];
+  updateProgress();
+  els.back.disabled = current===0;
+ 
+  if(step.final){
+    els.qBlock.style.display = 'none';
+    els.finalBlock.style.display = 'flex';
+    els.skip.style.display = 'none';
+    els.cont.style.display = 'none';
+  } else {
+    els.qBlock.style.display = 'block';
+    els.finalBlock.style.display = 'none';
+    els.skip.style.display = 'inline-flex';
+    els.cont.style.display = 'inline-flex';
+    els.eyebrow.textContent = step.eyebrow;
+    els.question.textContent = step.question;
+    els.sub.textContent = step.sub || '';
+    renderOptions(step);
+    els.cont.disabled = !canContinue(step);
+    gsap.fromTo('#stepQuestion, #stepSub, #stepEyebrow', {opacity:0, y:8}, {opacity:1, y:0, duration:0.4, stagger:0.05});
+  }
+  renderScene(step);
+}
+ 
+els.back.addEventListener('click', ()=>{
+  if(current>0){ current--; renderStep(); }
+});
+els.skip.addEventListener('click', ()=>{
+  if(current<steps.length-1){ current++; renderStep(); }
+});
+els.cont.addEventListener('click', ()=>{
+  if(current<steps.length-1){ current++; renderStep(); }
+});
+ 
+renderStep();
+</script>
+ 
+</body>
+</html>
+ 
+
+
+
