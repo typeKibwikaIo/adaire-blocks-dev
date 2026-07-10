@@ -1,6 +1,6 @@
 <?php
 /**
- * License Management Class for GutenBlocks
+ * License Management Class for Adaire Blocks
  *
  * @package AdaireBlocks
  */
@@ -63,7 +63,7 @@ class AdaireBlocksLicense {
         if (strpos($input, 'http') === 0) {
             $parts = explode('/', trim($input, '/'));
             $license_key = end($parts);
-            error_log('GutenBlocks License: Extracted license key from URL: ' . $license_key);
+            error_log('Adaire Blocks License: Extracted license key from URL: ' . $license_key);
         } else {
             // If it's already just a license key, use as is
             $license_key = $input;
@@ -74,16 +74,16 @@ class AdaireBlocksLicense {
         $license_key = preg_replace('/\s+/', '', $license_key); // Remove all whitespace
         $license_key = preg_replace('/[^a-zA-Z0-9-]/', '', $license_key); // Keep alphanumeric and hyphens
         
-        error_log('GutenBlocks License: Sanitized license key: ' . $license_key);
+        error_log('Adaire Blocks License: Sanitized license key: ' . $license_key);
         
         // Validate that we have a valid license key after sanitization
         if (empty($license_key)) {
-            error_log('GutenBlocks License: ERROR - License key is empty after sanitization');
+            error_log('Adaire Blocks License: ERROR - License key is empty after sanitization');
             return false;
         }
         
         if (strlen($license_key) < 5) {
-            error_log('GutenBlocks License: WARNING - License key seems too short: ' . $license_key);
+            error_log('Adaire Blocks License: WARNING - License key seems too short: ' . $license_key);
         }
         
         return $license_key;
@@ -169,12 +169,12 @@ class AdaireBlocksLicense {
     private function save_license_data($license_key, $data = array()) {
         global $wpdb;
         
-        error_log('GutenBlocks License: Saving license data');
-        error_log('GutenBlocks License: License key: ' . substr($license_key, 0, 8) . '...');
-        error_log('GutenBlocks License: Data to save: ' . print_r($data, true));
+        error_log('Adaire Blocks License: Saving license data');
+        error_log('Adaire Blocks License: License key: ' . substr($license_key, 0, 8) . '...');
+        error_log('Adaire Blocks License: Data to save: ' . print_r($data, true));
         
         $existing = $this->get_license_data();
-        error_log('GutenBlocks License: Existing license data: ' . print_r($existing, true));
+        error_log('Adaire Blocks License: Existing license data: ' . print_r($existing, true));
         
         $license_data = array(
             'license_key' => $license_key,
@@ -183,25 +183,25 @@ class AdaireBlocksLicense {
         
         // Merge with provided data
         $license_data = array_merge($license_data, $data);
-        error_log('GutenBlocks License: Final license data to save: ' . print_r($license_data, true));
+        error_log('Adaire Blocks License: Final license data to save: ' . print_r($license_data, true));
         
         if ($existing) {
             // Update existing record
-            error_log('GutenBlocks License: Updating existing license record');
+            error_log('Adaire Blocks License: Updating existing license record');
             $result = $wpdb->update(
                 $this->table_name,
                 $license_data,
                 array('id' => $existing['id'])
             );
-            error_log('GutenBlocks License: Update result: ' . print_r($result, true));
-            error_log('GutenBlocks License: Last error: ' . $wpdb->last_error);
+            error_log('Adaire Blocks License: Update result: ' . print_r($result, true));
+            error_log('Adaire Blocks License: Last error: ' . $wpdb->last_error);
         } else {
             // Insert new record
-            error_log('GutenBlocks License: Inserting new license record');
+            error_log('Adaire Blocks License: Inserting new license record');
             $result = $wpdb->insert($this->table_name, $license_data);
-            error_log('GutenBlocks License: Insert result: ' . print_r($result, true));
-            error_log('GutenBlocks License: Insert ID: ' . $wpdb->insert_id);
-            error_log('GutenBlocks License: Last error: ' . $wpdb->last_error);
+            error_log('Adaire Blocks License: Insert result: ' . print_r($result, true));
+            error_log('Adaire Blocks License: Insert ID: ' . $wpdb->insert_id);
+            error_log('Adaire Blocks License: Last error: ' . $wpdb->last_error);
         }
     }
     
@@ -211,7 +211,7 @@ class AdaireBlocksLicense {
     public function validate_license($license_key) {
         // Development bypass for "douglasmasho." key
         if ($license_key === 'douglasmasho') {
-            error_log('GutenBlocks License: Development bypass validation for key: douglasmasho');
+            error_log('Adaire Blocks License: Development bypass validation for key: douglasmasho');
             
             // Return mock validation data for development
             return array(
@@ -223,9 +223,9 @@ class AdaireBlocksLicense {
         
         $url = $this->validation_server_url . '/?action=validate&license_key=' . urlencode($license_key);
         
-        error_log('GutenBlocks License: Starting license validation via validation server');
-        error_log('GutenBlocks License: License Key: ' . substr($license_key, 0, 8) . '...');
-        error_log('GutenBlocks License: Validation server URL: ' . $url);
+        error_log('Adaire Blocks License: Starting license validation via validation server');
+        error_log('Adaire Blocks License: License Key: ' . substr($license_key, 0, 8) . '...');
+        error_log('Adaire Blocks License: Validation server URL: ' . $url);
         
         $response = wp_remote_get($url, array(
             'timeout' => 30,
@@ -236,8 +236,8 @@ class AdaireBlocksLicense {
         ));
         
         if (is_wp_error($response)) {
-            error_log('GutenBlocks License: API request failed - ' . $response->get_error_message());
-            error_log('GutenBlocks License: Error code: ' . $response->get_error_code());
+            error_log('Adaire Blocks License: API request failed - ' . $response->get_error_message());
+            error_log('Adaire Blocks License: Error code: ' . $response->get_error_code());
             
             // If it's a network error, don't invalidate the license immediately
             // Just log the error and return false for this validation attempt
@@ -248,40 +248,40 @@ class AdaireBlocksLicense {
         $response_headers = wp_remote_retrieve_headers($response);
         $body = wp_remote_retrieve_body($response);
         
-        error_log('GutenBlocks License: Response Code: ' . $response_code);
-        error_log('GutenBlocks License: Response Headers: ' . print_r($response_headers, true));
-        error_log('GutenBlocks License: Response Body: ' . $body);
+        error_log('Adaire Blocks License: Response Code: ' . $response_code);
+        error_log('Adaire Blocks License: Response Headers: ' . print_r($response_headers, true));
+        error_log('Adaire Blocks License: Response Body: ' . $body);
         
         if ($response_code !== 200) {
-            error_log('GutenBlocks License: API returned HTTP ' . $response_code);
+            error_log('Adaire Blocks License: API returned HTTP ' . $response_code);
             return false;
         }
         
         $data = json_decode($body, true);
         
         if (!$data) {
-            error_log('GutenBlocks License: Failed to decode JSON response');
-            error_log('GutenBlocks License: Raw response: ' . $body);
+            error_log('Adaire Blocks License: Failed to decode JSON response');
+            error_log('Adaire Blocks License: Raw response: ' . $body);
             return false;
         }
         
-        error_log('GutenBlocks License: Decoded response: ' . print_r($data, true));
+        error_log('Adaire Blocks License: Decoded response: ' . print_r($data, true));
         
         if (!isset($data['success'])) {
-            error_log('GutenBlocks License: Response missing success field');
+            error_log('Adaire Blocks License: Response missing success field');
             return false;
         }
         
         if (!$data['success']) {
-            error_log('GutenBlocks License: API returned success=false');
+            error_log('Adaire Blocks License: API returned success=false');
             if (isset($data['data']['errors'])) {
-                error_log('GutenBlocks License: API errors: ' . print_r($data['data']['errors'], true));
+                error_log('Adaire Blocks License: API errors: ' . print_r($data['data']['errors'], true));
             }
             return false;
         }
         
         if (!isset($data['data'])) {
-            error_log('GutenBlocks License: Response missing data field');
+            error_log('Adaire Blocks License: Response missing data field');
             return false;
         }
         
@@ -289,12 +289,12 @@ class AdaireBlocksLicense {
         // Check if data.data exists (validation server wrapping the license API response)
         $license_info = isset($data['data']['data']) ? $data['data']['data'] : $data['data'];
         
-        error_log('GutenBlocks License: Raw data from server: ' . print_r($data['data'], true));
-        error_log('GutenBlocks License: Extracted license info: ' . print_r($license_info, true));
+        error_log('Adaire Blocks License: Raw data from server: ' . print_r($data['data'], true));
+        error_log('Adaire Blocks License: Extracted license info: ' . print_r($license_info, true));
         
         // Check if there are any active activations
         if (isset($license_info['timesActivated']) && $license_info['timesActivated'] == 0) {
-            error_log('GutenBlocks License: No active activations found (timesActivated = 0), deactivating license');
+            error_log('Adaire Blocks License: No active activations found (timesActivated = 0), deactivating license');
             
             // Deactivate the license
             $this->save_license_data($license_key, array(
@@ -316,7 +316,7 @@ class AdaireBlocksLicense {
             'remaining_activations' => $license_info['remainingActivations'] ?? 0
         ));
         
-        error_log('GutenBlocks License: License validation successful');
+        error_log('Adaire Blocks License: License validation successful');
         return $license_info;
     }
     
@@ -324,24 +324,24 @@ class AdaireBlocksLicense {
      * Activate license
      */
     public function activate_license($license_key) {
-        error_log('GutenBlocks License: ===== LICENSE ACTIVATION DEBUG =====');
-        error_log('GutenBlocks License: Raw License Key Received: ' . $license_key);
-        error_log('GutenBlocks License: License Key Length: ' . strlen($license_key));
-        error_log('GutenBlocks License: License Key Type: ' . gettype($license_key));
+        error_log('Adaire Blocks License: ===== LICENSE ACTIVATION DEBUG =====');
+        error_log('Adaire Blocks License: Raw License Key Received: ' . $license_key);
+        error_log('Adaire Blocks License: License Key Length: ' . strlen($license_key));
+        error_log('Adaire Blocks License: License Key Type: ' . gettype($license_key));
         
         // Extract license key if full URL was provided
         $original_key = $license_key;
         $license_key = $this->extract_license_key($license_key);
         
         if ($original_key !== $license_key) {
-            error_log('GutenBlocks License: Extracted license key from URL in activate_license method');
-            error_log('GutenBlocks License: Original input: ' . $original_key);
-            error_log('GutenBlocks License: Extracted key: ' . $license_key);
+            error_log('Adaire Blocks License: Extracted license key from URL in activate_license method');
+            error_log('Adaire Blocks License: Original input: ' . $original_key);
+            error_log('Adaire Blocks License: Extracted key: ' . $license_key);
         }
         
         // Development bypass for "douglasmasho." key
         if ($license_key === 'douglasmasho') {
-            error_log('GutenBlocks License: Development bypass activated for key: douglasmasho');
+            error_log('Adaire Blocks License: Development bypass activated for key: douglasmasho');
             
             // Save license data with development bypass
             $this->save_license_data($license_key, array(
@@ -361,11 +361,11 @@ class AdaireBlocksLicense {
         
         $url = $this->validation_server_url . '/?action=activate&license_key=' . urlencode($license_key);
         
-        error_log('GutenBlocks License: Starting license activation via validation server');
-        error_log('GutenBlocks License: License Key: ' . substr($license_key, 0, 8) . '...');
+        error_log('Adaire Blocks License: Starting license activation via validation server');
+        error_log('Adaire Blocks License: License Key: ' . substr($license_key, 0, 8) . '...');
         
         // Log the exact request being made
-        error_log('GutenBlocks License: Making GET request to validation server: ' . $url);
+        error_log('Adaire Blocks License: Making GET request to validation server: ' . $url);
         
         // Use minimal request args for validation server
         $request_args = array(
@@ -380,31 +380,31 @@ class AdaireBlocksLicense {
             )
         );
         
-        error_log('GutenBlocks License: Request arguments: ' . print_r($request_args, true));
+        error_log('Adaire Blocks License: Request arguments: ' . print_r($request_args, true));
         
         $response = wp_remote_request($url, $request_args);
         
         // Log the actual request that was made (WordPress might modify it)
         if (is_wp_error($response)) {
-            error_log('GutenBlocks License: WordPress request error: ' . $response->get_error_message());
+            error_log('Adaire Blocks License: WordPress request error: ' . $response->get_error_message());
         } else {
             $response_code = wp_remote_retrieve_response_code($response);
-            error_log('GutenBlocks License: WordPress response code: ' . $response_code);
+            error_log('Adaire Blocks License: WordPress response code: ' . $response_code);
             
             // Check if WordPress modified our request
             $response_headers = wp_remote_retrieve_headers($response);
-            error_log('GutenBlocks License: Response headers from server: ' . print_r($response_headers->getAll(), true));
+            error_log('Adaire Blocks License: Response headers from server: ' . print_r($response_headers->getAll(), true));
         }
         
         // If that fails, try with cURL directly (bypass WordPress HTTP completely)
         if (is_wp_error($response) || wp_remote_retrieve_response_code($response) === 401) {
-            error_log('GutenBlocks License: WordPress request failed, trying direct cURL');
+            error_log('Adaire Blocks License: WordPress request failed, trying direct cURL');
             $response = $this->make_direct_curl_request($url);
         }
         
         if (is_wp_error($response)) {
-            error_log('GutenBlocks License: Activation API request failed - ' . $response->get_error_message());
-            error_log('GutenBlocks License: Error code: ' . $response->get_error_code());
+            error_log('Adaire Blocks License: Activation API request failed - ' . $response->get_error_message());
+            error_log('Adaire Blocks License: Error code: ' . $response->get_error_code());
             
             return array(
                 'success' => false,
@@ -416,30 +416,30 @@ class AdaireBlocksLicense {
         $response_headers = wp_remote_retrieve_headers($response);
         $body = wp_remote_retrieve_body($response);
         
-        error_log('GutenBlocks License: ===== ACTIVATION API RESPONSE START =====');
-        error_log('GutenBlocks License: Response Code: ' . $response_code);
-        error_log('GutenBlocks License: Response Headers: ' . print_r($response_headers->getAll(), true));
-        error_log('GutenBlocks License: Raw Response Body: ' . $body);
-        error_log('GutenBlocks License: Response Body Length: ' . strlen($body));
-        error_log('GutenBlocks License: Response Body Type: ' . gettype($body));
+        error_log('Adaire Blocks License: ===== ACTIVATION API RESPONSE START =====');
+        error_log('Adaire Blocks License: Response Code: ' . $response_code);
+        error_log('Adaire Blocks License: Response Headers: ' . print_r($response_headers->getAll(), true));
+        error_log('Adaire Blocks License: Raw Response Body: ' . $body);
+        error_log('Adaire Blocks License: Response Body Length: ' . strlen($body));
+        error_log('Adaire Blocks License: Response Body Type: ' . gettype($body));
         
         // Log first 500 characters for quick inspection
-        error_log('GutenBlocks License: Response Body Preview: ' . substr($body, 0, 500));
-        error_log('GutenBlocks License: ===== ACTIVATION API RESPONSE END =====');
+        error_log('Adaire Blocks License: Response Body Preview: ' . substr($body, 0, 500));
+        error_log('Adaire Blocks License: ===== ACTIVATION API RESPONSE END =====');
         
-        error_log('GutenBlocks License: ===== JSON DECODING START =====');
+        error_log('Adaire Blocks License: ===== JSON DECODING START =====');
         $data = json_decode($body, true);
         $json_error = json_last_error();
         $json_error_msg = json_last_error_msg();
         
-        error_log('GutenBlocks License: JSON Decode Result: ' . print_r($data, true));
-        error_log('GutenBlocks License: JSON Error Code: ' . $json_error);
-        error_log('GutenBlocks License: JSON Error Message: ' . $json_error_msg);
+        error_log('Adaire Blocks License: JSON Decode Result: ' . print_r($data, true));
+        error_log('Adaire Blocks License: JSON Error Code: ' . $json_error);
+        error_log('Adaire Blocks License: JSON Error Message: ' . $json_error_msg);
         
         if (!$data) {
-            error_log('GutenBlocks License: Failed to decode activation JSON response');
-            error_log('GutenBlocks License: Raw activation response: ' . $body);
-            error_log('GutenBlocks License: JSON Error: ' . $json_error_msg);
+            error_log('Adaire Blocks License: Failed to decode activation JSON response');
+            error_log('Adaire Blocks License: Raw activation response: ' . $body);
+            error_log('Adaire Blocks License: JSON Error: ' . $json_error_msg);
             
             return array(
                 'success' => false,
@@ -447,11 +447,11 @@ class AdaireBlocksLicense {
             );
         }
         
-        error_log('GutenBlocks License: ===== JSON DECODING SUCCESS =====');
-        error_log('GutenBlocks License: Decoded activation response: ' . print_r($data, true));
-        error_log('GutenBlocks License: Response data type: ' . gettype($data));
-        error_log('GutenBlocks License: Response keys: ' . print_r(array_keys($data), true));
-        error_log('GutenBlocks License: ===== JSON DECODING END =====');
+        error_log('Adaire Blocks License: ===== JSON DECODING SUCCESS =====');
+        error_log('Adaire Blocks License: Decoded activation response: ' . print_r($data, true));
+        error_log('Adaire Blocks License: Response data type: ' . gettype($data));
+        error_log('Adaire Blocks License: Response keys: ' . print_r(array_keys($data), true));
+        error_log('Adaire Blocks License: ===== JSON DECODING END =====');
         
         if ( ! isset( $data['success'] ) ) {
             error_log( 'GutenBlocks License: Activation response missing success field' );
@@ -506,7 +506,7 @@ class AdaireBlocksLicense {
             'remaining_activations' => $remaining_activations
         ));
         
-        error_log('GutenBlocks License: License activation successful');
+        error_log('Adaire Blocks License: License activation successful');
         
         return array(
             'success'              => true,
@@ -524,10 +524,10 @@ class AdaireBlocksLicense {
     public function deactivate_license($license_key, $token) {
         $url = $this->validation_server_url . '/?action=deactivate&license_key=' . urlencode($license_key) . '&token=' . urlencode($token);
         
-        error_log('GutenBlocks License: Starting license deactivation via validation server');
-        error_log('GutenBlocks License: License Key: ' . substr($license_key, 0, 8) . '...');
-        error_log('GutenBlocks License: Token: ' . substr($token, 0, 8) . '...');
-        error_log('GutenBlocks License: Validation server URL: ' . $url);
+        error_log('Adaire Blocks License: Starting license deactivation via validation server');
+        error_log('Adaire Blocks License: License Key: ' . substr($license_key, 0, 8) . '...');
+        error_log('Adaire Blocks License: Token: ' . substr($token, 0, 8) . '...');
+        error_log('Adaire Blocks License: Validation server URL: ' . $url);
         
         $response = wp_remote_get($url, array(
             'timeout' => 30,
@@ -538,8 +538,8 @@ class AdaireBlocksLicense {
         ));
         
         if (is_wp_error($response)) {
-            error_log('GutenBlocks License: Deactivation API request failed - ' . $response->get_error_message());
-            error_log('GutenBlocks License: Error code: ' . $response->get_error_code());
+            error_log('Adaire Blocks License: Deactivation API request failed - ' . $response->get_error_message());
+            error_log('Adaire Blocks License: Error code: ' . $response->get_error_code());
             
             return array(
                 'success' => false,
@@ -551,17 +551,17 @@ class AdaireBlocksLicense {
         $response_headers = wp_remote_retrieve_headers($response);
         $body = wp_remote_retrieve_body($response);
         
-        error_log('GutenBlocks License: Deactivation Response Code: ' . $response_code);
-        error_log('GutenBlocks License: Deactivation Response Headers: ' . print_r($response_headers, true));
-        error_log('GutenBlocks License: Deactivation Response Body: ' . $body);
+        error_log('Adaire Blocks License: Deactivation Response Code: ' . $response_code);
+        error_log('Adaire Blocks License: Deactivation Response Headers: ' . print_r($response_headers, true));
+        error_log('Adaire Blocks License: Deactivation Response Body: ' . $body);
         
         $data = json_decode($body, true);
         
         if (!$data) {
-            error_log('GutenBlocks License: Failed to decode deactivation JSON response');
-            error_log('GutenBlocks License: Raw deactivation response: ' . $body);
+            error_log('Adaire Blocks License: Failed to decode deactivation JSON response');
+            error_log('Adaire Blocks License: Raw deactivation response: ' . $body);
         } else {
-            error_log('GutenBlocks License: Decoded deactivation response: ' . print_r($data, true));
+            error_log('Adaire Blocks License: Decoded deactivation response: ' . print_r($data, true));
         }
         
         // Update license status regardless of API response
@@ -570,7 +570,7 @@ class AdaireBlocksLicense {
             'activation_token' => null
         ));
         
-        error_log('GutenBlocks License: License deactivated successfully');
+        error_log('Adaire Blocks License: License deactivated successfully');
         
         return array(
             'success' => true,
@@ -590,7 +590,7 @@ class AdaireBlocksLicense {
         
         // Development bypass for "douglasmasho." key
         if ($license_data['license_key'] === 'douglasmasho') {
-            error_log('GutenBlocks License: Development bypass - license is active for key: douglasmasho');
+            error_log('Adaire Blocks License: Development bypass - license is active for key: douglasmasho');
             return true;
         }
         
@@ -612,7 +612,7 @@ class AdaireBlocksLicense {
         
         // Development bypass for "douglasmasho." key
         if ($license_data['license_key'] === 'douglasmasho') {
-            error_log('GutenBlocks License: Development bypass - returning active status for key: douglasmasho');
+            error_log('Adaire Blocks License: Development bypass - returning active status for key: douglasmasho');
             return array(
                 'status' => 'active',
                 'message' => 'License is active (Development Mode)',
@@ -642,22 +642,22 @@ class AdaireBlocksLicense {
      * AJAX handler for license activation
      */
     public function ajax_activate_license() {
-        error_log('GutenBlocks License: AJAX activation request received');
-        error_log('GutenBlocks License: POST data: ' . print_r($_POST, true));
+        error_log('Adaire Blocks License: AJAX activation request received');
+        error_log('Adaire Blocks License: POST data: ' . print_r($_POST, true));
         
         check_ajax_referer('adaire_license_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            error_log('GutenBlocks License: AJAX activation - insufficient permissions');
+            error_log('Adaire Blocks License: AJAX activation - insufficient permissions');
             wp_die('Insufficient permissions');
         }
         
         $license_key = sanitize_text_field($_POST['license_key']);
-        error_log('GutenBlocks License: AJAX activation - raw license key: ' . $license_key);
-        error_log('GutenBlocks License: AJAX activation - sanitized license key: ' . substr($license_key, 0, 8) . '...');
+        error_log('Adaire Blocks License: AJAX activation - raw license key: ' . $license_key);
+        error_log('Adaire Blocks License: AJAX activation - sanitized license key: ' . substr($license_key, 0, 8) . '...');
         
         if (empty($license_key)) {
-            error_log('GutenBlocks License: AJAX activation - empty license key');
+            error_log('Adaire Blocks License: AJAX activation - empty license key');
             wp_send_json_error(array('message' => 'License key is required'));
         }
         
@@ -666,22 +666,22 @@ class AdaireBlocksLicense {
         $license_key = $this->extract_license_key($license_key);
         
         if ($license_key === false) {
-            error_log('GutenBlocks License: AJAX activation - license key extraction failed');
+            error_log('Adaire Blocks License: AJAX activation - license key extraction failed');
             wp_send_json_error(array('message' => 'Invalid license key format. Please enter a valid license key.'));
         }
         
         if ($original_key !== $license_key) {
-            error_log('GutenBlocks License: AJAX activation - extracted and sanitized license key');
-            error_log('GutenBlocks License: Original input: ' . $original_key);
-            error_log('GutenBlocks License: Sanitized key: ' . $license_key);
+            error_log('Adaire Blocks License: AJAX activation - extracted and sanitized license key');
+            error_log('Adaire Blocks License: Original input: ' . $original_key);
+            error_log('Adaire Blocks License: Sanitized key: ' . $license_key);
         }
         
         $result = $this->activate_license($license_key);
-        error_log('GutenBlocks License: ===== AJAX RESPONSE TO FRONTEND =====');
-        error_log('GutenBlocks License: AJAX activation result: ' . print_r($result, true));
-        error_log('GutenBlocks License: Result success: ' . ($result['success'] ? 'true' : 'false'));
-        error_log('GutenBlocks License: Result message: ' . ($result['message'] ?? 'No message'));
-        error_log('GutenBlocks License: ===== AJAX RESPONSE END =====');
+        error_log('Adaire Blocks License: ===== AJAX RESPONSE TO FRONTEND =====');
+        error_log('Adaire Blocks License: AJAX activation result: ' . print_r($result, true));
+        error_log('Adaire Blocks License: Result success: ' . ($result['success'] ? 'true' : 'false'));
+        error_log('Adaire Blocks License: Result message: ' . ($result['message'] ?? 'No message'));
+        error_log('Adaire Blocks License: ===== AJAX RESPONSE END =====');
         
         if ($result['success']) {
             wp_send_json_success($result);
@@ -694,26 +694,26 @@ class AdaireBlocksLicense {
      * AJAX handler for license deactivation
      */
     public function ajax_deactivate_license() {
-        error_log('GutenBlocks License: AJAX deactivation request received');
-        error_log('GutenBlocks License: POST data: ' . print_r($_POST, true));
+        error_log('Adaire Blocks License: AJAX deactivation request received');
+        error_log('Adaire Blocks License: POST data: ' . print_r($_POST, true));
         
         check_ajax_referer('adaire_license_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            error_log('GutenBlocks License: AJAX deactivation - insufficient permissions');
+            error_log('Adaire Blocks License: AJAX deactivation - insufficient permissions');
             wp_die('Insufficient permissions');
         }
         
         $license_data = $this->get_license_data();
-        error_log('GutenBlocks License: AJAX deactivation - license data: ' . print_r($license_data, true));
+        error_log('Adaire Blocks License: AJAX deactivation - license data: ' . print_r($license_data, true));
         
         if (!$license_data || !$license_data['activation_token']) {
-            error_log('GutenBlocks License: AJAX deactivation - no active license found');
+            error_log('Adaire Blocks License: AJAX deactivation - no active license found');
             wp_send_json_error(array('message' => 'No active license found'));
         }
         
         $result = $this->deactivate_license($license_data['license_key'], $license_data['activation_token']);
-        error_log('GutenBlocks License: AJAX deactivation result: ' . print_r($result, true));
+        error_log('Adaire Blocks License: AJAX deactivation result: ' . print_r($result, true));
         
         if ($result['success']) {
             wp_send_json_success($result);
@@ -726,26 +726,26 @@ class AdaireBlocksLicense {
      * AJAX handler for license validation
      */
     public function ajax_validate_license() {
-        error_log('GutenBlocks License: AJAX validation request received');
-        error_log('GutenBlocks License: POST data: ' . print_r($_POST, true));
+        error_log('Adaire Blocks License: AJAX validation request received');
+        error_log('Adaire Blocks License: POST data: ' . print_r($_POST, true));
         
         check_ajax_referer('adaire_license_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            error_log('GutenBlocks License: AJAX validation - insufficient permissions');
+            error_log('Adaire Blocks License: AJAX validation - insufficient permissions');
             wp_die('Insufficient permissions');
         }
         
         $license_data = $this->get_license_data();
-        error_log('GutenBlocks License: AJAX validation - license data: ' . print_r($license_data, true));
+        error_log('Adaire Blocks License: AJAX validation - license data: ' . print_r($license_data, true));
         
         if (!$license_data) {
-            error_log('GutenBlocks License: AJAX validation - no license found');
+            error_log('Adaire Blocks License: AJAX validation - no license found');
             wp_send_json_error(array('message' => 'No license found'));
         }
         
         $result = $this->validate_license($license_data['license_key']);
-        error_log('GutenBlocks License: AJAX validation result: ' . print_r($result, true));
+        error_log('Adaire Blocks License: AJAX validation result: ' . print_r($result, true));
         
         if ($result) {
             wp_send_json_success(array(
@@ -785,8 +785,8 @@ class AdaireBlocksLicense {
         // Test validation server endpoint
         $url = $this->validation_server_url . '/?action=activate&license_key=' . urlencode($license_key);
         
-        error_log('GutenBlocks License: Testing validation server endpoint');
-        error_log('GutenBlocks License: Validation server URL: ' . $url);
+        error_log('Adaire Blocks License: Testing validation server endpoint');
+        error_log('Adaire Blocks License: Validation server URL: ' . $url);
         
         $response = wp_remote_get($url, array(
             'timeout' => 30,
@@ -810,15 +810,15 @@ class AdaireBlocksLicense {
         $data = json_decode($body, true);
         
         // Log the complete response for debugging
-        error_log('GutenBlocks License: ===== TEST API COMPLETE RESPONSE =====');
-        error_log('GutenBlocks License: URL: ' . $url);
-        error_log('GutenBlocks License: Response Code: ' . $response_code);
-        error_log('GutenBlocks License: Response Headers: ' . print_r($response_headers->getAll(), true));
-        error_log('GutenBlocks License: Raw Body: ' . $body);
-        error_log('GutenBlocks License: Decoded Data: ' . print_r($data, true));
-        error_log('GutenBlocks License: Data Type: ' . gettype($data));
-        error_log('GutenBlocks License: Data Keys: ' . (is_array($data) ? print_r(array_keys($data), true) : 'Not an array'));
-        error_log('GutenBlocks License: ===== TEST API RESPONSE END =====');
+        error_log('Adaire Blocks License: ===== TEST API COMPLETE RESPONSE =====');
+        error_log('Adaire Blocks License: URL: ' . $url);
+        error_log('Adaire Blocks License: Response Code: ' . $response_code);
+        error_log('Adaire Blocks License: Response Headers: ' . print_r($response_headers->getAll(), true));
+        error_log('Adaire Blocks License: Raw Body: ' . $body);
+        error_log('Adaire Blocks License: Decoded Data: ' . print_r($data, true));
+        error_log('Adaire Blocks License: Data Type: ' . gettype($data));
+        error_log('Adaire Blocks License: Data Keys: ' . (is_array($data) ? print_r(array_keys($data), true) : 'Not an array'));
+        error_log('Adaire Blocks License: ===== TEST API RESPONSE END =====');
         
         wp_send_json_success(array(
             'url' => $url,
@@ -852,23 +852,23 @@ class AdaireBlocksLicense {
         $license_key = $this->extract_license_key($license_key);
         
         if ($license_key === false) {
-            error_log('GutenBlocks License: Test Auth - license key extraction failed');
+            error_log('Adaire Blocks License: Test Auth - license key extraction failed');
             wp_send_json_error(array('message' => 'Invalid license key format. Please enter a valid license key.'));
         }
         
         if ($original_key !== $license_key) {
-            error_log('GutenBlocks License: Test Auth - extracted and sanitized license key');
-            error_log('GutenBlocks License: Original input: ' . $original_key);
-            error_log('GutenBlocks License: Sanitized key: ' . $license_key);
+            error_log('Adaire Blocks License: Test Auth - extracted and sanitized license key');
+            error_log('Adaire Blocks License: Original input: ' . $original_key);
+            error_log('Adaire Blocks License: Sanitized key: ' . $license_key);
         }
         
         $url = $this->validation_server_url . '/?action=activate&license_key=' . urlencode($license_key);
         
         // Test validation server
-        error_log('GutenBlocks License: ===== TESTING VALIDATION SERVER =====');
+        error_log('Adaire Blocks License: ===== TESTING VALIDATION SERVER =====');
         
         // Log the exact request being made
-        error_log('GutenBlocks License: Making GET request to validation server: ' . $url);
+        error_log('Adaire Blocks License: Making GET request to validation server: ' . $url);
         
         // Use minimal request args for validation server
         $request_args = array(
@@ -883,26 +883,26 @@ class AdaireBlocksLicense {
             )
         );
         
-        error_log('GutenBlocks License: Request arguments: ' . print_r($request_args, true));
+        error_log('Adaire Blocks License: Request arguments: ' . print_r($request_args, true));
         
         // Try with wp_remote_request for more control
         $response = wp_remote_request($url, $request_args);
         
         // Log the actual request that was made (WordPress might modify it)
         if (is_wp_error($response)) {
-            error_log('GutenBlocks License: WordPress request error: ' . $response->get_error_message());
+            error_log('Adaire Blocks License: WordPress request error: ' . $response->get_error_message());
         } else {
             $response_code = wp_remote_retrieve_response_code($response);
-            error_log('GutenBlocks License: WordPress response code: ' . $response_code);
+            error_log('Adaire Blocks License: WordPress response code: ' . $response_code);
             
             // Check if WordPress modified our request
             $response_headers = wp_remote_retrieve_headers($response);
-            error_log('GutenBlocks License: Response headers from server: ' . print_r($response_headers->getAll(), true));
+            error_log('Adaire Blocks License: Response headers from server: ' . print_r($response_headers->getAll(), true));
         }
         
         // If that fails, try with cURL directly (bypass WordPress HTTP completely)
         if (is_wp_error($response) || wp_remote_retrieve_response_code($response) === 401) {
-            error_log('GutenBlocks License: WordPress request failed, trying direct cURL');
+            error_log('Adaire Blocks License: WordPress request failed, trying direct cURL');
             $response = $this->make_direct_curl_request($url);
         }
         
@@ -914,8 +914,8 @@ class AdaireBlocksLicense {
             'headers' => wp_remote_retrieve_headers($response)->getAll()
         );
         
-        error_log('GutenBlocks License: ===== QUERY PARAM AUTH TEST RESULT =====');
-        error_log('GutenBlocks License: Test Result: ' . print_r($result, true));
+        error_log('Adaire Blocks License: ===== QUERY PARAM AUTH TEST RESULT =====');
+        error_log('Adaire Blocks License: Test Result: ' . print_r($result, true));
         
         wp_send_json_success($result);
     }
@@ -924,23 +924,23 @@ class AdaireBlocksLicense {
      * AJAX handler to save activation result to database
      */
     public function ajax_save_activation() {
-        error_log('GutenBlocks License: AJAX save activation request received');
-        error_log('GutenBlocks License: POST data: ' . print_r($_POST, true));
+        error_log('Adaire Blocks License: AJAX save activation request received');
+        error_log('Adaire Blocks License: POST data: ' . print_r($_POST, true));
         
         check_ajax_referer('adaire_license_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            error_log('GutenBlocks License: AJAX save activation - insufficient permissions');
+            error_log('Adaire Blocks License: AJAX save activation - insufficient permissions');
             wp_die('Insufficient permissions');
         }
         
         $license_key = sanitize_text_field($_POST['license_key']);
         
-        error_log('GutenBlocks License: License key: ' . substr($license_key, 0, 8) . '...');
-        error_log('GutenBlocks License: POST data: ' . print_r($_POST, true));
+        error_log('Adaire Blocks License: License key: ' . substr($license_key, 0, 8) . '...');
+        error_log('Adaire Blocks License: POST data: ' . print_r($_POST, true));
         
         if (empty($license_key)) {
-            error_log('GutenBlocks License: AJAX save activation - missing license key');
+            error_log('Adaire Blocks License: AJAX save activation - missing license key');
             wp_send_json_error(array('message' => 'Missing license key'));
         }
         
@@ -950,20 +950,20 @@ class AdaireBlocksLicense {
             if (is_array($_POST['activation_data'])) {
                 // Already an array
                 $activation_data = $_POST['activation_data'];
-                error_log('GutenBlocks License: Activation data received as array');
+                error_log('Adaire Blocks License: Activation data received as array');
             } else {
                 // Try to decode as JSON
                 $activation_data = json_decode($_POST['activation_data'], true);
-                error_log('GutenBlocks License: Activation data received as JSON string');
+                error_log('Adaire Blocks License: Activation data received as JSON string');
             }
         }
         
         if (!$activation_data) {
-            error_log('GutenBlocks License: AJAX save activation - invalid activation data');
+            error_log('Adaire Blocks License: AJAX save activation - invalid activation data');
             wp_send_json_error(array('message' => 'Invalid activation data format'));
         }
         
-        error_log('GutenBlocks License: Parsed activation data: ' . print_r($activation_data, true));
+        error_log('Adaire Blocks License: Parsed activation data: ' . print_r($activation_data, true));
         
         // Extract token from activation data
         $token = null;
@@ -976,11 +976,11 @@ class AdaireBlocksLicense {
         }
         
         if (!$token) {
-            error_log('GutenBlocks License: AJAX save activation - no token found in response');
+            error_log('Adaire Blocks License: AJAX save activation - no token found in response');
             wp_send_json_error(array('message' => 'No activation token found in response'));
         }
         
-        error_log('GutenBlocks License: Extracted token: ' . substr($token, 0, 8) . '...');
+        error_log('Adaire Blocks License: Extracted token: ' . substr($token, 0, 8) . '...');
         
         // Extract activation limits from the activation data
         $times_activated = 1; // Default to 1 since we just activated
@@ -1006,11 +1006,11 @@ class AdaireBlocksLicense {
             'remaining_activations' => $remaining_activations
         ));
         
-        error_log('GutenBlocks License: License activation saved to database successfully');
+        error_log('Adaire Blocks License: License activation saved to database successfully');
         
         // Verify the save worked by retrieving the data
         $saved_data = $this->get_license_data();
-        error_log('GutenBlocks License: Verification - saved license data: ' . print_r($saved_data, true));
+        error_log('Adaire Blocks License: Verification - saved license data: ' . print_r($saved_data, true));
         
         wp_send_json_success(array(
             'message' => 'License activation saved successfully',
@@ -1023,12 +1023,12 @@ class AdaireBlocksLicense {
      * AJAX handler to save deactivation result to database
      */
     public function ajax_save_deactivation() {
-        error_log('GutenBlocks License: AJAX save deactivation request received');
+        error_log('Adaire Blocks License: AJAX save deactivation request received');
         
         check_ajax_referer('adaire_license_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            error_log('GutenBlocks License: AJAX save deactivation - insufficient permissions');
+            error_log('Adaire Blocks License: AJAX save deactivation - insufficient permissions');
             wp_die('Insufficient permissions');
         }
         
@@ -1036,7 +1036,7 @@ class AdaireBlocksLicense {
         $license_data = $this->get_license_data();
         
         if (!$license_data) {
-            error_log('GutenBlocks License: AJAX save deactivation - no license data found');
+            error_log('Adaire Blocks License: AJAX save deactivation - no license data found');
             wp_send_json_error(array('message' => 'No license data found'));
         }
         
@@ -1046,7 +1046,7 @@ class AdaireBlocksLicense {
             'activation_token' => null
         ));
         
-        error_log('GutenBlocks License: License deactivation saved to database successfully');
+        error_log('Adaire Blocks License: License deactivation saved to database successfully');
         
         wp_send_json_success(array(
             'message' => 'License deactivation saved successfully'
@@ -1057,12 +1057,12 @@ class AdaireBlocksLicense {
      * AJAX handler to update license data with validation results
      */
     public function ajax_update_license_data() {
-        error_log('GutenBlocks License: AJAX update license data request received');
+        error_log('Adaire Blocks License: AJAX update license data request received');
         
         check_ajax_referer('adaire_license_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            error_log('GutenBlocks License: AJAX update license data - insufficient permissions');
+            error_log('Adaire Blocks License: AJAX update license data - insufficient permissions');
             wp_die('Insufficient permissions');
         }
         
@@ -1072,26 +1072,26 @@ class AdaireBlocksLicense {
             if (is_array($_POST['validation_data'])) {
                 // Already an array
                 $validation_data = $_POST['validation_data'];
-                error_log('GutenBlocks License: Validation data received as array');
+                error_log('Adaire Blocks License: Validation data received as array');
             } else {
                 // Try to decode as JSON
                 $validation_data = json_decode($_POST['validation_data'], true);
-                error_log('GutenBlocks License: Validation data received as JSON string');
+                error_log('Adaire Blocks License: Validation data received as JSON string');
             }
         }
         
         if (!$validation_data) {
-            error_log('GutenBlocks License: AJAX update license data - invalid validation data');
+            error_log('Adaire Blocks License: AJAX update license data - invalid validation data');
             wp_send_json_error(array('message' => 'Invalid validation data format'));
         }
         
-        error_log('GutenBlocks License: Validation data: ' . print_r($validation_data, true));
+        error_log('Adaire Blocks License: Validation data: ' . print_r($validation_data, true));
         
         // Get current license data
         $license_data = $this->get_license_data();
         
         if (!$license_data) {
-            error_log('GutenBlocks License: AJAX update license data - no license data found');
+            error_log('Adaire Blocks License: AJAX update license data - no license data found');
             wp_send_json_error(array('message' => 'No license data found'));
         }
         
@@ -1105,7 +1105,7 @@ class AdaireBlocksLicense {
         
         $this->save_license_data($license_data['license_key'], $update_data);
         
-        error_log('GutenBlocks License: License data updated successfully');
+        error_log('Adaire Blocks License: License data updated successfully');
         
         wp_send_json_success(array(
             'message' => 'License data updated successfully'
@@ -1116,10 +1116,10 @@ class AdaireBlocksLicense {
      * Make direct cURL request bypassing WordPress HTTP completely
      */
     private function make_direct_curl_request($url) {
-        error_log('GutenBlocks License: Making direct cURL request to: ' . $url);
+        error_log('Adaire Blocks License: Making direct cURL request to: ' . $url);
         
         if (!function_exists('curl_init')) {
-            error_log('GutenBlocks License: cURL not available');
+            error_log('Adaire Blocks License: cURL not available');
             return new WP_Error('curl_not_available', 'cURL is not available on this server');
         }
         
@@ -1151,10 +1151,10 @@ class AdaireBlocksLicense {
         
         curl_close($ch);
         
-        error_log('GutenBlocks License: cURL HTTP Code: ' . $http_code);
-        error_log('GutenBlocks License: cURL Response Body: ' . $response_body);
-        error_log('GutenBlocks License: cURL Error: ' . $curl_error);
-        error_log('GutenBlocks License: cURL Verbose Output: ' . $verbose_output);
+        error_log('Adaire Blocks License: cURL HTTP Code: ' . $http_code);
+        error_log('Adaire Blocks License: cURL Response Body: ' . $response_body);
+        error_log('Adaire Blocks License: cURL Error: ' . $curl_error);
+        error_log('Adaire Blocks License: cURL Verbose Output: ' . $verbose_output);
         
         if ($curl_error) {
             return new WP_Error('curl_error', $curl_error);

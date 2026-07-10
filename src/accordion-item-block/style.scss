@@ -1,8 +1,25 @@
 // Accordion Item Block Styles
-// Most styles are inherited from parent accordion-block
-
+// Most styles are inherited from parent accordion-block.
+//
+// Font size and font weight overrides reuse the parent's own
+// `--acc-title-size` / `--acc-title-weight` custom properties: when this
+// item sets a fontSize/fontWeight attribute, edit.js/save.js redeclare those
+// same variable names on this item's own root element, and the CSS custom
+// property cascade (closest declaration wins) lets a single item override
+// the accordion-block-wide value without touching the parent block's files.
+//
+// Line height, letter spacing, text transform, and font family aren't
+// exposed as custom properties by the parent at all (line-height and
+// font-family are hardcoded there), so this stylesheet declares the rule
+// that consumes this item's own `--acc-item-title-*` variables directly.
 .adaire-accordion__item {
     // Styles are defined in parent accordion-block/style.scss
-    // This file exists for consistency and potential future customizations
+
+    .adaire-accordion__title {
+        line-height: var(--acc-item-title-line-height, 1.4);
+        letter-spacing: var(--acc-item-title-letter-spacing, normal);
+        text-transform: var(--acc-item-title-text-transform, none);
+        font-family: var(--acc-item-title-font-family, inherit);
+    }
 }
 

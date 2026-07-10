@@ -680,7 +680,7 @@ function ResponsivePreviewPlugin() {
 	const toolbar = (
 		<div
 			className="adaire-responsive-toolbar"
-			aria-label="GutenBlocks responsive preview toolbar"
+			aria-label="Adaire Blocks responsive preview toolbar"
 		>
 			<div className="adaire-responsive-toolbar__viewport">
 				<select

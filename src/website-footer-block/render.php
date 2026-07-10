@@ -342,7 +342,31 @@ if ( ! function_exists( 'adaire_footer_render_brand_column_content' ) ) {
 		if ( $show_brand_name ) {
 			$out .= '<div class="website-footer-block__brand-name">' . wp_kses_post( isset( $column['brandName'] ) ? $column['brandName'] : '' ) . '</div>';
 		}
-		$out .= '<p class="website-footer-block__brand-description">' . wp_kses_post( isset( $column['description'] ) ? $column['description'] : '' ) . '</p>';
+
+		// Tagline (ADAB-012): the `description` field is the de facto tagline
+		// (it has no other use on this column type), now with its own
+		// typography + color controls routed through CSS custom props —
+		// mirrors edit.js's RichText style prop on the same element exactly,
+		// so editor and frontend can never visually disagree.
+		$tagline_font_size      = ( isset( $column['taglineFontSize'] ) && is_numeric( $column['taglineFontSize'] ) && $column['taglineFontSize'] >= 0 ) ? $column['taglineFontSize'] . 'px' : '';
+		$tagline_font_weight    = ! empty( $column['taglineFontWeight'] ) ? $column['taglineFontWeight'] : '';
+		$tagline_line_height    = ( isset( $column['taglineLineHeight'] ) && is_numeric( $column['taglineLineHeight'] ) && $column['taglineLineHeight'] >= 0 ) ? $column['taglineLineHeight'] : '';
+		$tagline_letter_spacing = ( isset( $column['taglineLetterSpacing'] ) && is_numeric( $column['taglineLetterSpacing'] ) && $column['taglineLetterSpacing'] >= 0 ) ? $column['taglineLetterSpacing'] . 'px' : '';
+		$tagline_color          = ! empty( $column['taglineColor'] ) ? $column['taglineColor'] : '';
+		// Only override the legacy 0.9 opacity dimming once a tagline color is
+		// explicitly chosen — see the matching style.scss comment for why.
+		$tagline_opacity        = $tagline_color ? '1' : '';
+		$tagline_style          = adaire_footer_style_vars_to_string(
+			array(
+				'--tagline-font-size'      => $tagline_font_size,
+				'--tagline-font-weight'    => $tagline_font_weight,
+				'--tagline-line-height'    => $tagline_line_height,
+				'--tagline-letter-spacing' => $tagline_letter_spacing,
+				'--tagline-color'          => $tagline_color,
+				'--tagline-opacity'        => $tagline_opacity,
+			)
+		);
+		$out .= '<p class="website-footer-block__brand-description"' . ( $tagline_style ? ' style="' . esc_attr( $tagline_style ) . '"' : '' ) . '>' . wp_kses_post( isset( $column['description'] ) ? $column['description'] : '' ) . '</p>';
 
 		if ( ! empty( $column['showCta'] ) ) {
 			$cta_style     = isset( $column['ctaStyle'] ) ? $column['ctaStyle'] : 'button';
@@ -461,20 +485,25 @@ if ( ! function_exists( 'adaire_footer_render_newsletter_column_content' ) ) {
 		$field_name   = isset( $column['newsletterFieldName'] ) && $column['newsletterFieldName'] ? $column['newsletterFieldName'] : 'email';
 		$button_color = isset( $column['newsletterButtonColor'] ) ? $column['newsletterButtonColor'] : '';
 		$button_text_color = isset( $column['newsletterButtonTextColor'] ) ? $column['newsletterButtonTextColor'] : '';
+		$input_border_color = isset( $column['newsletterInputBorderColor'] ) ? $column['newsletterInputBorderColor'] : '';
 
 		$button_style = adaire_footer_style_vars_to_string(
 			array(
-				'background-color' => $button_color ? $button_color : 'var(--footer-accent-color, #D52940)',
+				'background-color' => $button_color ? $button_color : 'var(--footer-accent-color, #503AA8)',
 				'color'             => $button_text_color ? $button_text_color : '#ffffff',
 			)
 		);
+
+		$input_style = $input_border_color
+			? adaire_footer_style_vars_to_string( array( 'border-color' => $input_border_color ) )
+			: '';
 
 		$out = '<form class="website-footer-block__newsletter" method="post" action="' . esc_url( $action ? $action : '#' ) . '">';
 		if ( $description ) {
 			$out .= '<p class="website-footer-block__newsletter-description">' . wp_kses_post( $description ) . '</p>';
 		}
 		$out .= '<div class="website-footer-block__newsletter-field-row">';
-		$out .= '<input type="email" name="' . esc_attr( $field_name ) . '" class="website-footer-block__newsletter-input" placeholder="' . esc_attr( $placeholder ) . '" required="required" />';
+		$out .= '<input type="email" name="' . esc_attr( $field_name ) . '" class="website-footer-block__newsletter-input" placeholder="' . esc_attr( $placeholder ) . '"' . ( $input_style ? ' style="' . esc_attr( $input_style ) . '"' : '' ) . ' required="required" />';
 		$out .= '<button type="submit" class="website-footer-block__newsletter-button" style="' . esc_attr( $button_style ) . '">' . esc_html( $button_text ) . '</button>';
 		$out .= '</div>';
 		$out .= '</form>';
@@ -504,9 +533,9 @@ if ( ! function_exists( 'adaire_footer_render_buttons_column_content' ) ) {
 			$transition_dur = ( isset( $item['transitionDuration'] ) && is_numeric( $item['transitionDuration'] ) && $item['transitionDuration'] >= 0 ) ? $item['transitionDuration'] : 300;
 			$style_attr     = adaire_footer_style_vars_to_string(
 				array(
-					'background-color' => 'solid' === $style ? ( $bg ? $bg : 'var(--footer-accent-color, #D52940)' ) : 'transparent',
+					'background-color' => 'solid' === $style ? ( $bg ? $bg : 'var(--footer-accent-color, #503AA8)' ) : 'transparent',
 					'color'             => $text_color ? $text_color : ( 'solid' === $style ? '#ffffff' : 'inherit' ),
-					'border-color'      => $bg ? $bg : 'var(--footer-accent-color, #D52940)',
+					'border-color'      => $bg ? $bg : 'var(--footer-accent-color, #503AA8)',
 					'border-radius'     => $border_radius,
 					'transition'        => 'all ' . $transition_dur . 'ms ease',
 					'--buttons-hover-bg'           => $hover_bg,
@@ -936,9 +965,9 @@ $style_string = adaire_footer_style_vars_to_string(
 		'padding-bottom'               => ( isset( $attributes['paddingBottom'] ) ? (int) $attributes['paddingBottom'] : 40 ) . 'px',
 		'margin-top'                   => ( isset( $attributes['marginTop'] ) ? (int) $attributes['marginTop'] : 0 ) . 'px',
 		'margin-bottom'                => ( isset( $attributes['marginBottom'] ) ? (int) $attributes['marginBottom'] : 0 ) . 'px',
-		'--footer-accent-color'        => ! empty( $attributes['accentColor'] ) ? $attributes['accentColor'] : '#D52940',
+		'--footer-accent-color'        => ! empty( $attributes['accentColor'] ) ? $attributes['accentColor'] : '#503AA8',
 		'--footer-max-width'           => ( isset( $attributes['maxWidth'] ) ? (int) $attributes['maxWidth'] : 1200 ) . 'px',
-		'--footer-font-family'         => $typography['fontFamily'],
+		'--footer-font-family'         => ! empty( $attributes['fontFamily'] ) ? $attributes['fontFamily'] : $typography['fontFamily'],
 		'--footer-base-font-size'      => $typography['baseFontSize'] . 'px',
 		'--footer-heading-font-size'   => $typography['headingFontSize'] . 'px',
 		'--footer-heading-font-weight' => $typography['headingFontWeight'],

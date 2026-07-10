@@ -3,7 +3,7 @@
   "apiVersion": 3,
   "name": "create-block/timeline-block",
   "version": "0.1.0",
-  "title": "Timeline",
+  "title": "Timeline (Free)",
   "category": "adaire-information-blocks",
   "description": "Display a vertical alternating or horizontal timeline with customizable items, icons, colors, and section header.",
   "supports": {
@@ -30,7 +30,7 @@
         { "title": "Track & Report",        "description": "Full visibility into every transaction with real-time dashboards and exportable compliance reports.",              "icon": "check"  }
       ]
     },
-    "backgroundColor":   { "type": "string",  "default": "#503AA8" },
+    "backgroundColor":   { "type": "string",  "default": "#0a1628" },
     "accentColor":       { "type": "string",  "default": "#ffffff" },
     "eyebrowColor":      { "type": "string",  "default": "#aeb4cf" },
     "textColor":         { "type": "string",  "default": "#ffffff" },
@@ -42,6 +42,39 @@
     "paddingTop":        { "type": "number",  "default": 80 },
     "paddingBottom":     { "type": "number",  "default": 80 },
     "marginTop":         { "type": "number",  "default": 0 },
-    "marginBottom":      { "type": "number",  "default": 0 }
+    "marginBottom":      { "type": "number",  "default": 0 },
+
+    "fontFamily":               { "type": "string", "default": "" },
+
+    "eyebrowFontSize":          { "type": "string", "default": "11px" },
+    "eyebrowFontWeight":        { "type": "string", "default": "700" },
+    "eyebrowLineHeight":        { "type": "string", "default": "normal" },
+    "eyebrowLetterSpacing":     { "type": "string", "default": "0.14em" },
+    "eyebrowTextTransform":     { "type": "string", "default": "uppercase" },
+
+    "sectionTitleFontSize":      { "type": "string", "default": "clamp(26px, 3.5vw, 42px)" },
+    "sectionTitleFontWeight":    { "type": "string", "default": "700" },
+    "sectionTitleLineHeight":    { "type": "string", "default": "1.18" },
+    "sectionTitleLetterSpacing": { "type": "string", "default": "normal" },
+    "sectionTitleTextTransform": { "type": "string", "default": "none" },
+
+    "sectionDescFontSize":      { "type": "string", "default": "16px" },
+    "sectionDescFontWeight":    { "type": "string", "default": "400" },
+    "sectionDescLineHeight":    { "type": "string", "default": "1.75" },
+    "sectionDescLetterSpacing": { "type": "string", "default": "normal" },
+    "sectionDescTextTransform": { "type": "string", "default": "none" },
+
+    "itemTitleFontSize":      { "type": "string", "default": "18px" },
+    "itemTitleFontWeight":    { "type": "string", "default": "700" },
+    "itemTitleLineHeight":    { "type": "string", "default": "1.3" },
+    "itemTitleLetterSpacing": { "type": "string", "default": "normal" },
+    "itemTitleTextTransform": { "type": "string", "default": "none" },
+    "itemTitleColor":         { "type": "string", "default": "" },
+
+    "itemDescFontSize":      { "type": "string", "default": "15px" },
+    "itemDescFontWeight":    { "type": "string", "default": "400" },
+    "itemDescLineHeight":    { "type": "string", "default": "1.75" },
+    "itemDescLetterSpacing": { "type": "string", "default": "normal" },
+    "itemDescTextTransform": { "type": "string", "default": "none" }
   }
 }

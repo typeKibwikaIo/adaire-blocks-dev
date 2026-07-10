@@ -3,16 +3,38 @@
 
 .ad-carousel-text-block {
 	display: block;
-	padding: 60px 20px;
+	padding-top: var(--carousel-padding-top, 60px);
+	padding-bottom: var(--carousel-padding-bottom, 60px);
+	padding-left: 20px;
+	padding-right: 20px;
 	margin: 0;
-	font-family: inherit;
+	font-family: var(--testimonial-font-family, inherit);
 	line-height: 1.5;
 	background: linear-gradient(180deg, #ffffff 0%, #f8f4ff 100%);
 	min-height: auto;
 	overflow: hidden;
 	color: var(--text-color, #000000);
 	font-size: var(--font-size, 16px);
-	
+
+	@media (max-width: 1024px) {
+		padding-top: var(--carousel-padding-top-tablet, 48px);
+		padding-bottom: var(--carousel-padding-bottom-tablet, 48px);
+	}
+
+	@media (max-width: 768px) {
+		padding-top: var(--carousel-padding-top-mobile, 36px);
+		padding-bottom: var(--carousel-padding-bottom-mobile, 36px);
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+
+	@media (max-width: 480px) {
+		padding-top: var(--carousel-padding-top-watch, 24px);
+		padding-bottom: var(--carousel-padding-bottom-watch, 24px);
+		padding-left: 12px;
+		padding-right: 12px;
+	}
+
 	&__testimonial-carousel {
 		margin: 0 auto;
 		transition: max-width 0.3s ease;
@@ -163,20 +185,25 @@
 	}
 	
 	&__logo-placeholder {
-		font-size: 18px;
-		font-weight: 700;
+		font-size: var(--company-name-font-size, 18px);
+		font-weight: var(--company-name-font-weight, 700);
+		line-height: var(--company-name-line-height, 1.5);
+		letter-spacing: var(--company-name-letter-spacing, 1px);
+		text-transform: var(--company-name-text-transform, none);
 		color: #333;
-		letter-spacing: 1px;
 	}
-	
+
 	&__quote {
 		// Content layer — independent from &__name's heading layer below.
 		// Consumed directly here (most-specific selector) rather than relying
 		// on inheriting --font-size from the block root, which this rule used
 		// to silently override with a hardcoded value regardless of it.
 		font-size: var(--content-font-size, 16px);
-		line-height: 1.6;
-		color: var(--text-color, #333);
+		font-weight: var(--quote-font-weight, 400);
+		line-height: var(--quote-line-height, 1.6);
+		letter-spacing: var(--quote-letter-spacing, normal);
+		text-transform: var(--quote-text-transform, none);
+		color: var(--quote-color, #333);
 		margin-bottom: 30px;
 		flex-grow: 1;
 		font-style: italic;
@@ -185,10 +212,14 @@
 
 		@media (max-width: 1024px) {
 			font-size: var(--content-font-size-tablet, 16px);
+			font-weight: var(--quote-font-weight-tablet, 400);
+			line-height: var(--quote-line-height-tablet, 1.6);
 		}
 
 		@media (max-width: 768px) {
 			font-size: var(--content-font-size-mobile, 16px);
+			font-weight: var(--quote-font-weight-mobile, 400);
+			line-height: var(--quote-line-height-mobile, 1.6);
 		}
 	}
 
@@ -199,23 +230,33 @@
 	&__name {
 		// Heading layer — independent from &__quote's content layer above.
 		font-size: var(--heading-font-size, 18px);
-		font-weight: 700;
-		color: var(--text-color, #333);
+		font-weight: var(--author-name-font-weight, 700);
+		line-height: var(--author-name-line-height, 1.5);
+		letter-spacing: var(--author-name-letter-spacing, normal);
+		text-transform: var(--author-name-text-transform, none);
+		color: var(--author-name-color, #333);
 		margin-bottom: 5px;
 
 		@media (max-width: 1024px) {
 			font-size: var(--heading-font-size-tablet, 18px);
+			font-weight: var(--author-name-font-weight-tablet, 700);
+			line-height: var(--author-name-line-height-tablet, 1.5);
 		}
 
 		@media (max-width: 768px) {
 			font-size: var(--heading-font-size-mobile, 18px);
+			font-weight: var(--author-name-font-weight-mobile, 700);
+			line-height: var(--author-name-line-height-mobile, 1.5);
 		}
 	}
-	
+
 	&__title {
-		font-size: 14px;
-		color: var(--text-color, #666);
-		font-weight: 400;
+		font-size: var(--author-title-font-size, 14px);
+		color: var(--author-title-color, #666);
+		font-weight: var(--author-title-font-weight, 400);
+		line-height: var(--author-title-line-height, 1.5);
+		letter-spacing: var(--author-title-letter-spacing, normal);
+		text-transform: var(--author-title-text-transform, none);
 	}
 }
 

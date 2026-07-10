@@ -4,7 +4,6 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
 import {
     PanelBody,
     RangeControl,
-    ColorPicker,
     BaseControl,
     Button,
     TextControl,
@@ -17,7 +16,7 @@ import { desktop, tablet, mobile } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
-import AdaireColorControl from '../components/AdaireColorControl';
+import BoundColorPalette from '../components/BoundColorPalette';
 import './editor.scss';
 
 export default function Edit({ attributes, setAttributes, clientId }) {
@@ -137,11 +136,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         max={200}
                     />
 
-                    <AdaireColorControl
-                        label={__('Icon Color', 'icon-box-block')}
-                        value={iconColor}
-                        onChange={(v) => setAttributes({ iconColor: v })}
-                    />
+                    <BaseControl label={__('Icon Color', 'icon-box-block')}>
+                        <BoundColorPalette
+                            value={iconColor}
+                            onChange={(v) => setAttributes({ iconColor: v || "" })}
+                        />
+                    </BaseControl>
 
                     <SelectControl
                         label={__('Alignment', 'icon-box-block')}
@@ -156,21 +156,24 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 <PanelBody title={__('Card Style', 'icon-box-block')} initialOpen={false}>
-                    <AdaireColorControl
-                        label={__('Background Color', 'icon-box-block')}
-                        value={backgroundColor}
-                        onChange={(v) => setAttributes({ backgroundColor: v })}
-                    />
-                    <AdaireColorControl
-                        label={__('Background Hover Color', 'icon-box-block')}
-                        value={backgroundHoverColor}
-                        onChange={(v) => setAttributes({ backgroundHoverColor: v })}
-                    />
-                    <AdaireColorControl
-                        label={__('Text Color', 'icon-box-block')}
-                        value={textColor}
-                        onChange={(v) => setAttributes({ textColor: v })}
-                    />
+                    <BaseControl label={__('Background Color', 'icon-box-block')}>
+                        <BoundColorPalette
+                            value={backgroundColor || ""}
+                            onChange={(v) => setAttributes({ backgroundColor: v || "" })}
+                        />
+                    </BaseControl>
+                    <BaseControl label={__('Background Hover Color', 'icon-box-block')}>
+                        <BoundColorPalette
+                            value={backgroundHoverColor || ""}
+                            onChange={(v) => setAttributes({ backgroundHoverColor: v || "" })}
+                        />
+                    </BaseControl>
+                    <BaseControl label={__('Text Color', 'icon-box-block')}>
+                        <BoundColorPalette
+                            value={textColor || ""}
+                            onChange={(v) => setAttributes({ textColor: v || "" })}
+                        />
+                    </BaseControl>
                     <RangeControl
                         label={__('Border Radius (px)', 'icon-box-block')}
                         value={borderRadius}
@@ -186,11 +189,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         max={10}
                     />
                     {borderWidth > 0 && (
-                        <AdaireColorControl
-                            label={__('Border Color', 'icon-box-block')}
-                            value={borderColor}
-                            onChange={(v) => setAttributes({ borderColor: v })}
-                        />
+                        <BaseControl label={__('Border Color', 'icon-box-block')}>
+                            <BoundColorPalette
+                                value={borderColor || ""}
+                                onChange={(v) => setAttributes({ borderColor: v || "" })}
+                            />
+                        </BaseControl>
                     )}
                 </PanelBody>
 
@@ -222,16 +226,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 ]}
                                 onChange={(v) => setAttributes({ linkTarget: v })}
                             />
-                            <AdaireColorControl
-                                label={__('Button Background', 'icon-box-block')}
-                                value={buttonBgColor}
-                                onChange={(v) => setAttributes({ buttonBgColor: v })}
-                            />
-                            <AdaireColorControl
-                                label={__('Button Text Color', 'icon-box-block')}
-                                value={buttonTextColor}
-                                onChange={(v) => setAttributes({ buttonTextColor: v })}
-                            />
+                            <BaseControl label={__('Button Background', 'icon-box-block')}>
+                                <BoundColorPalette
+                                    value={buttonBgColor || ""}
+                                    onChange={(v) => setAttributes({ buttonBgColor: v || "" })}
+                                />
+                            </BaseControl>
+                            <BaseControl label={__('Button Text Color', 'icon-box-block')}>
+                                <BoundColorPalette
+                                    value={buttonTextColor || ""}
+                                    onChange={(v) => setAttributes({ buttonTextColor: v || "" })}
+                                />
+                            </BaseControl>
                         </>
                     )}
                 </PanelBody>

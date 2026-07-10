@@ -4,7 +4,7 @@ This guide explains how to add custom icons to your WordPress blocks and the com
 
 ## Overview
 
-The GutenBlocks Blocks plugin uses a custom icon system that allows you to:
+The Adaire Blocks plugin uses a custom icon system that allows you to:
 - Define custom SVG icons for each block
 - Display icons in both the WordPress editor and admin block management page
 - Automatically sync icons between your React components and WordPress block registration

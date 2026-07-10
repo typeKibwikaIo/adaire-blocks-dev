@@ -1,18 +1,89 @@
 // Row block styling
 .adaire-row {
   display: grid;
-  // grid-template-columns is set via inline style from columnWidths attribute
+  // grid-template-columns and gap are set via inline style, driven by the
+  // columnWidths/gap attributes — the values below are just a fallback for
+  // any markup saved before those attributes existed.
   gap: 16px;
-  width: 100%;
+  // `auto`, not `100%`. A block-level box with an explicit width of 100%
+  // does NOT get shrunk to make room for margin — the margin is added on
+  // top, so any nonzero left/right margin (from the new Margin control)
+  // pushed this row's right edge past its container, overflowing the page
+  // horizontally. `width: auto` is what lets the browser subtract left/right
+  // margin from the available space automatically, which is exactly the
+  // sizing behavior every other margin/padding-aware block in this plugin
+  // already gets "for free" by never forcing width to a fixed 100% — this is
+  // the one row-specific place that needed to match that. Visually identical
+  // to `100%` for the overwhelmingly common case of zero margin.
+  width: auto;
   box-sizing: border-box;
   min-height: 80px;
 
-  @media (max-width: 768px) {
-    &.adaire-row--cols-2,
-    &.adaire-row--cols-3,
-    &.adaire-row--cols-4 {
+  &--valign-top { align-items: start; }
+  &--valign-center { align-items: center; }
+  &--valign-bottom { align-items: end; }
+
+  // Tablet and below: let columns wrap into as many per row as the
+  // available width allows, instead of forcing every multi-column row down
+  // to a single column. This keeps things feeling like a "row" at tablet
+  // width and only drops to one-per-line on narrow phones once there truly
+  // isn't room for a second column.
+  //
+  // Uses :not(cols-1) instead of an explicit cols-2/3/4 list — the previous
+  // explicit list silently skipped 5+ column rows (no override at all, so
+  // they stayed at their fixed editor widths and overflowed on mobile).
+  @media (max-width: 1024px) {
+    &:not(.adaire-row--cols-1) {
+      grid-template-columns: repeat( auto-fit, minmax( 240px, 1fr ) ) !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    &:not(.adaire-row--cols-1) {
+      grid-template-columns: repeat( auto-fit, minmax( 160px, 1fr ) ) !important;
+    }
+
+    // Explicit override from the "Mobile Columns" Inspector control — lets
+    // the user pin phone-width layout to exactly 1-per-row or 2-per-row
+    // instead of relying on auto-fit wrapping. Declared after the auto-fit
+    // rule above so it wins the (equal-specificity) cascade when set.
+    &.adaire-row--mobile-cols-1 {
       grid-template-columns: 1fr !important;
     }
+
+    &.adaire-row--mobile-cols-2 {
+      grid-template-columns: repeat( 2, 1fr ) !important;
+    }
+  }
+
+  // Width options (Full / Wide / Contained).
+  //
+  // These are applied via our own modifier class (instead of relying solely
+  // on the active theme's alignwide/alignfull CSS) so the three options
+  // render identically in the editor and on the frontend regardless of
+  // whether the theme declares `add_theme_support( 'align-wide' )`.
+  //
+  // (This block was previously duplicated verbatim right after itself —
+  // harmless since both copies were identical, but removed as dead weight.)
+  &--width-contained {
+    max-width: var( --wp--style--global--content-size, 800px );
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &--width-wide {
+    max-width: var( --wp--style--global--wide-size, 1280px );
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  // No explicit `width: 100%` here (unlike before) — same overflow risk as
+  // the base rule above once a nonzero margin is set. `max-width: none`
+  // alone is enough: combined with the base rule's `width: auto`, this
+  // still fills all available space when margin is 0, and correctly shrinks
+  // to make room for it otherwise.
+  &--width-full {
+    max-width: none;
   }
 }
 
@@ -21,8 +92,18 @@
   box-sizing: border-box;
   min-height: 80px;
 
-  // Empty state styling
-  &:empty::before {
+  // Empty state styling — editor-only. This is a build-time hint ("drop
+  // something in this column"), not real page content, so it's scoped to
+  // `.editor-styles-wrapper` (present only inside the block editor canvas)
+  // instead of applying unconditionally. Previously this shipped in the
+  // shared frontend stylesheet too, so any column left empty on a
+  // published page showed a dashed "Add content here" box to visitors —
+  // and, when a real Border (see the Border panel above) was also set on
+  // that same still-empty column, this placeholder's own hardcoded dashed
+  // border visually sat on top of/instead of the real one, making the
+  // Border feature look like it was ignoring the Solid/Dashed/etc style
+  // choice when it wasn't; the column just had no content in it yet.
+  .editor-styles-wrapper &:empty::before {
     content: 'Add content here';
     color: #757575;
     font-size: 13px;
@@ -113,4 +194,52 @@
       fill: #7c6de8;
     }
   }
+
+  &.is-active {
+    border-color: #7c6de8;
+    background: #f5f3ff;
+
+    svg rect {
+      fill: #7c6de8;
+    }
+  }
+}
+
+// Inspector "Columns" panel (editor only) — add/remove columns and
+// switch between preset layouts after the row already has content.
+.adaire-row-columns-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e1e1e;
+  margin: 0 0 8px;
+}
+
+.adaire-row-columns-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  .components-button {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+.adaire-row-columns-label {
+  font-size: 12px;
+  color: #757575;
+  margin: 0 0 10px;
+}
+
+.adaire-row-columns-widths {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.adaire-row-columns-presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }

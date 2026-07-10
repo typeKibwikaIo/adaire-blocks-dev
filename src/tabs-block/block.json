@@ -3,9 +3,16 @@
     "apiVersion": 3,
     "name": "create-block/tabs-block",
     "version": "0.1.0",
-    "title": "Tabbed Content",
+    "title": "Tabbed Content (Free)",
     "category": "adaire-content-tabs",
-    "description": "Organize content into clickable tabs with smooth transitions and custom styling for better page organization.",
+    "description": "Organize content into clickable tabs or pill-style switchers with smooth transitions and custom styling for better page organization.",
+    "keywords": [
+        "tabs",
+        "switcher",
+        "toggle",
+        "pills",
+        "content"
+    ],
     "supports": {
         "html": false,
         "anchor": true,
@@ -75,6 +82,37 @@
         "tabTitleActiveFontWeight": {
             "type": "string",
             "default": "600"
+        },
+        "tabTitleLineHeight": {
+            "type": "object",
+            "default": {
+                "desktop": "normal",
+                "tablet": "normal",
+                "mobile": "normal",
+                "smartwatch": "normal"
+            }
+        },
+        "tabTitleLetterSpacing": {
+            "type": "object",
+            "default": {
+                "desktop": "-0.01em",
+                "tablet": "-0.01em",
+                "mobile": "-0.01em",
+                "smartwatch": "-0.01em"
+            }
+        },
+        "tabTitleTextTransform": {
+            "type": "object",
+            "default": {
+                "desktop": "none",
+                "tablet": "none",
+                "mobile": "none",
+                "smartwatch": "none"
+            }
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
         },
         "tabGap": {
             "type": "object",
@@ -218,6 +256,103 @@
         "verticalActiveBgOpacity": {
             "type": "number",
             "default": 0.05
+        },
+        "tabStyle": {
+            "type": "string",
+            "default": "underline"
+        },
+        "pillStyle": {
+            "type": "string",
+            "default": "default"
+        },
+        "pillBackgroundColor": {
+            "type": "string",
+            "default": "transparent"
+        },
+        "pillActiveBackgroundColor": {
+            "type": "string",
+            "default": "#503AA8"
+        },
+        "pillTextColor": {
+            "type": "string",
+            "default": "#94a3b8"
+        },
+        "pillActiveTextColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "pillBorderColor": {
+            "type": "string",
+            "default": "#475569"
+        },
+        "pillActiveBorderColor": {
+            "type": "string",
+            "default": "#503AA8"
+        },
+        "pillBorderRadius": {
+            "type": "number",
+            "default": 24
+        },
+        "pillPadding": {
+            "type": "object",
+            "default": {
+                "top": 12,
+                "right": 24,
+                "bottom": 12,
+                "left": 24
+            }
+        },
+        "contentBackgroundColor": {
+            "type": "string",
+            "default": ""
+        },
+        "contentBorderRadius": {
+            "type": "number",
+            "default": 0
+        },
+        "contentWidth": {
+            "type": "object",
+            "default": {
+                "desktop": {
+                    "value": 100,
+                    "unit": "%"
+                },
+                "tablet": {
+                    "value": 100,
+                    "unit": "%"
+                },
+                "mobile": {
+                    "value": 100,
+                    "unit": "%"
+                }
+            }
+        },
+        "wrapperBackgroundColor": {
+            "type": "string",
+            "default": ""
+        },
+        "wrapperPadding": {
+            "type": "object",
+            "default": {
+                "desktop": {
+                    "top": 0,
+                    "right": 0,
+                    "bottom": 0,
+                    "left": 0
+                },
+                "tablet": {
+                    "top": 0,
+                    "right": 0,
+                    "bottom": 0,
+                    "left": 0
+                },
+                "mobile": {
+                    "top": 0,
+                    "right": 0,
+                    "bottom": 0,
+                    "left": 0
+                }
+            }
         }
     }
 }

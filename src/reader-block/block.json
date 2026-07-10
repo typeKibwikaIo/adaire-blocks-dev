@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Reader",
   "category": "adaire-blog-publishing",
-  "description": "Reader block for GutenBlocks.",
+  "description": "Reader block for Guten-Blocks.",
   "supports": {
     "html": false,
     "anchor": true
@@ -53,7 +53,7 @@
         {
           "title": "Designing better digital products",
           "excerpt": "A short guide to product clarity, systems, and conversion.",
-          "author": "GutenBlocks Team",
+          "author": "Guten-Blocks Team",
           "date": "2026-06-06",
           "readingTime": "5 min read",
           "category": "Design",

@@ -17,15 +17,15 @@
 		width: 100%;
 		box-sizing: border-box;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		
+
 		&--small {
 			font-size: 13px;
 		}
-		
+
 		&--medium {
 			font-size: 14px;
 		}
-		
+
 		&--large {
 			font-size: 16px;
 		}
@@ -183,9 +183,22 @@
 			}
 
 			.website-footer-block__brand-description {
-				font-size: 14px;
-				line-height: 1.6;
-				opacity: 0.9;
+				// Tagline (ADAB-012) — font-size/weight/line-height/letter-spacing
+				// and color are all customizable via column.tagline* attributes,
+				// wired through these CSS vars by edit.js + render.php. Fallbacks
+				// here reproduce the exact pre-existing hardcoded look (14px,
+				// normal weight, 1.6 line-height, no extra letter-spacing, color
+				// inherited from the footer's text color dimmed to 90% opacity)
+				// so footers saved before this feature existed render identically.
+				// `--tagline-opacity` is only set to 1 by edit.js/render.php once
+				// a user explicitly picks a tagline color — otherwise it's left
+				// unset so the legacy 0.9 dimming still applies by default.
+				font-size: var(--tagline-font-size, 14px);
+				font-weight: var(--tagline-font-weight, 400);
+				line-height: var(--tagline-line-height, 1.6);
+				letter-spacing: var(--tagline-letter-spacing, normal);
+				color: var(--tagline-color, inherit);
+				opacity: var(--tagline-opacity, 0.9);
 				margin-bottom: 16px;
 			}
 		}
@@ -222,7 +235,7 @@
 					// inline `color` on the link element would out-specificity
 					// this :hover rule's `color` and hover would never visibly
 					// apply, same bug class already fixed for the social icons.
-					color: var(--link-color, var(--footer-accent-color, #D52940));
+					color: var(--link-color, var(--footer-accent-color, #503AA8));
 					text-decoration: var(--link-underline-mode, none);
 					font-size: inherit;
 					font-weight: var(--footer-nav-font-weight, 400);
@@ -310,7 +323,7 @@
 		a {
 			// Same --link-color routing as the top-level nav-link rule above,
 			// so sub-menu links also respect the :hover rule below.
-			color: var(--link-color, var(--footer-accent-color, #D52940));
+			color: var(--link-color, var(--footer-accent-color, #503AA8));
 			text-decoration: var(--link-underline-mode, none);
 			font-size: 0.95em;
 			opacity: 0.9;
@@ -349,12 +362,22 @@
 		&-input {
 			flex: 1 1 160px;
 			min-width: 0;
+			// Not inherited from the block root's own border-box declaration
+			// (box-sizing isn't an inherited property) — without this, the
+			// padding/border below add on top of the flex-computed width
+			// instead of being included in it, making the field render
+			// wider/taller than intended.
+			box-sizing: border-box;
+			max-width: 100%;
 			padding: 10px 12px;
 			border-radius: 4px;
 			border: 1px solid rgba(255, 255, 255, 0.25);
 			background: rgba(255, 255, 255, 0.08);
 			color: inherit;
 			font-size: 14px;
+			line-height: normal;
+			-webkit-appearance: none;
+			appearance: none;
 
 			&::placeholder {
 				color: inherit;
@@ -709,7 +732,7 @@
 			grid-template-columns: 1fr;
 			display: flex;
 			flex-direction: column;
-			
+
 			// Order columns by mobile priority
 			> * {
 				order: var(--mobile-priority, 999);
@@ -733,6 +756,18 @@
 		&__newsletter-field-row {
 			flex-direction: column;
 			align-items: stretch;
+		}
+
+		// The input's `flex: 1 1 160px` (set above for the default row
+		// layout) targets WIDTH there — flex-basis/flex-grow apply to a
+		// flex container's main axis, which rotates to the vertical axis
+		// once the row switches to `flex-direction: column` right above.
+		// Left as-is, that same declaration told the input to grow to fill
+		// available *height* instead, which is what made it render as an
+		// oversized box on mobile instead of a normal single-line field.
+		&__newsletter-input {
+			flex: 0 0 auto;
+			width: 100%;
 		}
 
 		&__newsletter-button {
@@ -778,7 +813,7 @@
 		&--dashed {
 			list-style: none;
 			padding-left: 0;
-			
+
 			li {
 				position: relative;
 				padding-left: 20px;

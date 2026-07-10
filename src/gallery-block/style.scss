@@ -2,6 +2,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    font-family: var(--gb-font-family, inherit);
 
     &__container {
         width: 100%;
@@ -116,7 +117,11 @@
     &__caption,
     &__caption-input {
         margin-top: 6px;
-        font-size: 13px;
+        font-size: var(--gb-caption-font-size, 13px);
+        font-weight: var(--gb-caption-font-weight, 400);
+        line-height: var(--gb-caption-line-height, normal);
+        letter-spacing: var(--gb-caption-letter-spacing, normal);
+        text-transform: var(--gb-caption-text-transform, none);
         color: #555;
         text-align: center;
     }

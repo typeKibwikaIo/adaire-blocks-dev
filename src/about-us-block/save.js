@@ -2,7 +2,10 @@ import { RichText, useBlockProps } from '@wordpress/block-editor';
 
 export default function save( { attributes: a } ) {
 	const blockProps = useBlockProps.save( {
-		className: 'adaire-about',
+		className: [
+			'adaire-about',
+			`adaire-about--width-${ a.contentWidth || 'contained' }`,
+		].join( ' ' ),
 		style: {
 			'--ab-bg'     : a.backgroundColor || '#ffffff',
 			'--ab-text'   : a.textColor       || '#6366f1',
@@ -11,7 +14,42 @@ export default function save( { attributes: a } ) {
 			backgroundColor: a.backgroundColor || '#ffffff',
 			paddingTop    : `${ a.paddingTop    ?? 64 }px`,
 			paddingBottom : `${ a.paddingBottom ?? 64 }px`,
+			// Mirrors paddingTop/paddingBottom as CSS custom properties (not new
+			// attributes) so style.scss's mobile media query can cap oversized
+			// desktop padding down on small screens via `min()`.
+			'--ab-padding-top'    : `${ a.paddingTop    ?? 64 }px`,
+			'--ab-padding-bottom' : `${ a.paddingBottom ?? 64 }px`,
 			color         : a.textColor       || '#6366f1',
+
+			'--ab-font-family' : a.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+
+			'--ab-heading-line-height'    : a.headingLineHeight    || '1.0',
+			'--ab-heading-letter-spacing' : a.headingLetterSpacing || '-0.03em',
+			'--ab-heading-text-transform' : a.headingTextTransform || 'none',
+
+			'--ab-tagline-line-height'    : a.taglineLineHeight    || '1.65',
+			'--ab-tagline-letter-spacing' : a.taglineLetterSpacing || 'normal',
+			'--ab-tagline-text-transform' : a.taglineTextTransform || 'none',
+
+			'--ab-mission-line-height'    : a.missionLineHeight    || '1.75',
+			'--ab-mission-letter-spacing' : a.missionLetterSpacing || 'normal',
+			'--ab-mission-text-transform' : a.missionTextTransform || 'none',
+
+			'--ab-statement-line-height'    : a.statementLineHeight    || '1.38',
+			'--ab-statement-letter-spacing' : a.statementLetterSpacing || 'normal',
+			'--ab-statement-text-transform' : a.statementTextTransform || 'none',
+
+			'--ab-caption-line-height'    : a.captionLineHeight    || '1.72',
+			'--ab-caption-letter-spacing' : a.captionLetterSpacing || 'normal',
+			'--ab-caption-text-transform' : a.captionTextTransform || 'none',
+
+			'--ab-body-line-height'    : a.bodyLineHeight    || '1.8',
+			'--ab-body-letter-spacing' : a.bodyLetterSpacing || 'normal',
+			'--ab-body-text-transform' : a.bodyTextTransform || 'none',
+
+			'--ab-closing-line-height'    : a.closingLineHeight    || '1.12',
+			'--ab-closing-letter-spacing' : a.closingLetterSpacing || '-0.02em',
+			'--ab-closing-text-transform' : a.closingTextTransform || 'none',
 		},
 	} );
 

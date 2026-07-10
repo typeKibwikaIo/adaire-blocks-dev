@@ -1,20 +1,33 @@
-﻿import { useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, TextControl, ToggleControl, ColorPicker, SelectControl, RangeControl, BaseControl, Button, __experimentalBoxControl as BoxControl } from '@wordpress/components';
+import { useBlockProps, ColorPalette } from '@wordpress/block-editor';
+import { PanelBody, TextControl, ToggleControl, SelectControl, RangeControl, BaseControl, Button, __experimentalBoxControl as BoxControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import ButtonIcon, { BUTTON_ICON_OPTIONS } from './icons';
+import BoundColorPalette from '../components/BoundColorPalette';
+
+const FONT_FAMILY_OPTIONS = [
+  { label: 'Default (inherit theme)', value: '' },
+  { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+  { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+  { label: 'Georgia', value: 'Georgia, serif' },
+  { label: 'Times New Roman', value: "'Times New Roman', Times, serif" },
+  { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+  { label: 'Trebuchet MS', value: "'Trebuchet MS', sans-serif" },
+  { label: 'Courier New', value: "'Courier New', Courier, monospace" },
+  { label: 'System UI', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
 
 export default function Edit({ attributes, setAttributes }) {
   const [deviceType, setDeviceType] = useState('desktop');
   const [activeZone, setActiveZone] = useState(null);
 
-  const { 
-    buttonText, 
-    buttonLink, 
-    openInNewTab, 
+  const {
+    buttonText,
+    buttonLink,
+    openInNewTab,
     blockId,
     // Styling attributes
     buttonColor,
@@ -37,22 +50,31 @@ export default function Edit({ attributes, setAttributes }) {
     borderWidth,
     borderColor,
     borderStyle,
-    buttonHoverBorderColor
+    buttonHoverBorderColor,
+    lineHeight,
+    letterSpacing,
+    textTransform,
+    fontFamily
   } = attributes;
 
   // Helper to get device-specific values
   const getDeviceFontSize = () => getDeviceValue(fontSize, deviceType, deviceType === 'desktop' ? 18 : deviceType === 'tablet' ? 16 : deviceType === 'mobile' ? 14 : 12);
   const getDevicePadding = () => buttonPadding?.[deviceType] || buttonPadding?.desktop || { top: '10px', right: '20px', bottom: '10px', left: '20px' };
   const getDeviceMargin = () => buttonMargin?.[deviceType] || buttonMargin?.desktop || { top: '20px', right: '0px', bottom: '20px', left: '0px' };
+  const getDeviceLineHeight = () => getDeviceValue(lineHeight, deviceType, 'normal');
+  const getDeviceLetterSpacing = () => getDeviceValue(letterSpacing, deviceType, 'normal');
 
   const blockProps = useBlockProps({
     className: 'adaire-button-block',
     style: {
       '--button-color': buttonColor || '#000000',
-      '--button-bg-color': buttonBackgroundColor || 'transparent',
+      // Theme-color inheritance (ADAB-014) — see matching comment in
+      // save.js. Must stay in sync with save.js's fallback chain so the
+      // editor preview matches the persisted markup (block validity check).
+      '--button-bg-color': buttonBackgroundColor || 'var(--wp--preset--color--primary, #ff4242)',
       '--button-hover-color': buttonHoverColor || '#ffffff',
-      '--button-hover-bg-color': buttonHoverBackgroundColor || 'transparent',
-      '--button-underline-color': underlineColor || '#ff4242',
+      '--button-hover-bg-color': buttonHoverBackgroundColor || 'var(--wp--preset--color--secondary, var(--wp--preset--color--primary, #e63939))',
+      '--button-underline-color': underlineColor || 'var(--wp--preset--color--secondary, #ff4242)',
       '--button-blur': blurAmount ? `${blurAmount}px` : '0px',
       '--button-font-size': `${getDeviceValue(fontSize, 'desktop', 18)}px`,
       '--button-font-size-tablet': `${getDeviceValue(fontSize, 'tablet', 16)}px`,
@@ -94,9 +116,19 @@ export default function Edit({ attributes, setAttributes }) {
       '--button-border-radius': borderRadius ? `${borderRadius}px` : '0px',
       '--button-font-weight': fontWeight || '500',
       '--button-border-width': borderWidth ? `${borderWidth}px` : '2px',
-      '--button-border-color': borderColor || '#ff4242',
+      '--button-border-color': borderColor || 'var(--wp--preset--color--secondary, #ff4242)',
       '--button-border-style': borderStyle || 'solid',
-      '--button-hover-border-color': buttonHoverBorderColor || borderColor || '#ff4242',
+      '--button-hover-border-color': buttonHoverBorderColor || borderColor || 'var(--wp--preset--color--secondary, #ff4242)',
+      '--button-line-height': getDeviceValue(lineHeight, 'desktop', 'normal'),
+      '--button-line-height-tablet': getDeviceValue(lineHeight, 'tablet', 'normal'),
+      '--button-line-height-mobile': getDeviceValue(lineHeight, 'mobile', 'normal'),
+      '--button-line-height-watch': getDeviceValue(lineHeight, 'smartwatch', 'normal'),
+      '--button-letter-spacing': getDeviceValue(letterSpacing, 'desktop', 'normal'),
+      '--button-letter-spacing-tablet': getDeviceValue(letterSpacing, 'tablet', 'normal'),
+      '--button-letter-spacing-mobile': getDeviceValue(letterSpacing, 'mobile', 'normal'),
+      '--button-letter-spacing-watch': getDeviceValue(letterSpacing, 'smartwatch', 'normal'),
+      '--button-text-transform': textTransform || 'none',
+      '--button-font-family': fontFamily || '',
     }
   });
 
@@ -110,7 +142,7 @@ export default function Edit({ attributes, setAttributes }) {
             onChange={(value) => setAttributes({ buttonText: value })}
             placeholder="Enter button text..."
           />
-          
+
           <TextControl
             label="Button Link"
             value={buttonLink}
@@ -118,7 +150,7 @@ export default function Edit({ attributes, setAttributes }) {
             placeholder="https://example.com"
             type="url"
           />
-          
+
           <ToggleControl
             label="Open in new tab"
             checked={openInNewTab}
@@ -128,8 +160,8 @@ export default function Edit({ attributes, setAttributes }) {
         </PanelBody>
 
         <PanelBody title="Responsive Settings" initialOpen={false}>
-          <DeviceSwitcher 
-            deviceType={deviceType} 
+          <DeviceSwitcher
+            deviceType={deviceType}
             setDeviceType={setDeviceType}
             label="Device Preview"
           />
@@ -137,79 +169,106 @@ export default function Edit({ attributes, setAttributes }) {
 
         <PanelBody title="Button Styling" initialOpen={false}>
           <BaseControl label="Button Color">
-            <ColorPicker
-              color={buttonColor}
-              onChangeComplete={(color) => setAttributes({ buttonColor: color.hex })}
-              disableAlpha
+            <BoundColorPalette
+              value={buttonColor}
+              onChange={(v) => setAttributes({ buttonColor: v || "" })}
             />
           </BaseControl>
 
-          <BaseControl label="Button Background Color">
-            <ColorPicker
-              color={buttonBackgroundColor && buttonBackgroundColor !== 'transparent' ? buttonBackgroundColor : '#000000'}
-              onChangeComplete={(color) => {
-                // Default to full opacity if alpha is not specified
-                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                const colorValue = alpha < 1 
-                  ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                  : color.hex;
-                setAttributes({ buttonBackgroundColor: colorValue });
-              }}
-              enableAlpha={true}
-              defaultValue="#000000"
+          <BaseControl
+            label="Button Background Color"
+            help={
+              !buttonBackgroundColor
+                ? "Inheriting the theme's primary color (or the default fill color if the theme defines none)."
+                : buttonBackgroundColor === 'transparent'
+                  ? 'Explicitly transparent.'
+                  : undefined
+            }
+          >
+            <BoundColorPalette
+              value={buttonBackgroundColor || ""}
+              onChange={(v) => setAttributes({ buttonBackgroundColor: v || "" })}
             />
-            {buttonBackgroundColor && buttonBackgroundColor !== 'transparent' && (
-              <Button
-                isSmall
-                isDestructive
-                onClick={() => setAttributes({ buttonBackgroundColor: 'transparent' })}
-                style={{ marginTop: '8px' }}
-              >
-                Clear Background Color
-              </Button>
-            )}
+            <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+              {buttonBackgroundColor && (
+                <Button
+                  isSmall
+                  onClick={() => setAttributes({ buttonBackgroundColor: '' })}
+                >
+                  Use Theme Color
+                </Button>
+              )}
+              {buttonBackgroundColor !== 'transparent' && (
+                <Button
+                  isSmall
+                  isDestructive
+                  onClick={() => setAttributes({ buttonBackgroundColor: 'transparent' })}
+                >
+                  Make Transparent
+                </Button>
+              )}
+            </div>
           </BaseControl>
 
           <BaseControl label="Hover Text Color">
-            <ColorPicker
-              color={buttonHoverColor}
-              onChangeComplete={(color) => setAttributes({ buttonHoverColor: color.hex })}
-              disableAlpha
+            <BoundColorPalette
+              value={buttonHoverColor}
+              onChange={(v) => setAttributes({ buttonHoverColor: v || "" })}
             />
           </BaseControl>
 
-          <BaseControl label="Hover Background Color">
-            <ColorPicker
-              color={buttonHoverBackgroundColor && buttonHoverBackgroundColor !== 'transparent' ? buttonHoverBackgroundColor : '#000000'}
-              onChangeComplete={(color) => {
-                // Default to full opacity if alpha is not specified
-                const alpha = color.rgb.a !== undefined ? color.rgb.a : 1;
-                const colorValue = alpha < 1 
-                  ? `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`
-                  : color.hex;
-                setAttributes({ buttonHoverBackgroundColor: colorValue });
-              }}
-              enableAlpha={true}
-              defaultValue="#000000"
+          <BaseControl
+            label="Hover Background Color"
+            help={
+              !buttonHoverBackgroundColor
+                ? "Inheriting the theme's secondary color (falling back to primary, then the default hover color)."
+                : buttonHoverBackgroundColor === 'transparent'
+                  ? 'Explicitly transparent.'
+                  : undefined
+            }
+          >
+            <BoundColorPalette
+              value={buttonHoverBackgroundColor || ""}
+              onChange={(v) => setAttributes({ buttonHoverBackgroundColor: v || "" })}
             />
-            {buttonHoverBackgroundColor && buttonHoverBackgroundColor !== 'transparent' && (
+            <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+              {buttonHoverBackgroundColor && (
+                <Button
+                  isSmall
+                  onClick={() => setAttributes({ buttonHoverBackgroundColor: '' })}
+                >
+                  Use Theme Color
+                </Button>
+              )}
+              {buttonHoverBackgroundColor !== 'transparent' && (
+                <Button
+                  isSmall
+                  isDestructive
+                  onClick={() => setAttributes({ buttonHoverBackgroundColor: 'transparent' })}
+                >
+                  Make Transparent
+                </Button>
+              )}
+            </div>
+          </BaseControl>
+
+          <BaseControl
+            label="Underline Color"
+            help={!underlineColor ? "Inheriting the theme's secondary color." : undefined}
+          >
+            <BoundColorPalette
+              value={underlineColor}
+              onChange={(v) => setAttributes({ underlineColor: v || "" })}
+            />
+            {underlineColor && (
               <Button
                 isSmall
-                isDestructive
-                onClick={() => setAttributes({ buttonHoverBackgroundColor: 'transparent' })}
+                onClick={() => setAttributes({ underlineColor: '' })}
                 style={{ marginTop: '8px' }}
               >
-                Clear Hover Background Color
+                Use Theme Color
               </Button>
             )}
-          </BaseControl>
-
-          <BaseControl label="Underline Color">
-            <ColorPicker
-              color={underlineColor}
-              onChangeComplete={(color) => setAttributes({ underlineColor: color.hex })}
-              disableAlpha
-            />
           </BaseControl>
 
           <SelectControl
@@ -225,50 +284,82 @@ export default function Edit({ attributes, setAttributes }) {
             onChange={(value) => setAttributes({ buttonStyle: value })}
           />
 
-          {buttonStyle === 'border' && (
-            <>
-              <RangeControl
-                label="Border Width (px)"
-                value={borderWidth}
-                onChange={(value) => setAttributes({ borderWidth: value })}
-                min={1}
-                max={10}
-                step={1}
-              />
+          {/*
+            ADAB-014: border controls used to be gated behind
+            `buttonStyle === 'border'`. They're now always visible — the
+            underlying borderWidth/borderColor/borderStyle/buttonHoverBorderColor
+            attributes apply visually to the --border variant's rendering in
+            style.scss (unchanged from before, see comment there for why
+            border rendering itself stays scoped to that one variant), but
+            users on any other style can still pre-configure border values
+            here ahead of switching styles, or use them if a future style
+            variant reads them. Surfacing them for every buttonStyle just
+            removes a controls/attributes mismatch (the attributes already
+            existed unconditionally; only the UI was gated).
+          */}
+          <RangeControl
+            label="Border Width (px)"
+            value={borderWidth}
+            onChange={(value) => setAttributes({ borderWidth: value })}
+            min={0}
+            max={10}
+            step={1}
+            help={buttonStyle !== 'border' ? 'Only visually applied when Button Style is set to "Border".' : undefined}
+          />
 
-              <BaseControl label="Border Color">
-                <ColorPicker
-                  color={borderColor}
-                  onChangeComplete={(color) => setAttributes({ borderColor: color.hex })}
-                  disableAlpha
-                />
-              </BaseControl>
+          <BaseControl
+            label="Border Color"
+            help={!borderColor ? "Inheriting the theme's secondary color." : undefined}
+          >
+            <BoundColorPalette
+              value={borderColor}
+              onChange={(v) => setAttributes({ borderColor: v || "" })}
+            />
+            {borderColor && (
+              <Button
+                isSmall
+                onClick={() => setAttributes({ borderColor: '' })}
+                style={{ marginTop: '8px' }}
+              >
+                Use Theme Color
+              </Button>
+            )}
+          </BaseControl>
 
-              <BaseControl label="Hover Border Color">
-                <ColorPicker
-                  color={buttonHoverBorderColor || borderColor}
-                  onChangeComplete={(color) => setAttributes({ buttonHoverBorderColor: color.hex })}
-                  disableAlpha
-                />
-              </BaseControl>
+          <BaseControl
+            label="Hover Border Color"
+            help={!buttonHoverBorderColor ? "Inheriting the theme's secondary color (falling back to Border Color)." : undefined}
+          >
+            <BoundColorPalette
+              value={buttonHoverBorderColor || borderColor}
+              onChange={(v) => setAttributes({ buttonHoverBorderColor: v || "" })}
+            />
+            {buttonHoverBorderColor && (
+              <Button
+                isSmall
+                onClick={() => setAttributes({ buttonHoverBorderColor: '' })}
+                style={{ marginTop: '8px' }}
+              >
+                Use Theme Color
+              </Button>
+            )}
+          </BaseControl>
 
-              <SelectControl
-                label="Border Style"
-                value={borderStyle}
-                options={[
-                  { label: 'Solid', value: 'solid' },
-                  { label: 'Dashed', value: 'dashed' },
-                  { label: 'Dotted', value: 'dotted' },
-                  { label: 'Double', value: 'double' },
-                  { label: 'Groove', value: 'groove' },
-                  { label: 'Ridge', value: 'ridge' },
-                  { label: 'Inset', value: 'inset' },
-                  { label: 'Outset', value: 'outset' }
-                ]}
-                onChange={(value) => setAttributes({ borderStyle: value })}
-              />
-            </>
-          )}
+          <SelectControl
+            label="Border Style"
+            value={borderStyle}
+            options={[
+              { label: 'Solid', value: 'solid' },
+              { label: 'Dashed', value: 'dashed' },
+              { label: 'Dotted', value: 'dotted' },
+              { label: 'Double', value: 'double' },
+              { label: 'Groove', value: 'groove' },
+              { label: 'Ridge', value: 'ridge' },
+              { label: 'Inset', value: 'inset' },
+              { label: 'Outset', value: 'outset' }
+            ]}
+            onChange={(value) => setAttributes({ borderStyle: value })}
+          />
 
           <RangeControl
             label="Blur Amount (px)"
@@ -286,6 +377,38 @@ export default function Edit({ attributes, setAttributes }) {
             min={deviceType === 'smartwatch' ? 8 : deviceType === 'mobile' ? 10 : 12}
             max={deviceType === 'smartwatch' ? 20 : 48}
             step={1}
+          />
+
+          <UnitControl
+            label={`Line Height - ${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)}`}
+            value={getDeviceLineHeight()}
+            onChange={(value) => setAttributes({ lineHeight: updateDeviceAttribute(lineHeight, deviceType, value) })}
+          />
+
+          <UnitControl
+            label={`Letter Spacing - ${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)}`}
+            value={getDeviceLetterSpacing()}
+            onChange={(value) => setAttributes({ letterSpacing: updateDeviceAttribute(letterSpacing, deviceType, value) })}
+          />
+
+          <SelectControl
+            label="Text Transform"
+            value={textTransform}
+            options={[
+              { label: 'None', value: 'none' },
+              { label: 'Uppercase', value: 'uppercase' },
+              { label: 'Lowercase', value: 'lowercase' },
+              { label: 'Capitalize', value: 'capitalize' }
+            ]}
+            onChange={(value) => setAttributes({ textTransform: value })}
+          />
+
+          <SelectControl
+            label="Font Family"
+            value={fontFamily || ''}
+            options={FONT_FAMILY_OPTIONS}
+            onChange={(value) => setAttributes({ fontFamily: value })}
+            help="Applies to the button label."
           />
 
           <ToggleControl
@@ -371,7 +494,7 @@ export default function Edit({ attributes, setAttributes }) {
             max={50}
             step={1}
           />
-          
+
           <SelectControl
             label="Font Weight"
             value={fontWeight}
@@ -440,6 +563,4 @@ export default function Edit({ attributes, setAttributes }) {
       </div>
     </>
   );
-} 
-
-
+}

@@ -3,12 +3,13 @@
   "apiVersion": 3,
   "name": "create-block/saas-hero-block",
   "version": "0.2.0",
-  "title": "SaaS Hero",
+  "title": "SaaS Hero (Free)",
   "category": "adaire-layout-hero",
-  "description": "SaaS Hero block for GutenBlocks.",
+  "description": "SaaS Hero block for Guten-Blocks.",
   "supports": {
     "html": false,
-    "anchor": true
+    "anchor": true,
+    "spacing": { "margin": true, "padding": true }
   },
   "textdomain": "saas-hero-block",
   "editorScript": "file:./index.js",
@@ -74,30 +75,6 @@
     "mediaBorderRadius": { "type": "number", "default": -1 },
     "mediaSpacing": { "type": "number", "default": 48 },
 
-    "showTrustBar": { "type": "boolean", "default": true },
-    "trustBarTitle": { "type": "string", "default": "Trusted by" },
-    "trustLogos": { "type": "string", "default": "Acme\nVelocity\nAtlas\nNexus\nPrime" },
-    "trustItems": {
-      "type": "array",
-      "default": [
-        { "name": "Acme", "logoUrl": "", "url": "" },
-        { "name": "Velocity", "logoUrl": "", "url": "" },
-        { "name": "Atlas", "logoUrl": "", "url": "" },
-        { "name": "Nexus", "logoUrl": "", "url": "" },
-        { "name": "Prime", "logoUrl": "", "url": "" }
-      ]
-    },
-    "trustLayout": { "type": "string", "default": "row" },
-    "trustItemWidth": { "type": "number", "default": 0 },
-    "trustItemGap": { "type": "number", "default": 32 },
-    "trustLogoMaxHeight": { "type": "number", "default": 32 },
-    "trustCarousel": { "type": "boolean", "default": false },
-    "trustCarouselAutoplay": { "type": "boolean", "default": true },
-    "trustCarouselSpeed": { "type": "number", "default": 30 },
-    "trustCarouselDirection": { "type": "string", "default": "left" },
-    "trustCarouselPauseOnHover": { "type": "boolean", "default": true },
-    "trustCarouselVisibleItems": { "type": "number", "default": 5 },
-
     "effectsPreset": { "type": "string", "default": "none" },
     "effectDotPattern": { "type": "boolean", "default": false },
     "effectGradientOverlay": { "type": "boolean", "default": false },
@@ -111,50 +88,45 @@
     "effectFloatingElements": { "type": "boolean", "default": false },
     "effectAnimatedAccents": { "type": "boolean", "default": false },
 
-    "showRatingBadges": { "type": "boolean", "default": false },
-    "ratingBadgesAlignment": { "type": "string", "default": "center" },
-    "ratingBadges": {
-      "type": "array",
-      "default": [
-        { "icon": "bi bi-star-fill", "imageUrl": "", "text": "4.8/5", "subtext": "500+ App Store reviews" },
-        { "icon": "bi bi-star-fill", "imageUrl": "", "text": "4.7/5", "subtext": "1,200+ Google Play reviews" },
-        { "icon": "bi bi-trophy-fill", "imageUrl": "", "text": "Excellent", "subtext": "Rated on Trustpilot" }
-      ]
-    },
-
-    "showSecurityPanel": { "type": "boolean", "default": false },
-    "securityPanelTitle": { "type": "string", "default": "Security through our trusted partner" },
-    "securityPanelPartnerName": { "type": "string", "default": "SecurePay" },
-    "securityPanelText": { "type": "string", "default": "Your money and data are protected by bank-grade infrastructure, managed in partnership with a fully licensed financial institution." },
-    "securityPanelBg": { "type": "string", "default": "#f8fafc" },
-    "securityPanelTextColor": { "type": "string", "default": "#111827" },
-    "securityFeatures": {
-      "type": "array",
-      "default": [
-        { "icon": "bi bi-lock-fill", "imageUrl": "", "title": "Bank-level encryption", "text": "Your data is protected with 256-bit encryption, the same standard used by major banks." },
-        { "icon": "bi bi-bank", "imageUrl": "", "title": "Licensed & regulated", "text": "Backed by a fully licensed financial partner, supervised by national regulators." },
-        { "icon": "bi bi-shield-fill-check", "imageUrl": "", "title": "Fraud monitoring", "text": "Round-the-clock automated monitoring flags suspicious activity in real time." },
-        { "icon": "bi bi-credit-card-fill", "imageUrl": "", "title": "Deposit protection", "text": "Funds held with our banking partner are protected up to the applicable guarantee scheme." },
-        { "icon": "bi bi-key-fill", "imageUrl": "", "title": "Two-factor authentication", "text": "An extra layer of security keeps your account safe even if your password is compromised." },
-        { "icon": "bi bi-telephone-fill", "imageUrl": "", "title": "24/7 support", "text": "A dedicated security team is available around the clock if anything looks wrong." }
-      ]
-    },
-
-    "showFaq": { "type": "boolean", "default": false },
-    "faqTitle": { "type": "string", "default": "Frequently asked questions" },
-    "faqOpenFirst": { "type": "boolean", "default": true },
-    "faqItems": {
-      "type": "array",
-      "default": [
-        { "question": "How long does it take to open an account?", "answer": "Most accounts are approved within 5 minutes once you submit your details and verification documents." },
-        { "question": "Is there a monthly fee?", "answer": "We offer a free plan with core features, plus paid plans that unlock advanced tools and lower transaction fees." },
-        { "question": "Can I cancel anytime?", "answer": "Yes. There is no long-term contract — you can downgrade or close your account whenever you like." },
-        { "question": "Is my money protected?", "answer": "Funds are held with our regulated banking partner and protected under the applicable deposit guarantee scheme." }
-      ]
-    },
-
     "fontSize": { "type": "number", "default": 16 },
     "padding": { "type": "number", "default": 80 },
-    "borderRadius": { "type": "number", "default": 12 }
+    "borderRadius": { "type": "number", "default": 12 },
+
+    "fontFamily": { "type": "string", "default": "inherit" },
+
+    "eyebrowFontSize": { "type": "string", "default": "14px" },
+    "eyebrowFontWeight": { "type": "string", "default": "600" },
+    "eyebrowLineHeight": { "type": "string", "default": "normal" },
+    "eyebrowLetterSpacing": { "type": "string", "default": "1px" },
+    "eyebrowTextTransform": { "type": "string", "default": "uppercase" },
+
+    "headingFontSize": { "type": "string", "default": "clamp(36px, 5vw, 64px)" },
+    "headingFontWeight": { "type": "string", "default": "800" },
+    "headingLineHeight": { "type": "string", "default": "1.2" },
+    "headingLetterSpacing": { "type": "string", "default": "normal" },
+    "headingTextTransform": { "type": "string", "default": "none" },
+
+    "bodyTextLineHeight": { "type": "string", "default": "1.6" },
+    "bodyTextLetterSpacing": { "type": "string", "default": "normal" },
+    "bodyTextTextTransform": { "type": "string", "default": "none" },
+    "bodyTextFontWeight": { "type": "string", "default": "400" },
+
+    "pillFontSize": { "type": "string", "default": "14px" },
+    "pillFontWeight": { "type": "string", "default": "600" },
+    "pillLineHeight": { "type": "string", "default": "normal" },
+    "pillLetterSpacing": { "type": "string", "default": "normal" },
+    "pillTextTransform": { "type": "string", "default": "none" },
+
+    "buttonFontSize": { "type": "string", "default": "16px" },
+    "buttonFontWeight": { "type": "string", "default": "600" },
+    "buttonLineHeight": { "type": "string", "default": "normal" },
+    "buttonLetterSpacing": { "type": "string", "default": "normal" },
+    "buttonTextTransform": { "type": "string", "default": "none" },
+
+    "microCopyFontSize": { "type": "string", "default": "14px" },
+    "microCopyFontWeight": { "type": "string", "default": "400" },
+    "microCopyLineHeight": { "type": "string", "default": "normal" },
+    "microCopyLetterSpacing": { "type": "string", "default": "normal" },
+    "microCopyTextTransform": { "type": "string", "default": "none" }
   }
 }

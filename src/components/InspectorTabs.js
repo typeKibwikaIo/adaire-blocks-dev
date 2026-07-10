@@ -1,7 +1,7 @@
 /**
  * InspectorTabs — structured block inspector sidebar.
  *
- * Splits every GutenBlocks block into two tabs:
+ * Splits every Adaire Blocks block into two tabs:
  *   • General  — functional / content settings (the block's own panels)
  *   • Advanced — ALL styling, grouped by priority so users don't get lost:
  *

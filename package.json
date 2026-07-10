@@ -1,7 +1,7 @@
 {
 	"name": "adaire-blocks",
 	"version": "0.1.0",
-	"description": "GutenBlocks is a powerful WordPress plugin that empowers developers and designers to craft visually stunning, high-performance websites with ease. Seamlessly integrating GSAP animations and advanced layout controls, it lets you bring your creative vision to life with smooth, professional-grade motion effects — all within the familiar Gutenberg editor.",
+	"description": "Adaire Blocks is a powerful WordPress plugin that empowers developers and designers to craft visually stunning, high-performance websites with ease. Seamlessly integrating GSAP animations and advanced layout controls, it lets you bring your creative vision to life with smooth, professional-grade motion effects — all within the familiar Gutenberg editor.",
 	"author": "Adaire Digital",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
@@ -11,6 +11,7 @@
 		"build:free": "node scripts/generate-free-version.js",
 		"build:plus": "npm run build",
 		"build:premium": "npm run build",
+		"build:freemium": "node scripts/generate-freemium-version.js",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",
@@ -19,11 +20,14 @@
 		"plugin-zip:free": "node scripts/zip-generated-folder.js free",
 		"plugin-zip:plus": "node scripts/zip-generated-folder.js plus",
 		"plugin-zip:premium": "node scripts/zip-generated-folder.js premium",
+		"plugin-zip:freemium": "node scripts/zip-generated-folder.js freemium",
 		"start": "wp-scripts start --blocks-manifest",
 		"generate:free": "npm run build:free",
+		"generate:freemium": "npm run build:freemium",
 		"deploy:free": "npm run build:free && npm run plugin-zip:free",
 		"deploy:plus": "npm run build:plus && npm run plugin-zip:plus",
-		"deploy:premium": "npm run build:premium && npm run plugin-zip:premium"
+		"deploy:premium": "npm run build:premium && npm run plugin-zip:premium",
+		"deploy:freemium": "npm run build:freemium && npm run plugin-zip:freemium"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^30.27.0",

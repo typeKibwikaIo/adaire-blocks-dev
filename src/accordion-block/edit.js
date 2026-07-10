@@ -1,14 +1,15 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useCallback, useState, useEffect } from '@wordpress/element';
-import { useBlockProps, useInnerBlocksProps, store as blockEditorStore } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps, store as blockEditorStore, ColorPalette } from '@wordpress/block-editor';
 import { createBlock } from '@wordpress/blocks';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { PanelBody, RangeControl, ToggleControl, ColorPalette, Button, ButtonGroup, TextControl, BaseControl } from '@wordpress/components';
+import { PanelBody, RangeControl, ToggleControl, Button, ButtonGroup, TextControl, BaseControl } from '@wordpress/components';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 const EASINGS = [ 'ease', 'linear', 'ease-in', 'ease-out', 'ease-in-out' ];
 const FREE_TIER_ITEM_LIMIT = 3;
@@ -540,13 +541,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                 </PanelBody>
                 <PanelBody title={ __('Colors', 'accordion-block') } initialOpen={ false }>
                     <p>{ __('Title', 'accordion-block') }</p>
-                    <ColorPalette value={ titleColor } onChange={ (v)=> setAttributes({ titleColor: v }) } />
+                    <BoundColorPalette value={ titleColor } onChange={ (v)=> setAttributes({ titleColor: v }) } />
                     <p>{ __('Content', 'accordion-block') }</p>
-                    <ColorPalette value={ contentColor } onChange={ (v)=> setAttributes({ contentColor: v }) } />
+                    <BoundColorPalette value={ contentColor } onChange={ (v)=> setAttributes({ contentColor: v }) } />
                     <p>{ __('Background', 'accordion-block') }</p>
-                    <ColorPalette value={ backgroundColor } onChange={ (v)=> setAttributes({ backgroundColor: v }) } />
+                    <BoundColorPalette value={ backgroundColor } onChange={ (v)=> setAttributes({ backgroundColor: v }) } />
                     <p>{ __('Chevron', 'accordion-block') }</p>
-                    <ColorPalette value={ chevronColor } onChange={ (v)=> setAttributes({ chevronColor: v }) } />
+                    <BoundColorPalette value={ chevronColor } onChange={ (v)=> setAttributes({ chevronColor: v }) } />
                     <RangeControl
                         label={ __('Chevron Size (px)', 'accordion-block') }
                         value={ getDeviceValue(chevronSize, deviceType, deviceType === 'desktop' ? 16 : deviceType === 'tablet' ? 14 : deviceType === 'mobile' ? 12 : 10) }
@@ -556,9 +557,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         step={ 1 }
                     />
                     <p>{ __('Content Background', 'accordion-block') }</p>
-                    <ColorPalette value={ contentBackgroundColor } onChange={ (v)=> setAttributes({ contentBackgroundColor: v }) } />
+                    <BoundColorPalette value={ contentBackgroundColor } onChange={ (v)=> setAttributes({ contentBackgroundColor: v }) } />
                     <p>{ __('Divider Line Color', 'accordion-block') }</p>
-                    <ColorPalette value={ dividerColor } onChange={ (v)=> setAttributes({ dividerColor: v }) } />
+                    <BoundColorPalette value={ dividerColor } onChange={ (v)=> setAttributes({ dividerColor: v }) } />
                     <RangeControl
                         label={ __('Divider Line Thickness (px)', 'accordion-block') }
                         value={ dividerThickness }
@@ -647,9 +648,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                     content={
                         <>
                             <p>{ __('Background', 'accordion-block') }</p>
-                            <ColorPalette value={ backgroundColor } onChange={ (v)=> setAttributes({ backgroundColor: v }) } />
+                            <BoundColorPalette value={ backgroundColor } onChange={ (v)=> setAttributes({ backgroundColor: v }) } />
                             <p>{ __('Chevron', 'accordion-block') }</p>
-                            <ColorPalette value={ chevronColor } onChange={ (v)=> setAttributes({ chevronColor: v }) } />
+                            <BoundColorPalette value={ chevronColor } onChange={ (v)=> setAttributes({ chevronColor: v }) } />
                         </>
                     }
                 >

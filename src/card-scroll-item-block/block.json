@@ -99,6 +99,50 @@
         "imageBackgroundPosition": {
             "type": "string",
             "default": "center"
+        },
+        "titleFontSize": {
+            "type": "string",
+            "default": ""
+        },
+        "titleFontWeight": {
+            "type": "string",
+            "default": ""
+        },
+        "titleLineHeight": {
+            "type": "string",
+            "default": ""
+        },
+        "titleLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "titleTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "descriptionFontSize": {
+            "type": "string",
+            "default": ""
+        },
+        "descriptionFontWeight": {
+            "type": "string",
+            "default": ""
+        },
+        "descriptionLineHeight": {
+            "type": "string",
+            "default": ""
+        },
+        "descriptionLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "descriptionTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
         }
     },
     "editorScript": "file:./index.js",

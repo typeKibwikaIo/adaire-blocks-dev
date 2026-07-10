@@ -45,7 +45,10 @@
     },
     "tabs-block": {
       "enabled": true,
-      "upgradeMessage": "Upgrade to Premium for unlimited tabs and advanced features."
+      "limits": {
+        "customAnimations": false
+      },
+      "upgradeMessage": "Upgrade to customize the animation and transition between tabs."
     },
     "tab-panel-block": {
       "enabled": true,
@@ -56,11 +59,11 @@
     },
     "content-toggle-block": {
       "enabled": true,
-      "upgradeMessage": "Upgrade to Premium for advanced content toggle features."
+      "upgradeMessage": "Legacy block — its functionality is now part of the Tabbed Content block (Pills style)."
     },
     "content-toggle-panel-block": {
       "enabled": true,
-      "upgradeMessage": "Content Toggle Panel Block works with the Content Toggle Block."
+      "upgradeMessage": "Legacy block — works with existing Content Switcher blocks only."
     },
     "social-share-block": {
       "enabled": true,
@@ -86,17 +89,17 @@
       "enabled": true,
       "upgradeMessage": "Upgrade to Premium for more footer layouts and styling."
     },
-    "pricing-comparison-block": {
-      "enabled": true,
-      "upgradeMessage": "Upgrade to Premium for advanced comparison features and more plan groups."
-    },
     "pricing-table-block": {
       "enabled": true,
-      "upgradeMessage": "Responsive pricing tables with monthly/yearly toggle, card grid, and fully customizable styling."
+      "upgradeMessage": "Responsive pricing tables with card grid and fully customizable styling."
     },
     "saas-hero-block": {
       "enabled": true,
       "upgradeMessage": "Upgrade to Premium for advanced hero layouts, animations, and additional media frame styles."
+    },
+    "rating-badge-block": {
+      "enabled": true,
+      "upgradeMessage": "Upgrade to Premium for advanced rating badge styles and layouts."
     },
     "timeline-block": {
       "enabled": true,
@@ -112,9 +115,22 @@
         "maxItems": 8
       },
       "upgradeMessage": "Go pro to add more than 8 images to your gallery."
+    },
+    "cookie-notice-block": {
+      "enabled": true,
+      "upgradeMessage": "Upgrade to the Freemium Cookie Banner for GDPR/CCPA consent categories, Google Consent Mode, and more layouts."
     }
   },
   "premium": {
+    "pricing-comparison-block": {
+      "enabled": true,
+      "features": [
+        "unlimited-plan-groups",
+        "audience-tabs",
+        "sticky-cta-bar",
+        "advanced-styling"
+      ]
+    },
     "accordion-block": {
       "enabled": true,
       "features": [
@@ -925,6 +941,19 @@
         "lightbox",
         "priority-support"
       ]
+    }
+  },
+  "freemium": {
+    "cookie-consent-block": {
+      "enabled": true,
+      "features": [
+        "gdpr-ccpa-consent-categories",
+        "9-layout-positions",
+        "google-consent-mode",
+        "block-scripts-until-consent",
+        "reopen-preferences-tab"
+      ],
+      "upgradeMessage": "Upgrade to Premium for unlimited custom consent categories and advanced consent analytics."
     }
   }
 }

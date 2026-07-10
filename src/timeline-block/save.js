@@ -27,6 +27,40 @@ export default function save( { attributes: a } ) {
 			marginTop       : `${ a.marginTop     ?? 0  }px`,
 			marginBottom    : `${ a.marginBottom  ?? 0  }px`,
 			color           : a.textColor        || '#ffffff',
+
+			'--tl-font-family' : a.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif",
+
+			'--tl-eyebrow-font-size'      : a.eyebrowFontSize      || '11px',
+			'--tl-eyebrow-font-weight'    : a.eyebrowFontWeight    || '700',
+			'--tl-eyebrow-line-height'    : a.eyebrowLineHeight    || 'normal',
+			'--tl-eyebrow-letter-spacing' : a.eyebrowLetterSpacing || '0.14em',
+			'--tl-eyebrow-text-transform' : a.eyebrowTextTransform || 'uppercase',
+
+			'--tl-section-title-font-size'      : a.sectionTitleFontSize      || 'clamp(26px, 3.5vw, 42px)',
+			'--tl-section-title-font-weight'    : a.sectionTitleFontWeight    || '700',
+			'--tl-section-title-line-height'    : a.sectionTitleLineHeight    || '1.18',
+			'--tl-section-title-letter-spacing' : a.sectionTitleLetterSpacing || 'normal',
+			'--tl-section-title-text-transform' : a.sectionTitleTextTransform || 'none',
+
+			'--tl-section-desc-font-size'      : a.sectionDescFontSize      || '16px',
+			'--tl-section-desc-font-weight'    : a.sectionDescFontWeight    || '400',
+			'--tl-section-desc-line-height'    : a.sectionDescLineHeight    || '1.75',
+			'--tl-section-desc-letter-spacing' : a.sectionDescLetterSpacing || 'normal',
+			'--tl-section-desc-text-transform' : a.sectionDescTextTransform || 'none',
+
+			'--tl-item-title-font-size'      : a.itemTitleFontSize      || '18px',
+			'--tl-item-title-font-weight'    : a.itemTitleFontWeight    || '700',
+			'--tl-item-title-line-height'    : a.itemTitleLineHeight    || '1.3',
+			'--tl-item-title-letter-spacing' : a.itemTitleLetterSpacing || 'normal',
+			'--tl-item-title-text-transform' : a.itemTitleTextTransform || 'none',
+			// Must mirror edit.js exactly since this block saves static markup.
+			'--tl-item-title-color'         : a.itemTitleColor || a.textColor || '#ffffff',
+
+			'--tl-item-desc-font-size'      : a.itemDescFontSize      || '15px',
+			'--tl-item-desc-font-weight'    : a.itemDescFontWeight    || '400',
+			'--tl-item-desc-line-height'    : a.itemDescLineHeight    || '1.75',
+			'--tl-item-desc-letter-spacing' : a.itemDescLetterSpacing || 'normal',
+			'--tl-item-desc-text-transform' : a.itemDescTextTransform || 'none',
 		},
 	} );
 

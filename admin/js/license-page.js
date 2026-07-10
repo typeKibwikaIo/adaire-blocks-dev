@@ -1,5 +1,5 @@
 /**
- * License Management JavaScript for GutenBlocks
+ * License Management JavaScript for Adaire Blocks
  *
  * @package AdaireBlocks
  */

@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/testimonial-block",
     "version": "0.1.0",
-    "title": "Customer Reviews",
+    "title": "Reviews (Free)",
     "category": "adaire-testimonial",
     "description": "Display customer testimonials with quotes, author info, and ratings to build trust.",
     "example": {},
@@ -21,6 +21,18 @@
         "textColor": {
             "type": "string",
             "default": "#000000"
+        },
+        "quoteColor": {
+            "type": "string",
+            "default": ""
+        },
+        "authorNameColor": {
+            "type": "string",
+            "default": ""
+        },
+        "authorTitleColor": {
+            "type": "string",
+            "default": ""
         },
         "arrowColor": {
             "type": "string",
@@ -222,6 +234,102 @@
                     "unit": "px"
                 }
             }
+        },
+        "quoteFontWeight": {
+            "type": "object",
+            "default": {
+                "desktop": "400",
+                "tablet": "400",
+                "mobile": "400",
+                "smartwatch": "400"
+            }
+        },
+        "quoteLineHeight": {
+            "type": "object",
+            "default": {
+                "desktop": "1.6",
+                "tablet": "1.6",
+                "mobile": "1.6",
+                "smartwatch": "1.6"
+            }
+        },
+        "quoteLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "quoteTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "authorNameFontWeight": {
+            "type": "object",
+            "default": {
+                "desktop": "700",
+                "tablet": "700",
+                "mobile": "700",
+                "smartwatch": "700"
+            }
+        },
+        "authorNameLineHeight": {
+            "type": "object",
+            "default": {
+                "desktop": "1.5",
+                "tablet": "1.5",
+                "mobile": "1.5",
+                "smartwatch": "1.5"
+            }
+        },
+        "authorNameLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "authorNameTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "authorTitleFontSize": {
+            "type": "string",
+            "default": "14px"
+        },
+        "authorTitleFontWeight": {
+            "type": "string",
+            "default": "400"
+        },
+        "authorTitleLineHeight": {
+            "type": "string",
+            "default": "1.5"
+        },
+        "authorTitleLetterSpacing": {
+            "type": "string",
+            "default": "normal"
+        },
+        "authorTitleTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "companyNameFontSize": {
+            "type": "string",
+            "default": "18px"
+        },
+        "companyNameFontWeight": {
+            "type": "string",
+            "default": "700"
+        },
+        "companyNameLineHeight": {
+            "type": "string",
+            "default": "1.5"
+        },
+        "companyNameLetterSpacing": {
+            "type": "string",
+            "default": "1px"
+        },
+        "companyNameTextTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
         }
     }
 }

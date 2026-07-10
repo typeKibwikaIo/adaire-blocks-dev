@@ -6,6 +6,7 @@ import {
     MediaUpload,
     MediaUploadCheck,
     useInnerBlocksProps,
+    useSettings,
 } from '@wordpress/block-editor';
 import {
     PanelBody,
@@ -30,7 +31,47 @@ const BREAKPOINTS = [
     { name: 'bigDesktop', icon: desktop, label: __('Big Desktop', 'adaire-blocks-dev2') },
 ];
 
+const TEXT_TRANSFORM_OPTIONS = [
+    { label: __('None', 'adaire-blocks-dev2'), value: 'none' },
+    { label: __('Uppercase', 'adaire-blocks-dev2'), value: 'uppercase' },
+    { label: __('Lowercase', 'adaire-blocks-dev2'), value: 'lowercase' },
+    { label: __('Capitalize', 'adaire-blocks-dev2'), value: 'capitalize' },
+];
+
+const FONT_FAMILY_OPTIONS = [
+    { label: __('Default (inherit theme)', 'adaire-blocks-dev2'), value: '' },
+    { label: __('Arial', 'adaire-blocks-dev2'), value: 'Arial, Helvetica, sans-serif' },
+    { label: __('Helvetica', 'adaire-blocks-dev2'), value: 'Helvetica, Arial, sans-serif' },
+    { label: __('Georgia', 'adaire-blocks-dev2'), value: 'Georgia, serif' },
+    { label: __('Times New Roman', 'adaire-blocks-dev2'), value: "'Times New Roman', Times, serif" },
+    { label: __('Verdana', 'adaire-blocks-dev2'), value: 'Verdana, Geneva, sans-serif' },
+    { label: __('Trebuchet MS', 'adaire-blocks-dev2'), value: "'Trebuchet MS', sans-serif" },
+    { label: __('Courier New', 'adaire-blocks-dev2'), value: "'Courier New', Courier, monospace" },
+    { label: __('System UI', 'adaire-blocks-dev2'), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+];
+
+const FONT_WEIGHT_OPTIONS = [
+    { label: __('Default (inherit)', 'adaire-blocks-dev2'), value: '' },
+    { label: '300', value: '300' },
+    { label: '400', value: '400' },
+    { label: '500', value: '500' },
+    { label: '600', value: '600' },
+    { label: '700', value: '700' },
+    { label: '800', value: '800' },
+];
+
 export default function Edit({ attributes, setAttributes }) {
+    const [ themeColors ] = useSettings( 'color.palette.theme' );
+    const bindColor = ( hex ) => {
+        if ( ! hex ) return '';
+        const match = ( themeColors || [] ).find( c => c.color === hex );
+        return match ? `var(--wp--preset--color--${ match.slug })` : hex;
+    };
+    const resolveColor = ( v ) => {
+        if ( ! v || ! v.startsWith( 'var(--wp--preset--color--' ) ) return v ?? '';
+        const slug = v.slice( 'var(--wp--preset--color--'.length, -1 );
+        return ( themeColors || [] ).find( c => c.slug === slug )?.color ?? v;
+    };
     const {
         title,
         description,
@@ -52,6 +93,17 @@ export default function Edit({ attributes, setAttributes }) {
         previewText,
         imageBackgroundSize,
         imageBackgroundPosition,
+        titleFontSize,
+        titleFontWeight,
+        titleLineHeight,
+        titleLetterSpacing,
+        titleTextTransform,
+        descriptionFontSize,
+        descriptionFontWeight,
+        descriptionLineHeight,
+        descriptionLetterSpacing,
+        descriptionTextTransform,
+        fontFamily,
     } = attributes;
 
     const [deviceType, setDeviceType] = useState('desktop');
@@ -110,6 +162,25 @@ export default function Edit({ attributes, setAttributes }) {
             ...responsiveStyleVars('responsiveTitleMarginBottom', '--title-margin-bottom'),
             ...responsiveStyleVars('responsiveDescriptionMarginBottom', '--desc-margin-bottom'),
             ...responsiveStyleVars('responsiveCardWidth', '--card-width'),
+            // Per-card typography overrides. Title/description font-size,
+            // font-weight, and line-height reuse the parent card-scroll-block's
+            // own `--current-title-*` / `--current-desc-*` variable names — when
+            // set here, the CSS custom property cascade lets this single card
+            // override the slider-wide value without touching the parent block.
+            // Letter-spacing/text-transform/font-family have no parent-level
+            // equivalent, so they're new variables consumed by this block's own
+            // style.scss.
+            ...(titleFontSize ? { '--current-title-size': titleFontSize } : {}),
+            ...(titleFontWeight ? { '--current-title-weight': titleFontWeight } : {}),
+            ...(titleLineHeight ? { '--current-title-lh': titleLineHeight } : {}),
+            '--card-title-letter-spacing': titleLetterSpacing || 'normal',
+            '--card-title-text-transform': titleTextTransform || 'none',
+            ...(descriptionFontSize ? { '--current-desc-size': descriptionFontSize } : {}),
+            ...(descriptionFontWeight ? { '--current-desc-weight': descriptionFontWeight } : {}),
+            ...(descriptionLineHeight ? { '--current-desc-lh': descriptionLineHeight } : {}),
+            '--card-desc-letter-spacing': descriptionLetterSpacing || 'normal',
+            '--card-desc-text-transform': descriptionTextTransform || 'none',
+            '--card-font-family': fontFamily || 'inherit',
         }
     });
 
@@ -279,6 +350,81 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                 </PanelBody>
 
+                <PanelBody title={__('Typography', 'adaire-blocks-dev2')} initialOpen={false}>
+                    <p style={{ fontWeight: 600, marginBottom: '4px' }}>{__('Title', 'adaire-blocks-dev2')}</p>
+                    <UnitControl
+                        label={__('Font Size', 'adaire-blocks-dev2')}
+                        value={titleFontSize}
+                        onChange={(value) => setAttributes({ titleFontSize: value })}
+                        help={__("Leave blank to use the Card Slider's title size.", 'adaire-blocks-dev2')}
+                    />
+                    <SelectControl
+                        label={__('Font Weight', 'adaire-blocks-dev2')}
+                        value={titleFontWeight || ''}
+                        options={FONT_WEIGHT_OPTIONS}
+                        onChange={(value) => setAttributes({ titleFontWeight: value })}
+                        help={__("Leave blank to use the Card Slider's title weight.", 'adaire-blocks-dev2')}
+                    />
+                    <UnitControl
+                        label={__('Line Height', 'adaire-blocks-dev2')}
+                        value={titleLineHeight}
+                        onChange={(value) => setAttributes({ titleLineHeight: value })}
+                        help={__("Leave blank to use the Card Slider's title line height.", 'adaire-blocks-dev2')}
+                    />
+                    <UnitControl
+                        label={__('Letter Spacing', 'adaire-blocks-dev2')}
+                        value={titleLetterSpacing}
+                        onChange={(value) => setAttributes({ titleLetterSpacing: value })}
+                    />
+                    <SelectControl
+                        label={__('Text Transform', 'adaire-blocks-dev2')}
+                        value={titleTextTransform}
+                        options={TEXT_TRANSFORM_OPTIONS}
+                        onChange={(value) => setAttributes({ titleTextTransform: value })}
+                    />
+
+                    <p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '4px' }}>{__('Description', 'adaire-blocks-dev2')}</p>
+                    <UnitControl
+                        label={__('Font Size', 'adaire-blocks-dev2')}
+                        value={descriptionFontSize}
+                        onChange={(value) => setAttributes({ descriptionFontSize: value })}
+                        help={__("Leave blank to use the Card Slider's description size.", 'adaire-blocks-dev2')}
+                    />
+                    <SelectControl
+                        label={__('Font Weight', 'adaire-blocks-dev2')}
+                        value={descriptionFontWeight || ''}
+                        options={FONT_WEIGHT_OPTIONS}
+                        onChange={(value) => setAttributes({ descriptionFontWeight: value })}
+                        help={__("Leave blank to use the Card Slider's description weight.", 'adaire-blocks-dev2')}
+                    />
+                    <UnitControl
+                        label={__('Line Height', 'adaire-blocks-dev2')}
+                        value={descriptionLineHeight}
+                        onChange={(value) => setAttributes({ descriptionLineHeight: value })}
+                        help={__("Leave blank to use the Card Slider's description line height.", 'adaire-blocks-dev2')}
+                    />
+                    <UnitControl
+                        label={__('Letter Spacing', 'adaire-blocks-dev2')}
+                        value={descriptionLetterSpacing}
+                        onChange={(value) => setAttributes({ descriptionLetterSpacing: value })}
+                    />
+                    <SelectControl
+                        label={__('Text Transform', 'adaire-blocks-dev2')}
+                        value={descriptionTextTransform}
+                        options={TEXT_TRANSFORM_OPTIONS}
+                        onChange={(value) => setAttributes({ descriptionTextTransform: value })}
+                    />
+
+                    <p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '4px' }}>{__('Block', 'adaire-blocks-dev2')}</p>
+                    <SelectControl
+                        label={__('Font Family', 'adaire-blocks-dev2')}
+                        value={fontFamily || ''}
+                        options={FONT_FAMILY_OPTIONS}
+                        onChange={(value) => setAttributes({ fontFamily: value })}
+                        help={__('Applies to this card only (title and description).', 'adaire-blocks-dev2')}
+                    />
+                </PanelBody>
+
                 <PanelBody title={__('Preview Text', 'adaire-blocks-dev2')} initialOpen={false}>
                     <TextControl
                         label={__('Preview Text', 'adaire-blocks-dev2')}
@@ -292,10 +438,10 @@ export default function Edit({ attributes, setAttributes }) {
                     title={__('Colors', 'adaire-blocks-dev2')}
                     initialOpen={false}
                     colorSettings={[
-                        { value: backgroundColor, onChange: (val) => setAttributes({ backgroundColor: val }), label: __('Background', 'adaire-blocks-dev2') },
-                        { value: headerTextColor, onChange: (val) => setAttributes({ headerTextColor: val }), label: __('Title', 'adaire-blocks-dev2') },
-                        { value: textColor, onChange: (val) => setAttributes({ textColor: val }), label: __('Description', 'adaire-blocks-dev2') },
-                        { value: shadowColor, onChange: (val) => setAttributes({ shadowColor: val }), label: __('Shadow', 'adaire-blocks-dev2') },
+                        { value: resolveColor( backgroundColor ), onChange: (val) => setAttributes({ backgroundColor: bindColor( val ) }), label: __('Background', 'adaire-blocks-dev2') },
+                        { value: resolveColor( headerTextColor ), onChange: (val) => setAttributes({ headerTextColor: bindColor( val ) }), label: __('Title', 'adaire-blocks-dev2') },
+                        { value: resolveColor( textColor ), onChange: (val) => setAttributes({ textColor: bindColor( val ) }), label: __('Description', 'adaire-blocks-dev2') },
+                        { value: resolveColor( shadowColor ), onChange: (val) => setAttributes({ shadowColor: bindColor( val ) }), label: __('Shadow', 'adaire-blocks-dev2') },
                     ]}
                 />
                 <PanelBody title={__('Shadow', 'adaire-blocks-dev2')} initialOpen={false}>
