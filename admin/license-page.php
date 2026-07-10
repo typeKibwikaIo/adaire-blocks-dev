@@ -49,7 +49,7 @@ class AdaireBlocksLicensePage {
      * Enqueue license page scripts
      */
     public function enqueue_license_scripts($hook) {
-        if ($hook !== 'adaire-blocks_page_adaire-blocks-license') {
+        if (strpos($hook, 'adaire-blocks-license') === false) {
             return;
         }
         
@@ -177,7 +177,7 @@ class AdaireBlocksLicensePage {
                                 </div>
                             <?php else: ?>
                                 <!-- Inactive License Actions -->
-                                <form id="adaire-license-form" class="adaire-license-form">
+                                <form id="adaire-license-form" class="adaire-license-form" method="post" action="#">
                                     <div class="adaire-license-input-group">
                                         <label for="license-key">License Key</label>
                                         <input type="text" 

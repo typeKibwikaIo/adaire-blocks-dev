@@ -102,8 +102,9 @@
 			letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-smallLaptop, var(--adaire-posts-grid-heading-letter-spacing-desktop, normal));
 
 			.adaire-text-underline {
-				background-size: 100% var(--adaire-posts-grid-heading-underline-width-smallLaptop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px));
-				padding-bottom: calc(var(--adaire-posts-grid-heading-underline-width-smallLaptop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px)) * 0.15);
+				--adaire-posts-grid-underline-width-resolved: var(--adaire-posts-grid-heading-underline-width-smallLaptop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px));
+				background-size: 100% var(--adaire-posts-grid-underline-width-resolved);
+				padding-bottom: calc(var(--adaire-posts-grid-underline-width-resolved) * 0.15);
 			}
 		}
 	}
@@ -123,8 +124,9 @@
 			letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-tablet, var(--adaire-posts-grid-heading-letter-spacing-smallLaptop, var(--adaire-posts-grid-heading-letter-spacing-desktop, normal)));
 
 			.adaire-text-underline {
-				background-size: 100% var(--adaire-posts-grid-heading-underline-width-tablet, var(--adaire-posts-grid-heading-underline-width-smallLaptop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px)));
-				padding-bottom: calc(var(--adaire-posts-grid-heading-underline-width-tablet, var(--adaire-posts-grid-heading-underline-width-smallLaptop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px))) * 0.15);
+				--adaire-posts-grid-underline-width-resolved: var(--adaire-posts-grid-heading-underline-width-tablet, var(--adaire-posts-grid-heading-underline-width-smallLaptop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px)));
+				background-size: 100% var(--adaire-posts-grid-underline-width-resolved);
+				padding-bottom: calc(var(--adaire-posts-grid-underline-width-resolved) * 0.15);
 			}
 		}
 	}
@@ -144,8 +146,9 @@
 			letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-mobile, var(--adaire-posts-grid-heading-letter-spacing-tablet, var(--adaire-posts-grid-heading-letter-spacing-desktop, normal)));
 
 			.adaire-text-underline {
-				background-size: 100% var(--adaire-posts-grid-heading-underline-width-mobile, var(--adaire-posts-grid-heading-underline-width-tablet, var(--adaire-posts-grid-heading-underline-width-desktop, 8px)));
-				padding-bottom: calc(var(--adaire-posts-grid-heading-underline-width-mobile, var(--adaire-posts-grid-heading-underline-width-tablet, var(--adaire-posts-grid-heading-underline-width-desktop, 8px))) * 0.15);
+				--adaire-posts-grid-underline-width-resolved: var(--adaire-posts-grid-heading-underline-width-mobile, var(--adaire-posts-grid-heading-underline-width-tablet, var(--adaire-posts-grid-heading-underline-width-desktop, 8px)));
+				background-size: 100% var(--adaire-posts-grid-underline-width-resolved);
+				padding-bottom: calc(var(--adaire-posts-grid-underline-width-resolved) * 0.15);
 			}
 		}
 	}
@@ -165,8 +168,9 @@
 			letter-spacing: var(--adaire-posts-grid-heading-letter-spacing-bigDesktop, var(--adaire-posts-grid-heading-letter-spacing-desktop, normal));
 
 			.adaire-text-underline {
-				background-size: 100% var(--adaire-posts-grid-heading-underline-width-bigDesktop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px));
-				padding-bottom: calc(var(--adaire-posts-grid-heading-underline-width-bigDesktop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px)) * 0.15);
+				--adaire-posts-grid-underline-width-resolved: var(--adaire-posts-grid-heading-underline-width-bigDesktop, var(--adaire-posts-grid-heading-underline-width-desktop, 8px));
+				background-size: 100% var(--adaire-posts-grid-underline-width-resolved);
+				padding-bottom: calc(var(--adaire-posts-grid-underline-width-resolved) * 0.15);
 			}
 		}
 	}

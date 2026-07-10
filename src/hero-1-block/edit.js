@@ -1,5 +1,5 @@
 ﻿import { __ } from "@wordpress/i18n";
-import { useState, useEffect } from "@wordpress/element";
+import { useState, useEffect, createElement } from "@wordpress/element";
 import {
 	useBlockProps,
 	MediaUpload,
@@ -32,12 +32,34 @@ import {
 	desktop,
 	tablet,
 	mobile,
-	laptop,
 } from "@wordpress/icons";
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
 import "./editor.scss";
+
+// 'laptop' is not exported by @wordpress/icons — custom icon for the
+// "Small Laptop" breakpoint button (same shape used in infogrid-block/edit.js).
+const laptop = createElement('svg', {
+	width: 24,
+	height: 24,
+	viewBox: '0 0 24 24',
+	fill: 'none',
+	xmlns: 'http://www.w3.org/2000/svg'
+},
+	createElement('path', {
+		d: 'M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V15C20 16.1046 19.1046 17 18 17H6C4.89543 17 4 16.1046 4 15V6Z',
+		stroke: 'currentColor',
+		strokeWidth: '1.5',
+		fill: 'none'
+	}),
+	createElement('path', {
+		d: 'M2 19H22',
+		stroke: 'currentColor',
+		strokeWidth: '1.5',
+		strokeLinecap: 'round'
+	})
+);
 
 const ALLOWED_BLOCKS = ["create-block/button-block"];
 
