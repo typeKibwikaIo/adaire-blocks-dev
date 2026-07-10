@@ -72,7 +72,7 @@ class AdaireBlocksLicense {
         // Sanitize the license key - remove spaces and special characters
         $license_key = trim($license_key);
         $license_key = preg_replace('/\s+/', '', $license_key); // Remove all whitespace
-        $license_key = preg_replace('/[^a-zA-Z0-9]/', '', $license_key); // Keep only alphanumeric
+        $license_key = preg_replace('/[^a-zA-Z0-9-]/', '', $license_key); // Keep alphanumeric and hyphens
         
         error_log('GutenBlocks License: Sanitized license key: ' . $license_key);
         
@@ -453,82 +453,49 @@ class AdaireBlocksLicense {
         error_log('GutenBlocks License: Response keys: ' . print_r(array_keys($data), true));
         error_log('GutenBlocks License: ===== JSON DECODING END =====');
         
-        if (!isset($data['success'])) {
-            error_log('GutenBlocks License: Activation response missing success field');
-            error_log('GutenBlocks License: Available fields in response: ' . print_r(array_keys($data), true));
-            return array(
-                'success' => false,
-                'message' => 'Invalid response format from license server - missing success field'
-            );
+        if ( ! isset( $data['success'] ) ) {
+            error_log( 'GutenBlocks License: Activation response missing success field' );
+            return array( 'success' => false, 'message' => 'Invalid response format from license server' );
         }
-        
-        if (!$data['success']) {
-            error_log('GutenBlocks License: Activation API returned success=false');
-            
-            // Check for activation limit error
-            if (isset($data['data']['errors']['lmfwc_rest_data_error'])) {
-                $error_message = $data['data']['errors']['lmfwc_rest_data_error'][0];
-                error_log('GutenBlocks License: Activation limit error: ' . $error_message);
-                
-                return array(
-                    'success' => false,
-                    'message' => $error_message
-                );
+
+        // Outer failure: validation server itself could not reach LMFWC.
+        if ( ! $data['success'] ) {
+            error_log( 'GutenBlocks License: Validation server returned outer success=false' );
+            return array( 'success' => false, 'message' => $data['error'] ?? 'License activation failed' );
+        }
+
+        // Unwrap the validation-server envelope.
+        // Structure: { success, data: { success, data: { activationData: { token }, timesActivated, … } } }
+        $lmfwc_response  = $data['data'] ?? [];
+        $activation_data = $lmfwc_response['data'] ?? $lmfwc_response;
+
+        // Inner failure: LMFWC returned success=false (e.g. activation limit reached).
+        // LMFWC sends HTTP 200 even on errors, so the outer success is always true.
+        if ( isset( $lmfwc_response['success'] ) && ! $lmfwc_response['success'] ) {
+            $lmfwc_errors = $activation_data['errors'] ?? $lmfwc_response['errors'] ?? [];
+            if ( isset( $lmfwc_errors['lmfwc_rest_data_error'] ) ) {
+                return array( 'success' => false, 'message' => $lmfwc_errors['lmfwc_rest_data_error'][0] );
             }
-            
-            // Log any other errors
-            if (isset($data['data']['errors'])) {
-                error_log('GutenBlocks License: Activation errors: ' . print_r($data['data']['errors'], true));
-            }
-            
-            return array(
-                'success' => false,
-                'message' => 'License activation failed'
-            );
+            error_log( 'GutenBlocks License: LMFWC activation errors: ' . print_r( $lmfwc_errors, true ) );
+            return array( 'success' => false, 'message' => 'License activation failed' );
         }
-        
-        // Handle different response structures
-        $token = null;
-        $activation_data = null;
-        
-        if (isset($data['data'])) {
-            // Standard structure: {success: true, data: {token: "..."}}
-            $activation_data = $data['data'];
-            $token = $activation_data['token'] ?? null;
-            error_log('GutenBlocks License: Using standard data structure');
-        } else {
-            // Alternative structure: {success: true, token: "..."}
-            $token = $data['token'] ?? null;
-            $activation_data = $data;
-            error_log('GutenBlocks License: Using alternative response structure');
+
+        $token = $activation_data['activationData']['token']
+              ?? $activation_data['token']
+              ?? null;
+
+        error_log( 'GutenBlocks License: Activation data: ' . print_r( $activation_data, true ) );
+
+        if ( ! $token ) {
+            error_log( 'GutenBlocks License: No activation token received in response' );
+            return array( 'success' => false, 'message' => 'No activation token received' );
         }
-        
-        error_log('GutenBlocks License: Activation data: ' . print_r($activation_data, true));
-        
-        if (!$token) {
-            error_log('GutenBlocks License: No activation token received in response');
-            return array(
-                'success' => false,
-                'message' => 'No activation token received'
-            );
-        }
-        
-        error_log('GutenBlocks License: Received activation token: ' . substr($token, 0, 8) . '...');
-        
-        // Extract activation limits from the response data
-        $times_activated = 1; // Default to 1 since we just activated
-        $times_activated_max = 0;
-        $remaining_activations = 0;
-        
-        if (isset($activation_data['timesActivated'])) {
-            $times_activated = $activation_data['timesActivated'];
-        }
-        if (isset($activation_data['timesActivatedMax'])) {
-            $times_activated_max = $activation_data['timesActivatedMax'];
-        }
-        if (isset($activation_data['remainingActivations'])) {
-            $remaining_activations = $activation_data['remainingActivations'];
-        }
+
+        error_log( 'GutenBlocks License: Received activation token: ' . substr( $token, 0, 8 ) . '...' );
+
+        $times_activated      = $activation_data['timesActivated']      ?? 1;
+        $times_activated_max  = $activation_data['timesActivatedMax']   ?? 0;
+        $remaining_activations = $activation_data['remainingActivations'] ?? 0;
         
         // Save license data with correct limits
         $this->save_license_data($license_key, array(
@@ -542,9 +509,12 @@ class AdaireBlocksLicense {
         error_log('GutenBlocks License: License activation successful');
         
         return array(
-            'success' => true,
-            'message' => 'License activated successfully',
-            'token' => $token
+            'success'              => true,
+            'message'              => 'License activated successfully',
+            'token'                => $token,
+            'timesActivated'       => $times_activated,
+            'timesActivatedMax'    => $times_activated_max,
+            'remainingActivations' => $remaining_activations,
         );
     }
     
