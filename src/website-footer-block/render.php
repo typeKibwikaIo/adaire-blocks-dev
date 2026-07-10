@@ -485,6 +485,7 @@ if ( ! function_exists( 'adaire_footer_render_newsletter_column_content' ) ) {
 		$field_name   = isset( $column['newsletterFieldName'] ) && $column['newsletterFieldName'] ? $column['newsletterFieldName'] : 'email';
 		$button_color = isset( $column['newsletterButtonColor'] ) ? $column['newsletterButtonColor'] : '';
 		$button_text_color = isset( $column['newsletterButtonTextColor'] ) ? $column['newsletterButtonTextColor'] : '';
+		$input_border_color = isset( $column['newsletterInputBorderColor'] ) ? $column['newsletterInputBorderColor'] : '';
 
 		$button_style = adaire_footer_style_vars_to_string(
 			array(
@@ -493,12 +494,16 @@ if ( ! function_exists( 'adaire_footer_render_newsletter_column_content' ) ) {
 			)
 		);
 
+		$input_style = $input_border_color
+			? adaire_footer_style_vars_to_string( array( 'border-color' => $input_border_color ) )
+			: '';
+
 		$out = '<form class="website-footer-block__newsletter" method="post" action="' . esc_url( $action ? $action : '#' ) . '">';
 		if ( $description ) {
 			$out .= '<p class="website-footer-block__newsletter-description">' . wp_kses_post( $description ) . '</p>';
 		}
 		$out .= '<div class="website-footer-block__newsletter-field-row">';
-		$out .= '<input type="email" name="' . esc_attr( $field_name ) . '" class="website-footer-block__newsletter-input" placeholder="' . esc_attr( $placeholder ) . '" required="required" />';
+		$out .= '<input type="email" name="' . esc_attr( $field_name ) . '" class="website-footer-block__newsletter-input" placeholder="' . esc_attr( $placeholder ) . '"' . ( $input_style ? ' style="' . esc_attr( $input_style ) . '"' : '' ) . ' required="required" />';
 		$out .= '<button type="submit" class="website-footer-block__newsletter-button" style="' . esc_attr( $button_style ) . '">' . esc_html( $button_text ) . '</button>';
 		$out .= '</div>';
 		$out .= '</form>';

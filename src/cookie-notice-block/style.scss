@@ -1,0 +1,150 @@
+// Cookie Notice Block (Free) — shared styles (frontend + editor preview).
+
+.adaire-cookie-notice {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	width: 320px;
+	max-width: calc(100vw - 32px);
+	padding: 20px 22px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.12);
+	font-size: 14px;
+	line-height: 1.5;
+
+	&__message {
+		margin: 0;
+	}
+
+	&__privacy-link {
+		font-size: 13px;
+		text-decoration: underline;
+		align-self: flex-start;
+
+		&:hover,
+		&:focus {
+			opacity: 0.85;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		gap: 10px;
+		margin-top: 4px;
+	}
+
+	&__btn {
+		flex: 1;
+		border: 1px solid transparent;
+		border-radius: 8px;
+		padding: 9px 14px;
+		font-size: 13px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: opacity 0.15s ease, transform 0.15s ease;
+
+		&:hover {
+			opacity: 0.9;
+		}
+
+		&:active {
+			transform: scale(0.98);
+		}
+
+		&--decline {
+			background: transparent;
+		}
+	}
+}
+
+// ─── Frontend floating positioning ──────────────────────────────────────
+// The outer wrapper stays in the DOM permanently and just toggles which of
+// its two children is visible: the consent panel (.is-panel-visible) or the
+// small reopen icon (.is-reopen-visible) that sticks around after a choice
+// has been made so visitors can come back and change it later.
+.adaire-cookie-notice-block {
+	position: fixed;
+	z-index: 999999;
+	margin: 0;
+
+	&[data-position="floating-bottom-right"] {
+		right: 20px;
+		bottom: 20px;
+	}
+
+	&[data-position="floating-bottom-left"] {
+		left: 20px;
+		bottom: 20px;
+	}
+
+	&[data-position="floating-bottom-center"] {
+		left: 50%;
+		bottom: 20px;
+		transform: translateX(-50%);
+	}
+
+	&[data-position="floating-top-right"] {
+		right: 20px;
+		top: 20px;
+	}
+
+	&[data-position="floating-top-left"] {
+		left: 20px;
+		top: 20px;
+	}
+
+	&[data-position="floating-top-center"] {
+		left: 50%;
+		top: 20px;
+		transform: translateX(-50%);
+	}
+
+	@media (max-width: 480px) {
+		left: 12px !important;
+		right: 12px !important;
+		transform: none !important;
+		width: auto;
+
+		.adaire-cookie-notice {
+			width: 100%;
+		}
+	}
+}
+
+.adaire-cookie-notice-panel-wrap {
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(12px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+
+	.adaire-cookie-notice-block.is-panel-visible & {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translateY(0);
+	}
+}
+
+.adaire-cookie-notice__reopen {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.15);
+	opacity: 0;
+	transform: scale(0.85);
+	transition: opacity 0.2s ease, transform 0.2s ease;
+
+	&:hover {
+		transform: scale(1.06);
+	}
+
+	.adaire-cookie-notice-block.is-reopen-visible & {
+		display: flex;
+		opacity: 1;
+		transform: scale(1);
+	}
+}

@@ -1,6 +1,22 @@
 /**
  * Row block deprecations — most recent first.
  *
+ * v2  Frozen copy of the save() from the very first pass of the Padding/
+ *     Margin feature, before a follow-up fix normalized each side's CSS
+ *     unit. That first pass read the BoxControl's `style.spacing.padding`/
+ *     `.margin` values as-is — but BoxControl can hand back a bare number
+ *     ("16") instead of "16px", and a unitless non-zero length is invalid
+ *     CSS that browsers silently drop, which is why padding/margin appeared
+ *     to have no effect even though the values really were being saved.
+ *     The fix runs every side through `normalizeBoxUnits()` before building
+ *     the CSS shorthand. Any row saved during that first pass has frozen
+ *     markup with unitless `padding-top:204;...` etc. in its style
+ *     attribute — re-running the *current* (unit-normalized) save() against
+ *     that same stored data would no longer match and Gutenberg would flag
+ *     it as invalid. This entry reproduces that exact unnormalized output so
+ *     those rows keep validating; `migrate` is a no-op since no attribute
+ *     shape changed, only how the style string is built from it.
+ *
  * v1  Frozen copy of the save() that shipped before the row width fix added
  *     an explicit, theme-independent width control (Contained/Wide/Full).
  *     That fix appends an `adaire-row--width-(contained|wide|full)` modifier
@@ -16,6 +32,65 @@
  *     block.json attributes when parsing a deprecated entry that omits one).
  */
 import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { getRowWidthClass } from './width-utils';
+import { boxToCss } from '../components/spacing-utils';
+
+const deprecatedV2 = {
+	migrate( attributes ) {
+		return attributes;
+	},
+
+	save( { attributes } ) {
+		const {
+			columnWidths = [],
+			align,
+			gap = 16,
+			verticalAlign = '',
+			mobileColumns = '',
+			borderEnabled = false,
+			borderWidth = 1,
+			borderStyle = 'solid',
+			borderColor = '',
+			borderRadius = 0,
+			style: blockStyle,
+		} = attributes;
+
+		// Deliberately NOT run through normalizeBoxUnits() — this entry exists
+		// specifically to reproduce the old unnormalized output byte-for-byte.
+		const paddingCss = boxToCss( blockStyle?.spacing?.padding );
+		const marginCss = boxToCss( blockStyle?.spacing?.margin );
+
+		const gridTemplateColumns = columnWidths.length
+			? columnWidths.map( ( w ) => `${ w }fr` ).join( ' ' )
+			: '1fr';
+
+		const borderStyleVars = borderEnabled
+			? {
+				borderWidth: `${ borderWidth }px`,
+				borderStyle: borderStyle || 'solid',
+				borderColor: borderColor || undefined,
+				borderRadius: borderRadius ? `${ borderRadius }px` : undefined,
+			}
+			: {};
+
+		const blockProps = useBlockProps.save( {
+			className: `adaire-row adaire-row--cols-${ columnWidths.length } ${ getRowWidthClass( align ) } ${ verticalAlign ? `adaire-row--valign-${ verticalAlign }` : '' } ${ mobileColumns ? `adaire-row--mobile-cols-${ mobileColumns }` : '' }`,
+			style: {
+				gridTemplateColumns,
+				gap: `${ gap }px`,
+				...borderStyleVars,
+				padding: paddingCss || undefined,
+				margin: marginCss || undefined,
+			},
+		} );
+
+		return (
+			<div { ...blockProps }>
+				<InnerBlocks.Content />
+			</div>
+		);
+	},
+};
 
 const deprecatedV1 = {
 	migrate( attributes ) {
@@ -41,4 +116,4 @@ const deprecatedV1 = {
 	},
 };
 
-export default [ deprecatedV1 ];
+export default [ deprecatedV2, deprecatedV1 ];

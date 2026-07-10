@@ -5,7 +5,17 @@
   // columnWidths/gap attributes — the values below are just a fallback for
   // any markup saved before those attributes existed.
   gap: 16px;
-  width: 100%;
+  // `auto`, not `100%`. A block-level box with an explicit width of 100%
+  // does NOT get shrunk to make room for margin — the margin is added on
+  // top, so any nonzero left/right margin (from the new Margin control)
+  // pushed this row's right edge past its container, overflowing the page
+  // horizontally. `width: auto` is what lets the browser subtract left/right
+  // margin from the available space automatically, which is exactly the
+  // sizing behavior every other margin/padding-aware block in this plugin
+  // already gets "for free" by never forcing width to a fixed 100% — this is
+  // the one row-specific place that needed to match that. Visually identical
+  // to `100%` for the overwhelmingly common case of zero margin.
+  width: auto;
   box-sizing: border-box;
   min-height: 80px;
 
@@ -52,29 +62,9 @@
   // on the active theme's alignwide/alignfull CSS) so the three options
   // render identically in the editor and on the frontend regardless of
   // whether the theme declares `add_theme_support( 'align-wide' )`.
-  &--width-contained {
-    max-width: var( --wp--style--global--content-size, 800px );
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  &--width-wide {
-    max-width: var( --wp--style--global--wide-size, 1280px );
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  &--width-full {
-    max-width: none;
-    width: 100%;
-  }
-
-  // Width options (Full / Wide / Contained).
   //
-  // These are applied via our own modifier class (instead of relying solely
-  // on the active theme's alignwide/alignfull CSS) so the three options
-  // render identically in the editor and on the frontend regardless of
-  // whether the theme declares `add_theme_support( 'align-wide' )`.
+  // (This block was previously duplicated verbatim right after itself —
+  // harmless since both copies were identical, but removed as dead weight.)
   &--width-contained {
     max-width: var( --wp--style--global--content-size, 800px );
     margin-left: auto;
@@ -87,9 +77,13 @@
     margin-right: auto;
   }
 
+  // No explicit `width: 100%` here (unlike before) — same overflow risk as
+  // the base rule above once a nonzero margin is set. `max-width: none`
+  // alone is enough: combined with the base rule's `width: auto`, this
+  // still fills all available space when margin is 0, and correctly shrinks
+  // to make room for it otherwise.
   &--width-full {
     max-width: none;
-    width: 100%;
   }
 }
 
@@ -98,8 +92,18 @@
   box-sizing: border-box;
   min-height: 80px;
 
-  // Empty state styling
-  &:empty::before {
+  // Empty state styling — editor-only. This is a build-time hint ("drop
+  // something in this column"), not real page content, so it's scoped to
+  // `.editor-styles-wrapper` (present only inside the block editor canvas)
+  // instead of applying unconditionally. Previously this shipped in the
+  // shared frontend stylesheet too, so any column left empty on a
+  // published page showed a dashed "Add content here" box to visitors —
+  // and, when a real Border (see the Border panel above) was also set on
+  // that same still-empty column, this placeholder's own hardcoded dashed
+  // border visually sat on top of/instead of the real one, making the
+  // Border feature look like it was ignoring the Solid/Dashed/etc style
+  // choice when it wasn't; the column just had no content in it yet.
+  .editor-styles-wrapper &:empty::before {
     content: 'Add content here';
     color: #757575;
     font-size: 13px;

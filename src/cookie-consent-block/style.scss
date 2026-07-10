@@ -1,86 +1,578 @@
-﻿.adaire-cookie-consent {
-  background: var(--ad-bg, #111827);
-  background-image: var(--ad-bg-image, none);
-  background-position: center;
-  background-size: cover;
-  color: var(--ad-color, #fff);
-  border-radius: var(--ad-radius, 18px);
-  padding: var(--ad-padding, 28px);
-  font-size: var(--ad-font-size, 16px);
-  position: relative;
-  overflow: hidden;
-  display: grid;
-  gap: 1.25rem;
-  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.14);
+// ─────────────────────────────────────────────────────────────────────────
+// Cookie Banner (Freemium) — shared style.scss (loads in both editor + front).
+// See bottom of file for the .editor-styles-wrapper override block that
+// keeps this block a calm in-flow preview while editing, matching the
+// pattern already used by social-banner-block / mega-menu-block for the
+// same "fixed on the front end, relative while editing" problem.
+// ─────────────────────────────────────────────────────────────────────────
+
+.adaire-cookie-banner {
+	display: contents; // root is a pure layout host; every real box below is individually positioned
+
+	* {
+		box-sizing: border-box;
+	}
+
+	// Overlay
+	&__overlay {
+		position: fixed;
+		inset: 0;
+		background: var(--ccb-overlay, rgba(15, 23, 42, 0.55));
+		z-index: calc(var(--ccb-z-index, 999999) - 1);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity var(--ccb-anim-duration, 400ms) ease;
+	}
+
+	&.is-visible &__overlay {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	&.is-hidden &__overlay {
+		display: none !important;
+	}
+
+	// Panel
+	&__panel {
+		position: fixed;
+		z-index: var(--ccb-z-index, 999999);
+		display: flex;
+		flex-direction: column;
+		gap: var(--ccb-gap, 14px);
+		background: var(--ccb-bg, #ffffff);
+		color: var(--ccb-text, #5f6368);
+		font-family: var(--ccb-font-family, inherit);
+		font-weight: var(--ccb-font-weight, 400);
+		line-height: var(--ccb-line-height, 1.6);
+		padding: var(--ccb-padding, 24px);
+		border-radius: var(--ccb-radius, 10px);
+		border: var(--ccb-border-width, 1px) solid var(--ccb-border-color, #e5e7eb);
+		font-size: var(--ccb-body-fs, 14px);
+		max-width: 100%;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity var(--ccb-anim-duration, 400ms) ease, transform var(--ccb-anim-duration, 400ms) ease;
+	}
+
+	&.is-visible &__panel {
+		opacity: 1;
+		transform: none !important;
+		pointer-events: auto;
+	}
+
+	&.is-hidden &__panel {
+		display: none !important;
+	}
+
+	// Shadow intensity
+	&[data-shadow="soft"] &__panel { box-shadow: 0 4px 24px rgba(32, 33, 36, 0.12); }
+	&[data-shadow="medium"] &__panel { box-shadow: 0 12px 40px rgba(32, 33, 36, 0.18); }
+	&[data-shadow="strong"] &__panel { box-shadow: 0 20px 60px rgba(32, 33, 36, 0.28); }
+	&[data-shadow="none"] &__panel { box-shadow: none; }
+
+	// Density
+	&[data-density="compact"] &__panel {
+		gap: calc(var(--ccb-gap, 16px) * 0.6);
+		padding: calc(var(--ccb-padding, 24px) * 0.7);
+	}
+	&[data-density="compact"] &__title { font-size: calc(var(--ccb-heading-fs, 18px) * 0.9); }
+	&[data-density="compact"] &__description { font-size: calc(var(--ccb-body-fs, 14px) * 0.95); }
+
+	// Header / title
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	&__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width: 2em;
+		height: 2em;
+		font-size: 1.1em;
+		line-height: 1;
+		border-radius: 50%;
+		color: var(--ccb-accent, #1a73e8);
+		background: rgba(26, 115, 232, 0.12);
+		background: color-mix(in srgb, var(--ccb-accent, #1a73e8) 12%, transparent);
+
+		svg {
+			display: block;
+		}
+	}
+
+	&__title {
+		margin: 0;
+		color: var(--ccb-heading, #ffffff);
+		font-size: var(--ccb-heading-fs, 18px);
+		font-weight: 700;
+	}
+
+	&__description {
+		margin: 0;
+		font-size: var(--ccb-body-fs, 14px);
+		opacity: 0.92;
+	}
+
+	&__additional {
+		margin: 0;
+		font-size: calc(var(--ccb-body-fs, 14px) * 0.85);
+		opacity: 0.65;
+	}
+
+	// Category preview / manage panels — a flat list of rows separated by
+	// hairline dividers (no shaded box), matching the clean "settings list"
+	// look of Real Cookie Banner's preference panel.
+	&__categories,
+	&__prefs {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid var(--ccb-border-color, #e5e7eb);
+		border-radius: calc(var(--ccb-radius, 10px) * 0.7);
+		overflow: hidden;
+	}
+
+	&__cat-row,
+	&__pref-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		font-size: calc(var(--ccb-body-fs, 14px) * 0.95);
+		cursor: pointer;
+		padding: 10px 14px;
+
+		& + & {
+			border-top: 1px solid var(--ccb-border-color, #e5e7eb);
+		}
+
+		// Text content sits first visually; the switch is pinned to the end
+		// of the row regardless of source order (input stays before the
+		// label text in markup for a11y/label-association reasons).
+		> span { order: 1; }
+
+		// Toggle-switch look for the plain checkbox input — no extra markup
+		// needed, just restyle the native control.
+		input[type="checkbox"] {
+			order: 2;
+			appearance: none;
+			-webkit-appearance: none;
+			position: relative;
+			flex: none;
+			width: 38px;
+			height: 22px;
+			margin: 0;
+			border-radius: 999px;
+			background: #d1d5db;
+			cursor: pointer;
+			transition: background-color .18s ease;
+
+			&::before {
+				content: "";
+				position: absolute;
+				top: 2px;
+				left: 2px;
+				width: 18px;
+				height: 18px;
+				border-radius: 50%;
+				background: #ffffff;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+				transition: transform .18s ease;
+			}
+
+			&:checked {
+				background: var(--ccb-accent, #1a73e8);
+			}
+
+			&:checked::before {
+				transform: translateX(16px);
+			}
+
+			&:disabled {
+				background: var(--ccb-accent, #1a73e8);
+				opacity: .5;
+				cursor: not-allowed;
+			}
+
+			&:focus-visible {
+				outline: 2px solid var(--ccb-accent, #1a73e8);
+				outline-offset: 2px;
+			}
+		}
+	}
+
+	&__cat-desc {
+		display: block;
+		font-style: normal;
+		opacity: 0.65;
+		font-size: 0.9em;
+	}
+
+	&__prefs-actions {
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 4px;
+	}
+
+	// Links
+	&__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
+
+		a {
+			color: var(--ccb-accent, #1a73e8);
+			font-size: calc(var(--ccb-body-fs, 14px) * 0.9);
+			text-decoration: underline;
+
+			&:hover,
+			&:focus-visible {
+				opacity: 0.8;
+			}
+		}
+	}
+
+	// Actions / buttons — "Manage" reads as a plain text link pinned to the
+	// start of the row, Reject/Accept are grouped together at the end. This
+	// mirrors the classic cookie-consent layout (secondary link on one side,
+	// the two decision buttons on the other) instead of three buttons bunched
+	// together.
+	&__actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 12px;
+		justify-content: space-between;
+		padding-top: calc(var(--ccb-gap, 14px) * 0.5);
+		border-top: 1px solid var(--ccb-border-color, #e5e7eb);
+	}
+
+	&__actions-primary {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-left: auto;
+	}
+
+	&__btn,
+	&__reopen {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		border: 1px solid transparent;
+		cursor: pointer;
+		font-weight: 600;
+		white-space: nowrap;
+		transition: transform .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+
+		&:focus-visible {
+			outline: 2px solid var(--ccb-accent, #1a73e8);
+			outline-offset: 2px;
+		}
+	}
+
+	&__btn--primary {
+		background: var(--ccb-accent, #1a73e8);
+		color: var(--ccb-btn-text, #ffffff);
+	}
+
+	&__btn--outline {
+		background: transparent;
+		color: var(--ccb-text, #5f6368);
+		border-color: var(--ccb-border-color, #e5e7eb);
+	}
+
+	&__btn--ghost {
+		background: var(--ccb-btn2-bg, transparent);
+		color: var(--ccb-btn2-text, #1a73e8);
+		text-decoration: none;
+		border: 0;
+		padding: 0 !important;
+		font-weight: 500;
+
+		&:hover,
+		&:focus-visible {
+			text-decoration: underline;
+		}
+	}
+
+	&__btn:hover,
+	&__reopen:hover {
+		transform: translateY(-1px);
+	}
+
+	// Button shape
+	&[data-shape="pill"] &__btn { border-radius: 999px; }
+	&[data-shape="rounded"] &__btn { border-radius: 10px; }
+	&[data-shape="square"] &__btn { border-radius: 2px; }
+
+	// Button size
+	&[data-btn-size="sm"] &__btn { padding: .5rem .9rem; font-size: .8em; }
+	&[data-btn-size="md"] &__btn { padding: .75rem 1.15rem; font-size: .92em; }
+	&[data-btn-size="lg"] &__btn { padding: .95rem 1.5rem; font-size: 1em; }
+
+	// Close button
+	&__close {
+		position: absolute;
+		top: 10px;
+		right: 12px;
+		background: transparent;
+		border: 0;
+		color: inherit;
+		font-size: 1.4rem;
+		line-height: 1;
+		cursor: pointer;
+		opacity: 0.6;
+
+		&:hover,
+		&:focus-visible {
+			opacity: 1;
+		}
+	}
+
+	// Reopen tab
+	&__reopen {
+		position: fixed;
+		z-index: var(--ccb-z-index, 999999);
+		bottom: 16px;
+		background: var(--ccb-bg, #ffffff);
+		color: var(--ccb-text, #5f6368);
+		border: 1px solid var(--ccb-border-color, #e5e7eb);
+		border-radius: 999px;
+		padding: .6rem 1rem;
+		font-size: .85rem;
+		box-shadow: 0 6px 24px rgba(32, 33, 36, 0.16);
+	}
+
+	&__reopen[data-reopen-position="bottom-left"] { left: 16px; }
+	&__reopen[data-reopen-position="bottom-right"] { right: 16px; }
+	&__reopen[hidden] { display: none; }
 }
 
-.adaire-cookie-consent__eyebrow { color: var(--ad-accent, #d52940); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin: 0; }
-.adaire-cookie-consent__heading { font-size: clamp(1.8rem, 5vw, 4rem); line-height: 1; margin: 0; }
-.adaire-cookie-consent__text { line-height: 1.7; opacity: .86; max-width: 720px; }
-.adaire-cookie-consent__button,
-.adaire-cookie-consent button { background: var(--ad-button-color, var(--ad-accent, #d52940)); border: 0; border-radius: 999px; color: #fff; display: inline-flex; font-weight: 800; padding: .85rem 1.15rem; text-decoration: none; cursor: pointer; }
-.adaire-cookie-consent__button.is-secondary { background: transparent; box-shadow: inset 0 0 0 1px currentColor; }
-.adaire-cookie-consent__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-.adaire-cookie-consent input,
-.adaire-cookie-consent textarea,
-.adaire-cookie-consent select { border: 1px solid #d1d5db; border-radius: 12px; padding: .85rem; width: 100%; }
-.adaire-cookie-consent textarea { min-height: 120px; }
-.adaire-cookie-consent .is-wide { grid-column: 1 / -1; }
-.adaire-cookie-consent .ad-hp { left: -9999px; position: absolute; }
-.adaire-cookie-consent__track { background: #f3f4f6; border-radius: 999px; height: 14px; overflow: hidden; }
-.adaire-cookie-consent__track span { background: var(--ad-accent, #d52940); display: block; height: 100%; border-radius: inherit; }
-.adaire-cookie-consent__label { align-items: center; color: inherit; display: flex; font-weight: 800; gap: .5rem; justify-content: space-between; }
-.adaire-cookie-consent__card { background: #fff; border: 1px solid #e5e7eb; border-radius: 22px; color: #111827; overflow: hidden; }
-.adaire-cookie-consent__card > div { padding: 1rem; }
-.adaire-cookie-consent__card img,
-.adaire-cookie-consent__image,
-.adaire-cookie-consent__qr { height: auto; max-width: 100%; object-fit: cover; }
-.adaire-cookie-consent__viewer,
-.adaire-cookie-consent iframe { border: 1px solid #e5e7eb; border-radius: var(--ad-radius, 18px); width: 100%; }
-.adaire-cookie-consent__layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 34%); gap: 1rem; }
-.adaire-cookie-consent__player iframe { height: 100%; width: 100%; }
-.adaire-cookie-consent__badge { background: var(--ad-accent, #d52940); border-radius: 999px; color: #fff; display: inline-flex; font-size: .75rem; font-weight: 900; padding: .35rem .6rem; }
-.adaire-cookie-consent__close { position: absolute; right: .75rem; top: .75rem; }
-.adaire-cookie-consent__actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+// Layout placement (front end)
+.adaire-cookie-banner[data-layout="bar-bottom"] .adaire-cookie-banner__panel {
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-radius: 0;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.adaire-cookie-banner[data-layout="bar-bottom"][data-width="contained"] .adaire-cookie-banner__panel {
+	left: 50%;
+	right: auto;
+	bottom: 16px;
+	transform: translateX(-50%);
+	width: var(--ccb-max-width, 480px);
+	border-radius: var(--ccb-radius, 16px);
+}
 
-.adaire-promo-banner[data-sticky="true"],
-.adaire-cookie-consent { position: sticky; top: 0; z-index: 50; }
-.adaire-promo-banner[data-position="bottom"],
-.adaire-cookie-consent[data-position="bottom"] { bottom: 0; top: auto; }
-.adaire-cookie-consent.is-hidden,
-.adaire-promo-banner.is-hidden { display: none; }
+.adaire-cookie-banner[data-layout="bar-top"] .adaire-cookie-banner__panel {
+	left: 0;
+	right: 0;
+	top: 0;
+	border-radius: 0;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.adaire-cookie-banner[data-layout="bar-top"][data-width="contained"] .adaire-cookie-banner__panel {
+	left: 50%;
+	right: auto;
+	top: 16px;
+	transform: translateX(-50%);
+	width: var(--ccb-max-width, 480px);
+	border-radius: var(--ccb-radius, 16px);
+}
+
+.adaire-cookie-banner[data-layout="floating-bottom-right"] .adaire-cookie-banner__panel { right: 20px; bottom: 20px; width: var(--ccb-max-width, 480px); }
+.adaire-cookie-banner[data-layout="floating-bottom-left"] .adaire-cookie-banner__panel { left: 20px; bottom: 20px; width: var(--ccb-max-width, 480px); }
+.adaire-cookie-banner[data-layout="floating-top-right"] .adaire-cookie-banner__panel { right: 20px; top: 20px; width: var(--ccb-max-width, 480px); }
+.adaire-cookie-banner[data-layout="floating-top-left"] .adaire-cookie-banner__panel { left: 20px; top: 20px; width: var(--ccb-max-width, 480px); }
+
+.adaire-cookie-banner[data-layout="center-modal"] .adaire-cookie-banner__panel {
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: var(--ccb-max-width, 480px);
+}
+.adaire-cookie-banner[data-layout="center-modal"].is-visible .adaire-cookie-banner__panel {
+	transform: translate(-50%, -50%) !important;
+}
+
+.adaire-cookie-banner[data-layout="slide-in-bottom"] .adaire-cookie-banner__panel { left: 20px; bottom: 20px; width: var(--ccb-max-width, 480px); }
+.adaire-cookie-banner[data-layout="slide-in-right"] .adaire-cookie-banner__panel { right: 20px; top: 50%; transform: translateY(-50%); width: var(--ccb-max-width, 480px); }
+.adaire-cookie-banner[data-layout="slide-in-right"].is-visible .adaire-cookie-banner__panel { transform: translateY(-50%) !important; }
+
+// Content alignment for floating / modal layouts
+.adaire-cookie-banner[data-align="left"] .adaire-cookie-banner__actions { justify-content: flex-start; }
+.adaire-cookie-banner[data-align="center"] .adaire-cookie-banner__actions { justify-content: center; }
+
+// Entrance animation start states (front end only — see .is-visible above)
+.adaire-cookie-banner[data-anim="fade"] .adaire-cookie-banner__panel { transform: none; }
+.adaire-cookie-banner[data-anim="slide-up"] .adaire-cookie-banner__panel { transform: translateY(40px); }
+.adaire-cookie-banner[data-anim="slide-down"] .adaire-cookie-banner__panel { transform: translateY(-40px); }
+.adaire-cookie-banner[data-anim="slide-left"] .adaire-cookie-banner__panel { transform: translateX(-40px); }
+.adaire-cookie-banner[data-anim="slide-right"] .adaire-cookie-banner__panel { transform: translateX(40px); }
+.adaire-cookie-banner[data-anim="none"] .adaire-cookie-banner__panel {
+	transition: none;
+	opacity: 1;
+	transform: none;
+	pointer-events: auto;
+}
+.adaire-cookie-banner[data-anim="none"].is-hidden .adaire-cookie-banner__panel { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+	.adaire-cookie-banner__panel,
+	.adaire-cookie-banner__overlay {
+		transition: none !important;
+	}
+}
+
+// Responsive (tablet / mobile)
+@media (max-width: 1024px) {
+	.adaire-cookie-banner__panel {
+		font-size: var(--ccb-body-fs-tablet, var(--ccb-body-fs, 14px));
+		padding: var(--ccb-padding-tablet, var(--ccb-padding, 24px));
+	}
+	.adaire-cookie-banner__title {
+		font-size: var(--ccb-heading-fs-tablet, var(--ccb-heading-fs, 18px));
+	}
+	.adaire-cookie-banner__description {
+		font-size: var(--ccb-body-fs-tablet, var(--ccb-body-fs, 14px));
+	}
+}
 
 @media (max-width: 768px) {
-  .adaire-cookie-consent,
-  .adaire-cookie-consent__layout { grid-template-columns: 1fr; }
-  .adaire-cookie-consent__chat { display: none; }
-}
-@media (max-width: 600px) {
-  .adaire-cookie-consent__grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 480px) {
-  .adaire-cookie-consent__actions { display: grid; gap: .75rem; }
-  .adaire-cookie-consent__viewer { min-height: 300px !important; }
+	.adaire-cookie-banner__panel {
+		font-size: var(--ccb-body-fs-mobile, var(--ccb-body-fs, 14px));
+		padding: var(--ccb-padding-mobile, var(--ccb-padding, 24px));
+		flex-direction: column !important;
+		align-items: stretch !important;
+	}
+	.adaire-cookie-banner__title {
+		font-size: var(--ccb-heading-fs-mobile, var(--ccb-heading-fs, 18px));
+	}
+	.adaire-cookie-banner__description {
+		font-size: var(--ccb-body-fs-mobile, var(--ccb-body-fs, 14px));
+	}
+	.adaire-cookie-banner__actions {
+		justify-content: stretch !important;
+		flex-direction: column;
+	}
+	.adaire-cookie-banner__actions-primary {
+		flex-direction: column;
+		width: 100%;
+		margin-left: 0;
+	}
+	.adaire-cookie-banner__btn {
+		width: 100%;
+	}
+	.adaire-cookie-banner__btn--ghost {
+		width: auto;
+		align-self: flex-start;
+	}
+	.adaire-cookie-banner[data-layout^="floating-"] .adaire-cookie-banner__panel,
+	.adaire-cookie-banner[data-layout^="slide-in"] .adaire-cookie-banner__panel,
+	.adaire-cookie-banner[data-layout="center-modal"] .adaire-cookie-banner__panel {
+		left: 12px !important;
+		right: 12px !important;
+		width: auto !important;
+		max-width: none;
+	}
 }
 
-.adaire-cookie-consent__button,
-.adaire-cookie-consent button {
-  min-width: var(--ad-button-width, auto);
-  min-height: var(--ad-button-height, auto);
-  border: 1px solid transparent;
-  justify-content: center;
-  transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
+// Editor-only inspector chrome (category repeater) — these classes never
+// appear in save.js output, kept here since this block has no separate
+// editor.scss (matches the convention documented in rating-badge-block/style.scss).
+.adaire-repeater {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-bottom: 12px;
+
+	&__item {
+		border: 1px solid #e2e8f0;
+		border-radius: 8px;
+		padding: 10px;
+	}
+
+	&__row-head {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		margin-bottom: 8px;
+	}
+
+	&__index {
+		font-weight: 600;
+		font-size: 12px;
+		opacity: 0.6;
+		margin-right: 4px;
+	}
 }
-.adaire-cookie-consent[data-hover=lift] .adaire-cookie-consent__button:hover,
-.adaire-cookie-consent[data-hover=lift] button:hover { transform: translateY(-2px); }
-.adaire-cookie-consent[data-hover=glow] .adaire-cookie-consent__button:hover,
-.adaire-cookie-consent[data-hover=glow] button:hover { box-shadow: 0 12px 34px color-mix(in srgb, var(--ad-button-hover-bg, #111827), transparent 55%); }
-.adaire-cookie-consent[data-hover=darken] .adaire-cookie-consent__button:hover,
-.adaire-cookie-consent[data-hover=darken] button:hover,
-.adaire-cookie-consent__button:hover,
-.adaire-cookie-consent button:hover {
-  background: var(--ad-button-hover-bg, #111827);
-  border-color: var(--ad-button-hover-border, #111827);
-  color: var(--ad-button-hover-color, #fff);
+
+.adaire-help-note {
+	font-size: 12px;
+	opacity: 0.65;
+	margin-top: 8px;
 }
-.adaire-cookie-consent[data-layout=one] .adaire-cookie-consent__grid { grid-template-columns: 1fr; }
+
+// ─────────────────────────────────────────────────────────────────────────
+// EDITOR OVERRIDE — keep this block a calm, in-flow preview while editing.
+// Same technique already used by social-banner-block / mega-menu-block for
+// blocks that are position:fixed/sticky on the live site.
+// ─────────────────────────────────────────────────────────────────────────
+.editor-styles-wrapper .adaire-cookie-banner,
+.block-editor-block-list__layout .adaire-cookie-banner {
+	display: block !important;
+	position: relative !important;
+}
+
+.editor-styles-wrapper .adaire-cookie-banner .adaire-cookie-banner__overlay,
+.block-editor-block-list__layout .adaire-cookie-banner .adaire-cookie-banner__overlay {
+	display: none !important;
+}
+
+.editor-styles-wrapper .adaire-cookie-banner .adaire-cookie-banner__panel,
+.block-editor-block-list__layout .adaire-cookie-banner .adaire-cookie-banner__panel {
+	position: relative !important;
+	inset: auto !important;
+	left: auto !important;
+	right: auto !important;
+	top: auto !important;
+	bottom: auto !important;
+	transform: none !important;
+	opacity: 1 !important;
+	pointer-events: auto !important;
+	transition: none !important;
+	width: 100% !important;
+	max-width: var(--ccb-max-width, 480px);
+	margin: 0 auto;
+}
+
+.editor-styles-wrapper .adaire-cookie-banner[data-layout^="bar-"] .adaire-cookie-banner__panel,
+.block-editor-block-list__layout .adaire-cookie-banner[data-layout^="bar-"] .adaire-cookie-banner__panel {
+	max-width: 100% !important;
+	border-radius: var(--ccb-radius, 16px) !important;
+}
+
+.editor-styles-wrapper .adaire-cookie-banner .adaire-cookie-banner__reopen,
+.block-editor-block-list__layout .adaire-cookie-banner .adaire-cookie-banner__reopen {
+	position: static !important;
+	display: inline-flex !important;
+	margin-top: 10px;
+}
+
+.editor-styles-wrapper .adaire-cookie-banner .adaire-cookie-banner__prefs,
+.block-editor-block-list__layout .adaire-cookie-banner .adaire-cookie-banner__prefs {
+	display: flex !important;
+}

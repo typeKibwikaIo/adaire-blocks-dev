@@ -1377,6 +1377,10 @@ export default function Edit({ attributes, setAttributes }) {
                                                                     <label>{__('Button Text Color', 'website-footer-block')}</label>
                                                                     <BoundColorPalette value={column.newsletterButtonTextColor || ''} onChange={(v) => updateColumn(column.id, { newsletterButtonTextColor: v || '' })} />
                                                                 </div>
+                                                                <div style={{ marginBottom: 4 }}>
+                                                                    <label>{__('Input Border Color', 'website-footer-block')}</label>
+                                                                    <BoundColorPalette value={column.newsletterInputBorderColor || ''} onChange={(v) => updateColumn(column.id, { newsletterInputBorderColor: v || '' })} />
+                                                                </div>
                                                             </>
                                                         )}
 
@@ -1626,6 +1630,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                             <input type="email" disabled
                                                                 className="website-footer-block__newsletter-input"
                                                                 placeholder={column.newsletterPlaceholder || __('Enter your email', 'website-footer-block')}
+                                                                style={column.newsletterInputBorderColor ? { borderColor: column.newsletterInputBorderColor } : undefined}
                                                                 onClick={(e) => e.stopPropagation()} />
                                                             <RichText tagName="span" className="website-footer-block__newsletter-button"
                                                                 value={column.newsletterButtonText} onChange={(v) => updateColumn(column.id, { newsletterButtonText: v })}

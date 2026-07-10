@@ -15,6 +15,8 @@ import {
 	SelectControl,
 	TextControl,
 	ToggleControl,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
@@ -26,6 +28,12 @@ function ColorPicker( { label, value, onChange } ) {
 		<AdaireColorControl label={ label } value={ value } onChange={ onChange } />
 	);
 }
+
+const CONTENT_WIDTH_OPTIONS = [
+	{ label: __( 'Contained' ), value: '' },
+	{ label: __( 'Wide' ), value: 'wide' },
+	{ label: __( 'Full' ), value: 'full' },
+];
 
 const TEXT_TRANSFORM_OPTIONS = [
 	{ label: __( 'None' ), value: 'none' },
@@ -120,7 +128,10 @@ export default function Edit( { attributes: a, setAttributes } ) {
 	const [activeZone, setActiveZone] = useState(null);
 
 	const blockProps = useBlockProps( {
-		className: 'adaire-about',
+		className: [
+			'adaire-about',
+			`adaire-about--width-${ a.contentWidth || 'contained' }`,
+		].join( ' ' ),
 		style: {
 			'--ab-bg'     : a.backgroundColor || '#0a0a0a',
 			'--ab-text'   : a.textColor       || '#ffffff',
@@ -129,6 +140,12 @@ export default function Edit( { attributes: a, setAttributes } ) {
 			backgroundColor: a.backgroundColor || '#0a0a0a',
 			paddingTop    : `${ a.paddingTop    ?? 64 }px`,
 			paddingBottom : `${ a.paddingBottom ?? 64 }px`,
+			// Mirrors the paddingTop/paddingBottom values above as CSS custom
+			// properties (not new attributes) purely so style.scss's mobile
+			// media query can cap oversized desktop padding down on small
+			// screens via `min()` — see the "Mobile" section of style.scss.
+			'--ab-padding-top'    : `${ a.paddingTop    ?? 64 }px`,
+			'--ab-padding-bottom' : `${ a.paddingBottom ?? 64 }px`,
 			color         : a.textColor       || '#ffffff',
 			'--ab-font-family' : a.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
 		},
@@ -156,6 +173,37 @@ export default function Edit( { attributes: a, setAttributes } ) {
 		<>
 			{ /* ── Sidebar ─────────────────────────────────────── */ }
 			<InspectorTabs attributes={a} setAttributes={setAttributes}>
+				<PanelBody title={ __( 'Layout', 'about-us-block' ) } initialOpen>
+					<ToggleGroupControl
+						label={ __( 'Content Width' ) }
+						value={ a.contentWidth || '' }
+						isBlock
+						onChange={ ( value ) => setAttributes( {
+							contentWidth: value,
+							// Also drives WordPress's own native alignwide/alignfull
+							// mechanism (this block already declares align support in
+							// block.json), not just our own --ab-content-max-width CSS
+							// var. Our CSS var alone only resizes the zones *inside*
+							// this section — it can't make the section's own outer box
+							// break out of a parent container the active theme (or a
+							// classic, non-block theme) constrains it with. Setting the
+							// real `align` attribute too gets WordPress's/the theme's
+							// own alignfull break-out CSS applied to the outer wrapper,
+							// which is what actually removes the leftover side margins
+							// on narrow/mobile screens that our CSS var alone couldn't.
+							align: value || undefined,
+						} ) }
+						help={ __( 'Contained keeps the block within its default max width. Wide and Full expand it — Full stretches the whole block edge-to-edge on every screen size, including mobile.' ) }
+					>
+						{ CONTENT_WIDTH_OPTIONS.map( ( option ) => (
+							<ToggleGroupControlOption
+								key={ option.value || 'contained' }
+								value={ option.value }
+								label={ option.label }
+							/>
+						) ) }
+					</ToggleGroupControl>
+				</PanelBody>
 				<PanelBody title={ __( 'Hero', 'about-us-block' ) } initialOpen>
 					<ToggleControl
 						label={ __( 'Show scroll button' ) }

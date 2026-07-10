@@ -1,9 +1,27 @@
 import { __ } from '@wordpress/i18n';
-import { InspectorControls, useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
-import { PanelBody, RangeControl, __experimentalToggleGroupControl as ToggleGroupControl, __experimentalToggleGroupControlOption as ToggleGroupControlOption } from '@wordpress/components';
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import {
+	PanelBody,
+	RangeControl,
+	SelectControl,
+	ToggleControl,
+	BaseControl,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+} from '@wordpress/components';
 import { select, useDispatch } from '@wordpress/data';
+import InspectorTabs from '../components/InspectorTabs';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 const MIN_COLUMN_WIDTH = 5;
+
+const BORDER_STYLE_OPTIONS = [
+	{ label: __( 'Solid', 'adaire-column' ), value: 'solid' },
+	{ label: __( 'Dashed', 'adaire-column' ), value: 'dashed' },
+	{ label: __( 'Dotted', 'adaire-column' ), value: 'dotted' },
+	{ label: __( 'Double', 'adaire-column' ), value: 'double' },
+	{ label: __( 'Groove', 'adaire-column' ), value: 'groove' },
+];
 
 /**
  * Resizes one column to `newWidth` and proportionally redistributes the
@@ -53,7 +71,51 @@ function redistributeWidths( targetClientId, newWidth, siblings ) {
 }
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { width, horizontalAlign = '', verticalAlign = '' } = attributes;
+	const {
+		width,
+		horizontalAlign = '',
+		verticalAlign = '',
+		borderEnabled = false,
+		borderWidth = 1,
+		borderStyle = 'solid',
+		borderColor = '',
+		borderRadius = 0,
+	} = attributes;
+
+	// Reads/writes the same `style.color.background` path WordPress core's
+	// native `supports.color.background` (declared in block.json) already
+	// uses — this is deliberately NOT a new custom attribute. It's just a
+	// second UI (living in our own Style tab, alongside Border, instead of
+	// WP's separate native "Styles" tab) pointed at the identical data, so
+	// both stay in sync automatically and nothing changes for columns that
+	// already have a background color set via the native panel.
+	const backgroundColor = attributes?.style?.color?.background ?? '';
+	const setBackgroundColor = ( value ) => {
+		setAttributes( {
+			style: {
+				...attributes.style,
+				color: {
+					...attributes.style?.color,
+					background: value || undefined,
+				},
+			},
+		} );
+	};
+
+	// Only emit border-related inline styles when the user has actually
+	// turned the border on — keeps this attribute set 100% backward
+	// compatible with columns saved before this feature existed (their
+	// borderEnabled default is false, so save() renders byte-for-byte the
+	// same style attribute as before and Gutenberg's block validation never
+	// flags them as invalid).
+	const borderStyleVars = borderEnabled
+		? {
+			borderWidth: `${ borderWidth }px`,
+			borderStyle: borderStyle || 'solid',
+			borderColor: borderColor || undefined,
+			borderRadius: borderRadius ? `${ borderRadius }px` : undefined,
+		}
+		: {};
 
 	const blockProps = useBlockProps( {
 		className: [
@@ -61,6 +123,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			horizontalAlign && `adaire-column--halign-${ horizontalAlign }`,
 			verticalAlign && `adaire-column--valign-${ verticalAlign }`,
 		].filter( Boolean ).join( ' ' ),
+		style: borderStyleVars,
 	} );
 
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
@@ -93,7 +156,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	return (
 		<>
-			<InspectorControls>
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody title={ __( 'Width', 'adaire-column' ) } initialOpen={ true }>
 					<RangeControl
 						label={ __( 'Column Width (%)', 'adaire-column' ) }
@@ -128,7 +191,53 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<ToggleGroupControlOption value="bottom" label={ __( 'Bottom', 'adaire-column' ) } />
 					</ToggleGroupControl>
 				</PanelBody>
-			</InspectorControls>
+				<PanelBody title={ __( 'Background', 'adaire-column' ) } initialOpen={ false }>
+					<BaseControl label={ __( 'Background Color', 'adaire-column' ) } help={ __( 'Same setting as the native "Background" color in the block\'s Styles panel — shown here too for quicker access.', 'adaire-column' ) }>
+						<BoundColorPalette
+							value={ backgroundColor }
+							onChange={ setBackgroundColor }
+						/>
+					</BaseControl>
+				</PanelBody>
+				<PanelBody title={ __( 'Border', 'adaire-column' ) } initialOpen={ false }>
+					<ToggleControl
+						label={ __( 'Enable Border', 'adaire-column' ) }
+						checked={ borderEnabled }
+						onChange={ ( val ) => setAttributes( { borderEnabled: val } ) }
+						help={ __( 'Adds a border around this column, separate from the other columns in the row.', 'adaire-column' ) }
+					/>
+					{ borderEnabled && (
+						<>
+							<RangeControl
+								label={ __( 'Border Width (px)', 'adaire-column' ) }
+								value={ borderWidth }
+								onChange={ ( val ) => setAttributes( { borderWidth: val } ) }
+								min={ 1 }
+								max={ 20 }
+							/>
+							<SelectControl
+								label={ __( 'Border Type', 'adaire-column' ) }
+								value={ borderStyle }
+								options={ BORDER_STYLE_OPTIONS }
+								onChange={ ( val ) => setAttributes( { borderStyle: val } ) }
+							/>
+							<BaseControl label={ __( 'Border Color', 'adaire-column' ) }>
+								<BoundColorPalette
+									value={ borderColor }
+									onChange={ ( v ) => setAttributes( { borderColor: v || '' } ) }
+								/>
+							</BaseControl>
+							<RangeControl
+								label={ __( 'Border Radius (px)', 'adaire-column' ) }
+								value={ borderRadius }
+								onChange={ ( val ) => setAttributes( { borderRadius: val } ) }
+								min={ 0 }
+								max={ 60 }
+							/>
+						</>
+					) }
+				</PanelBody>
+			</InspectorTabs>
 			<div { ...innerBlocksProps } />
 		</>
 	);

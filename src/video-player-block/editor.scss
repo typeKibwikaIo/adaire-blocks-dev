@@ -318,10 +318,22 @@
         filter: brightness(0.5);
     }
 
-    // Add subtle border in editor to show block boundaries
-	&.is-selected {
-		outline: none;
-		box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
+    // Add subtle border in editor to show block boundaries.
+	//
+	// `!important` is required here: without it, WordPress core's own native
+	// "selected block" outline can still win the cascade and show through
+	// instead of this override. That native outline is drawn using the CSS
+	// variable --wp-admin-theme-color, which is NOT a fixed color — it comes
+	// from each individual WP user's own "Admin Color Scheme" choice under
+	// their profile (Default/blue, Sunrise/orange, Coffee/brown, Ectoplasm,
+	// Midnight, Ocean, etc.). Two different logged-in users (or the same
+	// user after changing their profile setting) genuinely see different
+	// colors here — which is what "changes color based on the user's PC"
+	// actually is: a per-WP-account setting, not something tied to hardware.
+	&.is-selected,
+	&.is-selected .ad-video-player__container {
+		outline: none !important;
+		box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35) !important;
 		border-radius: inherit;
 	}
     

@@ -422,9 +422,12 @@ class AdaireBlocksSettings {
     }
 
     private function log_registration_failure($message) {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('Adaire Blocks Registry: ' . $message);
-        }
+        // Always log — the AJAX error text tells the user to "check server
+        // logs for details", so this must not be silently gated behind
+        // WP_DEBUG (most hosts don't enable it, which made that message a
+        // dead end). PHP's error_log() respects the site's own log_errors/
+        // error_log ini settings regardless of WP_DEBUG.
+        error_log('Adaire Blocks Registry: ' . $message);
     }
 
     /**

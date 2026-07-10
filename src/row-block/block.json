@@ -38,6 +38,26 @@
     "mobileColumns": {
       "type": "string",
       "default": ""
+    },
+    "borderEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "borderWidth": {
+      "type": "number",
+      "default": 1
+    },
+    "borderStyle": {
+      "type": "string",
+      "default": "solid"
+    },
+    "borderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 0
     }
   }
 }

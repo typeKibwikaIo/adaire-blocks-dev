@@ -2,7 +2,10 @@ import { RichText, useBlockProps } from '@wordpress/block-editor';
 
 export default function save( { attributes: a } ) {
 	const blockProps = useBlockProps.save( {
-		className: 'adaire-about',
+		className: [
+			'adaire-about',
+			`adaire-about--width-${ a.contentWidth || 'contained' }`,
+		].join( ' ' ),
 		style: {
 			'--ab-bg'     : a.backgroundColor || '#ffffff',
 			'--ab-text'   : a.textColor       || '#6366f1',
@@ -11,6 +14,11 @@ export default function save( { attributes: a } ) {
 			backgroundColor: a.backgroundColor || '#ffffff',
 			paddingTop    : `${ a.paddingTop    ?? 64 }px`,
 			paddingBottom : `${ a.paddingBottom ?? 64 }px`,
+			// Mirrors paddingTop/paddingBottom as CSS custom properties (not new
+			// attributes) so style.scss's mobile media query can cap oversized
+			// desktop padding down on small screens via `min()`.
+			'--ab-padding-top'    : `${ a.paddingTop    ?? 64 }px`,
+			'--ab-padding-bottom' : `${ a.paddingBottom ?? 64 }px`,
 			color         : a.textColor       || '#6366f1',
 
 			'--ab-font-family' : a.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
