@@ -38,14 +38,28 @@ export default function save( { attributes: a } ) {
 						value={ a.message }
 					/>
 
-					{ a.showPrivacyLink && !! a.privacyPolicyText && !! a.privacyPolicyUrl && (
-						<a
-							className="adaire-cookie-notice__privacy-link"
-							style={ { color: a.linkColor } }
-							href={ a.privacyPolicyUrl }
-						>
-							{ a.privacyPolicyText }
-						</a>
+					{ ( ( a.showPrivacyLink && !! a.privacyPolicyText && !! a.privacyPolicyUrl ) ||
+						( a.showTermsLink && !! a.termsText && !! a.termsUrl ) ) && (
+						<div className="adaire-cookie-notice__links">
+							{ a.showPrivacyLink && !! a.privacyPolicyText && !! a.privacyPolicyUrl && (
+								<a
+									className="adaire-cookie-notice__privacy-link"
+									style={ { color: a.linkColor } }
+									href={ a.privacyPolicyUrl }
+								>
+									{ a.privacyPolicyText }
+								</a>
+							) }
+							{ a.showTermsLink && !! a.termsText && !! a.termsUrl && (
+								<a
+									className="adaire-cookie-notice__privacy-link"
+									style={ { color: a.linkColor } }
+									href={ a.termsUrl }
+								>
+									{ a.termsText }
+								</a>
+							) }
+						</div>
 					) }
 
 					<div className="adaire-cookie-notice__actions">

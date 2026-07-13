@@ -38,7 +38,7 @@
 		"posts-carousel-block":        { "component": "posts-carousel",      "svg": "Free Blocks/posts-carousel-block.svg" },
 		"pricing-table-block":         { "component": "pricing-table",       "svg": "Free Blocks/pricing-table-block.svg" },
 		"pricing-comparison-block":    { "component": "pricing-comparison",  "svg": "Plus Blocks/pricing-table-block.svg" },
-		"progress-block":              { "component": "progress",            "svg": "Plus Blocks/progress-plus-block.svg" },
+		"progress-block":              { "component": "progress",            "svg": "Free Blocks/progress-block.svg" },
 			"container-block":            { "component": "container",           "svg": "Free Blocks/container-block.svg" },
 		"project-block":               { "component": "project",             "svg": "Premium Blocks/project-premium-block.svg" },
 		"questions-block":             { "component": "questions",           "svg": "Plus Blocks/questions-plus-block.svg" },

@@ -46,6 +46,18 @@
             "type": "string",
             "default": ""
         },
+        "showTermsLink": {
+            "type": "boolean",
+            "default": true
+        },
+        "termsText": {
+            "type": "string",
+            "default": "Terms & Conditions"
+        },
+        "termsUrl": {
+            "type": "string",
+            "default": ""
+        },
         "position": {
             "type": "string",
             "default": "floating-bottom-right"

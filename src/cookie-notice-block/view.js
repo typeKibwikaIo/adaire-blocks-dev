@@ -86,8 +86,21 @@ function initNotice( root ) {
 	}
 }
 
-document.addEventListener( 'DOMContentLoaded', () => {
+function initAll() {
 	document
 		.querySelectorAll( '.adaire-cookie-notice-block' )
 		.forEach( initNotice );
-} );
+}
+
+// Guard against the script executing after DOMContentLoaded has already
+// fired — WordPress can enqueue view scripts with a defer/module strategy,
+// and the timing of that relative to DOMContentLoaded isn't identical across
+// browser engines. If the listener is registered too late, 'DOMContentLoaded'
+// never fires again and initNotice() (and therefore every click handler,
+// including the ones that write to localStorage) never runs — which looks
+// exactly like "consent isn't saved" in whichever browser loses that race.
+if ( document.readyState === 'loading' ) {
+	document.addEventListener( 'DOMContentLoaded', initAll );
+} else {
+	initAll();
+}

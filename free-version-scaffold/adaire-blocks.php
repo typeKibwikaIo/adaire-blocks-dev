@@ -31,6 +31,10 @@ require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-blocks-config.ph
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/sendgrid.php';
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-patterns.php';
 
+// Make the free Cookie Notice block render on every front-end page, not just
+// the one page/post it's inserted into.
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/cookie-notice-global.php';
+
 // Initialize the plugin
 function adaire_blocks_init() {
     // Get settings instance

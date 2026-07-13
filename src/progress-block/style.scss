@@ -1,71 +1,153 @@
-.adaire-progress-block {
-	position: fixed;
-	z-index: var(--progress-z-index, 1000);
-	pointer-events: none;
+.adaire-progress-bar {
+	box-sizing: border-box;
 
-	&--bar {
-		.adaire-progress-block__bar {
-			width: var(--progress-bar-width, 20vw);
-			height: var(--progress-bar-length, 4px);
-		}
+	&__header {
+		margin-bottom: 2rem;
 
-		.adaire-progress-block__track {
-			width: 100%;
-			height: 100%;
-			background-color: var(--progress-track-color, #e5e7eb);
-			border-radius: var(--progress-border-radius, 2px);
-			overflow: hidden;
-		}
-
-		.adaire-progress-block__fill {
-			height: 100%;
-			width: 0%;
-			background-color: var(--progress-fill-color, #22c55e);
-			border-radius: var(--progress-border-radius, 2px);
-			transition: width 0.1s ease-out;
+		&.is-align-center {
+			text-align: center;
 		}
 	}
 
-	&--ring {
-		.adaire-progress-block__ring {
-			position: relative;
-			width: var(--progress-ring-size, 60px);
-			height: var(--progress-ring-size, 60px);
-		}
+	&__heading {
+		margin: 0 0 0.5rem;
+		font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+		font-weight: 700;
+		line-height: 1.2;
+		color: var(--pb-heading-color, #111827);
+	}
 
-		.adaire-progress-block__ring-svg {
-			width: 100%;
-			height: 100%;
-			transform: rotate(-90deg);
-		}
+	&__subheading {
+		margin: 0;
+		font-size: 1rem;
+		line-height: 1.6;
+		color: var(--pb-subheading-color, #6b7280);
+	}
 
-		.adaire-progress-block__ring-track {
-			fill: none;
-			stroke: var(--progress-ring-track-color, #e5e7eb);
-			stroke-width: var(--progress-ring-stroke-width, 4px);
-		}
+	// ── Bar layout ──────────────────────────────────────────────────────────
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
 
-		.adaire-progress-block__ring-fill {
-			fill: none;
-			stroke: var(--progress-ring-fill-color, #22c55e);
-			stroke-width: var(--progress-ring-stroke-width, 4px);
-			stroke-linecap: round;
-			stroke-dasharray: 283;
-			stroke-dashoffset: 283;
-			transition: stroke-dashoffset 0.1s ease-out;
-		}
+	&__item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
 
-		.adaire-progress-block__ring-text {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			font-size: var(--progress-ring-font-size, 16px);
-			font-weight: 600;
-			color: var(--progress-ring-text-color, #111827);
-			line-height: 1;
+	&__row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+	}
+
+	&__label {
+		font-weight: 600;
+		color: var(--pb-label-color, #1e2a5e);
+	}
+
+	&__value {
+		font-weight: 600;
+		color: var(--pb-value-color, #1e2a5e);
+	}
+
+	&__track {
+		width: 100%;
+		height: var(--pb-bar-height, 10px);
+		background-color: var(--pb-track-color, #e6e9f5);
+		border-radius: var(--pb-bar-radius, 999px);
+		overflow: hidden;
+	}
+
+	&__fill {
+		height: 100%;
+		border-radius: inherit;
+		background: var(--pb-fill-color, #f97316);
+		background: linear-gradient(
+			90deg,
+			var(--pb-fill-color, #f97316) 0%,
+			var(--pb-fill-color-end, #facc15) 100%
+		);
+		transition: width 1.2s ease-out;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none !important;
+		}
+	}
+
+	// ── Circle layout ───────────────────────────────────────────────────────
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(var(--pb-columns, 4), minmax(0, 1fr));
+		gap: 2rem;
+	}
+
+	&__ring-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		text-align: center;
+	}
+
+	&__ring {
+		position: relative;
+		width: var(--pb-ring-size, 160px);
+		height: var(--pb-ring-size, 160px);
+	}
+
+	&__ring-svg {
+		width: 100%;
+		height: 100%;
+		transform: rotate(-90deg);
+	}
+
+	&__ring-track {
+		fill: none;
+		stroke: var(--pb-ring-track-color, rgba(17, 24, 39, 0.1));
+		stroke-width: var(--pb-ring-stroke-width, 10px);
+	}
+
+	&__ring-fill {
+		fill: none;
+		stroke: var(--pb-fill-color, #f97316);
+		stroke-width: var(--pb-ring-stroke-width, 10px);
+		stroke-linecap: round;
+		transition: stroke-dashoffset 1.2s ease-out;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none !important;
+		}
+	}
+
+	&__ring-text {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		font-size: 1.25rem;
+		font-weight: 700;
+		color: var(--pb-ring-text-color, #111827);
+		line-height: 1;
+	}
+
+	&__ring-label {
+		font-weight: 600;
+		color: var(--pb-ring-label-color, #111827);
+	}
+
+	@media (max-width: 782px) {
+		&__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 480px) {
+		&__grid {
+			grid-template-columns: 1fr;
 		}
 	}
 }
-
-

@@ -119,6 +119,10 @@
     "cookie-notice-block": {
       "enabled": true,
       "upgradeMessage": "Upgrade to the Freemium Cookie Banner for GDPR/CCPA consent categories, Google Consent Mode, and more layouts."
+    },
+    "progress-block": {
+      "enabled": true,
+      "upgradeMessage": "Upgrade to Premium for additional progress layouts and advanced animation controls."
     }
   },
   "premium": {

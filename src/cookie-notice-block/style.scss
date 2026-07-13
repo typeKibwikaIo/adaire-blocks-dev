@@ -1,18 +1,43 @@
 // Cookie Notice Block (Free) — shared styles (frontend + editor preview).
 
 .adaire-cookie-notice {
+	// box-sizing is not guaranteed to be border-box globally (depends on the
+	// active theme), and this component sets an explicit width/max-width
+	// alongside horizontal padding — without border-box the rendered width is
+	// width + padding, which pushes the box past the intended right edge on
+	// narrow mobile viewports. That's what caused the banner to visually
+	// overlap/overflow past other content on mobile.
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
-	width: 320px;
+	// Floating corner cards used to be a fixed 320px, so a long message only
+	// had one way to go: taller, pushing the card up over whatever page
+	// content sat above it. Letting the width flex up to 480px means extra
+	// content mostly grows the box *horizontally* first; max-height + scroll
+	// below is the backstop for content too long even at the widened cap.
+	width: clamp(300px, 34vw, 480px);
 	max-width: calc(100vw - 32px);
+	max-height: min(80vh, 640px);
+	overflow-y: auto;
 	padding: 20px 22px;
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.12);
 	font-size: 14px;
 	line-height: 1.5;
 
+	* {
+		box-sizing: border-box;
+	}
+
 	&__message {
 		margin: 0;
+		overflow-wrap: break-word;
+	}
+
+	&__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px 14px;
 	}
 
 	&__privacy-link {
@@ -28,12 +53,14 @@
 
 	&__actions {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 10px;
 		margin-top: 4px;
 	}
 
 	&__btn {
 		flex: 1;
+		min-width: 100px;
 		border: 1px solid transparent;
 		border-radius: 8px;
 		padding: 9px 14px;
@@ -76,12 +103,6 @@
 		bottom: 20px;
 	}
 
-	&[data-position="floating-bottom-center"] {
-		left: 50%;
-		bottom: 20px;
-		transform: translateX(-50%);
-	}
-
 	&[data-position="floating-top-right"] {
 		right: 20px;
 		top: 20px;
@@ -92,10 +113,59 @@
 		top: 20px;
 	}
 
+	// "Center" positions are a flat, full-width bar flush with the viewport
+	// edge — not a floating card — at every screen size, not just mobile.
+	// The bar lays its content out as a single row (message/links on one
+	// side, buttons on the other) so long content grows the bar
+	// horizontally instead of stacking every piece vertically — a tall
+	// stacked column is what was overlapping content above the banner.
+	&[data-position="floating-bottom-center"],
 	&[data-position="floating-top-center"] {
-		left: 50%;
-		top: 20px;
-		transform: translateX(-50%);
+		left: 0;
+		right: 0;
+		width: auto;
+		transform: none;
+
+		.adaire-cookie-notice {
+			width: 100%;
+			max-width: 100%;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px 24px;
+		}
+
+		.adaire-cookie-notice__message {
+			flex: 1 1 320px;
+			min-width: 0;
+		}
+
+		.adaire-cookie-notice__links {
+			flex: 0 1 auto;
+		}
+
+		.adaire-cookie-notice__actions {
+			flex: 0 0 auto;
+			margin-top: 0;
+		}
+
+		// Below this, fall back to the normal stacked column so buttons
+		// never get squeezed down to nothing on narrow phones.
+		@media (max-width: 560px) {
+			.adaire-cookie-notice {
+				flex-direction: column;
+				align-items: stretch;
+			}
+		}
+	}
+
+	&[data-position="floating-bottom-center"] {
+		bottom: 0;
+	}
+
+	&[data-position="floating-top-center"] {
+		top: 0;
 	}
 
 	@media (max-width: 480px) {
@@ -106,6 +176,12 @@
 
 		.adaire-cookie-notice {
 			width: 100%;
+		}
+
+		&[data-position="floating-bottom-center"],
+		&[data-position="floating-top-center"] {
+			left: 0 !important;
+			right: 0 !important;
 		}
 	}
 }

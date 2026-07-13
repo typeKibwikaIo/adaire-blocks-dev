@@ -1,283 +1,419 @@
-﻿import { __ } from "@wordpress/i18n";
-import {
-	useBlockProps,
-	InspectorControls,
-	PanelColorSettings,
-} from "@wordpress/block-editor";
+import { __ } from "@wordpress/i18n";
+import { useBlockProps, RichText } from "@wordpress/block-editor";
 import {
 	PanelBody,
+	ToggleControl,
 	RangeControl,
 	SelectControl,
+	TextControl,
+	Button,
 } from "@wordpress/components";
-import { useState, useEffect } from "@wordpress/element";
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import InspectorTabs from "../components/InspectorTabs";
+import AdaireColorControl from "../components/AdaireColorControl";
 import "./editor.scss";
 
-export default function Edit({ attributes, setAttributes, clientId }) {
-	const [deviceType, setDeviceType] = useState('desktop');
+const RING_RADIUS = 45;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
+export default function Edit({ attributes, setAttributes }) {
 	const {
-		blockId,
-		variant,
-		barLength,
-		barWidth,
+		layout,
+		columns,
+		showHeading,
+		heading,
+		subheading,
+		headingAlign,
+		items,
+		showValue,
 		fillColor,
+		useGradient,
+		fillColorEnd,
 		trackColor,
-		borderRadius,
+		labelColor,
+		valueColor,
+		barHeight,
+		barRadius,
 		ringSize,
 		ringStrokeWidth,
-		ringFillColor,
 		ringTrackColor,
 		ringTextColor,
-		ringFontSize,
-		verticalPosition,
-		verticalOffset,
-		horizontalPosition,
-		horizontalOffset,
-		zIndex,
+		ringLabelColor,
+		headingColor,
+		subheadingColor,
+		backgroundColor,
+		animationDuration,
+		paddingTop,
+		paddingBottom,
 	} = attributes;
 
-	useEffect(() => {
-		if (!blockId) {
-			setAttributes({ blockId: clientId });
-		}
-	}, [blockId, clientId, setAttributes]);
+	const set = (key) => (value) => setAttributes({ [key]: value });
+
+	const addItem = () => {
+		setAttributes({
+			items: [
+				...items,
+				{ label: __("New item", "progress-block"), value: 50, color: "" },
+			],
+		});
+	};
+
+	const removeItem = (index) => {
+		setAttributes({ items: items.filter((_, i) => i !== index) });
+	};
+
+	const updateItem = (index, key, value) => {
+		setAttributes({
+			items: items.map((item, i) =>
+				i === index ? { ...item, [key]: value } : item
+			),
+		});
+	};
+
+	const moveItem = (index, direction) => {
+		const target = index + direction;
+		if (target < 0 || target >= items.length) return;
+		const newItems = [...items];
+		[newItems[index], newItems[target]] = [newItems[target], newItems[index]];
+		setAttributes({ items: newItems });
+	};
 
 	const blockProps = useBlockProps({
-		id: blockId || undefined,
-		className: `adaire-progress-block adaire-progress-block--${variant}`,
+		className: `adaire-progress-bar is-layout-${layout}`,
 		style: {
-			"--progress-fill-color": fillColor,
-			"--progress-track-color": trackColor,
-			"--progress-bar-length": `${getDeviceValue(barLength, 'desktop', 4)}px`,
-			"--progress-bar-length-tablet": `${getDeviceValue(barLength, 'tablet', 3)}px`,
-			"--progress-bar-length-mobile": `${getDeviceValue(barLength, 'mobile', 2)}px`,
-			"--progress-bar-length-watch": `${getDeviceValue(barLength, 'smartwatch', 2)}px`,
-			"--progress-bar-width": `${getDeviceValue(barWidth, 'desktop', 20)}vw`,
-			"--progress-bar-width-tablet": `${getDeviceValue(barWidth, 'tablet', 25)}vw`,
-			"--progress-bar-width-mobile": `${getDeviceValue(barWidth, 'mobile', 30)}vw`,
-			"--progress-bar-width-watch": `${getDeviceValue(barWidth, 'smartwatch', 40)}vw`,
-			"--progress-border-radius": `${borderRadius}px`,
-			"--progress-ring-size": `${getDeviceValue(ringSize, 'desktop', 60)}px`,
-			"--progress-ring-size-tablet": `${getDeviceValue(ringSize, 'tablet', 50)}px`,
-			"--progress-ring-size-mobile": `${getDeviceValue(ringSize, 'mobile', 40)}px`,
-			"--progress-ring-size-watch": `${getDeviceValue(ringSize, 'smartwatch', 30)}px`,
-			"--progress-ring-stroke-width": `${getDeviceValue(ringStrokeWidth, 'desktop', 4)}px`,
-			"--progress-ring-stroke-width-tablet": `${getDeviceValue(ringStrokeWidth, 'tablet', 3)}px`,
-			"--progress-ring-stroke-width-mobile": `${getDeviceValue(ringStrokeWidth, 'mobile', 3)}px`,
-			"--progress-ring-stroke-width-watch": `${getDeviceValue(ringStrokeWidth, 'smartwatch', 2)}px`,
-			"--progress-ring-fill-color": ringFillColor,
-			"--progress-ring-track-color": ringTrackColor,
-			"--progress-ring-text-color": ringTextColor,
-			"--progress-ring-font-size": `${getDeviceValue(ringFontSize, 'desktop', 16)}px`,
-			"--progress-ring-font-size-tablet": `${getDeviceValue(ringFontSize, 'tablet', 14)}px`,
-			"--progress-ring-font-size-mobile": `${getDeviceValue(ringFontSize, 'mobile', 12)}px`,
-			"--progress-ring-font-size-watch": `${getDeviceValue(ringFontSize, 'smartwatch', 10)}px`,
-			position: "fixed",
-			top: verticalPosition === "top" && verticalOffset > 0 ? `${verticalOffset}%` : "auto",
-			bottom: verticalPosition === "bottom" && verticalOffset > 0 ? `${verticalOffset}%` : "auto",
-			left: horizontalPosition === "left" && horizontalOffset > 0 ? `${horizontalOffset}%` : "auto",
-			right: horizontalPosition === "right" && horizontalOffset > 0 ? `${horizontalOffset}%` : "auto",
-			zIndex: zIndex,
+			"--pb-fill-color": fillColor,
+			"--pb-fill-color-end": useGradient ? fillColorEnd : fillColor,
+			"--pb-track-color": trackColor,
+			"--pb-label-color": labelColor,
+			"--pb-value-color": valueColor,
+			"--pb-bar-height": `${barHeight}px`,
+			"--pb-bar-radius": `${barRadius}px`,
+			"--pb-ring-size": `${ringSize}px`,
+			"--pb-ring-stroke-width": `${ringStrokeWidth}px`,
+			"--pb-ring-track-color": ringTrackColor,
+			"--pb-ring-text-color": ringTextColor,
+			"--pb-ring-label-color": ringLabelColor,
+			"--pb-heading-color": headingColor,
+			"--pb-subheading-color": subheadingColor,
+			"--pb-columns": columns,
+			backgroundColor: backgroundColor || undefined,
+			paddingTop: `${paddingTop}px`,
+			paddingBottom: `${paddingBottom}px`,
 		},
 	});
 
 	return (
 		<>
-			<InspectorControls>
-				<PanelBody title="Responsive Settings" initialOpen={false}>
-					<DeviceSwitcher
-						deviceType={deviceType}
-						setDeviceType={setDeviceType}
-						label="Device Preview"
-					/>
-				</PanelBody>
-
-				<PanelBody title={__("Progress Type", "progress-block")} initialOpen={true}>
+			<InspectorTabs attributes={attributes} setAttributes={setAttributes}>
+				<PanelBody title={__("Layout", "progress-block")} initialOpen={true}>
 					<SelectControl
-						label={__("Variant", "progress-block")}
-						value={variant}
+						label={__("Layout Style", "progress-block")}
+						value={layout}
 						options={[
 							{ label: __("Bar", "progress-block"), value: "bar" },
-							{ label: __("Ring", "progress-block"), value: "ring" },
+							{ label: __("Circle", "progress-block"), value: "circle" },
 						]}
-						onChange={(value) => setAttributes({ variant: value })}
+						onChange={set("layout")}
+						help={__(
+							"Switch between a stacked list of bars or a grid of progress rings.",
+							"progress-block"
+						)}
+					/>
+					{layout === "circle" && (
+						<RangeControl
+							label={__("Columns", "progress-block")}
+							value={columns}
+							min={1}
+							max={6}
+							onChange={set("columns")}
+						/>
+					)}
+					<ToggleControl
+						label={__("Show Heading", "progress-block")}
+						checked={showHeading}
+						onChange={set("showHeading")}
+					/>
+					{showHeading && (
+						<SelectControl
+							label={__("Heading Alignment", "progress-block")}
+							value={headingAlign}
+							options={[
+								{ label: __("Left", "progress-block"), value: "left" },
+								{ label: __("Center", "progress-block"), value: "center" },
+							]}
+							onChange={set("headingAlign")}
+						/>
+					)}
+					<ToggleControl
+						label={__("Show Percentage Value", "progress-block")}
+						checked={showValue}
+						onChange={set("showValue")}
+					/>
+					<RangeControl
+						label={__("Animation Duration (ms)", "progress-block")}
+						value={animationDuration}
+						min={200}
+						max={3000}
+						step={100}
+						onChange={set("animationDuration")}
+						help={__(
+							"How long the bar/ring takes to fill when it scrolls into view.",
+							"progress-block"
+						)}
 					/>
 				</PanelBody>
 
-				{variant === "bar" && (
-					<>
-						<PanelBody title={__("Bar Styling", "progress-block")} initialOpen={true}>
-							<RangeControl
-								label={__("Length (Height)", "progress-block")}
-								value={getDeviceValue(barLength, deviceType, deviceType === 'desktop' ? 4 : deviceType === 'tablet' ? 3 : deviceType === 'mobile' ? 2 : 2)}
-								onChange={(value) => setAttributes({ barLength: updateDeviceAttribute(barLength, deviceType, value) })}
-								min={2}
-								max={20}
+				<PanelBody title={__("Items", "progress-block")} initialOpen={true}>
+					{items.map((item, index) => (
+						<div className="adaire-progress-bar__item-control" key={index}>
+							<TextControl
+								label={__("Label", "progress-block") + ` #${index + 1}`}
+								value={item.label}
+								onChange={(value) => updateItem(index, "label", value)}
 							/>
 							<RangeControl
-								label={__("Width (vw)", "progress-block")}
-								value={getDeviceValue(barWidth, deviceType, deviceType === 'desktop' ? 20 : deviceType === 'tablet' ? 25 : deviceType === 'mobile' ? 30 : 40)}
-								onChange={(value) => setAttributes({ barWidth: updateDeviceAttribute(barWidth, deviceType, value) })}
-								min={5}
-								max={100}
-							/>
-							<RangeControl
-								label={__("Border Radius", "progress-block")}
-								value={borderRadius}
-								onChange={(value) => setAttributes({ borderRadius: value })}
+								label={__("Value (%)", "progress-block")}
+								value={item.value}
 								min={0}
-								max={50}
+								max={100}
+								onChange={(value) => updateItem(index, "value", value)}
 							/>
-						</PanelBody>
-
-						<PanelColorSettings
-							title={__("Bar Colors", "progress-block")}
-							initialOpen={false}
-							colorSettings={[
-								{
-									value: fillColor,
-									onChange: (value) => setAttributes({ fillColor: value }),
-									label: __("Fill Color", "progress-block"),
-								},
-								{
-									value: trackColor,
-									onChange: (value) => setAttributes({ trackColor: value }),
-									label: __("Track Color", "progress-block"),
-								},
-							]}
-						/>
-					</>
-				)}
-
-				{variant === "ring" && (
-					<>
-						<PanelBody title={__("Ring Styling", "progress-block")} initialOpen={true}>
-							<RangeControl
-								label={__("Ring Size", "progress-block")}
-								value={getDeviceValue(ringSize, deviceType, deviceType === 'desktop' ? 60 : deviceType === 'tablet' ? 50 : deviceType === 'mobile' ? 40 : 30)}
-								onChange={(value) => setAttributes({ ringSize: updateDeviceAttribute(ringSize, deviceType, value) })}
-								min={30}
-								max={200}
+							<AdaireColorControl
+								label={__("Color override (optional)", "progress-block")}
+								value={item.color}
+								onChange={(value) => updateItem(index, "color", value)}
 							/>
-							<RangeControl
-								label={__("Stroke Width", "progress-block")}
-								value={ringStrokeWidth}
-								onChange={(value) => setAttributes({ ringStrokeWidth: value })}
-								min={1}
-								max={20}
-							/>
-							<RangeControl
-								label={__("Font Size", "progress-block")}
-								value={ringFontSize}
-								onChange={(value) => setAttributes({ ringFontSize: value })}
-								min={10}
-								max={48}
-							/>
-						</PanelBody>
+							<div className="adaire-progress-bar__item-actions">
+								<Button
+									icon="arrow-up-alt2"
+									label={__("Move up", "progress-block")}
+									onClick={() => moveItem(index, -1)}
+									disabled={index === 0}
+								/>
+								<Button
+									icon="arrow-down-alt2"
+									label={__("Move down", "progress-block")}
+									onClick={() => moveItem(index, 1)}
+									disabled={index === items.length - 1}
+								/>
+								<Button
+									isDestructive
+									variant="secondary"
+									onClick={() => removeItem(index)}
+								>
+									{__("Remove", "progress-block")}
+								</Button>
+							</div>
+						</div>
+					))}
+					<Button variant="primary" onClick={addItem}>
+						{__("Add Item", "progress-block")}
+					</Button>
+				</PanelBody>
 
-						<PanelColorSettings
-							title={__("Ring Colors", "progress-block")}
-							initialOpen={false}
-							colorSettings={[
-								{
-									value: ringFillColor,
-									onChange: (value) => setAttributes({ ringFillColor: value }),
-									label: __("Fill Color", "progress-block"),
-								},
-								{
-									value: ringTrackColor,
-									onChange: (value) => setAttributes({ ringTrackColor: value }),
-									label: __("Track Color", "progress-block"),
-								},
-								{
-									value: ringTextColor,
-									onChange: (value) => setAttributes({ ringTextColor: value }),
-									label: __("Text Color", "progress-block"),
-								},
-							]}
-						/>
-					</>
-				)}
-
-				<PanelBody title={__("Position", "progress-block")} initialOpen={false}>
-					<SelectControl
-						label={__("Vertical Position", "progress-block")}
-						value={verticalPosition ?? "bottom"}
-						options={[
-							{ label: __("Top", "progress-block"), value: "top" },
-							{ label: __("Bottom", "progress-block"), value: "bottom" },
-						]}
-						onChange={(value) => setAttributes({ verticalPosition: value })}
+				<PanelBody title={__("Colors", "progress-block")} initialOpen={false}>
+					<AdaireColorControl
+						label={__(
+							layout === "circle" ? "Ring Fill Color" : "Bar Fill Color",
+							"progress-block"
+						)}
+						value={fillColor}
+						onChange={set("fillColor")}
 					/>
-					<RangeControl
-						label={__("Vertical Offset (%)", "progress-block")}
-						value={verticalOffset ?? 5}
-						onChange={(value) => setAttributes({ verticalOffset: value })}
-						min={0}
-						max={50}
-						help={__("Distance from the selected edge", "progress-block")}
+					{layout === "bar" && (
+						<>
+							<ToggleControl
+								label={__("Use Gradient Fill", "progress-block")}
+								checked={useGradient}
+								onChange={set("useGradient")}
+							/>
+							{useGradient && (
+								<AdaireColorControl
+									label={__("Gradient End Color", "progress-block")}
+									value={fillColorEnd}
+									onChange={set("fillColorEnd")}
+								/>
+							)}
+						</>
+					)}
+					<AdaireColorControl
+						label={__(
+							layout === "circle" ? "Ring Track Color" : "Track Color",
+							"progress-block"
+						)}
+						value={layout === "circle" ? ringTrackColor : trackColor}
+						onChange={set(layout === "circle" ? "ringTrackColor" : "trackColor")}
 					/>
-					<SelectControl
-						label={__("Horizontal Position", "progress-block")}
-						value={horizontalPosition ?? "right"}
-						options={[
-							{ label: __("Left", "progress-block"), value: "left" },
-							{ label: __("Right", "progress-block"), value: "right" },
-						]}
-						onChange={(value) => setAttributes({ horizontalPosition: value })}
+					<AdaireColorControl
+						label={__("Label Color", "progress-block")}
+						value={layout === "circle" ? ringLabelColor : labelColor}
+						onChange={set(layout === "circle" ? "ringLabelColor" : "labelColor")}
 					/>
-					<RangeControl
-						label={__("Horizontal Offset (%)", "progress-block")}
-						value={horizontalOffset ?? 5}
-						onChange={(value) => setAttributes({ horizontalOffset: value })}
-						min={0}
-						max={50}
-						help={__("Distance from the selected edge", "progress-block")}
+					<AdaireColorControl
+						label={__("Value Color", "progress-block")}
+						value={layout === "circle" ? ringTextColor : valueColor}
+						onChange={set(layout === "circle" ? "ringTextColor" : "valueColor")}
 					/>
-					<RangeControl
-						label={__("Z-Index", "progress-block")}
-						value={zIndex}
-						onChange={(value) => setAttributes({ zIndex: value })}
-						min={1}
-						max={9999}
+					{showHeading && (
+						<>
+							<AdaireColorControl
+								label={__("Heading Color", "progress-block")}
+								value={headingColor}
+								onChange={set("headingColor")}
+							/>
+							<AdaireColorControl
+								label={__("Subheading Color", "progress-block")}
+								value={subheadingColor}
+								onChange={set("subheadingColor")}
+							/>
+						</>
+					)}
+					<AdaireColorControl
+						label={__("Background Color", "progress-block")}
+						value={backgroundColor}
+						onChange={set("backgroundColor")}
 					/>
 				</PanelBody>
-			</InspectorControls>
+
+				{layout === "bar" && (
+					<PanelBody title={__("Bar Styling", "progress-block")} initialOpen={false}>
+						<RangeControl
+							label={__("Bar Height", "progress-block")}
+							value={barHeight}
+							min={2}
+							max={40}
+							onChange={set("barHeight")}
+						/>
+						<RangeControl
+							label={__("Bar Radius", "progress-block")}
+							value={barRadius}
+							min={0}
+							max={999}
+							onChange={set("barRadius")}
+						/>
+					</PanelBody>
+				)}
+
+				{layout === "circle" && (
+					<PanelBody title={__("Ring Styling", "progress-block")} initialOpen={false}>
+						<RangeControl
+							label={__("Ring Size", "progress-block")}
+							value={ringSize}
+							min={60}
+							max={280}
+							onChange={set("ringSize")}
+						/>
+						<RangeControl
+							label={__("Ring Stroke Width", "progress-block")}
+							value={ringStrokeWidth}
+							min={2}
+							max={30}
+							onChange={set("ringStrokeWidth")}
+						/>
+					</PanelBody>
+				)}
+
+				<PanelBody title={__("Spacing", "progress-block")} initialOpen={false}>
+					<RangeControl
+						label={__("Top Padding", "progress-block")}
+						value={paddingTop}
+						min={0}
+						max={160}
+						onChange={set("paddingTop")}
+					/>
+					<RangeControl
+						label={__("Bottom Padding", "progress-block")}
+						value={paddingBottom}
+						min={0}
+						max={160}
+						onChange={set("paddingBottom")}
+					/>
+				</PanelBody>
+			</InspectorTabs>
 
 			<div {...blockProps}>
-				{variant === "bar" && (
-					<div className="adaire-progress-block__bar">
-						<div className="adaire-progress-block__track">
-							<div className="adaire-progress-block__fill" style={{ width: "50%" }}></div>
-						</div>
+				{showHeading && (
+					<div className={`adaire-progress-bar__header is-align-${headingAlign}`}>
+						<RichText
+							tagName="h3"
+							className="adaire-progress-bar__heading"
+							value={heading}
+							onChange={set("heading")}
+							placeholder={__("Heading…", "progress-block")}
+							allowedFormats={[]}
+						/>
+						<RichText
+							tagName="p"
+							className="adaire-progress-bar__subheading"
+							value={subheading}
+							onChange={set("subheading")}
+							placeholder={__("Subheading…", "progress-block")}
+							allowedFormats={[]}
+						/>
 					</div>
 				)}
-				{variant === "ring" && (
-					<div className="adaire-progress-block__ring">
-						<svg className="adaire-progress-block__ring-svg" viewBox="0 0 100 100">
-							<circle
-								className="adaire-progress-block__ring-track"
-								cx="50"
-								cy="50"
-								r="45"
-							/>
-							<circle
-								className="adaire-progress-block__ring-fill"
-								cx="50"
-								cy="50"
-								r="45"
-								style={{ strokeDasharray: "283", strokeDashoffset: "141.5" }}
-							/>
-						</svg>
-						<div className="adaire-progress-block__ring-text">50%</div>
+
+				{layout === "bar" && (
+					<div className="adaire-progress-bar__list">
+						{items.map((item, index) => (
+							<div className="adaire-progress-bar__item" key={index}>
+								<div className="adaire-progress-bar__row">
+									<span className="adaire-progress-bar__label">{item.label}</span>
+									{showValue && (
+										<span className="adaire-progress-bar__value">{item.value}%</span>
+									)}
+								</div>
+								<div className="adaire-progress-bar__track">
+									<div
+										className="adaire-progress-bar__fill"
+										style={{
+											width: `${item.value}%`,
+											background: item.color || undefined,
+										}}
+									/>
+								</div>
+							</div>
+						))}
+					</div>
+				)}
+
+				{layout === "circle" && (
+					<div className="adaire-progress-bar__grid">
+						{items.map((item, index) => {
+							const offset =
+								RING_CIRCUMFERENCE - (item.value / 100) * RING_CIRCUMFERENCE;
+							return (
+								<div className="adaire-progress-bar__ring-item" key={index}>
+									<div className="adaire-progress-bar__ring">
+										<svg viewBox="0 0 100 100" className="adaire-progress-bar__ring-svg">
+											<circle
+												className="adaire-progress-bar__ring-track"
+												cx="50"
+												cy="50"
+												r={RING_RADIUS}
+											/>
+											<circle
+												className="adaire-progress-bar__ring-fill"
+												cx="50"
+												cy="50"
+												r={RING_RADIUS}
+												style={{
+													stroke: item.color || undefined,
+													strokeDasharray: RING_CIRCUMFERENCE,
+													strokeDashoffset: offset,
+												}}
+											/>
+										</svg>
+										{showValue && (
+											<div className="adaire-progress-bar__ring-text">{item.value}%</div>
+										)}
+									</div>
+									<div className="adaire-progress-bar__ring-label">{item.label}</div>
+								</div>
+							);
+						})}
 					</div>
 				)}
 			</div>
 		</>
 	);
 }
-
-
-
-

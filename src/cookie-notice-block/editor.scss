@@ -24,9 +24,37 @@
 		justify-content: flex-start;
 	}
 
+	// "Center" positions render as a flat, full-width horizontal bar on the
+	// front end (see style.scss), so preview it the same way here instead
+	// of a centered floating card.
 	&[data-position="floating-bottom-center"],
 	&[data-position="floating-top-center"] {
 		justify-content: center;
+		width: 100%;
+
+		.adaire-cookie-notice {
+			width: 100%;
+			max-width: 100%;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px 24px;
+		}
+
+		.adaire-cookie-notice__message {
+			flex: 1 1 320px;
+			min-width: 0;
+		}
+
+		.adaire-cookie-notice__links {
+			flex: 0 1 auto;
+		}
+
+		.adaire-cookie-notice__actions {
+			flex: 0 0 auto;
+			margin-top: 0;
+		}
 	}
 }
 

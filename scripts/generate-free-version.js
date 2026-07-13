@@ -271,12 +271,17 @@ class FreeVersionGenerator {
         const includesDest = path.join(this.freeVersionDir, 'includes');
         fs.mkdirSync(includesDest, { recursive: true });
 
+        // Files the scaffold's own adaire-blocks.php require_once's directly
+        // and does NOT already ship its own copy of.
+        const sharedIncludesFiles = ['class-adaire-blocks-config.php', 'cookie-notice-global.php'];
+
         if (fs.existsSync(includesSrc)) {
             fs.readdirSync(includesSrc).forEach(file => {
                 const dest = path.join(includesDest, file);
                 // Don't overwrite files that came from the scaffold
-                if (!fs.existsSync(dest) && file === 'class-adaire-blocks-config.php') {
+                if (!fs.existsSync(dest) && sharedIncludesFiles.includes(file)) {
                     fs.copyFileSync(path.join(includesSrc, file), dest);
+                    console.log(`   ✓ Copied includes/${file}`);
                 }
             });
         }

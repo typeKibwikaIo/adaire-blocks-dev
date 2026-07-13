@@ -26,10 +26,10 @@ const CookieIcon = () => (
 const POSITION_OPTIONS = [
 	{ label: __( 'Bottom Right (floating)' ), value: 'floating-bottom-right' },
 	{ label: __( 'Bottom Left (floating)' ), value: 'floating-bottom-left' },
-	{ label: __( 'Bottom Center (floating)' ), value: 'floating-bottom-center' },
+	{ label: __( 'Bottom Center (full-width bar)' ), value: 'floating-bottom-center' },
 	{ label: __( 'Top Right (floating)' ), value: 'floating-top-right' },
 	{ label: __( 'Top Left (floating)' ), value: 'floating-top-left' },
-	{ label: __( 'Top Center (floating)' ), value: 'floating-top-center' },
+	{ label: __( 'Top Center (full-width bar)' ), value: 'floating-top-center' },
 ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
@@ -41,6 +41,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		showPrivacyLink,
 		privacyPolicyText,
 		privacyPolicyUrl,
+		showTermsLink,
+		termsText,
+		termsUrl,
 		position,
 		backgroundColor,
 		textColor,
@@ -93,6 +96,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								value={ privacyPolicyUrl }
 								placeholder="https://example.com/privacy-policy"
 								onChange={ ( v ) => setAttributes( { privacyPolicyUrl: v } ) }
+							/>
+						</>
+					) }
+					<ToggleControl
+						label={ __( 'Show Terms & Conditions Link' ) }
+						checked={ !! showTermsLink }
+						onChange={ ( v ) => setAttributes( { showTermsLink: v } ) }
+					/>
+					{ showTermsLink && (
+						<>
+							<TextControl
+								label={ __( 'Terms & Conditions Link Text' ) }
+								value={ termsText }
+								onChange={ ( v ) => setAttributes( { termsText: v } ) }
+							/>
+							<TextControl
+								label={ __( 'Terms & Conditions URL' ) }
+								value={ termsUrl }
+								placeholder="https://example.com/terms-and-conditions"
+								onChange={ ( v ) => setAttributes( { termsUrl: v } ) }
 							/>
 						</>
 					) }
@@ -156,15 +179,29 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							placeholder={ __( 'Cookie consent message…' ) }
 						/>
 
-						{ showPrivacyLink && !! privacyPolicyText && (
-							<a
-								className="adaire-cookie-notice__privacy-link"
-								style={ { color: linkColor } }
-								href="#"
-								onClick={ ( e ) => e.preventDefault() }
-							>
-								{ privacyPolicyText }
-							</a>
+						{ ( ( showPrivacyLink && !! privacyPolicyText ) || ( showTermsLink && !! termsText ) ) && (
+							<div className="adaire-cookie-notice__links">
+								{ showPrivacyLink && !! privacyPolicyText && (
+									<a
+										className="adaire-cookie-notice__privacy-link"
+										style={ { color: linkColor } }
+										href="#"
+										onClick={ ( e ) => e.preventDefault() }
+									>
+										{ privacyPolicyText }
+									</a>
+								) }
+								{ showTermsLink && !! termsText && (
+									<a
+										className="adaire-cookie-notice__privacy-link"
+										style={ { color: linkColor } }
+										href="#"
+										onClick={ ( e ) => e.preventDefault() }
+									>
+										{ termsText }
+									</a>
+								) }
+							</div>
 						) }
 
 						<div className="adaire-cookie-notice__actions">

@@ -391,6 +391,10 @@ function adaire_render_license_notice($block_name) {
 // Include block migration tool
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/block-migration.php';
 
+// Make the free Cookie Notice block render on every front-end page, not just
+// the one page/post it's inserted into.
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/cookie-notice-global.php';
+
 // Diagnostics tool removed
 
 /**

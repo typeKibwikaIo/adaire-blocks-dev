@@ -28,6 +28,7 @@ These blocks are available in the free version without limitations.
 - **Website Footer** (`website-footer-block`)
 - **Row** (`row-block`)
 - **Container** (`container-block`)
+- **Progress Bar** (`progress-block`)
 
 ## Plus Blocks
 
@@ -45,7 +46,6 @@ These blocks are available in Plus and Premium versions.
 - **Mega Menu (Plus)** (`mega-menu-block`)
 - **Testimonial (Plus)** (`testimonial2-block`)
 - **Pricing Table (Plus)** (`pricing-table-block`)
-- **Progress (Plus)** (`progress-block`)
 - **Info Grid 3** (`infogrid-3-block`)
 - **Info Grid 4** (`infogrid-4-block`)
 - **Case Studies (Plus)** (`case-studies-block`)
