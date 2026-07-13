@@ -4,4 +4,8 @@ import Edit from './edit';
 import save from './save';
 import metadata from './block.json';
 
-registerBlockType(metadata.name, { edit: Edit, save });
+// Import icon component
+import CookieNoticeIcon from '../icons/cookie-notice';
+
+registerBlockType(metadata.name, {edit: Edit, save,
+ 	icon: CookieNoticeIcon,});

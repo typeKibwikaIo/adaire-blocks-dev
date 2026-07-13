@@ -81,5 +81,5 @@
             ]
         }
     },
-    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#6366F1\"/>\r\n<path d=\"M12 4.5L14.12 9.3L19.5 9.9L15.5 13.47L16.62 18.75L12 16.05L7.38 18.75L8.5 13.47L4.5 9.9L9.88 9.3L12 4.5Z\" fill=\"white\"/>\r\n</svg>"
+    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#F0F0F1\"/>\r\n<circle cx=\"12\" cy=\"11\" r=\"7\" fill=\"#D52940\"/>\r\n<path d=\"M12 7.2L13.2 9.9L16.1 10.3L14 12.3L14.6 15.2L12 13.7L9.4 15.2L10 12.3L7.9 10.3L10.8 9.9L12 7.2Z\" fill=\"#F0F0F1\"/>\r\n<path d=\"M9 16.8L7.6 21.2L12 19.4L16.4 21.2L15 16.8Z\" fill=\"#D52940\"/>\r\n</svg>"
 }

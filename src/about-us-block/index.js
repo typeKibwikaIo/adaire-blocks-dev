@@ -5,4 +5,8 @@ import save from './save';
 import deprecated from './deprecated';
 import metadata from './block.json';
 
-registerBlockType( metadata.name, { edit: Edit, save, deprecated } );
+// Import icon component
+import AboutUsIcon from '../icons/about-us';
+
+registerBlockType( metadata.name, {edit: Edit, save, deprecated,
+ 	icon: AboutUsIcon,} );
