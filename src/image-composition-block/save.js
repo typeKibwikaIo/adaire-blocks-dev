@@ -19,7 +19,6 @@ export default function save({ attributes }) {
 			'--container-max-width': `${containerMaxWidth?.desktop?.value ?? 1200}${containerMaxWidth?.desktop?.unit ?? 'px'}`,
 			'--container-max-width-tablet': `${containerMaxWidth?.tablet?.value ?? 100}${containerMaxWidth?.tablet?.unit ?? '%'}`,
 			'--container-max-width-mobile': `${containerMaxWidth?.mobile?.value ?? 100}${containerMaxWidth?.mobile?.unit ?? '%'}`,
-			'--container-max-width-watch': `${containerMaxWidth?.smartwatch?.value ?? 100}${containerMaxWidth?.smartwatch?.unit ?? '%'}`,
 		},
 	});
 

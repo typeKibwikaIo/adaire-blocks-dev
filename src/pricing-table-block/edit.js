@@ -20,13 +20,8 @@ import { useEffect, useState } from "@wordpress/element";
 import { plus, trash, arrowUp, arrowDown } from "@wordpress/icons";
 import QuickZone from "../components/QuickZone";
 import InspectorTabs from "../components/InspectorTabs";
+import DeviceSwitcher, { THREE_TIERS } from "../components/DeviceSwitcher";
 import "./editor.scss";
-
-const DEVICE_TYPES = [
-	{ key: "desktop", label: __("Desktop", "pricing-table-block") },
-	{ key: "tablet", label: __("Tablet", "pricing-table-block") },
-	{ key: "mobile", label: __("Mobile", "pricing-table-block") },
-];
 
 const CONTAINER_MODES = [
 	{ label: __("Full Width", "pricing-table-block"), value: "full" },
@@ -249,6 +244,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}, [blockId, clientId, setAttributes]);
 
 	const [activeZone, setActiveZone] = useState(null);
+	const [deviceType, setDeviceType] = useState('desktop');
 
 	const gridColumnsDesktop = gridColumns?.desktop ?? 3;
 	const gridColumnsTablet = gridColumns?.tablet ?? gridColumnsDesktop;
@@ -621,7 +617,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	return (
 		<>
 			<InspectorTabs attributes={attributes} setAttributes={setAttributes}>
-				<PanelBody title={__("Layout", "pricing-table-block")} initialOpen={true}>
+				<PanelBody section="layout" title={__("Layout", "pricing-table-block")} initialOpen={true}>
 					<p>{__("Container Width", "pricing-table-block")}</p>
 					<ButtonGroup>
 						{CONTAINER_MODES.map((mode) => (
@@ -635,43 +631,46 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						))}
 					</ButtonGroup>
 
+					<DeviceSwitcher
+						deviceType={deviceType}
+						setDeviceType={setDeviceType}
+						label={__("Device Preview", "pricing-table-block")}
+						tiers={THREE_TIERS}
+					/>
+
 					<div className="adaire-pricing-table__dimension-controls">
-						{DEVICE_TYPES.map((device) => {
+						{(() => {
 							const unit =
-								containerMaxWidth?.[device.key]?.unit ??
-								(device.key === "desktop" ? "px" : "%");
+								containerMaxWidth?.[deviceType]?.unit ??
+								(deviceType === "desktop" ? "px" : "%");
 							const value =
-								containerMaxWidth?.[device.key]?.value ??
+								containerMaxWidth?.[deviceType]?.value ??
 								(unit === "px"
-									? device.key === "desktop"
+									? deviceType === "desktop"
 										? 1200
 										: 600
 									: 100);
 							const min =
 								unit === "px"
-									? device.key === "desktop"
+									? deviceType === "desktop"
 										? 400
 										: 200
 									: 10;
 							const max =
 								unit === "px"
-									? device.key === "desktop"
+									? deviceType === "desktop"
 										? 2000
 										: 1200
 									: 100;
 
 							return (
-								<div
-									key={device.key}
-									className="adaire-pricing-table__dimension-row"
-								>
-									<strong>{device.label}</strong>
+								<div className="adaire-pricing-table__dimension-row">
 									<RangeControl
 										label={__("Max Width", "pricing-table-block")}
 										value={value}
 										onChange={(rangeValue) =>
 											updateContainerDimension(
-												device.key,
+												deviceType,
 												"value",
 												rangeValue,
 											)
@@ -688,7 +687,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 												isPrimary={unit === unitOption}
 												onClick={() =>
 													updateContainerDimension(
-														device.key,
+														deviceType,
 														"unit",
 														unitOption,
 													)
@@ -700,69 +699,45 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									</ButtonGroup>
 								</div>
 							);
-						})}
+						})()}
 					</div>
 
 					<RangeControl
-						label={__("Grid Columns (Desktop)", "pricing-table-block")}
-						value={gridColumnsDesktop}
+						label={__("Grid Columns", "pricing-table-block")}
+						value={
+							deviceType === "desktop"
+								? gridColumnsDesktop
+								: deviceType === "tablet"
+									? gridColumnsTablet
+									: gridColumnsMobile
+						}
 						onChange={(value) =>
 							setAttributes({
-								gridColumns: { ...gridColumns, desktop: value },
+								gridColumns: { ...gridColumns, [deviceType]: value },
 							})
 						}
 						min={1}
-						max={4}
-					/>
-					<RangeControl
-						label={__("Grid Columns (Tablet)", "pricing-table-block")}
-						value={gridColumnsTablet}
-						onChange={(value) =>
-							setAttributes({
-								gridColumns: { ...gridColumns, tablet: value },
-							})
-						}
-						min={1}
-						max={3}
-					/>
-					<RangeControl
-						label={__("Grid Columns (Mobile)", "pricing-table-block")}
-						value={gridColumnsMobile}
-						onChange={(value) =>
-							setAttributes({
-								gridColumns: { ...gridColumns, mobile: value },
-							})
-						}
-						min={1}
-						max={2}
+						max={deviceType === "desktop" ? 4 : deviceType === "tablet" ? 3 : 2}
 					/>
 
-					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Grid Gap", "pricing-table-block")}</strong>
-					</p>
-					{DEVICE_TYPES.map((device) => (
-						<div key={device.key}>
-							<RangeControl
-								label={device.label}
-								value={
-									gridGap?.[device.key] ??
-									(device.key === "desktop"
-										? 32
-										: gridGapDesktop)
-								}
-								onChange={(value) =>
-									setAttributes({
-										gridGap: { ...gridGap, [device.key]: value },
-									})
-								}
-								min={0}
-								max={64}
-							/>
-						</div>
-					))}
+					<RangeControl
+						label={__("Grid Gap", "pricing-table-block")}
+						value={
+							gridGap?.[deviceType] ??
+							(deviceType === "desktop" ? 32 : gridGapDesktop)
+						}
+						onChange={(value) =>
+							setAttributes({
+								gridGap: { ...gridGap, [deviceType]: value },
+							})
+						}
+						min={0}
+						max={64}
+					/>
 				</PanelBody>
 
 				<PanelBody
+					section="content"
 					title={__("Cards", "pricing-table-block")}
 					initialOpen={false}
 				>
@@ -1026,6 +1001,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				/>
 
 				<PanelBody
+					section="style"
+					priority="medium"
 					title={__("Card Styling", "pricing-table-block")}
 					initialOpen={false}
 				>
@@ -1092,6 +1069,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 
 				<PanelBody
+					section="style"
+					priority="high"
 					title={__("Typography", "pricing-table-block")}
 					initialOpen={false}
 				>
@@ -1103,24 +1082,28 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						help={__("Applies to all text in this block.", "pricing-table-block")}
 					/>
 
+					<DeviceSwitcher
+						deviceType={deviceType}
+						setDeviceType={setDeviceType}
+						label={__("Device Preview", "pricing-table-block")}
+						tiers={THREE_TIERS}
+					/>
+
 					<p>
 						<strong>{__("Heading", "pricing-table-block")}</strong>
 					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`heading-${device.key}`}
-							label={device.label}
-							value={
-								headingFontSize?.[device.key]?.value ||
-								(device.key === "desktop" ? 40 : device.key === "tablet" ? 32 : 26)
-							}
-							onChange={(value) =>
-								updateFontSize("headingFontSize", device.key, value)
-							}
-							min={20}
-							max={96}
-						/>
-					))}
+					<RangeControl
+						label={__("Font Size", "pricing-table-block")}
+						value={
+							headingFontSize?.[deviceType]?.value ||
+							(deviceType === "desktop" ? 40 : deviceType === "tablet" ? 32 : 26)
+						}
+						onChange={(value) =>
+							updateFontSize("headingFontSize", deviceType, value)
+						}
+						min={20}
+						max={96}
+					/>
 					<TypographySubsection
 						label={__("Heading Style", "pricing-table-block")}
 						prefix="heading"
@@ -1131,21 +1114,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Subheading", "pricing-table-block")}</strong>
 					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`subheading-${device.key}`}
-							label={device.label}
-							value={
-								subheadingFontSize?.[device.key]?.value ||
-								(device.key === "desktop" ? 18 : device.key === "tablet" ? 16 : 14)
-							}
-							onChange={(value) =>
-								updateFontSize("subheadingFontSize", device.key, value)
-							}
-							min={12}
-							max={48}
-						/>
-					))}
+					<RangeControl
+						label={__("Font Size", "pricing-table-block")}
+						value={
+							subheadingFontSize?.[deviceType]?.value ||
+							(deviceType === "desktop" ? 18 : deviceType === "tablet" ? 16 : 14)
+						}
+						onChange={(value) =>
+							updateFontSize("subheadingFontSize", deviceType, value)
+						}
+						min={12}
+						max={48}
+					/>
 					<TypographySubsection
 						label={__("Subheading Style", "pricing-table-block")}
 						prefix="subheading"
@@ -1156,21 +1136,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Plan Name", "pricing-table-block")}</strong>
 					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`plan-name-${device.key}`}
-							label={device.label}
-							value={
-								planNameFontSize?.[device.key]?.value ||
-								(device.key === "desktop" ? 20 : device.key === "tablet" ? 18 : 16)
-							}
-							onChange={(value) =>
-								updateFontSize("planNameFontSize", device.key, value)
-							}
-							min={12}
-							max={48}
-						/>
-					))}
+					<RangeControl
+						label={__("Font Size", "pricing-table-block")}
+						value={
+							planNameFontSize?.[deviceType]?.value ||
+							(deviceType === "desktop" ? 20 : deviceType === "tablet" ? 18 : 16)
+						}
+						onChange={(value) =>
+							updateFontSize("planNameFontSize", deviceType, value)
+						}
+						min={12}
+						max={48}
+					/>
 					<TypographySubsection
 						label={__("Plan Name Style", "pricing-table-block")}
 						prefix="planName"
@@ -1181,20 +1158,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Plan Tagline", "pricing-table-block")}</strong>
 					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`plan-tagline-${device.key}`}
-							label={device.label}
-							value={
-								planTaglineFontSize?.[device.key]?.value || 14
-							}
-							onChange={(value) =>
-								updateFontSize("planTaglineFontSize", device.key, value)
-							}
-							min={10}
-							max={32}
-						/>
-					))}
+					<RangeControl
+						label={__("Font Size", "pricing-table-block")}
+						value={
+							planTaglineFontSize?.[deviceType]?.value || 14
+						}
+						onChange={(value) =>
+							updateFontSize("planTaglineFontSize", deviceType, value)
+						}
+						min={10}
+						max={32}
+					/>
 					<TypographySubsection
 						label={__("Plan Tagline Style", "pricing-table-block")}
 						prefix="planTagline"
@@ -1205,21 +1179,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Price", "pricing-table-block")}</strong>
 					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`price-${device.key}`}
-							label={device.label}
-							value={
-								priceFontSize?.[device.key]?.value ||
-								(device.key === "desktop" ? 40 : device.key === "tablet" ? 32 : 28)
-							}
-							onChange={(value) =>
-								updateFontSize("priceFontSize", device.key, value)
-							}
-							min={20}
-							max={80}
-						/>
-					))}
+					<RangeControl
+						label={__("Font Size", "pricing-table-block")}
+						value={
+							priceFontSize?.[deviceType]?.value ||
+							(deviceType === "desktop" ? 40 : deviceType === "tablet" ? 32 : 28)
+						}
+						onChange={(value) =>
+							updateFontSize("priceFontSize", deviceType, value)
+						}
+						min={20}
+						max={80}
+					/>
 					<TypographySubsection
 						label={__("Price Style", "pricing-table-block")}
 						prefix="price"
@@ -1230,21 +1201,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Features", "pricing-table-block")}</strong>
 					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`feature-${device.key}`}
-							label={device.label}
-							value={
-								featureFontSize?.[device.key]?.value ||
-								(device.key === "desktop" ? 14 : 13)
-							}
-							onChange={(value) =>
-								updateFontSize("featureFontSize", device.key, value)
-							}
-							min={10}
-							max={32}
-						/>
-					))}
+					<RangeControl
+						label={__("Font Size", "pricing-table-block")}
+						value={
+							featureFontSize?.[deviceType]?.value ||
+							(deviceType === "desktop" ? 14 : 13)
+						}
+						onChange={(value) =>
+							updateFontSize("featureFontSize", deviceType, value)
+						}
+						min={10}
+						max={32}
+					/>
 					<TypographySubsection
 						label={__("Features Style", "pricing-table-block")}
 						prefix="feature"
@@ -1255,21 +1223,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Button", "pricing-table-block")}</strong>
 					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`button-${device.key}`}
-							label={device.label}
-							value={
-								buttonFontSize?.[device.key]?.value ||
-								(device.key === "desktop" ? 15 : 14)
-							}
-							onChange={(value) =>
-								updateFontSize("buttonFontSize", device.key, value)
-							}
-							min={10}
-							max={32}
-						/>
-					))}
+					<RangeControl
+						label={__("Font Size", "pricing-table-block")}
+						value={
+							buttonFontSize?.[deviceType]?.value ||
+							(deviceType === "desktop" ? 15 : 14)
+						}
+						onChange={(value) =>
+							updateFontSize("buttonFontSize", deviceType, value)
+						}
+						min={10}
+						max={32}
+					/>
 					<TypographySubsection
 						label={__("Button Style", "pricing-table-block")}
 						prefix="button"
@@ -1280,25 +1245,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Price Suffix", "pricing-table-block")}</strong>
 					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`price-suffix-${device.key}`}
-							label={device.label}
-							value={
-								priceSuffixFontSize?.[device.key]?.value ||
-								(device.key === "desktop"
-									? 14
-									: device.key === "tablet"
-										? 13
-										: 12)
-							}
-							onChange={(value) =>
-								updateFontSize("priceSuffixFontSize", device.key, value)
-							}
-							min={10}
-							max={32}
-						/>
-					))}
+					<RangeControl
+						label={__("Font Size", "pricing-table-block")}
+						value={
+							priceSuffixFontSize?.[deviceType]?.value ||
+							(deviceType === "desktop"
+								? 14
+								: deviceType === "tablet"
+									? 13
+									: 12)
+						}
+						onChange={(value) =>
+							updateFontSize("priceSuffixFontSize", deviceType, value)
+						}
+						min={10}
+						max={32}
+					/>
 					<TypographySubsection
 						label={__("Price Suffix Style", "pricing-table-block")}
 						prefix="priceSuffix"
@@ -1309,25 +1271,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<p style={{ marginTop: "16px" }}>
 						<strong>{__("Price Prefix", "pricing-table-block")}</strong>
 					</p>
-					{DEVICE_TYPES.map((device) => (
-						<RangeControl
-							key={`price-prefix-${device.key}`}
-							label={device.label}
-							value={
-								pricePrefixFontSize?.[device.key]?.value ||
-								(device.key === "desktop"
-									? 18
-									: device.key === "tablet"
-										? 16
-										: 14)
-							}
-							onChange={(value) =>
-								updateFontSize("pricePrefixFontSize", device.key, value)
-							}
-							min={10}
-							max={32}
-						/>
-					))}
+					<RangeControl
+						label={__("Font Size", "pricing-table-block")}
+						value={
+							pricePrefixFontSize?.[deviceType]?.value ||
+							(deviceType === "desktop"
+								? 18
+								: deviceType === "tablet"
+									? 16
+									: 14)
+						}
+						onChange={(value) =>
+							updateFontSize("pricePrefixFontSize", deviceType, value)
+						}
+						min={10}
+						max={32}
+					/>
 					<TypographySubsection
 						label={__("Price Prefix Style", "pricing-table-block")}
 						prefix="pricePrefix"

@@ -113,16 +113,6 @@
 		}
 	}
 
-	// Responsive container max-width for smartwatch
-	@media (max-width: 320px) {
-		&__container.is-constrained {
-			max-width: var(
-				--container-max-width-watch,
-				var(--container-max-width-mobile, 100%)
-			) !important;
-		}
-	}
-
 	// Responsive container height for tablet
 	@media (max-width: 1024px) {
 		&__container {
@@ -143,16 +133,6 @@
 		}
 	}
 
-	// Responsive container height for smartwatch
-	@media (max-width: 320px) {
-		&__container {
-			height: var(
-				--container-height-watch,
-				var(--container-height-mobile, 315px)
-			) !important;
-		}
-	}
-
 	// Responsive margins
 	@media (max-width: 1024px) {
 		margin-top: var(--margin-top-tablet, 0) !important;
@@ -168,13 +148,6 @@
 		margin-left: var(--margin-left-mobile, 0) !important;
 	}
 
-	@media (max-width: 320px) {
-		margin-top: var(--margin-top-watch, 0) !important;
-		margin-right: var(--margin-right-watch, 0) !important;
-		margin-bottom: var(--margin-bottom-watch, 0) !important;
-		margin-left: var(--margin-left-watch, 0) !important;
-	}
-
 	// Responsive padding
 	@media (max-width: 1024px) {
 		padding-top: var(--padding-top-tablet, 0) !important;
@@ -188,13 +161,6 @@
 		padding-right: var(--padding-right-mobile, 0) !important;
 		padding-bottom: var(--padding-bottom-mobile, 0) !important;
 		padding-left: var(--padding-left-mobile, 0) !important;
-	}
-
-	@media (max-width: 320px) {
-		padding-top: var(--padding-top-watch, 0) !important;
-		padding-right: var(--padding-right-watch, 0) !important;
-		padding-bottom: var(--padding-bottom-watch, 0) !important;
-		padding-left: var(--padding-left-watch, 0) !important;
 	}
 
 	// Content area

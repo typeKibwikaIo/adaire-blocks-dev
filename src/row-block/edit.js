@@ -12,9 +12,9 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { createBlock } from '@wordpress/blocks';
 import { select, useDispatch, useSelect } from '@wordpress/data';
+import InspectorTabs from '../components/InspectorTabs';
 import PresetIcon from './PresetIcon';
 import { getRowWidthClass } from './width-utils';
-import InspectorTabs from '../components/InspectorTabs';
 import BoundColorPalette from '../components/BoundColorPalette';
 import { boxToCss, normalizeBoxUnits } from '../components/spacing-utils';
 
@@ -203,9 +203,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     }
     : {};
 
-  // ─── Row Layout (functional / positional — stays in the "Layout" tab) ──
+  // ─── Row Layout (functional / positional — tagged "layout" per the
+  // Gutenblocks free-tier InspectorTabs reorg) ──
   const rowLayoutPanel = (
-    <PanelBody title={ __( 'Row Layout', 'adaire-row' ) } initialOpen={ true }>
+    <PanelBody section="layout" title={ __( 'Row Layout', 'adaire-row' ) } initialOpen={ true }>
       <ToggleGroupControl
         label={ __( 'Row Width', 'adaire-row' ) }
         value={ align || '' }
@@ -249,9 +250,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     </PanelBody>
   );
 
-  // ─── Spacing (visual — auto-classified into the "Style" tab by title) ──
+  // ─── Spacing (visual — tagged "style"/medium per the Gutenblocks
+  // free-tier InspectorTabs reorg) ──
   const spacingPanel = (
-    <PanelBody title={ __( 'Spacing', 'adaire-row' ) } initialOpen={ false }>
+    <PanelBody section="style" priority="medium" title={ __( 'Spacing', 'adaire-row' ) } initialOpen={ false }>
       <RangeControl
         label={ __( 'Gap Between Columns (px)', 'adaire-row' ) }
         value={ gap }
@@ -291,11 +293,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     </PanelBody>
   );
 
-  // ─── Border (visual — auto-classified into the "Style" tab by title) ──
+  // ─── Border (visual — tagged "style"/medium per the Gutenblocks free-tier
+  // InspectorTabs reorg) ──
   // Applies to the row container itself (the whole grid, not individual
   // columns — see column-block/edit.js for the equivalent per-column control).
   const borderPanel = (
-    <PanelBody title={ __( 'Border', 'adaire-row' ) } initialOpen={ false }>
+    <PanelBody section="style" priority="medium" title={ __( 'Border', 'adaire-row' ) } initialOpen={ false }>
       <ToggleControl
         label={ __( 'Enable Border', 'adaire-row' ) }
         checked={ borderEnabled }
@@ -433,9 +436,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
   const currentColumnCount = columnWidths.length || 1;
 
-  // ─── Columns (functional — stays in the "Layout" tab) ──────────────────
+  // ─── Columns (functional — tagged "content" per the Gutenblocks free-tier
+  // InspectorTabs reorg) ──────────────────
   const columnsPanel = (
-    <PanelBody title={ __( 'Columns', 'adaire-row' ) } initialOpen={ false }>
+    <PanelBody section="content" title={ __( 'Columns', 'adaire-row' ) } initialOpen={ true }>
       <p className="adaire-row-columns-count">
         { sprintf(
           /* translators: %d: number of columns */

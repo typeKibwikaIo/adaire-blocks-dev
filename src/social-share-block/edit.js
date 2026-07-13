@@ -128,7 +128,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody title={__('Button Settings', 'social-share-block')} initialOpen={true}>
+                <PanelBody section="layout" title={__('Button Settings', 'social-share-block')} initialOpen={true}>
                     <BaseControl label={__('Button Icon', 'social-share-block')}>
                         <Button
                             onClick={() => setIsButtonIconPickerOpen(true)}
@@ -183,7 +183,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Button Styling', 'social-share-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Button Styling', 'social-share-block')} initialOpen={false}>
                     <BaseControl label={__('Background Color', 'social-share-block')}>
                         <BoundColorPalette
                             value={buttonBackgroundColor || ""}
@@ -235,7 +235,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
                 </PanelBody>
 
-                <PanelBody title={__('Typography', 'social-share-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography', 'social-share-block')} initialOpen={false}>
                     <RangeControl
                         label={__('Platform Label Font Size (px)', 'social-share-block')}
                         value={platformFontSize}
@@ -295,7 +295,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Platform Settings', 'social-share-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Platform Settings', 'social-share-block')} initialOpen={true}>
                     <SelectControl
                         label={__('Tooltip Position', 'social-share-block')}
                         value={tooltipPosition}

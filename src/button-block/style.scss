@@ -22,14 +22,6 @@
     margin-left: var(--button-margin-left-mobile, 0px);
   }
 
-  // Smartwatch responsive
-  @media (max-width: 320px) {
-    margin-top: var(--button-margin-top-watch, 8px);
-    margin-right: var(--button-margin-right-watch, 0px);
-    margin-bottom: var(--button-margin-bottom-watch, 8px);
-    margin-left: var(--button-margin-left-watch, 0px);
-  }
-
       // Override WordPress core rule: html :where([style*=border-width]) { border-style: solid }
       &[style*="border-width"],
       &[style*="borderWidth"] {
@@ -82,17 +74,6 @@
       padding-right: var(--button-padding-right-mobile, 12px);
       padding-bottom: var(--button-padding-bottom-mobile, 6px);
       padding-left: var(--button-padding-left-mobile, 12px);
-    }
-
-    // Smartwatch responsive
-    @media (max-width: 320px) {
-      font-size: var(--button-font-size-watch, 12px);
-      line-height: var(--button-line-height-watch, normal);
-      letter-spacing: var(--button-letter-spacing-watch, normal);
-      padding-top: var(--button-padding-top-watch, 4px);
-      padding-right: var(--button-padding-right-watch, 8px);
-      padding-bottom: var(--button-padding-bottom-watch, 4px);
-      padding-left: var(--button-padding-left-watch, 8px);
     }
 
     // Icon wrapper — spacing/position vary by the

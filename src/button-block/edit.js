@@ -2,7 +2,7 @@ import { useBlockProps, ColorPalette } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl, SelectControl, RangeControl, BaseControl, Button, __experimentalBoxControl as BoxControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS } from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import ButtonIcon, { BUTTON_ICON_OPTIONS } from './icons';
@@ -58,7 +58,7 @@ export default function Edit({ attributes, setAttributes }) {
   } = attributes;
 
   // Helper to get device-specific values
-  const getDeviceFontSize = () => getDeviceValue(fontSize, deviceType, deviceType === 'desktop' ? 18 : deviceType === 'tablet' ? 16 : deviceType === 'mobile' ? 14 : 12);
+  const getDeviceFontSize = () => getDeviceValue(fontSize, deviceType, deviceType === 'desktop' ? 18 : deviceType === 'tablet' ? 16 : 14);
   const getDevicePadding = () => buttonPadding?.[deviceType] || buttonPadding?.desktop || { top: '10px', right: '20px', bottom: '10px', left: '20px' };
   const getDeviceMargin = () => buttonMargin?.[deviceType] || buttonMargin?.desktop || { top: '20px', right: '0px', bottom: '20px', left: '0px' };
   const getDeviceLineHeight = () => getDeviceValue(lineHeight, deviceType, 'normal');
@@ -79,7 +79,6 @@ export default function Edit({ attributes, setAttributes }) {
       '--button-font-size': `${getDeviceValue(fontSize, 'desktop', 18)}px`,
       '--button-font-size-tablet': `${getDeviceValue(fontSize, 'tablet', 16)}px`,
       '--button-font-size-mobile': `${getDeviceValue(fontSize, 'mobile', 14)}px`,
-      '--button-font-size-watch': `${getDeviceValue(fontSize, 'smartwatch', 12)}px`,
       '--button-padding-top': buttonPadding?.desktop?.top || '10px',
       '--button-padding-right': buttonPadding?.desktop?.right || '20px',
       '--button-padding-bottom': buttonPadding?.desktop?.bottom || '10px',
@@ -92,10 +91,6 @@ export default function Edit({ attributes, setAttributes }) {
       '--button-padding-right-mobile': buttonPadding?.mobile?.right || '12px',
       '--button-padding-bottom-mobile': buttonPadding?.mobile?.bottom || '6px',
       '--button-padding-left-mobile': buttonPadding?.mobile?.left || '12px',
-      '--button-padding-top-watch': buttonPadding?.smartwatch?.top || '4px',
-      '--button-padding-right-watch': buttonPadding?.smartwatch?.right || '8px',
-      '--button-padding-bottom-watch': buttonPadding?.smartwatch?.bottom || '4px',
-      '--button-padding-left-watch': buttonPadding?.smartwatch?.left || '8px',
       '--button-margin-top': buttonMargin?.desktop?.top || '20px',
       '--button-margin-right': buttonMargin?.desktop?.right || '0px',
       '--button-margin-bottom': buttonMargin?.desktop?.bottom || '20px',
@@ -108,10 +103,6 @@ export default function Edit({ attributes, setAttributes }) {
       '--button-margin-right-mobile': buttonMargin?.mobile?.right || '0px',
       '--button-margin-bottom-mobile': buttonMargin?.mobile?.bottom || '12px',
       '--button-margin-left-mobile': buttonMargin?.mobile?.left || '0px',
-      '--button-margin-top-watch': buttonMargin?.smartwatch?.top || '8px',
-      '--button-margin-right-watch': buttonMargin?.smartwatch?.right || '0px',
-      '--button-margin-bottom-watch': buttonMargin?.smartwatch?.bottom || '8px',
-      '--button-margin-left-watch': buttonMargin?.smartwatch?.left || '0px',
       '--button-z-index': zIndex || '1',
       '--button-border-radius': borderRadius ? `${borderRadius}px` : '0px',
       '--button-font-weight': fontWeight || '500',
@@ -122,11 +113,9 @@ export default function Edit({ attributes, setAttributes }) {
       '--button-line-height': getDeviceValue(lineHeight, 'desktop', 'normal'),
       '--button-line-height-tablet': getDeviceValue(lineHeight, 'tablet', 'normal'),
       '--button-line-height-mobile': getDeviceValue(lineHeight, 'mobile', 'normal'),
-      '--button-line-height-watch': getDeviceValue(lineHeight, 'smartwatch', 'normal'),
       '--button-letter-spacing': getDeviceValue(letterSpacing, 'desktop', 'normal'),
       '--button-letter-spacing-tablet': getDeviceValue(letterSpacing, 'tablet', 'normal'),
       '--button-letter-spacing-mobile': getDeviceValue(letterSpacing, 'mobile', 'normal'),
-      '--button-letter-spacing-watch': getDeviceValue(letterSpacing, 'smartwatch', 'normal'),
       '--button-text-transform': textTransform || 'none',
       '--button-font-family': fontFamily || '',
     }
@@ -135,7 +124,7 @@ export default function Edit({ attributes, setAttributes }) {
   return (
     <>
       <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-        <PanelBody title="Button Settings" initialOpen={true}>
+        <PanelBody section="content" title="Button Settings" initialOpen={true}>
           <TextControl
             label="Button Text"
             value={buttonText}
@@ -157,17 +146,81 @@ export default function Edit({ attributes, setAttributes }) {
             onChange={(value) => setAttributes({ openInNewTab: value })}
             help={openInNewTab ? 'Link will open in a new tab' : 'Link will open in the same tab'}
           />
+
+          <TextControl
+            label="Block ID"
+            value={blockId}
+            onChange={(value) => setAttributes({ blockId: value })}
+            help="Add a custom ID to this block for CSS targeting or anchor links."
+          />
+
+          <RangeControl
+            label="Z-Index"
+            value={zIndex}
+            onChange={(value) => setAttributes({ zIndex: value })}
+            min={0}
+            max={100}
+            step={1}
+          />
         </PanelBody>
 
-        <PanelBody title="Responsive Settings" initialOpen={false}>
+        <PanelBody section="layout" title="Responsive Settings" initialOpen={false}>
           <DeviceSwitcher
             deviceType={deviceType}
             setDeviceType={setDeviceType}
             label="Device Preview"
+            tiers={THREE_TIERS}
           />
         </PanelBody>
 
-        <PanelBody title="Button Styling" initialOpen={false}>
+        <PanelBody section="layout" title="Button Variant" initialOpen={false}>
+          <SelectControl
+            label="Button Style"
+            value={buttonStyle}
+            options={[
+              { label: 'Underline', value: 'underline' },
+              { label: 'Background Fill', value: 'fill' },
+              { label: 'Border', value: 'border' },
+              { label: 'Gradient', value: 'gradient' },
+              { label: 'Glass Effect', value: 'glass' }
+            ]}
+            onChange={(value) => setAttributes({ buttonStyle: value })}
+          />
+        </PanelBody>
+
+        <PanelBody section="layout" title="Icon Settings" initialOpen={false}>
+          <ToggleControl
+            label="Show Icon"
+            checked={showIcon}
+            onChange={(value) => setAttributes({ showIcon: value })}
+            help={showIcon ? 'Icon will be visible' : 'Icon will be hidden'}
+          />
+
+          {showIcon && (
+            <>
+              <SelectControl
+                label="Icon"
+                value={iconType || 'arrow-diagonal'}
+                options={BUTTON_ICON_OPTIONS}
+                onChange={(value) => setAttributes({ iconType: value })}
+              />
+
+              <SelectControl
+                label="Icon Position"
+                value={iconPosition || 'right'}
+                options={[
+                  { label: 'Right of text', value: 'right' },
+                  { label: 'Left of text', value: 'left' },
+                  { label: 'Inline (no gap)', value: 'inline' }
+                ]}
+                onChange={(value) => setAttributes({ iconPosition: value })}
+                help="Left/Right move the icon using flex order; Inline keeps it after the text but removes the spacing gap."
+              />
+            </>
+          )}
+        </PanelBody>
+
+        <PanelBody section="style" priority="high" title="Colors" initialOpen={false}>
           <BaseControl label="Button Color">
             <BoundColorPalette
               value={buttonColor}
@@ -271,42 +324,6 @@ export default function Edit({ attributes, setAttributes }) {
             )}
           </BaseControl>
 
-          <SelectControl
-            label="Button Style"
-            value={buttonStyle}
-            options={[
-              { label: 'Underline', value: 'underline' },
-              { label: 'Background Fill', value: 'fill' },
-              { label: 'Border', value: 'border' },
-              { label: 'Gradient', value: 'gradient' },
-              { label: 'Glass Effect', value: 'glass' }
-            ]}
-            onChange={(value) => setAttributes({ buttonStyle: value })}
-          />
-
-          {/*
-            ADAB-014: border controls used to be gated behind
-            `buttonStyle === 'border'`. They're now always visible — the
-            underlying borderWidth/borderColor/borderStyle/buttonHoverBorderColor
-            attributes apply visually to the --border variant's rendering in
-            style.scss (unchanged from before, see comment there for why
-            border rendering itself stays scoped to that one variant), but
-            users on any other style can still pre-configure border values
-            here ahead of switching styles, or use them if a future style
-            variant reads them. Surfacing them for every buttonStyle just
-            removes a controls/attributes mismatch (the attributes already
-            existed unconditionally; only the UI was gated).
-          */}
-          <RangeControl
-            label="Border Width (px)"
-            value={borderWidth}
-            onChange={(value) => setAttributes({ borderWidth: value })}
-            min={0}
-            max={10}
-            step={1}
-            help={buttonStyle !== 'border' ? 'Only visually applied when Button Style is set to "Border".' : undefined}
-          />
-
           <BaseControl
             label="Border Color"
             help={!borderColor ? "Inheriting the theme's secondary color." : undefined}
@@ -344,6 +361,31 @@ export default function Edit({ attributes, setAttributes }) {
               </Button>
             )}
           </BaseControl>
+        </PanelBody>
+
+        <PanelBody section="style" priority="medium" title="Border & Effects" initialOpen={false}>
+          {/*
+            ADAB-014: border controls used to be gated behind
+            `buttonStyle === 'border'`. They're now always visible — the
+            underlying borderWidth/borderColor/borderStyle/buttonHoverBorderColor
+            attributes apply visually to the --border variant's rendering in
+            style.scss (unchanged from before, see comment there for why
+            border rendering itself stays scoped to that one variant), but
+            users on any other style can still pre-configure border values
+            here ahead of switching styles, or use them if a future style
+            variant reads them. Surfacing them for every buttonStyle just
+            removes a controls/attributes mismatch (the attributes already
+            existed unconditionally; only the UI was gated).
+          */}
+          <RangeControl
+            label="Border Width (px)"
+            value={borderWidth}
+            onChange={(value) => setAttributes({ borderWidth: value })}
+            min={0}
+            max={10}
+            step={1}
+            help={buttonStyle !== 'border' ? 'Only visually applied when Button Style is set to "Border".' : undefined}
+          />
 
           <SelectControl
             label="Border Style"
@@ -362,6 +404,15 @@ export default function Edit({ attributes, setAttributes }) {
           />
 
           <RangeControl
+            label="Border Radius (px)"
+            value={borderRadius}
+            onChange={(value) => setAttributes({ borderRadius: value })}
+            min={0}
+            max={50}
+            step={1}
+          />
+
+          <RangeControl
             label="Blur Amount (px)"
             value={blurAmount}
             onChange={(value) => setAttributes({ blurAmount: value })}
@@ -370,12 +421,28 @@ export default function Edit({ attributes, setAttributes }) {
             step={1}
           />
 
+          <SelectControl
+            label="Hover Animation"
+            value={hoverAnimation}
+            options={[
+              { label: 'Slide Underline', value: 'slide-underline' },
+              { label: 'Scale', value: 'scale' },
+              { label: 'Bounce', value: 'bounce' },
+              { label: 'Glow', value: 'glow' },
+              { label: 'Shake', value: 'shake' },
+              { label: 'None', value: 'none' }
+            ]}
+            onChange={(value) => setAttributes({ hoverAnimation: value })}
+          />
+        </PanelBody>
+
+        <PanelBody section="style" priority="high" title="Typography" initialOpen={false}>
           <RangeControl
             label={`Font Size (px) - ${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)}`}
             value={getDeviceFontSize()}
             onChange={(value) => setAttributes({ fontSize: updateDeviceAttribute(fontSize, deviceType, value) })}
-            min={deviceType === 'smartwatch' ? 8 : deviceType === 'mobile' ? 10 : 12}
-            max={deviceType === 'smartwatch' ? 20 : 48}
+            min={deviceType === 'mobile' ? 10 : 12}
+            max={48}
             step={1}
           />
 
@@ -411,90 +478,6 @@ export default function Edit({ attributes, setAttributes }) {
             help="Applies to the button label."
           />
 
-          <ToggleControl
-            label="Show Icon"
-            checked={showIcon}
-            onChange={(value) => setAttributes({ showIcon: value })}
-            help={showIcon ? 'Icon will be visible' : 'Icon will be hidden'}
-          />
-
-          {showIcon && (
-            <>
-              <SelectControl
-                label="Icon"
-                value={iconType || 'arrow-diagonal'}
-                options={BUTTON_ICON_OPTIONS}
-                onChange={(value) => setAttributes({ iconType: value })}
-              />
-
-              <SelectControl
-                label="Icon Position"
-                value={iconPosition || 'right'}
-                options={[
-                  { label: 'Right of text', value: 'right' },
-                  { label: 'Left of text', value: 'left' },
-                  { label: 'Inline (no gap)', value: 'inline' }
-                ]}
-                onChange={(value) => setAttributes({ iconPosition: value })}
-                help="Left/Right move the icon using flex order; Inline keeps it after the text but removes the spacing gap."
-              />
-            </>
-          )}
-
-          <SelectControl
-            label="Hover Animation"
-            value={hoverAnimation}
-            options={[
-              { label: 'Slide Underline', value: 'slide-underline' },
-              { label: 'Scale', value: 'scale' },
-              { label: 'Bounce', value: 'bounce' },
-              { label: 'Glow', value: 'glow' },
-              { label: 'Shake', value: 'shake' },
-              { label: 'None', value: 'none' }
-            ]}
-            onChange={(value) => setAttributes({ hoverAnimation: value })}
-          />
-
-             <BoxControl
-            label={`Button Padding (${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)})`}
-            values={getDevicePadding()}
-            onChange={(value) => setAttributes({ buttonPadding: updateDeviceAttribute(buttonPadding, deviceType, value) })}
-            units={[
-              { value: 'px', label: 'px', default: 0 },
-              { value: 'em', label: 'em', default: 0 },
-              { value: 'rem', label: 'rem', default: 0 },
-            ]}
-          />
-
-          <BoxControl
-            label={`Button Margin (${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)})`}
-            values={getDeviceMargin()}
-            onChange={(value) => setAttributes({ buttonMargin: updateDeviceAttribute(buttonMargin, deviceType, value) })}
-            units={[
-              { value: 'px', label: 'px', default: 0 },
-              { value: 'em', label: 'em', default: 0 },
-              { value: 'rem', label: 'rem', default: 0 },
-            ]}
-          />
-
-          <RangeControl
-            label="Z-Index"
-            value={zIndex}
-            onChange={(value) => setAttributes({ zIndex: value })}
-            min={0}
-            max={100}
-            step={1}
-          />
-
-          <RangeControl
-            label="Border Radius (px)"
-            value={borderRadius}
-            onChange={(value) => setAttributes({ borderRadius: value })}
-            min={0}
-            max={50}
-            step={1}
-          />
-
           <SelectControl
             label="Font Weight"
             value={fontWeight}
@@ -514,12 +497,27 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
-        <PanelBody title="Block Settings" initialOpen={false}>
-          <TextControl
-            label="Block ID"
-            value={blockId}
-            onChange={(value) => setAttributes({ blockId: value })}
-            help="Add a custom ID to this block for CSS targeting or anchor links."
+        <PanelBody section="style" priority="medium" title="Spacing" initialOpen={false}>
+          <BoxControl
+            label={`Button Padding (${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)})`}
+            values={getDevicePadding()}
+            onChange={(value) => setAttributes({ buttonPadding: updateDeviceAttribute(buttonPadding, deviceType, value) })}
+            units={[
+              { value: 'px', label: 'px', default: 0 },
+              { value: 'em', label: 'em', default: 0 },
+              { value: 'rem', label: 'rem', default: 0 },
+            ]}
+          />
+
+          <BoxControl
+            label={`Button Margin (${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)})`}
+            values={getDeviceMargin()}
+            onChange={(value) => setAttributes({ buttonMargin: updateDeviceAttribute(buttonMargin, deviceType, value) })}
+            units={[
+              { value: 'px', label: 'px', default: 0 },
+              { value: 'em', label: 'em', default: 0 },
+              { value: 'rem', label: 'rem', default: 0 },
+            ]}
           />
         </PanelBody>
       </InspectorTabs>

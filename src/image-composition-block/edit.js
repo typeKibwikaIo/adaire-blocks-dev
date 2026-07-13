@@ -12,8 +12,10 @@ import {
 	ButtonGroup,
 } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
-import { desktop, tablet, mobile, plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
+import { getBlockType } from '@wordpress/blocks';
+import { plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
 import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher, { THREE_TIERS } from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
@@ -35,6 +37,20 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 		}
 	}, [blockId, clientId, setAttributes]);
 
+	// Resets the given responsive attributes back to their block.json defaults —
+	// existing values only, nothing new is added.
+	const resetToDefaults = (keys) => {
+		const blockType = getBlockType('create-block/image-composition-block');
+		const defaults = blockType?.attributes || {};
+		const resetValues = {};
+		keys.forEach((key) => {
+			if (defaults[key] && 'default' in defaults[key]) {
+				resetValues[key] = defaults[key].default;
+			}
+		});
+		setAttributes(resetValues);
+	};
+
 	const blockProps = useBlockProps({
 		className: 'adaire-image-composition',
 		style: {
@@ -43,7 +59,6 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 			'--container-max-width': `${containerMaxWidth?.desktop?.value ?? 1200}${containerMaxWidth?.desktop?.unit ?? 'px'}`,
 			'--container-max-width-tablet': `${containerMaxWidth?.tablet?.value ?? 100}${containerMaxWidth?.tablet?.unit ?? '%'}`,
 			'--container-max-width-mobile': `${containerMaxWidth?.mobile?.value ?? 100}${containerMaxWidth?.mobile?.unit ?? '%'}`,
-			'--container-max-width-watch': `${containerMaxWidth?.smartwatch?.value ?? 100}${containerMaxWidth?.smartwatch?.unit ?? '%'}`,
 		},
 	});
 
@@ -86,7 +101,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody title={__('Images', 'image-composition-block')} initialOpen={true}>
+				<PanelBody section="content" title={__('Images', 'image-composition-block')} initialOpen={true}>
 					<Button
 						variant="primary"
 						icon={plus}
@@ -199,7 +214,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					))}
 				</PanelBody>
 
-				<PanelBody title={__('Layout', 'image-composition-block')} initialOpen={false}>
+				<PanelBody section="style" priority="medium" title={__('Spacing', 'image-composition-block')} initialOpen={false}>
 					<RangeControl
 						label={__('Gap between images (px)', 'image-composition-block')}
 						value={gap}
@@ -216,7 +231,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 				</PanelBody>
 
-				<PanelBody title={__('Container', 'image-composition-block')} initialOpen={false}>
+				<PanelBody section="layout" title={__('Container', 'image-composition-block')} initialOpen={false}>
 					<p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Mode', 'image-composition-block')}</p>
 					<ButtonGroup style={{ marginBottom: '16px' }}>
 						{[
@@ -239,30 +254,12 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 							<p style={{ marginTop: 8, marginBottom: 8, fontWeight: 600 }}>
 								{__('Max width', 'image-composition-block')}
 							</p>
-							<ButtonGroup style={{ marginBottom: 12 }}>
-								<Button
-									icon={desktop}
-									isPrimary={deviceType === 'desktop'}
-									onClick={() => setDeviceType('desktop')}
-								/>
-								<Button
-									icon={tablet}
-									isPrimary={deviceType === 'tablet'}
-									onClick={() => setDeviceType('tablet')}
-								/>
-								<Button
-									icon={mobile}
-									isPrimary={deviceType === 'mobile'}
-									onClick={() => setDeviceType('mobile')}
-								/>
-								<Button
-									isPrimary={deviceType === 'smartwatch'}
-									onClick={() => setDeviceType('smartwatch')}
-									label={__('Watch', 'image-composition-block')}
-								>
-									âŒš
-								</Button>
-							</ButtonGroup>
+							<DeviceSwitcher
+								deviceType={deviceType}
+								setDeviceType={setDeviceType}
+								tiers={THREE_TIERS}
+								onReset={() => resetToDefaults(['containerMaxWidth'])}
+							/>
 							<div style={{ display: 'flex', gap: 8 }}>
 								<TextControl
 									type="number"

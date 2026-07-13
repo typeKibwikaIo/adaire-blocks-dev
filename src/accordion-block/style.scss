@@ -15,10 +15,6 @@
       max-width: var(--acc-container-max-width-mobile, var(--acc-container-max-width-tablet, 100%));
     }
 
-    /* Responsive container max-width for smartwatch */
-    @media (max-width: 320px) {
-      max-width: var(--acc-container-max-width-watch, var(--acc-container-max-width-mobile, 100%));
-    }
   }
   --acc-title-color: #111;
   --acc-content-color: #444;
@@ -64,13 +60,6 @@
       margin-right: var(--acc-margin-h-mobile, var(--acc-margin-right));
     }
   }
-  @media (max-width: 320px) {
-    .adaire-accordion__container {
-      margin-left: var(--acc-margin-h-watch, var(--acc-margin-left));
-      margin-right: var(--acc-margin-h-watch, var(--acc-margin-right));
-    }
-  }
-
   /* When block is wide/full aligned, themes often neutralize margins.
      Use padding as a fallback so horizontal spacing still shows. */
   &.alignfull,
@@ -92,14 +81,8 @@
         padding-right: var(--acc-margin-h-mobile, var(--acc-margin-right));
       }
     }
-    @media (max-width: 320px) {
-      .adaire-accordion__container {
-        padding-left: var(--acc-margin-h-watch, var(--acc-margin-left));
-        padding-right: var(--acc-margin-h-watch, var(--acc-margin-right));
-      }
-    }
   }
-  
+
   .adaire-accordion__list {
     display: flex;
     flex-direction: column;
@@ -115,10 +98,6 @@
       gap: var(--acc-gap-mobile, var(--acc-gap-tablet, var(--acc-gap)));
     }
 
-    /* Responsive gap - smartwatch */
-    @media (max-width: 320px) {
-      gap: var(--acc-gap-watch, var(--acc-gap-mobile, var(--acc-gap-tablet, var(--acc-gap))));
-    }
   }
 
   .adaire-accordion__item {
@@ -138,11 +117,6 @@
     /* Responsive border radius - mobile */
     @media (max-width: 768px) {
       border-radius: var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius)));
-    }
-
-    /* Responsive border radius - smartwatch */
-    @media (max-width: 320px) {
-      border-radius: var(--acc-radius-watch, var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius))));
     }
 
     &:hover {
@@ -205,14 +179,6 @@
         var(--acc-padding-left-mobile, var(--acc-padding-left-tablet, var(--acc-padding-left, 20px))) !important;
     }
 
-    /* Responsive header padding - smartwatch */
-    @media (max-width: 320px) {
-      padding:
-        var(--acc-padding-top-watch, var(--acc-padding-top-mobile, var(--acc-padding-top-tablet, var(--acc-padding-top, 20px))))
-        var(--acc-padding-right-watch, var(--acc-padding-right-mobile, var(--acc-padding-right-tablet, var(--acc-padding-right, 20px))))
-        var(--acc-padding-bottom-watch, var(--acc-padding-bottom-mobile, var(--acc-padding-bottom-tablet, var(--acc-padding-bottom, 20px))))
-        var(--acc-padding-left-watch, var(--acc-padding-left-mobile, var(--acc-padding-left-tablet, var(--acc-padding-left, 20px)))) !important;
-    }
   }
 
   .adaire-accordion__title {
@@ -239,10 +205,6 @@
       font-size: var(--acc-title-size-mobile, var(--acc-title-size-tablet, var(--acc-title-size)));
     }
 
-    /* Responsive title font size - smartwatch */
-    @media (max-width: 320px) {
-      font-size: var(--acc-title-size-watch, var(--acc-title-size-mobile, var(--acc-title-size-tablet, var(--acc-title-size))));
-    }
   }
 
   .adaire-accordion__chevron {
@@ -272,11 +234,6 @@
         height: var(--acc-chevron-size-mobile, var(--acc-chevron-size-tablet, var(--acc-chevron-size, 16px))) !important;
       }
 
-      /* Responsive chevron size - smartwatch */
-      @media (max-width: 320px) {
-        width: var(--acc-chevron-size-watch, var(--acc-chevron-size-mobile, var(--acc-chevron-size-tablet, var(--acc-chevron-size, 16px)))) !important;
-        height: var(--acc-chevron-size-watch, var(--acc-chevron-size-mobile, var(--acc-chevron-size-tablet, var(--acc-chevron-size, 16px)))) !important;
-      }
     }
   }
   
@@ -331,12 +288,6 @@
       border-radius: 0 0 var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius))) var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius)));
     }
 
-    /* Responsive content font size - smartwatch */
-    @media (max-width: 320px) {
-      font-size: var(--acc-content-size-watch, var(--acc-content-size-mobile, var(--acc-content-size-tablet, var(--acc-content-size))));
-      border-radius: 0 0 var(--acc-radius-watch, var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius)))) var(--acc-radius-watch, var(--acc-radius-mobile, var(--acc-radius-tablet, var(--acc-radius))));
-    }
-    
     p {
       margin: 0 0 1em 0;
       font-family: inherit;

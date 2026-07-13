@@ -16,12 +16,11 @@ import {
 } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import { useEffect, useRef, useCallback, useState } from "@wordpress/element";
-import { desktop, tablet, mobile } from '@wordpress/icons';
 import { Splide } from '@splidejs/splide';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
 import QuickZone from '../components/QuickZone';
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS } from '../components/DeviceSwitcher';
 import InspectorTabs from '../components/InspectorTabs';
 import BoundColorPalette from '../components/BoundColorPalette';
 
@@ -159,11 +158,9 @@ export default function Edit({ attributes, setAttributes }) {
 			"--carousel-padding-top": `${responsivePaddingTop?.desktop ?? 60}px`,
 			"--carousel-padding-top-tablet": `${responsivePaddingTop?.tablet ?? 48}px`,
 			"--carousel-padding-top-mobile": `${responsivePaddingTop?.mobile ?? 36}px`,
-			"--carousel-padding-top-watch": `${responsivePaddingTop?.smartwatch ?? 24}px`,
 			"--carousel-padding-bottom": `${responsivePaddingBottom?.desktop ?? 60}px`,
 			"--carousel-padding-bottom-tablet": `${responsivePaddingBottom?.tablet ?? 48}px`,
 			"--carousel-padding-bottom-mobile": `${responsivePaddingBottom?.mobile ?? 36}px`,
-			"--carousel-padding-bottom-watch": `${responsivePaddingBottom?.smartwatch ?? 24}px`,
 			// Independent heading (author name) / content (quote) typography
 			// layers — see style.scss's &__name / &__quote, which consume
 			// these directly (most-specific selector wins) instead of relying
@@ -173,22 +170,18 @@ export default function Edit({ attributes, setAttributes }) {
 			"--heading-font-size": `${headingFontSize?.desktop ?? 18}px`,
 			"--heading-font-size-tablet": `${headingFontSize?.tablet ?? 18}px`,
 			"--heading-font-size-mobile": `${headingFontSize?.mobile ?? 18}px`,
-			"--heading-font-size-watch": `${headingFontSize?.smartwatch ?? 18}px`,
 			"--content-font-size": `${contentFontSize?.desktop ?? 16}px`,
 			"--content-font-size-tablet": `${contentFontSize?.tablet ?? 16}px`,
 			"--content-font-size-mobile": `${contentFontSize?.mobile ?? 16}px`,
-			"--content-font-size-watch": `${contentFontSize?.smartwatch ?? 16}px`,
 			// Quote (content) typography — font-weight/line-height are
 			// responsive (4 breakpoints) to match contentFontSize's own
 			// shape; letter-spacing/text-transform stay flat per convention.
 			"--quote-font-weight": `${quoteFontWeight?.desktop ?? '400'}`,
 			"--quote-font-weight-tablet": `${quoteFontWeight?.tablet ?? '400'}`,
 			"--quote-font-weight-mobile": `${quoteFontWeight?.mobile ?? '400'}`,
-			"--quote-font-weight-watch": `${quoteFontWeight?.smartwatch ?? '400'}`,
 			"--quote-line-height": `${quoteLineHeight?.desktop ?? '1.6'}`,
 			"--quote-line-height-tablet": `${quoteLineHeight?.tablet ?? '1.6'}`,
 			"--quote-line-height-mobile": `${quoteLineHeight?.mobile ?? '1.6'}`,
-			"--quote-line-height-watch": `${quoteLineHeight?.smartwatch ?? '1.6'}`,
 			"--quote-letter-spacing": quoteLetterSpacing || 'normal',
 			"--quote-text-transform": quoteTextTransform || 'none',
 			// Author name (heading) typography — font-weight/line-height are
@@ -196,11 +189,9 @@ export default function Edit({ attributes, setAttributes }) {
 			"--author-name-font-weight": `${authorNameFontWeight?.desktop ?? '700'}`,
 			"--author-name-font-weight-tablet": `${authorNameFontWeight?.tablet ?? '700'}`,
 			"--author-name-font-weight-mobile": `${authorNameFontWeight?.mobile ?? '700'}`,
-			"--author-name-font-weight-watch": `${authorNameFontWeight?.smartwatch ?? '700'}`,
 			"--author-name-line-height": `${authorNameLineHeight?.desktop ?? '1.5'}`,
 			"--author-name-line-height-tablet": `${authorNameLineHeight?.tablet ?? '1.5'}`,
 			"--author-name-line-height-mobile": `${authorNameLineHeight?.mobile ?? '1.5'}`,
-			"--author-name-line-height-watch": `${authorNameLineHeight?.smartwatch ?? '1.5'}`,
 			"--author-name-letter-spacing": authorNameLetterSpacing || 'normal',
 			"--author-name-text-transform": authorNameTextTransform || 'none',
 			// Author title — no prior attribute/shape existed for this role,
@@ -459,7 +450,7 @@ export default function Edit({ attributes, setAttributes }) {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody title="Container Settings" initialOpen={true}>
+				<PanelBody section="layout" title="Container Settings" initialOpen={true}>
 					<ButtonGroup>
 						{[
 							{ label: __('Full width', 'testimonial-block'), value: 'full' },
@@ -475,29 +466,12 @@ export default function Edit({ attributes, setAttributes }) {
 					</ButtonGroup>
 					{containerMode === 'constrained' && (
 						<>
-							<p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>
-								{__('Max Width', 'testimonial-block')}
-							</p>
-							<ButtonGroup style={{ marginBottom: '12px' }}>
-								<Button
-									icon={desktop}
-									isPrimary={deviceType === 'desktop'}
-									onClick={() => setDeviceType('desktop')}
-									label={__('Desktop', 'testimonial-block')}
-								/>
-								<Button
-									icon={tablet}
-									isPrimary={deviceType === 'tablet'}
-									onClick={() => setDeviceType('tablet')}
-									label={__('Tablet', 'testimonial-block')}
-								/>
-								<Button
-									icon={mobile}
-									isPrimary={deviceType === 'mobile'}
-									onClick={() => setDeviceType('mobile')}
-									label={__('Mobile', 'testimonial-block')}
-								/>
-							</ButtonGroup>
+							<DeviceSwitcher
+								deviceType={deviceType}
+								setDeviceType={setDeviceType}
+								label={__('Max Width', 'testimonial-block')}
+								tiers={THREE_TIERS}
+							/>
 							<div style={{ display: 'flex', gap: '8px' }}>
 								<TextControl
 									type="number"
@@ -550,7 +524,7 @@ export default function Edit({ attributes, setAttributes }) {
 					)}
 				</PanelBody>
 
-				<PanelBody title="Carousel Settings" initialOpen={true}>
+				<PanelBody section="layout" title="Carousel Settings" initialOpen={true}>
 					<TextControl
 						label="Slides Per View"
 						value={slidesPerView}
@@ -722,7 +696,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 
-				<PanelBody title="Card Width Settings" initialOpen={false}>
+				<PanelBody section="layout" title="Card Width Settings" initialOpen={false}>
 					<p style={{ marginBottom: '16px', color: '#666' }}>
 						{__('Control the width of individual testimonial cards at different screen sizes', 'testimonial-block')}
 					</p>
@@ -861,7 +835,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</p>
 				</PanelBody>
 
-				<PanelBody title="Card Gap Settings" initialOpen={false}>
+				<PanelBody section="layout" title="Card Gap Settings" initialOpen={false}>
 					<p style={{ marginBottom: '16px', color: '#666' }}>
 						{__('Control the spacing between testimonial cards at different screen sizes', 'testimonial-block')}
 					</p>
@@ -1000,7 +974,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</p>
 				</PanelBody>
 
-				<PanelBody title="Testimonials" initialOpen={true}>
+				<PanelBody section="content" title="Testimonials" initialOpen={true}>
 					{(testimonials || []).map((testimonial, index) => (
 						<div
 							key={index}
@@ -1127,15 +1101,22 @@ export default function Edit({ attributes, setAttributes }) {
 						Add New Testimonial
 					</Button>
 					{ showUpgradeNotice && (
-						<UpgradeNotice 
+						<UpgradeNotice
 							variant="inline"
 							itemType="testimonial"
 							message={upgradeMessage}
 						/>
 					) }
+
+					<TextControl
+						label="Block ID"
+						value={blockId}
+						onChange={(value) => setAttributes({ blockId: value })}
+						help="Add a custom ID to this block for CSS targeting or anchor links."
+					/>
 				</PanelBody>
 
-				<PanelBody title="Logo Settings" initialOpen={false}>
+				<PanelBody section="layout" title="Logo Settings" initialOpen={false}>
 					<SelectControl
 						label="Logo Alignment"
 						value={logoAlignment}
@@ -1162,7 +1143,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 
-				<PanelBody title="Color Settings" initialOpen={false}>
+				<PanelBody section="style" priority="high" title="Color Settings" initialOpen={false}>
 					<BaseControl label="Quote (Description) Color" help="Color for the review/quote text only">
 						<BoundColorPalette
 							value={quoteColor || textColor}
@@ -1200,12 +1181,12 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 				</PanelBody>
 
-				<PanelBody title={__('Typography', 'testimonial-block')} initialOpen={false}>
+				<PanelBody section="style" priority="high" title={__('Typography', 'testimonial-block')} initialOpen={false}>
 					<p style={{ marginBottom: '16px', color: '#666' }}>
 						{__('Heading and content text now have independent font-size controls, per device.', 'testimonial-block')}
 					</p>
 
-					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Device')} />
+					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Device')} tiers={THREE_TIERS} />
 
 					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '0' }}>
 						{__('Heading Font Size', 'testimonial-block')}
@@ -1357,17 +1338,8 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 
-				<PanelBody title="Block Settings" initialOpen={false}>
-					<TextControl
-						label="Block ID"
-						value={blockId}
-						onChange={(value) => setAttributes({ blockId: value })}
-						help="Add a custom ID to this block for CSS targeting or anchor links."
-					/>
-				</PanelBody>
-
-				<PanelBody title={__('Spacing', 'testimonial-block')} initialOpen={false}>
-					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Device')} />
+				<PanelBody section="style" priority="medium" title={__('Spacing', 'testimonial-block')} initialOpen={false}>
+					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Device')} tiers={THREE_TIERS} />
 					<RangeControl
 						label={__('Padding top (px)', 'testimonial-block')}
 						value={getDeviceValue(responsivePaddingTop, deviceType, deviceType === 'desktop' ? 60 : deviceType === 'tablet' ? 48 : deviceType === 'mobile' ? 36 : 24)}
