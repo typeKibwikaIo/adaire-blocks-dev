@@ -2308,6 +2308,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             )}
                         </>
                     )}
+
+                    <TextControl
+						label={__("Block ID", "hero-1-block")}
+                        value={blockId}
+                        onChange={(value) => setAttributes({ blockId: value })}
+						help={__(
+							"Add a custom ID to this block for CSS targeting or anchor links.",
+							"hero-1-block",
+						)}
+                    />
                 </PanelBody>
 
 				{(mediaType === "image" || mediaType === "video") && (
@@ -2384,22 +2394,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						/>
 					</PanelBody>
 				)}
-
-				<PanelBody
-					section="advanced"
-					title={__("Block Settings", "hero-1-block")}
-					initialOpen={false}
-				>
-                    <TextControl
-						label={__("Block ID", "hero-1-block")}
-                        value={blockId}
-                        onChange={(value) => setAttributes({ blockId: value })}
-						help={__(
-							"Add a custom ID to this block for CSS targeting or anchor links.",
-							"hero-1-block",
-						)}
-                    />
-                </PanelBody>
             </InspectorTabs>
 
             <div {...blockProps}>

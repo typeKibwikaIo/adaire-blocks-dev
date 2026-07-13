@@ -87,43 +87,35 @@ export default function save({ attributes }) {
 			"--carousel-padding-top": `${responsivePaddingTop?.desktop ?? 60}px`,
 			"--carousel-padding-top-tablet": `${responsivePaddingTop?.tablet ?? 48}px`,
 			"--carousel-padding-top-mobile": `${responsivePaddingTop?.mobile ?? 36}px`,
-			"--carousel-padding-top-watch": `${responsivePaddingTop?.smartwatch ?? 24}px`,
 			"--carousel-padding-bottom": `${responsivePaddingBottom?.desktop ?? 60}px`,
 			"--carousel-padding-bottom-tablet": `${responsivePaddingBottom?.tablet ?? 48}px`,
 			"--carousel-padding-bottom-mobile": `${responsivePaddingBottom?.mobile ?? 36}px`,
-			"--carousel-padding-bottom-watch": `${responsivePaddingBottom?.smartwatch ?? 24}px`,
 			// Independent heading (author name) / content (quote) typography
 			// layers — must mirror edit.js exactly since this block saves
 			// static markup. See style.scss's &__name / &__quote.
 			"--heading-font-size": `${headingFontSize?.desktop ?? 18}px`,
 			"--heading-font-size-tablet": `${headingFontSize?.tablet ?? 18}px`,
 			"--heading-font-size-mobile": `${headingFontSize?.mobile ?? 18}px`,
-			"--heading-font-size-watch": `${headingFontSize?.smartwatch ?? 18}px`,
 			"--content-font-size": `${contentFontSize?.desktop ?? 16}px`,
 			"--content-font-size-tablet": `${contentFontSize?.tablet ?? 16}px`,
 			"--content-font-size-mobile": `${contentFontSize?.mobile ?? 16}px`,
-			"--content-font-size-watch": `${contentFontSize?.smartwatch ?? 16}px`,
 			// Quote (content) typography — must mirror edit.js exactly since
 			// this block saves static markup.
 			"--quote-font-weight": `${quoteFontWeight?.desktop ?? '400'}`,
 			"--quote-font-weight-tablet": `${quoteFontWeight?.tablet ?? '400'}`,
 			"--quote-font-weight-mobile": `${quoteFontWeight?.mobile ?? '400'}`,
-			"--quote-font-weight-watch": `${quoteFontWeight?.smartwatch ?? '400'}`,
 			"--quote-line-height": `${quoteLineHeight?.desktop ?? '1.6'}`,
 			"--quote-line-height-tablet": `${quoteLineHeight?.tablet ?? '1.6'}`,
 			"--quote-line-height-mobile": `${quoteLineHeight?.mobile ?? '1.6'}`,
-			"--quote-line-height-watch": `${quoteLineHeight?.smartwatch ?? '1.6'}`,
 			"--quote-letter-spacing": quoteLetterSpacing || 'normal',
 			"--quote-text-transform": quoteTextTransform || 'none',
 			// Author name (heading) typography
 			"--author-name-font-weight": `${authorNameFontWeight?.desktop ?? '700'}`,
 			"--author-name-font-weight-tablet": `${authorNameFontWeight?.tablet ?? '700'}`,
 			"--author-name-font-weight-mobile": `${authorNameFontWeight?.mobile ?? '700'}`,
-			"--author-name-font-weight-watch": `${authorNameFontWeight?.smartwatch ?? '700'}`,
 			"--author-name-line-height": `${authorNameLineHeight?.desktop ?? '1.5'}`,
 			"--author-name-line-height-tablet": `${authorNameLineHeight?.tablet ?? '1.5'}`,
 			"--author-name-line-height-mobile": `${authorNameLineHeight?.mobile ?? '1.5'}`,
-			"--author-name-line-height-watch": `${authorNameLineHeight?.smartwatch ?? '1.5'}`,
 			"--author-name-letter-spacing": authorNameLetterSpacing || 'normal',
 			"--author-name-text-transform": authorNameTextTransform || 'none',
 			// Author title — flat (no prior attribute/shape existed for this role)

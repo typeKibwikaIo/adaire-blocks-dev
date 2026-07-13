@@ -18,8 +18,7 @@ import {
     Spinner,
     Notice,
     __experimentalSpacingSizesControl as SpacingSizesControl,
-    __experimentalBoxControl as BoxControl,
-    TabPanel
+    __experimentalBoxControl as BoxControl
 } from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
@@ -540,52 +539,29 @@ return (
                     )}
 
                     <PanelBody title={__('Slides Per View', 'posts-carousel-block')} initialOpen={false}>
-                        <TabPanel
-                            className="posts-carousel-slides-tab-panel"
-                            activeClass="is-active"
-                            onSelect={(tabName) => setDeviceType(tabName)}
-                            tabs={[
-                                {
-                                    name: 'desktop',
-                                    title: __('Desktop', 'posts-carousel-block'),
-                                    icon: desktop,
-                                },
-                                {
-                                    name: 'tablet',
-                                    title: __('Tablet', 'posts-carousel-block'),
-                                    icon: tablet,
-                                },
-                                {
-                                    name: 'mobile',
-                                    title: __('Mobile', 'posts-carousel-block'),
-                                    icon: mobile,
-                                },
-                            ]}
-                        >
-                            {(tab) => {
-                                const currentValue = slidesPerView?.[tab.name] ?? (tab.name === 'desktop' ? 4 : tab.name === 'tablet' ? 3 : 2);
-                                return (
-                                    <RangeControl
-                                        label={__('Slides Per View', 'posts-carousel-block')}
-                                        value={currentValue}
-                                        onChange={(value) => {
-                                            setAttributes({
-                                                slidesPerView: {
-                                                    ...slidesPerView,
-                                                    [tab.name]: value
-                                                }
-                                            });
-                                        }}
-                                        min={1}
-                                        max={6}
-                                        step={1}
-                                        withInputField={true}
-                                        allowReset={true}
-                                        help={__('Number of slides visible at once', 'posts-carousel-block')}
+                        <DeviceSwitcher
+                            deviceType={deviceType}
+                            setDeviceType={setDeviceType}
+                            tiers={THREE_TIERS}
                         />
-                                );
+                        <RangeControl
+                            label={__('Slides Per View', 'posts-carousel-block')}
+                            value={slidesPerView?.[deviceType] ?? (deviceType === 'desktop' ? 4 : deviceType === 'tablet' ? 3 : 2)}
+                            onChange={(value) => {
+                                setAttributes({
+                                    slidesPerView: {
+                                        ...slidesPerView,
+                                        [deviceType]: value
+                                    }
+                                });
                             }}
-                        </TabPanel>
+                            min={1}
+                            max={6}
+                            step={1}
+                            withInputField={true}
+                            allowReset={true}
+                            help={__('Number of slides visible at once', 'posts-carousel-block')}
+                        />
                     </PanelBody>
 
                     <SelectControl

@@ -28,13 +28,6 @@
 		padding-right: 16px;
 	}
 
-	@media (max-width: 480px) {
-		padding-top: var(--carousel-padding-top-watch, 24px);
-		padding-bottom: var(--carousel-padding-bottom-watch, 24px);
-		padding-left: 12px;
-		padding-right: 12px;
-	}
-
 	&__testimonial-carousel {
 		margin: 0 auto;
 		transition: max-width 0.3s ease;

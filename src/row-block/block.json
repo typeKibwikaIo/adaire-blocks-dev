@@ -11,6 +11,8 @@
   "supports": {
     "html": false,
     "align": ["wide", "full"],
+    "anchor": true,
+    "customClassName": true,
     "spacing": { "padding": true, "margin": true },
     "color": { "background": true, "gradients": true }
   },

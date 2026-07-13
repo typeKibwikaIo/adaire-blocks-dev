@@ -9,7 +9,6 @@ import {
     Button,
     TextControl,
     SelectControl,
-    ButtonGroup,
     __experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
 import { desktop, tablet, mobile } from '@wordpress/icons';
@@ -18,6 +17,7 @@ import { plus, trash } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher from '../components/DeviceSwitcher';
 import './editor.scss';
 
 // Custom icons for small laptop and big desktop
@@ -76,11 +76,11 @@ const bigDesktopIcon = createElement('svg', {
 );
 
 const BREAKPOINTS = [
-    { name: 'mobile', icon: mobile, label: __('Mobile', 'social-banner-block') },
-    { name: 'tablet', icon: tablet, label: __('Tablet', 'social-banner-block') },
-    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'social-banner-block') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'social-banner-block') },
-    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'social-banner-block') }
+    { key: 'mobile', icon: mobile, label: __('Mobile', 'social-banner-block') },
+    { key: 'tablet', icon: tablet, label: __('Tablet', 'social-banner-block') },
+    { key: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'social-banner-block') },
+    { key: 'desktop', icon: desktop, label: __('Desktop', 'social-banner-block') },
+    { key: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'social-banner-block') }
 ];
 
 const FONT_FAMILY_OPTIONS = [
@@ -205,7 +205,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody title={__('Position Settings', 'social-banner-block')} initialOpen={true}>
+                <PanelBody section="layout" title={__('Position Settings', 'social-banner-block')} initialOpen={true}>
                     <SelectControl
                         label={__('Position Type', 'social-banner-block')}
                         value={positionType || 'fixed'}
@@ -304,24 +304,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </div>
                 </PanelBody>
 
-                <PanelBody title={__('Background & Padding', 'social-banner-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Background & Padding', 'social-banner-block')} initialOpen={false}>
                   
                 <div style={{ marginTop: '20px' }}>
                         <p style={{ marginBottom: '8px', fontWeight: 600 }}>
                             {__('Current Breakpoint:', 'social-banner-block')}{' '}
-                            {BREAKPOINTS.find(bp => bp.name === deviceType)?.label || deviceType}
+                            {BREAKPOINTS.find(bp => bp.key === deviceType)?.label || deviceType}
                         </p>
-                        <ButtonGroup style={{ marginBottom: '12px', flexWrap: 'wrap' }}>
-                            {BREAKPOINTS.map((bp) => (
-                                <Button
-                                    key={bp.name}
-                                    icon={bp.icon}
-                                    isPrimary={deviceType === bp.name}
-                                    onClick={() => setDeviceType(bp.name)}
-                                    aria-label={bp.label}
-                                />
-                            ))}
-                        </ButtonGroup>
+                        <DeviceSwitcher
+                            deviceType={deviceType}
+                            setDeviceType={setDeviceType}
+                            tiers={BREAKPOINTS}
+                        />
 
                         <BoxControl
                             label={__('Padding', 'social-banner-block')}
@@ -358,7 +352,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 </PanelBody>
 
-                <PanelBody title={__('Typography', 'social-banner-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography', 'social-banner-block')} initialOpen={false}>
                     <SelectControl
                         label={__('Font Family', 'social-banner-block')}
                         value={fontFamily || ''}
@@ -368,7 +362,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Icon Settings', 'social-banner-block')} initialOpen={true}>
+                <PanelBody section="style" priority="medium" title={__('Icon Settings', 'social-banner-block')} initialOpen={true}>
                     <RangeControl
                         label={__('Icon Size', 'social-banner-block')}
                         value={iconSize}
@@ -439,7 +433,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Icon Entries', 'social-banner-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Icon Entries', 'social-banner-block')} initialOpen={true}>
                     <Button
                         onClick={addIconEntry}
                         variant="primary"

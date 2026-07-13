@@ -13,17 +13,10 @@ import {
 } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import { getBlockType } from '@wordpress/blocks';
-import { desktop, tablet, mobile, plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
+import { plus, trash, chevronUp, chevronDown } from '@wordpress/icons';
 import InspectorTabs from '../components/InspectorTabs';
-import DeviceSwitcher from '../components/DeviceSwitcher';
+import DeviceSwitcher, { THREE_TIERS } from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
-
-const FOUR_TIERS = [
-	{ key: 'desktop', label: __('Desktop', 'image-composition-block'), icon: desktop },
-	{ key: 'tablet', label: __('Tablet', 'image-composition-block'), icon: tablet },
-	{ key: 'mobile', label: __('Mobile', 'image-composition-block'), icon: mobile },
-	{ key: 'smartwatch', label: __('Watch', 'image-composition-block'), glyph: '⌚' },
-];
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
 	const {
@@ -66,7 +59,6 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 			'--container-max-width': `${containerMaxWidth?.desktop?.value ?? 1200}${containerMaxWidth?.desktop?.unit ?? 'px'}`,
 			'--container-max-width-tablet': `${containerMaxWidth?.tablet?.value ?? 100}${containerMaxWidth?.tablet?.unit ?? '%'}`,
 			'--container-max-width-mobile': `${containerMaxWidth?.mobile?.value ?? 100}${containerMaxWidth?.mobile?.unit ?? '%'}`,
-			'--container-max-width-watch': `${containerMaxWidth?.smartwatch?.value ?? 100}${containerMaxWidth?.smartwatch?.unit ?? '%'}`,
 		},
 	});
 
@@ -265,7 +257,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 							<DeviceSwitcher
 								deviceType={deviceType}
 								setDeviceType={setDeviceType}
-								tiers={FOUR_TIERS}
+								tiers={THREE_TIERS}
 								onReset={() => resetToDefaults(['containerMaxWidth'])}
 							/>
 							<div style={{ display: 'flex', gap: 8 }}>

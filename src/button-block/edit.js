@@ -2,7 +2,7 @@ import { useBlockProps, ColorPalette } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl, SelectControl, RangeControl, BaseControl, Button, __experimentalBoxControl as BoxControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS } from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import ButtonIcon, { BUTTON_ICON_OPTIONS } from './icons';
@@ -58,7 +58,7 @@ export default function Edit({ attributes, setAttributes }) {
   } = attributes;
 
   // Helper to get device-specific values
-  const getDeviceFontSize = () => getDeviceValue(fontSize, deviceType, deviceType === 'desktop' ? 18 : deviceType === 'tablet' ? 16 : deviceType === 'mobile' ? 14 : 12);
+  const getDeviceFontSize = () => getDeviceValue(fontSize, deviceType, deviceType === 'desktop' ? 18 : deviceType === 'tablet' ? 16 : 14);
   const getDevicePadding = () => buttonPadding?.[deviceType] || buttonPadding?.desktop || { top: '10px', right: '20px', bottom: '10px', left: '20px' };
   const getDeviceMargin = () => buttonMargin?.[deviceType] || buttonMargin?.desktop || { top: '20px', right: '0px', bottom: '20px', left: '0px' };
   const getDeviceLineHeight = () => getDeviceValue(lineHeight, deviceType, 'normal');
@@ -79,7 +79,6 @@ export default function Edit({ attributes, setAttributes }) {
       '--button-font-size': `${getDeviceValue(fontSize, 'desktop', 18)}px`,
       '--button-font-size-tablet': `${getDeviceValue(fontSize, 'tablet', 16)}px`,
       '--button-font-size-mobile': `${getDeviceValue(fontSize, 'mobile', 14)}px`,
-      '--button-font-size-watch': `${getDeviceValue(fontSize, 'smartwatch', 12)}px`,
       '--button-padding-top': buttonPadding?.desktop?.top || '10px',
       '--button-padding-right': buttonPadding?.desktop?.right || '20px',
       '--button-padding-bottom': buttonPadding?.desktop?.bottom || '10px',
@@ -92,10 +91,6 @@ export default function Edit({ attributes, setAttributes }) {
       '--button-padding-right-mobile': buttonPadding?.mobile?.right || '12px',
       '--button-padding-bottom-mobile': buttonPadding?.mobile?.bottom || '6px',
       '--button-padding-left-mobile': buttonPadding?.mobile?.left || '12px',
-      '--button-padding-top-watch': buttonPadding?.smartwatch?.top || '4px',
-      '--button-padding-right-watch': buttonPadding?.smartwatch?.right || '8px',
-      '--button-padding-bottom-watch': buttonPadding?.smartwatch?.bottom || '4px',
-      '--button-padding-left-watch': buttonPadding?.smartwatch?.left || '8px',
       '--button-margin-top': buttonMargin?.desktop?.top || '20px',
       '--button-margin-right': buttonMargin?.desktop?.right || '0px',
       '--button-margin-bottom': buttonMargin?.desktop?.bottom || '20px',
@@ -108,10 +103,6 @@ export default function Edit({ attributes, setAttributes }) {
       '--button-margin-right-mobile': buttonMargin?.mobile?.right || '0px',
       '--button-margin-bottom-mobile': buttonMargin?.mobile?.bottom || '12px',
       '--button-margin-left-mobile': buttonMargin?.mobile?.left || '0px',
-      '--button-margin-top-watch': buttonMargin?.smartwatch?.top || '8px',
-      '--button-margin-right-watch': buttonMargin?.smartwatch?.right || '0px',
-      '--button-margin-bottom-watch': buttonMargin?.smartwatch?.bottom || '8px',
-      '--button-margin-left-watch': buttonMargin?.smartwatch?.left || '0px',
       '--button-z-index': zIndex || '1',
       '--button-border-radius': borderRadius ? `${borderRadius}px` : '0px',
       '--button-font-weight': fontWeight || '500',
@@ -122,11 +113,9 @@ export default function Edit({ attributes, setAttributes }) {
       '--button-line-height': getDeviceValue(lineHeight, 'desktop', 'normal'),
       '--button-line-height-tablet': getDeviceValue(lineHeight, 'tablet', 'normal'),
       '--button-line-height-mobile': getDeviceValue(lineHeight, 'mobile', 'normal'),
-      '--button-line-height-watch': getDeviceValue(lineHeight, 'smartwatch', 'normal'),
       '--button-letter-spacing': getDeviceValue(letterSpacing, 'desktop', 'normal'),
       '--button-letter-spacing-tablet': getDeviceValue(letterSpacing, 'tablet', 'normal'),
       '--button-letter-spacing-mobile': getDeviceValue(letterSpacing, 'mobile', 'normal'),
-      '--button-letter-spacing-watch': getDeviceValue(letterSpacing, 'smartwatch', 'normal'),
       '--button-text-transform': textTransform || 'none',
       '--button-font-family': fontFamily || '',
     }
@@ -134,7 +123,7 @@ export default function Edit({ attributes, setAttributes }) {
 
   return (
     <>
-      <InspectorTabs attributes={ attributes } setAttributes={ setAttributes } skipBuiltinControls={ ['zIndex'] }>
+      <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
         <PanelBody section="content" title="Button Settings" initialOpen={true}>
           <TextControl
             label="Button Text"
@@ -157,6 +146,22 @@ export default function Edit({ attributes, setAttributes }) {
             onChange={(value) => setAttributes({ openInNewTab: value })}
             help={openInNewTab ? 'Link will open in a new tab' : 'Link will open in the same tab'}
           />
+
+          <TextControl
+            label="Block ID"
+            value={blockId}
+            onChange={(value) => setAttributes({ blockId: value })}
+            help="Add a custom ID to this block for CSS targeting or anchor links."
+          />
+
+          <RangeControl
+            label="Z-Index"
+            value={zIndex}
+            onChange={(value) => setAttributes({ zIndex: value })}
+            min={0}
+            max={100}
+            step={1}
+          />
         </PanelBody>
 
         <PanelBody section="layout" title="Responsive Settings" initialOpen={false}>
@@ -164,6 +169,7 @@ export default function Edit({ attributes, setAttributes }) {
             deviceType={deviceType}
             setDeviceType={setDeviceType}
             label="Device Preview"
+            tiers={THREE_TIERS}
           />
         </PanelBody>
 
@@ -435,8 +441,8 @@ export default function Edit({ attributes, setAttributes }) {
             label={`Font Size (px) - ${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)}`}
             value={getDeviceFontSize()}
             onChange={(value) => setAttributes({ fontSize: updateDeviceAttribute(fontSize, deviceType, value) })}
-            min={deviceType === 'smartwatch' ? 8 : deviceType === 'mobile' ? 10 : 12}
-            max={deviceType === 'smartwatch' ? 20 : 48}
+            min={deviceType === 'mobile' ? 10 : 12}
+            max={48}
             step={1}
           />
 
@@ -512,23 +518,6 @@ export default function Edit({ attributes, setAttributes }) {
               { value: 'em', label: 'em', default: 0 },
               { value: 'rem', label: 'rem', default: 0 },
             ]}
-          />
-        </PanelBody>
-
-        <PanelBody section="advanced" title="Block Settings" initialOpen={false}>
-          <TextControl
-            label="Block ID"
-            value={blockId}
-            onChange={(value) => setAttributes({ blockId: value })}
-            help="Add a custom ID to this block for CSS targeting or anchor links."
-          />
-          <RangeControl
-            label="Z-Index"
-            value={zIndex}
-            onChange={(value) => setAttributes({ zIndex: value })}
-            min={0}
-            max={100}
-            step={1}
           />
         </PanelBody>
       </InspectorTabs>

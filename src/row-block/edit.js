@@ -1,8 +1,9 @@
-import { useBlockProps, useInnerBlocksProps, ButtonBlockAppender, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps, ButtonBlockAppender } from '@wordpress/block-editor';
 import { PanelBody, Button, RangeControl, __experimentalToggleGroupControl as ToggleGroupControl, __experimentalToggleGroupControlOption as ToggleGroupControlOption } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import { createBlock } from '@wordpress/blocks';
 import { select, useDispatch, useSelect } from '@wordpress/data';
+import InspectorTabs from '../components/InspectorTabs';
 import PresetIcon from './PresetIcon';
 import { getRowWidthClass } from './width-utils';
 
@@ -95,9 +96,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     ? columnWidths.map( ( w ) => `${ w }fr` ).join( ' ' )
     : '1fr';
 
-  const widthControls = (
-    <InspectorControls>
-      <PanelBody title={ __( 'Width', 'adaire-row' ) } initialOpen={ true }>
+  const widthPanels = [
+      <PanelBody key="width" section="layout" title={ __( 'Width', 'adaire-row' ) } initialOpen={ true }>
         <ToggleGroupControl
           label={ __( 'Row Width', 'adaire-row' ) }
           value={ align || '' }
@@ -113,8 +113,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
             />
           ) ) }
         </ToggleGroupControl>
-      </PanelBody>
-      <PanelBody title={ __( 'Spacing & Alignment', 'adaire-row' ) } initialOpen={ false }>
+      </PanelBody>,
+      <PanelBody key="spacing-alignment" section="layout" title={ __( 'Spacing & Alignment', 'adaire-row' ) } initialOpen={ false }>
         <RangeControl
           label={ __( 'Gap Between Columns (px)', 'adaire-row' ) }
           value={ gap }
@@ -148,9 +148,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
             <ToggleGroupControlOption value="2" label={ __( '2 per row', 'adaire-row' ) } />
           </ToggleGroupControl>
         ) }
-      </PanelBody>
-    </InspectorControls>
-  );
+      </PanelBody>,
+  ];
 
   const blockProps = useBlockProps( {
     className: `adaire-row adaire-row--cols-${ columnWidths.length } ${ getRowWidthClass( align ) } ${ verticalAlign ? `adaire-row--valign-${ verticalAlign }` : '' } ${ mobileColumns ? `adaire-row--mobile-cols-${ mobileColumns }` : '' }`,
@@ -244,9 +243,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
   const currentColumnCount = columnWidths.length || 1;
 
-  const columnControls = (
-    <InspectorControls>
-      <PanelBody title={ __( 'Columns', 'adaire-row' ) } initialOpen={ true }>
+  const columnsPanel = (
+      <PanelBody section="content" title={ __( 'Columns', 'adaire-row' ) } initialOpen={ true }>
         <p className="adaire-row-columns-count">
           { sprintf(
             /* translators: %d: number of columns */
@@ -312,7 +310,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
           ) ) }
         </div>
       </PanelBody>
-    </InspectorControls>
   );
 
   // Hooks must be called unconditionally — before any early return.
@@ -328,7 +325,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
   if ( ! layoutAttr ) {
     return (
       <>
-        { widthControls }
+        <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
+          { widthPanels }
+        </InspectorTabs>
         <div { ...blockProps }>
           <div className="adaire-row-placeholder">
             <div className="adaire-row-placeholder__header">
@@ -364,8 +363,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
   return (
     <>
-      { widthControls }
-      { columnControls }
+      <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
+        { widthPanels }
+        { columnsPanel }
+      </InspectorTabs>
       <div { ...innerBlocksProps } />
     </>
   );

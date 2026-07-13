@@ -1,19 +1,26 @@
 /**
  * InspectorTabs — structured block inspector sidebar.
  *
- * Splits every Adaire Blocks block into four tabs:
+ * Splits every Adaire Blocks block into three tabs:
  *   • Content  — the block's own text/data/items
  *   • Layout   — structural arrangement (columns, ordering, variant, container/alignment)
  *   • Style    — colors, typography, gradients, shadows, spacing/effects
- *   • Advanced — CSS ID, CSS Classes, custom code hooks
  *
- *   ┌───────────────────────────────────────────┐
- *   │  Content  │  Layout  │  Style  │  Advanced  │
- *   ├───────────────────────────────────────────┤
- *   │  HIGH PRIORITY                             │  ← most-used styling (colors, type)
- *   │   ▾ Colors                                 │
- *   │  MEDIUM PRIORITY                           │  ← border, spacing, effects…
- *   └───────────────────────────────────────────┘
+ * There is deliberately no Advanced tab. WordPress's own native "Advanced"
+ * panel already renders HTML Anchor / Additional CSS Class(es) for any block
+ * with supports.anchor / supports.customClassName, and renders below every
+ * block's InspectorControls regardless of which of these tabs is active —
+ * a custom Advanced tab here just duplicated it. Any block-specific control
+ * that used to live there (e.g. a Block ID field, Z-Index) belongs in
+ * Content or Style instead, tagged accordingly.
+ *
+ *   ┌────────────────────────────────┐
+ *   │  Content  │  Layout  │  Style  │
+ *   ├────────────────────────────────┤
+ *   │  HIGH PRIORITY                  │  ← most-used styling (colors, type)
+ *   │   ▾ Colors                      │
+ *   │  MEDIUM PRIORITY                │  ← border, spacing, effects…
+ *   └────────────────────────────────┘
  *
  * Usage inside a block's Edit():
  *   <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
@@ -22,9 +29,9 @@
  *       <PanelBody section="style"   title="Typography">…</PanelBody>
  *   </InspectorTabs>
  *
- * Panels tagged with an explicit `section` prop ("content" | "layout" | "style" |
- * "advanced") are placed deliberately. A `priority` prop ("high" | "medium") further
- * orders panels within the Style tab. Panels with no `section` prop (blocks outside
+ * Panels tagged with an explicit `section` prop ("content" | "layout" | "style")
+ * are placed deliberately. A `priority` prop ("high" | "medium") further orders
+ * panels within the Style tab. Panels with no `section` prop (blocks outside
  * the Gutenblocks free-tier reorg that haven't been tagged yet) fall back to the
  * legacy keyword classifier below, so their behavior is unchanged.
  */
@@ -33,8 +40,6 @@ import { InspectorControls } from '@wordpress/block-editor';
 import {
 	TabPanel,
 	PanelBody,
-	TextControl,
-	__experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
 import { Children, isValidElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -84,13 +89,6 @@ const StyleIcon = (
 	</svg>
 );
 
-const AdvancedIcon = (
-	<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-		<circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
-		<path d="M19.4 13a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" strokeWidth="1.4" />
-	</svg>
-);
-
 /**
  * Legacy fallback: decide which tab/priority a panel belongs to based on its
  * title, for panels with no explicit `section` prop.
@@ -110,7 +108,7 @@ function classifyTitle( title ) {
 	return null;
 }
 
-const VALID_SECTIONS = [ 'content', 'layout', 'style', 'advanced' ];
+const VALID_SECTIONS = [ 'content', 'layout', 'style' ];
 
 /**
  * Classify a single child element into { section, priority }.
@@ -139,63 +137,12 @@ export default function InspectorTabs( {
 	attributes = {},
 	setAttributes = () => {},
 	stylePanels = [],
-	skipBuiltinControls = [],
 	children,
 } ) {
-	const hasZIndex  = 'zIndex' in attributes && ! skipBuiltinControls.includes( 'zIndex' );
-	const hasMargin  = 'gutenblocksMargin' in attributes && ! skipBuiltinControls.includes( 'gutenblocksMargin' );
-	const hasPadding = 'gutenblocksPadding' in attributes && ! skipBuiltinControls.includes( 'gutenblocksPadding' );
-
-	// Built-in dev-level controls always live at the bottom (low priority).
-	const builtinLayoutPanel = {
-		title: __( 'Spacing & Custom CSS' ),
-		content: (
-			<>
-				{ hasMargin && (
-					<BoxControl
-						label={ __( 'Margin' ) }
-						values={ attributes.gutenblocksMargin }
-						onChange={ ( gutenblocksMargin ) => setAttributes( { gutenblocksMargin } ) }
-					/>
-				) }
-				{ hasPadding && (
-					<BoxControl
-						label={ __( 'Padding' ) }
-						values={ attributes.gutenblocksPadding }
-						onChange={ ( gutenblocksPadding ) => setAttributes( { gutenblocksPadding } ) }
-					/>
-				) }
-				{ hasZIndex && (
-					<TextControl
-						type="number"
-						label={ __( 'Z-Index' ) }
-						value={ attributes.zIndex ?? '' }
-						onChange={ ( value ) =>
-							setAttributes( {
-								zIndex: value === '' ? undefined : Number( value ),
-							} )
-						}
-					/>
-				) }
-				<TextControl
-					label={ __( 'CSS ID' ) }
-					value={ attributes.anchor ?? '' }
-					onChange={ ( anchor ) => setAttributes( { anchor } ) }
-				/>
-				<TextControl
-					label={ __( 'CSS Classes' ) }
-					value={ attributes.className ?? '' }
-					onChange={ ( className ) => setAttributes( { className } ) }
-				/>
-			</>
-		),
-	};
-
-	// Partition the block's own panels into Content / Layout / Style(+priority) / Advanced.
+	// Partition the block's own panels into Content / Layout / Style(+priority).
 	const contentChildren = [];
 	const layoutChildren = [];
 	const styleGroups = { high: [], medium: [] };
-	const advancedChildren = [];
 
 	Children.toArray( children ).forEach( ( child ) => {
 		const { section, priority } = classifyChild( child );
@@ -203,8 +150,6 @@ export default function InspectorTabs( {
 			contentChildren.push( child );
 		} else if ( section === 'style' ) {
 			styleGroups[ priority ].push( child );
-		} else if ( section === 'advanced' ) {
-			advancedChildren.push( child );
 		} else {
 			layoutChildren.push( child );
 		}
@@ -223,19 +168,6 @@ export default function InspectorTabs( {
 			</PanelBody>
 		);
 	} );
-
-	// Built-in dev-level controls live in Advanced, followed by any
-	// block-specific panels explicitly tagged section="advanced".
-	const advancedTabChildren = [
-		<PanelBody
-			key="adaire-builtin-layout"
-			title={ builtinLayoutPanel.title }
-			initialOpen={ true }
-		>
-			{ builtinLayoutPanel.content }
-		</PanelBody>,
-		...advancedChildren,
-	];
 
 	const hasStyle = styleGroups.high.length > 0 || styleGroups.medium.length > 0;
 
@@ -275,16 +207,6 @@ export default function InspectorTabs( {
 						),
 						className: 'adaire-inspector-tab',
 					},
-					{
-						name: 'advanced',
-						title: (
-							<span className="adaire-tab-title">
-								{ AdvancedIcon }
-								{ __( 'Advanced' ) }
-							</span>
-						),
-						className: 'adaire-inspector-tab',
-					},
 				] }
 			>
 				{ ( tab ) => {
@@ -293,7 +215,7 @@ export default function InspectorTabs( {
 							<div className="adaire-inspector-tabs__panel">
 								{ contentChildren.length > 0
 									? contentChildren
-									: <p className="adaire-inspector-empty">{ __( 'This block has no content settings — see the Layout, Style and Advanced tabs.' ) }</p> }
+									: <p className="adaire-inspector-empty">{ __( 'This block has no content settings — see the Layout and Style tabs.' ) }</p> }
 							</div>
 						);
 					}
@@ -308,31 +230,23 @@ export default function InspectorTabs( {
 						);
 					}
 
-					if ( tab.name === 'style' ) {
-						return (
-							<div className="adaire-inspector-tabs__panel adaire-inspector-tabs__panel--advanced">
-								{ hasStyle
-									? STYLE_ORDER.map( ( priority ) => {
-										const panels = styleGroups[ priority ];
-										if ( panels.length === 0 ) return null;
-
-										return (
-											<div key={ priority } className={ `adaire-priority-group is-${ priority }` }>
-												<div className={ `adaire-priority-label is-${ priority }` }>
-													{ STYLE_LABELS[ priority ] }
-												</div>
-												{ panels }
-											</div>
-										);
-									} )
-									: <p className="adaire-inspector-empty">{ __( 'This block has no style settings.' ) }</p> }
-							</div>
-						);
-					}
-
 					return (
 						<div className="adaire-inspector-tabs__panel">
-							{ advancedTabChildren }
+							{ hasStyle
+								? STYLE_ORDER.map( ( priority ) => {
+									const panels = styleGroups[ priority ];
+									if ( panels.length === 0 ) return null;
+
+									return (
+										<div key={ priority } className={ `adaire-priority-group is-${ priority }` }>
+											<div className={ `adaire-priority-label is-${ priority }` }>
+												{ STYLE_LABELS[ priority ] }
+											</div>
+											{ panels }
+										</div>
+									);
+								} )
+								: <p className="adaire-inspector-empty">{ __( 'This block has no style settings.' ) }</p> }
 						</div>
 					);
 				} }

@@ -218,7 +218,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody title={ __( 'Layout', 'timeline-block' ) } initialOpen={ true }>
+				<PanelBody section="layout" title={ __( 'Layout', 'timeline-block' ) } initialOpen={ true }>
 					<SelectControl
 						label={ __( 'Orientation', 'timeline-block' ) }
 						value={ orientation }
@@ -239,7 +239,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) => setAttributes( { showArrows: value } ) }
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Colors', 'timeline-block' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="high" title={ __( 'Colors', 'timeline-block' ) } initialOpen={ false }>
 					<ColorPicker
 						label={ __( 'Background Color', 'timeline-block' ) }
 						value={ attributes.backgroundColor }
@@ -266,7 +266,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) => setAttributes( { descriptionColor: value } ) }
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Typography', 'timeline-block' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="high" title={ __( 'Typography', 'timeline-block' ) } initialOpen={ false }>
 					<SelectControl
 						label={ __( 'Font family' ) }
 						value={ a.fontFamily || '' }
@@ -280,7 +280,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TypographySubsection title={ __( 'Milestone title' ) } a={ a } set={ set } prefix="itemTitle" />
 					<TypographySubsection title={ __( 'Milestone description' ) } a={ a } set={ set } prefix="itemDesc" />
 				</PanelBody>
-				<PanelBody title={ __( 'Typography', 'timeline-block' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="high" title={ __( 'Typography', 'timeline-block' ) } initialOpen={ false }>
 					<SelectControl
 						label={ __( 'Font family' ) }
 						value={ a.fontFamily || '' }
@@ -294,7 +294,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TypographySubsection title={ __( 'Milestone title' ) } a={ a } set={ set } prefix="itemTitle" />
 					<TypographySubsection title={ __( 'Milestone description' ) } a={ a } set={ set } prefix="itemDesc" />
 				</PanelBody>
-				<PanelBody title={ __( 'Spacing', 'timeline-block' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="medium" title={ __( 'Spacing', 'timeline-block' ) } initialOpen={ false }>
 					<RangeControl
 						label={ __( 'Padding top (px)', 'timeline-block' ) }
 						value={ a.paddingTop ?? 80 }
@@ -325,6 +325,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 				<PanelBody
+					section="content"
 					title={ `Items (${ items.length })` }
 					initialOpen={ false }
 				>

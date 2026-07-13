@@ -1,4 +1,4 @@
-const DEVICES = [ 'desktop', 'tablet', 'mobile', 'smartwatch' ];
+const DEVICES = [ 'desktop', 'tablet', 'mobile' ];
 const SIDES = [ 'Top', 'Right', 'Bottom', 'Left' ];
 
 export const getUnitValue = ( value, fallbackValue, fallbackUnit ) =>
@@ -67,7 +67,7 @@ export const getVideoPlayerStyles = ( attributes ) => {
 	};
 
 	DEVICES.filter( ( device ) => device !== 'desktop' ).forEach( ( device ) => {
-		const suffix = device === 'smartwatch' ? 'watch' : device;
+		const suffix = device;
 
 		styles[ `--container-max-width-${ suffix }` ] = getUnitValue(
 			containerMaxWidth?.[ device ],
@@ -87,7 +87,7 @@ export const getVideoPlayerStyles = ( attributes ) => {
 		styles[ `padding${ side }` ] = `${ padding[ side ]?.desktop ?? 0 }px`;
 
 		DEVICES.filter( ( device ) => device !== 'desktop' ).forEach( ( device ) => {
-			const suffix = device === 'smartwatch' ? 'watch' : device;
+			const suffix = device;
 			styles[ `--margin-${ cssSide }-${ suffix }` ] = `${ margins[ side ]?.[ device ] ?? 0 }px`;
 			styles[ `--padding-${ cssSide }-${ suffix }` ] = `${ padding[ side ]?.[ device ] ?? 0 }px`;
 		} );

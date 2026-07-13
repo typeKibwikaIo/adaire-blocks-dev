@@ -13,6 +13,15 @@ const DEFAULT_TIERS = [
 	{ key: "smartwatch", label: "Watch", icon: null, glyph: "⌚" },
 ];
 
+// 3-tier set (no smartwatch) for blocks that have dropped the watch
+// breakpoint. Kept separate from DEFAULT_TIERS since other blocks still
+// rely on the 4-tier default.
+export const THREE_TIERS = [
+	{ key: "desktop", label: "Desktop", icon: desktop },
+	{ key: "tablet", label: "Tablet", icon: tablet },
+	{ key: "mobile", label: "Mobile", icon: mobile },
+];
+
 /**
  * DeviceSwitcher Component
  * The one shared responsive device switcher used across every Gutenblocks block.
