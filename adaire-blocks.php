@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Guten-Blocks
  * Description:       A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.
- * Version:           1.2.8
+ * Version:           1.2.9
  * Requires at least: 6.7
  * Requires PHP:      7.0
  * Author:            <a href="https://adaireblocks.com" target="_blank">Adaire Digital</a>
@@ -227,7 +227,7 @@ add_action('admin_notices', function () {
 // End of version rollback code
 
 // Define plugin constants
-define('ADAIRE_BLOCKS_VERSION', '1.2.8');
+define('ADAIRE_BLOCKS_VERSION', '1.2.9');
 define('ADAIRE_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 

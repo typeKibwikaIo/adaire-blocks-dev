@@ -5,4 +5,8 @@ import save from './save';
 import deprecated from './deprecated';
 import metadata from './block.json';
 
-registerBlockType( metadata.name, { edit: Edit, save, deprecated } );
+// Import icon component
+import TimelineIcon from '../icons/timeline';
+
+registerBlockType( metadata.name, {edit: Edit, save, deprecated,
+ 	icon: TimelineIcon,} );

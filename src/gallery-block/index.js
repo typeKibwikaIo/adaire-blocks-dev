@@ -23,12 +23,14 @@ import save from './save';
 import deprecated from './deprecated';
 import metadata from './block.json';
 
+// Import icon component
+import GalleryIcon from '../icons/gallery';
+
 /**
  * Register the Gallery block. The icon defined in block.json (an inline SVG)
  * is used automatically, so no JS icon override is needed here.
  */
-registerBlockType( metadata.name, {
-	edit: Edit,
+registerBlockType( metadata.name, {edit: Edit,
 	save,
 	deprecated,
-} );
+		icon: GalleryIcon,} );

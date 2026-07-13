@@ -5,4 +5,8 @@ import save from './save';
 import deprecated from './deprecated';
 import metadata from './block.json';
 
-registerBlockType( metadata.name, { edit: Edit, save, deprecated } );
+// Import icon component
+import SaasHeroIcon from '../icons/saas-hero';
+
+registerBlockType( metadata.name, {edit: Edit, save, deprecated,
+ 	icon: SaasHeroIcon,} );

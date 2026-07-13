@@ -7,172 +7,662 @@
     "category": "adaire-layout-navigation",
     "description": "Build responsive site headers with logo, navigation, CTA, search, social icons, top bar, sticky behavior, and mobile hamburger menu.",
     "example": {},
-    "supports": { "html": false, "anchor": true, "customClassName": true },
+    "supports": {
+        "html": false,
+        "anchor": true,
+        "customClassName": true
+    },
     "textdomain": "header-block",
-    "icon": "menu-alt3",
+    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#F0F0F1\"/>\r\n<rect x=\"3\" y=\"6\" width=\"18\" height=\"4\" rx=\"1.2\" fill=\"#D52940\"/>\r\n<rect x=\"3\" y=\"12\" width=\"8\" height=\"1.6\" rx=\"0.8\" fill=\"#D52940\"/>\r\n<rect x=\"13\" y=\"12\" width=\"8\" height=\"1.6\" rx=\"0.8\" fill=\"#D52940\"/>\r\n<rect x=\"3\" y=\"16\" width=\"18\" height=\"1.6\" rx=\"0.8\" fill=\"#D52940\"/>\r\n</svg>",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
     "viewScript": "file:./view.js",
     "render": "file:./render.php",
     "attributes": {
-        "layout": { "type": "string", "default": "horizontal" },
-        "showTopBar": { "type": "boolean", "default": false },
-        "topBarLeft": { "type": "string", "default": "Call us: +1 234 567 890" },
-        "topBarRight": { "type": "string", "default": "" },
-        "topBarBackgroundColor": { "type": "string", "default": "#111827" },
-        "topBarTextColor": { "type": "string", "default": "#ffffff" },
-        "topBarFontSize": { "type": "number", "default": 13 },
-        "topBarLayout": { "type": "string", "default": "space-between" },
-        "logoType": { "type": "string", "default": "text" },
-        "logoImageUrl": { "type": "string", "default": "" },
-        "logoImageAlt": { "type": "string", "default": "" },
-        "logoText": { "type": "string", "default": "Site Logo" },
-        "tagline": { "type": "string", "default": "" },
-        "showTagline": { "type": "boolean", "default": false },
-        "logoWidth": { "type": "number", "default": 160 },
-        "mobileLogoWidth": { "type": "number", "default": 120 },
-        "linkLogoHome": { "type": "boolean", "default": true },
-        "logoUrl": { "type": "string", "default": "/" },
-        "showNav": { "type": "boolean", "default": true },
-        "navOrientation": { "type": "string", "default": "horizontal" },
-        "navItems": { "type": "array", "default": [{"label":"Home","url":"#","icon":"home"},{"label":"About","url":"#","icon":"info"},{"label":"Services","url":"#","icon":"grid"},{"label":"Contact","url":"#","icon":"mail"}] },
-        "navigationSource": { "type": "string", "default": "legacy" },
-        "selectedMenuId": { "type": "number", "default": 0 },
-        "navIconColor": { "type": "string", "default": "#111827" },
-        "navSpacing": { "type": "number", "default": 28 },
-        "mobileMenuStyle": { "type": "string", "default": "dropdown" },
-        "mobileSlideDirection": { "type": "string", "default": "right" },
-        "hamburgerIconStyle": { "type": "string", "default": "bars" },
-        "mobileBreakpoint": { "type": "number", "default": 782 },
-        "mobileCloseOnOutsideClick": { "type": "boolean", "default": true },
-        "mobileCloseOnEscape": { "type": "boolean", "default": true },
-        "showCta": { "type": "boolean", "default": true },
-        "ctaText": { "type": "string", "default": "Get Started" },
-        "ctaUrl": { "type": "string", "default": "#" },
-        "ctaNewTab": { "type": "boolean", "default": false },
-        "ctaStyle": { "type": "string", "default": "filled" },
-        "ctaIcon": { "type": "string", "default": "arrow-right" },
-        "ctaIconPosition": { "type": "string", "default": "right" },
-        "showSignIn": { "type": "boolean", "default": true },
-        "signInText": { "type": "string", "default": "Sign In" },
-        "signInUrl": { "type": "string", "default": "#" },
-        "signInNewTab": { "type": "boolean", "default": false },
-        "signInStyle": { "type": "string", "default": "outlined" },
-        "signInIcon": { "type": "string", "default": "user" },
-        "showSignUp": { "type": "boolean", "default": true },
-        "signUpText": { "type": "string", "default": "Sign Up" },
-        "signUpUrl": { "type": "string", "default": "#" },
-        "signUpNewTab": { "type": "boolean", "default": false },
-        "signUpStyle": { "type": "string", "default": "filled" },
-        "signUpIcon": { "type": "string", "default": "user-plus" },
-        "stickyBehavior": { "type": "string", "default": "static" },
-        "showSearch": { "type": "boolean", "default": false },
-        "searchMode": { "type": "string", "default": "expand" },
-        "searchPlaceholder": { "type": "string", "default": "Search..." },
-        "searchIconColor": { "type": "string", "default": "" },
-        "searchIconBgColor": { "type": "string", "default": "" },
-        "searchIconSize": { "type": "number", "default": 18 },
-        "searchButtonSize": { "type": "number", "default": 38 },
-        "searchPosition": { "type": "string", "default": "start" },
-        "showSocial": { "type": "boolean", "default": false },
-        "socialLinks": { "type": "array", "default": [{"platform":"Facebook","url":"#"},{"platform":"Instagram","url":"#"},{"platform":"LinkedIn","url":"#"}] },
-        "socialIconSize": { "type": "number", "default": 18 },
-        "socialIconColor": { "type": "string", "default": "#111827" },
-        "backgroundType": { "type": "string", "default": "" },
-        "backgroundColor": { "type": "string", "default": "#ffffff" },
-        "useGradient": { "type": "boolean", "default": false },
-        "gradientBackground": { "type": "string", "default": "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)" },
-        "transparentHeader": { "type": "boolean", "default": false },
-        "textColor": { "type": "string", "default": "#111827" },
-        "hoverColor": { "type": "string", "default": "#2563eb" },
-        "buttonShape": { "type": "string", "default": "pill" },
-        "borderBottom": { "type": "boolean", "default": true },
-        "borderColor": { "type": "string", "default": "#e5e7eb" },
-        "borderThickness": { "type": "number", "default": 1 },
-        "boxShadow": { "type": "boolean", "default": false },
-        "paddingTop": { "type": "number", "default": 18 },
-        "paddingBottom": { "type": "number", "default": 18 },
-        "maxWidthMode": { "type": "string", "default": "contained" },
-        "maxWidth": { "type": "number", "default": 1200 },
-        "navFontSize": { "type": "number", "default": 16 },
-        "navFontWeight": { "type": "string", "default": "500" },
-        "letterSpacing": { "type": "number", "default": 0 },
-        "textTransform": { "type": "string", "default": "none" },
-        "fontFamily": { "type": "string", "default": "" },
-        "zIndex": { "type": "number", "default": 50 },
-        "hamburgerBorder": { "type": "boolean", "default": false },
-        "hamburgerBorderColor": { "type": "string", "default": "#e5e7eb" },
-        "hamburgerBorderRadius": { "type": "number", "default": 10 },
-        "hamburgerPosition": { "type": "string", "default": "left" },
-        "hamburgerSize": { "type": "number", "default": 42 },
-        "signInBgColor": { "type": "string", "default": "#ffffff" },
-        "signInTextColor": { "type": "string", "default": "#6366f1" },
-        "signInBorderColor": { "type": "string", "default": "#6366f1" },
-        "signInFontSize": { "type": "number", "default": 16 },
-        "signUpBgColor": { "type": "string", "default": "#6366f1" },
-        "signUpTextColor": { "type": "string", "default": "#ffffff" },
-        "signUpBorderColor": { "type": "string", "default": "#6366f1" },
-        "signUpFontSize": { "type": "number", "default": 16 },
-        "ctaBgColor": { "type": "string", "default": "" },
-        "ctaTextColor": { "type": "string", "default": "" },
-        "ctaBorderColor": { "type": "string", "default": "" },
-        "ctaFontSize": { "type": "number", "default": 16 },
-        "gutenblocksMargin": { "type": "object", "default": {} },
-        "gutenblocksPadding": { "type": "object", "default": {} },
-        "bgImageUrl": { "type": "string", "default": "" },
-        "bgSize": { "type": "string", "default": "cover" },
-        "bgPosition": { "type": "string", "default": "center center" },
-        "bgRepeat": { "type": "string", "default": "no-repeat" },
-        "bgAttachment": { "type": "string", "default": "scroll" },
-
-        "navShowDots": { "type": "boolean", "default": false },
-        "navDotSize": { "type": "number", "default": 6 },
-        "navDotSpacing": { "type": "number", "default": 8 },
-        "navDotColor": { "type": "string", "default": "" },
-        "navDotPosition": { "type": "string", "default": "after" },
-
-        "showSignInIcon": { "type": "boolean", "default": true },
-        "showSignUpIcon": { "type": "boolean", "default": true },
-        "showCtaIcon": { "type": "boolean", "default": true },
-        "showNavIcons": { "type": "boolean", "default": true },
-
-        "ctaHoverBgColor": { "type": "string", "default": "" },
-        "ctaHoverTextColor": { "type": "string", "default": "" },
-        "ctaBorderRadius": { "type": "number", "default": -1 },
-        "ctaPaddingVertical": { "type": "number", "default": -1 },
-        "ctaPaddingHorizontal": { "type": "number", "default": -1 },
-        "buttonBorderRadius": { "type": "number", "default": -1 },
-        "buttonPaddingVertical": { "type": "number", "default": 4 },
-
-        "searchLayoutStyle": { "type": "string", "default": "icon-only" },
-        "searchInputBgColor": { "type": "string", "default": "" },
-        "searchInputBorderColor": { "type": "string", "default": "" },
-        "searchInputTextColor": { "type": "string", "default": "" },
-        "searchPlaceholderColor": { "type": "string", "default": "" },
-        "searchContainerBgColor": { "type": "string", "default": "" },
-
-        "socialPlacement": { "type": "string", "default": "actions" },
-        "socialHoverEffect": { "type": "string", "default": "color" },
-
-        "topBarFollowEnabled": { "type": "boolean", "default": true },
-        "topBarFollowText": { "type": "string", "default": "Follow us" },
-        "topBarFollowUrl": { "type": "string", "default": "" },
-        "topBarFollowIcon": { "type": "string", "default": "none" },
-        "topBarFollowIconPosition": { "type": "string", "default": "left" },
-        "topBarFollowPosition": { "type": "string", "default": "right" },
-        "topBarFollowNewTab": { "type": "boolean", "default": false },
-
-        "showCartIcon": { "type": "boolean", "default": false },
-        "cartIconPlacement": { "type": "string", "default": "actions" },
-        "cartIconSize": { "type": "number", "default": 18 },
-        "cartIconColor": { "type": "string", "default": "" },
-        "cartShowCount": { "type": "boolean", "default": true },
-
-        "showPaymentIcons": { "type": "boolean", "default": false },
-        "paymentIcons": { "type": "array", "default": [{"method":"Visa"},{"method":"Mastercard"},{"method":"PayPal"}] },
-        "paymentIconPlacement": { "type": "string", "default": "actions" },
-        "paymentIconSize": { "type": "number", "default": 22 },
-        "paymentIconColor": { "type": "string", "default": "" }
+        "layout": {
+            "type": "string",
+            "default": "horizontal"
+        },
+        "showTopBar": {
+            "type": "boolean",
+            "default": false
+        },
+        "topBarLeft": {
+            "type": "string",
+            "default": "Call us: +1 234 567 890"
+        },
+        "topBarRight": {
+            "type": "string",
+            "default": ""
+        },
+        "topBarBackgroundColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "topBarTextColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "topBarFontSize": {
+            "type": "number",
+            "default": 13
+        },
+        "topBarLayout": {
+            "type": "string",
+            "default": "space-between"
+        },
+        "logoType": {
+            "type": "string",
+            "default": "text"
+        },
+        "logoImageUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "logoImageAlt": {
+            "type": "string",
+            "default": ""
+        },
+        "logoText": {
+            "type": "string",
+            "default": "Site Logo"
+        },
+        "tagline": {
+            "type": "string",
+            "default": ""
+        },
+        "showTagline": {
+            "type": "boolean",
+            "default": false
+        },
+        "logoWidth": {
+            "type": "number",
+            "default": 160
+        },
+        "mobileLogoWidth": {
+            "type": "number",
+            "default": 120
+        },
+        "linkLogoHome": {
+            "type": "boolean",
+            "default": true
+        },
+        "logoUrl": {
+            "type": "string",
+            "default": "/"
+        },
+        "showNav": {
+            "type": "boolean",
+            "default": true
+        },
+        "navOrientation": {
+            "type": "string",
+            "default": "horizontal"
+        },
+        "navItems": {
+            "type": "array",
+            "default": [
+                {
+                    "label": "Home",
+                    "url": "#",
+                    "icon": "home"
+                },
+                {
+                    "label": "About",
+                    "url": "#",
+                    "icon": "info"
+                },
+                {
+                    "label": "Services",
+                    "url": "#",
+                    "icon": "grid"
+                },
+                {
+                    "label": "Contact",
+                    "url": "#",
+                    "icon": "mail"
+                }
+            ]
+        },
+        "navigationSource": {
+            "type": "string",
+            "default": "legacy"
+        },
+        "selectedMenuId": {
+            "type": "number",
+            "default": 0
+        },
+        "navIconColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "navSpacing": {
+            "type": "number",
+            "default": 28
+        },
+        "mobileMenuStyle": {
+            "type": "string",
+            "default": "dropdown"
+        },
+        "mobileSlideDirection": {
+            "type": "string",
+            "default": "right"
+        },
+        "hamburgerIconStyle": {
+            "type": "string",
+            "default": "bars"
+        },
+        "mobileBreakpoint": {
+            "type": "number",
+            "default": 782
+        },
+        "mobileCloseOnOutsideClick": {
+            "type": "boolean",
+            "default": true
+        },
+        "mobileCloseOnEscape": {
+            "type": "boolean",
+            "default": true
+        },
+        "showCta": {
+            "type": "boolean",
+            "default": true
+        },
+        "ctaText": {
+            "type": "string",
+            "default": "Get Started"
+        },
+        "ctaUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "ctaNewTab": {
+            "type": "boolean",
+            "default": false
+        },
+        "ctaStyle": {
+            "type": "string",
+            "default": "filled"
+        },
+        "ctaIcon": {
+            "type": "string",
+            "default": "arrow-right"
+        },
+        "ctaIconPosition": {
+            "type": "string",
+            "default": "right"
+        },
+        "showSignIn": {
+            "type": "boolean",
+            "default": true
+        },
+        "signInText": {
+            "type": "string",
+            "default": "Sign In"
+        },
+        "signInUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "signInNewTab": {
+            "type": "boolean",
+            "default": false
+        },
+        "signInStyle": {
+            "type": "string",
+            "default": "outlined"
+        },
+        "signInIcon": {
+            "type": "string",
+            "default": "user"
+        },
+        "showSignUp": {
+            "type": "boolean",
+            "default": true
+        },
+        "signUpText": {
+            "type": "string",
+            "default": "Sign Up"
+        },
+        "signUpUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "signUpNewTab": {
+            "type": "boolean",
+            "default": false
+        },
+        "signUpStyle": {
+            "type": "string",
+            "default": "filled"
+        },
+        "signUpIcon": {
+            "type": "string",
+            "default": "user-plus"
+        },
+        "stickyBehavior": {
+            "type": "string",
+            "default": "static"
+        },
+        "showSearch": {
+            "type": "boolean",
+            "default": false
+        },
+        "searchMode": {
+            "type": "string",
+            "default": "expand"
+        },
+        "searchPlaceholder": {
+            "type": "string",
+            "default": "Search..."
+        },
+        "searchIconColor": {
+            "type": "string",
+            "default": ""
+        },
+        "searchIconBgColor": {
+            "type": "string",
+            "default": ""
+        },
+        "searchIconSize": {
+            "type": "number",
+            "default": 18
+        },
+        "searchButtonSize": {
+            "type": "number",
+            "default": 38
+        },
+        "searchPosition": {
+            "type": "string",
+            "default": "start"
+        },
+        "showSocial": {
+            "type": "boolean",
+            "default": false
+        },
+        "socialLinks": {
+            "type": "array",
+            "default": [
+                {
+                    "platform": "Facebook",
+                    "url": "#"
+                },
+                {
+                    "platform": "Instagram",
+                    "url": "#"
+                },
+                {
+                    "platform": "LinkedIn",
+                    "url": "#"
+                }
+            ]
+        },
+        "socialIconSize": {
+            "type": "number",
+            "default": 18
+        },
+        "socialIconColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "backgroundType": {
+            "type": "string",
+            "default": ""
+        },
+        "backgroundColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "useGradient": {
+            "type": "boolean",
+            "default": false
+        },
+        "gradientBackground": {
+            "type": "string",
+            "default": "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)"
+        },
+        "transparentHeader": {
+            "type": "boolean",
+            "default": false
+        },
+        "textColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "hoverColor": {
+            "type": "string",
+            "default": "#2563eb"
+        },
+        "buttonShape": {
+            "type": "string",
+            "default": "pill"
+        },
+        "borderBottom": {
+            "type": "boolean",
+            "default": true
+        },
+        "borderColor": {
+            "type": "string",
+            "default": "#e5e7eb"
+        },
+        "borderThickness": {
+            "type": "number",
+            "default": 1
+        },
+        "boxShadow": {
+            "type": "boolean",
+            "default": false
+        },
+        "paddingTop": {
+            "type": "number",
+            "default": 18
+        },
+        "paddingBottom": {
+            "type": "number",
+            "default": 18
+        },
+        "maxWidthMode": {
+            "type": "string",
+            "default": "contained"
+        },
+        "maxWidth": {
+            "type": "number",
+            "default": 1200
+        },
+        "navFontSize": {
+            "type": "number",
+            "default": 16
+        },
+        "navFontWeight": {
+            "type": "string",
+            "default": "500"
+        },
+        "letterSpacing": {
+            "type": "number",
+            "default": 0
+        },
+        "textTransform": {
+            "type": "string",
+            "default": "none"
+        },
+        "fontFamily": {
+            "type": "string",
+            "default": ""
+        },
+        "zIndex": {
+            "type": "number",
+            "default": 50
+        },
+        "hamburgerBorder": {
+            "type": "boolean",
+            "default": false
+        },
+        "hamburgerBorderColor": {
+            "type": "string",
+            "default": "#e5e7eb"
+        },
+        "hamburgerBorderRadius": {
+            "type": "number",
+            "default": 10
+        },
+        "hamburgerPosition": {
+            "type": "string",
+            "default": "left"
+        },
+        "hamburgerSize": {
+            "type": "number",
+            "default": 42
+        },
+        "signInBgColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "signInTextColor": {
+            "type": "string",
+            "default": "#6366f1"
+        },
+        "signInBorderColor": {
+            "type": "string",
+            "default": "#6366f1"
+        },
+        "signInFontSize": {
+            "type": "number",
+            "default": 16
+        },
+        "signUpBgColor": {
+            "type": "string",
+            "default": "#6366f1"
+        },
+        "signUpTextColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "signUpBorderColor": {
+            "type": "string",
+            "default": "#6366f1"
+        },
+        "signUpFontSize": {
+            "type": "number",
+            "default": 16
+        },
+        "ctaBgColor": {
+            "type": "string",
+            "default": ""
+        },
+        "ctaTextColor": {
+            "type": "string",
+            "default": ""
+        },
+        "ctaBorderColor": {
+            "type": "string",
+            "default": ""
+        },
+        "ctaFontSize": {
+            "type": "number",
+            "default": 16
+        },
+        "gutenblocksMargin": {
+            "type": "object",
+            "default": {}
+        },
+        "gutenblocksPadding": {
+            "type": "object",
+            "default": {}
+        },
+        "bgImageUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "bgSize": {
+            "type": "string",
+            "default": "cover"
+        },
+        "bgPosition": {
+            "type": "string",
+            "default": "center center"
+        },
+        "bgRepeat": {
+            "type": "string",
+            "default": "no-repeat"
+        },
+        "bgAttachment": {
+            "type": "string",
+            "default": "scroll"
+        },
+        "navShowDots": {
+            "type": "boolean",
+            "default": false
+        },
+        "navDotSize": {
+            "type": "number",
+            "default": 6
+        },
+        "navDotSpacing": {
+            "type": "number",
+            "default": 8
+        },
+        "navDotColor": {
+            "type": "string",
+            "default": ""
+        },
+        "navDotPosition": {
+            "type": "string",
+            "default": "after"
+        },
+        "showSignInIcon": {
+            "type": "boolean",
+            "default": true
+        },
+        "showSignUpIcon": {
+            "type": "boolean",
+            "default": true
+        },
+        "showCtaIcon": {
+            "type": "boolean",
+            "default": true
+        },
+        "showNavIcons": {
+            "type": "boolean",
+            "default": true
+        },
+        "ctaHoverBgColor": {
+            "type": "string",
+            "default": ""
+        },
+        "ctaHoverTextColor": {
+            "type": "string",
+            "default": ""
+        },
+        "ctaBorderRadius": {
+            "type": "number",
+            "default": -1
+        },
+        "ctaPaddingVertical": {
+            "type": "number",
+            "default": -1
+        },
+        "ctaPaddingHorizontal": {
+            "type": "number",
+            "default": -1
+        },
+        "buttonBorderRadius": {
+            "type": "number",
+            "default": -1
+        },
+        "buttonPaddingVertical": {
+            "type": "number",
+            "default": 4
+        },
+        "searchLayoutStyle": {
+            "type": "string",
+            "default": "icon-only"
+        },
+        "searchInputBgColor": {
+            "type": "string",
+            "default": ""
+        },
+        "searchInputBorderColor": {
+            "type": "string",
+            "default": ""
+        },
+        "searchInputTextColor": {
+            "type": "string",
+            "default": ""
+        },
+        "searchPlaceholderColor": {
+            "type": "string",
+            "default": ""
+        },
+        "searchContainerBgColor": {
+            "type": "string",
+            "default": ""
+        },
+        "socialPlacement": {
+            "type": "string",
+            "default": "actions"
+        },
+        "socialHoverEffect": {
+            "type": "string",
+            "default": "color"
+        },
+        "topBarFollowEnabled": {
+            "type": "boolean",
+            "default": true
+        },
+        "topBarFollowText": {
+            "type": "string",
+            "default": "Follow us"
+        },
+        "topBarFollowUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "topBarFollowIcon": {
+            "type": "string",
+            "default": "none"
+        },
+        "topBarFollowIconPosition": {
+            "type": "string",
+            "default": "left"
+        },
+        "topBarFollowPosition": {
+            "type": "string",
+            "default": "right"
+        },
+        "topBarFollowNewTab": {
+            "type": "boolean",
+            "default": false
+        },
+        "showCartIcon": {
+            "type": "boolean",
+            "default": false
+        },
+        "cartIconPlacement": {
+            "type": "string",
+            "default": "actions"
+        },
+        "cartIconSize": {
+            "type": "number",
+            "default": 18
+        },
+        "cartIconColor": {
+            "type": "string",
+            "default": ""
+        },
+        "cartShowCount": {
+            "type": "boolean",
+            "default": true
+        },
+        "showPaymentIcons": {
+            "type": "boolean",
+            "default": false
+        },
+        "paymentIcons": {
+            "type": "array",
+            "default": [
+                {
+                    "method": "Visa"
+                },
+                {
+                    "method": "Mastercard"
+                },
+                {
+                    "method": "PayPal"
+                }
+            ]
+        },
+        "paymentIconPlacement": {
+            "type": "string",
+            "default": "actions"
+        },
+        "paymentIconSize": {
+            "type": "number",
+            "default": 22
+        },
+        "paymentIconColor": {
+            "type": "string",
+            "default": ""
+        }
     }
 }
