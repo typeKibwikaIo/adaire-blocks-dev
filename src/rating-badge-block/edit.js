@@ -1,9 +1,11 @@
-import { InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps } from '@wordpress/block-editor';
+import { MediaUpload, MediaUploadCheck, useBlockProps } from '@wordpress/block-editor';
 import { BaseControl, Button, ButtonGroup, PanelBody, RangeControl, SelectControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import AdaireColorControl from '../components/AdaireColorControl';
 import BootstrapIconPicker from './BootstrapIconPicker';
+import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher, { THREE_TIERS } from '../components/DeviceSwitcher';
 import { getStyleVars, resolveRatingIcon, RatingBadgeView } from './shared';
 
 const CONTAINER_MODES = [
@@ -67,6 +69,7 @@ function RepeaterField( { items, onChange, renderItem, addLabel, newItem } ) {
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const [ iconPickerIndex, setIconPickerIndex ] = useState( null );
+	const [ deviceType, setDeviceType ] = useState( 'desktop' );
 	const a = attributes;
 
 	useEffect( () => {
@@ -93,8 +96,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	return (
 		<>
-			<InspectorControls>
-				<PanelBody title={ __( 'Layout', 'rating-badge-block' ) } initialOpen={ true }>
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
+				<PanelBody section="layout" title={ __( 'Layout', 'rating-badge-block' ) } initialOpen={ true }>
 					<p>{ __( 'Container Width', 'rating-badge-block' ) }</p>
 					<ButtonGroup>
 						{ CONTAINER_MODES.map( ( mode ) => (
@@ -108,16 +111,30 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) ) }
 					</ButtonGroup>
 					{ a.containerMode === 'constrained' && (
-						<RangeControl
-							label={ __( 'Max Width (Desktop)', 'rating-badge-block' ) }
-							value={ a.containerMaxWidth?.desktop?.value ?? 1200 }
-							onChange={ ( value ) => setAttributes( {
-								containerMaxWidth: { ...a.containerMaxWidth, desktop: { value, unit: 'px' } },
-							} ) }
-							min={ 400 }
-							max={ 2000 }
-							step={ 10 }
-						/>
+						<>
+							<DeviceSwitcher
+								deviceType={ deviceType }
+								setDeviceType={ setDeviceType }
+								tiers={ THREE_TIERS }
+								label={ __( 'Max Width Device', 'rating-badge-block' ) }
+							/>
+							<RangeControl
+								label={ __( 'Max Width', 'rating-badge-block' ) }
+								value={
+									a.containerMaxWidth?.[ deviceType ]?.value ??
+									( deviceType === 'desktop' ? 1200 : 100 )
+								}
+								onChange={ ( value ) => setAttributes( {
+									containerMaxWidth: {
+										...a.containerMaxWidth,
+										[ deviceType ]: { value, unit: deviceType === 'desktop' ? 'px' : '%' },
+									},
+								} ) }
+								min={ deviceType === 'desktop' ? 400 : 10 }
+								max={ deviceType === 'desktop' ? 2000 : 100 }
+								step={ deviceType === 'desktop' ? 10 : 1 }
+							/>
+						</>
 					) }
 					<SelectControl
 						label={ __( 'Alignment', 'rating-badge-block' ) }
@@ -131,12 +148,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Colors', 'rating-badge-block' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="high" title={ __( 'Colors', 'rating-badge-block' ) } initialOpen={ false }>
 					<AdaireColorControl label={ __( 'Accent color', 'rating-badge-block' ) } value={ a.accentColor } onChange={ ( v ) => setAttributes( { accentColor: v || '#6366f1' } ) } />
 					<AdaireColorControl label={ __( 'Text color', 'rating-badge-block' ) } value={ a.textColor } onChange={ ( v ) => setAttributes( { textColor: v || '#111827' } ) } />
 				</PanelBody>
 
-				<PanelBody title={ __( 'Badges', 'rating-badge-block' ) } initialOpen={ true }>
+				<PanelBody section="content" title={ __( 'Badges', 'rating-badge-block' ) } initialOpen={ true }>
 					<RepeaterField
 						items={ a.badges }
 						onChange={ ( items ) => setAttributes( { badges: items } ) }
@@ -170,7 +187,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) }
 					/>
 				</PanelBody>
-			</InspectorControls>
+			</InspectorTabs>
 
 			<BootstrapIconPicker
 				isOpen={ iconPickerIndex !== null }
