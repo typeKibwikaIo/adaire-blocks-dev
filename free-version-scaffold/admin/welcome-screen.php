@@ -478,15 +478,9 @@ class Adaire_Welcome_Screen {
                 <div class="abw-top-right">
                     <span class="abw-counter" id="abw-counter">Step 1 of 5</span>
                     <a href="<?php echo esc_url( $exit_url ); ?>" class="abw-top-exit"><?php esc_html_e( 'Skip setup →', 'adaire-blocks' ); ?></a>
-<<<<<<< Updated upstream
-                    <a href="https://adaire.digital/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
                     <a href="https://gutenblocks.com/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
->>>>>>> Stashed changes
-=======
->>>>>>> main
+
+
                 </div>
             </nav>
 
@@ -879,11 +873,7 @@ class Adaire_Welcome_Screen {
                 return true;
             });
             E.scene.querySelectorAll('.abw-swl').forEach(function(el){el.parentNode&&el.parentNode.removeChild(el);});
-                    <a href="https://gutenblocks.com/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
-            if(!frame||typeof lottie==='undefined')return;
-=======
             if(typeof lottie==='undefined')return;
->>>>>>> Stashed changes
             [[leftUrl,'abw-swl abw-swl-l'],[rightUrl,'abw-swl abw-swl-r']].forEach(function(pair){
                 if(!pair[0])return;
                 var el=document.createElement('div');
