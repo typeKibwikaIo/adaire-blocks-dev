@@ -58,7 +58,7 @@ export default function Edit({ attributes, setAttributes }) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody title={__('Container Settings', 'container-block')} initialOpen={true}>
+                <PanelBody section="layout" title={__('Container Settings', 'container-block')} initialOpen={true}>
                     <TextControl
                         label={__('Max Width', 'container-block')}
                         value={maxWidth}
@@ -95,7 +95,7 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Padding', 'container-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Padding', 'container-block')} initialOpen={false}>
                     <RangeControl
                         label={__('Padding Top (px)', 'container-block')}
                         value={paddingTop}
@@ -126,7 +126,7 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Margin', 'container-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Margin', 'container-block')} initialOpen={false}>
                     <RangeControl
                         label={__('Margin Top (px)', 'container-block')}
                         value={marginTop}
@@ -143,7 +143,7 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Background', 'container-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Background', 'container-block')} initialOpen={false}>
                     <SelectControl
                         label={__('Background Type', 'container-block')}
                         value={backgroundType}
@@ -184,7 +184,7 @@ export default function Edit({ attributes, setAttributes }) {
                     )}
                 </PanelBody>
 
-                <PanelBody title={__('Border', 'container-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Border', 'container-block')} initialOpen={false}>
                     <RangeControl
                         label={__('Border Radius (px)', 'container-block')}
                         value={borderRadius}

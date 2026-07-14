@@ -12,18 +12,18 @@ if (!defined('ABSPATH')) {
 }
 
 class AdaireBlocksConfig {
-    
+
     private static $instance = null;
     private $config_file;
     private $config_data;
     private $plugin_version;
-    
+
     private function __construct() {
         $this->config_file = ADAIRE_BLOCKS_PLUGIN_PATH . 'config/blocks-config.json';
         $this->plugin_version = $this->detect_plugin_version();
         $this->load_config();
     }
-    
+
     /**
      * Get singleton instance
      */
@@ -33,7 +33,7 @@ class AdaireBlocksConfig {
         }
         return self::$instance;
     }
-    
+
     /**
      * Detect plugin version (free or premium)
      */
@@ -43,18 +43,18 @@ class AdaireBlocksConfig {
         if (file_exists($this->config_file)) {
             $config_content = file_get_contents($this->config_file);
             $config = json_decode($config_content, true);
-            
+
             // Check if config has a version indicator
             if (isset($config['version']) && $config['version'] === 'free') {
                 return 'free';
             }
-            
+
             // Check if premium config is empty (indicates free version)
             if (isset($config['premium']) && empty($config['premium'])) {
                 return 'free';
             }
         }
-        
+
         // Method 2: Check for premium-only files (NOT update-checker related)
         // Check for a premium-specific admin file
         $premium_marker = ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/premium-features.php';
@@ -69,16 +69,16 @@ class AdaireBlocksConfig {
                 }
             }
         }
-        
+
         // Method 3: Check if premium license is active
         if ($this->is_premium_license_active()) {
             return 'premium';
         }
-        
+
         // Default to free version when license is inactive
         return 'free';
     }
-    
+
     /**
      * Check if premium license is active
      */
@@ -87,17 +87,17 @@ class AdaireBlocksConfig {
         if (class_exists('AdaireBlocksLicense')) {
             $license_manager = AdaireBlocksLicense::get_instance();
             $license_status = $license_manager->get_license_status();
-            
+
             return $license_status['status'] === 'active';
         }
-        
+
         // Fallback to old system if new license system not available
         $license_key = get_option('adaire_blocks_license_key', '');
         $license_status = get_option('adaire_blocks_license_status', 'inactive');
-        
+
         return !empty($license_key) && $license_status === 'active';
     }
-    
+
     /**
      * Load configuration from JSON file
      */
@@ -106,34 +106,34 @@ class AdaireBlocksConfig {
             $this->config_data = array();
             return;
         }
-        
+
         $config_content = file_get_contents($this->config_file);
         $this->config_data = json_decode($config_content, true);
-        
+
         if (!$this->config_data) {
             $this->config_data = array();
         }
     }
-    
+
     /**
      * Get block configuration for current version
      */
     public function get_block_config($block_name) {
         $version_config = $this->config_data[$this->plugin_version] ?? array();
-        
+
         // Check if block exists in current version config
         if (isset($version_config[$block_name])) {
             return $version_config[$block_name];
         }
-        
+
         // For premium users, also check the plus category
         if ($this->plugin_version === 'premium' && isset($this->config_data['plus'][$block_name])) {
             return $this->config_data['plus'][$block_name];
         }
-        
+
         return array();
     }
-    
+
     /**
      * Check if block is enabled for current version
      */
@@ -141,7 +141,7 @@ class AdaireBlocksConfig {
         $config = $this->get_block_config($block_name);
         return isset($config['enabled']) ? $config['enabled'] : false;
     }
-    
+
     /**
      * Get block limits for current version
      */
@@ -149,7 +149,7 @@ class AdaireBlocksConfig {
         $config = $this->get_block_config($block_name);
         return $config['limits'] ?? array();
     }
-    
+
     /**
      * Get block features for current version
      */
@@ -157,7 +157,7 @@ class AdaireBlocksConfig {
         $config = $this->get_block_config($block_name);
         return $config['features'] ?? array();
     }
-    
+
     /**
      * Get upgrade message for block
      */
@@ -165,7 +165,7 @@ class AdaireBlocksConfig {
         $config = $this->get_block_config($block_name);
         return $config['upgradeMessage'] ?? 'Upgrade to Premium for more features.';
     }
-    
+
     /**
      * Check if feature is available
      */
@@ -173,11 +173,11 @@ class AdaireBlocksConfig {
         if ($this->plugin_version === 'premium') {
             return true;
         }
-        
+
         $features = $this->get_block_features($block_name);
         return in_array($feature, $features);
     }
-    
+
     /**
      * Check if limit is reached
      */
@@ -185,44 +185,44 @@ class AdaireBlocksConfig {
         if ($this->plugin_version === 'premium') {
             return false;
         }
-        
+
         $limits = $this->get_block_limits($block_name);
         $limit_value = $limits[$limit_key] ?? null;
-        
+
         if ($limit_value === null) {
             return false;
         }
-        
+
         return $current_value >= $limit_value;
     }
-    
+
     /**
      * Get current plugin version (public accessor)
      */
     public function get_plugin_version() {
         return $this->plugin_version;
     }
-    
+
     /**
      * Check if premium features are available
      */
     public function is_premium() {
         return $this->plugin_version === 'premium';
     }
-    
+
     /**
      * Get all available blocks for current version
      */
     public function get_available_blocks() {
         $version_config = $this->config_data[$this->plugin_version] ?? array();
         $available_blocks = array();
-        
+
         foreach ($version_config as $block_name => $config) {
             if (isset($config['enabled']) && $config['enabled']) {
                 $available_blocks[] = $block_name;
             }
         }
-        
+
         // For premium users, also include plus blocks
         if ($this->plugin_version === 'premium' && isset($this->config_data['plus'])) {
             foreach ($this->config_data['plus'] as $block_name => $config) {
@@ -231,32 +231,32 @@ class AdaireBlocksConfig {
                 }
             }
         }
-        
+
         return $available_blocks;
     }
-    
+
     /**
      * Get upgrade notice for disabled blocks
      */
     public function get_upgrade_notices() {
         $version_config = $this->config_data[$this->plugin_version] ?? array();
         $notices = array();
-        
+
         foreach ($version_config as $block_name => $config) {
             if (isset($config['enabled']) && !$config['enabled'] && isset($config['upgradeMessage'])) {
                 $notices[$block_name] = $config['upgradeMessage'];
             }
         }
-        
+
         return $notices;
     }
-    
+
     /**
      * Render upgrade notice HTML for PHP render callbacks
      */
     public function render_upgrade_notice($block_name, $custom_message = null) {
         $message = $custom_message ?: $this->get_upgrade_message($block_name);
-        
+
         ob_start();
         ?>
         <div class="adaire-upgrade-notice-php" style="
@@ -280,8 +280,8 @@ class AdaireBlocksConfig {
             <p style="margin: 0 0 15px 0; color: #333; line-height: 1.5;">
                 <?php echo esc_html($message); ?>
             </p>
-            <a href="https://adaireblocks.com/premium" 
-               target="_blank" 
+            <a href="https://adaireblocks.com/premium"
+               target="_blank"
                rel="noopener noreferrer"
                style="
                    background: #0073aa;
@@ -301,7 +301,7 @@ class AdaireBlocksConfig {
         <?php
         return ob_get_clean();
     }
-    
+
     /**
      * Check if block should show upgrade notice instead of rendering
      */
@@ -310,16 +310,16 @@ class AdaireBlocksConfig {
         if (!$this->is_block_enabled($block_name)) {
             return true;
         }
-        
+
         // If block is enabled but has limits, check if limits are exceeded
         $limits = $this->get_block_limits($block_name);
-        
+
         foreach ($limits as $limit_key => $limit_value) {
             if (isset($attributes[$limit_key]) && $this->is_limit_reached($block_name, $limit_key, $attributes[$limit_key])) {
                 return true;
             }
         }
-        
+
         return false;
     }
 }

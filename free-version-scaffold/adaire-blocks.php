@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('ADAIRE_BLOCKS_VERSION', '1.2.6');
+define('ADAIRE_BLOCKS_VERSION', '1.2.8');
 define('ADAIRE_BLOCKS_PLUGIN_FILE', __FILE__);
 define('ADAIRE_BLOCKS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -30,6 +30,10 @@ define('ADAIRE_BLOCKS_IS_FREE', true);
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-blocks-config.php';
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/sendgrid.php';
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-patterns.php';
+
+// Make the free Cookie Notice block render on every front-end page, not just
+// the one page/post it's inserted into.
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/cookie-notice-global.php';
 
 // Initialize the plugin
 function adaire_blocks_init() {
@@ -49,13 +53,13 @@ add_action('init', 'adaire_blocks_init');
  */
 function adaire_blocks_register_blocks() {
     $blocks_dir = ADAIRE_BLOCKS_PLUGIN_PATH . 'build/';
-    
+
     if (!is_dir($blocks_dir)) {
                     return;
                 }
-                
+
     $block_dirs = glob($blocks_dir . '*', GLOB_ONLYDIR);
-    
+
     foreach ($block_dirs as $block_dir) {
         $block_name = basename($block_dir);
         $block_json = $block_dir . '/block.json';
@@ -87,6 +91,7 @@ function adaire_blocks_register_block_categories( $categories, $editor_context )
 
     $custom_categories = array(
         array( 'slug' => 'adaire-blocks-free', 'title' => __( 'Guten-Blocks FREE', 'adaire-blocks' ), 'icon' => null ),
+        array( 'slug' => 'adaire-freemium', 'title' => __( 'Freemium (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
         array( 'slug' => 'adaire-blocks-alignment-layout-structure', 'title' => __( 'Alignment, Layout & Structure (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
         array( 'slug' => 'adaire-hero-sections', 'title' => __( 'Hero & Navigation (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
         array( 'slug' => 'adaire-layout-sections', 'title' => __( 'Layout Sections (Guten-Blocks)', 'adaire-blocks' ), 'icon' => null ),
@@ -188,6 +193,10 @@ function adaire_blocks_localize_editor_config() {
         $free_blocks = isset( $config_data['free'] ) && is_array( $config_data['free'] )
             ? $config_data['free']
             : array();
+        $freemium_blocks = isset( $config_data['freemium'] ) && is_array( $config_data['freemium'] )
+            ? $config_data['freemium']
+            : array();
+        $free_blocks = array_merge( $free_blocks, $freemium_blocks );
 
         foreach ( $free_blocks as $block_name => $block_config ) {
             $blocks_config[ $block_name ] = array(

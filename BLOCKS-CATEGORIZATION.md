@@ -28,6 +28,7 @@ These blocks are available in the free version without limitations.
 - **Website Footer** (`website-footer-block`)
 - **Row** (`row-block`)
 - **Container** (`container-block`)
+- **Progress Bar** (`progress-block`)
 
 ## Plus Blocks
 
@@ -45,7 +46,6 @@ These blocks are available in Plus and Premium versions.
 - **Mega Menu (Plus)** (`mega-menu-block`)
 - **Testimonial (Plus)** (`testimonial2-block`)
 - **Pricing Table (Plus)** (`pricing-table-block`)
-- **Progress (Plus)** (`progress-block`)
 - **Info Grid 3** (`infogrid-3-block`)
 - **Info Grid 4** (`infogrid-4-block`)
 - **Case Studies (Plus)** (`case-studies-block`)
@@ -60,3 +60,9 @@ These blocks are only available in the Premium version.
 - **Industries (Premium)** (`industries-block`)
 - **Modal (Premium)** (`modal-block`)
 - **Testimonial (Premium)** (`testimonial3-block`)
+
+## Freemium Blocks
+
+These blocks ship in their own standalone "Freemium" distribution (`npm run deploy:freemium`), separate from Free/Plus/Premium. They register under the `adaire-freemium` inserter category and are tracked in `config/blocks-config.json` under a `freemium` tier.
+
+- **Cookie Banner** (`cookie-consent-block`) — GDPR/CCPA/ePrivacy-style cookie consent banner. Content (title, description, categories, button labels, policy links) is edited inline via RichText/QuickZone; 9 layout positions (bottom/top bar, 4 floating corners, center modal, 2 slide-in variants); full color, typography (responsive per device), spacing, border, shadow, and button-style controls via InspectorTabs; consent categories are a fully editable repeater (label/description/required/default-on) with sensible GDPR-style defaults; behavior controls cover consent expiration, versioning, auto-hide, and a reopen "Cookie Settings" tab. Front end (`view.js`) stores consent in `localStorage`, dispatches a `window.adaireCookieConsentChange` event + `window.adaireCookieConsent` global, optionally drives Google Consent Mode v2 (`gtag('consent','update', …)`), and can gate `<script type="text/plain" data-cookie-consent="category-key">` tags until that category is accepted.

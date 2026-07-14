@@ -17,15 +17,15 @@
 		width: 100%;
 		box-sizing: border-box;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		
+
 		&--small {
 			font-size: 13px;
 		}
-		
+
 		&--medium {
 			font-size: 14px;
 		}
-		
+
 		&--large {
 			font-size: 16px;
 		}
@@ -362,12 +362,22 @@
 		&-input {
 			flex: 1 1 160px;
 			min-width: 0;
+			// Not inherited from the block root's own border-box declaration
+			// (box-sizing isn't an inherited property) — without this, the
+			// padding/border below add on top of the flex-computed width
+			// instead of being included in it, making the field render
+			// wider/taller than intended.
+			box-sizing: border-box;
+			max-width: 100%;
 			padding: 10px 12px;
 			border-radius: 4px;
 			border: 1px solid rgba(255, 255, 255, 0.25);
 			background: rgba(255, 255, 255, 0.08);
 			color: inherit;
 			font-size: 14px;
+			line-height: normal;
+			-webkit-appearance: none;
+			appearance: none;
 
 			&::placeholder {
 				color: inherit;
@@ -722,7 +732,7 @@
 			grid-template-columns: 1fr;
 			display: flex;
 			flex-direction: column;
-			
+
 			// Order columns by mobile priority
 			> * {
 				order: var(--mobile-priority, 999);
@@ -746,6 +756,18 @@
 		&__newsletter-field-row {
 			flex-direction: column;
 			align-items: stretch;
+		}
+
+		// The input's `flex: 1 1 160px` (set above for the default row
+		// layout) targets WIDTH there — flex-basis/flex-grow apply to a
+		// flex container's main axis, which rotates to the vertical axis
+		// once the row switches to `flex-direction: column` right above.
+		// Left as-is, that same declaration told the input to grow to fill
+		// available *height* instead, which is what made it render as an
+		// oversized box on mobile instead of a normal single-line field.
+		&__newsletter-input {
+			flex: 0 0 auto;
+			width: 100%;
 		}
 
 		&__newsletter-button {
@@ -791,7 +813,7 @@
 		&--dashed {
 			list-style: none;
 			padding-left: 0;
-			
+
 			li {
 				position: relative;
 				padding-left: 20px;

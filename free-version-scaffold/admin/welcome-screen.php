@@ -64,7 +64,7 @@ class Adaire_Welcome_Screen {
 
     public static function create_starter_page() {
         check_ajax_referer( 'adaire_create_page', 'nonce' );
-        if ( ! current_user_can( 'edit_pages' ) ) {
+        if ( ! current_user_can( 'manage_options' ) ) {
             wp_send_json_error( array( 'message' => __( 'Insufficient permissions.', 'adaire-blocks' ) ) );
         }
         $pattern_slug = sanitize_text_field( wp_unslash( $_POST['pattern'] ?? 'adaire-blocks/landing-page' ) );
@@ -95,31 +95,12 @@ class Adaire_Welcome_Screen {
             wp_die( esc_html__( 'Unauthorized', 'adaire-blocks' ) );
         }
 
-<<<<<<< Updated upstream
-        $nonce       = wp_create_nonce( 'adaire_create_page' );
-        $ajax_url    = admin_url( 'admin-ajax.php' );
-        $docs_url    = 'https://adaire.digital/docs/';
-
-        $is_block_theme = function_exists( 'wp_is_block_theme' ) && wp_is_block_theme();
-        $theme_name      = wp_get_theme()->get( 'Name' );
-        $theme_slug      = get_stylesheet();
-        $header_url      = admin_url( 'site-editor.php?postType=wp_template_part&postId=' . rawurlencode( $theme_slug . '//header' ) );
-        $footer_url      = admin_url( 'site-editor.php?postType=wp_template_part&postId=' . rawurlencode( $theme_slug . '//footer' ) );
-        $all_parts_url   = admin_url( 'site-editor.php?path=%2Fwp_template_part%2Fall' );
-
-        // Sidebar / quick-action destinations.
-        $settings_url  = admin_url( 'admin.php?page=adaire-blocks-settings' );
-        $migration_url = admin_url( 'admin.php?page=adaire-blocks-migration' );
-        $support_page_url = admin_url( 'admin.php?page=adaire-blocks-support' );
-        $themes_url    = admin_url( 'themes.php' );
-=======
         $nonce         = wp_create_nonce( 'adaire_create_page' );
         $ajax_url      = admin_url( 'admin-ajax.php' );
         $docs_url      = 'https://adaire.digital/docs/';
         $support_url   = 'https://adaire.digital/support/';
         $settings_url  = admin_url( 'admin.php?page=adaire-blocks-settings' );
         $migration_url = admin_url( 'admin.php?page=adaire-blocks-migration' );
->>>>>>> Stashed changes
         $exit_url      = admin_url();
         $new_page_url  = admin_url( 'post-new.php?post_type=page' );
 
@@ -174,81 +155,8 @@ class Adaire_Welcome_Screen {
             }
         }
 
-<<<<<<< Updated upstream
-        $templates = array(
-            array(
-                'slug'        => 'adaire-blocks/landing-page',
-                'icon'        => 'rocket',
-                'title'       => __( 'Landing Page', 'adaire-blocks' ),
-                'description' => __( 'Hero, features, testimonial & CTA.', 'adaire-blocks' ),
-                'homepage'    => true,
-                'image'       => $preview_images['landing'],
-            ),
-            array(
-                'slug'        => 'adaire-blocks/about-page',
-                'icon'        => 'users',
-                'title'       => __( 'About Page', 'adaire-blocks' ),
-                'description' => __( 'Hero, about section, timeline & testimonial.', 'adaire-blocks' ),
-                'homepage'    => false,
-                'image'       => $preview_images['about'],
-            ),
-            array(
-                'slug'        => 'adaire-blocks/services-page',
-                'icon'        => 'settings',
-                'title'       => __( 'Services Page', 'adaire-blocks' ),
-                'description' => __( 'Hero, info grid & pricing table.', 'adaire-blocks' ),
-                'homepage'    => false,
-                'image'       => $preview_images['services'],
-            ),
-            array(
-                'slug'        => 'adaire-blocks/blog-landing',
-                'icon'        => 'file-text',
-                'title'       => __( 'Blog Landing', 'adaire-blocks' ),
-                'description' => __( 'Hero with a posts grid.', 'adaire-blocks' ),
-                'homepage'    => false,
-                'image'       => $preview_images['blog'],
-            ),
-            array(
-                'slug'        => 'adaire-blocks/contact-page',
-                'icon'        => 'mail',
-                'title'       => __( 'Contact Page', 'adaire-blocks' ),
-                'description' => __( 'Hero with a two-column contact layout.', 'adaire-blocks' ),
-                'homepage'    => false,
-                'image'       => '',
-            ),
-        );
-
-        $resources = array(
-            array(
-                'href'  => $docs_url . 'getting-started/',
-                'tag'   => __( 'Guide', 'adaire-blocks' ),
-                'title' => __( 'Getting Started Guide', 'adaire-blocks' ),
-                'desc'  => __( 'Step-by-step walkthrough of every block and setting.', 'adaire-blocks' ),
-                'cta'   => __( 'Read the guide', 'adaire-blocks' ),
-                'image' => $preview_images['blog'],
-            ),
-            array(
-                'href'  => $docs_url . 'blocks/',
-                'tag'   => __( 'Reference', 'adaire-blocks' ),
-                'title' => __( 'Block Reference', 'adaire-blocks' ),
-                'desc'  => __( 'Attributes, options, and examples for all free blocks.', 'adaire-blocks' ),
-                'cta'   => __( 'Browse reference', 'adaire-blocks' ),
-                'image' => $preview_images['landing'],
-            ),
-            array(
-                'href'     => $support_page_url,
-                'tag'      => __( 'Help', 'adaire-blocks' ),
-                'title'    => __( 'Support', 'adaire-blocks' ),
-                'desc'     => __( 'Get in touch with our support team directly.', 'adaire-blocks' ),
-                'cta'      => __( 'Get support', 'adaire-blocks' ),
-                'image'    => $preview_images['services'],
-                'external' => false,
-            ),
-        );
-=======
         $version    = defined( 'ADAIRE_BLOCKS_VERSION' ) ? ADAIRE_BLOCKS_VERSION : '1.0';
         $brand_svg  = '<svg viewBox="0 0 1000 1000" fill="currentColor"><path d="M408.523 321.353H163.388V393.981H401.889V483.583H195.142C156 483.583 125 516.017 125 556.18V645.814C125 685.978 156 718.411 195.142 718.411H401.889V645.814H201.776V556.18H401.889V645.814H477.941V393.981C477.941 353.818 446.941 321.353 408.523 321.353Z"/><path d="M603.247 267.692V357.441H801.292C842.251 357.441 875 389.932 875 429.647V643.346C875 686.658 838.511 718.412 793.842 718.412H592.057C553.348 718.412 522.059 688.102 522.059 650.569V189C566.728 189 603.217 224.381 603.217 267.692H603.247ZM603.247 650.569H793.842V429.647H603.247V650.569Z"/></svg>';
->>>>>>> Stashed changes
         ?>
         <div class="wrap abw-shell">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -435,11 +343,21 @@ class Adaire_Welcome_Screen {
         .abw-mc{position:absolute;background:#fff;border-radius:10px;box-shadow:0 14px 32px -14px rgba(20,24,31,.3);padding:9px;}
         .abw-mb{background:#EEF2F5;border-radius:4px;height:7px;margin-bottom:5px;}
         .abw-mp{background:#DCE6EA;border-radius:6px;margin-bottom:7px;}
-        /* Word */
-        .abw-sw-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:40px;}
-        .abw-sw-frame{border:1.8px solid var(--accent);border-radius:3px;width:78%;height:64%;display:flex;align-items:center;justify-content:center;position:relative;}
-        .abw-sw-frame::before{content:'';position:absolute;inset:-1px;border-radius:3px;border:1px solid rgba(201,70,63,.2);}
-        .abw-sw{font-family:'Poppins',sans-serif;font-weight:800;color:#fff;text-align:center;font-size:clamp(26px,5vw,54px);line-height:1;letter-spacing:-.02em;text-transform:uppercase;}
+        /* Site mockup (word/topic scene) */
+        .abw-ws-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:32px;}
+        .abw-ws-card{position:relative;width:300px;background:#fff;border-radius:16px;box-shadow:0 22px 54px -18px rgba(20,24,31,.35);overflow:hidden;}
+        .abw-ws-nav{height:26px;background:#F5F7F9;display:flex;align-items:center;gap:5px;padding:0 10px;}
+        .abw-ws-nav>span{width:6px;height:6px;border-radius:50%;background:#D7DDE1;flex-shrink:0;}
+        .abw-ws-url{margin-left:8px;flex:1;background:#fff;border-radius:5px;height:16px;display:flex;align-items:center;gap:5px;padding:0 8px;font-size:9px;font-family:'Inter',sans-serif;color:var(--muted);font-weight:500;overflow:hidden;white-space:nowrap;}
+        .abw-ws-dot{width:5px;height:5px;border-radius:50%;background:#22C55E;flex-shrink:0;}
+        .abw-ws-hero{height:96px;position:relative;overflow:hidden;background:linear-gradient(120deg,var(--accent),#E5847D);transition:background .5s ease;}
+        .abw-ws-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.35) 40%,transparent 60%);background-size:200% 100%;animation:abwShimmer 2.6s ease-in-out infinite;}
+        .abw-ws-body{padding:16px;display:flex;flex-direction:column;align-items:center;gap:9px;}
+        .abw-ws-icon{width:34px;height:34px;border-radius:50%;background:var(--accent-t);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0;transition:color .3s ease,background .3s ease;}
+        .abw-ws-icon svg{width:18px;height:18px;stroke-width:1.8;}
+        .abw-ws-label{font-family:'Poppins',sans-serif;font-weight:700;font-size:14.5px;color:var(--ink);}
+        .abw-ws-row{width:100%;height:8px;border-radius:5px;background:#EEF2F5;}
+        @keyframes abwShimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
         /* Level */
         .abw-lv-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:40px;}
         .abw-lv-word{font-family:'Poppins',sans-serif;font-weight:800;color:#fff;font-size:clamp(34px,6vw,62px);letter-spacing:-.02em;text-transform:uppercase;}
@@ -451,14 +369,46 @@ class Adaire_Welcome_Screen {
         .abw-sk-body{padding:13px;}
         .abw-sk-bar{background:#EEF2F5;border-radius:5px;height:8px;margin-bottom:8px;}
         .abw-sk-lbl{font-size:9.5px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:'Inter',sans-serif;}
-        /* Spotlight */
-        .abw-sp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:68%;background:#fff;border-radius:14px;box-shadow:0 18px 44px -16px rgba(20,24,31,.3);padding:20px;border:2px solid var(--accent);}
-        .abw-sp-lbl{font-size:9.5px;font-weight:700;letter-spacing:.06em;color:var(--accent-d);text-transform:uppercase;margin-bottom:11px;font-family:'Inter',sans-serif;}
-        .abw-sp-f{background:#F5F7F9;border-radius:7px;height:32px;margin-bottom:8px;}
-        .abw-sp-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px;}
-        .abw-sp-row div{height:28px;border-radius:6px;background:#F5F7F9;}
-        .abw-sp-row div:first-child{background:rgba(201,70,63,.12);}
-        .abw-sp-btn{background:var(--accent);border-radius:7px;height:32px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;font-family:'Inter',sans-serif;}
+        /* Page builder (feature spotlight scene) */
+        .abw-pg-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;}
+        .abw-pg-card{position:relative;width:300px;background:#fff;border-radius:16px;box-shadow:0 22px 54px -18px rgba(20,24,31,.35);overflow:hidden;display:flex;flex-direction:column;}
+        .abw-pg-nav{height:24px;background:#F5F7F9;display:flex;align-items:center;gap:5px;padding:0 10px;flex-shrink:0;}
+        .abw-pg-nav span{width:6px;height:6px;border-radius:50%;background:#D7DDE1;}
+        .abw-pg-hero{height:64px;flex-shrink:0;position:relative;overflow:hidden;background:linear-gradient(120deg,var(--accent),#E5847D);}
+        .abw-pg-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.3) 40%,transparent 60%);background-size:200% 100%;animation:abwShimmer 2.8s ease-in-out infinite;}
+        .abw-pg-body{padding:12px;display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;}
+        .abw-pg-empty{font-size:11.5px;color:var(--faint);text-align:center;padding:22px 8px;font-family:'Inter',sans-serif;}
+        .abw-pg-sec{background:#F8FAFB;border:1px solid var(--line-s);border-radius:10px;padding:10px;}
+        .abw-pg-sec-lbl{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-family:'Inter',sans-serif;}
+        .abw-pg-pro-tag{color:var(--accent);}
+        /* Testimonials */
+        .abw-pg-testi-row{display:flex;gap:8px;}
+        .abw-pg-testi-card{flex:1;background:#fff;border-radius:8px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 2px 6px rgba(20,24,31,.06);}
+        .abw-pg-avatar{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#E5847D);}
+        .abw-pg-stars{font-size:8px;color:#F59E0B;letter-spacing:1px;}
+        .abw-pg-line{width:80%;height:5px;border-radius:3px;background:#EEF2F5;}
+        /* Pricing table */
+        .abw-pg-price-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+        .abw-pg-price-col{background:#fff;border-radius:8px;padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 2px 6px rgba(20,24,31,.06);}
+        .abw-pg-price-col.featured{background:var(--accent-t);box-shadow:0 0 0 1.5px var(--accent);transform:scale(1.05);}
+        .abw-pg-price-h{width:60%;height:5px;border-radius:3px;background:#EEF2F5;}
+        .abw-pg-price-num{font-family:'Poppins',sans-serif;font-weight:800;font-size:13px;color:var(--ink);}
+        .abw-pg-price-l{width:80%;height:4px;border-radius:3px;background:#EEF2F5;}
+        /* Counter */
+        .abw-pg-counter-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center;}
+        .abw-pg-counter-item{display:flex;flex-direction:column;gap:2px;}
+        .abw-pg-counter-num{font-family:'Poppins',sans-serif;font-weight:800;font-size:17px;color:var(--accent);}
+        .abw-pg-counter-lbl{font-size:8.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+        /* Flip card */
+        .abw-pg-flip-card{width:100%;height:64px;perspective:600px;}
+        .abw-pg-flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:abwPgFlip 3.6s ease-in-out infinite;}
+        .abw-pg-flip-front,.abw-pg-flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:8px;}
+        .abw-pg-flip-front{background:linear-gradient(135deg,var(--accent),#E5847D);}
+        .abw-pg-flip-back{background:#EEF2F5;transform:rotateY(180deg);}
+        @keyframes abwPgFlip{0%,38%{transform:rotateY(0deg);}50%,88%{transform:rotateY(180deg);}100%{transform:rotateY(360deg);}}
+        /* Generic (pro placeholder) */
+        .abw-pg-generic-bar{height:8px;border-radius:5px;background:#EEF2F5;margin-bottom:6px;}
+        .abw-pg-generic-bar:last-child{margin-bottom:0;}
         /* Complete */
         .abw-cf{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:286px;background:#fff;border-radius:16px;box-shadow:0 22px 54px -18px rgba(20,24,31,.35);overflow:hidden;}
         .abw-cf-nav{height:22px;background:#F5F7F9;display:flex;align-items:center;gap:5px;padding:0 10px;}
@@ -518,45 +468,6 @@ class Adaire_Welcome_Screen {
         .abw-pro-later:hover{color:var(--ink);}
         </style>
 
-<<<<<<< Updated upstream
-        <div class="adaire-shell">
-            <aside class="adaire-shell-sidebar">
-                <div class="adaire-shell-brand">
-                    <span class="adaire-shell-brand-mark"><?php echo self::icon( 'brand-mark' ); ?></span>
-                    <span class="adaire-shell-brand-name"><?php esc_html_e( 'Guten-Blocks', 'adaire-blocks' ); ?></span>
-                </div>
-
-                <nav class="adaire-shell-nav">
-                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=adaire-blocks-welcome' ) ); ?>" class="adaire-shell-link is-active">
-                        <?php echo self::icon( 'rocket' ); ?> <?php esc_html_e( 'Quick Start', 'adaire-blocks' ); ?>
-                    </a>
-                    <a href="<?php echo esc_url( $settings_url ); ?>" class="adaire-shell-link">
-                        <?php echo self::icon( 'settings' ); ?> <?php esc_html_e( 'Block Settings', 'adaire-blocks' ); ?>
-                    </a>
-                    <a href="<?php echo esc_url( $migration_url ); ?>" class="adaire-shell-link">
-                        <?php echo self::icon( 'sync' ); ?> <?php esc_html_e( 'Migration Tool', 'adaire-blocks' ); ?>
-                    </a>
-
-                    <div class="adaire-shell-nav-divider"></div>
-                    <span class="adaire-shell-nav-label"><?php esc_html_e( 'Resources', 'adaire-blocks' ); ?></span>
-
-                    <a href="<?php echo esc_url( $docs_url ); ?>" target="_blank" rel="noopener" class="adaire-shell-link adaire-shell-link-ext">
-                        <span class="adaire-shell-link-label"><?php echo self::icon( 'book-open' ); ?> <?php esc_html_e( 'Documentation', 'adaire-blocks' ); ?></span>
-                        <span class="adaire-shell-ext-icon"><?php echo self::icon( 'external-link' ); ?></span>
-                    </a>
-                    <a href="<?php echo esc_url( $support_page_url ); ?>" class="adaire-shell-link">
-                        <?php echo self::icon( 'message-circle' ); ?> <?php esc_html_e( 'Support', 'adaire-blocks' ); ?>
-                    </a>
-                </nav>
-
-                <div class="adaire-shell-spacer"></div>
-
-                <div class="adaire-shell-sidebar-foot">
-                    <a href="<?php echo esc_url( $exit_url ); ?>" class="adaire-shell-exit">
-                        <?php echo self::icon( 'arrow-left' ); ?> <?php esc_html_e( 'Exit to WordPress', 'adaire-blocks' ); ?>
-                    </a>
-                    <span class="adaire-shell-version">Guten-Blocks v<?php echo esc_html( ADAIRE_BLOCKS_VERSION ); ?></span>
-=======
         <div class="abw" id="abw">
 
             <nav class="abw-top">
@@ -569,282 +480,18 @@ class Adaire_Welcome_Screen {
                     <a href="<?php echo esc_url( $exit_url ); ?>" class="abw-top-exit"><?php esc_html_e( 'Skip setup →', 'adaire-blocks' ); ?></a>
 <<<<<<< Updated upstream
                     <a href="https://adaire.digital/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
+<<<<<<< HEAD
 >>>>>>> Stashed changes
 =======
                     <a href="https://gutenblocks.com/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
                 </div>
             </nav>
 
             <div class="abw-prog-track"><div class="abw-prog-fill" id="abw-prog"></div></div>
 
-<<<<<<< Updated upstream
-            <div class="adaire-hero">
-                <div class="adaire-hero-grid">
-                    <div class="adaire-hero-inner">
-                        <span class="adaire-pill"><span class="adaire-pill-icon"><?php echo self::icon( 'sparkle' ); ?></span> <?php esc_html_e( 'Free plan', 'adaire-blocks' ); ?></span>
-                        <h1 class="adaire-hero-title"><?php esc_html_e( 'Welcome to', 'adaire-blocks' ); ?> <span class="adaire-accent">Guten-Blocks</span></h1>
-                        <p class="adaire-hero-sub"><?php esc_html_e( 'Create a starter page from a ready-made layout, or explore the full block library directly in the editor.', 'adaire-blocks' ); ?></p>
-                        <div class="adaire-hero-actions">
-                            <a href="#adaire-templates" class="adaire-btn adaire-btn-primary">
-                                <?php esc_html_e( 'Start Building', 'adaire-blocks' ); ?>
-                                <span class="adaire-btn-arrow">→</span>
-                            </a>
-                            <a href="<?php echo esc_url( $docs_url . 'getting-started/' ); ?>" target="_blank" class="adaire-btn adaire-btn-ghost">
-                                <?php esc_html_e( 'View Docs', 'adaire-blocks' ); ?>
-                            </a>
-                        </div>
-                        <span class="adaire-hero-version">v<?php echo esc_html( ADAIRE_BLOCKS_VERSION ); ?> · <?php esc_html_e( 'Free plan', 'adaire-blocks' ); ?></span>
-                    </div>
-                    <div class="adaire-hero-visual">
-                        <div class="adaire-hero-shot">
-                            <div class="adaire-hero-shot-bar">
-                                <span class="adaire-hero-shot-dot"></span>
-                                <span class="adaire-hero-shot-dot"></span>
-                                <span class="adaire-hero-shot-dot"></span>
-                            </div>
-                            <img src="<?php echo esc_url( $hero_image_url ); ?>" alt="<?php esc_attr_e( 'A Guten-Blocks block in the WordPress editor', 'adaire-blocks' ); ?>" loading="eager" decoding="async" />
-                            <span class="adaire-hero-shot-tag"><?php echo self::icon( 'sparkle' ); ?> <?php esc_html_e( 'Built with Guten-Blocks', 'adaire-blocks' ); ?></span>
-                        </div>
-                        <div class="adaire-hero-shot-float">
-                            <img src="<?php echo esc_url( $showcase_image_url ); ?>" alt="<?php esc_attr_e( 'Another Guten-Blocks block layout', 'adaire-blocks' ); ?>" loading="lazy" decoding="async" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="adaire-welcome-steps">
-                <div class="adaire-step adaire-fade">
-                    <div class="adaire-step-num">1</div>
-                    <h3><?php esc_html_e( 'Choose a starter template', 'adaire-blocks' ); ?></h3>
-                    <p><?php esc_html_e( 'Pick one of the ready-made page layouts below. A draft page opens in the editor.', 'adaire-blocks' ); ?></p>
-                </div>
-                <div class="adaire-step adaire-fade" style="transition-delay:.08s">
-                    <div class="adaire-step-num">2</div>
-                    <h3><?php esc_html_e( 'Customise the content', 'adaire-blocks' ); ?></h3>
-                    <p><?php esc_html_e( 'Replace the placeholder text and images with your own. Every block is editable.', 'adaire-blocks' ); ?></p>
-                </div>
-                <div class="adaire-step adaire-fade" style="transition-delay:.16s">
-                    <div class="adaire-step-num">3</div>
-                    <h3><?php esc_html_e( 'Publish & set as homepage', 'adaire-blocks' ); ?></h3>
-                    <p><?php esc_html_e( 'Publish the page, then go to Settings → Reading to set it as your static front page.', 'adaire-blocks' ); ?></p>
-                </div>
-            </div>
-
-            <div id="adaire-homepage-tip" class="adaire-homepage-tip" style="display:none;">
-                <span class="adaire-tip-icon"><?php echo self::icon( 'check-circle' ); ?></span>
-                <span id="adaire-tip-text"></span>
-                <a href="<?php echo esc_url( admin_url( 'options-reading.php' ) ); ?>" style="margin-left:8px; white-space:nowrap;">
-                    <?php esc_html_e( 'Set as homepage →', 'adaire-blocks' ); ?>
-                </a>
-            </div>
-
-            <div id="adaire-templates" class="adaire-section-head">
-                <div>
-                    <p class="adaire-section-title"><?php esc_html_e( 'Starter Page Templates', 'adaire-blocks' ); ?></p>
-                    <p class="adaire-section-subtitle"><?php esc_html_e( 'Each button creates a draft page pre-filled with that layout and opens the editor.', 'adaire-blocks' ); ?></p>
-                </div>
-                <div class="adaire-slider-nav">
-                    <button type="button" class="adaire-slider-btn" data-dir="-1" aria-label="<?php esc_attr_e( 'Scroll templates left', 'adaire-blocks' ); ?>"><?php echo self::icon( 'chevron-left' ); ?></button>
-                    <button type="button" class="adaire-slider-btn" data-dir="1" aria-label="<?php esc_attr_e( 'Scroll templates right', 'adaire-blocks' ); ?>"><?php echo self::icon( 'chevron-right' ); ?></button>
-                </div>
-            </div>
-
-            <div class="adaire-slider" id="adaire-template-slider">
-                <div class="adaire-slider-track">
-                    <?php foreach ( $templates as $i => $tpl ) : ?>
-                    <div class="adaire-template-card adaire-fade" style="transition-delay:<?php echo esc_attr( $i * 0.06 ); ?>s">
-                        <div class="adaire-template-media">
-                            <?php if ( $tpl['homepage'] ) : ?>
-                                <span class="adaire-home-badge"><?php esc_html_e( 'Homepage', 'adaire-blocks' ); ?></span>
-                            <?php endif; ?>
-                            <?php if ( ! empty( $tpl['image'] ) ) : ?>
-                                <img src="<?php echo esc_url( $tpl['image'] ); ?>" alt="<?php echo esc_attr( $tpl['title'] ); ?>" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
-                            <?php else : ?>
-                                <div class="adaire-template-media-pattern">
-                                    <?php echo self::icon( $tpl['icon'] ); ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="adaire-template-body">
-                            <h3><?php echo esc_html( $tpl['title'] ); ?></h3>
-                            <p><?php echo esc_html( $tpl['description'] ); ?></p>
-                            <button
-                                class="adaire-create-btn"
-                                data-pattern="<?php echo esc_attr( $tpl['slug'] ); ?>"
-                                data-title="<?php echo esc_attr( $tpl['title'] ); ?>"
-                                data-homepage="<?php echo $tpl['homepage'] ? '1' : '0'; ?>"
-                            >
-                                <span class="adaire-btn-icon"><?php echo self::icon( 'plus' ); ?></span> <?php esc_html_e( 'Create Page', 'adaire-blocks' ); ?>
-                            </button>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
-            <p class="adaire-section-title"><?php esc_html_e( 'Jumpstart Your Workflow', 'adaire-blocks' ); ?></p>
-            <p class="adaire-section-subtitle"><?php esc_html_e( 'Quick links to the screens you\'ll use most: site editing, block management, and migration.', 'adaire-blocks' ); ?></p>
-            <span class="adaire-hf-theme-tag"><?php echo esc_html( __( 'Active theme: ', 'adaire-blocks' ) . $theme_name ); ?></span>
-
-            <?php if ( $is_block_theme ) : ?>
-            <div class="adaire-hf-grid">
-                <a href="<?php echo esc_url( $header_url ); ?>" class="adaire-hf-card adaire-fade">
-                    <span class="adaire-swatch adaire-swatch-2"><?php echo self::icon( 'layout-top' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'Edit Header', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Logo, navigation &amp; top bar', 'adaire-blocks' ); ?></p>
-                    </div>
-                    <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-                <a href="<?php echo esc_url( $footer_url ); ?>" class="adaire-hf-card adaire-fade" style="transition-delay:.06s">
-                    <span class="adaire-swatch adaire-swatch-5"><?php echo self::icon( 'layout-bottom' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'Edit Footer', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Links, copyright &amp; social icons', 'adaire-blocks' ); ?></p>
-                    </div>
-                    <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-                <a href="<?php echo esc_url( $all_parts_url ); ?>" class="adaire-hf-card is-add adaire-fade" style="transition-delay:.12s">
-                    <span class="adaire-swatch adaire-swatch-6"><?php echo self::icon( 'grid' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'All Template Parts', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Browse, add or manage all parts', 'adaire-blocks' ); ?></p>
-                    </div>
-                    <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-                <a href="<?php echo esc_url( $settings_url ); ?>" class="adaire-hf-card adaire-fade" style="transition-delay:.18s">
-                    <span class="adaire-swatch adaire-swatch-3"><?php echo self::icon( 'settings' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'Block Settings', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Enable or disable individual blocks', 'adaire-blocks' ); ?></p>
-                    </div>
-                    <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-                <a href="<?php echo esc_url( $migration_url ); ?>" class="adaire-hf-card adaire-fade" style="transition-delay:.24s">
-                    <span class="adaire-swatch adaire-swatch-4"><?php echo self::icon( 'sync' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'Migration Tool', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Move old blocks over to Guten-Blocks', 'adaire-blocks' ); ?></p>
-                    </div>
-                    <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-                <a href="<?php echo esc_url( $docs_url ); ?>" target="_blank" rel="noopener" class="adaire-hf-card adaire-fade" style="transition-delay:.3s">
-                    <span class="adaire-swatch adaire-swatch-1"><?php echo self::icon( 'book-open' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'Documentation', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Guides for every block and setting', 'adaire-blocks' ); ?></p>
-                    </div>
-                    <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-            </div>
-            <?php else : ?>
-            <div class="adaire-hf-classic-note">
-                <span class="adaire-note-icon"><?php echo self::icon( 'info' ); ?></span>
-                <span><?php printf(
-                    /* translators: %s: theme name */
-                    esc_html__( 'Your active theme (%s) is a classic theme. Header and footer editing is available for block themes via the Site Editor. Switch to a block theme (e.g. Twenty Twenty-Four) to use these shortcuts.', 'adaire-blocks' ),
-                    '<strong>' . esc_html( $theme_name ) . '</strong>'
-                ); ?>
-                <a href="<?php echo esc_url( $themes_url ); ?>" style="margin-left:6px;"><?php esc_html_e( 'Browse themes →', 'adaire-blocks' ); ?></a></span>
-            </div>
-            <div class="adaire-hf-grid">
-                <a href="<?php echo esc_url( $settings_url ); ?>" class="adaire-hf-card adaire-fade">
-                    <span class="adaire-swatch adaire-swatch-3"><?php echo self::icon( 'settings' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'Block Settings', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Enable or disable individual blocks', 'adaire-blocks' ); ?></p>
-                    </div>
-                    <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-                <a href="<?php echo esc_url( $migration_url ); ?>" class="adaire-hf-card adaire-fade" style="transition-delay:.06s">
-                    <span class="adaire-swatch adaire-swatch-4"><?php echo self::icon( 'sync' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'Migration Tool', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Move old blocks over to Guten-Blocks', 'adaire-blocks' ); ?></p>
-                    </div>
-                    <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-                <a href="<?php echo esc_url( $docs_url ); ?>" target="_blank" rel="noopener" class="adaire-hf-card adaire-fade" style="transition-delay:.12s">
-                    <span class="adaire-swatch adaire-swatch-1"><?php echo self::icon( 'book-open' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'Documentation', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'Guides for every block and setting', 'adaire-blocks' ); ?></p>
-                    </div>
-                    <span class="adaire-hf-arrow"><?php echo self::icon( 'chevron-right' ); ?></span>
-                </a>
-            </div>
-            <?php endif; ?>
-
-            <p class="adaire-section-title"><?php esc_html_e( 'Expand Your Toolkit', 'adaire-blocks' ); ?></p>
-            <p class="adaire-section-subtitle"><?php esc_html_e( 'Guides and support to help you get more out of Guten-Blocks.', 'adaire-blocks' ); ?></p>
-
-            <div class="adaire-resources">
-                <?php foreach ( $resources as $i => $res ) : $res_is_external = ! isset( $res['external'] ) || $res['external']; ?>
-                <a href="<?php echo esc_url( $res['href'] ); ?>" <?php echo $res_is_external ? 'target="_blank" rel="noopener"' : ''; ?> class="adaire-resource adaire-fade" style="transition-delay:<?php echo esc_attr( $i * 0.06 ); ?>s">
-                    <div class="adaire-resource-media">
-                        <img src="<?php echo esc_url( $res['image'] ); ?>" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
-                        <span class="adaire-resource-tag"><?php echo esc_html( $res['tag'] ); ?></span>
-                    </div>
-                    <div class="adaire-resource-body">
-                        <h3><?php echo esc_html( $res['title'] ); ?></h3>
-                        <p><?php echo esc_html( $res['desc'] ); ?></p>
-                        <span class="adaire-resource-foot"><?php echo esc_html( $res['cta'] ); ?> <?php echo self::icon( 'chevron-right' ); ?></span>
-                    </div>
-                </a>
-                <?php endforeach; ?>
-            </div>
-
-            <p class="adaire-section-title"><?php esc_html_e( 'Frequently Asked Questions', 'adaire-blocks' ); ?></p>
-            <p class="adaire-section-subtitle"><?php esc_html_e( 'Answers to common questions about templates, blocks, and themes.', 'adaire-blocks' ); ?></p>
-
-            <div class="adaire-faq-layout">
-            <div class="adaire-faq-visual adaire-fade">
-                <img src="<?php echo esc_url( $preview_images['about'] ); ?>" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
-                <div class="adaire-faq-visual-card">
-                    <span class="adaire-faq-visual-icon"><?php echo self::icon( 'book-open' ); ?></span>
-                    <div>
-                        <h3><?php esc_html_e( 'Still have questions?', 'adaire-blocks' ); ?></h3>
-                        <p><?php esc_html_e( 'The full documentation covers every block in detail.', 'adaire-blocks' ); ?></p>
-                    </div>
-                </div>
-            </div>
-            <div class="adaire-faq">
-                <?php
-                $faqs = array(
-                    array(
-                        'q' => __( 'How do I set a starter page as my homepage?', 'adaire-blocks' ),
-                        'a' => __( 'Create the Landing Page template, publish it, then go to Settings → Reading and set it as your static front page.', 'adaire-blocks' ),
-                    ),
-                    array(
-                        'q' => __( 'Can I edit the templates after they\'re created?', 'adaire-blocks' ),
-                        'a' => __( 'Yes. Every template is just regular Adaire blocks on a draft page. Open it in the editor and replace any text, image, or section.', 'adaire-blocks' ),
-                    ),
-                    array(
-                        'q' => __( 'What\'s the difference between the free and paid blocks?', 'adaire-blocks' ),
-                        'a' => __( 'The free plan includes a curated set of layout, hero, and content blocks. Visit Guten-Blocks Settings to see which blocks are included and what upgrading unlocks.', 'adaire-blocks' ),
-                    ),
-                    array(
-                        'q' => __( 'Why doesn\'t my theme show header/footer editing?', 'adaire-blocks' ),
-                        'a' => __( 'Header and footer editing via the Site Editor only works with block themes. Classic themes manage these areas through their own theme settings or widgets.', 'adaire-blocks' ),
-                    ),
-                );
-                ?>
-                <div class="adaire-faq-chips" id="adaire-faq-chips" data-answers="<?php echo esc_attr( wp_json_encode( wp_list_pluck( $faqs, 'a' ) ) ); ?>">
-                    <?php foreach ( $faqs as $i => $faq ) : ?>
-                        <button type="button" class="adaire-faq-chip" data-index="<?php echo esc_attr( $i ); ?>" aria-pressed="<?php echo 0 === $i ? 'true' : 'false'; ?>">
-                            <?php echo esc_html( $faq['q'] ); ?>
-                        </button>
-                    <?php endforeach; ?>
-                </div>
-                <div class="adaire-faq-answer-wrap">
-                    <p class="adaire-faq-answer is-active" id="adaire-faq-answer"><?php echo esc_html( $faqs[0]['a'] ); ?></p>
-                </div>
-            </div>
-            </div><!-- .adaire-faq-layout -->
-
-        </div><!-- .adaire-welcome -->
-=======
             <main class="abw-stage">
                 <div class="abw-left">
                     <div id="abw-qblock">
@@ -860,7 +507,6 @@ class Adaire_Welcome_Screen {
                         <div id="abw-scene"></div>
                     </div>
                 </div>
->>>>>>> Stashed changes
             </main>
 
             <footer class="abw-foot">
@@ -971,7 +617,7 @@ class Adaire_Welcome_Screen {
                 opts: [
                     { label:"Testimonials",       free:true  },
                     { label:"Pricing Table",       free:true  },
-                    { label:"Counter Block",       free:true  },
+                    { label:"Counter",              free:true  },
                     { label:"Flip Card",           free:true  },
                     { label:"Animation on Scroll", pro:true   },
                     { label:"Mega Menu",           pro:true   },
@@ -1036,6 +682,8 @@ class Adaire_Welcome_Screen {
             chat:      '<path d="M21 11.5a8.38 8.38 0 01-1.9 5.4c-1.6 2-4 3.1-6.6 3.1-1 0-2-.2-2.9-.5L4 21l1.5-4.2A8.3 8.3 0 013 11.5 8.5 8.5 0 0112 3a8.5 8.5 0 019 8.5z"/>',
             sync:      '<path d="M3 12a9 9 0 0115.4-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 01-15.4 6.4L3 16"/><path d="M3 21v-5h5"/>'
         };
+
+        var TOPIC_COLORS = { 0:'#3B82F6', 1:'#10B981', 2:'#8B5CF6', 3:'#F59E0B', 4:'#C9463F', 5:'#EC4899', 6:'#06B6D4', 7:'#64748B' };
 
         /* ── Helpers ── */
         function icon(name){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||'')+'</svg>'; }
@@ -1231,8 +879,7 @@ class Adaire_Welcome_Screen {
                 return true;
             });
             E.scene.querySelectorAll('.abw-swl').forEach(function(el){el.parentNode&&el.parentNode.removeChild(el);});
-<<<<<<< Updated upstream
-            var frame=E.scene.querySelector('.abw-sw-frame');
+                    <a href="https://gutenblocks.com/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
             if(!frame||typeof lottie==='undefined')return;
 =======
             if(typeof lottie==='undefined')return;
@@ -1289,16 +936,18 @@ class Adaire_Welcome_Screen {
                         if(idx>-1)arr.splice(idx,1);else arr.push(i);
                         sel[current]=arr;
                         if(step.scene==='word'){
-                            sceneWordUpdate(opt.label);
                             var selArr=sel[current]||[];
                             if(selArr.length>0){
                                 var showIdx=selArr[selArr.length-1];
+                                sceneWordUpdate(step.opts[showIdx],showIdx);
                                 var pair=stepLotties[showIdx]||null;
                                 sceneWordLotties(pair?(pair.left||null):null,pair?(pair.right||null):null);
                             } else {
+                                sceneWordReset();
                                 sceneWordLotties(null,null);
                             }
                         }
+                        if(step.scene==='spotlight')renderPageSections();
                     }
                     renderOpts(step);
                     E.cont.disabled=!canCont(step);
@@ -1378,19 +1027,47 @@ class Adaire_Welcome_Screen {
         }
 
         function sceneWord(){
-            E.scene.innerHTML='<div class="abw-sw-wrap"><div class="abw-sw-frame"><div class="abw-sw" id="abw-sw">YOUR SITE</div></div></div>';
-            tFromTo(E.scene.querySelector('.abw-sw-frame'),{opacity:0,scale:.88},{opacity:1,scale:1},.6,'power3.out');
-            tFromTo(document.getElementById('abw-sw'),{opacity:0,y:18,filter:'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)'},.5,'',.1);
+            E.scene.innerHTML='<div class="abw-ws-wrap"><div class="abw-ws-card" id="abw-ws-card">'+
+                '<div class="abw-ws-nav"><span></span><span></span><span></span><div class="abw-ws-url"><span class="abw-ws-dot"></span><span id="abw-ws-url-text">yoursite.com</span></div></div>'+
+                '<div class="abw-ws-hero" id="abw-ws-hero"></div>'+
+                '<div class="abw-ws-body">'+
+                    '<div class="abw-ws-icon" id="abw-ws-icon">'+icon('layout')+'</div>'+
+                    '<div class="abw-ws-label" id="abw-ws-label">Your Site</div>'+
+                    '<div class="abw-ws-row"></div>'+
+                    '<div class="abw-ws-row" style="width:70%"></div>'+
+                '</div>'+
+            '</div></div>';
+            tFromTo(E.scene.querySelector('.abw-ws-card'),{opacity:0,scale:.88,y:22},{opacity:1,scale:1,y:0},.6,'back.out(1.6)');
             addParticles();
         }
 
-        function sceneWordUpdate(word){
-            var sw=document.getElementById('abw-sw');
-            if(!sw)return;
-            tTo(sw,{opacity:0,y:-14,filter:'blur(7px)'},.18,'',0,function(){
-                sw.textContent=word.toUpperCase();
-                tFromTo(sw,{opacity:0,y:16,filter:'blur(7px)'},{opacity:1,y:0,filter:'blur(0px)'},.3,'power2.out');
-            });
+        function sceneWordUpdate(opt,idx){
+            var card=document.getElementById('abw-ws-card');
+            if(!card)return;
+            var hero=document.getElementById('abw-ws-hero');
+            var iconEl=document.getElementById('abw-ws-icon');
+            var label=document.getElementById('abw-ws-label');
+            var urlText=document.getElementById('abw-ws-url-text');
+            var color=TOPIC_COLORS[idx]||'#C9463F';
+            if(hero)hero.style.background='linear-gradient(120deg,'+color+','+color+'bb)';
+            if(iconEl){
+                iconEl.style.color=color;iconEl.style.background=color+'14';
+                iconEl.innerHTML=opt.icon?icon(opt.icon):icon('layout');
+            }
+            if(label)label.textContent=opt.label;
+            if(urlText)urlText.textContent='yoursite.com/'+opt.label.toLowerCase().replace(/\s+/g,'-');
+            tFromTo(card,{scale:.96},{scale:1},.4,'back.out(1.8)');
+        }
+
+        function sceneWordReset(){
+            var hero=document.getElementById('abw-ws-hero');
+            var iconEl=document.getElementById('abw-ws-icon');
+            var label=document.getElementById('abw-ws-label');
+            var urlText=document.getElementById('abw-ws-url-text');
+            if(hero)hero.style.background='linear-gradient(120deg,var(--accent),#E5847D)';
+            if(iconEl){iconEl.style.color='var(--accent)';iconEl.style.background='var(--accent-t)';iconEl.innerHTML=icon('layout');}
+            if(label)label.textContent='Your Site';
+            if(urlText)urlText.textContent='yoursite.com';
         }
 
         function sceneLevel(){
@@ -1446,12 +1123,88 @@ class Adaire_Welcome_Screen {
         }
 
         function sceneSpotlight(){
-            E.scene.innerHTML='<div class="abw-sp"><div class="abw-sp-lbl">Your Block Toolkit</div>'+
-                '<div class="abw-sp-f"></div><div class="abw-sp-row"><div></div><div></div></div>'+
-                '<div class="abw-sp-f" style="width:75%;"></div>'+
-                '<div class="abw-sp-btn">Build with GutenBlocks →</div></div>';
-            tFromTo(E.scene.querySelector('.abw-sp'),{opacity:0,scale:.86,y:22,filter:'blur(8px)'},{opacity:1,scale:1,y:0,filter:'blur(0px)'},.55,'back.out(1.7)');
+            E.scene.innerHTML='<div class="abw-pg-wrap"><div class="abw-pg-card">'+
+                '<div class="abw-pg-nav"><span></span><span></span><span></span></div>'+
+                '<div class="abw-pg-hero"></div>'+
+                '<div class="abw-pg-body" id="abw-pg-body"><div class="abw-pg-empty">Pick features below to build your page →</div></div>'+
+            '</div></div>';
+            tFromTo(E.scene.querySelector('.abw-pg-card'),{opacity:0,scale:.9,y:20},{opacity:1,scale:1,y:0},.55,'back.out(1.6)');
             addParticles();
+        }
+
+        function featureSectionHTML(idx,opt){
+            switch(idx){
+                case 0: return '<div class="abw-pg-sec abw-pg-testi" data-f="0">'+
+                        '<div class="abw-pg-sec-lbl">Testimonials</div>'+
+                        '<div class="abw-pg-testi-row">'+
+                            '<div class="abw-pg-testi-card"><span class="abw-pg-avatar"></span><span class="abw-pg-stars">★★★★★</span><span class="abw-pg-line"></span></div>'+
+                            '<div class="abw-pg-testi-card"><span class="abw-pg-avatar"></span><span class="abw-pg-stars">★★★★★</span><span class="abw-pg-line"></span></div>'+
+                        '</div></div>';
+                case 1: return '<div class="abw-pg-sec abw-pg-pricing" data-f="1">'+
+                        '<div class="abw-pg-sec-lbl">Pricing Table</div>'+
+                        '<div class="abw-pg-price-row">'+
+                            '<div class="abw-pg-price-col"><span class="abw-pg-price-h"></span><span class="abw-pg-price-num">$9</span><span class="abw-pg-price-l"></span></div>'+
+                            '<div class="abw-pg-price-col featured"><span class="abw-pg-price-h"></span><span class="abw-pg-price-num">$29</span><span class="abw-pg-price-l"></span></div>'+
+                            '<div class="abw-pg-price-col"><span class="abw-pg-price-h"></span><span class="abw-pg-price-num">$49</span><span class="abw-pg-price-l"></span></div>'+
+                        '</div></div>';
+                case 2: return '<div class="abw-pg-sec abw-pg-counter" data-f="2">'+
+                        '<div class="abw-pg-sec-lbl">Counter</div>'+
+                        '<div class="abw-pg-counter-row">'+
+                            '<div class="abw-pg-counter-item"><span class="abw-pg-counter-num" data-target="250">0</span><span class="abw-pg-counter-lbl">Clients</span></div>'+
+                            '<div class="abw-pg-counter-item"><span class="abw-pg-counter-num" data-target="1200">0</span><span class="abw-pg-counter-lbl">Projects</span></div>'+
+                            '<div class="abw-pg-counter-item"><span class="abw-pg-counter-num" data-target="98">0</span><span class="abw-pg-counter-lbl">Happy %</span></div>'+
+                        '</div></div>';
+                case 3: return '<div class="abw-pg-sec abw-pg-flip" data-f="3">'+
+                        '<div class="abw-pg-sec-lbl">Flip Card</div>'+
+                        '<div class="abw-pg-flip-card"><div class="abw-pg-flip-inner"><div class="abw-pg-flip-front"></div><div class="abw-pg-flip-back"></div></div></div>'+
+                        '</div>';
+                default: return '<div class="abw-pg-sec abw-pg-generic" data-f="'+idx+'">'+
+                        '<div class="abw-pg-sec-lbl">'+opt.label+(opt.pro?' <span class="abw-pg-pro-tag">· Pro</span>':'')+'</div>'+
+                        '<div class="abw-pg-generic-bar"></div><div class="abw-pg-generic-bar" style="width:70%"></div>'+
+                        '</div>';
+            }
+        }
+
+        function animateCounters(container){
+            var nums=container.querySelectorAll('.abw-pg-counter-num');
+            nums.forEach(function(n){
+                var target=parseInt(n.getAttribute('data-target'),10)||0;
+                var start=performance.now(),dur=900;
+                function step(now){
+                    var t=Math.min(1,(now-start)/dur);
+                    var eased=1-Math.pow(1-t,3);
+                    n.textContent=Math.round(target*eased);
+                    if(t<1)requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            });
+        }
+
+        function renderPageSections(){
+            var body=document.getElementById('abw-pg-body');
+            if(!body)return;
+            var step=STEPS[current];
+            var selArr=(sel[current]||[]).slice().sort(function(a,b){return a-b;});
+            var empty=body.querySelector('.abw-pg-empty');
+            var existing={};
+            Array.prototype.forEach.call(body.querySelectorAll('.abw-pg-sec'),function(el){existing[el.getAttribute('data-f')]=el;});
+            Object.keys(existing).forEach(function(k){
+                if(selArr.indexOf(parseInt(k,10))===-1){
+                    var el=existing[k];
+                    tTo(el,{opacity:0,y:-8,scale:.94},.22,'',0,function(){el.parentNode&&el.parentNode.removeChild(el);});
+                }
+            });
+            selArr.forEach(function(idx,order){
+                if(existing[idx]){body.appendChild(existing[idx]);return;}
+                var opt=step.opts[idx];
+                var tmp=document.createElement('div');
+                tmp.innerHTML=featureSectionHTML(idx,opt);
+                var el=tmp.firstChild;
+                body.appendChild(el);
+                tFromTo(el,{opacity:0,y:14,scale:.96},{opacity:1,y:0,scale:1},.4,'back.out(1.5)',order*.05);
+                if(idx===2)animateCounters(el);
+            });
+            if(empty)empty.style.display=selArr.length?'none':'';
         }
 
         function sceneComplete(){
@@ -1486,13 +1239,14 @@ class Adaire_Welcome_Screen {
                 else if(step.scene==='word')      sceneWord();
                 else if(step.scene==='level')     sceneLevel();
                 else if(step.scene==='template')  sceneTemplate();
-                else if(step.scene==='spotlight') sceneSpotlight();
+                else if(step.scene==='spotlight'){ sceneSpotlight(); renderPageSections(); }
                 else if(step.scene==='complete')  sceneComplete();
                 var stepLotties=(LOTTIE_MAP&&LOTTIE_MAP[stepIdx])?LOTTIE_MAP[stepIdx]:{};
                 if(step.scene==='word'){
                     var selArr=sel[stepIdx]||[];
                     if(selArr.length>0){
                         var lastIdx=selArr[selArr.length-1];
+                        sceneWordUpdate(step.opts[lastIdx],lastIdx);
                         var pair=stepLotties[lastIdx]||null;
                         if(pair)sceneWordLotties(pair.left||null,pair.right||null);
                     }

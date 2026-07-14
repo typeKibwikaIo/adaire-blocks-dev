@@ -13,7 +13,6 @@ const toDeviceObject = (value) => ({
     desktop: value,
     tablet: value,
     mobile: value,
-    smartwatch: value,
 });
 
 const transforms = {

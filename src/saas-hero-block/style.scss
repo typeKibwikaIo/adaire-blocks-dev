@@ -322,6 +322,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     padding: var(--ad-cta-padding-v, 14px) var(--ad-cta-padding-h, 32px);
     font-size: var(--ad-button-font-size, 16px);
     font-weight: var(--ad-button-font-weight, 600);

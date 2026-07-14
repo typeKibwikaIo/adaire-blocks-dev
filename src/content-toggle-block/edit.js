@@ -15,10 +15,18 @@ import {
     __experimentalUnitControl as UnitControl,
 } from "@wordpress/components";
 import { useEffect, useState } from "@wordpress/element";
+import { getBlockType } from "@wordpress/blocks";
 import { plus, trash, arrowUp, arrowDown, desktop, tablet, mobile } from "@wordpress/icons";
 import QuickZone from "../components/QuickZone";
 import InspectorTabs from "../components/InspectorTabs";
+import DeviceSwitcher from "../components/DeviceSwitcher";
 import "./editor.scss";
+
+const THREE_TIERS = [
+    { key: "desktop", label: __("Desktop", "content-toggle-block"), icon: desktop },
+    { key: "tablet", label: __("Tablet", "content-toggle-block"), icon: tablet },
+    { key: "mobile", label: __("Mobile", "content-toggle-block"), icon: mobile },
+];
 
 const CONTAINER_MODES = [
     { label: __("Full Width", "content-toggle-block"), value: "full" },
@@ -202,6 +210,20 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                 setAttributes({ activeToggle: index });
             }
         }
+    };
+
+    // Resets the given responsive attributes back to their block.json defaults —
+    // existing values only, nothing new is added.
+    const resetToDefaults = (keys) => {
+        const blockType = getBlockType("create-block/content-toggle-block");
+        const defaults = blockType?.attributes || {};
+        const resetValues = {};
+        keys.forEach((key) => {
+            if (defaults[key] && "default" in defaults[key]) {
+                resetValues[key] = defaults[key].default;
+            }
+        });
+        setAttributes(resetValues);
     };
 
     const updateContainerDimension = (device, property, value) => {
@@ -416,7 +438,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody title={__("Layout", "content-toggle-block")} initialOpen={true}>
+                <PanelBody section="layout" title={__("Container Settings", "content-toggle-block")} initialOpen={true}>
                     <p>{__("Container Width", "content-toggle-block")}</p>
                     <ButtonGroup>
                         {CONTAINER_MODES.map((mode) => (
@@ -506,7 +528,9 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                         options={TOGGLE_POSITIONS}
                         onChange={(value) => setAttributes({ togglePosition: value })}
                     />
+                </PanelBody>
 
+                <PanelBody section="style" priority="medium" title={__("Wrapper Style", "content-toggle-block")} initialOpen={false}>
                     <PanelColorSettings
                         title={__("Wrapper Background", "content-toggle-block")}
                         initialOpen={false}
@@ -521,26 +545,12 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                     />
 
                     <BaseControl label={__("Wrapper Padding", "content-toggle-block")}>
-                        <ButtonGroup style={{ marginBottom: "12px" }}>
-                            <Button
-                                icon={desktop}
-                                isPrimary={wrapperPaddingDeviceType === "desktop"}
-                                onClick={() => setWrapperPaddingDeviceType("desktop")}
-                                label={__("Desktop", "content-toggle-block")}
-                            />
-                            <Button
-                                icon={tablet}
-                                isPrimary={wrapperPaddingDeviceType === "tablet"}
-                                onClick={() => setWrapperPaddingDeviceType("tablet")}
-                                label={__("Tablet", "content-toggle-block")}
-                            />
-                            <Button
-                                icon={mobile}
-                                isPrimary={wrapperPaddingDeviceType === "mobile"}
-                                onClick={() => setWrapperPaddingDeviceType("mobile")}
-                                label={__("Mobile", "content-toggle-block")}
-                            />
-                        </ButtonGroup>
+                        <DeviceSwitcher
+                            deviceType={wrapperPaddingDeviceType}
+                            setDeviceType={setWrapperPaddingDeviceType}
+                            tiers={THREE_TIERS}
+                            onReset={() => resetToDefaults(["wrapperPadding"])}
+                        />
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                             <RangeControl
                                 label={__("Top", "content-toggle-block")}
@@ -583,6 +593,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody
+                    section="content"
                     title={__("Toggle Management", "content-toggle-block")}
                     initialOpen={false}
                 >
@@ -656,7 +667,8 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody
-                    title={__("Pill Styling", "content-toggle-block")}
+                    section="layout"
+                    title={__("Pill Layout", "content-toggle-block")}
                     initialOpen={false}
                 >
                     <SelectControl
@@ -672,7 +684,14 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                         options={PILL_STYLES}
                         onChange={(value) => setAttributes({ pillStyle: value })}
                     />
+                </PanelBody>
 
+                <PanelBody
+                    section="style"
+                    priority="medium"
+                    title={__("Pill Spacing & Radius", "content-toggle-block")}
+                    initialOpen={false}
+                >
                     <RangeControl
                         label={__("Border Radius", "content-toggle-block")}
                         value={pillBorderRadius}
@@ -689,6 +708,62 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                         max={48}
                     />
 
+                    <BaseControl label={__("Padding", "content-toggle-block")}>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                            <RangeControl
+                                label={__("Top", "content-toggle-block")}
+                                value={pillPadding?.top ?? 12}
+                                onChange={(value) =>
+                                    setAttributes({
+                                        pillPadding: { ...pillPadding, top: value },
+                                    })
+                                }
+                                min={0}
+                                max={32}
+                            />
+                            <RangeControl
+                                label={__("Right", "content-toggle-block")}
+                                value={pillPadding?.right ?? 24}
+                                onChange={(value) =>
+                                    setAttributes({
+                                        pillPadding: { ...pillPadding, right: value },
+                                    })
+                                }
+                                min={0}
+                                max={48}
+                            />
+                            <RangeControl
+                                label={__("Bottom", "content-toggle-block")}
+                                value={pillPadding?.bottom ?? 12}
+                                onChange={(value) =>
+                                    setAttributes({
+                                        pillPadding: { ...pillPadding, bottom: value },
+                                    })
+                                }
+                                min={0}
+                                max={32}
+                            />
+                            <RangeControl
+                                label={__("Left", "content-toggle-block")}
+                                value={pillPadding?.left ?? 24}
+                                onChange={(value) =>
+                                    setAttributes({
+                                        pillPadding: { ...pillPadding, left: value },
+                                    })
+                                }
+                                min={0}
+                                max={48}
+                            />
+                        </div>
+                    </BaseControl>
+                </PanelBody>
+
+                <PanelBody
+                    section="style"
+                    priority="high"
+                    title={__("Pill Typography", "content-toggle-block")}
+                    initialOpen={false}
+                >
                     <RangeControl
                         label={__("Font Size", "content-toggle-block")}
                         value={pillFontSize}
@@ -747,58 +822,11 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                         onChange={(value) => setAttributes({ fontFamily: value })}
                         help={__("Applies to the toggle pill labels.", "content-toggle-block")}
                     />
-
-                    <BaseControl label={__("Padding", "content-toggle-block")}>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                            <RangeControl
-                                label={__("Top", "content-toggle-block")}
-                                value={pillPadding?.top ?? 12}
-                                onChange={(value) =>
-                                    setAttributes({
-                                        pillPadding: { ...pillPadding, top: value },
-                                    })
-                                }
-                                min={0}
-                                max={32}
-                            />
-                            <RangeControl
-                                label={__("Right", "content-toggle-block")}
-                                value={pillPadding?.right ?? 24}
-                                onChange={(value) =>
-                                    setAttributes({
-                                        pillPadding: { ...pillPadding, right: value },
-                                    })
-                                }
-                                min={0}
-                                max={48}
-                            />
-                            <RangeControl
-                                label={__("Bottom", "content-toggle-block")}
-                                value={pillPadding?.bottom ?? 12}
-                                onChange={(value) =>
-                                    setAttributes({
-                                        pillPadding: { ...pillPadding, bottom: value },
-                                    })
-                                }
-                                min={0}
-                                max={32}
-                            />
-                            <RangeControl
-                                label={__("Left", "content-toggle-block")}
-                                value={pillPadding?.left ?? 24}
-                                onChange={(value) =>
-                                    setAttributes({
-                                        pillPadding: { ...pillPadding, left: value },
-                                    })
-                                }
-                                min={0}
-                                max={48}
-                            />
-                        </div>
-                    </BaseControl>
                 </PanelBody>
 
                 <PanelColorSettings
+                    section="style"
+                    priority="high"
                     title={__("Pill Colors", "content-toggle-block")}
                     initialOpen={false}
                     colorSettings={[
@@ -842,51 +870,17 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                 />
 
                 <PanelBody
-                    title={__("Content Styling", "content-toggle-block")}
+                    section="layout"
+                    title={__("Content Width", "content-toggle-block")}
                     initialOpen={false}
                 >
-                    <PanelColorSettings
-                        title={__("Background Color", "content-toggle-block")}
-                        initialOpen={true}
-                        colorSettings={[
-                            {
-                                value: contentBackgroundColor,
-                                onChange: (value) => setAttributes({ contentBackgroundColor: value }),
-                                label: __("Background", "content-toggle-block"),
-                                colors: DEFAULT_COLORS,
-                            },
-                        ]}
-                    />
-
-                    <RangeControl
-                        label={__("Border Radius", "content-toggle-block")}
-                        value={contentBorderRadius}
-                        onChange={(value) => setAttributes({ contentBorderRadius: value })}
-                        min={0}
-                        max={32}
-                    />
-
                     <BaseControl label={__("Content Width", "content-toggle-block")}>
-                        <ButtonGroup style={{ marginBottom: "12px" }}>
-                            <Button
-                                icon={desktop}
-                                isPrimary={contentWidthDeviceType === "desktop"}
-                                onClick={() => setContentWidthDeviceType("desktop")}
-                                label={__("Desktop", "content-toggle-block")}
-                            />
-                            <Button
-                                icon={tablet}
-                                isPrimary={contentWidthDeviceType === "tablet"}
-                                onClick={() => setContentWidthDeviceType("tablet")}
-                                label={__("Tablet", "content-toggle-block")}
-                            />
-                            <Button
-                                icon={mobile}
-                                isPrimary={contentWidthDeviceType === "mobile"}
-                                onClick={() => setContentWidthDeviceType("mobile")}
-                                label={__("Mobile", "content-toggle-block")}
-                            />
-                        </ButtonGroup>
+                        <DeviceSwitcher
+                            deviceType={contentWidthDeviceType}
+                            setDeviceType={setContentWidthDeviceType}
+                            tiers={THREE_TIERS}
+                            onReset={() => resetToDefaults(["contentWidth"])}
+                        />
                         <div style={{ display: "flex", gap: "8px", alignItems: "flex-end" }}>
                             {(() => {
                                 const unit =
@@ -938,6 +932,34 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                             })()}
                         </div>
                     </BaseControl>
+                </PanelBody>
+
+                <PanelBody
+                    section="style"
+                    priority="medium"
+                    title={__("Content Style", "content-toggle-block")}
+                    initialOpen={false}
+                >
+                    <PanelColorSettings
+                        title={__("Background Color", "content-toggle-block")}
+                        initialOpen={true}
+                        colorSettings={[
+                            {
+                                value: contentBackgroundColor,
+                                onChange: (value) => setAttributes({ contentBackgroundColor: value }),
+                                label: __("Background", "content-toggle-block"),
+                                colors: DEFAULT_COLORS,
+                            },
+                        ]}
+                    />
+
+                    <RangeControl
+                        label={__("Border Radius", "content-toggle-block")}
+                        value={contentBorderRadius}
+                        onChange={(value) => setAttributes({ contentBorderRadius: value })}
+                        min={0}
+                        max={32}
+                    />
 
                     <BaseControl label={__("Padding", "content-toggle-block")}>
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>

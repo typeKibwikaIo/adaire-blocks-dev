@@ -1,0 +1,226 @@
+// Cookie Notice Block (Free) — shared styles (frontend + editor preview).
+
+.adaire-cookie-notice {
+	// box-sizing is not guaranteed to be border-box globally (depends on the
+	// active theme), and this component sets an explicit width/max-width
+	// alongside horizontal padding — without border-box the rendered width is
+	// width + padding, which pushes the box past the intended right edge on
+	// narrow mobile viewports. That's what caused the banner to visually
+	// overlap/overflow past other content on mobile.
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	// Floating corner cards used to be a fixed 320px, so a long message only
+	// had one way to go: taller, pushing the card up over whatever page
+	// content sat above it. Letting the width flex up to 480px means extra
+	// content mostly grows the box *horizontally* first; max-height + scroll
+	// below is the backstop for content too long even at the widened cap.
+	width: clamp(300px, 34vw, 480px);
+	max-width: calc(100vw - 32px);
+	max-height: min(80vh, 640px);
+	overflow-y: auto;
+	padding: 20px 22px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.12);
+	font-size: 14px;
+	line-height: 1.5;
+
+	* {
+		box-sizing: border-box;
+	}
+
+	&__message {
+		margin: 0;
+		overflow-wrap: break-word;
+	}
+
+	&__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px 14px;
+	}
+
+	&__privacy-link {
+		font-size: 13px;
+		text-decoration: underline;
+		align-self: flex-start;
+
+		&:hover,
+		&:focus {
+			opacity: 0.85;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 4px;
+	}
+
+	&__btn {
+		flex: 1;
+		min-width: 100px;
+		border: 1px solid transparent;
+		border-radius: 8px;
+		padding: 9px 14px;
+		font-size: 13px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: opacity 0.15s ease, transform 0.15s ease;
+
+		&:hover {
+			opacity: 0.9;
+		}
+
+		&:active {
+			transform: scale(0.98);
+		}
+
+		&--decline {
+			background: transparent;
+		}
+	}
+}
+
+// ─── Frontend floating positioning ──────────────────────────────────────
+// The outer wrapper stays in the DOM permanently and just toggles which of
+// its two children is visible: the consent panel (.is-panel-visible) or the
+// small reopen icon (.is-reopen-visible) that sticks around after a choice
+// has been made so visitors can come back and change it later.
+.adaire-cookie-notice-block {
+	position: fixed;
+	z-index: 999999;
+	margin: 0;
+
+	&[data-position="floating-bottom-right"] {
+		right: 20px;
+		bottom: 20px;
+	}
+
+	&[data-position="floating-bottom-left"] {
+		left: 20px;
+		bottom: 20px;
+	}
+
+	&[data-position="floating-top-right"] {
+		right: 20px;
+		top: 20px;
+	}
+
+	&[data-position="floating-top-left"] {
+		left: 20px;
+		top: 20px;
+	}
+
+	// "Center" positions are a flat, full-width bar flush with the viewport
+	// edge — not a floating card — at every screen size, not just mobile.
+	// The bar lays its content out as a single row (message/links on one
+	// side, buttons on the other) so long content grows the bar
+	// horizontally instead of stacking every piece vertically — a tall
+	// stacked column is what was overlapping content above the banner.
+	&[data-position="floating-bottom-center"],
+	&[data-position="floating-top-center"] {
+		left: 0;
+		right: 0;
+		width: auto;
+		transform: none;
+
+		.adaire-cookie-notice {
+			width: 100%;
+			max-width: 100%;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px 24px;
+		}
+
+		.adaire-cookie-notice__message {
+			flex: 1 1 320px;
+			min-width: 0;
+		}
+
+		.adaire-cookie-notice__links {
+			flex: 0 1 auto;
+		}
+
+		.adaire-cookie-notice__actions {
+			flex: 0 0 auto;
+			margin-top: 0;
+		}
+
+		// Below this, fall back to the normal stacked column so buttons
+		// never get squeezed down to nothing on narrow phones.
+		@media (max-width: 560px) {
+			.adaire-cookie-notice {
+				flex-direction: column;
+				align-items: stretch;
+			}
+		}
+	}
+
+	&[data-position="floating-bottom-center"] {
+		bottom: 0;
+	}
+
+	&[data-position="floating-top-center"] {
+		top: 0;
+	}
+
+	@media (max-width: 480px) {
+		left: 12px !important;
+		right: 12px !important;
+		transform: none !important;
+		width: auto;
+
+		.adaire-cookie-notice {
+			width: 100%;
+		}
+
+		&[data-position="floating-bottom-center"],
+		&[data-position="floating-top-center"] {
+			left: 0 !important;
+			right: 0 !important;
+		}
+	}
+}
+
+.adaire-cookie-notice-panel-wrap {
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(12px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+
+	.adaire-cookie-notice-block.is-panel-visible & {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translateY(0);
+	}
+}
+
+.adaire-cookie-notice__reopen {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.15);
+	opacity: 0;
+	transform: scale(0.85);
+	transition: opacity 0.2s ease, transform 0.2s ease;
+
+	&:hover {
+		transform: scale(1.06);
+	}
+
+	.adaire-cookie-notice-block.is-reopen-visible & {
+		display: flex;
+		opacity: 1;
+		transform: scale(1);
+	}
+}

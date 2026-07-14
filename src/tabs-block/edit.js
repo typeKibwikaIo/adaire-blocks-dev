@@ -13,7 +13,7 @@ import {
     __experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 import { plus, trash, arrowUp, arrowDown } from '@wordpress/icons';
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS } from '../components/DeviceSwitcher';
 import './editor.scss';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
@@ -224,39 +224,31 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--tab-title-size': `${tabTitleFontSize?.desktop ?? tabTitleFontSize ?? 18}px`,
             '--tab-title-size-tablet': `${tabTitleFontSize?.tablet ?? 16}px`,
             '--tab-title-size-mobile': `${tabTitleFontSize?.mobile ?? 14}px`,
-            '--tab-title-size-watch': `${tabTitleFontSize?.smartwatch ?? 12}px`,
             '--tab-title-weight': tabTitleFontWeight,
             '--tab-title-active-weight': tabTitleActiveFontWeight,
             '--tab-title-line-height': `${getDeviceValue(tabTitleLineHeight, 'desktop', 'normal')}`,
             '--tab-title-line-height-tablet': `${getDeviceValue(tabTitleLineHeight, 'tablet', 'normal')}`,
             '--tab-title-line-height-mobile': `${getDeviceValue(tabTitleLineHeight, 'mobile', 'normal')}`,
-            '--tab-title-line-height-watch': `${getDeviceValue(tabTitleLineHeight, 'smartwatch', 'normal')}`,
             '--tab-title-letter-spacing': `${getDeviceValue(tabTitleLetterSpacing, 'desktop', '-0.01em')}`,
             '--tab-title-letter-spacing-tablet': `${getDeviceValue(tabTitleLetterSpacing, 'tablet', '-0.01em')}`,
             '--tab-title-letter-spacing-mobile': `${getDeviceValue(tabTitleLetterSpacing, 'mobile', '-0.01em')}`,
-            '--tab-title-letter-spacing-watch': `${getDeviceValue(tabTitleLetterSpacing, 'smartwatch', '-0.01em')}`,
             '--tab-title-text-transform': `${getDeviceValue(tabTitleTextTransform, 'desktop', 'none')}`,
             '--tab-title-text-transform-tablet': `${getDeviceValue(tabTitleTextTransform, 'tablet', 'none')}`,
             '--tab-title-text-transform-mobile': `${getDeviceValue(tabTitleTextTransform, 'mobile', 'none')}`,
-            '--tab-title-text-transform-watch': `${getDeviceValue(tabTitleTextTransform, 'smartwatch', 'none')}`,
             '--tabs-font-family': fontFamily || 'inherit',
             '--tab-gap': `${tabGap?.desktop ?? tabGap ?? 32}px`,
             '--tab-gap-tablet': `${tabGap?.tablet ?? 24}px`,
             '--tab-gap-mobile': `${tabGap?.mobile ?? 16}px`,
-            '--tab-gap-watch': `${tabGap?.smartwatch ?? 12}px`,
             '--underline-height': `${underlineHeight?.desktop ?? underlineHeight ?? 3}px`,
             '--underline-height-tablet': `${underlineHeight?.tablet ?? 2}px`,
             '--underline-height-mobile': `${underlineHeight?.mobile ?? 2}px`,
-            '--underline-height-watch': `${underlineHeight?.smartwatch ?? 1}px`,
             '--content-padding-top': `${contentPaddingTop?.desktop ?? contentPaddingTop ?? 40}px`,
             '--content-padding-top-tablet': `${contentPaddingTop?.tablet ?? 32}px`,
             '--content-padding-top-mobile': `${contentPaddingTop?.mobile ?? 24}px`,
-            '--content-padding-top-watch': `${contentPaddingTop?.smartwatch ?? 16}px`,
             '--content-padding-right': `${contentPaddingRight?.desktop ?? contentPaddingRight ?? 0}px`,
             '--content-padding-bottom': `${contentPaddingBottom?.desktop ?? contentPaddingBottom ?? 40}px`,
             '--content-padding-bottom-tablet': `${contentPaddingBottom?.tablet ?? 32}px`,
             '--content-padding-bottom-mobile': `${contentPaddingBottom?.mobile ?? 24}px`,
-            '--content-padding-bottom-watch': `${contentPaddingBottom?.smartwatch ?? 16}px`,
             '--content-padding-left': `${contentPaddingLeft?.desktop ?? contentPaddingLeft ?? 0}px`,
             '--tabs-align': tabsAlign,
             '--container-max-width': `${containerMaxWidth?.desktop?.value ?? containerMaxWidth?.value ?? 1200}${containerMaxWidth?.desktop?.unit ?? containerMaxWidth?.unit ?? 'px'}`,
@@ -394,7 +386,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 {/* ————— LAYOUT TAB: Tabs (content) ————— */}
-                <PanelBody title={__('Tabs', 'tabs-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Tabs', 'tabs-block')} initialOpen={true}>
                     <p style={helpTextStyle}>
                         {__('The highlighted tab is shown in the editor preview — click "Show" to edit another tab\'s content.', 'tabs-block')}
                     </p>
@@ -482,7 +474,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* ————— LAYOUT TAB: Layout ————— */}
-                <PanelBody title={__('Layout', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Layout', 'tabs-block')} initialOpen={false}>
                     <p style={sectionLabel}>{__('Tab Design', 'tabs-block')}</p>
                     <ButtonGroup>
                         {TAB_STYLE_OPTIONS.map(opt => (
@@ -571,7 +563,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </ButtonGroup>
                     {containerMode === 'constrained' && (
                         <div style={{ marginTop: '12px' }}>
-                            <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Max Width Device', 'tabs-block')} />
+                            <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Max Width Device', 'tabs-block')} tiers={THREE_TIERS} />
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
                                 <TextControl
                                     type="number"
@@ -627,7 +619,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* ————— LAYOUT TAB: Animation (freemium-gated) ————— */}
-                <PanelBody title={__('Animation', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Animation', 'tabs-block')} initialOpen={false}>
                     <p style={helpTextStyle}>
                         {__('Controls how panels fade and slide when switching tabs.', 'tabs-block')}
                     </p>
@@ -657,7 +649,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 {/* ————— STYLE TAB: colors (auto-sorted by InspectorTabs) ————— */}
                 {!isPills && (
-                    <PanelBody title={__('Tab Colors', 'tabs-block')} initialOpen={false}>
+                    <PanelBody section="style" priority="high" title={__('Tab Colors', 'tabs-block')} initialOpen={false}>
                         <p style={sectionLabel}>{__('Title', 'tabs-block')}</p>
                         <BoundColorPalette
                             value={tabTitleColor}
@@ -683,7 +675,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {isPills && (
-                    <PanelBody title={__('Pill Colors', 'tabs-block')} initialOpen={false}>
+                    <PanelBody section="style" priority="high" title={__('Pill Colors', 'tabs-block')} initialOpen={false}>
                         <p style={helpTextStyle}>
                             {__('"Active" colors apply to the selected pill and on hover.', 'tabs-block')}
                         </p>
@@ -721,7 +713,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {/* ————— STYLE TAB: typography ————— */}
-                <PanelBody title={__('Typography', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography', 'tabs-block')} initialOpen={false}>
                     <SelectControl
                         label={__('Font Family', 'tabs-block')}
                         value={fontFamily || ''}
@@ -761,7 +753,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ))}
                     </ButtonGroup>
 
-                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Fine-tuning Device', 'tabs-block')} />
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Fine-tuning Device', 'tabs-block')} tiers={THREE_TIERS} />
                     <UnitControl
                         label={__('Line Height', 'tabs-block')}
                         value={getDeviceValue(tabTitleLineHeight, deviceType, 'normal')}
@@ -782,7 +774,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 {/* ————— STYLE TAB: shape (mode-specific) ————— */}
                 {!isPills && (
-                    <PanelBody title={__('Underline Style', 'tabs-block')} initialOpen={false}>
+                    <PanelBody section="style" priority="medium" title={__('Underline Style', 'tabs-block')} initialOpen={false}>
                         <p style={helpTextStyle}>
                             {__('The animated line under the active tab (horizontal layout).', 'tabs-block')}
                         </p>
@@ -802,7 +794,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {isPills && (
-                    <PanelBody title={__('Pill Shape & Padding', 'tabs-block')} initialOpen={false}>
+                    <PanelBody section="style" priority="medium" title={__('Pill Shape & Padding', 'tabs-block')} initialOpen={false}>
                         <SelectControl
                             label={__('Pill Style', 'tabs-block')}
                             value={pillStyle}
@@ -851,7 +843,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {/* ————— STYLE TAB: content area ————— */}
-                <PanelBody title={__('Content Area Styling', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Content Area Styling', 'tabs-block')} initialOpen={false}>
                     <p style={helpTextStyle}>
                         {__('The panel that holds each tab\'s content.', 'tabs-block')}
                     </p>
@@ -867,7 +859,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         min={0}
                         max={32}
                     />
-                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Width Device', 'tabs-block')} />
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Width Device', 'tabs-block')} tiers={THREE_TIERS} />
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
                         <TextControl
                             type="number"
@@ -923,7 +915,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* ————— STYLE TAB: wrapper ————— */}
-                <PanelBody title={__('Wrapper Spacing', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Wrapper Spacing', 'tabs-block')} initialOpen={false}>
                     <p style={helpTextStyle}>
                         {__('The outer box around the tab bar and content together.', 'tabs-block')}
                     </p>
@@ -932,7 +924,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         value={wrapperBackgroundColor}
                         onChange={(v) => setAttributes({ wrapperBackgroundColor: v })}
                     />
-                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Padding Device', 'tabs-block')} />
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Padding Device', 'tabs-block')} tiers={THREE_TIERS} />
                     <div style={twoColGrid}>
                         <RangeControl
                             label={__('Top', 'tabs-block')}
@@ -966,7 +958,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* ————— STYLE TAB: margins ————— */}
-                <PanelBody title={__('Margins', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Margins', 'tabs-block')} initialOpen={false}>
                     <p style={helpTextStyle}>
                         {__('Space between this block and the blocks around it.', 'tabs-block')}
                     </p>

@@ -1,7 +1,7 @@
 /**
  * Block Template Styles
- * 
- * This file demonstrates how to use the container width, padding, 
+ *
+ * This file demonstrates how to use the container width, padding,
  * and margin CSS variables in your block styles.
  */
 
@@ -10,20 +10,64 @@
 	position: relative;
 	display: flex;
 	justify-content: center;
+	// Explicit reset on the outer wrapper itself (not just __container,
+	// which already has its own var-driven border below). Nothing in this
+	// stylesheet was ever setting a border/outline here, so this is a
+	// defensive no-op against any outside browser/theme/extension styling —
+	// harmless either way, since it can only ever remove something, never add.
+	border: none !important;
+	outline: none !important;
 	&__content {
 		height: 100%;
+		position: relative;
+		// Crops the intentionally-oversized iframe below so it always fully
+		// covers this box with no visible black bars, instead of showing
+		// whatever the platform's own player renders when its shape doesn't
+		// match the container.
+		overflow: hidden;
 
 		// Browsers render an unstyled <iframe> with a default ~2px inset
 		// border (a legacy UA-stylesheet behavior the `frameBorder="0"`
 		// JSX/HTML attribute no longer reliably suppresses in modern
 		// browsers) — that's what showed up as an unwanted black border
 		// around the video. Reset it explicitly with real CSS.
-		iframe,
 		video,
 		img {
 			display: block !important;
 			width: 100% !important;
 			height: 100% !important;
+			border: none !important;
+			outline: none !important;
+			box-shadow: none !important;
+		}
+
+		// YouTube/Vimeo iframes are always encoded as 16:9 internally. When
+		// this block's own container isn't exactly that shape — any custom
+		// Height/Width combination, or simply "Full Width" mode at whatever
+		// column width the theme happens to give it — the platform's own
+		// player letterboxes/pillarboxes the actual video with black bars
+		// to preserve that ratio instead of stretching it. That's the
+		// "black bar on top" users see: it isn't a border or margin from
+		// this plugin, it's YouTube/Vimeo's own player reacting to an
+		// aspect-ratio mismatch we were otherwise not correcting for.
+		//
+		// Fixed via the standard CSS "background-size: cover" trick,
+		// applied to an iframe instead of an image: view.js measures this
+		// box and sets the iframe's width/height so it's deliberately
+		// oversized on whichever axis is short, then centers it here and
+		// lets `overflow: hidden` above crop the excess — so the video
+		// always fully fills the block with no visible black bars,
+		// regardless of the container's own aspect ratio. The plain
+		// 100%/100% below is only the pre-JS/no-JS fallback (matches the
+		// previous, letterboxed behavior until view.js runs).
+		iframe {
+			display: block !important;
+			position: absolute !important;
+			top: 50% !important;
+			left: 50% !important;
+			transform: translate( -50%, -50% ) !important;
+			width: 100%;
+			height: 100%;
 			border: none !important;
 			outline: none !important;
 			box-shadow: none !important;
@@ -69,16 +113,6 @@
 		}
 	}
 
-	// Responsive container max-width for smartwatch
-	@media (max-width: 320px) {
-		&__container.is-constrained {
-			max-width: var(
-				--container-max-width-watch,
-				var(--container-max-width-mobile, 100%)
-			) !important;
-		}
-	}
-
 	// Responsive container height for tablet
 	@media (max-width: 1024px) {
 		&__container {
@@ -99,16 +133,6 @@
 		}
 	}
 
-	// Responsive container height for smartwatch
-	@media (max-width: 320px) {
-		&__container {
-			height: var(
-				--container-height-watch,
-				var(--container-height-mobile, 315px)
-			) !important;
-		}
-	}
-
 	// Responsive margins
 	@media (max-width: 1024px) {
 		margin-top: var(--margin-top-tablet, 0) !important;
@@ -122,13 +146,6 @@
 		margin-right: var(--margin-right-mobile, 0) !important;
 		margin-bottom: var(--margin-bottom-mobile, 0) !important;
 		margin-left: var(--margin-left-mobile, 0) !important;
-	}
-
-	@media (max-width: 320px) {
-		margin-top: var(--margin-top-watch, 0) !important;
-		margin-right: var(--margin-right-watch, 0) !important;
-		margin-bottom: var(--margin-bottom-watch, 0) !important;
-		margin-left: var(--margin-left-watch, 0) !important;
 	}
 
 	// Responsive padding
@@ -146,13 +163,6 @@
 		padding-left: var(--padding-left-mobile, 0) !important;
 	}
 
-	@media (max-width: 320px) {
-		padding-top: var(--padding-top-watch, 0) !important;
-		padding-right: var(--padding-right-watch, 0) !important;
-		padding-bottom: var(--padding-bottom-watch, 0) !important;
-		padding-left: var(--padding-left-watch, 0) !important;
-	}
-
 	// Content area
 	&__content {
 		// Your block-specific styles here
@@ -161,7 +171,7 @@
 
 /**
  * Alternative Pattern: Apply padding to container instead of root
- * 
+ *
  * If you prefer to apply padding to the container rather than the root element,
  * use this pattern instead:
  */
@@ -202,7 +212,7 @@
 
 /**
  * WordPress Alignment Classes Support
- * 
+ *
  * These styles ensure proper alignment when using WordPress align classes
  */
 

@@ -1,5 +1,5 @@
 ﻿import { __ } from "@wordpress/i18n";
-import { useState, useEffect } from "@wordpress/element";
+import { useState, useEffect, createElement } from "@wordpress/element";
 import {
 	useBlockProps,
 	MediaUpload,
@@ -32,14 +32,56 @@ import {
 	desktop,
 	tablet,
 	mobile,
-	laptop,
 } from "@wordpress/icons";
+import { getBlockType } from "@wordpress/blocks";
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
 import "./editor.scss";
 
+// 'laptop' is not exported by @wordpress/icons — custom icon for the
+// "Small Laptop" breakpoint button (same shape used in infogrid-block/edit.js).
+const laptop = createElement('svg', {
+	width: 24,
+	height: 24,
+	viewBox: '0 0 24 24',
+	fill: 'none',
+	xmlns: 'http://www.w3.org/2000/svg'
+},
+	createElement('path', {
+		d: 'M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V15C20 16.1046 19.1046 17 18 17H6C4.89543 17 4 16.1046 4 15V6Z',
+		stroke: 'currentColor',
+		strokeWidth: '1.5',
+		fill: 'none'
+	}),
+	createElement('path', {
+		d: 'M2 19H22',
+		stroke: 'currentColor',
+		strokeWidth: '1.5',
+		strokeLinecap: 'round'
+	})
+);
+
 const ALLOWED_BLOCKS = ["create-block/button-block"];
+
+// The block's one and only breakpoint set — every responsive control in this
+// block reads/writes the same `deviceType` state, so there is a single
+// switcher (in the "Responsive Settings" panel) rather than one per panel.
+const BREAKPOINTS = ["mobile", "tablet", "smallLaptop", "desktop", "bigDesktop"];
+const BREAKPOINT_LABELS = {
+	mobile: __("Mobile", "hero-1-block"),
+	tablet: __("Tablet", "hero-1-block"),
+	smallLaptop: __("Small Laptop", "hero-1-block"),
+	desktop: __("Desktop", "hero-1-block"),
+	bigDesktop: __("Big Desktop", "hero-1-block"),
+};
+const FIVE_TIERS = [
+	{ key: "mobile", label: BREAKPOINT_LABELS.mobile, icon: mobile },
+	{ key: "tablet", label: BREAKPOINT_LABELS.tablet, icon: tablet },
+	{ key: "smallLaptop", label: BREAKPOINT_LABELS.smallLaptop, icon: laptop },
+	{ key: "desktop", label: BREAKPOINT_LABELS.desktop, icon: desktop },
+	{ key: "bigDesktop", label: BREAKPOINT_LABELS.bigDesktop, icon: desktop },
+];
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const [deviceType, setDeviceType] = useState("desktop");
@@ -152,6 +194,38 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 [breakpoint]: value,
             },
         });
+    };
+
+    // Resets every responsive attribute back to its block.json default —
+    // existing values only, nothing new is added.
+    const RESPONSIVE_ATTRS = [
+        "responsiveMinHeight", "responsiveFlexDirection", "responsiveAlignItems",
+        "responsivePadding", "responsiveCtaWidth", "responsiveCtaMargin",
+        "responsiveHeadingFontSize", "responsiveHeadingLineHeight",
+        "responsiveHeadingMarginBottom", "responsiveHeadingMarginTop",
+        "responsiveTextFontSize", "responsiveTextMarginBottom", "responsiveTextMarginTop",
+        "responsiveButtonContainerFlexDirection", "responsiveButtonContainerGap",
+        "responsiveButtonContainerMarginTop", "responsiveIconWidth",
+        "responsiveIconTransform", "responsiveBackgroundGradient",
+        "responsiveRadialGradientCenterX", "responsiveRadialGradientCenterY",
+        "responsiveJustifyContent", "responsiveWidth", "responsiveIconVerticalOffset",
+        "responsiveIconHorizontalOffset", "responsivePreheaderFontSize",
+        "responsivePreheaderLineHeight", "responsivePreheaderMarginBottom",
+        "responsiveTextAlignment", "responsiveButtonAlignment",
+        "responsiveVideoWidth", "responsiveVideoHeight", "responsiveVideoBorderRadius",
+        "responsiveBreadcrumbTopOffset", "responsiveBreadcrumbLeftOffset",
+        "responsiveContentVideoJustify", "responsiveContentVideoAlign",
+    ];
+    const resetResponsiveDefaults = () => {
+        const blockType = getBlockType("create-block/hero-1-block");
+        const defaults = blockType?.attributes || {};
+        const resetValues = {};
+        RESPONSIVE_ATTRS.forEach((key) => {
+            if (defaults[key] && "default" in defaults[key]) {
+                resetValues[key] = defaults[key].default;
+            }
+        });
+        setAttributes(resetValues);
     };
 
 	const isRadialGradient = (gradient) =>
@@ -870,59 +944,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody
+					section="layout"
 					title={__("Responsive Settings", "hero-1-block")}
 					initialOpen={true}
 				>
 					<DeviceSwitcher
 						deviceType={deviceType}
 						setDeviceType={setDeviceType}
-						label="Device Preview"
+						label={__("Breakpoint", "hero-1-block")}
+						tiers={FIVE_TIERS}
+						onReset={resetResponsiveDefaults}
 					/>
-						<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-							{__("Breakpoint", "hero-1-block")}
-                        </p>
-                        <ButtonGroup>
-                            <Button
-                                icon={mobile}
-								isPrimary={deviceType === "mobile"}
-								onClick={() => setDeviceType("mobile")}
-								label={__("Mobile", "hero-1-block")}
-                            >
-								{__("Mobile", "hero-1-block")}
-                            </Button>
-                            <Button
-                                icon={tablet}
-								isPrimary={deviceType === "tablet"}
-								onClick={() => setDeviceType("tablet")}
-								label={__("Tablet", "hero-1-block")}
-                            >
-								{__("Tablet", "hero-1-block")}
-                            </Button>
-                            <Button
-                                icon={laptop}
-								isPrimary={deviceType === "smallLaptop"}
-								onClick={() => setDeviceType("smallLaptop")}
-								label={__("Small Laptop", "hero-1-block")}
-                            >
-								{__("Small Laptop", "hero-1-block")}
-                            </Button>
-                            <Button
-                                icon={desktop}
-								isPrimary={deviceType === "desktop"}
-								onClick={() => setDeviceType("desktop")}
-								label={__("Desktop", "hero-1-block")}
-                            >
-								{__("Desktop", "hero-1-block")}
-                            </Button>
-                            <Button
-                                icon={desktop}
-								isPrimary={deviceType === "bigDesktop"}
-								onClick={() => setDeviceType("bigDesktop")}
-								label={__("Big Desktop", "hero-1-block")}
-                            >
-								{__("Big Desktop", "hero-1-block")}
-                            </Button>
-                        </ButtonGroup>
 						<p style={{ marginTop: "8px", fontSize: "12px", color: "#757575" }}>
 							{__(
 								"Select a breakpoint to configure its settings. The editor preview shows desktop view.",
@@ -931,7 +963,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         </p>
 				</PanelBody>
 
-				<PanelBody title={__("Content", "hero-1-block")} initialOpen={true}>
+				<PanelBody section="content" title={__("Content", "hero-1-block")} initialOpen={true}>
                     <ToggleControl
 						label={__("Show Breadcrumbs", "hero-1-block")}
                         checked={showBreadcrumbs}
@@ -1045,7 +1077,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
 				<PanelBody
-					title={__("Icon Settings", "hero-1-block")}
+					section="content"
+					title={__("Icon", "hero-1-block")}
 					initialOpen={false}
 				>
                     <ToggleControl
@@ -1093,6 +1126,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     </Button>
                                 </div>
                             )}
+                        </>
+                    )}
+                </PanelBody>
+
+				<PanelBody
+					section="layout"
+					title={__("Icon Position", "hero-1-block")}
+					initialOpen={false}
+				>
+                    {showIcon && (
+                        <>
                             <SelectControl
 								label={__("Horizontal Position", "hero-1-block")}
                                 value={iconPosition}
@@ -1132,29 +1176,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								{__("Current Breakpoint:", "hero-1-block")}{" "}
 								{BREAKPOINT_LABELS[deviceType]}
                             </p>
-							<ButtonGroup style={{ marginBottom: "12px" }}>
-                                {BREAKPOINTS.map((bp) => (
-                                    <Button
-                                        key={bp}
-										icon={
-											bp === "mobile"
-												? mobile
-												: bp === "tablet"
-												? tablet
-												: bp === "desktop"
-												? desktop
-												: bp === "smallLaptop"
-												? smallLaptopIcon
-												: bigDesktopIcon
-										}
-                                        isPrimary={deviceType === bp}
-                                        onClick={() => setDeviceType(bp)}
-                                        label={BREAKPOINT_LABELS[bp]}
-                                    >
-                                        {BREAKPOINT_LABELS[bp]}
-                                    </Button>
-                                ))}
-                            </ButtonGroup>
                             <UnitControl
 								label={__("Icon Width", "hero-1-block")}
                                 value={currentIconWidth}
@@ -1247,9 +1268,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
                 </PanelBody>
 
-                {/* Responsive Layout Settings */}
+                {/* Responsive Background Gradient */}
 				<PanelBody
-					title={__("Layout (Responsive)", "hero-1-block")}
+					section="style"
+					priority="high"
+					title={__("Background Gradient", "hero-1-block")}
 					initialOpen={false}
 				>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
@@ -1321,6 +1344,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							/>
 						</>
 					)}
+				</PanelBody>
+
+				{/* Responsive Container Layout */}
+				<PanelBody
+					section="layout"
+					title={__("Container Layout", "hero-1-block")}
+					initialOpen={false}
+				>
+					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
+						{__("Current Breakpoint:", "hero-1-block")}{" "}
+						{BREAKPOINT_LABELS[deviceType]}
+                    </p>
                     <UnitControl
 						label={__("Width", "hero-1-block")}
                         value={currentWidth}
@@ -1399,19 +1434,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						onChange={(value) =>
 							setResponsiveValue("responsiveAlignItems", deviceType, value)
 						}
-                    />
-                    <BoxControl
-						label={__("Padding", "hero-1-block")}
-                        values={currentPadding}
-						onChange={(value) =>
-							setResponsiveValue("responsivePadding", deviceType, value)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-							{ value: "%", label: "%" },
-                        ]}
                     />
 					<BaseControl
 						label={__("Text Alignment", "hero-1-block")}
@@ -1515,6 +1537,32 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							{ value: "rem", label: "rem" },
 						]}
 					/>
+                </PanelBody>
+
+				{/* Responsive Container Spacing */}
+				<PanelBody
+					section="style"
+					priority="medium"
+					title={__("Container Spacing", "hero-1-block")}
+					initialOpen={false}
+				>
+					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
+						{__("Current Breakpoint:", "hero-1-block")}{" "}
+						{BREAKPOINT_LABELS[deviceType]}
+                    </p>
+                    <BoxControl
+						label={__("Padding", "hero-1-block")}
+                        values={currentPadding}
+						onChange={(value) =>
+							setResponsiveValue("responsivePadding", deviceType, value)
+						}
+                        units={[
+							{ value: "px", label: "px" },
+							{ value: "em", label: "em" },
+							{ value: "rem", label: "rem" },
+							{ value: "%", label: "%" },
+                        ]}
+                    />
 					<BoxControl
 						label={__("CTA Container Margin", "hero-1-block")}
 						values={currentCtaMargin}
@@ -1532,6 +1580,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 {/* Background & Overlay */}
 				<PanelBody
+					section="style"
+					priority="high"
 					title={__("Background & Overlay", "hero-1-block")}
 					initialOpen={false}
 				>
@@ -1711,6 +1761,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 {/* Breadcrumb Position (Responsive) */}
 				<PanelBody
+					section="layout"
 					title={__("Breadcrumb Position (Responsive)", "hero-1-block")}
 					initialOpen={false}
 				>
@@ -1720,29 +1771,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						{__("Current Breakpoint:", "hero-1-block")}{" "}
 						{BREAKPOINT_LABELS[deviceType]}
                     </p>
-					<ButtonGroup style={{ marginBottom: "12px" }}>
-                        {BREAKPOINTS.map((bp) => (
-                            <Button
-                                key={bp}
-								icon={
-									bp === "mobile"
-										? mobile
-										: bp === "tablet"
-										? tablet
-										: bp === "desktop"
-										? desktop
-										: bp === "smallLaptop"
-										? smallLaptopIcon
-										: bigDesktopIcon
-								}
-                                isPrimary={deviceType === bp}
-                                onClick={() => setDeviceType(bp)}
-                                label={BREAKPOINT_LABELS[bp]}
-                            >
-                                {BREAKPOINT_LABELS[bp]}
-                            </Button>
-                        ))}
-                    </ButtonGroup>
                     <UnitControl
 						label={__("Top Offset", "hero-1-block")}
                         value={currentBreadcrumbTopOffset}
@@ -1782,6 +1810,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 {/* Preheader Typography (Responsive) */}
                 {showPreheader && (
 					<PanelBody
+						section="style"
+						priority="high"
 						title={__("Preheader Typography (Responsive)", "hero-1-block")}
 						initialOpen={false}
 					>
@@ -1795,29 +1825,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							{__("Current Breakpoint:", "hero-1-block")}{" "}
 							{BREAKPOINT_LABELS[deviceType]}
                         </p>
-						<ButtonGroup style={{ marginBottom: "12px" }}>
-                            {BREAKPOINTS.map((bp) => (
-                                <Button
-                                    key={bp}
-									icon={
-										bp === "mobile"
-											? mobile
-											: bp === "tablet"
-											? tablet
-											: bp === "desktop"
-											? desktop
-											: bp === "smallLaptop"
-											? smallLaptopIcon
-											: bigDesktopIcon
-									}
-                                    isPrimary={deviceType === bp}
-                                    onClick={() => setDeviceType(bp)}
-                                    label={BREAKPOINT_LABELS[bp]}
-                                >
-                                    {BREAKPOINT_LABELS[bp]}
-                                </Button>
-                            ))}
-                        </ButtonGroup>
                         <UnitControl
 							label={__("Font Size", "hero-1-block")}
                             value={currentPreheaderFontSize}
@@ -1870,7 +1877,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {/* Typography Settings */}
-				<PanelBody title={__("Typography", "hero-1-block")} initialOpen={false}>
+				<PanelBody section="style" priority="high" title={__("Typography", "hero-1-block")} initialOpen={false}>
 					<p
 						style={{ marginBottom: "12px", fontWeight: 600, fontSize: "13px" }}
 					>
@@ -2110,6 +2117,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 {/* Responsive Button Container Settings */}
 				<PanelBody
+					section="layout"
 					title={__("Button Container (Responsive)", "hero-1-block")}
 					initialOpen={false}
 				>
@@ -2168,6 +2176,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 				{/* Media Settings */}
 				<PanelBody
+					section="content"
 					title={__("Media (Image/Video)", "hero-1-block")}
 					initialOpen={false}
 				>
@@ -2182,149 +2191,58 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						onChange={(value) => setAttributes({ mediaType: value })}
 					/>
 					{mediaType === "image" && (
-						<>
-							<BaseControl label={__("Media Image", "hero-1-block")}>
-								<MediaUploadCheck>
-									<MediaUpload
-										onSelect={(media) => {
-											setAttributes({
-												mediaImageUrl: media.url,
-												mediaImageId: media.id,
-											});
-										}}
-										allowedTypes={["image"]}
-										value={mediaImageId}
-										render={({ open }) => (
-											<div style={{ marginBottom: "10px" }}>
-												{mediaImageUrl ? (
-													<div
+						<BaseControl label={__("Media Image", "hero-1-block")}>
+							<MediaUploadCheck>
+								<MediaUpload
+									onSelect={(media) => {
+										setAttributes({
+											mediaImageUrl: media.url,
+											mediaImageId: media.id,
+										});
+									}}
+									allowedTypes={["image"]}
+									value={mediaImageId}
+									render={({ open }) => (
+										<div style={{ marginBottom: "10px" }}>
+											{mediaImageUrl ? (
+												<div
+													style={{
+														marginBottom: "10px",
+														position: "relative",
+													}}
+												>
+													<img
+														src={mediaImageUrl}
+														alt=""
+														style={{ width: "100%", borderRadius: "4px" }}
+													/>
+													<Button
+														isDestructive
+														onClick={() =>
+															setAttributes({
+																mediaImageUrl: "",
+																mediaImageId: 0,
+															})
+														}
 														style={{
-															marginBottom: "10px",
-															position: "relative",
+															position: "absolute",
+															top: "5px",
+															right: "5px",
 														}}
 													>
-														<img
-															src={mediaImageUrl}
-															alt=""
-															style={{ width: "100%", borderRadius: "4px" }}
-														/>
-														<Button
-															isDestructive
-															onClick={() =>
-																setAttributes({
-																	mediaImageUrl: "",
-																	mediaImageId: 0,
-																})
-															}
-															style={{
-																position: "absolute",
-																top: "5px",
-																right: "5px",
-															}}
-														>
-															{__("Remove", "hero-1-block")}
-														</Button>
-													</div>
-												) : (
-													<Button isSecondary onClick={open}>
-														{__("Select Image", "hero-1-block")}
+														{__("Remove", "hero-1-block")}
 													</Button>
-												)}
-											</div>
-										)}
-									/>
-								</MediaUploadCheck>
-							</BaseControl>
-							<p
-								style={{
-									marginTop: "16px",
-									marginBottom: "8px",
-									fontWeight: 600,
-								}}
-							>
-								{__("Image Dimensions (Responsive)", "hero-1-block")}
-							</p>
-							<p
-								style={{
-									marginBottom: "8px",
-									fontSize: "12px",
-									color: "#757575",
-								}}
-							>
-								{__("Current Breakpoint:", "hero-1-block")}{" "}
-								{BREAKPOINT_LABELS[deviceType]}
-							</p>
-							<ButtonGroup style={{ marginBottom: "12px" }}>
-								{BREAKPOINTS.map((bp) => (
-									<Button
-										key={bp}
-										icon={
-											bp === "mobile"
-												? mobile
-												: bp === "tablet"
-												? tablet
-												: bp === "desktop"
-												? desktop
-												: bp === "smallLaptop"
-												? smallLaptopIcon
-												: bigDesktopIcon
-										}
-										isPrimary={deviceType === bp}
-										onClick={() => setDeviceType(bp)}
-										label={BREAKPOINT_LABELS[bp]}
-									>
-										{BREAKPOINT_LABELS[bp]}
-									</Button>
-								))}
-							</ButtonGroup>
-							<UnitControl
-								label={__("Image Width", "hero-1-block")}
-								value={currentVideoWidth}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveVideoWidth",
-										deviceType,
-										value || "50%",
-									)
-								}
-								units={[
-									{ value: "%", label: "%" },
-									{ value: "px", label: "px" },
-									{ value: "rem", label: "rem" },
-								]}
-							/>
-							<UnitControl
-								label={__("Image Height", "hero-1-block")}
-								value={currentVideoHeight}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveVideoHeight",
-										deviceType,
-										value || "600px",
-									)
-								}
-								units={[
-									{ value: "px", label: "px" },
-									{ value: "rem", label: "rem" },
-									{ value: "%", label: "%" },
-								]}
-                    />
-							<UnitControl
-								label={__("Border Radius", "hero-1-block")}
-								value={currentVideoBorderRadius}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveVideoBorderRadius",
-										deviceType,
-										value || "16px",
-									)
-								}
-								units={[
-									{ value: "px", label: "px" },
-									{ value: "rem", label: "rem" },
-								]}
-							/>
-						</>
+												</div>
+											) : (
+												<Button isSecondary onClick={open}>
+													{__("Select Image", "hero-1-block")}
+												</Button>
+											)}
+										</div>
+									)}
+								/>
+							</MediaUploadCheck>
+						</BaseControl>
 					)}
 					{mediaType === "video" && (
                         <>
@@ -2410,103 +2328,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									}
                                 />
                             )}
-							<p
-								style={{
-									marginTop: "16px",
-									marginBottom: "8px",
-									fontWeight: 600,
-								}}
-							>
-								{__("Video Dimensions (Responsive)", "hero-1-block")}
-                            </p>
-							<p
-								style={{
-									marginBottom: "8px",
-									fontSize: "12px",
-									color: "#757575",
-								}}
-							>
-								{__("Current Breakpoint:", "hero-1-block")}{" "}
-								{BREAKPOINT_LABELS[deviceType]}
-                            </p>
-							<ButtonGroup style={{ marginBottom: "12px" }}>
-                                {BREAKPOINTS.map((bp) => (
-                                    <Button
-                                        key={bp}
-										icon={
-											bp === "mobile"
-												? mobile
-												: bp === "tablet"
-												? tablet
-												: bp === "desktop"
-												? desktop
-												: bp === "smallLaptop"
-												? smallLaptopIcon
-												: bigDesktopIcon
-										}
-                                        isPrimary={deviceType === bp}
-                                        onClick={() => setDeviceType(bp)}
-                                        label={BREAKPOINT_LABELS[bp]}
-                                    >
-                                        {BREAKPOINT_LABELS[bp]}
-                                    </Button>
-                                ))}
-                            </ButtonGroup>
-                            <UnitControl
-								label={__("Video Width", "hero-1-block")}
-                                value={currentVideoWidth}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveVideoWidth",
-										deviceType,
-										value || "50%",
-									)
-								}
-                                units={[
-									{ value: "%", label: "%" },
-									{ value: "px", label: "px" },
-									{ value: "rem", label: "rem" },
-                                ]}
-                            />
-                            <UnitControl
-								label={__("Video Height", "hero-1-block")}
-                                value={currentVideoHeight}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveVideoHeight",
-										deviceType,
-										value || "600px",
-									)
-								}
-                                units={[
-									{ value: "px", label: "px" },
-									{ value: "rem", label: "rem" },
-									{ value: "%", label: "%" },
-                                ]}
-                            />
-                            <UnitControl
-								label={__("Border Radius", "hero-1-block")}
-                                value={currentVideoBorderRadius}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveVideoBorderRadius",
-										deviceType,
-										value || "16px",
-									)
-								}
-                                units={[
-									{ value: "px", label: "px" },
-									{ value: "rem", label: "rem" },
-                                ]}
-                            />
                         </>
                     )}
-                </PanelBody>
 
-				<PanelBody
-					title={__("Block Settings", "hero-1-block")}
-					initialOpen={false}
-				>
                     <TextControl
 						label={__("Block ID", "hero-1-block")}
                         value={blockId}
@@ -2517,6 +2341,81 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						)}
                     />
                 </PanelBody>
+
+				{(mediaType === "image" || mediaType === "video") && (
+					<PanelBody
+						section="style"
+						priority="medium"
+						title={__("Media Dimensions (Responsive)", "hero-1-block")}
+						initialOpen={false}
+					>
+						<p
+							style={{
+								marginBottom: "8px",
+								fontSize: "12px",
+								color: "#757575",
+							}}
+						>
+							{__("Current Breakpoint:", "hero-1-block")}{" "}
+							{BREAKPOINT_LABELS[deviceType]}
+						</p>
+						<UnitControl
+							label={
+								mediaType === "image"
+									? __("Image Width", "hero-1-block")
+									: __("Video Width", "hero-1-block")
+							}
+							value={currentVideoWidth}
+							onChange={(value) =>
+								setResponsiveValue(
+									"responsiveVideoWidth",
+									deviceType,
+									value || "50%",
+								)
+							}
+							units={[
+								{ value: "%", label: "%" },
+								{ value: "px", label: "px" },
+								{ value: "rem", label: "rem" },
+							]}
+						/>
+						<UnitControl
+							label={
+								mediaType === "image"
+									? __("Image Height", "hero-1-block")
+									: __("Video Height", "hero-1-block")
+							}
+							value={currentVideoHeight}
+							onChange={(value) =>
+								setResponsiveValue(
+									"responsiveVideoHeight",
+									deviceType,
+									value || "600px",
+								)
+							}
+							units={[
+								{ value: "px", label: "px" },
+								{ value: "rem", label: "rem" },
+								{ value: "%", label: "%" },
+							]}
+						/>
+						<UnitControl
+							label={__("Border Radius", "hero-1-block")}
+							value={currentVideoBorderRadius}
+							onChange={(value) =>
+								setResponsiveValue(
+									"responsiveVideoBorderRadius",
+									deviceType,
+									value || "16px",
+								)
+							}
+							units={[
+								{ value: "px", label: "px" },
+								{ value: "rem", label: "rem" },
+							]}
+						/>
+					</PanelBody>
+				)}
             </InspectorTabs>
 
             <div {...blockProps}>

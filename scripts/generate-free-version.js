@@ -214,6 +214,23 @@ class FreeVersionGenerator {
         if (fs.existsSync(indexSrc)) {
             fs.copyFileSync(indexSrc, path.join(srcPath, 'index.js'));
         }
+
+        // Copy root-level side-effect modules that the dev index.js imports
+        // unconditionally before any block. categories.js registers every
+        // "adaire-*" block category via registerBlockCategory() — without
+        // it in the free build, no free block (regardless of its own
+        // block.json "category" value) gets that category registered, so
+        // WordPress silently falls back to putting all of them under the
+        // default "Uncategorized" bucket in the block inserter.
+        const rootSideEffectFiles = ['categories.js'];
+        rootSideEffectFiles.forEach(file => {
+            const fileSrc = path.join(this.sourceDir, 'src', file);
+            const fileDest = path.join(srcPath, file);
+            if (fs.existsSync(fileSrc)) {
+                fs.copyFileSync(fileSrc, fileDest);
+                console.log(`   ✓ Copied src/${file}`);
+            }
+        });
     }
 
     /**
@@ -254,12 +271,17 @@ class FreeVersionGenerator {
         const includesDest = path.join(this.freeVersionDir, 'includes');
         fs.mkdirSync(includesDest, { recursive: true });
 
+        // Files the scaffold's own adaire-blocks.php require_once's directly
+        // and does NOT already ship its own copy of.
+        const sharedIncludesFiles = ['class-adaire-blocks-config.php', 'cookie-notice-global.php'];
+
         if (fs.existsSync(includesSrc)) {
             fs.readdirSync(includesSrc).forEach(file => {
                 const dest = path.join(includesDest, file);
                 // Don't overwrite files that came from the scaffold
-                if (!fs.existsSync(dest) && file === 'class-adaire-blocks-config.php') {
+                if (!fs.existsSync(dest) && sharedIncludesFiles.includes(file)) {
                     fs.copyFileSync(path.join(includesSrc, file), dest);
+                    console.log(`   ✓ Copied includes/${file}`);
                 }
             });
         }
@@ -598,12 +620,20 @@ class FreeVersionGenerator {
         const enabledBlocks = this.getEnabledBlocks();
 
         let indexContent = `// Adaire Blocks Free Version - auto-generated, do not edit manually\n\n`;
+
+        // Register block categories before any block imports — see the
+        // matching comment in copyFreeBlocks() for why this is required.
+        const categoriesPath = path.join(this.freeVersionDir, 'src', 'categories.js');
+        if (fs.existsSync(categoriesPath)) {
+            indexContent += `import './categories';\n\n`;
+        }
+
         enabledBlocks.forEach(blockName => {
             indexContent += `import './${blockName}';\n`;
         });
 
         fs.writeFileSync(indexPath, indexContent);
-        console.log(`   ✓ index.js updated (${enabledBlocks.length} blocks)`);
+        console.log(`   ✓ index.js updated (${enabledBlocks.length} blocks, categories: ${fs.existsSync(categoriesPath) ? 'yes' : 'MISSING'})`);
     }
 
     /**

@@ -1,16 +1,32 @@
-.adaire-progress-block {
-	&--bar {
-		.adaire-progress-block__bar {
-			min-width: 100px;
+.adaire-progress-bar {
+	&__item-control {
+		padding: 12px 0;
+		border-bottom: 1px solid #e2e4e7;
+
+		&:first-child {
+			padding-top: 0;
+		}
+
+		&:last-of-type {
+			border-bottom: none;
 		}
 	}
 
-	&--ring {
-		.adaire-progress-block__ring {
-			min-width: 60px;
-			min-height: 60px;
-		}
+	&__item-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		margin-top: 8px;
+	}
+
+	// Static editor preview — canvas doesn't run view.js, so fills/rings show
+	// their real target value immediately instead of the 0% starting state
+	// used on the front end for the scroll-in animation.
+	&__fill {
+		transition: none;
+	}
+
+	&__ring-fill {
+		transition: none;
 	}
 }
-
-

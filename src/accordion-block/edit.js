@@ -1,10 +1,10 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useCallback, useState, useEffect } from '@wordpress/element';
 import { useBlockProps, useInnerBlocksProps, store as blockEditorStore, ColorPalette } from '@wordpress/block-editor';
-import { createBlock } from '@wordpress/blocks';
+import { createBlock, getBlockType } from '@wordpress/blocks';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { PanelBody, RangeControl, ToggleControl, Button, ButtonGroup, TextControl, BaseControl } from '@wordpress/components';
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS } from '../components/DeviceSwitcher';
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
 import InspectorTabs from '../components/InspectorTabs';
@@ -128,23 +128,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
             '--acc-chevron-size': `${ getDeviceValue(chevronSize, 'desktop', 16) }px`,
             '--acc-chevron-size-tablet': `${ getDeviceValue(chevronSize, 'tablet', 14) }px`,
             '--acc-chevron-size-mobile': `${ getDeviceValue(chevronSize, 'mobile', 12) }px`,
-            '--acc-chevron-size-watch': `${ getDeviceValue(chevronSize, 'smartwatch', 10) }px`,
             '--acc-title-size': `${ getDeviceValue(titleFontSize, 'desktop', 20) }px`,
             '--acc-title-size-tablet': `${ getDeviceValue(titleFontSize, 'tablet', 18) }px`,
             '--acc-title-size-mobile': `${ getDeviceValue(titleFontSize, 'mobile', 16) }px`,
-            '--acc-title-size-watch': `${ getDeviceValue(titleFontSize, 'smartwatch', 14) }px`,
             '--acc-content-size': `${ getDeviceValue(contentFontSize, 'desktop', 16) }px`,
             '--acc-content-size-tablet': `${ getDeviceValue(contentFontSize, 'tablet', 14) }px`,
             '--acc-content-size-mobile': `${ getDeviceValue(contentFontSize, 'mobile', 12) }px`,
-            '--acc-content-size-watch': `${ getDeviceValue(contentFontSize, 'smartwatch', 10) }px`,
             '--acc-gap': `${ getDeviceValue(gap, 'desktop', 12) }px`,
             '--acc-gap-tablet': `${ getDeviceValue(gap, 'tablet', 10) }px`,
             '--acc-gap-mobile': `${ getDeviceValue(gap, 'mobile', 8) }px`,
-            '--acc-gap-watch': `${ getDeviceValue(gap, 'smartwatch', 6) }px`,
             '--acc-radius': `${ getDeviceValue(radius, 'desktop', 12) }px`,
             '--acc-radius-tablet': `${ getDeviceValue(radius, 'tablet', 10) }px`,
             '--acc-radius-mobile': `${ getDeviceValue(radius, 'mobile', 8) }px`,
-            '--acc-radius-watch': `${ getDeviceValue(radius, 'smartwatch', 6) }px`,
             '--acc-padding-top': `${ padding?.desktop?.top ?? 20 }px`,
             '--acc-padding-right': `${ padding?.desktop?.right ?? 20 }px`,
             '--acc-padding-bottom': `${ padding?.desktop?.bottom ?? 20 }px`,
@@ -157,32 +152,23 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
             '--acc-padding-right-mobile': `${ padding?.mobile?.right ?? padding?.tablet?.right ?? padding?.desktop?.right ?? 20 }px`,
             '--acc-padding-bottom-mobile': `${ padding?.mobile?.bottom ?? padding?.tablet?.bottom ?? padding?.desktop?.bottom ?? 20 }px`,
             '--acc-padding-left-mobile': `${ padding?.mobile?.left ?? padding?.tablet?.left ?? padding?.desktop?.left ?? 20 }px`,
-            '--acc-padding-top-watch': `${ padding?.smartwatch?.top ?? padding?.mobile?.top ?? padding?.tablet?.top ?? padding?.desktop?.top ?? 20 }px`,
-            '--acc-padding-right-watch': `${ padding?.smartwatch?.right ?? padding?.mobile?.right ?? padding?.tablet?.right ?? padding?.desktop?.right ?? 20 }px`,
-            '--acc-padding-bottom-watch': `${ padding?.smartwatch?.bottom ?? padding?.mobile?.bottom ?? padding?.tablet?.bottom ?? padding?.desktop?.bottom ?? 20 }px`,
-            '--acc-padding-left-watch': `${ padding?.smartwatch?.left ?? padding?.mobile?.left ?? padding?.tablet?.left ?? padding?.desktop?.left ?? 20 }px`,
             '--acc-duration': `${ animationDuration }ms`,
             '--acc-easing': animationEasing,
             '--acc-margin-top': `${ getDeviceValue(marginTop, 'desktop', 0) }px`,
             '--acc-margin-top-tablet': `${ getDeviceValue(marginTop, 'tablet', 0) }px`,
             '--acc-margin-top-mobile': `${ getDeviceValue(marginTop, 'mobile', 0) }px`,
-            '--acc-margin-top-watch': `${ getDeviceValue(marginTop, 'smartwatch', 0) }px`,
             '--acc-margin-right': `${ getDeviceValue(marginRight, 'desktop', 0) }px`,
             '--acc-margin-right-tablet': `${ getDeviceValue(marginRight, 'tablet', 0) }px`,
             '--acc-margin-right-mobile': `${ getDeviceValue(marginRight, 'mobile', 0) }px`,
-            '--acc-margin-right-watch': `${ getDeviceValue(marginRight, 'smartwatch', 0) }px`,
             '--acc-margin-bottom': `${ getDeviceValue(marginBottom, 'desktop', 0) }px`,
             '--acc-margin-bottom-tablet': `${ getDeviceValue(marginBottom, 'tablet', 0) }px`,
             '--acc-margin-bottom-mobile': `${ getDeviceValue(marginBottom, 'mobile', 0) }px`,
-            '--acc-margin-bottom-watch': `${ getDeviceValue(marginBottom, 'smartwatch', 0) }px`,
             '--acc-margin-left': `${ getDeviceValue(marginLeft, 'desktop', 0) }px`,
             '--acc-margin-left-tablet': `${ getDeviceValue(marginLeft, 'tablet', 0) }px`,
             '--acc-margin-left-mobile': `${ getDeviceValue(marginLeft, 'mobile', 0) }px`,
-            '--acc-margin-left-watch': `${ getDeviceValue(marginLeft, 'smartwatch', 0) }px`,
             '--acc-margin-h-desktop': `${ marginHorizontal?.desktop ?? 0 }px`,
             '--acc-margin-h-tablet': `${ marginHorizontal?.tablet ?? 0 }px`,
             '--acc-margin-h-mobile': `${ marginHorizontal?.mobile ?? 0 }px`,
-            '--acc-margin-h-watch': `${ marginHorizontal?.smartwatch ?? 0 }px`,
             '--acc-title-weight': titleFontWeight,
             '--acc-content-weight': contentFontWeight,
             '--acc-shadow-intensity': shadowIntensity,
@@ -201,7 +187,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
             '--acc-container-max-width': `${ containerMaxWidth?.desktop?.value ?? 1200 }${ containerMaxWidth?.desktop?.unit ?? 'px' }`,
             '--acc-container-max-width-tablet': `${ containerMaxWidth?.tablet?.value ?? 100 }${ containerMaxWidth?.tablet?.unit ?? '%' }`,
             '--acc-container-max-width-mobile': `${ containerMaxWidth?.mobile?.value ?? 100 }${ containerMaxWidth?.mobile?.unit ?? '%' }`,
-            '--acc-container-max-width-watch': `${ containerMaxWidth?.smartwatch?.value ?? 100 }${ containerMaxWidth?.smartwatch?.unit ?? '%' }`,
         },
     } );
 
@@ -267,6 +252,25 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
         
         setAttributes({ items: next });
     }, [items, allowMultipleOpen, setAttributes]);
+
+    // Resets every responsive attribute back to its block.json default —
+    // existing values only, nothing new is added.
+    const RESPONSIVE_ATTRS = [
+        'chevronSize', 'titleFontSize', 'contentFontSize', 'gap', 'radius',
+        'padding', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
+        'marginHorizontal', 'containerMaxWidth',
+    ];
+    const resetResponsiveDefaults = () => {
+        const blockType = getBlockType( 'create-block/accordion-block' );
+        const defaults = blockType?.attributes || {};
+        const resetValues = {};
+        RESPONSIVE_ATTRS.forEach( ( key ) => {
+            if ( defaults[ key ] && 'default' in defaults[ key ] ) {
+                resetValues[ key ] = defaults[ key ].default;
+            }
+        } );
+        setAttributes( resetValues );
+    };
 
     const updatePadding = (device, property, value) => {
         // Handle backward compatibility - if padding is in old format, convert it
@@ -353,14 +357,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody title={ __('Responsive Settings', 'accordion-block') } initialOpen={ false }>
-                    <DeviceSwitcher 
-                        deviceType={deviceType} 
+                <PanelBody section="layout" title={ __('Responsive Settings', 'accordion-block') } initialOpen={ false }>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
                         setDeviceType={setDeviceType}
                         label="Device Preview"
+                        onReset={ resetResponsiveDefaults }
+                        tiers={ THREE_TIERS }
                     />
                 </PanelBody>
-                <PanelBody title={ __('Container Settings', 'accordion-block') } initialOpen={ true }>
+                <PanelBody section="layout" title={ __('Container Settings', 'accordion-block') } initialOpen={ true }>
                     <ButtonGroup>
                         { [
                             { label: __('Full width', 'accordion-block'), value: 'full' },
@@ -428,21 +434,34 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         </>
                     )}
                 </PanelBody>
-                <PanelBody title={ __('Items', 'accordion-block') } initialOpen={ true }>
-                    <Button 
-                        isPrimary 
+                <PanelBody section="content" title={ __('Items', 'accordion-block') } initialOpen={ true }>
+                    <Button
+                        isPrimary
                         onClick={ addItem }
                         disabled={ isLimitReached }
                     >
                         { __('Add Item', 'accordion-block') }
                     </Button>
                     { showUpgradeNotice && (
-                        <UpgradeNotice 
+                        <UpgradeNotice
                             variant="inline"
                             itemType="accordion"
                             message={upgradeMessage}
                         />
                     ) }
+                    <ToggleControl
+                        label={ __('Allow multiple open', 'accordion-block') }
+                        checked={ allowMultipleOpen }
+                        onChange={ (v) => setAttributes( { allowMultipleOpen: v } ) }
+                    />
+                    <ToggleControl
+                        label={ __('First item open by default', 'accordion-block') }
+                        checked={ firstItemOpenByDefault !== false }
+                        onChange={ (v) => setAttributes( { firstItemOpenByDefault: v } ) }
+                        help={ __('When enabled, the first accordion item will be open when the page loads.', 'accordion-block') }
+                    />
+                </PanelBody>
+                <PanelBody section="style" priority="medium" title={ __('Item Spacing', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Gap', 'accordion-block') }
                         value={ getDeviceValue(gap, deviceType, deviceType === 'desktop' ? 12 : deviceType === 'tablet' ? 10 : deviceType === 'mobile' ? 8 : 6) }
@@ -489,19 +508,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         min={ 0 }
                         max={ 48 }
                     />
-                    <ToggleControl
-                        label={ __('Allow multiple open', 'accordion-block') }
-                        checked={ allowMultipleOpen }
-                        onChange={ (v) => setAttributes( { allowMultipleOpen: v } ) }
-                    />
-                    <ToggleControl
-                        label={ __('First item open by default', 'accordion-block') }
-                        checked={ firstItemOpenByDefault !== false }
-                        onChange={ (v) => setAttributes( { firstItemOpenByDefault: v } ) }
-                        help={ __('When enabled, the first accordion item will be open when the page loads.', 'accordion-block') }
-                    />
                 </PanelBody>
-                <PanelBody title={ __('Typography', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="high" title={ __('Typography', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Title size', 'accordion-block') }
                         value={ getDeviceValue(titleFontSize, deviceType, deviceType === 'desktop' ? 20 : deviceType === 'tablet' ? 18 : deviceType === 'mobile' ? 16 : 14) }
@@ -539,7 +547,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         ) ) }
                     </ButtonGroup>
                 </PanelBody>
-                <PanelBody title={ __('Colors', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="high" title={ __('Colors', 'accordion-block') } initialOpen={ false }>
                     <p>{ __('Title', 'accordion-block') }</p>
                     <BoundColorPalette value={ titleColor } onChange={ (v)=> setAttributes({ titleColor: v }) } />
                     <p>{ __('Content', 'accordion-block') }</p>
@@ -569,7 +577,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         step={ 1 }
                     />
                 </PanelBody>
-                <PanelBody title={ __('Spacing & Margins', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Spacing & Margins', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Margin Top', 'accordion-block') }
                         value={ getDeviceValue(marginTop, deviceType, 0) }
@@ -606,7 +614,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         max={ 100 }
                     />
                 </PanelBody>
-                <PanelBody title={ __('Effects', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Effects', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Shadow Intensity', 'accordion-block') }
                         value={ shadowIntensity }
@@ -616,7 +624,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         step={ 0.01 }
                     />
                 </PanelBody>
-                <PanelBody title={ __('Animation', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Animation', 'accordion-block') } initialOpen={ false }>
                     <RangeControl
                         label={ __('Duration (ms)', 'accordion-block') }
                         value={ animationDuration }

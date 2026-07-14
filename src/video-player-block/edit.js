@@ -17,7 +17,7 @@ SelectControl,
 TextControl,
 ToggleControl,
 } from '@wordpress/components';
-import DeviceSwitcher from '../components/DeviceSwitcher';
+import DeviceSwitcher, { THREE_TIERS } from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import {
@@ -230,7 +230,7 @@ style: getVideoPlayerStyles( attributes ),
 const currentMaxWidth = containerMaxWidth?.[ deviceType ] || {};
 const maxWidthDefault = deviceType === 'desktop' ? 1200 : 100;
 const currentHeight = getContainerHeightForDevice( containerHeight, deviceType );
-const heightDefault = deviceType === 'desktop' || deviceType === 'tablet' ? 315 : deviceType === 'mobile' ? 250 : 200;
+const heightDefault = deviceType === 'desktop' || deviceType === 'tablet' ? 315 : 250;
 
 const sideloadMedia = async () => {
 if ( ! mediaRemoteUrl ) {
@@ -268,11 +268,12 @@ left: attributes[ names.left ],
 };
 
 return (
-<PanelBody title={ __( label, 'video-player-block' ) } initialOpen={ false }>
+<PanelBody section="style" priority="medium" title={ __( label, 'video-player-block' ) } initialOpen={ false }>
 <DeviceSwitcher
 label={ __( 'Device', 'video-player-block' ) }
 deviceType={ deviceType }
 setDeviceType={ setDeviceType }
+tiers={ THREE_TIERS }
 />
 <BoxControl
 label={ __( label, 'video-player-block' ) }
@@ -391,7 +392,7 @@ onClick={ () => setAttributes( { dimensionsConfigured: true } ) }
 return (
 <>
 <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-<PanelBody title={ __( 'Container Settings', 'video-player-block' ) } initialOpen>
+<PanelBody section="layout" title={ __( 'Container Settings', 'video-player-block' ) } initialOpen>
 <RangeControl
 label={ __( 'Border Radius (px)', 'video-player-block' ) }
 value={ containerBorderRadius }
@@ -447,6 +448,7 @@ step={ 0.05 }
 label={ __( 'Container Height', 'video-player-block' ) }
 deviceType={ deviceType }
 setDeviceType={ setDeviceType }
+tiers={ THREE_TIERS }
 />
 <TextControl
 type="number"
@@ -494,6 +496,7 @@ onClick={ () => setAttributes( { containerMode: option.value } ) }
 label={ __( 'Max Width', 'video-player-block' ) }
 deviceType={ deviceType }
 setDeviceType={ setDeviceType }
+tiers={ THREE_TIERS }
 />
 <TextControl
 type="number"
@@ -521,7 +524,7 @@ containerMaxWidth: {
 </div>
 ) }
 </PanelBody>
-<PanelBody title={ __( 'Video Settings', 'video-player-block' ) } initialOpen={ false }>
+<PanelBody section="content" title={ __( 'Video Settings', 'video-player-block' ) } initialOpen={ false }>
 <SelectControl
 label={ __( 'Insert As', 'video-player-block' ) }
 value={ mediaKind || 'video' }

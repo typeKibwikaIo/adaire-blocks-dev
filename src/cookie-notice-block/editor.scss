@@ -1,0 +1,99 @@
+// Cookie Notice Block (Free) — editor-only presentation.
+// The frontend version is `position: fixed` and floats over the page; inside
+// the block canvas that would just pin it to the iframe corner, so the
+// editor renders a static, centered preview of the same markup instead.
+
+.adaire-cookie-notice-editor {
+	display: flex;
+	justify-content: center;
+	padding: 24px 12px;
+	background: #f0f0f1;
+	border-radius: 8px;
+}
+
+.adaire-cookie-notice__preview-wrap {
+	display: flex;
+
+	&[data-position="floating-bottom-right"],
+	&[data-position="floating-top-right"] {
+		justify-content: flex-end;
+	}
+
+	&[data-position="floating-bottom-left"],
+	&[data-position="floating-top-left"] {
+		justify-content: flex-start;
+	}
+
+	// "Center" positions render as a flat, full-width horizontal bar on the
+	// front end (see style.scss), so preview it the same way here instead
+	// of a centered floating card.
+	&[data-position="floating-bottom-center"],
+	&[data-position="floating-top-center"] {
+		justify-content: center;
+		width: 100%;
+
+		.adaire-cookie-notice {
+			width: 100%;
+			max-width: 100%;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px 24px;
+		}
+
+		.adaire-cookie-notice__message {
+			flex: 1 1 320px;
+			min-width: 0;
+		}
+
+		.adaire-cookie-notice__links {
+			flex: 0 1 auto;
+		}
+
+		.adaire-cookie-notice__actions {
+			flex: 0 0 auto;
+			margin-top: 0;
+		}
+	}
+}
+
+.adaire-cookie-notice-editor-hint {
+	margin: 8px 0 0;
+	text-align: center;
+	font-size: 12px;
+	font-style: italic;
+	color: #757575;
+}
+
+// The reopen icon is normally hidden until a visitor makes a choice
+// (controlled by state classes view.js adds on the frontend); force it
+// visible here so the editor can show what it will look like.
+.adaire-cookie-notice-editor-reopen-preview {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	margin-top: 20px;
+	padding-top: 16px;
+	border-top: 1px dashed #ccc;
+
+	.adaire-cookie-notice__reopen {
+		display: flex !important;
+		opacity: 1 !important;
+		transform: none !important;
+		position: static;
+		cursor: default;
+	}
+}
+
+.adaire-cookie-notice-color-label {
+	margin: 12px 0 4px;
+	font-size: 12px;
+	font-weight: 600;
+	color: #1e1e1e;
+
+	&:first-child {
+		margin-top: 0;
+	}
+}

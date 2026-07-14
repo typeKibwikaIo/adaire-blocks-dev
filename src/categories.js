@@ -1,4 +1,4 @@
-﻿import { registerBlockCategory } from '@wordpress/blocks';
+import { registerBlockCategory } from '@wordpress/blocks';
 
 // Register custom block categories for Adaire Blocks
 registerBlockCategory('adaire-hero-sections', {
@@ -151,3 +151,8 @@ registerBlockCategory('adaire-free', {
     icon: <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
 });
 
+registerBlockCategory('adaire-freemium', {
+    slug: 'adaire-freemium',
+    title: 'Freemium (Guten-Blocks)',
+    icon: <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8 6 5 9.5 5 13a7 7 0 0 0 14 0c0-3.5-3-7-7-11zm2.5 9.2a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6zm-5 1.6a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM12 17a1.4 1.4 0 1 1 0-2.8A1.4 1.4 0 0 1 12 17z"/></svg>
+});

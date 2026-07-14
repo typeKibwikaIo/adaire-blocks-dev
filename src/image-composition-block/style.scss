@@ -28,12 +28,6 @@
     }
   }
 
-  @media (max-width: 320px) {
-    &__container.is-constrained {
-      max-width: var(--container-max-width-watch, var(--container-max-width-mobile, 100%));
-    }
-  }
-
   &__grid {
     display: grid;
     /* Fixed collage structure at all breakpoints; it simply scales with the container width */

@@ -11,7 +11,7 @@ The Tabbed Content block lets visitors switch between panels of content without 
 **Key Features:**
 - 🎨 Two tab designs: classic **Underline** tabs or **Pills** (content-switcher style, 4 variants)
 - ↔️ Horizontal or vertical orientation, tab bar above/below or beside the content
-- 📱 Device-specific settings (Desktop/Tablet/Mobile/Smartwatch) for widths, typography fine-tuning, and padding
+- 📱 Device-specific settings (Desktop/Tablet/Mobile) for widths, typography fine-tuning, and padding
 - ⚡ GSAP-powered fade/slide transitions with **smooth height animation** — content below the block glides instead of jumping
 - 👁️ Live animation preview while editing
 - ⌨️ Full keyboard navigation and ARIA tab semantics on the frontend

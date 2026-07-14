@@ -1,0 +1,11 @@
+import { registerBlockType } from '@wordpress/blocks';
+import './style.scss';
+import Edit from './edit';
+import save from './save';
+import metadata from './block.json';
+
+// Import icon component
+import CookieNoticeIcon from '../icons/cookie-notice';
+
+registerBlockType(metadata.name, {edit: Edit, save,
+ 	icon: CookieNoticeIcon,});

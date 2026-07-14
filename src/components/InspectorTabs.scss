@@ -1,6 +1,6 @@
 /**
  * Structured inspector sidebar — shared across all Adaire Blocks.
- * Mirrors the Layout | Style | Advanced tab layout used by the reference design.
+ * Mirrors the Content | Layout | Style tab layout used by the reference design.
  */
 
 .adaire-inspector-tabs {
@@ -53,17 +53,7 @@
 	}
 }
 
-// "ADVANCED STYLES" eyebrow label above the priority groups
-.adaire-inspector-adv-label {
-	font-size: 11px;
-	font-weight: 600;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-	color: #757575;
-	padding: 16px 16px 4px;
-}
-
-// Styling tiers (Appearance / Layout / Advanced) so users don't get lost
+// Styling tiers (Appearance / Effects & Spacing) so users don't get lost
 .adaire-priority-group {
 	& + .adaire-priority-group {
 		margin-top: 4px;

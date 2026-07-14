@@ -40,9 +40,11 @@ import {
     alignCenter,
     alignRight,
 } from '@wordpress/icons';
+import { getBlockType } from '@wordpress/blocks';
 import BootstrapIconPicker from '../icon-box-block/BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher from '../components/DeviceSwitcher';
 
 // Custom icons for small laptop and big desktop
 const smallLaptopIcon = createElement('svg', {
@@ -105,6 +107,23 @@ const BREAKPOINTS = [
     { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks-dev2') },
     { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks-dev2') },
     { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks-dev2') }
+];
+
+// Shared DeviceSwitcher tiers, derived from the same BREAKPOINTS list above.
+const FIVE_TIERS = BREAKPOINTS.map((bp) => ({ key: bp.name, label: bp.label, icon: bp.icon }));
+
+// Every responsive attribute that has a visible control in this block's
+// panels — used by the "Reset to default" action next to the switcher.
+const RESPONSIVE_ATTRS = [
+    'responsiveBlockWidth', 'responsiveMaxWidth', 'responsivePadding', 'responsiveGridWidth',
+    'responsiveIconSize', 'responsiveIconColor', 'responsiveItemPadding', 'responsiveItemTextAlign',
+    'responsiveItemBorderWidth', 'responsiveItemBorderStyle', 'responsiveItemBorderColor', 'responsiveItemBorderRadius',
+    'responsiveHeadingFontSize', 'responsiveHeadingFontWeight', 'responsiveHeadingLineHeight',
+    'responsiveHeadingLetterSpacing', 'responsiveHeadingTextTransform', 'responsiveHeadingColor', 'responsiveHeadingMarginBottom',
+    'responsiveTitleFontSize', 'responsiveTitleFontWeight', 'responsiveTitleLineHeight',
+    'responsiveTitleLetterSpacing', 'responsiveTitleTextTransform', 'responsiveTitleColor', 'responsiveTitleMarginBottom',
+    'responsiveTextFontSize', 'responsiveTextFontWeight', 'responsiveTextLineHeight',
+    'responsiveTextLetterSpacing', 'responsiveTextTextTransform', 'responsiveTextColor', 'responsiveTextMarginBottom',
 ];
 
 // Block-level Font Family control (ADAB-010) — a single, non-responsive
@@ -337,6 +356,20 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             setAttributes({ blockId: `infogrid-2-${clientId}` });
         }
     }, [clientId, blockId, setAttributes]);
+
+    // Resets every responsive attribute back to its block.json default —
+    // existing values only, nothing new is added.
+    const resetResponsiveDefaults = () => {
+        const blockType = getBlockType('create-block/infogrid-2-block');
+        const defaults = blockType?.attributes || {};
+        const resetValues = {};
+        RESPONSIVE_ATTRS.forEach((key) => {
+            if (defaults[key] && 'default' in defaults[key]) {
+                resetValues[key] = defaults[key].default;
+            }
+        });
+        setAttributes(resetValues);
+    };
 
     const attributesRef = useRef(attributes);
     const itemsRef = useRef(items);
@@ -590,26 +623,20 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <div className="adaire-device-toggle">
-                    <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks-dev2')}</p>
-                    <div className="adaire-device-toggle-group">
-                        {BREAKPOINTS.map((bp) => (
-                            <Button
-                                key={bp.name}
-                                isPrimary={deviceType === bp.name}
-                                onClick={() => setDeviceType(bp.name)}
-                                icon={bp.icon}
-                            >
-                                <span>{bp.label}</span>
-                            </Button>
-                        ))}
-                    </div>
+                <PanelBody section="layout" title={__('Responsive Settings', 'adaire-blocks-dev2')} initialOpen={true}>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        label={__('Device View', 'adaire-blocks-dev2')}
+                        tiers={FIVE_TIERS}
+                        onReset={resetResponsiveDefaults}
+                    />
                     <p className="adaire-device-toggle-status">
                         {__('Configuring:', 'adaire-blocks-dev2')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
                     </p>
-                </div>
+                </PanelBody>
 
-                <PanelBody title={__('Background & Overlay', 'adaire-blocks-dev2')}>
+                <PanelBody section="style" priority="high" title={__('Background & Overlay', 'adaire-blocks-dev2')}>
                     <PanelColorSettings
                         title={__('Solid Background Color', 'adaire-blocks-dev2')}
                         initialOpen={false}
@@ -731,7 +758,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
                 </PanelBody>
 
-                <PanelBody title={__('Layout Settings', 'adaire-blocks-dev2')}>
+                <PanelBody section="layout" title={__('Layout Settings', 'adaire-blocks-dev2')}>
                     <ToggleControl
                         label={__('Show Heading', 'adaire-blocks-dev2')}
                         checked={showHeading !== false}
@@ -799,12 +826,6 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         </div>
                     </div>
 
-                    <BoxControl
-                        label={__('Block Padding', 'adaire-blocks-dev2')}
-                        values={responsivePadding[deviceType]}
-                        onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, val)}
-                    />
-
                     <UnitControl
                         label={__('Grid Width', 'adaire-blocks-dev2')}
                         value={responsiveGridWidth[deviceType]}
@@ -812,7 +833,15 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Typography Settings', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Container Spacing', 'adaire-blocks-dev2')} initialOpen={false}>
+                    <BoxControl
+                        label={__('Block Padding', 'adaire-blocks-dev2')}
+                        values={responsivePadding[deviceType]}
+                        onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, val)}
+                    />
+                </PanelBody>
+
+                <PanelBody section="style" priority="high" title={__('Typography Settings', 'adaire-blocks-dev2')} initialOpen={false}>
                     <SelectControl
                         label={__('Font Family', 'adaire-blocks-dev2')}
                         value={fontFamily || ''}
@@ -861,7 +890,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Item Styles', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Item Styles', 'adaire-blocks-dev2')} initialOpen={false}>
                     <UnitControl
                         label={__('Icon Size', 'adaire-blocks-dev2')}
                         value={responsiveIconSize[deviceType]}
@@ -930,7 +959,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Manage Grid Items', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody section="content" title={__('Manage Grid Items', 'adaire-blocks-dev2')} initialOpen={false}>
                     <Button
                         variant="primary"
                         icon={plus}
