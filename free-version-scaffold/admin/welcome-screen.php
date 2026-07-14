@@ -488,9 +488,9 @@ class Adaire_Welcome_Screen {
         #abw-scene .abw-scene-lottie{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:32px;box-sizing:border-box;pointer-events:none;z-index:2;}
         #abw-scene .abw-scene-lottie svg{display:block;width:100%!important;height:100%!important;}
         /* ── Word scene corner Lotties (step 2) ── */
-        .abw-swl{position:absolute;bottom:-180px;width:380px;height:380px;pointer-events:none;z-index:3;}
-        .abw-swl-l{left:-65px;}
-        .abw-swl-r{right:-65px;}
+        .abw-swl{position:absolute;bottom:-20px;width:300px;height:300px;pointer-events:none;z-index:3;}
+        .abw-swl-l{left:-30px;}
+        .abw-swl-r{right:-30px;}
 
         /* ── Scene complete ring animations ── */
         @keyframes abwRingIn { from{opacity:0;transform:scale(.7)} to{opacity:1;transform:scale(1)} }
@@ -550,7 +550,11 @@ class Adaire_Welcome_Screen {
                 <div class="abw-top-right">
                     <span class="abw-counter" id="abw-counter">Step 1 of 5</span>
                     <a href="<?php echo esc_url( $exit_url ); ?>" class="abw-top-exit"><?php esc_html_e( 'Skip setup →', 'adaire-blocks' ); ?></a>
+<<<<<<< Updated upstream
                     <a href="https://adaire.digital/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
+>>>>>>> Stashed changes
+=======
+                    <a href="https://gutenblocks.com/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
 >>>>>>> Stashed changes
                 </div>
             </nav>
@@ -1174,13 +1178,17 @@ class Adaire_Welcome_Screen {
                 return true;
             });
             E.scene.querySelectorAll('.abw-swl').forEach(function(el){el.parentNode&&el.parentNode.removeChild(el);});
+<<<<<<< Updated upstream
             var frame=E.scene.querySelector('.abw-sw-frame');
             if(!frame||typeof lottie==='undefined')return;
+=======
+            if(typeof lottie==='undefined')return;
+>>>>>>> Stashed changes
             [[leftUrl,'abw-swl abw-swl-l'],[rightUrl,'abw-swl abw-swl-r']].forEach(function(pair){
                 if(!pair[0])return;
                 var el=document.createElement('div');
                 el.className=pair[1];
-                frame.appendChild(el);
+                E.scene.appendChild(el);
                 var anim=lottie.loadAnimation({container:el,renderer:'svg',loop:true,autoplay:true,path:pair[0]});
                 anim._isWordLottie=true;_sceneAnims.push(anim);
                 tFromTo(el,{opacity:0,scale:0.4},{opacity:1,scale:1},0.4,'back.out(2.2)');
@@ -1366,14 +1374,21 @@ class Adaire_Welcome_Screen {
         }
 
         function sceneTemplateUpdate(color,label){
-            var topHero=document.querySelector('.abw-sk:last-child .abw-sk-hero');
-            var topLbl=document.getElementById('abw-sk-lbl');
+            var cards=E.scene.querySelectorAll('.abw-sk');
+            if(!cards.length)return;
+            var top=cards[cards.length-1];
+            var topHero=top.querySelector('.abw-sk-hero');
+            var topLbl=top.querySelector('#abw-sk-lbl');
             if(!topHero)return;
             topHero.style.transition='background .4s ease';
             topHero.style.background='linear-gradient(130deg,'+color+','+color+'bb)';
             if(topLbl)topLbl.textContent=label;
-            var top=document.querySelector('.abw-sk:last-child');
-            if(top)tFromTo(top,{scale:.95},{scale:1},.4,'back.out(1.8)');
+            var base=top.style.transform.replace(/\s*scale\([^)]*\)/g,'');
+            top.style.transition='none';
+            top.style.transform=base+' scale(0.95)';
+            void top.offsetWidth;
+            top.style.transition='transform .4s cubic-bezier(0.34,1.56,0.64,1)';
+            top.style.transform=base;
         }
 
         function sceneSpotlight(){
