@@ -499,6 +499,23 @@ class Adaire_Welcome_Screen {
         @media(prefers-reduced-motion:reduce){
             .abw,.abw *{animation:none!important;transition:none!important;}
         }
+
+        /* ── Pro upgrade popup ── */
+        .abw-pro-overlay{position:fixed;inset:0;background:rgba(20,24,31,.55);backdrop-filter:blur(3px);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+        .abw-pro-overlay.is-open{opacity:1;pointer-events:all;}
+        .abw-pro-modal{background:#fff;border-radius:var(--r-lg);padding:36px 32px 28px;width:360px;max-width:calc(100vw - 32px);box-shadow:var(--sh3);position:relative;transform:translateY(18px) scale(.96);transition:transform .28s cubic-bezier(0.34,1.56,0.64,1);}
+        .abw-pro-overlay.is-open .abw-pro-modal{transform:translateY(0) scale(1);}
+        .abw-pro-close{position:absolute;top:14px;right:14px;background:none;border:none;cursor:pointer;color:var(--faint);padding:4px;line-height:1;border-radius:6px;transition:color .15s,background .15s;}
+        .abw-pro-close:hover{color:var(--ink);background:var(--line);}
+        .abw-pro-icon{width:48px;height:48px;background:var(--accent-t);border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--accent);margin-bottom:16px;}
+        .abw-pro-icon svg{width:24px;height:24px;}
+        .abw-pro-feat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-bottom:6px;}
+        .abw-pro-title{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:var(--ink);margin:0 0 10px;line-height:1.25;}
+        .abw-pro-desc{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0 0 24px;}
+        .abw-pro-cta{display:block;width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-pill);font-size:14px;font-weight:600;cursor:pointer;text-align:center;text-decoration:none;transition:background .18s;}
+        .abw-pro-cta:hover{background:var(--accent-d);color:#fff;text-decoration:none;}
+        .abw-pro-later{display:block;text-align:center;margin-top:12px;font-size:12.5px;color:var(--faint);cursor:pointer;background:none;border:none;width:100%;padding:4px;transition:color .15s;}
+        .abw-pro-later:hover{color:var(--ink);}
         </style>
 
 <<<<<<< Updated upstream
@@ -856,6 +873,22 @@ class Adaire_Welcome_Screen {
                     <button class="abw-cont" id="abw-cont" disabled><?php esc_html_e( 'Continue →', 'adaire-blocks' ); ?></button>
                 </div>
             </footer>
+
+            <div class="abw-pro-overlay" id="abw-pro-overlay" role="dialog" aria-modal="true">
+                <div class="abw-pro-modal">
+                    <button class="abw-pro-close" id="abw-pro-close" aria-label="Close">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                    <div class="abw-pro-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <div class="abw-pro-feat" id="abw-pro-feat">Pro Feature</div>
+                    <h3 class="abw-pro-title" id="abw-pro-title">Unlock this feature</h3>
+                    <p class="abw-pro-desc"><?php esc_html_e( 'This feature is available on GutenBlocks Pro. Upgrade to access advanced blocks, animations, and more — all inside the editor you already love.', 'adaire-blocks' ); ?></p>
+                    <a href="https://gutenblocks.com/pro/" target="_blank" rel="noopener" class="abw-pro-cta"><?php esc_html_e( 'Upgrade to Pro →', 'adaire-blocks' ); ?></a>
+                    <button class="abw-pro-later" id="abw-pro-later"><?php esc_html_e( 'Maybe later', 'adaire-blocks' ); ?></button>
+                </div>
+            </div>
         </div>
 
         <script>
@@ -968,6 +1001,26 @@ class Adaire_Welcome_Screen {
             skip:     document.getElementById('abw-skip'),
             cont:     document.getElementById('abw-cont')
         };
+
+        /* ── Pro upgrade popup ── */
+        var _proOverlay  = document.getElementById('abw-pro-overlay');
+        var _proFeat     = document.getElementById('abw-pro-feat');
+        var _proTitle    = document.getElementById('abw-pro-title');
+        var _proClose    = document.getElementById('abw-pro-close');
+        var _proLater    = document.getElementById('abw-pro-later');
+
+        function showProUpgrade(featureName){
+            if(_proFeat)  _proFeat.textContent  = featureName + ' — Pro Feature';
+            if(_proTitle) _proTitle.textContent  = 'Unlock ' + featureName;
+            if(_proOverlay) _proOverlay.classList.add('is-open');
+        }
+        function closeProUpgrade(){
+            if(_proOverlay) _proOverlay.classList.remove('is-open');
+        }
+        if(_proClose)  _proClose.addEventListener('click', closeProUpgrade);
+        if(_proLater)  _proLater.addEventListener('click', closeProUpgrade);
+        if(_proOverlay) _proOverlay.addEventListener('click', function(e){ if(e.target===_proOverlay) closeProUpgrade(); });
+        document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeProUpgrade(); });
 
         var ICONS = {
             briefcase: '<rect x="3" y="7" width="18" height="12" rx="1.5"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/>',
@@ -1214,6 +1267,7 @@ class Adaire_Welcome_Screen {
                 if(opt.desc)html+='<span class="abw-opt-desc">'+opt.desc+'</span>';
                 btn.innerHTML=html;
                 btn.addEventListener('click',function(){
+                    if(step.scene==='spotlight'&&opt.pro){ showProUpgrade(opt.label); return; }
                     var stepLotties=(LOTTIE_MAP&&LOTTIE_MAP[current])?LOTTIE_MAP[current]:{};
                     if(step.type==='single'){
                         if(sel[current]===i){
