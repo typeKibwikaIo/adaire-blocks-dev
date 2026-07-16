@@ -176,19 +176,70 @@ function ToggleCtrl( { label, value, onChange } ) {
 	);
 }
 
-/** Select dropdown: label above, full-width select below */
+// Human-readable labels for common enum values that formatLabel() can't handle well
+const ENUM_LABELS = {
+	'bottom-sheet':  'Bottom Sheet',
+	'drawer-right':  '→ Right Drawer',
+	'drawer-left':   'Left Drawer ←',
+	'slide-up':      'Slide ↑',
+	'slide-down':    'Slide ↓',
+	'zoom-in':       'Zoom In',
+	'zoom-out':      'Zoom Out',
+	'ease-out':      'Ease Out',
+	'ease-in-out':   'Ease In-Out',
+	'cubic-bezier(0.34, 1.56, 0.64, 1)': 'Spring',
+	'exit-intent':   'Exit Intent',
+	'top-right':     'Top Right',
+	'top-left':      'Top Left',
+	'outside-right': 'Out Top Right',
+	'outside-left':  'Out Top Left',
+	'bottom-right':  'Bottom Right',
+	'bottom-left':   'Bottom Left',
+};
+
+function enumLabel( v ) {
+	return ENUM_LABELS[ v ] || formatLabel( v );
+}
+
+/** Visual chip grid — shows ALL options at once as clickable pill buttons */
 function SelectCtrl( { label, value, schema, onChange } ) {
 	const options = ( schema.enum || [] );
+
+	// For long enum values (like cubic-bezier strings) fall back to a <select>
+	const useFallback = options.some( o => o.length > 30 );
+	if ( useFallback ) {
+		return (
+			<div className="adaire-ep__ctrl-block">
+				<CtrlLabel label={ label } />
+				<select
+					value={ value ?? '' }
+					onChange={ e => onChange( e.target.value ) }
+					className="adaire-ep__select"
+				>
+					{ options.map( o => <option key={ o } value={ o }>{ enumLabel( o ) }</option> ) }
+				</select>
+			</div>
+		);
+	}
+
 	return (
 		<div className="adaire-ep__ctrl-block">
 			<CtrlLabel label={ label } />
-			<select
-				value={ value ?? '' }
-				onChange={ e => onChange( e.target.value ) }
-				className="adaire-ep__select"
-			>
-				{ options.map( o => <option key={ o } value={ o }>{ formatLabel( o ) }</option> ) }
-			</select>
+			<div className="adaire-ep__chip-grid">
+				{ options.map( o => {
+					const active = ( value ?? schema.default ?? options[0] ) === o;
+					return (
+						<button
+							key={ o }
+							type="button"
+							className={ `adaire-ep__chip ${ active ? 'is-active' : '' }` }
+							onClick={ () => onChange( o ) }
+						>
+							{ enumLabel( o ) }
+						</button>
+					);
+				} ) }
+			</div>
 		</div>
 	);
 }
