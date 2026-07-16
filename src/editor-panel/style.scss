@@ -358,6 +358,44 @@ body.adaire-ep-active.adaire-ep-collapsed {
 		&:focus { border-color: var( --ep-border-focus ); }
 	}
 
+	// ── Chip grid: visual option picker replacing <select> for enum attrs ──
+	&__chip-grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+	}
+
+	&__chip {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px 10px;
+		font-size: 11px;
+		font-weight: 500;
+		font-family: var( --ep-font );
+		line-height: 1.3;
+		border: 1.5px solid var( --ep-border );
+		border-radius: 20px;
+		background: var( --ep-bg );
+		color: var( --ep-muted );
+		cursor: pointer;
+		white-space: nowrap;
+		transition: border-color var( --ep-transition ), background var( --ep-transition ), color var( --ep-transition );
+
+		&:hover:not( .is-active ) {
+			border-color: #c7d2fe;
+			background: #f0f4ff;
+			color: #4338ca;
+		}
+
+		&.is-active {
+			border-color: var( --ep-accent );
+			background: #eff6ff;
+			color: var( --ep-accent );
+			font-weight: 600;
+		}
+	}
+
 	// ── Toggle: pill LEFT, label RIGHT ───────────────────────────────────
 	&__toggle-row {
 		display: flex;
