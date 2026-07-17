@@ -416,7 +416,18 @@ export default function Edit({ attributes, setAttributes }) {
 				splideInstanceRef.current = null;
 			}
 		};
-	}, [testimonials, slidesPerView, spaceBetween, loop, navigation, pagination, scrollbar, arrowColor, dotColor, slidesPerViewMobile, slidesPerViewTablet, slidesPerViewDesktop]);
+	// `testimonials.length` (not `testimonials` itself) is intentional — Splide
+	// only needs to reinitialize when a slide is added/removed. The slide DOM
+	// nodes are ordinary React children of `splideRef` (type: 'slide', not
+	// 'loop', so Splide never clones them away from React's control — see the
+	// comment on `type: 'slide'` below), so editing a testimonial's text just
+	// re-renders content inside the already-mounted carousel. Depending on the
+	// full `testimonials` array here meant every keystroke in any card field
+	// replaced the array reference, destroying and rebuilding the whole Splide
+	// instance mid-edit — visible as the carousel losing its multi-card layout
+	// and collapsing to a stacked single column for a moment before Splide
+	// remounted, i.e. the block appearing to "switch between list and grid".
+	}, [testimonials.length, slidesPerView, spaceBetween, loop, navigation, pagination, scrollbar, arrowColor, dotColor, slidesPerViewMobile, slidesPerViewTablet, slidesPerViewDesktop]);
 
 	// Testimonial management functions
 	const updateTestimonial = (index, field, value) => {

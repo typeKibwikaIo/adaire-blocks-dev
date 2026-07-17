@@ -1196,7 +1196,7 @@ return (
                                 className="adaire-posts-grid__heading"
                                 value={headingText}
                                 onChange={(value) => setAttributes({ headingText: value })}
-                                placeholder={__('Add headingâ€¦', 'posts-grid-block')}
+                                placeholder={__('Add heading...', 'posts-grid-block')}
                                 allowedFormats={[
                                     'core/bold',
                                     'core/italic',
