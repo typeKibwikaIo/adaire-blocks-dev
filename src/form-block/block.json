@@ -3,9 +3,9 @@
   "apiVersion": 3,
   "name": "create-block/form-block",
   "version": "0.1.0",
-  "title": "Form",
-  "category": "adaire-start-actions",
-  "description": "Form block for Guten-Blocks.",
+  "title": "Booking Form",
+  "category": "adaire-business",
+  "description": "Booking Form block for Adaire Blocks.",
   "supports": {
     "html": false,
     "anchor": true
@@ -18,19 +18,19 @@
   "attributes": {
     "eyebrow": {
       "type": "string",
-      "default": "Contact"
+      "default": "Booking"
     },
     "heading": {
       "type": "string",
-      "default": "Send us a message"
+      "default": "Book a consultation"
     },
     "text": {
       "type": "string",
-      "default": "A clean starter form layout for collecting user enquiries."
+      "default": "Collect visitor details and preferred appointment dates."
     },
     "buttonText": {
       "type": "string",
-      "default": "Submit"
+      "default": "Book now"
     },
     "buttonUrl": {
       "type": "string",
@@ -52,61 +52,61 @@
       "type": "string",
       "default": ""
     },
-    "ccEmail": {
+    "services": {
+      "type": "string",
+      "default": "Consultation, Demo, Support"
+    },
+    "calendarEmbedUrl": {
       "type": "string",
       "default": ""
-    },
-    "bccEmail": {
-      "type": "string",
-      "default": ""
-    },
-    "subject": {
-      "type": "string",
-      "default": "Website enquiry"
     },
     "successMessage": {
       "type": "string",
-      "default": "Thanks, your message has been sent."
+      "default": "Thanks, your booking request was received."
     },
     "redirectUrl": {
       "type": "string",
       "default": ""
     },
-    "showPhoneCondition": {
+    "layout": {
+      "type": "string",
+      "default": "two"
+    },
+    "mobileFullButton": {
       "type": "boolean",
       "default": true
     },
-    "allowAttachment": {
-      "type": "boolean",
-      "default": true
-    },
-    "gdprText": {
+    "inputColor": {
       "type": "string",
-      "default": "I agree to the privacy policy."
+      "default": "#ffffff"
     },
-    "submitStyle": {
-      "type": "string",
-      "default": "filled"
-    },
-    "errorColor": {
-      "type": "string",
-      "default": "#ef4444"
-    },
-    "focusColor": {
-      "type": "string",
-      "default": "#d52940"
-    },
-    "fieldBorderColor": {
+    "inputBorderColor": {
       "type": "string",
       "default": "#d1d5db"
     },
-    "fieldRadius": {
+    "inputRadius": {
       "type": "number",
       "default": 12
     },
-    "formPadding": {
+    "labelFontSize": {
       "type": "number",
-      "default": 28
+      "default": 14
+    },
+    "labelFontWeight": {
+      "type": "string",
+      "default": "700"
+    },
+    "headingColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "subheadingColor": {
+      "type": "string",
+      "default": "#d1d5db"
+    },
+    "honeypot": {
+      "type": "boolean",
+      "default": true
     },
     "buttonWidth": {
       "type": "string",
@@ -169,17 +169,32 @@
           "width": "half"
         },
         {
-          "label": "Subject",
-          "name": "subject",
-          "type": "text",
-          "required": false,
+          "label": "Date",
+          "name": "date",
+          "type": "date",
+          "required": true,
           "width": "half"
         },
         {
-          "label": "Message",
-          "name": "message",
-          "type": "textarea",
+          "label": "Time",
+          "name": "time",
+          "type": "time",
           "required": true,
+          "width": "half"
+        },
+        {
+          "label": "Service",
+          "name": "service",
+          "type": "select",
+          "required": false,
+          "width": "half",
+          "options": "Consultation, Demo, Support"
+        },
+        {
+          "label": "Notes",
+          "name": "notes",
+          "type": "textarea",
+          "required": false,
           "width": "full"
         }
       ]

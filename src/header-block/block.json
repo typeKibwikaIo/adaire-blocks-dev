@@ -462,11 +462,11 @@
             "type": "number",
             "default": 16
         },
-        "gutenblocksMargin": {
+        "AdaireBlocksMargin": {
             "type": "object",
             "default": {}
         },
-        "gutenblocksPadding": {
+        "AdaireBlocksPadding": {
             "type": "object",
             "default": {}
         },

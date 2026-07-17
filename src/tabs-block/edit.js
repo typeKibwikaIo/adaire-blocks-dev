@@ -160,7 +160,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     const isVertical = tabLayout === 'vertical';
 
     // Animation customization is a paid feature (config-driven so the
-    // freemium distribution can unlock it without a rebuild)
+    // pro distribution can unlock it without a rebuild)
     const tabsBlockConfig = window.adaireBlocksConfig?.blocks?.['tabs-block'] || {};
     const tabsBlockLimits = tabsBlockConfig.limits || {};
     const isFree = !window.adaireBlocksConfig?.isPremium;
@@ -618,7 +618,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
                 </PanelBody>
 
-                {/* ————— LAYOUT TAB: Animation (freemium-gated) ————— */}
+                {/* ————— LAYOUT TAB: Animation (pro-gated) ————— */}
                 <PanelBody section="layout" title={__('Animation', 'tabs-block')} initialOpen={false}>
                     <p style={helpTextStyle}>
                         {__('Controls how panels fade and slide when switching tabs.', 'tabs-block')}

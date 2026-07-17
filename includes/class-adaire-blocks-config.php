@@ -1,7 +1,7 @@
 <?php
 /**
  * Configuration Manager for Adaire Blocks
- * Handles free vs premium feature availability
+ * Handles free vs pro feature availability
  *
  * @package AdaireBlocks
  */
@@ -35,7 +35,7 @@ class AdaireBlocksConfig {
     }
 
     /**
-     * Detect plugin version (free or premium)
+     * Detect plugin version (free or pro)
      */
     private function detect_plugin_version() {
         // Method 1: Check config file for version flag
@@ -49,17 +49,28 @@ class AdaireBlocksConfig {
                 return 'free';
             }
 
-            // Check if premium config is empty (indicates free version)
-            if (isset($config['premium']) && empty($config['premium'])) {
+            // Check if pro config exists and is non-empty
+            if (isset($config['pro']) && !empty($config['pro'])) {
+                return 'pro';
+            }
+
+            // Check if legacy premium config exists and map it to pro
+            if (isset($config['premium']) && !empty($config['premium'])) {
+                return 'pro';
+            }
+
+            // Check if pro/premium config is empty (indicates free version)
+            if ((isset($config['pro']) && empty($config['pro'])) || (isset($config['premium']) && empty($config['premium']))) {
                 return 'free';
             }
         }
 
-        // Method 2: Check for premium-only files (NOT update-checker related)
-        // Check for a premium-specific admin file
-        $premium_marker = ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/premium-features.php';
-        if (!file_exists($premium_marker)) {
-            // No premium marker file = likely free version
+        // Method 2: Check for pro-only files (NOT update-checker related)
+        // Check for a pro-specific admin file (fall back to legacy premium marker)
+        $pro_marker = ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/pro-features.php';
+        $legacy_premium_marker = ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/premium-features.php';
+        if (!file_exists($pro_marker) && !file_exists($legacy_premium_marker)) {
+            // No pro marker or legacy premium marker file = likely free version
             // But only if we have the free config
             if (file_exists($this->config_file)) {
                 $config_content = file_get_contents($this->config_file);
@@ -70,9 +81,9 @@ class AdaireBlocksConfig {
             }
         }
 
-        // Method 3: Check if premium license is active
-        if ($this->is_premium_license_active()) {
-            return 'premium';
+        // Method 3: Check if pro license is active
+        if ($this->is_pro_license_active()) {
+            return 'pro';
         }
 
         // Default to free version when license is inactive
@@ -80,9 +91,9 @@ class AdaireBlocksConfig {
     }
 
     /**
-     * Check if premium license is active
+     * Check if pro license is active
      */
-    private function is_premium_license_active() {
+    private function is_pro_license_active() {
         // Use the new license system
         if (class_exists('AdaireBlocksLicense')) {
             $license_manager = AdaireBlocksLicense::get_instance();
@@ -126,11 +137,6 @@ class AdaireBlocksConfig {
             return $version_config[$block_name];
         }
 
-        // For premium users, also check the plus category
-        if ($this->plugin_version === 'premium' && isset($this->config_data['plus'][$block_name])) {
-            return $this->config_data['plus'][$block_name];
-        }
-
         return array();
     }
 
@@ -163,14 +169,14 @@ class AdaireBlocksConfig {
      */
     public function get_upgrade_message($block_name) {
         $config = $this->get_block_config($block_name);
-        return $config['upgradeMessage'] ?? 'Upgrade to Premium for more features.';
+        return $config['upgradeMessage'] ?? 'Upgrade to Pro for more features.';
     }
 
     /**
      * Check if feature is available
      */
     public function is_feature_available($block_name, $feature) {
-        if ($this->plugin_version === 'premium') {
+        if ($this->plugin_version === 'pro') {
             return true;
         }
 
@@ -182,7 +188,7 @@ class AdaireBlocksConfig {
      * Check if limit is reached
      */
     public function is_limit_reached($block_name, $limit_key, $current_value) {
-        if ($this->plugin_version === 'premium') {
+        if ($this->plugin_version === 'pro') {
             return false;
         }
 
@@ -204,10 +210,17 @@ class AdaireBlocksConfig {
     }
 
     /**
-     * Check if premium features are available
+     * Check if pro features are available
+     */
+    public function is_pro() {
+        return $this->plugin_version === 'pro';
+    }
+
+    /**
+     * Backwards compatibility alias for pro feature checks
      */
     public function is_premium() {
-        return $this->plugin_version === 'premium';
+        return $this->is_pro();
     }
 
     /**
@@ -220,15 +233,6 @@ class AdaireBlocksConfig {
         foreach ($version_config as $block_name => $config) {
             if (isset($config['enabled']) && $config['enabled']) {
                 $available_blocks[] = $block_name;
-            }
-        }
-
-        // For premium users, also include plus blocks
-        if ($this->plugin_version === 'premium' && isset($this->config_data['plus'])) {
-            foreach ($this->config_data['plus'] as $block_name => $config) {
-                if (isset($config['enabled']) && $config['enabled']) {
-                    $available_blocks[] = $block_name;
-                }
             }
         }
 
@@ -275,12 +279,12 @@ class AdaireBlocksConfig {
                 </svg>
             </div>
             <h3 style="margin: 0 0 10px 0; color: #0073aa; font-size: 18px;">
-                <?php echo esc_html__('Premium Feature', 'adaire-blocks'); ?>
+                <?php echo esc_html__('Pro Feature', 'adaire-blocks'); ?>
             </h3>
             <p style="margin: 0 0 15px 0; color: #333; line-height: 1.5;">
                 <?php echo esc_html($message); ?>
             </p>
-            <a href="https://adaireblocks.com/premium"
+            <a href="https://adaireblocks.com/pro"
                target="_blank"
                rel="noopener noreferrer"
                style="
@@ -295,7 +299,7 @@ class AdaireBlocksConfig {
                "
                onmouseover="this.style.backgroundColor='#005177'"
                onmouseout="this.style.backgroundColor='#0073aa'">
-                <?php echo esc_html__('Upgrade to Premium', 'adaire-blocks'); ?>
+                <?php echo esc_html__('Upgrade to Pro', 'adaire-blocks'); ?>
             </a>
         </div>
         <?php

@@ -18,9 +18,10 @@ define('ADAIRE_FEEDBACK_EMAIL', 'feedback@yourdomain.com');
 ```
 
 ## 3) Verify it works
-1. Go to **Tools → GutenBlocks Deactivation Logs**.
+1. Go to **Tools → AdaireBlocks Deactivation Logs**.
 2. Use **Send Test Email** to send a test message.
 3. Check the inbox for the test email.
 
 ## Notes
-- The **Tools → GutenBlocks Deactivation Logs** page is for setup/testing only. Remove it before production so clients cannot access it.
+- The **Tools → AdaireBlocks Deactivation Logs** page is for setup/testing only. Remove it before production so clients cannot access it.
+

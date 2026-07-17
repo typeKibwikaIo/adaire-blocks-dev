@@ -526,7 +526,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					const backBtn = document.createElement("button");
 					backBtn.className = "adaire-mobile-menu__back-btn";
 					backBtn.setAttribute("aria-label", "Back");
-					backBtn.innerHTML = "â†";
+					backBtn.innerHTML = "\u2190";
 					backBtn.addEventListener("click", goBack);
 					leftControls.appendChild(backBtn);
 				}
@@ -548,7 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
 						const backBtnClone = document.createElement("button");
 						backBtnClone.className = "adaire-mobile-menu__back-btn";
 						backBtnClone.setAttribute("aria-label", "Back");
-						backBtnClone.innerHTML = "â†";
+						backBtnClone.innerHTML = "\u2190";
 						backBtnClone.addEventListener("click", goBack);
 						leftSide.appendChild(backBtnClone);
 					}
@@ -619,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					if (itm.children && itm.children.length) {
 						const chevron = document.createElement("span");
 						chevron.className = "adaire-mobile-menu__chevron";
-						chevron.textContent = "â€º";
+						chevron.textContent = "\u203A";
 						content.appendChild(chevron);
 					}
 

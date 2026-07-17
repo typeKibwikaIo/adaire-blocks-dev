@@ -494,7 +494,7 @@
         "responsive-spacing-and-typography"
       ]
     },
-    "infogrid-4-block": {
+    "bento-grid-block": {
       "enabled": true,
       "limits": {},
       "features": [
@@ -862,7 +862,7 @@
         "responsive-spacing-and-typography"
       ]
     },
-    "infogrid-4-block": {
+    "bento-grid-block": {
       "enabled": true,
       "limits": {},
       "features": [

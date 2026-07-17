@@ -10,7 +10,7 @@ let currentMessageHandler = null;
 let currentTimeout = null;
 
 function startMigration() {
-    if (!confirm('Are you sure you want to start the migration? This will update all posts, pages, and patterns with Guten-Blocks.')) {
+    if (!confirm('Are you sure you want to start the migration? This will update all posts, pages, and patterns with Adaire Blocks.')) {
         return;
     }
 
@@ -51,8 +51,8 @@ function startMigration() {
             addLog(`📊 Search Results:`);
             addLog(`   - Posts/Pages checked: ${data.data.posts_checked || 0}`);
             addLog(`   - Patterns checked: ${data.data.patterns_checked || 0}`);
-            addLog(`   - Posts/Pages with Guten-Blocks: ${postsCount}`);
-            addLog(`   - Patterns with Guten-Blocks: ${patternsCount}`);
+            addLog(`   - Posts/Pages with Adaire Blocks: ${postsCount}`);
+            addLog(`   - Patterns with Adaire Blocks: ${patternsCount}`);
             
             if (postsCount > 0 && patternsCount > 0) {
                 addLog(`✅ Found ${totalItems} item${totalItems !== 1 ? 's' : ''} to migrate (${postsCount} post${postsCount !== 1 ? 's' : ''}, ${patternsCount} pattern${patternsCount !== 1 ? 's' : ''})`);
@@ -61,7 +61,7 @@ function startMigration() {
             } else if (patternsCount > 0) {
                 addLog(`✅ Found ${totalItems} pattern${totalItems !== 1 ? 's' : ''} to migrate`);
             } else {
-                addLog(`ℹ️ No items found with Guten-Blocks to migrate`);
+                addLog(`ℹ️ No items found with Adaire Blocks to migrate`);
             }
             
             if (totalItems === 0) {

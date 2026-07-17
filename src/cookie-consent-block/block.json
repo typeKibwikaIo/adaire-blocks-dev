@@ -4,7 +4,7 @@
   "name": "create-block/cookie-consent-block",
   "version": "0.2.0",
   "title": "Cookie Banner",
-  "category": "adaire-freemium",
+  "category": "adaire-business",
   "description": "GDPR/CCPA-ready cookie consent banner with category-based preferences, multiple layouts, and full style controls.",
   "keywords": ["cookie", "consent", "gdpr", "privacy", "banner"],
   "supports": {

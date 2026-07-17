@@ -157,8 +157,8 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 			$styles['--adaire-header-cta-border'] = $attributes['ctaBorderColor'];
 		}
 
-		$margin_css  = adaire_header_box_to_css( isset( $attributes['gutenblocksMargin'] ) ? $attributes['gutenblocksMargin'] : null );
-		$padding_css = adaire_header_box_to_css( isset( $attributes['gutenblocksPadding'] ) ? $attributes['gutenblocksPadding'] : null );
+		$margin_css  = adaire_header_box_to_css( isset( $attributes['AdaireBlocksMargin'] ) ? $attributes['AdaireBlocksMargin'] : null );
+		$padding_css = adaire_header_box_to_css( isset( $attributes['AdaireBlocksPadding'] ) ? $attributes['AdaireBlocksPadding'] : null );
 		if ( $margin_css ) {
 			$styles['margin'] = $margin_css;
 		}
@@ -617,3 +617,4 @@ $html .= '</div>'; // .adaire-header-inner
 $html .= '</header>';
 
 echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- every dynamic value above is escaped at the point of interpolation.
+

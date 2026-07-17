@@ -83,10 +83,22 @@
 	}
 
 	a {
-	
+
 
 		&:focus {
 			outline-style: none;
+		}
+
+		// Restore a visible focus indicator for keyboard users only — the
+		// unconditional `outline-style: none` above otherwise leaves Tab
+		// navigation with no visual indication of what's focused anywhere
+		// in the menu (WCAG 2.4.7 Focus Visible failure). :focus-visible
+		// keeps mouse/touch clicks free of the ring while still showing it
+		// for keyboard focus, matching the intent of the rule above.
+		&:focus-visible {
+			outline: 2px solid var(--mega-menu-hover-color, #428aff);
+			outline-offset: 2px;
+			border-radius: 2px;
 		}
 
 		// color: inherit;
@@ -379,16 +391,24 @@
 		position: fixed;
 		z-index: 3000;
 		top: var(--mega-menu-dropdown-top, 70px);
-		right: var(--mega-menu-padding-right);
+		// Full-width and centered under the navbar, capped to the same
+		// width as the navbar's own content in "constrained" mode (see
+		// --mega-menu-dropdown-max-width in the PHP render callback) —
+		// rather than pinned to the navbar's right edge with a fixed
+		// 800px width regardless of which item triggered it, which put
+		// the panel in the same spot on screen no matter where in the
+		// menu bar you actually clicked or focused.
+		left: 0;
+		right: 0;
+		width: 100%;
+		max-width: var(--mega-menu-dropdown-max-width, none);
+		margin-left: auto;
+		margin-right: auto;
 		background: var(--mega-menu-bg-color);
 		overflow: hidden;
 		transform: translateY(-10px);
 		display: flex;
 		flex-direction: column;
-		min-width: 800px;
-        @media(min-width: 2000px){
-		min-width: 800px;
-        }
 		justify-content: space-evenly;
 		align-items: flex-start;
 		gap: var(--menu-panel-gap, 16px); //variable connected to bottom padding
@@ -409,11 +429,15 @@
 			color: var(--mega-menu-active-color);
 		}
 
+		// These two size modifiers keep the same centered left:0/right:0
+		// positioning as the base rule above (so they're no longer pinned
+		// to either edge regardless of trigger either), just overriding
+		// width down to auto/content-driven sizing instead of the base
+		// rule's full-width default.
 		&.smaller{
+			width: auto;
+			max-width: 380px;
 			min-width: 300px;
-			width: 380px;
-			right: unset;
-
 
 			& ul {
 				gap: 0px;
@@ -421,9 +445,9 @@
 		}
 
 		&.smallest {
+			width: auto;
+			max-width: none;
 			min-width: unset;
-			// width: 0px;
-			right: unset;
 			// padding: 16px;
 			// gap: 12px;
 
@@ -940,7 +964,13 @@
 	}
 
 	// Hover effects
-	&__dropdown:hover &__menu {
+	// :focus-within is the keyboard equivalent of :hover here — without it,
+	// Tab-only navigation can never reveal this content at all (the JS
+	// focus/keydown handling that exists elsewhere in this block is only
+	// wired up when "keepCanvasOpenOnClick" is enabled, which defaults to
+	// off), a WCAG 2.1.1 Keyboard failure for every menu using defaults.
+	&__dropdown:hover &__menu,
+	&__dropdown:focus-within &__menu {
 		opacity: 1;
 		visibility: visible;
 		transform: translateY(0);
@@ -952,7 +982,8 @@
 		visibility: visible;
 	}
 
-	&__dropdown:hover &__chevron {
+	&__dropdown:hover &__chevron,
+	&__dropdown:focus-within &__chevron {
 		transform: rotate(180deg);
 	}
 

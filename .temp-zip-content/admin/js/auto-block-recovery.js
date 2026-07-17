@@ -45,11 +45,11 @@
 		}
 		
 		// Log that the script is loaded
-		logToParent( '[GutenBlocks Blocks] Auto-recovery script loaded!' );
-		logToParent( '[GutenBlocks Blocks] Current URL: ' + window.location.href );
-		logToParent( '[GutenBlocks Blocks] wp object available: ' + (typeof wp !== 'undefined') );
-		logToParent( '[GutenBlocks Blocks] wp.data available: ' + (typeof wp !== 'undefined' && typeof wp.data !== 'undefined') );
-		logToParent( '[GutenBlocks Blocks] wp.blocks available: ' + (typeof wp !== 'undefined' && typeof wp.blocks !== 'undefined') );
+		logToParent( '[AdaireBlocks Blocks] Auto-recovery script loaded!' );
+		logToParent( '[AdaireBlocks Blocks] Current URL: ' + window.location.href );
+		logToParent( '[AdaireBlocks Blocks] wp object available: ' + (typeof wp !== 'undefined') );
+		logToParent( '[AdaireBlocks Blocks] wp.data available: ' + (typeof wp !== 'undefined' && typeof wp.data !== 'undefined') );
+		logToParent( '[AdaireBlocks Blocks] wp.blocks available: ' + (typeof wp !== 'undefined' && typeof wp.blocks !== 'undefined') );
 
 	// Check if wp.data is available.
 	// If it's not ready yet, wait for WordPress to load (both in migration mode and normal editor mode)
@@ -57,7 +57,7 @@
 		const isMigration = isMigrationMode;
 		const contextLabel = isMigration ? 'Migration' : 'Editor';
 		
-		logToParent( `[GutenBlocks Blocks ${contextLabel}] ⏳ WordPress not ready yet - waiting for dependencies...`, 'warn' );
+		logToParent( `[AdaireBlocks Blocks ${contextLabel}] ⏳ WordPress not ready yet - waiting for dependencies...`, 'warn' );
 
 		let wpWaitCount = 0;
 		const MAX_WP_WAIT = 200; // Check 200 times over 20 seconds (100ms intervals)
@@ -66,12 +66,12 @@
 			
 			if ( typeof wp !== 'undefined' && typeof wp.data !== 'undefined' ) {
 				clearInterval( wpWaitInterval );
-				logToParent( `[GutenBlocks Blocks ${contextLabel}] ✅ WordPress dependencies loaded after ` + (wpWaitCount * 100) + 'ms' );
+				logToParent( `[AdaireBlocks Blocks ${contextLabel}] ✅ WordPress dependencies loaded after ` + (wpWaitCount * 100) + 'ms' );
 				// Continue with initialization
 				initializeRecovery();
 			} else if ( wpWaitCount >= MAX_WP_WAIT ) {
 				clearInterval( wpWaitInterval );
-				logToParent( `[GutenBlocks Blocks ${contextLabel}] ❌ WordPress dependencies failed to load after 20 seconds`, 'error' );
+				logToParent( `[AdaireBlocks Blocks ${contextLabel}] ❌ WordPress dependencies failed to load after 20 seconds`, 'error' );
 				
 				// Only notify parent in migration mode; in normal editor mode just stop silently
 				if ( isMigration ) {
@@ -84,7 +84,7 @@
 		return;
 	}
 
-	logToParent( '[GutenBlocks Blocks] ✅ wp.data is available' );
+	logToParent( '[AdaireBlocks Blocks] ✅ wp.data is available' );
 	
 	// Initialize recovery if WordPress is ready
 	initializeRecovery();
@@ -94,10 +94,10 @@
 	 */
 	function initializeRecovery() {
 		if ( isMigrationMode ) {
-		logToParent( '[GutenBlocks Blocks Migration] 🔄 Migration mode activated' );
+		logToParent( '[AdaireBlocks Blocks Migration] 🔄 Migration mode activated' );
 		
 		// Disable "leave site" warning during migration
-		logToParent( '[GutenBlocks Blocks Migration] 🔇 Disabling leave site warnings...' );
+		logToParent( '[AdaireBlocks Blocks Migration] 🔇 Disabling leave site warnings...' );
 		
 		// Remove any existing beforeunload handlers
 		window.onbeforeunload = null;
@@ -106,7 +106,7 @@
 		const originalAddEventListener = window.addEventListener;
 		window.addEventListener = function( type, listener, options ) {
 			if ( type === 'beforeunload' ) {
-				logToParent( '[GutenBlocks Blocks Migration] Blocked beforeunload listener' );
+				logToParent( '[AdaireBlocks Blocks Migration] Blocked beforeunload listener' );
 				return; // Don't add beforeunload listeners
 			}
 			return originalAddEventListener.call( this, type, listener, options );
@@ -118,13 +118,13 @@
 		}, true );
 		
 	} else {
-		logToParent( '[GutenBlocks Blocks] 📝 Normal editor mode (not migration)' );
+		logToParent( '[AdaireBlocks Blocks] 📝 Normal editor mode (not migration)' );
 	}
 
 	// Timeout to prevent infinite waiting (increased to allow more time for editor to load)
-	logToParent( '[GutenBlocks Blocks] ⏱️ Setting 30-second timeout for editor ready check' );
+	logToParent( '[AdaireBlocks Blocks] ⏱️ Setting 30-second timeout for editor ready check' );
 	let editorReadyTimeout = setTimeout( function() {
-		logToParent( '[GutenBlocks Blocks] ⚠️ Editor ready timeout reached (30 seconds) - forcing recovery attempt', 'warn' );
+		logToParent( '[AdaireBlocks Blocks] ⚠️ Editor ready timeout reached (30 seconds) - forcing recovery attempt', 'warn' );
 		if ( typeof unsubscribe === 'function' ) {
 			unsubscribe();
 		}
@@ -132,7 +132,7 @@
 	}, 30000 ); // 30 second timeout (increased from 10 seconds)
 
 	// Wait for the editor to be ready
-	logToParent( '[GutenBlocks Blocks] 👂 Subscribing to editor store changes...' );
+	logToParent( '[AdaireBlocks Blocks] 👂 Subscribing to editor store changes...' );
 	let subscriptionCount = 0;
 	let editorReadyCheckCount = 0;
 	const MAX_EDITOR_CHECKS = 50; // Maximum number of times to check for editor readiness
@@ -148,7 +148,7 @@
 		if ( ! editor ) {
 			// If we've checked many times and editor still not available, proceed anyway
 			if ( editorReadyCheckCount > MAX_EDITOR_CHECKS ) {
-				logToParent( '[GutenBlocks Blocks] ⚠️ Editor store not available after ' + MAX_EDITOR_CHECKS + ' checks - proceeding anyway', 'warn' );
+				logToParent( '[AdaireBlocks Blocks] ⚠️ Editor store not available after ' + MAX_EDITOR_CHECKS + ' checks - proceeding anyway', 'warn' );
 				clearTimeout( editorReadyTimeout );
 				unsubscribe();
 				setTimeout( function() {
@@ -167,13 +167,13 @@
 		if ( ! blocks || blocks.length === 0 ) {
 			// Optional debug logging so we can see that we're still waiting
 			if ( editorReadyCheckCount % 10 === 0 ) {
-				logToParent( '[GutenBlocks Blocks] ⏳ Editor store available but no blocks yet (check ' + editorReadyCheckCount + ')' );
+				logToParent( '[AdaireBlocks Blocks] ⏳ Editor store available but no blocks yet (check ' + editorReadyCheckCount + ')' );
 			}
 			return;
 		}
 
 		// Editor is ready!
-		logToParent( '[GutenBlocks Blocks] ✅ Editor is ready! Found ' + blocks.length + ' blocks' );
+		logToParent( '[AdaireBlocks Blocks] ✅ Editor is ready! Found ' + blocks.length + ' blocks' );
 
 		// Clear the timeout
 		clearTimeout( editorReadyTimeout );
@@ -204,8 +204,8 @@
 		const needsRecovery = ! block.isValid || 
 			( block.validationIssues && block.validationIssues.length > 0 );
 		
-		// In normal editor mode, attempt recovery for ANY invalid block (not just GutenBlocks blocks)
-		// In migration mode, keep it scoped to GutenBlocks blocks to avoid touching third‑party content.
+		// In normal editor mode, attempt recovery for ANY invalid block (not just AdaireBlocks blocks)
+		// In migration mode, keep it scoped to AdaireBlocks blocks to avoid touching third‑party content.
 		const isTargetBlock = ! isMigrationMode || isAdaireBlockName( block.name );
 		
 		if ( needsRecovery && isTargetBlock ) {
@@ -231,7 +231,7 @@
 					recoveredInnerBlocks
 				);
 			} catch ( error ) {
-				logToParent( '[GutenBlocks Blocks] ⚠️ Recovery failed for ' + block.name + ': ' + error.message, 'warn' );
+				logToParent( '[AdaireBlocks Blocks] ⚠️ Recovery failed for ' + block.name + ': ' + error.message, 'warn' );
 				// If recovery fails, return the original block with recovered inner blocks
 				return {
 					...block,
@@ -257,56 +257,56 @@
 	 */
 	function attemptAutoRecovery() {
 		if ( ! isMigrationMode ) {
-			logToParent( '[GutenBlocks Blocks] 🔧 === STARTING AUTO-RECOVERY ===' );
-			logToParent( '[GutenBlocks Blocks] Migration mode: ' + isMigrationMode );
+			logToParent( '[AdaireBlocks Blocks] 🔧 === STARTING AUTO-RECOVERY ===' );
+			logToParent( '[AdaireBlocks Blocks] Migration mode: ' + isMigrationMode );
 		}
 		
 		// Verify all required WordPress APIs are available
 		if ( ! isMigrationMode ) {
-			logToParent( '[GutenBlocks Blocks] 🔍 Checking WordPress APIs...' );
+			logToParent( '[AdaireBlocks Blocks] 🔍 Checking WordPress APIs...' );
 		}
 		
 		if ( typeof wp === 'undefined' ) {
-			logToParent( '[GutenBlocks Blocks] ❌ CRITICAL: wp is not defined', 'error' );
+			logToParent( '[AdaireBlocks Blocks] ❌ CRITICAL: wp is not defined', 'error' );
 			if ( isMigrationMode ) {
 				notifyMigrationComplete( false, 0, 'wp is not defined' );
 			}
 			return;
 		}
-		logToParent( '[GutenBlocks Blocks] ✅ wp is defined' );
+		logToParent( '[AdaireBlocks Blocks] ✅ wp is defined' );
 
 		if ( typeof wp.data === 'undefined' ) {
-			logToParent( '[GutenBlocks Blocks] ❌ CRITICAL: wp.data is not defined', 'error' );
+			logToParent( '[AdaireBlocks Blocks] ❌ CRITICAL: wp.data is not defined', 'error' );
 			if ( isMigrationMode ) {
 				notifyMigrationComplete( false, 0, 'wp.data is not defined' );
 			}
 			return;
 		}
-		logToParent( '[GutenBlocks Blocks] ✅ wp.data is defined' );
+		logToParent( '[AdaireBlocks Blocks] ✅ wp.data is defined' );
 
 		if ( typeof wp.blocks === 'undefined' ) {
-			logToParent( '[GutenBlocks Blocks] ❌ CRITICAL: wp.blocks is not defined', 'error' );
+			logToParent( '[AdaireBlocks Blocks] ❌ CRITICAL: wp.blocks is not defined', 'error' );
 			if ( isMigrationMode ) {
 				notifyMigrationComplete( false, 0, 'wp.blocks is not defined' );
 			}
 			return;
 		}
-		logToParent( '[GutenBlocks Blocks] ✅ wp.blocks is defined' );
+		logToParent( '[AdaireBlocks Blocks] ✅ wp.blocks is defined' );
 
-		logToParent( '[GutenBlocks Blocks] 🔍 Getting editor stores...' );
+		logToParent( '[AdaireBlocks Blocks] 🔍 Getting editor stores...' );
 		const editor = wp.data.select( 'core/block-editor' );
 		const dispatch = wp.data.dispatch( 'core/block-editor' );
 		const coreEditor = wp.data.dispatch( 'core/editor' );
 		const coreEditorSelect = wp.data.select( 'core/editor' );
 		
 		if ( ! editor || ! dispatch ) {
-			logToParent( '[GutenBlocks Blocks] ❌ CRITICAL: Editor or dispatch not available', 'error' );
+			logToParent( '[AdaireBlocks Blocks] ❌ CRITICAL: Editor or dispatch not available', 'error' );
 			if ( isMigrationMode ) {
 				notifyMigrationComplete( false, 0, 'Editor not ready' );
 			}
 			return;
 		}
-		logToParent( '[GutenBlocks Blocks] ✅ Editor stores available' );
+		logToParent( '[AdaireBlocks Blocks] ✅ Editor stores available' );
 
 		// Helper function to get all blocks including nested ones
 		function getAllBlocks( blocks, parentPath = '', parentId = null ) {
@@ -346,24 +346,24 @@
 			try {
 				const rawContent = coreEditorSelect.getEditedPostContent();
 				if ( rawContent && typeof rawContent === 'string' && rawContent.trim().length > 0 ) {
-					logToParent( '[GutenBlocks Blocks] ℹ️ No blocks from editor store, attempting fallback parse of post content...' );
+					logToParent( '[AdaireBlocks Blocks] ℹ️ No blocks from editor store, attempting fallback parse of post content...' );
 					const parsedBlocks = wp.blocks.parse( rawContent );
 					if ( parsedBlocks && parsedBlocks.length > 0 ) {
 						topLevelBlocks = parsedBlocks;
-						logToParent( '[GutenBlocks Blocks] ✅ Fallback parse successful, found ' + parsedBlocks.length + ' top-level block(s)' );
+						logToParent( '[AdaireBlocks Blocks] ✅ Fallback parse successful, found ' + parsedBlocks.length + ' top-level block(s)' );
 					} else {
-						logToParent( '[GutenBlocks Blocks] ℹ️ Fallback parse returned no blocks' );
+						logToParent( '[AdaireBlocks Blocks] ℹ️ Fallback parse returned no blocks' );
 					}
 				}
 			} catch ( e ) {
-				logToParent( '[GutenBlocks Blocks] ⚠️ Error during fallback block parsing: ' + e.message, 'warn' );
+				logToParent( '[AdaireBlocks Blocks] ⚠️ Error during fallback block parsing: ' + e.message, 'warn' );
 			}
 		}
 		const allBlocksWithPaths = getAllBlocks( topLevelBlocks );
 		const allBlocks = allBlocksWithPaths.map( function( item ) { return item.block; } );
 		
-		logToParent( '[GutenBlocks Blocks] 📊 Total blocks in editor: ' + topLevelBlocks.length + ' (top-level)' );
-		logToParent( '[GutenBlocks Blocks] 📊 Total blocks including nested: ' + allBlocks.length );
+		logToParent( '[AdaireBlocks Blocks] 📊 Total blocks in editor: ' + topLevelBlocks.length + ' (top-level)' );
+		logToParent( '[AdaireBlocks Blocks] 📊 Total blocks including nested: ' + allBlocks.length );
 		
 		// Get detailed validation info from block editor
 		let blockValidationErrors = {};
@@ -383,17 +383,17 @@
 				}
 			} );
 		} catch ( error ) {
-			logToParent( '[GutenBlocks Blocks] ⚠️ Error getting validation errors: ' + error.message, 'warn' );
+			logToParent( '[AdaireBlocks Blocks] ⚠️ Error getting validation errors: ' + error.message, 'warn' );
 		}
 		
-		logToParent( '[GutenBlocks Blocks] 🔍 Block validation errors from store: ' + Object.keys( blockValidationErrors ).length );
+		logToParent( '[AdaireBlocks Blocks] 🔍 Block validation errors from store: ' + Object.keys( blockValidationErrors ).length );
 		
 		// Also try to validate blocks using WordPress's validation
 		// This helps catch blocks that haven't been validated yet
 		if ( typeof wp.blocks.validateBlock !== 'undefined' ) {
 			let validatedBlocks = 0;
 			allBlocks.forEach( function( block ) {
-				// In normal mode, validate all invalid blocks; in migration mode, only GutenBlocks blocks
+				// In normal mode, validate all invalid blocks; in migration mode, only AdaireBlocks blocks
 				const isTargetBlock = ! isMigrationMode || isAdaireBlockName( block.name );
 				if ( isTargetBlock ) {
 					try {
@@ -411,18 +411,18 @@
 				}
 			} );
 			if ( validatedBlocks > 0 && ! isMigrationMode ) {
-				logToParent( '[GutenBlocks Blocks] 🔍 Validated blocks, found ' + validatedBlocks + ' invalid GutenBlocks blocks' );
+				logToParent( '[AdaireBlocks Blocks] 🔍 Validated blocks, found ' + validatedBlocks + ' invalid AdaireBlocks blocks' );
 			}
 		}
 		
 		// Log nested structure with more details
-		logToParent( '[GutenBlocks Blocks] 🌳 Block Tree Structure:' );
+		logToParent( '[AdaireBlocks Blocks] 🌳 Block Tree Structure:' );
 			allBlocksWithPaths.forEach( function( item, i ) {
 			const indent = '  '.repeat( item.depth );
 			const status = item.block.isValid ? '✅' : '❌';
 			const isAdaire = isAdaireBlockName( item.block.name );
 			const marker = isAdaire ? ' [ADAIRE]' : '';
-			logToParent( '[GutenBlocks Blocks] ' + indent + status + ' ' + item.path + marker );
+			logToParent( '[AdaireBlocks Blocks] ' + indent + status + ' ' + item.path + marker );
 		} );
 		
 		// Check for validation issues
@@ -435,7 +435,7 @@
 		} );
 		
 		if ( blocksWithValidationIssues.length > 0 && ! isMigrationMode ) {
-			logToParent( '[GutenBlocks Blocks] ⚠️ Blocks with validation issues: ' + blocksWithValidationIssues.length, 'warn' );
+			logToParent( '[AdaireBlocks Blocks] ⚠️ Blocks with validation issues: ' + blocksWithValidationIssues.length, 'warn' );
 		}
 		
 		let recoveredCount = 0;
@@ -443,7 +443,7 @@
 		let skippedCount = 0;
 
 		if ( ! isMigrationMode ) {
-			logToParent( '[GutenBlocks Blocks] 🔄 Starting tree-based recovery for nested blocks...' );
+			logToParent( '[AdaireBlocks Blocks] 🔄 Starting tree-based recovery for nested blocks...' );
 		}
 		
 		// Count invalid blocks for logging
@@ -453,7 +453,7 @@
 			const hasValidationIssues = block.validationIssues && block.validationIssues.length > 0;
 			const isInvalid = ! block.isValid;
 				const needsRecovery = isInvalid || hasValidationError || hasValidationIssues;
-				// In normal mode, treat all invalid blocks as candidates; in migration mode, GutenBlocks only
+				// In normal mode, treat all invalid blocks as candidates; in migration mode, AdaireBlocks only
 				const isTargetBlock = ! isMigrationMode || isAdaireBlockName( block.name );
 			
 			if ( needsRecovery ) {
@@ -475,14 +475,14 @@
 				
 				// Check if this block was recovered
 				// A block is considered recovered if it was invalid and is now valid, or if it was recreated
-				// In normal mode we consider all invalid blocks; in migration mode we scope to GutenBlocks blocks.
+				// In normal mode we consider all invalid blocks; in migration mode we scope to AdaireBlocks blocks.
 				const isTargetBlock = ! isMigrationMode || isAdaireBlockName( originalBlock.name );
 				if ( isTargetBlock &&
 					 ! originalBlock.isValid &&
 					 ( recoveredBlock.isValid || originalBlock.clientId !== recoveredBlock.clientId ) ) {
 					count++;
 					if ( ! isMigrationMode ) {
-						logToParent( '[GutenBlocks Blocks] ✅ Recovered: ' + originalBlock.name );
+						logToParent( '[AdaireBlocks Blocks] ✅ Recovered: ' + originalBlock.name );
 					}
 				}
 				
@@ -508,7 +508,7 @@
 		// Only update blocks if we actually recovered something
 		if ( recoveredCount > 0 ) {
 			if ( ! isMigrationMode ) {
-				logToParent( '[GutenBlocks Blocks] 🔄 Updating editor with recovered blocks...' );
+				logToParent( '[AdaireBlocks Blocks] 🔄 Updating editor with recovered blocks...' );
 			}
 			
 			try {
@@ -523,7 +523,7 @@
 						const hasValidationIssues = block.validationIssues && block.validationIssues.length > 0;
 						const isInvalid = ! block.isValid;
 						const needsRecovery = isInvalid || hasValidationError || hasValidationIssues;
-						// In normal editor mode, recover any invalid block; in migration mode, GutenBlocks only
+						// In normal editor mode, recover any invalid block; in migration mode, AdaireBlocks only
 						const isTargetBlock = ! isMigrationMode || isAdaireBlockName( block.name );
 						
 						if ( needsRecovery && isTargetBlock ) {
@@ -548,13 +548,13 @@
 											dispatch.replaceBlock( clientId, recoveredBlock );
 											actuallyRecovered++;
 											if ( ! isMigrationMode ) {
-												logToParent( '[GutenBlocks Blocks] ✅ Recovered block: ' + blockToRecover.name );
+												logToParent( '[AdaireBlocks Blocks] ✅ Recovered block: ' + blockToRecover.name );
 											}
 										}
 									}
 								}
 							} catch ( e ) {
-								logToParent( '[GutenBlocks Blocks] ⚠️ Failed to recover block ' + clientId + ': ' + e.message, 'warn' );
+								logToParent( '[AdaireBlocks Blocks] ⚠️ Failed to recover block ' + clientId + ': ' + e.message, 'warn' );
 							}
 						} );
 						
@@ -562,14 +562,14 @@
 						recoveredCount = actuallyRecovered;
 						
 						if ( ! isMigrationMode ) {
-							logToParent( '[GutenBlocks Blocks] ✅ Recovered ' + actuallyRecovered + ' block(s) using WordPress recovery' );
+							logToParent( '[AdaireBlocks Blocks] ✅ Recovered ' + actuallyRecovered + ' block(s) using WordPress recovery' );
 						}
 					} else {
 						// Fallback to resetBlocks for tree-based recovery
 						dispatch.resetBlocks( recoveredBlocks );
 						
 						if ( ! isMigrationMode ) {
-							logToParent( '[GutenBlocks Blocks] ✅ Editor updated successfully' );
+							logToParent( '[AdaireBlocks Blocks] ✅ Editor updated successfully' );
 						}
 					}
 				} else {
@@ -577,23 +577,23 @@
 					dispatch.resetBlocks( recoveredBlocks );
 					
 					if ( ! isMigrationMode ) {
-						logToParent( '[GutenBlocks Blocks] ✅ Editor updated successfully' );
+						logToParent( '[AdaireBlocks Blocks] ✅ Editor updated successfully' );
 					}
 				}
 			} catch ( error ) {
-				logToParent( '[GutenBlocks Blocks] ❌ Failed to update editor: ' + error.message, 'error' );
+				logToParent( '[AdaireBlocks Blocks] ❌ Failed to update editor: ' + error.message, 'error' );
 			}
 		}
 
 		if ( ! isMigrationMode ) {
-			logToParent( '[GutenBlocks Blocks] 📊 === RECOVERY SUMMARY ===' );
-			logToParent( '[GutenBlocks Blocks] Total blocks checked (including nested): ' + allBlocks.length );
-			logToParent( '[GutenBlocks Blocks] Invalid: ' + invalidBlocksCount + ' | Skipped: ' + skippedCount + ' | Recovered: ' + recoveredCount );
+			logToParent( '[AdaireBlocks Blocks] 📊 === RECOVERY SUMMARY ===' );
+			logToParent( '[AdaireBlocks Blocks] Total blocks checked (including nested): ' + allBlocks.length );
+			logToParent( '[AdaireBlocks Blocks] Invalid: ' + invalidBlocksCount + ' | Skipped: ' + skippedCount + ' | Recovered: ' + recoveredCount );
 		}
 
 		if ( recoveredCount > 0 ) {
 			if ( ! isMigrationMode ) {
-				logToParent( '[GutenBlocks Blocks] 💾 Recovered ' + recoveredCount + ' block(s)' );
+				logToParent( '[AdaireBlocks Blocks] 💾 Recovered ' + recoveredCount + ' block(s)' );
 			}
 			
 			// Save the post after recovery
@@ -620,7 +620,7 @@
 						// If save completed successfully
 						if ( ! isSaving && didSave ) {
 							saveUnsubscribe();
-							logToParent( '[GutenBlocks Blocks Migration] ✅ Save completed successfully' );
+							logToParent( '[AdaireBlocks Blocks Migration] ✅ Save completed successfully' );
 							// Small delay before notifying to ensure all is settled
 							setTimeout( function() {
 								notifyMigrationComplete( true, recoveredCount );
@@ -631,7 +631,7 @@
 						// If save failed, still notify completion (blocks were recovered even if save failed)
 						if ( ! isSaving && saveError ) {
 							saveUnsubscribe();
-							logToParent( '[GutenBlocks Blocks Migration] ⚠️ Save failed, but blocks were recovered', 'warn' );
+							logToParent( '[AdaireBlocks Blocks Migration] ⚠️ Save failed, but blocks were recovered', 'warn' );
 							setTimeout( function() {
 								notifyMigrationComplete( true, recoveredCount );
 							}, 200 );
@@ -641,7 +641,7 @@
 						// If we've checked many times and still saving, something might be wrong
 						if ( saveCheckCount > MAX_SAVE_CHECKS ) {
 							saveUnsubscribe();
-							logToParent( '[GutenBlocks Blocks Migration] ⚠️ Save check timeout - assuming completion', 'warn' );
+							logToParent( '[AdaireBlocks Blocks Migration] ⚠️ Save check timeout - assuming completion', 'warn' );
 							setTimeout( function() {
 								notifyMigrationComplete( true, recoveredCount );
 							}, 200 );
@@ -652,7 +652,7 @@
 					// Timeout fallback (increased to 10 seconds to allow more time for save to complete)
 					setTimeout( function() {
 						saveUnsubscribe();
-						logToParent( '[GutenBlocks Blocks Migration] ⏱️ Save timeout reached - assuming completion', 'warn' );
+						logToParent( '[AdaireBlocks Blocks Migration] ⏱️ Save timeout reached - assuming completion', 'warn' );
 						notifyMigrationComplete( true, recoveredCount );
 					}, 10000 );
 				}, 300 );
@@ -660,7 +660,7 @@
 				// Normal mode - show a notice and auto-save the post
 				wp.data.dispatch( 'core/notices' ).createNotice(
 					'success',
-					`GutenBlocks Blocks: Automatically recovered ${recoveredCount} block(s).`,
+					`AdaireBlocks Blocks: Automatically recovered ${recoveredCount} block(s).`,
 					{
 						type: 'snackbar',
 						isDismissible: true,
@@ -669,7 +669,7 @@
 
 				// Auto-save the post after recovery in normal mode
 				if ( coreEditor && typeof coreEditor.savePost === 'function' ) {
-					logToParent( '[GutenBlocks Blocks] 💾 Auto-saving post after recovery...' );
+					logToParent( '[AdaireBlocks Blocks] 💾 Auto-saving post after recovery...' );
 					
 					// Wait a moment for blocks to settle, then save
 					setTimeout( function() {
@@ -681,7 +681,7 @@
 						
 						// Save the post
 						coreEditor.savePost();
-						logToParent( '[GutenBlocks Blocks] ✅ Post saved after recovery' );
+						logToParent( '[AdaireBlocks Blocks] ✅ Post saved after recovery' );
 					}, 500 );
 				} else {
 					// Fallback: Reset the dirty state so the "leave site" prompt doesn't appear
@@ -690,7 +690,7 @@
 						if ( wp.data.select( 'core/editor' ) && wp.data.dispatch( 'core/editor' ).resetEditorBlocks ) {
 							const currentBlocks = wp.data.select( 'core/block-editor' ).getBlocks();
 							wp.data.dispatch( 'core/editor' ).resetEditorBlocks( currentBlocks );
-							logToParent( '[GutenBlocks Blocks] ✅ Reset editor state' );
+							logToParent( '[AdaireBlocks Blocks] ✅ Reset editor state' );
 						}
 					}, 100 );
 				}
@@ -699,9 +699,9 @@
 			// No blocks recovered
 			if ( ! isMigrationMode ) {
 				if ( invalidBlocksCount > 0 ) {
-					logToParent( '[GutenBlocks Blocks] ℹ️ Found ' + invalidBlocksCount + ' invalid blocks but none could be recovered' );
+					logToParent( '[AdaireBlocks Blocks] ℹ️ Found ' + invalidBlocksCount + ' invalid blocks but none could be recovered' );
 				} else {
-					logToParent( '[GutenBlocks Blocks] ✅ All blocks are valid!' );
+					logToParent( '[AdaireBlocks Blocks] ✅ All blocks are valid!' );
 				}
 			}
 			
@@ -711,7 +711,7 @@
 		}
 		
 		if ( ! isMigrationMode ) {
-			logToParent( '[GutenBlocks Blocks] 🏁 === AUTO-RECOVERY COMPLETE ===' );
+			logToParent( '[AdaireBlocks Blocks] 🏁 === AUTO-RECOVERY COMPLETE ===' );
 		}
 	}
 
@@ -730,9 +730,9 @@
 	}
 
 	} catch (error) {
-		const errorMsg = '[GutenBlocks Blocks] 💥 CRITICAL ERROR: ' + error.message;
+		const errorMsg = '[AdaireBlocks Blocks] 💥 CRITICAL ERROR: ' + error.message;
 		console.error(errorMsg, error);
-		console.error('[GutenBlocks Blocks] Error stack:', error.stack);
+		console.error('[AdaireBlocks Blocks] Error stack:', error.stack);
 		
 		// Send to parent if in iframe
 		if (window.parent && window.parent !== window) {

@@ -23,28 +23,27 @@ const BLOCK_CATEGORIES = {
     'testimonial2-block': 'adaire-blocks-free',
     'animation-scroll-block': 'adaire-blocks-free',
     
-    // PLUS Blocks
-    'counter-block': 'adaire-blocks-plus',
-    'map-block': 'adaire-blocks-plus',
-    'logos-block': 'adaire-blocks-plus',
-    'portfolio-block': 'adaire-blocks-plus',
-    'questions-block': 'adaire-blocks-plus',
-    'services-block': 'adaire-blocks-plus',
-    'mega-menu-block': 'adaire-blocks-plus',
-    'swiper-carousel-block': 'adaire-blocks-plus',
-    'swiper-slide-block': 'adaire-blocks-plus',
-    'our-process-block': 'adaire-blocks-plus',
-    'flipcard-block': 'adaire-blocks-plus',
-    'flipcard-front-block': 'adaire-blocks-plus',
-    'flipcard-back-block': 'adaire-blocks-plus',
-    
-    // PREMIUM Blocks
-    'particles-block': 'adaire-blocks-premium',
-    'project-block': 'adaire-blocks-premium',
-    'industries-block': 'adaire-blocks-premium',
-    'modal-block': 'adaire-blocks-premium',
-    'modal-trigger-block': 'adaire-blocks-premium', // Child block of modal-block
-    'modal-content-block': 'adaire-blocks-premium', // Child block of modal-block
+    // PRO Blocks
+    'counter-block': 'adaire-blocks-pro',
+    'map-block': 'adaire-blocks-pro',
+    'logos-block': 'adaire-blocks-pro',
+    'portfolio-block': 'adaire-blocks-pro',
+    'questions-block': 'adaire-blocks-pro',
+    'services-block': 'adaire-blocks-pro',
+    'mega-menu-block': 'adaire-blocks-pro',
+    'swiper-carousel-block': 'adaire-blocks-pro',
+    'swiper-slide-block': 'adaire-blocks-pro',
+    'our-process-block': 'adaire-blocks-pro',
+    'flipcard-block': 'adaire-blocks-pro',
+    'flipcard-front-block': 'adaire-blocks-pro',
+    'flipcard-back-block': 'adaire-blocks-pro',
+
+    'particles-block': 'adaire-blocks-pro',
+    'project-block': 'adaire-blocks-pro',
+    'industries-block': 'adaire-blocks-pro',
+    'modal-block': 'adaire-blocks-pro',
+    'modal-trigger-block': 'adaire-blocks-pro', // Child block of modal-block
+    'modal-content-block': 'adaire-blocks-pro', // Child block of modal-block
 };
 
 // Get all block directories

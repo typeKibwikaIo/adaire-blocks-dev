@@ -145,8 +145,8 @@ function getHeaderStyleV3(attributes) {
     if (attributes.ctaTextColor) styles['--adaire-header-cta-text'] = attributes.ctaTextColor;
     if (attributes.ctaBorderColor) styles['--adaire-header-cta-border'] = attributes.ctaBorderColor;
 
-    const marginCss = boxToCssV3(attributes.gutenblocksMargin);
-    const paddingCss = boxToCssV3(attributes.gutenblocksPadding);
+    const marginCss = boxToCssV3(attributes.AdaireBlocksMargin);
+    const paddingCss = boxToCssV3(attributes.AdaireBlocksPadding);
     if (marginCss) styles.margin = marginCss;
     if (paddingCss) styles.padding = paddingCss;
 
@@ -461,3 +461,4 @@ const deprecatedV1 = {
 
 // Most recent first
 export default [ deprecatedV3, deprecatedV2, deprecatedV1 ];
+

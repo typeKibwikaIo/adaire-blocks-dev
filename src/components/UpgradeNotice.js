@@ -54,7 +54,7 @@ const UpgradeNotice = ({
                     </svg>
                 </span>
                 <span className="adaire-upgrade-notice__text">
-                    <strong>{__('Premium Feature', 'adaire-blocks')}</strong>
+                    <strong>{__('Pro Feature', 'adaire-blocks')}</strong>
                     <p>{displayMessage}</p>
                 </span>
                 <Button

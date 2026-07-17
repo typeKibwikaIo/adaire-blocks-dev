@@ -16,6 +16,8 @@ export default function save( { attributes: a } ) {
 	const blockProps = useBlockProps.save( {
 		className: 'adaire-cookie-notice-block',
 		'data-position': a.position || 'floating-bottom-right',
+		'data-expiration-days': a.expirationDays ?? 365,
+		'data-consent-version': a.consentVersion || '1',
 	} );
 
 	return (
@@ -62,7 +64,47 @@ export default function save( { attributes: a } ) {
 						</div>
 					) }
 
+					<div className="adaire-cookie-notice__prefs" data-cookie-prefs>
+						<label className="adaire-cookie-notice__pref-row">
+							<span>{ a.necessaryLabel }</span>
+							<input type="checkbox" checked disabled readOnly />
+						</label>
+						<label className="adaire-cookie-notice__pref-row">
+							<span>{ a.preferencesLabel }</span>
+							<input type="checkbox" data-cookie-category="preferences" />
+						</label>
+						<label className="adaire-cookie-notice__pref-row">
+							<span>{ a.analyticsLabel }</span>
+							<input type="checkbox" data-cookie-category="analytics" />
+						</label>
+						<label className="adaire-cookie-notice__pref-row">
+							<span>{ a.marketingLabel }</span>
+							<input type="checkbox" data-cookie-category="marketing" />
+						</label>
+						<button
+							type="button"
+							className="adaire-cookie-notice__btn adaire-cookie-notice__btn--accept adaire-cookie-notice__btn--save-prefs"
+							style={ {
+								backgroundColor: a.acceptButtonColor,
+								color: a.acceptButtonTextColor,
+							} }
+							data-cookie-action="save-preferences"
+						>
+							{ a.savePreferencesText }
+						</button>
+					</div>
+
 					<div className="adaire-cookie-notice__actions">
+						{ a.showCustomize && (
+							<button
+								type="button"
+								className="adaire-cookie-notice__btn adaire-cookie-notice__btn--customize"
+								style={ { color: a.textColor } }
+								data-cookie-action="customize"
+							>
+								{ a.customizeText }
+							</button>
+						) }
 						<button
 							type="button"
 							className="adaire-cookie-notice__btn adaire-cookie-notice__btn--decline"

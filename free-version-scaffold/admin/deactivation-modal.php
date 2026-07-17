@@ -137,7 +137,7 @@ class Adaire_Deactivation_Modal
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                         </div>
                         <h4><?php esc_html_e( 'Thanks for the feedback!', 'adaire-blocks' ); ?></h4>
-                        <p><?php esc_html_e( 'We\'ll use it to make Guten-Blocks better. See you next time.', 'adaire-blocks' ); ?></p>
+                        <p><?php esc_html_e( 'We\'ll use it to make Adaire Blocks better. See you next time.', 'adaire-blocks' ); ?></p>
                     </div>
 
                 </div><!-- .adaire-modal-body -->
@@ -159,7 +159,7 @@ class Adaire_Deactivation_Modal
         $default_recipient = defined('ADAIRE_FEEDBACK_EMAIL') ? ADAIRE_FEEDBACK_EMAIL : self::DEFAULT_FEEDBACK_EMAIL;
         $feedback_recipient = apply_filters('adaire_blocks_deactivation_feedback_to', $default_recipient, $feedback);
 
-        $subject = 'Guten-Blocks Deactivation Feedback';
+        $subject = 'Adaire Blocks Deactivation Feedback';
         $message = $this->build_feedback_message($feedback);
 
         $send_result = $this->send_feedback_email($feedback_recipient, $subject, $message, $feedback);
@@ -189,7 +189,7 @@ class Adaire_Deactivation_Modal
         $email_text = $feedback['email'] ?: 'Not provided';
 
         return implode("\n", [
-            'A user has deactivated the Guten-Blocks Free plugin.',
+            'A user has deactivated the Adaire Blocks Free plugin.',
             '',
             'Site: ' . $feedback['site'],
             'Reason: ' . $reason_text,

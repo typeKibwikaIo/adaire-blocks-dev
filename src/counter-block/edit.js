@@ -521,7 +521,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 											isSecondary={counterDirection !== opt.value}
 											disabled={isCountUpOnly && opt.value === 'down'}
 											onClick={() => setAttributes({ counterDirection: opt.value })}
-											title={isCountUpOnly && opt.value === 'down' ? (blockConfig.upgradeMessage || "Upgrade to Premium") : ""}
+											title={isCountUpOnly && opt.value === 'down' ? (blockConfig.upgradeMessage || "Upgrade to Pro") : ""}
 										>
 											{opt.label}
 										</Button>
@@ -529,7 +529,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								</ButtonGroup>
 								{isCountUpOnly && (
 									<p style={{ fontSize: '12px', color: '#666', marginTop: '8px', fontStyle: 'italic' }}>
-										{blockConfig.upgradeMessage || __("Upgrade to Premium to enable Count Down", "counter-block")}
+										{blockConfig.upgradeMessage || __("Upgrade to Pro to enable Count Down", "counter-block")}
 									</p>
 								)}
 							</>

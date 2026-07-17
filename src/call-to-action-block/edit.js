@@ -519,43 +519,43 @@ export default function Edit({ attributes, setAttributes }) {
 										value: "split-right",
 									},
 									{
-										label: "Stacked: Image Top, Text Bottom" + (isHorizontalOnly ? " (Premium)" : ""),
+										label: "Stacked: Image Top, Text Bottom" + (isHorizontalOnly ? " (Pro)" : ""),
 										value: "stacked-top",
 										disabled: isHorizontalOnly
 									},
 									{
-										label: "Stacked: Image Bottom, Text Top" + (isHorizontalOnly ? " (Premium)" : ""),
+										label: "Stacked: Image Bottom, Text Top" + (isHorizontalOnly ? " (Pro)" : ""),
 										value: "stacked-bottom",
 										disabled: isHorizontalOnly
 									},
 									{
-										label: "Overlay: Text Bottom Left" + (isHorizontalOnly ? " (Premium)" : ""),
+										label: "Overlay: Text Bottom Left" + (isHorizontalOnly ? " (Pro)" : ""),
 										value: "overlay-bottom-left",
 										disabled: isHorizontalOnly
 									},
 									{
-										label: "Overlay: Text Bottom Right" + (isHorizontalOnly ? " (Premium)" : ""),
+										label: "Overlay: Text Bottom Right" + (isHorizontalOnly ? " (Pro)" : ""),
 										value: "overlay-bottom-right",
 										disabled: isHorizontalOnly
 									},
 									{
-										label: "Overlay: Text Top Left" + (isHorizontalOnly ? " (Premium)" : ""),
+										label: "Overlay: Text Top Left" + (isHorizontalOnly ? " (Pro)" : ""),
 										value: "overlay-top-left",
 										disabled: isHorizontalOnly
 									},
 									{
-										label: "Overlay: Text Top Right" + (isHorizontalOnly ? " (Premium)" : ""),
+										label: "Overlay: Text Top Right" + (isHorizontalOnly ? " (Pro)" : ""),
 										value: "overlay-top-right",
 										disabled: isHorizontalOnly
 									},
 									{
-										label: "Overlay: Text Center" + (isHorizontalOnly ? " (Premium)" : ""),
+										label: "Overlay: Text Center" + (isHorizontalOnly ? " (Pro)" : ""),
 										value: "overlay-center",
 										disabled: isHorizontalOnly
 									},
 								]}
 								onChange={(val) => setAttributes({ layout: val })}
-								help={isHorizontalOnly ? (blockConfig.upgradeMessage || "Upgrade to Premium for Stacked and Overlay layouts") : ""}
+								help={isHorizontalOnly ? (blockConfig.upgradeMessage || "Upgrade to Pro for Stacked and Overlay layouts") : ""}
 							/>
 						);
 					})()}

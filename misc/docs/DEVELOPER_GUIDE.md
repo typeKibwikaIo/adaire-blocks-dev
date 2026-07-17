@@ -82,7 +82,7 @@ adaire-blocks-dev/
 |---|---|
 | `adaire-blocks-free` | Included in both free and premium versions |
 | `adaire-blocks-plus` | Premium only (requires license) |
-| `adaire-blocks-premium` | Premium only (requires license) |
+| `adaire-blocks-pro` | Premium only (requires license) |
 
 ---
 
@@ -156,7 +156,7 @@ This is the block's manifest. The key fields:
 
 > **`"icon"` field**: Leave this as an empty string. The icon is injected automatically by `scripts/update-block-icons.js` during the build: do not edit it manually. See [Section 6](#6-the-icon-system) for how to set the icon.
 
-> **`"category"`**: Use `adaire-blocks-free` for blocks that should appear in the free version. Use `adaire-blocks-plus` or `adaire-blocks-premium` for blocks requiring a license.
+> **`"category"`**: Use `adaire-blocks-free` for blocks that should appear in the free version. Use `adaire-blocks-plus` or `adaire-blocks-pro` for blocks requiring a license.
 
 ---
 
@@ -610,7 +610,7 @@ Place your `.svg` file in the appropriate tier folder:
 src/icons/new-icons/
 ├── Free Blocks/          ← for adaire-blocks-free category blocks
 ├── Plus Blocks/          ← for adaire-blocks-plus category blocks
-└── Premium Blocks/       ← for adaire-blocks-premium category blocks
+└── Premium Blocks/       ← for adaire-blocks-pro category blocks
 ```
 
 SVG requirements:
@@ -741,3 +741,4 @@ Static blocks (where `save.js` produces the HTML) need no changes to the PHP fil
 □  Run: npm run build
 □  Verify the block appears in the Gutenberg inserter
 ```
+

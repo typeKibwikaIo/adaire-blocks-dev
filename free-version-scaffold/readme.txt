@@ -1,4 +1,4 @@
-=== Guten-Blocks - more than just a Block builder ===
+=== Adaire Blocks - more than just a Block builder ===
 Contributors: adairedigital
 Donate link: https://adaireblocks.com/
 Tags: blocks, gutenberg, gsap, animation, layout
@@ -18,7 +18,7 @@ THE ESSENTIAL GUTENBERG BLOCK COLLECTION. PAY FOR ONLY WHAT YOU USE.™
 
 Most page builders make you pay for 100+ widgets—even if you only use five. That's not fair, and it's expensive.
 
-Guten-Blocks flips the model. Start with our powerful free blocks. Then, as your needs grow, you unlock exactly the additional blocks you want—starting from just US$0.25 per month per block. No forced bundles. No wasted spend. Just the tools you actually use.
+Adaire Blocks flips the model. Start with our powerful free blocks. Then, as your needs grow, you unlock exactly the additional blocks you want—starting from just US$0.25 per month per block. No forced bundles. No wasted spend. Just the tools you actually use.
 
 It's cheaper. It's smarter. It's Unbundled—our way of delivering value by separating blocks into thoughtful tiers instead of one bloated package.
 
@@ -30,12 +30,12 @@ It's cheaper. It's smarter. It's Unbundled—our way of delivering value by sepa
 
 No bloat. No forced bundles. You're in control.
 
-**Why Choose Guten-Blocks? The Unbundled Philosophy**
+**Why Choose Adaire Blocks? The Unbundled Philosophy**
 
 * **Pay for Only What You Use™:** Our unique model means you're never forced to buy a "pro pack" of 50 widgets just to get the three you actually need. Start free. Add blocks individually. Save money.
 * **Just the Essentials, Always Evolving:** We don't give you 80 widgets. We give you a thoughtfully curated collection of versatile blocks that solve real-world design challenges. And as your needs grow, so will our library—with more blocks and full website templates on the horizon.
 * **Smooth, Modern Animations:** Powered by GSAP, our blocks feature silky-smooth scroll-triggered animations, hover effects, and micro-interactions that delight users without sacrificing performance.
-* **Built for Speed:** Coded with modern JavaScript (ES6+) and React, Guten-Blocks is optimized for efficiency. Add interactivity without the bloat.
+* **Built for Speed:** Coded with modern JavaScript (ES6+) and React, Adaire Blocks is optimized for efficiency. Add interactivity without the bloat.
 * **100% Gutenberg Native:** Work entirely within the familiar WordPress editor. No new interfaces to learn, no clunky page builder cruft. Just your blocks, your content, and—soon—your templates.
 * **Full Creative Control:** Every block comes with intuitive customization options in the block sidebar—colors, typography, animation speeds, layout settings, and responsive controls.
 
@@ -105,7 +105,7 @@ For when your projects need that extra "wow" factor. Stunning, professional bloc
 And more blocks and templates are in active development—because your website should never stop evolving.
 
 **Performance You Can Feel**
-Guten-Blocks is built for the modern web. We leverage the power of GSAP for animations that are not only beautiful but also highly performant, ensuring smooth 60fps interactions. Our code is lean, our blocks are focused, and your site stays fast.
+Adaire Blocks is built for the modern web. We leverage the power of GSAP for animations that are not only beautiful but also highly performant, ensuring smooth 60fps interactions. Our code is lean, our blocks are focused, and your site stays fast.
 
 * Accessibility-friendly: Semantic HTML and keyboard navigation support.
 * Responsive by default: Mobile-first design with full breakpoint control.
@@ -122,7 +122,7 @@ Guten-Blocks is built for the modern web. We leverage the power of GSAP for anim
 
 1. Upload the plugin files to the `/wp-content/plugins/adaire-blocks` directory, or install directly from the WordPress plugin repository.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. In the Gutenberg editor, click the '+' inserter and find your new Guten-Blocks under their respective categories.
+3. In the Gutenberg editor, click the '+' inserter and find your new Adaire Blocks under their respective categories.
 
 == Frequently Asked Questions ==
 
@@ -136,7 +136,7 @@ Unbundled is how we deliver value—by separating blocks into thoughtful tiers a
 Yes. We're actively developing additional blocks and full website templates while staying true to our Pay for Only What You Use™ philosophy.
 
 = Do I need another page builder to use these blocks? =
-No. Guten-Blocks works exclusively within the standard WordPress Gutenberg editor. No additional plugins required.
+No. Adaire Blocks works exclusively within the standard WordPress Gutenberg editor. No additional plugins required.
 
 = Are the blocks compatible with my theme? =
 Yes, they are designed to integrate seamlessly with any modern WordPress theme that follows block editor standards.
@@ -148,11 +148,11 @@ Yes. Each animation-enabled block includes controls for speed, easing, and trigg
 No. GSAP is loaded once, deferred, and only on pages that use animated blocks. We avoid layout thrashing and use transforms/opacity for GPU-accelerated animations.
 
 = How do I get support? =
-Visit our website at https://adaireblocks.com or reach out through the WordPress.org support forums. Guten-Blocks is open-source (GPL-3.0), and we welcome contributions from the community.
+Visit our website at https://adaireblocks.com or reach out through the WordPress.org support forums. Adaire Blocks is open-source (GPL-3.0), and we welcome contributions from the community.
 
 == Screenshots ==
 
-1. The Unbundled Editor: A clean, focused workspace with Guten-Blocks ready to use.
+1. The Unbundled Editor: A clean, focused workspace with Adaire Blocks ready to use.
 2. Posts Grid in Action: Showcasing smooth GSAP entrance animations.
 3. Header and SaaS Hero blocks on a live page.
 4. Plus Blocks: Mega Menu and Pricing Table blocks with advanced controls.
@@ -166,7 +166,7 @@ Visit our website at https://adaireblocks.com or reach out through the WordPress
 * Fixed a display issue in the deactivation modal (explicit SVG dimensions and inline fallback styles) that could cause the header icon to render incorrectly on some sites.
 
 = 1.2.7 =
-* Adaire Blocks is now Guten-Blocks. The plugin name, inserter categories, block titles, admin screens, and documentation have all been updated to reflect the new name.
+* Adaire Blocks is now Adaire Blocks. The plugin name, inserter categories, block titles, admin screens, and documentation have all been updated to reflect the new name.
 * Every Free-tier block now displays with a "(Free)" suffix in the inserter, so it's clear at a glance which blocks are included at no cost. A few names were also shortened for clarity: Customer Reviews is now Reviews (Free), Website Footer is now Footer (Free), Header is now Header Menu (Free), and Advanced Feature Grid is now Feature Grid (Free).
 * Renamed the Feature Box block to Icon Box (Free) for clarity.
 * Moved Plan Comparison from Free to Premium — it is no longer included in the Free tier.
@@ -193,7 +193,7 @@ Visit our website at https://adaireblocks.com or reach out through the WordPress
 Improved deactivation feedback flow and a display fix for the deactivation modal. No action required.
 
 = 1.2.7 =
-Adaire Blocks is now Guten-Blocks. Plugin name, block titles, and admin screens are updated; no functional changes and no action required.
+Adaire Blocks is now Adaire Blocks. Plugin name, block titles, and admin screens are updated; no functional changes and no action required.
 
 = 1.2.6 =
 Documentation-only correction to the Free block list — no functional changes. If you were relying on the previously (incorrectly) advertised free Call to Action or Logo blocks, those have always required Plus.

@@ -44,7 +44,7 @@ of its supporting code were removed:
 
 - Deleted the shared "builtin" Advanced panel (auto-injected CSS ID, Additional CSS
   Classes, Margin, Padding, Z-Index controls). Confirmed dead/redundant first:
-  - No block declares `gutenblocksMargin` / `gutenblocksPadding`.
+  - No block declares `AdaireBlocksMargin` / `AdaireBlocksPadding`.
   - Z-Index was already handled per-block where it mattered (button-block).
   - CSS ID / CSS Classes duplicated **WordPress core's own native "Advanced" panel**
     (HTML Anchor / Additional CSS Class(es)), which auto-renders below every block's
@@ -147,3 +147,4 @@ Content / Layout / Style only.
   effort (button-block, testimonial-block, row-block).
 - All responsive tiers across the 8 cleaned-up blocks now correctly cascade
   desktop → tablet → mobile, with mobile as the smallest tier.
+

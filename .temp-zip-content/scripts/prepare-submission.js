@@ -39,7 +39,7 @@ const config = {
     ]
 };
 
-console.log('🚀 Preparing GutenBlocks Blocks for WordPress.org submission...\n');
+console.log('🚀 Preparing AdaireBlocks Blocks for WordPress.org submission...\n');
 
 async function prepareSubmission() {
     try {
@@ -155,4 +155,5 @@ function createZip(sourceDir, outputPath) {
 
 // Run the script
 prepareSubmission();
+
 

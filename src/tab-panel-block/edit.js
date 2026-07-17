@@ -55,7 +55,7 @@ export default function Edit({ attributes, clientId }) {
         // Tab 1 — Pricing
         [
             ['core/heading', { level: 3, content: 'Simple, Transparent Pricing', style: { color: { text: '#503AA8' } }, textColor: undefined }],
-            ['core/paragraph', { content: 'Use the Tabbed Content block to showcase different pricing tiers side by side. Switch between monthly and annual plans, or compare free vs premium features — all within the same block.' }],
+            ['core/paragraph', { content: 'Use the Tabbed Content block to showcase different pricing tiers side by side. Switch between monthly and annual plans, or compare free vs pro features — all within the same block.' }],
             ['core/paragraph', { content: 'Pair this block with the Pricing Table block for a complete, conversion-ready pricing section that keeps your page clean and scannable.' }],
         ],
         // Tab 2 — FAQ

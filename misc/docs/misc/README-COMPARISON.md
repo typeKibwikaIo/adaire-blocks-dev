@@ -12,7 +12,7 @@ The free and premium readme.txt files are **strategically different**, not just 
 |-------|--------|-------|--------|
 | Missing Donate link | ❌ Not present | ✅ Added | Fixed |
 | Duplicate tag | `blocks` appeared twice | Single instance | Fixed |
-| Contributor username | `gutenblocks` | `adaire` | Fixed |
+| Contributor username | `AdaireBlocks` | `adaire` | Fixed |
 
 ---
 
@@ -268,4 +268,5 @@ Most developers do **Option 2**: Free on WordPress.org → Premium on own websit
 ---
 
 **Your current premium readme.txt is now WordPress.org compliant! ✅**
+
 

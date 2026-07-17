@@ -660,7 +660,7 @@
 				// Normal mode - show a notice and auto-save the post
 				wp.data.dispatch( 'core/notices' ).createNotice(
 					'success',
-					`Guten-Blocks: Automatically recovered ${recoveredCount} block(s).`,
+					`Adaire Blocks: Automatically recovered ${recoveredCount} block(s).`,
 					{
 						type: 'snackbar',
 						isDismissible: true,

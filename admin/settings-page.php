@@ -46,8 +46,8 @@ class AdaireBlocksSettings {
         $svg_icon = 'data:image/svg+xml;base64,' . base64_encode('<svg width="20" height="20" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M408.523 321.353H163.388V393.981H401.889V483.583H195.142C156 483.583 125 516.017 125 556.18V645.814C125 685.978 156 718.411 195.142 718.411H401.889V645.814H201.776V556.18H401.889V645.814H477.941V393.981C477.941 353.818 446.941 321.353 408.523 321.353Z" fill="black"/><path d="M603.247 267.692V357.441H801.292C842.251 357.441 875 389.932 875 429.647V643.346C875 686.658 838.511 718.412 793.842 718.412H592.057C553.348 718.412 522.059 688.102 522.059 650.569V189C566.728 189 603.217 224.381 603.217 267.692H603.247ZM603.247 650.569H793.842V429.647H603.247V650.569Z" fill="black"/></svg>');
         
         add_menu_page(
-            'Guten-Blocks',
-            'Guten-Blocks',
+            'Adaire Blocks',
+            'Adaire Blocks',
             'manage_options',
             'adaire-blocks-settings',
             array($this, 'settings_page'),
@@ -176,7 +176,7 @@ class AdaireBlocksSettings {
             $name        = isset($block_data['title']) ? $block_data['title'] : ucwords(str_replace('-', ' ', $block_name));
             $description = isset($block_data['description']) ? $block_data['description'] : 'Custom block for ' . $name;
 
-            // Raw category slug from block.json (e.g. adaire-blocks-free / adaire-blocks-plus / adaire-blocks-premium).
+            // Raw category slug from block.json (e.g. adaire-blocks-free / adaire-blocks-pro).
             $category_slug = isset($block_data['category']) ? $block_data['category'] : '';
 
             // Human-readable category label for display.
@@ -184,11 +184,8 @@ class AdaireBlocksSettings {
                 case 'adaire-blocks-free':
                     $category_label = 'Free';
                     break;
-                case 'adaire-blocks-plus':
-                    $category_label = 'Plus';
-                    break;
-                case 'adaire-blocks-premium':
-                    $category_label = 'Premium';
+                case 'adaire-blocks-pro':
+                    $category_label = 'Pro';
                     break;
                 case 'adaire-hero-sections':
                     $category_label = 'Hero & Navigation';
@@ -611,7 +608,7 @@ class AdaireBlocksSettings {
         
         // Safety check - ensure config is loaded
         if (!$config) {
-            wp_die('Error: Guten-Blocks configuration not loaded. Please try refreshing the page.');
+            wp_die('Error: Adaire Blocks configuration not loaded. Please try refreshing the page.');
         }
         
         // // Debug: Log config status (only in debug mode)
@@ -695,7 +692,7 @@ class AdaireBlocksSettings {
                             
                             echo esc_html( $total_blocks ) . ' blocks available';
                             if ($config && !$config->is_premium()) {
-                                echo ' (' . esc_html( $free_blocks ) . ' free, ' . esc_html( $premium_blocks ) . ' premium)';
+                                echo ' (' . esc_html( $free_blocks ) . ' free, ' . esc_html( $premium_blocks ) . ' pro)';
                             }
                             ?>
                         </p>
@@ -723,7 +720,7 @@ class AdaireBlocksSettings {
                             }
                             echo esc_html( $enabled_count ) . ' enabled, ' . esc_html( $total_free - $enabled_count ) . ' disabled';
                             if ($config && !$config->is_premium() && $premium_blocks > 0) {
-                                echo ' (' . esc_html( $premium_blocks ) . ' premium blocks require upgrade)';
+                                echo ' (' . esc_html( $premium_blocks ) . ' pro blocks require upgrade)';
                             }
                             ?>
                         </p>
@@ -803,7 +800,7 @@ class AdaireBlocksSettings {
                                     <?php if ($block_data['is_premium']): ?>
                                         <div class="adaire-block-premium-badge">
                                             <span class="dashicons dashicons-star-filled"></span>
-                                            Premium
+                                            Pro
                                         </div>
                                     <?php endif; ?>
                                     <div class="adaire-block-header">
@@ -998,3 +995,4 @@ class AdaireBlocksSettings {
 
 // Initialize settings using singleton pattern
 AdaireBlocksSettings::get_instance();
+

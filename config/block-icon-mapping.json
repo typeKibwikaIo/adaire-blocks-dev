@@ -28,7 +28,7 @@
 		"infogrid-block":              { "component": "info-grid",           "svg": "part5/info-grid-block.svg" },
 		"infogrid-2-block":            { "component": "info-grid-2",         "svg": "part5/info-grid-2-block.svg" },
 		"infogrid-3-block":            { "component": "info-grid-3",         "svg": "part5/info-grid-3-block.svg" },
-		"infogrid-4-block":            { "component": "info-grid-4",         "svg": "part5/info-grid-4-block.svg" },
+		"bento-grid-block":            { "component": "info-grid-4",         "svg": "part5/info-grid-4-block.svg" },
 		"logos-block":                 { "component": "logos",               "svg": "Plus Blocks/logos-plus-block.svg" },
 		"map-block":                   { "component": "map",                 "svg": "Plus Blocks/map-plus-block.svg" },
 		"mega-menu-block":             { "component": "mega-menu",           "svg": "Plus Blocks/mega-menu-plus-block.svg" },
@@ -68,3 +68,4 @@
 				"column-block":                { "component": "layout" }
 	}
 }
+

@@ -26,6 +26,14 @@
             "type": "string",
             "default": ""
         },
+        "navigationSource": {
+            "type": "string",
+            "default": "legacy"
+        },
+        "selectedMenuId": {
+            "type": "number",
+            "default": 0
+        },
         "logoUrl": {
             "type": "string",
             "default": ""

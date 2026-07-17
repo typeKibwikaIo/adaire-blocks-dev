@@ -1,7 +1,7 @@
 /**
  * InspectorTabs — structured block inspector sidebar.
  *
- * Splits every GutenBlocks block into two tabs:
+ * Splits every AdaireBlocks block into two tabs:
  *   • General  — functional / content settings (the block's own panels)
  *   • Advanced — ALL styling, grouped by priority so users don't get lost:
  *
@@ -106,8 +106,8 @@ export default function InspectorTabs( {
 	children,
 } ) {
 	const hasZIndex  = 'zIndex' in attributes;
-	const hasMargin  = 'gutenblocksMargin' in attributes;
-	const hasPadding = 'gutenblocksPadding' in attributes;
+	const hasMargin  = 'AdaireBlocksMargin' in attributes;
+	const hasPadding = 'AdaireBlocksPadding' in attributes;
 
 	// Built-in dev-level controls always live at the bottom (low priority).
 	const builtinLayoutPanel = {
@@ -118,15 +118,15 @@ export default function InspectorTabs( {
 				{ hasMargin && (
 					<BoxControl
 						label={ __( 'Margin' ) }
-						values={ attributes.gutenblocksMargin }
-						onChange={ ( gutenblocksMargin ) => setAttributes( { gutenblocksMargin } ) }
+						values={ attributes.AdaireBlocksMargin }
+						onChange={ ( AdaireBlocksMargin ) => setAttributes( { AdaireBlocksMargin } ) }
 					/>
 				) }
 				{ hasPadding && (
 					<BoxControl
 						label={ __( 'Padding' ) }
-						values={ attributes.gutenblocksPadding }
-						onChange={ ( gutenblocksPadding ) => setAttributes( { gutenblocksPadding } ) }
+						values={ attributes.AdaireBlocksPadding }
+						onChange={ ( AdaireBlocksPadding ) => setAttributes( { AdaireBlocksPadding } ) }
 					/>
 				) }
 				{ hasZIndex && (
@@ -280,3 +280,4 @@ export default function InspectorTabs( {
 		</InspectorControls>
 	);
 }
+

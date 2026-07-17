@@ -36,7 +36,7 @@ class Adaire_Welcome_Screen {
     public static function add_menu_page() {
         add_submenu_page(
             'adaire-blocks-settings',
-            __( 'Welcome to Guten-Blocks', 'adaire-blocks' ),
+            __( 'Welcome to Adaire Blocks', 'adaire-blocks' ),
             __( 'Welcome / Quick Start', 'adaire-blocks' ),
             'manage_options',
             'adaire-blocks-welcome',
@@ -473,12 +473,12 @@ class Adaire_Welcome_Screen {
             <nav class="abw-top">
                 <div class="abw-brand">
                     <span class="abw-brand-icon"><?php echo $brand_svg; ?></span>
-                    <span class="abw-brand-name">GutenBlocks</span>
+                    <span class="abw-brand-name">AdaireBlocks</span>
                 </div>
                 <div class="abw-top-right">
                     <span class="abw-counter" id="abw-counter">Step 1 of 5</span>
                     <a href="<?php echo esc_url( $exit_url ); ?>" class="abw-top-exit"><?php esc_html_e( 'Skip setup →', 'adaire-blocks' ); ?></a>
-                    <a href="https://gutenblocks.com/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
+                    <a href="https://AdaireBlocks.com/pro/" target="_blank" rel="noopener" class="abw-upgrade"><?php esc_html_e( 'Upgrade', 'adaire-blocks' ); ?></a>
 
 
                 </div>
@@ -524,8 +524,8 @@ class Adaire_Welcome_Screen {
                     </div>
                     <div class="abw-pro-feat" id="abw-pro-feat">Pro Feature</div>
                     <h3 class="abw-pro-title" id="abw-pro-title">Unlock this feature</h3>
-                    <p class="abw-pro-desc"><?php esc_html_e( 'This feature is available on GutenBlocks Pro. Upgrade to access advanced blocks, animations, and more — all inside the editor you already love.', 'adaire-blocks' ); ?></p>
-                    <a href="https://gutenblocks.com/pro/" target="_blank" rel="noopener" class="abw-pro-cta"><?php esc_html_e( 'Upgrade to Pro →', 'adaire-blocks' ); ?></a>
+                    <p class="abw-pro-desc"><?php esc_html_e( 'This feature is available on AdaireBlocks Pro. Upgrade to access advanced blocks, animations, and more — all inside the editor you already love.', 'adaire-blocks' ); ?></p>
+                    <a href="https://AdaireBlocks.com/pro/" target="_blank" rel="noopener" class="abw-pro-cta"><?php esc_html_e( 'Upgrade to Pro →', 'adaire-blocks' ); ?></a>
                     <button class="abw-pro-later" id="abw-pro-later"><?php esc_html_e( 'Maybe later', 'adaire-blocks' ); ?></button>
                 </div>
             </div>
@@ -1262,7 +1262,7 @@ class Adaire_Welcome_Screen {
                 '<button class="abw-create" id="abw-create" data-slug="'+slug+'" data-label="'+lbl+'">'+btnTxt+'</button>'+
                 '<div class="abw-final-links">'+
                     '<a href="'+SETTINGS+'" class="abw-final-link"><span class="abw-fl-icon">'+icon('settings')+'</span><div><div>Block Settings</div><div class="abw-fl-meta">Enable, disable or configure individual blocks</div></div></a>'+
-                    '<a href="'+MIGRATION+'" class="abw-final-link"><span class="abw-fl-icon">'+icon('sync')+'</span><div><div>Migration Tool</div><div class="abw-fl-meta">Move old blocks over to GutenBlocks</div></div></a>'+
+                    '<a href="'+MIGRATION+'" class="abw-final-link"><span class="abw-fl-icon">'+icon('sync')+'</span><div><div>Migration Tool</div><div class="abw-fl-meta">Move old blocks over to AdaireBlocks</div></div></a>'+
                     '<a href="'+DOCS+'" target="_blank" rel="noopener" class="abw-final-link"><span class="abw-fl-icon">'+icon('book')+'</span><div><div>Documentation</div><div class="abw-fl-meta">Guides for every block and setting</div></div></a>'+
                     '<a href="'+SUPPORT+'" target="_blank" rel="noopener" class="abw-final-link"><span class="abw-fl-icon">'+icon('chat')+'</span><div><div>Support</div><div class="abw-fl-meta">Submit a ticket or browse answered questions</div></div></a>'+
                 '</div>';
@@ -1353,3 +1353,4 @@ class Adaire_Welcome_Screen {
         <?php
     }
 }
+

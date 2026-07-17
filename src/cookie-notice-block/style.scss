@@ -80,7 +80,60 @@
 		&--decline {
 			background: transparent;
 		}
+
+		&--customize {
+			flex: 0 0 auto;
+			background: transparent;
+			border-color: currentColor;
+			opacity: 0.75;
+
+			&:hover {
+				opacity: 1;
+			}
+		}
 	}
+
+	// Per-category consent toggles, revealed by the "Customize" button.
+	// Hidden on the frontend until the visitor asks for it; the
+	// `--editor-preview` variant is always shown so the block editor gives an
+	// accurate sense of what visitors can configure.
+	&__prefs {
+		display: none;
+		flex-direction: column;
+		gap: 6px;
+		padding: 6px 0;
+		border-top: 1px solid rgba(127, 127, 127, 0.25);
+		border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+
+		&--editor-preview {
+			display: flex;
+		}
+	}
+
+	&__pref-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		font-size: 13px;
+		cursor: pointer;
+
+		input[type="checkbox"] {
+			flex-shrink: 0;
+			width: 16px;
+			height: 16px;
+			cursor: pointer;
+
+			&:disabled {
+				cursor: default;
+				opacity: 0.6;
+			}
+		}
+	}
+}
+
+.adaire-cookie-notice-block.is-prefs-open .adaire-cookie-notice__prefs {
+	display: flex;
 }
 
 // ─── Frontend floating positioning ──────────────────────────────────────

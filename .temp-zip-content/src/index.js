@@ -1,4 +1,4 @@
-// GutenBlocks Blocks Free Version - auto-generated, do not edit manually
+// AdaireBlocks Blocks Free Version - auto-generated, do not edit manually
 
 import './row-block';
 import './column-block';
@@ -28,3 +28,4 @@ import './pricing-table-block';
 import './saas-hero-block';
 import './timeline-block';
 import './about-us-block';
+

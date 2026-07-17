@@ -1,4 +1,4 @@
-﻿import { InspectorControls, MediaUpload, MediaUploadCheck, RichText, URLInput, useBlockProps, ColorPalette } from '@wordpress/block-editor';
+import { InspectorControls, MediaUpload, MediaUploadCheck, RichText, URLInput, useBlockProps, ColorPalette } from '@wordpress/block-editor';
 import { Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
@@ -9,11 +9,11 @@ const normalizeName = (label = '') => label.toLowerCase().replace(/[^a-z0-9]+/g,
 
 export default function Edit({ attributes, setAttributes }) {
   const a = attributes;
-  const fields = a.fields && a.fields.length ? a.fields : [{"label":"Name","name":"name","type":"text","required":true,"width":"half"},{"label":"Email","name":"email","type":"email","required":true,"width":"half"},{"label":"Phone","name":"phone","type":"tel","required":false,"width":"half"},{"label":"Subject","name":"subject","type":"text","required":false,"width":"half"},{"label":"Message","name":"message","type":"textarea","required":true,"width":"full"}];
+  const fields = a.fields && a.fields.length ? a.fields : [{"label":"Name","name":"name","type":"text","required":true,"width":"half"},{"label":"Email","name":"email","type":"email","required":true,"width":"half"},{"label":"Phone","name":"phone","type":"tel","required":false,"width":"half"},{"label":"Date","name":"date","type":"date","required":true,"width":"half"},{"label":"Time","name":"time","type":"time","required":true,"width":"half"},{"label":"Service","name":"service","type":"select","required":false,"width":"half","options":"Consultation, Demo, Support"},{"label":"Notes","name":"notes","type":"textarea","required":false,"width":"full"}];
   const updateField = (index, patch) => setAttributes({ fields: fields.map((field, i) => i === index ? { ...field, ...patch } : field) });
   const addField = () => setAttributes({ fields: [...fields, { label: 'New field', name: 'new_field_' + (fields.length + 1), type: 'text', required: false, width: 'half' }] });
   const removeField = (index) => setAttributes({ fields: fields.filter((_, i) => i !== index) });
-  const blockProps = useBlockProps({ className: 'adaire-form', style: {
+  const blockProps = useBlockProps({ className: 'adaire-booking-form', style: {
     '--ad-accent': a.accentColor,
     '--ad-bg': a.backgroundType === 'gradient' ? (a.backgroundGradient || a.gradient) : a.backgroundColor,
     '--ad-color': a.textColor,
@@ -67,11 +67,12 @@ export default function Edit({ attributes, setAttributes }) {
       </PanelBody>
     </InspectorControls>
     <section {...blockProps} data-hover={a.buttonHoverEffect || 'lift'} data-layout={a.layout || 'two'}>
-      <RichText tagName="p" className="adaire-form__eyebrow" value={a.eyebrow} onChange={set(setAttributes, 'eyebrow')} />
-      <RichText tagName="h2" className="adaire-form__heading" value={a.heading} onChange={set(setAttributes, 'heading')} />
-      <RichText tagName="p" className="adaire-form__text" value={a.text} onChange={set(setAttributes, 'text')} />
-      <div className="adaire-form__grid">{fields.map((field, index) => <label className={field.width === 'full' ? 'is-wide' : ''} key={index}>{field.label}{field.type === 'textarea' ? <textarea disabled /> : field.type === 'select' ? <select disabled>{(field.options || '').split(',').map((option) => <option key={option}>{option.trim()}</option>)}</select> : <input type={field.type || 'text'} disabled />}</label>)}</div>
-      <RichText tagName="span" className="adaire-form__button" value={a.buttonText} onChange={set(setAttributes, 'buttonText')} />
+      <RichText tagName="p" className="adaire-booking-form__eyebrow" value={a.eyebrow} onChange={set(setAttributes, 'eyebrow')} />
+      <RichText tagName="h2" className="adaire-booking-form__heading" value={a.heading} onChange={set(setAttributes, 'heading')} />
+      <RichText tagName="p" className="adaire-booking-form__text" value={a.text} onChange={set(setAttributes, 'text')} />
+      <div className="adaire-booking-form__grid">{fields.map((field, index) => <label className={field.width === 'full' ? 'is-wide' : ''} key={index}>{field.label}{field.type === 'textarea' ? <textarea disabled /> : field.type === 'select' ? <select disabled>{(field.options || '').split(',').map((option) => <option key={option}>{option.trim()}</option>)}</select> : <input type={field.type || 'text'} disabled />}</label>)}</div>
+      <RichText tagName="span" className="adaire-booking-form__button" value={a.buttonText} onChange={set(setAttributes, 'buttonText')} />
     </section>
   </>);
 }
+

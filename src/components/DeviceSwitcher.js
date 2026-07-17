@@ -24,7 +24,7 @@ export const THREE_TIERS = [
 
 /**
  * DeviceSwitcher Component
- * The one shared responsive device switcher used across every Gutenblocks block.
+ * The one shared responsive device switcher used across every AdaireBlocks block.
  *
  * @param {Object} props
  * @param {string} props.deviceType - Current selected device key
@@ -237,3 +237,4 @@ export function setFlatDeviceValue( setAttributes, prefix, device, value ) {
 	const key = `${ prefix }${ capitalize( device ) }`;
 	setAttributes( { [ key ]: value } );
 }
+

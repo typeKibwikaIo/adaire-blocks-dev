@@ -11,6 +11,7 @@ import {
     TextareaControl,
     RangeControl,
     SelectControl,
+    ToggleControl,
     Button,
     ButtonGroup,
     __experimentalUnitControl as UnitControl,
@@ -18,6 +19,8 @@ import {
 } from '@wordpress/components';
 import { useState, useEffect, createElement, useCallback, useRef } from '@wordpress/element';
 import { desktop, tablet, mobile } from '@wordpress/icons';
+import { BENTO_LAYOUTS, getBentoLayout, makeDefaultCard } from './bento-layouts';
+import BentoPresetIcon from './BentoPresetIcon';
 
 // Custom icons for small laptop and big desktop (copied from other blocks for consistency)
 const smallLaptopIcon = createElement('svg', {
@@ -131,19 +134,15 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         blockId,
         containerMode,
         mainTitle,
-        item1Title,
-        item1Description,
-        item2Title,
-        item2Description,
-        item3Title,
-        item3Description,
-        item4Title,
-        item4Description,
+        cards,
         backgroundColor,
         cardBackgroundColor,
         cardBorderRadius,
         gridBorderColor,
         gridBorderWidth,
+        gridGap,
+        cardShadow,
+        bentoLayout,
         titleColor,
         itemTitleColor,
         itemDescriptionColor,
@@ -207,6 +206,32 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     // Alias used by TypographySection
     const updateResponsiveAttribute = updateResponsive;
 
+    const updateCard = (index, field, value) => {
+        const next = cards.map((card, i) => (i === index ? { ...card, [field]: value } : card));
+        setAttributes({ cards: next });
+    };
+
+    const addCard = () => {
+        setAttributes({ cards: [...cards, makeDefaultCard(cards.length)] });
+    };
+
+    const removeCard = (index) => {
+        setAttributes({ cards: cards.filter((_, i) => i !== index) });
+    };
+
+    const selectBentoLayout = (layoutId) => {
+        const layout = getBentoLayout(layoutId);
+        const next = { bentoLayout: layoutId };
+        if (cards.length < layout.cardCount) {
+            const padded = [...cards];
+            while (padded.length < layout.cardCount) {
+                padded.push(makeDefaultCard(padded.length));
+            }
+            next.cards = padded;
+        }
+        setAttributes(next);
+    };
+
     const updateContainerDimension = (device, property, value) => {
         const currentVal = responsiveMaxWidth?.[device] || {};
         const next = {
@@ -229,13 +254,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     };
 
     const blockProps = useBlockProps({
-        className: `adaire-infogrid-4 ${containerMode === 'constrained' ? 'is-constrained' : ''}`,
+        className: `adaire-infogrid-4 ${containerMode === 'constrained' ? 'is-constrained' : ''} ${cardShadow ? 'has-card-shadow' : ''}`,
         style: {
             '--infogrid4-bg-color': backgroundColor,
             '--infogrid4-card-bg': cardBackgroundColor,
             '--infogrid4-card-radius': `${cardBorderRadius}px`,
             '--infogrid4-grid-border-color': gridBorderColor,
             '--infogrid4-grid-border-thickness': `${gridBorderWidth}px`,
+            '--infogrid4-grid-gap': `${gridGap}px`,
             // Title typography
             '--infogrid4-title-font-size-mobile': responsiveMainTitleFontSize?.mobile,
             '--infogrid4-title-font-size-tablet': responsiveMainTitleFontSize?.tablet,
@@ -412,46 +438,38 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         value={mainTitle}
                         onChange={(value) => setAttributes({ mainTitle: value })}
                     />
-                    <TextareaControl
-                        label={__('Item 1 Title', 'adaire-blocks-dev2')}
-                        value={item1Title}
-                        onChange={(value) => setAttributes({ item1Title: value })}
-                    />
-                    <TextareaControl
-                        label={__('Item 1 Description', 'adaire-blocks-dev2')}
-                        value={item1Description}
-                        onChange={(value) => setAttributes({ item1Description: value })}
-                    />
-                    <TextareaControl
-                        label={__('Item 2 Title', 'adaire-blocks-dev2')}
-                        value={item2Title}
-                        onChange={(value) => setAttributes({ item2Title: value })}
-                    />
-                    <TextareaControl
-                        label={__('Item 2 Description', 'adaire-blocks-dev2')}
-                        value={item2Description}
-                        onChange={(value) => setAttributes({ item2Description: value })}
-                    />
-                    <TextareaControl
-                        label={__('Item 3 Title', 'adaire-blocks-dev2')}
-                        value={item3Title}
-                        onChange={(value) => setAttributes({ item3Title: value })}
-                    />
-                    <TextareaControl
-                        label={__('Item 3 Description', 'adaire-blocks-dev2')}
-                        value={item3Description}
-                        onChange={(value) => setAttributes({ item3Description: value })}
-                    />
-                    <TextareaControl
-                        label={__('Item 4 Title', 'adaire-blocks-dev2')}
-                        value={item4Title}
-                        onChange={(value) => setAttributes({ item4Title: value })}
-                    />
-                    <TextareaControl
-                        label={__('Item 4 Description', 'adaire-blocks-dev2')}
-                        value={item4Description}
-                        onChange={(value) => setAttributes({ item4Description: value })}
-                    />
+                    {cards.map((card, index) => (
+                        <div
+                            key={index}
+                            className="adaire-bento-card-fields"
+                            style={{ borderTop: '1px solid #eee', paddingTop: '12px', marginTop: '12px' }}
+                        >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <strong>{__('Card', 'adaire-blocks-dev2')} {index + 1}</strong>
+                                <Button
+                                    icon="trash"
+                                    label={__('Remove Card', 'adaire-blocks-dev2')}
+                                    isDestructive
+                                    isSmall
+                                    disabled={cards.length <= 1}
+                                    onClick={() => removeCard(index)}
+                                />
+                            </div>
+                            <TextareaControl
+                                label={__('Title', 'adaire-blocks-dev2')}
+                                value={card.title}
+                                onChange={(value) => updateCard(index, 'title', value)}
+                            />
+                            <TextareaControl
+                                label={__('Description', 'adaire-blocks-dev2')}
+                                value={card.description}
+                                onChange={(value) => updateCard(index, 'description', value)}
+                            />
+                        </div>
+                    ))}
+                    <Button variant="secondary" icon="plus" onClick={addCard} style={{ marginTop: '8px' }}>
+                        {__('Add Card', 'adaire-blocks-dev2')}
+                    </Button>
                 </PanelBody>
 
                 <PanelColorSettings
@@ -477,6 +495,24 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 />
 
                 <PanelBody title={__('Layout Settings', 'adaire-blocks-dev2')} initialOpen={false}>
+                    <p>{__('Grid Layout', 'adaire-blocks-dev2')}</p>
+                    <div className="adaire-bento-preset-grid" style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '16px' }}>
+                        {BENTO_LAYOUTS.map((layout) => (
+                            <Button
+                                key={layout.id}
+                                className={`adaire-bento-preset-btn ${bentoLayout === layout.id ? 'is-active' : ''}`}
+                                isPrimary={bentoLayout === layout.id}
+                                onClick={() => selectBentoLayout(layout.id)}
+                                style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'flex-start', height: 'auto', padding: '6px 8px' }}
+                            >
+                                <BentoPresetIcon columns={layout.columns} rows={layout.rows} cells={layout.cells} />
+                                <span style={{ textAlign: 'left' }}>
+                                    <span style={{ display: 'block', fontWeight: 600 }}>{layout.label}</span>
+                                    <span style={{ display: 'block', fontSize: '11px', opacity: 0.75 }}>{layout.bestFor}</span>
+                                </span>
+                            </Button>
+                        ))}
+                    </div>
                     <p>{__('Container Width', 'adaire-blocks-dev2')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {CONTAINER_MODES.map((mode) => (
@@ -557,6 +593,18 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         onChange={(value) => setAttributes({ gridBorderWidth: value })}
                         min={0}
                         max={4}
+                    />
+                    <RangeControl
+                        label={__('Grid Gap', 'adaire-blocks-dev2')}
+                        value={gridGap}
+                        onChange={(value) => setAttributes({ gridGap: value })}
+                        min={0}
+                        max={64}
+                    />
+                    <ToggleControl
+                        label={__('Card Shadow', 'adaire-blocks-dev2')}
+                        checked={cardShadow}
+                        onChange={(value) => setAttributes({ cardShadow: value })}
                     />
                 </PanelBody>
 
@@ -674,63 +722,23 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         />
                     </div>
 
-                    <div className="adaire-infogrid-4__grid">
-                        <div className="adaire-infogrid-4__item adaire-infogrid-4__item--1">
-                            <RichText
-                                tagName="h3"
-                                className="adaire-infogrid-4__item-title"
-                                value={item1Title}
-                                onChange={(value) => setAttributes({ item1Title: value })}
-                            />
-                            <RichText
-                                tagName="p"
-                                className="adaire-infogrid-4__item-text"
-                                value={item1Description}
-                                onChange={(value) => setAttributes({ item1Description: value })}
-                            />
-                        </div>
-                        <div className="adaire-infogrid-4__item adaire-infogrid-4__item--2">
-                            <RichText
-                                tagName="h3"
-                                className="adaire-infogrid-4__item-title"
-                                value={item2Title}
-                                onChange={(value) => setAttributes({ item2Title: value })}
-                            />
-                            <RichText
-                                tagName="p"
-                                className="adaire-infogrid-4__item-text"
-                                value={item2Description}
-                                onChange={(value) => setAttributes({ item2Description: value })}
-                            />
-                        </div>
-                        <div className="adaire-infogrid-4__item adaire-infogrid-4__item--3">
-                            <RichText
-                                tagName="h3"
-                                className="adaire-infogrid-4__item-title"
-                                value={item3Title}
-                                onChange={(value) => setAttributes({ item3Title: value })}
-                            />
-                            <RichText
-                                tagName="p"
-                                className="adaire-infogrid-4__item-text"
-                                value={item3Description}
-                                onChange={(value) => setAttributes({ item3Description: value })}
-                            />
-                        </div>
-                        <div className="adaire-infogrid-4__item adaire-infogrid-4__item--4">
-                            <RichText
-                                tagName="h3"
-                                className="adaire-infogrid-4__item-title"
-                                value={item4Title}
-                                onChange={(value) => setAttributes({ item4Title: value })}
-                            />
-                            <RichText
-                                tagName="p"
-                                className="adaire-infogrid-4__item-text"
-                                value={item4Description}
-                                onChange={(value) => setAttributes({ item4Description: value })}
-                            />
-                        </div>
+                    <div className="adaire-infogrid-4__grid" data-layout={bentoLayout || 'symmetrical'}>
+                        {cards.map((card, index) => (
+                            <div key={index} className={`adaire-infogrid-4__item adaire-infogrid-4__item--${index + 1}`}>
+                                <RichText
+                                    tagName="h3"
+                                    className="adaire-infogrid-4__item-title"
+                                    value={card.title}
+                                    onChange={(value) => updateCard(index, 'title', value)}
+                                />
+                                <RichText
+                                    tagName="p"
+                                    className="adaire-infogrid-4__item-text"
+                                    value={card.description}
+                                    onChange={(value) => updateCard(index, 'description', value)}
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

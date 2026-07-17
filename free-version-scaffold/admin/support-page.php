@@ -1,7 +1,7 @@
 <?php
 /**
  * Support Page
- * Simple in-admin support/contact screen for Guten-Blocks users.
+ * Simple in-admin support/contact screen for Adaire Blocks users.
  */
 
 if (!defined('ABSPATH')) {
@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Add Support submenu to the Guten-Blocks admin menu
+ * Add Support submenu to the Adaire Blocks admin menu
  */
 function adaire_blocks_add_support_menu() {
     add_submenu_page(
@@ -40,7 +40,7 @@ function adaire_blocks_support_page() {
             .adaire-support-page .adaire-support-image { width: 100%; max-width: 620px; height: auto; border-radius: 12px; box-shadow: 0 10px 26px rgba(15, 23, 42, .08); display: block; }
         </style>
 
-        <h1><?php esc_html_e('Got a question about using Guten-Blocks?', 'adaire-blocks'); ?></h1>
+        <h1><?php esc_html_e('Got a question about using Adaire Blocks?', 'adaire-blocks'); ?></h1>
 
         <p class="adaire-support-desc">
             <?php

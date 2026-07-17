@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "SaaS Hero",
   "category": "adaire-layout-hero",
-  "description": "SaaS Hero block for GutenBlocks Blocks.",
+  "description": "SaaS Hero block for AdaireBlocks Blocks.",
   "supports": {
     "html": false,
     "anchor": true

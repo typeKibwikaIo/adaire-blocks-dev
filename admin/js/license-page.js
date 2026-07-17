@@ -232,7 +232,7 @@
                         <div class="adaire-license-input-group">
                             <label for="license-key">License Key</label>
                             <input type="text" id="license-key" name="license_key" placeholder="Enter your license key" value="${(data && data.licenseKey) ? this.escapeHtml(data.licenseKey) : ''}" required>
-                            <p class="description">Enter your GutenBlocks license key to activate the plugin.</p>
+                            <p class="description">Enter your AdaireBlocks license key to activate the plugin.</p>
                         </div>
                         <div class="adaire-license-actions">
                             <button type="submit" class="button button-primary" id="activate-license">
@@ -304,3 +304,4 @@
     });
 
 })(jQuery);
+

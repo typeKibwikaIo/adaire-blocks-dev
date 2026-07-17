@@ -64,7 +64,7 @@ All three of these already look correctly wired end-to-end in the current code:
 - Feature Grid icon size: `UnitControl` → `responsiveIconSize` → consumed in both the editor preview and real frontend media queries.
 - Feature Grid title color: `PanelColorSettings`/`TypographySection` → `responsiveTitleColor` → same full pipeline.
 
-No code-level defect was found for any of these three. Possible explanations: already fixed since the report was written, a caching artifact (common with "changed setting has no effect" reports), or the report is about a different, similarly-named block (`infogrid-block`, `infogrid-3-block`, `infogrid-4-block`, and `icon-box-block` all exist and look similar). **Recommend re-testing live on the current build before spending fix time here** — there's a real risk of "fixing" something that isn't broken.
+No code-level defect was found for any of these three. Possible explanations: already fixed since the report was written, a caching artifact (common with "changed setting has no effect" reports), or the report is about a different, similarly-named block (`infogrid-block`, `infogrid-3-block`, `bento-grid-block`, and `icon-box-block` all exist and look similar). **Recommend re-testing live on the current build before spending fix time here** — there's a real risk of "fixing" something that isn't broken.
 
 ## 12. Footer missing tagline control
 
@@ -123,3 +123,4 @@ Confirmed, and this is the largest item on the list — a real architectural gap
 The block's own internal 5-breakpoint device switcher (Mobile/Tablet/Small Laptop/Desktop/Big Desktop) is completely independent of WordPress's own top-toolbar resize-preview buttons — switching WP's preview width does not change which of this block's own breakpoints is being displayed; only this block's own device buttons do. That alone could produce the reported "switching device views shows wrong styling" experience without there being an actual CSS bug. The real frontend `@media` CSS looked correctly wired with proper desktop fallback for every property checked.
 
 **Recommend live verification first** — specifically whether "text disappears" / "content becomes blurry" reproduce on the actual published page (real bug) or only inside the editor's device-preview (most likely an editor-UX/expectation issue, not a frontend defect).
+

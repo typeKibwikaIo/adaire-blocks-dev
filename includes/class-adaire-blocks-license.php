@@ -204,6 +204,39 @@ class AdaireBlocksLicense {
             error_log('Adaire Blocks License: Last error: ' . $wpdb->last_error);
         }
     }
+
+    /**
+     * Extract token from activation response data.
+     */
+    private function extract_activation_token($activation_data) {
+        if (!is_array($activation_data)) {
+            return null;
+        }
+
+        $candidates = array(
+            $activation_data,
+            $activation_data['data'] ?? null,
+            isset($activation_data['data']['data']) && is_array($activation_data['data']['data']) ? $activation_data['data']['data'] : null,
+            $activation_data['activationData'] ?? null,
+            $activation_data['data']['activationData'] ?? null,
+        );
+
+        foreach ($candidates as $candidate) {
+            if (!is_array($candidate)) {
+                continue;
+            }
+
+            if (!empty($candidate['token'])) {
+                return $candidate['token'];
+            }
+
+            if (!empty($candidate['activationData']['token'])) {
+                return $candidate['activationData']['token'];
+            }
+        }
+
+        return null;
+    }
     
     /**
      * Validate license with validation server
@@ -436,7 +469,15 @@ class AdaireBlocksLicense {
         error_log('Adaire Blocks License: JSON Error Code: ' . $json_error);
         error_log('Adaire Blocks License: JSON Error Message: ' . $json_error_msg);
         
-        if (!$data) {
+        if ($body === '' || $body === null) {
+            error_log('Adaire Blocks License: Activation response body is empty');
+            return array(
+                'success' => false,
+                'message' => 'Invalid JSON response from license server: empty response body'
+            );
+        }
+        
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
             error_log('Adaire Blocks License: Failed to decode activation JSON response');
             error_log('Adaire Blocks License: Raw activation response: ' . $body);
             error_log('Adaire Blocks License: JSON Error: ' . $json_error_msg);
@@ -454,13 +495,13 @@ class AdaireBlocksLicense {
         error_log('Adaire Blocks License: ===== JSON DECODING END =====');
         
         if ( ! isset( $data['success'] ) ) {
-            error_log( 'GutenBlocks License: Activation response missing success field' );
+            error_log( 'AdaireBlocks License: Activation response missing success field' );
             return array( 'success' => false, 'message' => 'Invalid response format from license server' );
         }
 
         // Outer failure: validation server itself could not reach LMFWC.
         if ( ! $data['success'] ) {
-            error_log( 'GutenBlocks License: Validation server returned outer success=false' );
+            error_log( 'AdaireBlocks License: Validation server returned outer success=false' );
             return array( 'success' => false, 'message' => $data['error'] ?? 'License activation failed' );
         }
 
@@ -476,22 +517,21 @@ class AdaireBlocksLicense {
             if ( isset( $lmfwc_errors['lmfwc_rest_data_error'] ) ) {
                 return array( 'success' => false, 'message' => $lmfwc_errors['lmfwc_rest_data_error'][0] );
             }
-            error_log( 'GutenBlocks License: LMFWC activation errors: ' . print_r( $lmfwc_errors, true ) );
+            error_log( 'AdaireBlocks License: LMFWC activation errors: ' . print_r( $lmfwc_errors, true ) );
             return array( 'success' => false, 'message' => 'License activation failed' );
         }
 
-        $token = $activation_data['activationData']['token']
-              ?? $activation_data['token']
-              ?? null;
+        $token = $this->extract_activation_token($activation_data);
 
-        error_log( 'GutenBlocks License: Activation data: ' . print_r( $activation_data, true ) );
+        error_log( 'AdaireBlocks License: Activation data: ' . print_r( $activation_data, true ) );
+        error_log( 'AdaireBlocks License: Extracted token: ' . ( $token ? substr( $token, 0, 8 ) . '...' : 'none' ) );
 
         if ( ! $token ) {
-            error_log( 'GutenBlocks License: No activation token received in response' );
+            error_log( 'AdaireBlocks License: No activation token received in response' );
             return array( 'success' => false, 'message' => 'No activation token received' );
         }
 
-        error_log( 'GutenBlocks License: Received activation token: ' . substr( $token, 0, 8 ) . '...' );
+        error_log( 'AdaireBlocks License: Received activation token: ' . substr( $token, 0, 8 ) . '...' );
 
         $times_activated      = $activation_data['timesActivated']      ?? 1;
         $times_activated_max  = $activation_data['timesActivatedMax']   ?? 0;
@@ -966,15 +1006,7 @@ class AdaireBlocksLicense {
         error_log('Adaire Blocks License: Parsed activation data: ' . print_r($activation_data, true));
         
         // Extract token from activation data
-        $token = null;
-        if (isset($activation_data['data']['token'])) {
-            $token = $activation_data['data']['token'];
-        } elseif (isset($activation_data['data']['activationData']['token'])) {
-            $token = $activation_data['data']['activationData']['token'];
-        } elseif (isset($activation_data['token'])) {
-            $token = $activation_data['token'];
-        }
-        
+        $token = $this->extract_activation_token($activation_data);
         if (!$token) {
             error_log('Adaire Blocks License: AJAX save activation - no token found in response');
             wp_send_json_error(array('message' => 'No activation token found in response'));
@@ -1127,15 +1159,14 @@ class AdaireBlocksLicense {
         
         curl_setopt_array($ch, array(
             CURLOPT_URL => $url,
-            CURLOPT_POST => true,
+            CURLOPT_HTTPGET => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
                 'Accept: application/json',
-                'User-Agent: PostmanRuntime/7.32.3'
+                'User-Agent: Adaire-Blocks-WordPress/1.1.1'
             ),
             CURLOPT_VERBOSE => true,
             CURLOPT_STDERR => fopen('php://temp', 'w+')
@@ -1173,3 +1204,4 @@ class AdaireBlocksLicense {
         );
     }
 }
+

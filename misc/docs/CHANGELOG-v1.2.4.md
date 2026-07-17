@@ -43,7 +43,7 @@ Version 1.2.4 adds custom block icons for the recently added blocks (Hero 1, Ima
 ### Icon system
 
 - New SVG assets added under `src/icons/new-icons/part5/` (and, for free blocks, copied to `src/icons/new-icons/Free Blocks/`).
-- `config/block-icon-mapping.json` updated with `blockIconMap` and `newIconMap` entries for: hero-1-block, image-composition-block, infogrid-block, infogrid-2-block, infogrid-3-block, infogrid-4-block, card-scroll-block, footer-block.
+- `config/block-icon-mapping.json` updated with `blockIconMap` and `newIconMap` entries for: hero-1-block, image-composition-block, infogrid-block, infogrid-2-block, infogrid-3-block, bento-grid-block, card-scroll-block, footer-block.
 - `npm run prebuild` (apply-new-icons.js and update-block-icons.js) generates or updates React icon components and writes the SVG into each block’s `block.json`.
 
 ### Block registration (icon component)
@@ -52,7 +52,7 @@ Version 1.2.4 adds custom block icons for the recently added blocks (Hero 1, Ima
 - **image-composition-block:** `icon: ImageCompositionIcon` from `../icons/image-composition`
 - **infogrid-2-block:** `icon: InfoGrid2Icon` from `../icons/info-grid-2`
 - **infogrid-3-block:** `icon: InfoGrid3Icon` from `../icons/info-grid-3`
-- **infogrid-4-block:** `icon: InfoGrid4Icon` from `../icons/info-grid-4`
+- **bento-grid-block:** `icon: InfoGrid4Icon` from `../icons/info-grid-4`
 - **card-scroll-block:** `icon: CardScrollIcon` from `../icons/card-scroll`
 - **card-scroll-item-block:** `icon: CardScrollIcon` from `../icons/card-scroll`
 - **footer-block:** `icon: ContainerIcon` from `../icons/container`
@@ -71,7 +71,7 @@ Version 1.2.4 adds custom block icons for the recently added blocks (Hero 1, Ima
 - `src/image-composition-block/index.js` – Use ImageCompositionIcon.
 - `src/infogrid-2-block/index.js` – Use InfoGrid2Icon.
 - `src/infogrid-3-block/index.js` – Use InfoGrid3Icon.
-- `src/infogrid-4-block/index.js` – Use InfoGrid4Icon.
+- `src/bento-grid-block/index.js` – Use InfoGrid4Icon.
 - `src/card-scroll-block/index.js` – Use CardScrollIcon.
 - `src/card-scroll-item-block/index.js` – Use CardScrollIcon.
 - `src/footer-block/index.js` – Use ContainerIcon.
@@ -90,3 +90,4 @@ Version 1.2.4 adds custom block icons for the recently added blocks (Hero 1, Ima
 - All changes are additive. The only metadata change is the `icon` field in `block.json` (SVG string), which does not affect saved content or front-end output.
 
 **Version:** 1.2.4
+

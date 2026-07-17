@@ -39,12 +39,12 @@ const BLOCK_CATEGORIES = {
     'flipcard-back-block': 'adaire-blocks-plus',
     
     // PREMIUM Blocks
-    'particles-block': 'adaire-blocks-premium',
-    'project-block': 'adaire-blocks-premium',
-    'industries-block': 'adaire-blocks-premium',
-    'modal-block': 'adaire-blocks-premium',
-    'modal-trigger-block': 'adaire-blocks-premium', // Child block of modal-block
-    'modal-content-block': 'adaire-blocks-premium', // Child block of modal-block
+    'particles-block': 'adaire-blocks-pro',
+    'project-block': 'adaire-blocks-pro',
+    'industries-block': 'adaire-blocks-pro',
+    'modal-block': 'adaire-blocks-pro',
+    'modal-trigger-block': 'adaire-blocks-pro', // Child block of modal-block
+    'modal-content-block': 'adaire-blocks-pro', // Child block of modal-block
 };
 
 // Get all block directories

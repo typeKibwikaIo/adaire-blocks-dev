@@ -226,7 +226,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     disabled={forceSingleMapMode}
                                     help={
                                         forceSingleMapMode
-                                            ? blockConfig.upgradeMessage || __('Upgrade to Premium for interactive flying map animations', 'ad-map')
+                                            ? blockConfig.upgradeMessage || __('Upgrade to Pro for interactive flying map animations', 'ad-map')
                                             : __("When enabled, only one map is rendered and it slides to the selected location", 'ad-map')
                                     }
                                 />

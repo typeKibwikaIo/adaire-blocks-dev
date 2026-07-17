@@ -1,6 +1,6 @@
 <?php
 /**
- * GutenBlocks Deactivation Feedback Handler
+ * AdaireBlocks Deactivation Feedback Handler
  *
  * Upload this file to your server at:
  *   https://adaire.com/feedback-handler.php
@@ -32,7 +32,7 @@ $email   = sanitize( $_POST['email']   ?? '' );
 $site    = sanitize( $_POST['site']    ?? 'Not provided' );
 
 $lines = [
-    'A GutenBlocks user has deactivated the free plugin.',
+    'A AdaireBlocks user has deactivated the free plugin.',
     '',
     'Site:    ' . $site,
     'Reason:  ' . ( $reason  ?: 'Not provided' ),
@@ -47,10 +47,10 @@ $payload = [
     'personalizations' => [
         [
             'to'      => [ [ 'email' => ADAIRE_FEEDBACK_TO ] ],
-            'subject' => 'GutenBlocks Deactivation Feedback',
+            'subject' => 'AdaireBlocks Deactivation Feedback',
         ],
     ],
-    'from'    => [ 'email' => ADAIRE_FEEDBACK_FROM, 'name' => 'GutenBlocks' ],
+    'from'    => [ 'email' => ADAIRE_FEEDBACK_FROM, 'name' => 'AdaireBlocks' ],
     'content' => [ [ 'type' => 'text/plain', 'value' => $body ] ],
 ];
 
@@ -88,3 +88,4 @@ if ( $status >= 200 && $status < 300 ) {
 function sanitize( $value ) {
     return htmlspecialchars( strip_tags( trim( (string) $value ) ), ENT_QUOTES, 'UTF-8' );
 }
+

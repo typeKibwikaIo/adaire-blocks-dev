@@ -1,6 +1,6 @@
 # Session Summary — 2026-07-09
 
-This document summarizes the work completed in this session on the GutenBlocks WordPress plugin (`adaire-blocks-dev-main`), continuing from the Cookie Banner and Freemium tier work done the previous day.
+This document summarizes the work completed in this session on the AdaireBlocks WordPress plugin (`adaire-blocks-dev-main`), continuing from the Cookie Banner and Freemium tier work done the previous day.
 
 ## Cookie Banner: emoji removed, replaced with inline SVG icons
 
@@ -39,3 +39,4 @@ Working in this particular sandbox continues to run into a recurring quirk where
 ## What still needs to happen on your end
 
 None of the changes in this session have been packaged into a new zip file you can install, because the two blocks affected (SaaS Hero and Row/Column) both ship as part of the Free tier, which bundles far too many blocks to build within this sandbox's time limits. The Cookie Banner fix was rebuilt and shipped earlier in the session as `adaire-blocks-freemium.zip`. For everything else, running your normal Free-tier build and deploy process will pick up all of today's changes automatically, since they're all saved directly in the plugin's source.
+

@@ -204,7 +204,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     : {};
 
   // ─── Row Layout (functional / positional — tagged "layout" per the
-  // Gutenblocks free-tier InspectorTabs reorg) ──
+  // AdaireBlocks free-tier InspectorTabs reorg) ──
   const rowLayoutPanel = (
     <PanelBody section="layout" title={ __( 'Row Layout', 'adaire-row' ) } initialOpen={ true }>
       <ToggleGroupControl
@@ -250,7 +250,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     </PanelBody>
   );
 
-  // ─── Spacing (visual — tagged "style"/medium per the Gutenblocks
+  // ─── Spacing (visual — tagged "style"/medium per the AdaireBlocks
   // free-tier InspectorTabs reorg) ──
   const spacingPanel = (
     <PanelBody section="style" priority="medium" title={ __( 'Spacing', 'adaire-row' ) } initialOpen={ false }>
@@ -293,7 +293,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     </PanelBody>
   );
 
-  // ─── Border (visual — tagged "style"/medium per the Gutenblocks free-tier
+  // ─── Border (visual — tagged "style"/medium per the AdaireBlocks free-tier
   // InspectorTabs reorg) ──
   // Applies to the row container itself (the whole grid, not individual
   // columns — see column-block/edit.js for the equivalent per-column control).
@@ -436,7 +436,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
   const currentColumnCount = columnWidths.length || 1;
 
-  // ─── Columns (functional — tagged "content" per the Gutenblocks free-tier
+  // ─── Columns (functional — tagged "content" per the AdaireBlocks free-tier
   // InspectorTabs reorg) ──────────────────
   const columnsPanel = (
     <PanelBody section="content" title={ __( 'Columns', 'adaire-row' ) } initialOpen={ true }>
@@ -570,3 +570,4 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     </>
   );
 }
+

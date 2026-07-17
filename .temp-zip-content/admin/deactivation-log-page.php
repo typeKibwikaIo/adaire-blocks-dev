@@ -27,8 +27,8 @@ class Adaire_Deactivation_Log_Page
     {
         $capability = 'activate_plugins';
         add_management_page(
-            'GutenBlocks Deactivation Logs',
-            'GutenBlocks Deactivation Logs',
+            'AdaireBlocks Deactivation Logs',
+            'AdaireBlocks Deactivation Logs',
             $capability,
             'adaire-deactivation-logs',
             [$this, 'render']
@@ -46,7 +46,7 @@ class Adaire_Deactivation_Log_Page
         $recent_logs = $this->get_recent_logs();
 
         echo '<div class="wrap">';
-        echo '<h1>GutenBlocks Deactivation Logs</h1>';
+        echo '<h1>AdaireBlocks Deactivation Logs</h1>';
 
         $this->render_test_result_notice($test_result);
         $this->render_test_form();
@@ -65,8 +65,8 @@ class Adaire_Deactivation_Log_Page
         check_admin_referer('adaire_send_test');
 
         $test_recipient_email = defined('ADAIRE_FEEDBACK_EMAIL') ? ADAIRE_FEEDBACK_EMAIL : get_option('admin_email');
-        $subject = 'GutenBlocks SendGrid Test ' . current_time('mysql');
-        $message = "GutenBlocks SendGrid test message.\n\nTime: " . current_time('mysql') . "\nSite: " . get_bloginfo('url') . "\n";
+        $subject = 'AdaireBlocks SendGrid Test ' . current_time('mysql');
+        $message = "AdaireBlocks SendGrid test message.\n\nTime: " . current_time('mysql') . "\nSite: " . get_bloginfo('url') . "\n";
 
         $sendgrid_result = [
             'sent' => false,
@@ -202,3 +202,4 @@ class Adaire_Deactivation_Log_Page
         echo '</tbody></table>';
     }
 }
+

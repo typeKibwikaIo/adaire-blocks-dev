@@ -89,7 +89,7 @@ const Comp = mod.exports;
 
 const attributes = {
   buttonText: 'Back to all blocks',
-  buttonLink: 'https://gutenblocks.com/adaire-blocks/',
+  buttonLink: 'https://AdaireBlocks.com/adaire-blocks/',
   openInNewTab: false,
   blockId: '',
   buttonColor: '#ffffff',
@@ -115,3 +115,4 @@ const attributes = {
 
 const html = ReactDOMServer.renderToStaticMarkup(React.createElement(Comp, { attributes }));
 console.log(html);
+

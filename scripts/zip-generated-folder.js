@@ -5,10 +5,10 @@ const path = require('path');
 const AdmZip = require('adm-zip');
 
 const variant = (process.argv[2] || '').toLowerCase();
-const allowedVariants = ['free', 'plus', 'premium', 'freemium'];
+const allowedVariants = ['free', 'pro'];
 
 if (!allowedVariants.includes(variant)) {
-    console.error('Usage: node scripts/zip-generated-folder.js <free|plus|premium|freemium>');
+    console.error('Usage: node scripts/zip-generated-folder.js <free|pro>');
     process.exit(1);
 }
 

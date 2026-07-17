@@ -111,8 +111,8 @@
         "ctaBgColor": { "type": "string", "default": "" },
         "ctaTextColor": { "type": "string", "default": "" },
         "ctaBorderColor": { "type": "string", "default": "" },
-        "gutenblocksMargin": { "type": "object", "default": {} },
-        "gutenblocksPadding": { "type": "object", "default": {} },
+        "AdaireBlocksMargin": { "type": "object", "default": {} },
+        "AdaireBlocksPadding": { "type": "object", "default": {} },
         "bgImageUrl": { "type": "string", "default": "" },
         "bgSize": { "type": "string", "default": "cover" },
         "bgPosition": { "type": "string", "default": "center center" },
@@ -120,3 +120,4 @@
         "bgAttachment": { "type": "string", "default": "scroll" }
     }
 }
+

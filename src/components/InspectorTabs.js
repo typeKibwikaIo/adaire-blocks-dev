@@ -32,7 +32,7 @@
  * Panels tagged with an explicit `section` prop ("content" | "layout" | "style")
  * are placed deliberately. A `priority` prop ("high" | "medium") further orders
  * panels within the Style tab. Panels with no `section` prop (blocks outside
- * the Gutenblocks free-tier reorg that haven't been tagged yet) fall back to the
+ * the AdaireBlocks free-tier reorg that haven't been tagged yet) fall back to the
  * legacy keyword classifier below, so their behavior is unchanged.
  */
 
@@ -254,3 +254,4 @@ export default function InspectorTabs( {
 		</InspectorControls>
 	);
 }
+

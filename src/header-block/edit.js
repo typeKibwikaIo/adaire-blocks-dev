@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, useMemo } from '@wordpress/element';
+import { useState, useRef, useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls, ColorPalette, useSettings } from '@wordpress/block-editor';
 import {
@@ -12,7 +12,7 @@ import HeaderIcon, { iconOptions, SocialIcon, CartIcon, PaymentIcon, paymentMeth
 import InspectorTabs from '../components/InspectorTabs';
 import { boxToCss } from '../components/spacing-utils';
 
-// ─── Option maps ──────────────────────────────────────────────────────────
+// --- Option maps ----------------------------------------------------------
 
 const layoutOptions = [
     { label: 'Horizontal', value: 'horizontal' },
@@ -54,23 +54,23 @@ const buttonShapeOptions = [
 
 const platformOptions = ['Facebook','Instagram','X','YouTube','LinkedIn','TikTok'];
 
-// ADAB-016 — cart icon / payment icons share the same four-zone placement
+// ADAB-016 � cart icon / payment icons share the same four-zone placement
 // system already used by socialPlacement, so the icons can live wherever
 // socials already can (with header buttons, before nav, or either side of
 // the top bar) instead of inventing a separate positioning mechanism.
 const iconPlacementOptions = [
     { label: 'With header buttons', value: 'actions'      },
     { label: 'Before navigation',    value: 'before-nav'   },
-    { label: 'Top bar — left',       value: 'topbar-left'  },
-    { label: 'Top bar — right',      value: 'topbar-right' },
+    { label: 'Top bar � left',       value: 'topbar-left'  },
+    { label: 'Top bar � right',      value: 'topbar-right' },
 ];
 
-// Block-level Font Family control (ADAB-010) — one choice for the whole
+// Block-level Font Family control (ADAB-010) � one choice for the whole
 // header, applied via the --adaire-header-font-family custom property at
 // the block root. Not per-text-role: this block's existing typography
 // controls (Nav font size/weight, Letter spacing, Text transform) are flat
 // attributes, not the TypographySection-per-role pattern, and none of them
-// ever covered font family — that's the gap this control fills.
+// ever covered font family � that's the gap this control fills.
 const FONT_FAMILY_OPTIONS = [
     { label: 'Default (inherit theme)', value: '' },
     { label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
@@ -113,7 +113,7 @@ const hamburgerPositionOptions = [
     { label: 'Right', value: 'right' },
 ];
 
-// ─── CSS-variable color binding (live theme sync) ─────────────────────────
+// --- CSS-variable color binding (live theme sync) -------------------------
 
 function useColorBinding() {
     const [ themeColors ] = useSettings( 'color.palette.theme' );
@@ -130,7 +130,7 @@ function useColorBinding() {
     return { bindColor, resolveColor };
 }
 
-// ─── Background position grid ───────────────────────────────────────────
+// --- Background position grid -------------------------------------------
 
 const BG_POSITIONS = [
     ['top left',    'top center',    'top right'   ],
@@ -162,7 +162,7 @@ function BgPositionPicker({ value, onChange }) {
 
 // QuickZone, PenIcon, CloseIcon imported from ../components/QuickZone
 
-// ─── Style helpers ───────────────────────────────────────────────────────
+// --- Style helpers -------------------------------------------------------
 
 function getActionRadius( shape ) {
     switch ( shape ) {
@@ -174,7 +174,7 @@ function getActionRadius( shape ) {
 }
 
 // Resolves which of the three mutually-exclusive background modes is active.
-// Mirrors render.php's adaire_header_get_effective_background_type() — reads
+// Mirrors render.php's adaire_header_get_effective_background_type() � reads
 // the explicit backgroundType attribute when set, otherwise infers it from
 // whichever legacy field is populated so content saved before this attribute
 // existed keeps rendering exactly as it did before (image > gradient > color).
@@ -250,7 +250,7 @@ function getHeaderStyle( attributes ) {
         styles['--adaire-header-dot-spacing'] = `${ attributes.navDotSpacing != null ? attributes.navDotSpacing : 8 }px`;
         if ( attributes.navDotColor ) styles['--adaire-header-dot-color'] = attributes.navDotColor;
     }
-    // ADAB-016 — cart icon / payment icons sizing & color, same optional
+    // ADAB-016 � cart icon / payment icons sizing & color, same optional
     // override pattern as social icons (CSS var only set when non-empty;
     // style.scss falls back to a sensible default otherwise).
     styles['--adaire-header-cart-size']    = `${ attributes.cartIconSize || 18 }px`;
@@ -275,7 +275,7 @@ function getHeaderStyle( attributes ) {
     if ( attributes.ctaBorderColor )    styles['--adaire-header-cta-border']         = attributes.ctaBorderColor;
     if ( attributes.ctaFontSize )       styles['--adaire-header-cta-font-size']      = `${ attributes.ctaFontSize }px`;
 
-    // Background image — only when it's the active exclusive background mode
+    // Background image � only when it's the active exclusive background mode
     // and the header isn't transparent (matches render.php's frontend logic).
     if ( bgType === 'image' && attributes.bgImageUrl && ! attributes.transparentHeader ) {
         styles.backgroundImage      = `url(${ attributes.bgImageUrl })`;
@@ -285,15 +285,15 @@ function getHeaderStyle( attributes ) {
         styles.backgroundAttachment = attributes.bgAttachment || 'scroll';
     }
 
-    const marginCss  = boxToCss( attributes.gutenblocksMargin );
-    const paddingCss = boxToCss( attributes.gutenblocksPadding );
+    const marginCss  = boxToCss( attributes.AdaireBlocksMargin );
+    const paddingCss = boxToCss( attributes.AdaireBlocksPadding );
     if ( marginCss )  styles.margin  = marginCss;
     if ( paddingCss ) styles.padding = paddingCss;
 
     return styles;
 }
 
-// ─── Dynamic WP-menu resolution (req #2) ────────────────────────────────
+// --- Dynamic WP-menu resolution (req #2) --------------------------------
 // Mirrors render.php's adaire_header_resolve_menu_object() /
 // adaire_header_build_menu_tree() exactly, but client-side via the `core`
 // data store, so the editor canvas shows real menu items the instant a menu
@@ -314,7 +314,7 @@ function decodeEntities( html ) {
 // menu-items endpoint, which runs the same resolution) falls back to a raw
 // "#123 (no title)" string when a menu item has no custom label AND its
 // linked object has no title. That debug-style string leaks a raw DB post
-// ID and should never reach the editor preview or a site visitor — mirrors
+// ID and should never reach the editor preview or a site visitor � mirrors
 // adaire_header_friendly_menu_label()/adaire_header_label_from_url() in
 // render.php so editor and frontend agree.
 function isPlaceholderMenuTitle( title ) {
@@ -480,7 +480,7 @@ function DynamicMenuTree({ items, attributes }) {
     );
 }
 
-// ─── Search preview (req #6) ────────────────────────────────────────────
+// --- Search preview (req #6) --------------------------------------------
 
 function SearchPreview({ attributes }) {
     if ( ! attributes.showSearch ) {
@@ -505,7 +505,7 @@ function SearchPreview({ attributes }) {
     );
 }
 
-// ─── Social icons preview (req #7) ──────────────────────────────────────
+// --- Social icons preview (req #7) --------------------------------------
 
 function SocialPreview({ attributes }) {
     if ( ! attributes.showSocial ) {
@@ -529,8 +529,8 @@ function SocialPreview({ attributes }) {
     );
 }
 
-// ─── WooCommerce cart icon preview (ADAB-016) ───────────────────────────
-// Editor-only preview — there's no live cart count to show on canvas, so a
+// --- WooCommerce cart icon preview (ADAB-016) ---------------------------
+// Editor-only preview � there's no live cart count to show on canvas, so a
 // static placeholder badge stands in for it (mirrors how SearchPreview's
 // input is a non-functional stand-in too). The real count/link only exist
 // on the frontend, and only when WooCommerce is actually active.
@@ -550,7 +550,7 @@ function CartPreview({ attributes }) {
     );
 }
 
-// ─── Payment icons preview (ADAB-016) ───────────────────────────────────
+// --- Payment icons preview (ADAB-016) -----------------------------------
 
 function PaymentIconsPreview({ attributes }) {
     if ( ! attributes.showPaymentIcons ) {
@@ -568,7 +568,7 @@ function PaymentIconsPreview({ attributes }) {
     );
 }
 
-// ─── Top bar "Follow Us" preview (req #8) ───────────────────────────────
+// --- Top bar "Follow Us" preview (req #8) -------------------------------
 
 function FollowUsPreview({ attributes }) {
     if ( ! attributes.topBarFollowEnabled ) {
@@ -590,7 +590,7 @@ function FollowUsPreview({ attributes }) {
     return <span className={ `adaire-header-follow-us icon-${ iconPosition }` }>{ inner }</span>;
 }
 
-// ─── Social icons Quick-Edit zone (inline editing directly on the icons) ──
+// --- Social icons Quick-Edit zone (inline editing directly on the icons) --
 // Self-contained, like LogoZone/ActionsZone: builds its own update/move/
 // remove/add helpers from setAttributes rather than depending on the main
 // Edit() component's updateSocialItem, since it's rendered from inside
@@ -684,8 +684,8 @@ function SocialZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
-// ─── WooCommerce cart icon Quick-Edit zone (ADAB-016) ───────────────────
-// Self-contained like SocialZone — toggle, size, color, and the optional
+// --- WooCommerce cart icon Quick-Edit zone (ADAB-016) -------------------
+// Self-contained like SocialZone � toggle, size, color, and the optional
 // frontend cart-count badge live together here, regardless of which of the
 // 4 shared placement zones the icon is currently rendered into.
 
@@ -719,9 +719,9 @@ function CartZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
-// ─── Payment icons Quick-Edit zone (ADAB-016) ───────────────────────────
+// --- Payment icons Quick-Edit zone (ADAB-016) ---------------------------
 // Mirrors SocialZone's repeatable-array pattern exactly, but for payment
-// methods instead of social platforms (no URL field — these are static
+// methods instead of social platforms (no URL field � these are static
 // trust badges, not links).
 
 function PaymentZone({ attributes, setAttributes, activeZone, setActiveZone }) {
@@ -794,12 +794,12 @@ function PaymentZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
-// ─── Logo sub-component ─────────────────────────────────────────────────
+// --- Logo sub-component -------------------------------------------------
 
 function LogoPreview({ attributes }) {
     const logoContent = attributes.logoType === 'image' && attributes.logoImageUrl ? (
         // Apply width directly so the slider is live in the editor (CSS vars may not cascade
-        // immediately inside the block sandbox — inline style is always reactive).
+        // immediately inside the block sandbox � inline style is always reactive).
         <img
             src={ attributes.logoImageUrl }
             alt={ attributes.logoImageAlt || attributes.logoText }
@@ -822,7 +822,7 @@ function LogoPreview({ attributes }) {
     );
 }
 
-// ─── Header canvas preview ───────────────────────────────────────────────
+// --- Header canvas preview -----------------------------------------------
 
 function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone }) {
     const visibleNavItems = attributes.navItems || [];
@@ -852,12 +852,12 @@ function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone })
                 <nav className={ `adaire-header-nav is-${ attributes.navOrientation }` }>
                     { menuState.isLoading && (
                         <span className="adaire-header-nav-item adaire-header-nav-item--dynamic-note">
-                            { __( 'Loading menu…', 'header-block' ) }
+                            { __( 'Loading menu�', 'header-block' ) }
                         </span>
                     ) }
                     { ! menuState.isLoading && treeItems.length === 0 && (
                         <span className="adaire-header-nav-item adaire-header-nav-item--dynamic-note">
-                            { __( 'No menu assigned yet — select or assign one above.', 'header-block' ) }
+                            { __( 'No menu assigned yet � select or assign one above.', 'header-block' ) }
                         </span>
                     ) }
                     { ! menuState.isLoading && treeItems.length > 0 && (
@@ -940,7 +940,7 @@ function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone })
     const followPosition = attributes.topBarFollowPosition === 'left' ? 'left' : 'right';
     const searchPosition = attributes.searchPosition || 'start';
 
-    // ADAB-016 — cart/payment icons fall back to the 'actions' zone exactly
+    // ADAB-016 � cart/payment icons fall back to the 'actions' zone exactly
     // like social icons do when a topbar-dependent placement is chosen but
     // the top bar itself is off, so they never just silently disappear.
     const rawCartPlacement = attributes.cartIconPlacement || 'actions';
@@ -1027,7 +1027,7 @@ function HeaderPreview({ attributes, setAttributes, activeZone, setActiveZone })
     );
 }
 
-// ─── Logo Quick-Edit Zone ────────────────────────────────────────────────
+// --- Logo Quick-Edit Zone ------------------------------------------------
 
 function LogoZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     return (
@@ -1082,18 +1082,18 @@ function LogoZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
-// ─── Actions Quick-Edit Zone ─────────────────────────────────────────────
+// --- Actions Quick-Edit Zone ---------------------------------------------
 
 function ActionsZone({ attributes, setAttributes, activeZone, setActiveZone, socialPlacement, cartPlacement, paymentPlacement, searchPosition }) {
     // style.scss collapses an empty .adaire-header-actions to display:none
-    // so the nav can reclaim the freed space on the frontend — but that same
+    // so the nav can reclaim the freed space on the frontend � but that same
     // rule also loads in the editor, where it shrinks this zone's QuickZone
     // wrapper to 0x0 once Sign In, Sign Up and the CTA are all switched off.
     // A 0x0 element has nothing for the mouse to hover, so the pen trigger
     // becomes permanently unreachable and the only way back in is the
     // Inspector. Render a visible placeholder whenever nothing else would,
     // so the zone always keeps a hoverable footprint and the pen stays
-    // clickable — this is what lets a user re-add a removed CTA from the
+    // clickable � this is what lets a user re-add a removed CTA from the
     // canvas instead of only via the sidebar.
     const hasAnyAction = Boolean(
         ( searchPosition === 'start' || searchPosition === 'end' ) ||
@@ -1187,7 +1187,7 @@ function ActionsZone({ attributes, setAttributes, activeZone, setActiveZone, soc
     );
 }
 
-// ─── Background Quick-Edit chip ──────────────────────────────────────────
+// --- Background Quick-Edit chip ------------------------------------------
 // A floating chip at bottom-center of the header for background controls.
 
 function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
@@ -1200,7 +1200,7 @@ function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
         setActiveZone( isOpen ? null : 'background' );
     };
 
-    // Same close management as QuickZone — suppress WP auto-close so MediaUpload works
+    // Same close management as QuickZone � suppress WP auto-close so MediaUpload works
     useEffect( () => {
         if ( ! isOpen ) return;
         const handleKeyDown = ( e ) => {
@@ -1395,13 +1395,13 @@ function BgZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
-// ─── Header Layout Quick-Edit chip ───────────────────────────────────────
-// A floating chip at top-right of the header, always reachable on hover —
+// --- Header Layout Quick-Edit chip ---------------------------------------
+// A floating chip at top-right of the header, always reachable on hover �
 // independent of whatever Sign In/Sign Up/CTA/social/etc. are currently
 // shown or hidden (unlike ActionsZone, this one isn't anchored to the
 // actions row, so it can never collapse along with it). Exists specifically
-// so the main header layout settings — and, most importantly, re-enabling a
-// CTA the user removed — are never stranded Inspector-only just because
+// so the main header layout settings � and, most importantly, re-enabling a
+// CTA the user removed � are never stranded Inspector-only just because
 // every other on-canvas zone tied to that content vanished with it.
 
 function LayoutZone({ attributes, setAttributes, activeZone, setActiveZone }) {
@@ -1413,7 +1413,7 @@ function LayoutZone({ attributes, setAttributes, activeZone, setActiveZone }) {
         setActiveZone( isOpen ? null : 'layout' );
     };
 
-    // Same close management as BgZone — suppress WP auto-close so the
+    // Same close management as BgZone � suppress WP auto-close so the
     // popover behaves consistently with every other quick-edit chip.
     useEffect( () => {
         if ( ! isOpen ) return;
@@ -1508,7 +1508,7 @@ function LayoutZone({ attributes, setAttributes, activeZone, setActiveZone }) {
     );
 }
 
-// ─── Main Edit component ─────────────────────────────────────────────────
+// --- Main Edit component -------------------------------------------------
 
 export default function Edit({ attributes, setAttributes }) {
     const { bindColor, resolveColor } = useColorBinding();
@@ -1532,7 +1532,7 @@ export default function Edit({ attributes, setAttributes }) {
     };
 
     // Live list of registered WP menus for the "Select existing menu" navigation
-    // source — only fetched when actually needed so sites with no menus (or the
+    // source � only fetched when actually needed so sites with no menus (or the
     // default "legacy" navigation source) pay no extra REST cost.
     const wpMenus = useSelect( ( select ) => {
         if ( attributes.navigationSource !== 'menu' ) {
@@ -1542,7 +1542,7 @@ export default function Edit({ attributes, setAttributes }) {
         return coreStore && coreStore.getMenus ? coreStore.getMenus( { per_page: -1 } ) : [];
     }, [ attributes.navigationSource ] );
 
-    // ── Inspector style panels ──────────────────────────────────────────
+    // -- Inspector style panels ------------------------------------------
     const stylePanels = [
         {
             title: __( 'Background', 'header-block' ),
@@ -1708,7 +1708,7 @@ export default function Edit({ attributes, setAttributes }) {
             <InspectorControls>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes } stylePanels={ stylePanels }>
 
-                {/* ── Layout tab panels ──────────────────────────────────── */}
+                {/* -- Layout tab panels ------------------------------------ */}
                 <PanelBody title={ __( 'Layout', 'header-block' ) } initialOpen={ true }>
                     <SelectControl label="Layout"          value={ attributes.layout }         options={ layoutOptions } onChange={ v => setAttributes({ layout: v }) } />
                     <SelectControl label="Sticky behavior" value={ attributes.stickyBehavior } options={ stickyOptions } onChange={ v => setAttributes({ stickyBehavior: v }) } />
@@ -1742,12 +1742,12 @@ export default function Edit({ attributes, setAttributes }) {
                         label="Show nav icons"
                         checked={ attributes.showNavIcons !== false }
                         onChange={ v => setAttributes({ showNavIcons: v }) }
-                        help={ __( 'Icons are optional per requirement #4 — turn off to show labels only.', 'header-block' ) }
+                        help={ __( 'Icons are optional per requirement #4 � turn off to show labels only.', 'header-block' ) }
                     />
 
                     <hr />
 
-                    {/* Dot indicators (req #3) — off by default, explicit opt-in */}
+                    {/* Dot indicators (req #3) � off by default, explicit opt-in */}
                     <p className="adaire-header-qpop__section-label">Dot indicators</p>
                     <ToggleControl
                         label="Show dot indicators"
@@ -1784,7 +1784,7 @@ export default function Edit({ attributes, setAttributes }) {
                             label="Menu"
                             value={ attributes.selectedMenuId || 0 }
                             options={ [
-                                { label: __( 'Select a menu…', 'header-block' ), value: 0 },
+                                { label: __( 'Select a menu�', 'header-block' ), value: 0 },
                                 ...( wpMenus || [] ).map( menu => ( { label: menu.name, value: menu.id } ) ),
                             ] }
                             onChange={ v => setAttributes({ selectedMenuId: Number( v ) }) }
@@ -1792,7 +1792,7 @@ export default function Edit({ attributes, setAttributes }) {
                     ) }
                     { ( attributes.navigationSource === 'primary' || attributes.navigationSource === 'footer' ) && (
                         <p className="adaire-header-help-text">
-                            { __( 'Assign a menu to this location under Appearance → Menus.', 'header-block' ) }
+                            { __( 'Assign a menu to this location under Appearance ? Menus.', 'header-block' ) }
                         </p>
                     ) }
 
@@ -1905,11 +1905,11 @@ export default function Edit({ attributes, setAttributes }) {
                             // ADAB-017: the CTA has its own Border radius / padding
                             // overrides above (ctaBorderRadius, ctaPaddingVertical,
                             // ctaPaddingHorizontal). Once any of those is set, it wins
-                            // over this shared control for the CTA specifically — say
+                            // over this shared control for the CTA specifically � say
                             // so here instead of letting the change silently appear to
                             // do nothing.
                             ( attributes.ctaBorderRadius != null && attributes.ctaBorderRadius >= 0 )
-                                ? __( 'Applies to Sign In and Sign Up buttons. The CTA has its own Border radius override above (set to ' + attributes.ctaBorderRadius + 'px) — reset it to follow this shape instead.', 'header-block' )
+                                ? __( 'Applies to Sign In and Sign Up buttons. The CTA has its own Border radius override above (set to ' + attributes.ctaBorderRadius + 'px) � reset it to follow this shape instead.', 'header-block' )
                                 : __( 'Applies to Sign In, Sign Up and CTA buttons', 'header-block' )
                         }
                     />
@@ -2035,8 +2035,8 @@ export default function Edit({ attributes, setAttributes }) {
                         options={ [
                             { label: 'With header buttons', value: 'actions'      },
                             { label: 'Before navigation',    value: 'before-nav'   },
-                            { label: 'Top bar — left',       value: 'topbar-left'  },
-                            { label: 'Top bar — right',      value: 'topbar-right' },
+                            { label: 'Top bar � left',       value: 'topbar-left'  },
+                            { label: 'Top bar � right',      value: 'topbar-right' },
                         ] }
                         onChange={ v => setAttributes({ socialPlacement: v }) }
                         help={ __( 'Top bar placements need "Show top bar" enabled, otherwise they fall back to header buttons.', 'header-block' ) }
@@ -2177,9 +2177,9 @@ export default function Edit({ attributes, setAttributes }) {
                         value={ attributes.topBarLayout || 'space-between' }
                         options={ [
                             { label: 'Dispersed (left + right)', value: 'space-between' },
-                            { label: 'Grouped — Left',           value: 'left'          },
-                            { label: 'Grouped — Center',         value: 'center'        },
-                            { label: 'Grouped — Right',          value: 'right'         },
+                            { label: 'Grouped � Left',           value: 'left'          },
+                            { label: 'Grouped � Center',         value: 'center'        },
+                            { label: 'Grouped � Right',          value: 'right'         },
                         ] }
                         onChange={ v => setAttributes({ topBarLayout: v }) }
                     />
@@ -2192,7 +2192,7 @@ export default function Edit({ attributes, setAttributes }) {
 
                     <hr />
 
-                    {/* Follow Us (req #8) — flexible content block, off by default */}
+                    {/* Follow Us (req #8) � flexible content block, off by default */}
                     <p className="adaire-header-qpop__section-label">Follow Us</p>
                     <ToggleControl
                         label="Enable Follow Us"
@@ -2259,3 +2259,4 @@ export default function Edit({ attributes, setAttributes }) {
         </>
     );
 }
+

@@ -12,7 +12,7 @@
 
 ### Plus Blocks
 - **Info Grid 3 Block** (`infogrid-3-block`) - A responsive 2-row grid block with a three-column sub-section and background options
-- **Info Grid 4 Block** (`infogrid-4-block`) - A 2x2 grid block with configurable colors, typography, and background SVG icon support
+- **Info Grid 4 Block** (`bento-grid-block`) - A 2x2 grid block with configurable colors, typography, and background SVG icon support
 - **Case Studies Block** (`case-studies-block`) - A dynamic case studies grid with GSAP FLIP animations, filtering by Industry and Capabilities, and load more functionality
 - **Video Carousel Block** (`video-carousel-block`) - A draggable video carousel with custom drag cursor and smooth scrolling cards
 
@@ -133,4 +133,5 @@ All blocks now use consistent breakpoint definitions based on hero1 block:
 - No migration required for existing installations
 - Blocks automatically use new layout settings when edited
 - Old settings remain functional until manually updated
+
 

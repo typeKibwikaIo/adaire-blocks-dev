@@ -1,5 +1,6 @@
-﻿import { __ } from "@wordpress/i18n";
+﻿import { __, sprintf } from "@wordpress/i18n";
 import { useCallback, useState } from "@wordpress/element";
+import { useSelect } from "@wordpress/data";
 import {
 	useBlockProps,
 	InspectorControls,
@@ -58,6 +59,70 @@ const hexToRgba = (hex, alpha = 1) => {
 	return `rgba(${r}, ${g}, ${b}, ${Math.min(Math.max(alpha, 0), 1)})`;
 };
 
+const navigationSourceOptions = [
+	{ label: __("Custom (manual)", "mega-menu-block"), value: "legacy" },
+	{ label: __("Primary Menu", "mega-menu-block"), value: "primary" },
+	{ label: __("Footer Menu", "mega-menu-block"), value: "footer" },
+	{ label: __("Select existing menu", "mega-menu-block"), value: "menu" },
+];
+
+// Same two plugin-owned locations header-block and website-footer-block
+// already resolve against (see adaire_mega_menu_register_nav_menu_locations()
+// in adaire-blocks.php) — a menu already assigned there for the header can
+// power the mega menu too, with nothing new to configure.
+const NAV_MENU_LOCATION_SLUGS = {
+	primary: "adaire-blocks-primary",
+	footer: "adaire-blocks-footer",
+};
+
+/**
+ * Resolves just the connected menu's name (not its items — the live
+ * frontend renders the real content via the PHP render callback; the
+ * editor only needs enough to show a "connected to X" status line here)
+ * for the Navigation Source status text below.
+ */
+function useResolvedMenuName(navigationSource, selectedMenuId) {
+	const isDynamic = !!navigationSource && navigationSource !== "legacy";
+
+	const menus = useSelect(
+		(select) => {
+			if (!isDynamic) {
+				return null;
+			}
+			const coreStore = select("core");
+			return coreStore && coreStore.getMenus
+				? coreStore.getMenus({ per_page: -1, context: "view" })
+				: null;
+		},
+		[isDynamic],
+	);
+
+	if (!isDynamic) {
+		return { isLoading: false, menuName: null, hasMenu: false, menus: null };
+	}
+	if (menus === null) {
+		return { isLoading: true, menuName: null, hasMenu: false, menus: null };
+	}
+
+	let resolved = null;
+	if (navigationSource === "menu") {
+		resolved = (menus || []).find((m) => m.id === selectedMenuId) || null;
+	} else {
+		const slug = NAV_MENU_LOCATION_SLUGS[navigationSource];
+		resolved =
+			(menus || []).find(
+				(m) => Array.isArray(m.locations) && m.locations.includes(slug),
+			) || null;
+	}
+
+	return {
+		isLoading: false,
+		menuName: resolved ? resolved.name : null,
+		hasMenu: !!resolved,
+		menus,
+	};
+}
+
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const [deviceType, setDeviceType] = useState("desktop");
 	const [openDropdowns, setOpenDropdowns] = useState(new Set());
@@ -69,8 +134,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		"menu item",
 	);
 
+	const resolvedMenuStatus = useResolvedMenuName(
+		attributes.navigationSource,
+		attributes.selectedMenuId,
+	);
+	const isUsingWpMenu =
+		!!attributes.navigationSource && attributes.navigationSource !== "legacy";
+
 	const {
 		blockId,
+		navigationSource,
+		selectedMenuId,
 		logoUrl,
 		logoAlt,
 		logoSize,
@@ -2826,26 +2900,78 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					title={__("Menu Items", "mega-menu-block")}
 					initialOpen={true}
 				>
-					<p style={{ fontSize: "12px", color: "#666", marginBottom: "12px" }}>
-						{__(
-							"Maximum 3 hierarchy levels supported: Main Menu â†’ Sub Menu â†’ Sub Sub Menu",
+					<SelectControl
+						label={__("Navigation Source", "mega-menu-block")}
+						value={navigationSource || "legacy"}
+						options={navigationSourceOptions}
+						onChange={(v) => setAttributes({ navigationSource: v })}
+						help={__(
+							"Pull items live from a WordPress menu, or enter them manually below.",
 							"mega-menu-block",
 						)}
-					</p>
-					<Button
-						isPrimary
-						onClick={() => addMenuItem()}
-						disabled={isLimitReached}
-						icon={plus}
-					>
-						{__("Add Menu Item", "mega-menu-block")}
-					</Button>
-					{showUpgradeNotice && <UpgradeNotice message={upgradeMessage} />}
-					<div
-						style={{ marginTop: "16px", maxHeight: "400px", overflowY: "auto" }}
-					>
-						{menuItems.map((item) => renderMenuItem(item))}
-					</div>
+					/>
+					{navigationSource === "menu" && (
+						<SelectControl
+							label={__("Menu", "mega-menu-block")}
+							value={selectedMenuId || 0}
+							options={[
+								{ label: __("Select a menu…", "mega-menu-block"), value: 0 },
+								...(resolvedMenuStatus.menus || []).map((menu) => ({
+									label: menu.name,
+									value: menu.id,
+								})),
+							]}
+							onChange={(v) => setAttributes({ selectedMenuId: Number(v) })}
+						/>
+					)}
+					{isUsingWpMenu && (
+						<p style={{ fontSize: "12px", color: "#666", marginBottom: "12px" }}>
+							{resolvedMenuStatus.isLoading
+								? __("Loading menu…", "mega-menu-block")
+								: resolvedMenuStatus.hasMenu
+									? sprintf(
+											__(
+												'Connected to "%s" — items are pulled live from this WordPress menu and shown on the live site. This editor preview does not re-render them; check the live page to see the result.',
+												"mega-menu-block",
+											),
+											resolvedMenuStatus.menuName,
+										)
+									: navigationSource === "menu"
+										? __(
+												"No menu selected yet — choose one above.",
+												"mega-menu-block",
+											)
+										: __(
+												"No menu assigned to this location yet — assign one under Appearance → Menus.",
+												"mega-menu-block",
+											)}
+						</p>
+					)}
+
+					{(!navigationSource || navigationSource === "legacy") && (
+						<>
+							<p style={{ fontSize: "12px", color: "#666", marginBottom: "12px" }}>
+								{__(
+									"Maximum 3 hierarchy levels supported: Main Menu → Sub Menu → Sub Sub Menu",
+									"mega-menu-block",
+								)}
+							</p>
+							<Button
+								isPrimary
+								onClick={() => addMenuItem()}
+								disabled={isLimitReached}
+								icon={plus}
+							>
+								{__("Add Menu Item", "mega-menu-block")}
+							</Button>
+							{showUpgradeNotice && <UpgradeNotice message={upgradeMessage} />}
+							<div
+								style={{ marginTop: "16px", maxHeight: "400px", overflowY: "auto" }}
+							>
+								{menuItems.map((item) => renderMenuItem(item))}
+							</div>
+						</>
+					)}
 				</PanelBody>
 
 				<PanelBody title={__("Colors", "mega-menu-block")} initialOpen={false}>

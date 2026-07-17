@@ -1,4 +1,4 @@
-=== Adaire Blocks ===
+=== Gutenberg Blocks - Powered by Adaire ===
 Contributors: adairedigital
 Donate link: https://adaireblocks.com/
 Tags: blocks, gutenberg, gsap, animation, portfolio
@@ -40,7 +40,7 @@ Adaire Blocks is a comprehensive WordPress plugin that provides a collection of 
 * **Info Grid 2 Block** - Advanced grid layout with customizable items, backgrounds, and overlay options
 * **Image Composition Block** - Create collage-style compositions of images in an asymmetric grid layout
 
-**Plus Blocks (available in Plus and Premium versions):**
+**Plus Blocks (available in Plus and Pro versions):**
 * **Call to Action Block** - Build powerful call-to-action sections with animated carousels and gradient backgrounds
 * **Counter Block** - Display animated counters that count up or down to a target number, with customizable prefixes, suffixes, and captions for showcasing statistics and achievements
 * **Map Block** - Display multiple locations with Google Maps integration, Leaflet fly mode, and interactive navigation
@@ -60,12 +60,12 @@ Adaire Blocks is a comprehensive WordPress plugin that provides a collection of 
 * **Video Carousel Block** - A draggable video carousel with custom drag cursor and smooth scrolling cards
 * **Horizontal Scroll Carousel Block** - Scroll-driven horizontal carousel (Plus): vertical scroll scrubs a pinned row of Horizontal Scroll Card slides with GSAP ScrollTrigger
 
-**Premium Blocks (only available in Premium version):**
+**Pro Blocks (only available in Pro version):**
 * **Particles Block** - Add dynamic particle effects with scroll-controlled animations and customizable positioning
 * **Project Block** - Highlight your projects with interactive showcases, particle effects, and dynamic content
 * **Industries Block** - Showcase industries with responsive tiles, customizable icons, link functionality, and flexible layouts
 * **Modal Block** - Create customizable modal dialogs with trigger buttons, responsive dimensions, and flexible content areas
-* **Testimonial 3 Block (Premium)** - Premium testimonial carousel with draggable interface, purple background styling, white cards, and profile images
+* **Testimonial 3 Block (Pro)** - Pro testimonial carousel with draggable interface, purple background styling, white cards, and profile images
 
 **Technical Features:**
 
@@ -77,7 +77,7 @@ Adaire Blocks is a comprehensive WordPress plugin that provides a collection of 
 * Locomotive Scroll support for smooth scrolling experiences
 * Responsive design with mobile-first approach
 * GPL-2.0 licensed for maximum flexibility
-* Unified SVG icon system for every Free, Plus, and Premium block so the editor, admin UI, and docs share the same polished visuals
+* Unified SVG icon system for every Free, Plus, and Pro block so the editor, admin UI, and docs share the same polished visuals
 
 **Animation & Interaction Features:**
 

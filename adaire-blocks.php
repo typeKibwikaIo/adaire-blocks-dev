@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Guten-Blocks
+ * Plugin Name:       Adaire Blocks
  * Description:       A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.
  * Version:           1.2.9
  * Requires at least: 6.7
@@ -275,7 +275,7 @@ function adaire_blocks_license_notice() {
 	?>
 	<div class="notice notice-warning is-dismissible">
 		<p>
-			<strong>Guten-Blocks:</strong> 
+			<strong>Adaire Blocks:</strong> 
 			Your license is not active. 
 			<a href="<?php echo esc_url($license_page_url); ?>">Activate your license</a> 
 			to unlock all features and receive updates.
@@ -296,7 +296,7 @@ function adaire_blocks_license_error_notice($message) {
 	?>
 	<div class="notice notice-error is-dismissible">
 		<p>
-			<strong>Guten-Blocks License Error:</strong> 
+			<strong>Adaire Blocks License Error:</strong> 
 			<?php echo esc_html($message); ?>
 			<a href="<?php echo esc_url($license_page_url); ?>">Check your license</a>
 		</p>
@@ -372,11 +372,11 @@ function adaire_render_license_notice($block_name) {
     ">
         <h3 style="margin: 0 0 10px 0; color: #856404;">
             <span class="dashicons dashicons-lock" style="margin-right: 8px;"></span>
-            Premium Feature
+            Pro Feature
         </h3>
         <p style="margin: 0 0 15px 0; color: #856404;">
-            The <strong><?php echo esc_html($block_title); ?></strong> is a premium feature. 
-            Activate your license to unlock this block and many more premium features.
+            The <strong><?php echo esc_html($block_title); ?></strong> is a pro feature.
+            Activate your license to unlock this block and many more pro features.
         </p>
         <a href="<?php echo esc_url($license_page_url); ?>" 
            class="button button-primary" 
@@ -566,6 +566,179 @@ function render_counter_block($attributes) {
     });
 }
 
+if ( ! function_exists( 'adaire_mega_menu_register_nav_menu_locations' ) ) {
+	/**
+	 * Plugin-owned nav menu location slugs used to resolve the "Primary
+	 * Menu" / "Footer Menu" Navigation Source options — the same two
+	 * locations header-block and website-footer-block already use (see
+	 * register_nav_menus() elsewhere in this file). Reusing them means a
+	 * menu a site owner already assigned under Appearance > Menus for their
+	 * header or footer can power the mega menu too, with nothing new to
+	 * configure.
+	 */
+	function adaire_mega_menu_register_nav_menu_locations() {
+		return array(
+			'primary' => 'adaire-blocks-primary',
+			'footer'  => 'adaire-blocks-footer',
+		);
+	}
+}
+
+if ( ! function_exists( 'adaire_mega_menu_resolve_menu_object' ) ) {
+	/**
+	 * Resolves a WP_Term menu object for navigationSource "primary",
+	 * "footer", or "menu". Returns null if nothing is assigned/selected yet
+	 * so callers can gracefully fall back to the legacy menuItems.
+	 */
+	function adaire_mega_menu_resolve_menu_object( $attributes ) {
+		$source = isset( $attributes['navigationSource'] ) ? $attributes['navigationSource'] : 'legacy';
+
+		if ( 'menu' === $source ) {
+			$menu_id = ! empty( $attributes['selectedMenuId'] ) ? (int) $attributes['selectedMenuId'] : 0;
+			if ( ! $menu_id ) {
+				return null;
+			}
+			$menu = wp_get_nav_menu_object( $menu_id );
+			return $menu ? $menu : null;
+		}
+
+		if ( 'primary' === $source || 'footer' === $source ) {
+			$locations_map = adaire_mega_menu_register_nav_menu_locations();
+			$location_slug = $locations_map[ $source ];
+			$locations     = get_nav_menu_locations();
+
+			if ( empty( $locations[ $location_slug ] ) ) {
+				return null;
+			}
+
+			$menu = wp_get_nav_menu_object( $locations[ $location_slug ] );
+			return $menu ? $menu : null;
+		}
+
+		return null;
+	}
+}
+
+if ( ! function_exists( 'adaire_mega_menu_label_from_url' ) ) {
+	/**
+	 * Derives a human-readable label from a menu item's URL, used when WP
+	 * has nothing usable for the title (see adaire_mega_menu_friendly_label()).
+	 */
+	function adaire_mega_menu_label_from_url( $url ) {
+		$path = trim( (string) wp_parse_url( (string) $url, PHP_URL_PATH ), '/' );
+		if ( '' === $path ) {
+			return __( 'Menu item', 'mega-menu-block' );
+		}
+		$segments = explode( '/', $path );
+		$slug     = end( $segments );
+		$slug     = str_replace( array( '-', '_' ), ' ', $slug );
+		$slug     = trim( $slug );
+		return '' !== $slug ? ucwords( $slug ) : __( 'Menu item', 'mega-menu-block' );
+	}
+}
+
+if ( ! function_exists( 'adaire_mega_menu_friendly_label' ) ) {
+	/**
+	 * wp_get_nav_menu_items()/wp_setup_nav_menu_item() falls back to a raw
+	 * "#123 (no title)" string when a menu item has no custom label AND its
+	 * linked object has no title (deleted/trashed/genuinely-untitled target).
+	 * That debug-style string (with a raw DB post ID) should never reach a
+	 * site visitor or the editor, so swap it for a label derived from the
+	 * item's URL instead. A real custom label or resolved object title
+	 * always takes priority and passes through unchanged.
+	 */
+	function adaire_mega_menu_friendly_label( $title, $url ) {
+		$title = trim( (string) $title );
+		if ( '' !== $title && ! preg_match( '/^#\d+\s*\(no title\)$/i', $title ) ) {
+			return $title;
+		}
+		return adaire_mega_menu_label_from_url( $url );
+	}
+}
+
+if ( ! function_exists( 'adaire_mega_menu_build_menu_tree' ) ) {
+	/**
+	 * Assembles a flat wp_get_nav_menu_items() result into the nested shape
+	 * the existing render loop below already expects from the manually-
+	 * authored `menuItems` attribute — id/title/url/isBold/openInNewTab/
+	 * children — so no changes are needed to the (large, already-working)
+	 * markup loop itself, only to where its input data comes from. Every
+	 * mega-menu-specific field the loop also reads (canvasImageUrl,
+	 * bannerDescription, per-item font/color overrides, etc.) is optional
+	 * there via `??` fallbacks, so simply omitting them here is enough for
+	 * WP-menu-sourced items to render with the block's global styling.
+	 *
+	 * Depth is capped at 3 levels (dropdown > sub-dropdown > sub-menu leaf)
+	 * to match what the render loop actually supports — a WP menu can nest
+	 * deeper, but the 4th level and beyond would have nowhere to render, so
+	 * it's dropped rather than silently producing broken markup.
+	 */
+	function adaire_mega_menu_build_menu_tree( $menu_items, $max_depth = 3 ) {
+		$by_parent = array();
+		foreach ( $menu_items as $item ) {
+			$parent = (int) $item->menu_item_parent;
+			if ( ! isset( $by_parent[ $parent ] ) ) {
+				$by_parent[ $parent ] = array();
+			}
+			$by_parent[ $parent ][] = $item;
+		}
+
+		$build = function ( $parent_id, $depth ) use ( &$build, $by_parent, $max_depth ) {
+			if ( $depth > $max_depth || empty( $by_parent[ $parent_id ] ) ) {
+				return array();
+			}
+			$nodes = array();
+			foreach ( $by_parent[ $parent_id ] as $item ) {
+				$nodes[] = array(
+					'id'           => (int) $item->ID,
+					'title'        => adaire_mega_menu_friendly_label( $item->title, $item->url ),
+					'url'          => $item->url,
+					'isBold'       => false,
+					'openInNewTab' => '_blank' === $item->target,
+					'children'     => $build( (int) $item->ID, $depth + 1 ),
+				);
+			}
+			return $nodes;
+		};
+
+		return $build( 0, 1 );
+	}
+}
+
+if ( ! function_exists( 'adaire_mega_menu_resolve_menu_items' ) ) {
+	/**
+	 * Single entry point used by the render callback: decides between the
+	 * legacy `menuItems` attribute and a live WordPress menu.
+	 *
+	 * IMPORTANT: once a dynamic source ("primary"/"footer"/"menu") is
+	 * explicitly selected, this never falls back to the legacy items, even
+	 * if nothing is assigned/resolved yet — matching header-block's same
+	 * rule (see adaire_header_resolve_nav() in header-block/render.php) so
+	 * a stale or unrelated placeholder menu never silently renders instead
+	 * of the real selected one.
+	 */
+	function adaire_mega_menu_resolve_menu_items( $attributes ) {
+		$source        = isset( $attributes['navigationSource'] ) ? $attributes['navigationSource'] : 'legacy';
+		$legacy_items  = ( isset( $attributes['menuItems'] ) && is_array( $attributes['menuItems'] ) ) ? $attributes['menuItems'] : array();
+
+		if ( 'legacy' === $source || empty( $source ) ) {
+			return $legacy_items;
+		}
+
+		$menu = adaire_mega_menu_resolve_menu_object( $attributes );
+		if ( ! $menu ) {
+			return array();
+		}
+
+		$menu_items = wp_get_nav_menu_items( $menu->term_id, array( 'update_post_term_cache' => false ) );
+		if ( ! $menu_items ) {
+			return array();
+		}
+
+		return adaire_mega_menu_build_menu_tree( $menu_items );
+	}
+}
+
 /**
  * Render callback for mega-menu-block (Dynamic Block)
  * This PHP function outputs the HTML - JavaScript logic in view.js
@@ -579,7 +752,7 @@ function render_mega_menu_block($attributes, $content) {
         $logo_alt = $attrs['logoAlt'] ?? 'Logo';
         $logo_link_url = $attrs['logoLinkUrl'] ?? '/';
         $logo_size = $attrs['logoSize'] ?? 40;
-        $menu_items = $attrs['menuItems'] ?? array();
+        $menu_items = adaire_mega_menu_resolve_menu_items( $attrs );
         $backgroundColor = $attrs['backgroundColor'] ?? '#ffffff';
         $textColor = $attrs['textColor'] ?? '#000000';
         $hoverColor = $attrs['hoverColor'] ?? '#428aff';
@@ -892,6 +1065,15 @@ function render_mega_menu_block($attributes, $content) {
             '--container-max-width' => ($containerMaxWidth['desktop']['value'] ?? 1200) . ($containerMaxWidth['desktop']['unit'] ?? 'px'),
             '--container-max-width-tablet' => ($containerMaxWidth['tablet']['value'] ?? 100) . ($containerMaxWidth['tablet']['unit'] ?? '%'),
             '--container-max-width-mobile' => ($containerMaxWidth['mobile']['value'] ?? 100) . ($containerMaxWidth['mobile']['unit'] ?? '%'),
+            // Dropdown panels span the full navbar width and stay centered
+            // under it rather than pinned to the right edge (see __menu in
+            // style.scss) — capped to the same width as the navbar's own
+            // content when the menu is in "constrained" mode, unconstrained
+            // (edge-to-edge) otherwise, so the panel never reads wider than
+            // the nav bar it drops from.
+            '--mega-menu-dropdown-max-width' => ($containerMode === 'constrained')
+                ? ($containerMaxWidth['desktop']['value'] ?? 1200) . ($containerMaxWidth['desktop']['unit'] ?? 'px')
+                : 'none',
             '--mobile-menu-bg' => $mobileMenuBgColor,
             '--mobile-level1-font-size' => $mobileLevel1FontSize . 'px',
             '--mobile-level1-font-weight' => $mobileLevel1FontWeight,
@@ -1706,8 +1888,8 @@ add_action( 'init', function() {
  */
 add_action( 'init', function() {
 	register_nav_menus( array(
-		'adaire-blocks-primary' => __( 'Guten-Blocks — Primary Navigation', 'adaire-blocks' ),
-		'adaire-blocks-footer'  => __( 'Guten-Blocks — Footer Navigation', 'adaire-blocks' ),
+		'adaire-blocks-primary' => __( 'Adaire Blocks — Primary Navigation', 'adaire-blocks' ),
+		'adaire-blocks-footer'  => __( 'Adaire Blocks — Footer Navigation', 'adaire-blocks' ),
 	) );
 } );
 
@@ -1722,8 +1904,8 @@ add_action( 'init', function() {
 		register_sidebar( array(
 			'id'            => 'adaire-footer-widget-' . $i,
 			/* translators: %d: widget area number. */
-			'name'          => sprintf( __( 'Guten-Blocks — Footer Widget Area %d', 'adaire-blocks' ), $i ),
-			'description'   => __( 'Used by the Guten-Blocks Footer block\'s Widget Area column type.', 'adaire-blocks' ),
+			'name'          => sprintf( __( 'Adaire Blocks — Footer Widget Area %d', 'adaire-blocks' ), $i ),
+			'description'   => __( 'Used by the Adaire Blocks Footer block\'s Widget Area column type.', 'adaire-blocks' ),
 			'before_widget' => '<div class="website-footer-block__widget %1$s">',
 			'after_widget'  => '</div>',
 			'before_title'  => '<h4 class="website-footer-block__widget-title">',
@@ -1733,145 +1915,140 @@ add_action( 'init', function() {
 } );
 
 /**
- * Register custom block categories for Adaire Blocks (Free, Plus, Premium)
+ * Register custom block categories for Adaire Blocks (Free, Pro)
  */
 function adaire_blocks_register_block_categories( $categories, $editor_context ) {
 	$registered_slugs = wp_list_pluck( $categories, 'slug' );
 
 	$custom_categories = array(
 		array(
-			'slug'  => 'adaire-blocks-premium',
-			'title' => __( 'Guten-Blocks PREMIUM', 'adaire-blocks' ),
-			'icon'  => null,
-		),
-		array(
-			'slug'  => 'adaire-blocks-plus',
-			'title' => __( 'Guten-Blocks PLUS', 'adaire-blocks' ),
+			'slug'  => 'adaire-blocks-pro',
+			'title' => __( 'Adaire Blocks PRO', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blocks-free',
-			'title' => __( 'Guten-Blocks FREE', 'adaire-blocks' ),
+			'title' => __( 'Adaire Blocks FREE', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blocks-alignment-layout-structure',
-			'title' => __( 'Alignment, Layout & Structure (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Alignment, Layout & Structure (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-hero-sections',
-			'title' => __( 'Hero & Navigation (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Hero & Navigation (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-layout-sections',
-			'title' => __( 'Layout Sections (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Layout Sections (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-marketing',
-			'title' => __( 'Marketing (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Marketing (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-media',
-			'title' => __( 'Media (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Media (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-business',
-			'title' => __( 'Business (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Business (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-testimonial',
-			'title' => __( 'Testimonials (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Testimonials (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-social',
-			'title' => __( 'Social (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Social (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blog-publishing',
-			'title' => __( 'Blog & Publishing (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Blog & Publishing (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-start-actions',
-			'title' => __( 'Start & Actions (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Start & Actions (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-information-blocks',
-			'title' => __( 'Information Blocks (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Information Blocks (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-effects-interactions',
-			'title' => __( 'Effects & Interactions (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Effects & Interactions (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-interactive',
-			'title' => __( 'Interactive (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Interactive (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-layout-navigation',
-			'title' => __( 'Layout & Navigation (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Layout & Navigation (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-blog-content',
-			'title' => __( 'Blog & Content (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Blog & Content (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-content-expandable',
-			'title' => __( 'Expandable Content (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Expandable Content (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-content-info',
-			'title' => __( 'Content & Info (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Content & Info (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-content-tabs',
-			'title' => __( 'Tabs & Content (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Tabs & Content (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-layout-hero',
-			'title' => __( 'Layout & Hero (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Layout & Hero (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-marketing-conversion',
-			'title' => __( 'Marketing & Conversion (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Marketing & Conversion (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-media-images',
-			'title' => __( 'Media & Images (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Media & Images (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-media-videos',
-			'title' => __( 'Media & Videos (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Media & Videos (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-reviews-trust',
-			'title' => __( 'Reviews & Trust (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Reviews & Trust (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 		array(
 			'slug'  => 'adaire-social-engagement',
-			'title' => __( 'Social & Engagement (Guten-Blocks)', 'adaire-blocks' ),
+			'title' => __( 'Social & Engagement (Adaire Blocks)', 'adaire-blocks' ),
 			'icon'  => null,
 		),
 	);

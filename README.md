@@ -6,7 +6,7 @@ A powerful WordPress plugin that helps developers and designers create visually 
 
 Adaire Blocks is a comprehensive WordPress plugin that provides a collection of custom Gutenberg blocks designed to create visually stunning, high-performance websites. Built with modern web technologies including GSAP, React, and optimized for performance.
 
-- **Unified icon language**: refreshed SVG icons for every Free, Plus, and Premium block so the editor, admin block management screen, and documentation all share the same polished visuals.
+- **Unified icon language**: refreshed SVG icons for every Free, Plus, and Pro block so the editor, admin block management screen, and documentation all share the same polished visuals.
 
 ### Available Blocks
 
@@ -31,7 +31,7 @@ Adaire Blocks is a comprehensive WordPress plugin that provides a collection of 
 - **Info Grid 2 Block** - Advanced grid layout with customizable items, backgrounds, and overlay options
 - **Image Composition Block** - Create collage-style compositions of images in an asymmetric grid layout
 
-**Plus Blocks (available in Plus and Premium versions):**
+**Plus Blocks (available in Plus and Pro versions):**
 - **Call to Action Block** - Build powerful call-to-action sections with animated carousels and gradient backgrounds
 - **Counter Block** - Display animated counters that count up or down to a target number, with customizable prefixes, suffixes, and captions
 - **Map Block** - Display multiple locations with Google Maps integration, Leaflet fly mode, and interactive navigation
@@ -50,12 +50,12 @@ Adaire Blocks is a comprehensive WordPress plugin that provides a collection of 
 - **Case Studies Block** - A dynamic case studies grid with GSAP FLIP animations, filtering by Industry and Capabilities, and load more functionality
 - **Video Carousel Block** - A draggable video carousel with custom drag cursor and smooth scrolling cards
 
-**Premium Blocks (only available in Premium version):**
+**Pro Blocks (only available in Pro version):**
 - **Particles Block** - Add dynamic particle effects with scroll-controlled animations and customizable positioning
 - **Project Block** - Highlight your projects with interactive showcases, particle effects, and dynamic content
 - **Industries Block** - Showcase industries with responsive tiles, customizable icons, link functionality, and flexible layouts
 - **Modal Block** - Create customizable modal dialogs with trigger buttons, responsive dimensions, and flexible content areas
-- **Testimonial 3 Block (Premium)** - Premium testimonial carousel with draggable interface, purple background styling, white cards, and profile images
+- **Testimonial 3 Block (Pro)** - Pro testimonial carousel with draggable interface, purple background styling, white cards, and profile images
 
 ## Technical Features
 

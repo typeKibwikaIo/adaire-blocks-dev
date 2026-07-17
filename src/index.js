@@ -1,4 +1,4 @@
-﻿import './categories';
+import './categories';
 import './responsive-system';
 import './get-started-tour';
 import './scroll-text-block';
@@ -49,7 +49,7 @@ import "./container-block"
 import "./hero-1-block"
 import "./infogrid-2-block"
 import "./infogrid-3-block"
-import "./infogrid-4-block"
+import "./bento-grid-block"
 import "./image-composition-block"
 import "./header-block"
 import "./website-footer-block"
@@ -60,7 +60,7 @@ import "./horizontal-scroll-card-block"
 
 import "./saas-hero-block"
 import "./skill-bar-block"
-import "./booking-form-block"
+import "./form-block"
 import "./form-block"
 import "./app-download-block"
 import "./pdf-upload-block"
@@ -74,3 +74,5 @@ import "./row-block"
 import "./timeline-block"
 import "./about-us-block"
 import "./editor-panel"
+
+

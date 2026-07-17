@@ -1,6 +1,6 @@
 <?php
 /**
- * Configuration Manager for GutenBlocks Blocks
+ * Configuration Manager for AdaireBlocks Blocks
  * Handles free vs premium feature availability
  *
  * @package AdaireBlocks
@@ -323,3 +323,4 @@ class AdaireBlocksConfig {
         return false;
     }
 }
+

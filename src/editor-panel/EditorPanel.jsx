@@ -42,7 +42,7 @@ const KNOWN_GROUPS = [
 ];
 
 // Attrs always managed in the Advanced tab built-ins — skip from General
-const BUILTIN_ADVANCED = new Set( [ 'anchor', 'className', 'gutenblocksMargin', 'gutenblocksPadding', 'gutenblocksZIndex' ] );
+const BUILTIN_ADVANCED = new Set( [ 'anchor', 'className', 'AdaireBlocksMargin', 'AdaireBlocksPadding', 'AdaireBlocksZIndex' ] );
 
 function autoGroupAttrs( schema ) {
 	const entries = Object.entries( schema ).filter( ( [ name, s ] ) =>
@@ -195,6 +195,9 @@ const ENUM_LABELS = {
 	'outside-left':  'Out Top Left',
 	'bottom-right':  'Bottom Right',
 	'bottom-left':   'Bottom Left',
+	'featured-left': 'Featured Left',
+	'featured-top':  'Featured Top',
+	'three-column':  'Three Column',
 };
 
 function enumLabel( v ) {
@@ -403,10 +406,10 @@ function SpacingCtrl( { label, value = {}, onChange } ) {
 
 function AdvancedBuiltins( { attrs, setAttr, blockType } ) {
 	const schema    = blockType?.attributes ?? {};
-	const hasMargin  = 'gutenblocksMargin'  in schema;
-	const hasPadding = 'gutenblocksPadding' in schema;
-	const hasZIndex  = 'gutenblocksZIndex'  in schema || 'zIndex' in schema;
-	const zKey       = 'gutenblocksZIndex'  in schema ? 'gutenblocksZIndex' : ( 'zIndex' in schema ? 'zIndex' : null );
+	const hasMargin  = 'AdaireBlocksMargin'  in schema;
+	const hasPadding = 'AdaireBlocksPadding' in schema;
+	const hasZIndex  = 'AdaireBlocksZIndex'  in schema || 'zIndex' in schema;
+	const zKey       = 'AdaireBlocksZIndex'  in schema ? 'AdaireBlocksZIndex' : ( 'zIndex' in schema ? 'zIndex' : null );
 	const hasAnchor  = 'anchor'        in schema;
 	const hasClass   = 'className'     in schema;
 
@@ -426,8 +429,8 @@ function AdvancedBuiltins( { attrs, setAttr, blockType } ) {
 				{ hasMargin ? (
 					<SpacingCtrl
 						label={ __( 'Margin' ) }
-						value={ parseSpacing( attrs.gutenblocksMargin ) }
-						onChange={ v => setAttr( 'gutenblocksMargin', JSON.stringify( v ) ) }
+						value={ parseSpacing( attrs.AdaireBlocksMargin ) }
+						onChange={ v => setAttr( 'AdaireBlocksMargin', JSON.stringify( v ) ) }
 					/>
 				) : (
 					<div className="adaire-ep__spacing">
@@ -436,7 +439,7 @@ function AdvancedBuiltins( { attrs, setAttr, blockType } ) {
 							value={ {} }
 							onChange={ () => {} }
 						/>
-						<p className="adaire-ep__hint-sm">{ __( 'Register gutenblocksMargin attribute to enable' ) }</p>
+						<p className="adaire-ep__hint-sm">{ __( 'Register AdaireBlocksMargin attribute to enable' ) }</p>
 					</div>
 				) }
 
@@ -446,8 +449,8 @@ function AdvancedBuiltins( { attrs, setAttr, blockType } ) {
 				{ hasPadding ? (
 					<SpacingCtrl
 						label={ __( 'Padding' ) }
-						value={ parseSpacing( attrs.gutenblocksPadding ) }
-						onChange={ v => setAttr( 'gutenblocksPadding', JSON.stringify( v ) ) }
+						value={ parseSpacing( attrs.AdaireBlocksPadding ) }
+						onChange={ v => setAttr( 'AdaireBlocksPadding', JSON.stringify( v ) ) }
 					/>
 				) : (
 					<div className="adaire-ep__spacing">
@@ -456,7 +459,7 @@ function AdvancedBuiltins( { attrs, setAttr, blockType } ) {
 							value={ {} }
 							onChange={ () => {} }
 						/>
-						<p className="adaire-ep__hint-sm">{ __( 'Register gutenblocksPadding attribute to enable' ) }</p>
+						<p className="adaire-ep__hint-sm">{ __( 'Register AdaireBlocksPadding attribute to enable' ) }</p>
 					</div>
 				) }
 
@@ -822,3 +825,4 @@ export default function EditorPanel() {
 
 	return <SidebarContent isCollapsed={ isCollapsed } onToggleCollapse={ () => setIsCollapsed( c => ! c ) } />;
 }
+

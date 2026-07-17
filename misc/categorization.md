@@ -33,7 +33,7 @@ These blocks are available in Plus and Premium versions.
 - Counter (counter-block)
 - Flip Card (flipcard-block)
 - Info Grid 3 (infogrid-3-block)
-- Info Grid 4 (infogrid-4-block)
+- Info Grid 4 (bento-grid-block)
 - Logos (logos-block)
 - Map (map-block)
 - Mega Menu (mega-menu-block)
@@ -57,3 +57,4 @@ These blocks are only available in the Premium version.
 - Particles Block (particles-block)
 - Project Block (project-block)
 - Testimonial (Premium) (testimonial3-block)
+

@@ -184,8 +184,8 @@ function getHeaderStyle( attributes ) {
         styles.backgroundAttachment = attributes.bgAttachment || 'scroll';
     }
 
-    const marginCss  = boxToCss( attributes.gutenblocksMargin );
-    const paddingCss = boxToCss( attributes.gutenblocksPadding );
+    const marginCss  = boxToCss( attributes.AdaireBlocksMargin );
+    const paddingCss = boxToCss( attributes.AdaireBlocksPadding );
     if ( marginCss )  styles.margin  = marginCss;
     if ( paddingCss ) styles.padding = paddingCss;
 

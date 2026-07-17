@@ -5,19 +5,15 @@ export default function save({ attributes }) {
         blockId,
         containerMode,
         mainTitle,
-        item1Title,
-        item1Description,
-        item2Title,
-        item2Description,
-        item3Title,
-        item3Description,
-        item4Title,
-        item4Description,
+        cards,
         backgroundColor,
         cardBackgroundColor,
         cardBorderRadius,
         gridBorderColor,
         gridBorderWidth,
+        gridGap,
+        cardShadow,
+        bentoLayout,
         titleColor,
         itemTitleColor,
         itemDescriptionColor,
@@ -56,7 +52,7 @@ export default function save({ attributes }) {
     };
 
     const blockProps = useBlockProps.save({
-        className: `adaire-infogrid-4 ${containerMode === 'constrained' ? 'is-constrained' : ''}`,
+        className: `adaire-infogrid-4 ${containerMode === 'constrained' ? 'is-constrained' : ''} ${cardShadow ? 'has-card-shadow' : ''}`,
         id: blockId || undefined,
         style: {
             '--infogrid4-bg-color': backgroundColor,
@@ -64,6 +60,7 @@ export default function save({ attributes }) {
             '--infogrid4-card-radius': `${cardBorderRadius}px`,
             '--infogrid4-grid-border-color': gridBorderColor,
             '--infogrid4-grid-border-thickness': `${gridBorderWidth}px`,
+            '--infogrid4-grid-gap': `${gridGap}px`,
             '--infogrid4-title-color': titleColor,
             '--infogrid4-item-title-color': itemTitleColor,
             '--infogrid4-item-text-color': itemDescriptionColor,
@@ -227,23 +224,13 @@ export default function save({ attributes }) {
                     </h2>
                 </div>
 
-                <div className="adaire-infogrid-4__grid">
-                    <div className="adaire-infogrid-4__item adaire-infogrid-4__item--1">
-                        <h3 className="adaire-infogrid-4__item-title">{item1Title}</h3>
-                        <p className="adaire-infogrid-4__item-text">{item1Description}</p>
-                    </div>
-                    <div className="adaire-infogrid-4__item adaire-infogrid-4__item--2">
-                        <h3 className="adaire-infogrid-4__item-title">{item2Title}</h3>
-                        <p className="adaire-infogrid-4__item-text">{item2Description}</p>
-                    </div>
-                    <div className="adaire-infogrid-4__item adaire-infogrid-4__item--3">
-                        <h3 className="adaire-infogrid-4__item-title">{item3Title}</h3>
-                        <p className="adaire-infogrid-4__item-text">{item3Description}</p>
-                    </div>
-                    <div className="adaire-infogrid-4__item adaire-infogrid-4__item--4">
-                        <h3 className="adaire-infogrid-4__item-title">{item4Title}</h3>
-                        <p className="adaire-infogrid-4__item-text">{item4Description}</p>
-                    </div>
+                <div className="adaire-infogrid-4__grid" data-layout={bentoLayout || 'symmetrical'}>
+                    {cards.map((card, index) => (
+                        <div key={index} className={`adaire-infogrid-4__item adaire-infogrid-4__item--${index + 1}`}>
+                            <h3 className="adaire-infogrid-4__item-title">{card.title}</h3>
+                            <p className="adaire-infogrid-4__item-text">{card.description}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
