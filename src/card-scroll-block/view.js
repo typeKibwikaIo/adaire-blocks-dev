@@ -4,18 +4,29 @@
  * Originally implemented with GSAP + ScrollTrigger. GSAP ships under a
  * proprietary "Standard License" (not GPL-compatible), so it cannot be
  * bundled in this WordPress.org-distributed plugin. This version reimplements
- * the same visual behaviour using native scroll/resize listeners,
- * getBoundingClientRect-based math, and CSS transitions instead.
+ * the same visual behaviour using native CSS `position: sticky` plus a small
+ * amount of scroll-driven JS for the cover overlays, preview-text labels, and
+ * shadow fade.
  *
- * How pinning works here:
- * For each card we cache its "natural" (unpinned) document-relative top/left/
- * width/bottom, measured once at init and re-measured on resize (mirroring
- * what ScrollTrigger.refresh() used to do). On every scroll event we compare
- * the current window.scrollY against precomputed thresholds derived from
- * those cached rects to decide whether a card should be pinned
- * (position: fixed) or left in normal flow - the same math GSAP's
- * ScrollTrigger used internally to convert "top X%" trigger positions into
- * fixed scroll offsets.
+ * How the stacking works here:
+ * Every card except the last gets `position: sticky; top: <offset>px`, with
+ * each successive card's offset 30px lower than the one before it - the
+ * browser handles sticking/releasing natively as the user scrolls, exactly
+ * like GSAP's ScrollTrigger pinning did, but without manually toggling
+ * `position: fixed` ourselves. That distinction matters: an element that
+ * goes `position: fixed` is removed from normal document flow, which shifts
+ * its siblings to fill the gap and silently invalidates any cached "natural
+ * position" math for every card after it - the source of several very
+ * confusing bugs in an earlier version of this file (cards stuck pinned
+ * forever, raw card content bleeding through cover overlays). `position:
+ * sticky` never removes the element from flow, so none of that can happen.
+ *
+ * The remaining JS just watches, on scroll, whether each card has been
+ * "covered" - i.e. whether the next card in the stack has reached its own
+ * sticky offset - and toggles the solid-color cover overlay and preview-text
+ * label accordingly. That check is re-derived fresh from live
+ * getBoundingClientRect() values on every scroll tick rather than cached, so
+ * it can't drift out of sync the way pinnedState-transition tracking could.
  */
 
 const EASE_OUT = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'; // power2.out
@@ -31,12 +42,15 @@ function animateBoxShadow(el, targetValue) {
 
 // Function to cover a card (stop animation and add overlay)
 // This is called when a card above has pinned, meaning this card is now completely covered
-function coverCard(card, pinnedState) {
-    // Only cover if card is not currently pinned (it's been covered by a card above)
-    if (pinnedState.get(card)) {
-        // Don't cover if this card is currently pinned
-        return;
-    }
+function coverCard(card) {
+    // Note: cards stay position:fixed (pinnedState stays true) for their entire
+    // scroll range, which spans every subsequent card's pin/unpin cycle - that's
+    // what makes the stack visually build up. So a card being "pinned" here does
+    // NOT mean it isn't currently covered by the card above it; the two are
+    // independent. An earlier version skipped covering while a card was still
+    // pinned, which - since that's true almost the entire time a card is
+    // covered - meant the overlay never actually got applied, leaving the
+    // covered card's raw content (buttons, headings) visible through the peek strip.
 
     // Ensure inner content is static (no animation)
     const cardInner = card.querySelector('.adaire-card-scroll__card-inner');
@@ -257,11 +271,8 @@ const initCardScroll = () => {
 
     blocks.forEach((block) => {
         const cards = Array.from(block.querySelectorAll('.adaire-card-scroll__card'));
-        const intro = block.querySelector('.adaire-card-scroll__intro');
 
         if (!cards.length) return;
-
-        const lastCard = cards[cards.length - 1];
 
         // Calculate the visible peek height (how much of previous card should be visible)
         const peekHeight = 30; // pixels of previous card to show (matches user's setting)
@@ -269,45 +280,44 @@ const initCardScroll = () => {
         // Recalculated on init/resize
         let viewportHeight = window.innerHeight;
         let startPinPosition = viewportHeight * 0.15; // 15% from top
-        let pinOffsetPerCard = peekHeight; // Each card pins lower by this amount
+        let pinOffsetPerCard = peekHeight; // Each card sticks lower by this amount
 
-        // Cached natural (unpinned) layout rects, keyed by element.
-        const naturalRects = new Map();
-
-        // Pin state tracking so we can detect enter/leave transitions.
-        const pinnedState = new Map();
-        let introPinned = false;
+        // Tracks whether each (non-last) card is currently "covered" by the next
+        // card in the stack, purely so we can fire coverCard/uncoverCard and the
+        // preview-text show/hide only on enter/exit transitions rather than every
+        // scroll tick.
+        const coveredState = new Map();
         let shadowActive = false;
 
         const ctx = () => ({ viewportHeight, peekHeight, startPinPosition, pinOffsetPerCard, cards });
 
-        // Ensure card has an ID for tracking, seed pin state, and prepare GPU hints.
+        const pinTopPositionForIndex = (index) => startPinPosition + (index * pinOffsetPerCard);
+
+        // Give every card except the last a sticky offset. The browser then owns
+        // the entire stick/release lifecycle natively - see the file header for
+        // why that matters.
+        const applyStickyPositions = () => {
+            cards.forEach((card, index) => {
+                const isLastCard = index === cards.length - 1;
+                if (isLastCard) {
+                    card.style.position = '';
+                    card.style.top = '';
+                    return;
+                }
+                card.style.position = 'sticky';
+                card.style.top = `${pinTopPositionForIndex(index)}px`;
+            });
+        };
+
+        // Ensure card has an ID for tracking and seed covered state.
         cards.forEach((card, index) => {
             if (!card.id) {
                 card.id = `card-scroll-item-${index}`;
             }
-            pinnedState.set(card, false);
-
-            const isLastCard = index === cards.length - 1;
-            if (!isLastCard) {
-                // Prepare card for smooth pinning - force GPU acceleration
-                card.style.willChange = 'transform';
-                card.style.transform = 'translateZ(0)'; // Force GPU layer
-
-                // Card content animation is disabled - content remains static
-                // Ensure inner content is reset to default position
-                const cardInner = card.querySelector('.adaire-card-scroll__card-inner');
-                if (cardInner) {
-                    cardInner.style.transform = '';
-                }
+            if (index < cards.length - 1) {
+                coveredState.set(card, false);
             }
         });
-
-        // Prepare intro for smooth pinning
-        if (intro) {
-            intro.style.willChange = 'transform';
-            intro.style.transform = 'translateZ(0)';
-        }
 
         // Store original box-shadow for non-last cards (used by the shadow fade effect below)
         cards.forEach((c, idx) => {
@@ -317,139 +327,51 @@ const initCardScroll = () => {
             }
         });
 
-        const pinTopPositionForIndex = (index) => startPinPosition + (index * pinOffsetPerCard);
+        // Evaluate current live layout and apply/remove cover overlays + shadow
+        // fades accordingly. Re-derives everything fresh from
+        // getBoundingClientRect() every time it's called rather than relying on
+        // cached "natural position" math, so it can't drift out of sync with
+        // what's actually on screen.
+        const updateCoverStates = () => {
+            for (let index = 0; index < cards.length - 1; index++) {
+                const card = cards[index];
+                const nextCard = cards[index + 1];
+                const nextStickyTop = pinTopPositionForIndex(index + 1);
 
-        const clearCardPinStyles = (card) => {
-            card.style.position = '';
-            card.style.top = '';
-            card.style.left = '';
-            card.style.width = '';
-        };
+                // A card is covered once the next card in the stack has reached
+                // (or scrolled past) its own sticky offset - i.e. it's now stuck
+                // above this one. Checking this directly against nextCard's own
+                // live position (rather than tracking pin/unpin transitions on
+                // the card doing the covering) means a third card taking over
+                // from a second never leaves an earlier card's overlay stripped
+                // prematurely - each card's covered state only depends on its
+                // immediate neighbour, checked fresh every time.
+                const isCovered = nextCard.getBoundingClientRect().top <= nextStickyTop + 0.5;
+                const wasCovered = coveredState.get(card);
 
-        const applyCardPinStyles = (card, index) => {
-            const rect = naturalRects.get(card);
-            if (!rect) return;
-            card.style.position = 'fixed';
-            card.style.top = `${pinTopPositionForIndex(index)}px`;
-            card.style.left = `${rect.left}px`;
-            card.style.width = `${rect.width}px`;
-        };
+                if (isCovered && !wasCovered) {
+                    coverCard(card);
+                    coveredState.set(card, true);
 
-        const clearIntroPinStyles = () => {
-            intro.style.position = '';
-            intro.style.top = '';
-            intro.style.left = '';
-            intro.style.width = '';
-        };
-
-        const applyIntroPinStyles = () => {
-            const rect = naturalRects.get(intro);
-            if (!rect) return;
-            intro.style.position = 'fixed';
-            intro.style.top = `${startPinPosition}px`;
-            intro.style.left = `${rect.left}px`;
-            intro.style.width = `${rect.width}px`;
-        };
-
-        // Re-measure each card's natural (unpinned) document position. Mirrors what
-        // ScrollTrigger.refresh() used to do internally: temporarily release any pins,
-        // let layout settle, then read fresh geometry.
-        const measureNaturalPositions = () => {
-            cards.forEach(clearCardPinStyles);
-            if (intro) clearIntroPinStyles();
-
-            // Force reflow so subsequent getBoundingClientRect() reads are accurate.
-            void block.offsetHeight;
-
-            const scrollY = window.scrollY;
-            cards.forEach((card) => {
-                const rect = card.getBoundingClientRect();
-                naturalRects.set(card, {
-                    top: rect.top + scrollY,
-                    left: rect.left,
-                    width: rect.width,
-                    bottom: rect.bottom + scrollY
-                });
-            });
-            if (intro) {
-                const rect = intro.getBoundingClientRect();
-                naturalRects.set(intro, {
-                    top: rect.top + scrollY,
-                    left: rect.left,
-                    width: rect.width,
-                    bottom: rect.bottom + scrollY
-                });
+                    const previewText = nextCard.dataset.previewText || '';
+                    const textColor = nextCard.dataset.textColor || '#000000';
+                    if (previewText) {
+                        showPreviewText(card, previewText, textColor, nextCard, ctx());
+                    }
+                } else if (!isCovered && wasCovered) {
+                    uncoverCard(card);
+                    coveredState.set(card, false);
+                    hidePreviewText(card);
+                }
             }
-        };
 
-        // Evaluate current scroll position against cached thresholds and apply/remove
-        // pin styles + cover overlays + shadow fades accordingly. This is the primary,
-        // ongoing driver of the effect (replaces ScrollTrigger's onEnter/onLeave/etc).
-        const updatePinStates = () => {
-            const scrollY = window.scrollY;
-            const lastRect = naturalRects.get(lastCard);
-            if (!lastRect) return; // Not measured yet
+            // Smoothly fade shadows on non-last cards out/in while the (non-sticky)
+            // last card is positioned above them, until it scrolls fully past.
+            const lastCard = cards[cards.length - 1];
+            const lastCardRect = lastCard.getBoundingClientRect();
+            const lastCardStickyEquivalentTop = pinTopPositionForIndex(cards.length - 1);
+            const shouldHideShadows = lastCardRect.top <= lastCardStickyEquivalentTop + 0.5 && lastCardRect.bottom > 0;
 
-            cards.forEach((card, index) => {
-                const isLastCard = index === cards.length - 1;
-                if (isLastCard) return;
-
-                const rect = naturalRects.get(card);
-                if (!rect) return;
-
-                const pinTopPosition = pinTopPositionForIndex(index);
-                const startScrollY = rect.top - pinTopPosition;
-                const endScrollY = lastRect.top - pinTopPosition;
-
-                const shouldPin = scrollY >= startScrollY && scrollY < endScrollY;
-                const wasPinned = pinnedState.get(card);
-
-                if (shouldPin && !wasPinned) {
-                    applyCardPinStyles(card, index);
-                    pinnedState.set(card, true);
-
-                    // When this card pins, cover the previous card and show preview text
-                    if (index > 0) {
-                        const previousCard = cards[index - 1];
-                        coverCard(previousCard, pinnedState);
-                        const previewText = card.dataset.previewText || '';
-                        const textColor = card.dataset.textColor || '#000000';
-                        if (previewText) {
-                            showPreviewText(previousCard, previewText, textColor, card, ctx());
-                        }
-                    }
-                } else if (!shouldPin && wasPinned) {
-                    clearCardPinStyles(card);
-                    pinnedState.set(card, false);
-
-                    // Uncover previous card when this card unpins
-                    if (index > 0) {
-                        const previousCard = cards[index - 1];
-                        uncoverCard(previousCard);
-                        hidePreviewText(previousCard);
-                    }
-                }
-
-                // Intro pins/unpins on the same range as card index 0
-                // (trigger: cards[0], start/end "top 15%").
-                if (index === 0 && intro) {
-                    if (shouldPin && !introPinned) {
-                        applyIntroPinStyles();
-                        introPinned = true;
-                    } else if (!shouldPin && introPinned) {
-                        clearIntroPinStyles();
-                        introPinned = false;
-                    }
-                }
-            });
-
-            // Smoothly fade shadows on non-last cards out/in while the last card is
-            // positioned above them (until it fully scrolls past).
-            const lastCardStartPosition = pinTopPositionForIndex(cards.length - 1);
-            const shadowStartScrollY = lastRect.top - lastCardStartPosition;
-            const shadowEndScrollY = lastRect.bottom; // "bottom top": last card's bottom reaches viewport top
-
-            const shouldHideShadows = scrollY >= shadowStartScrollY && scrollY < shadowEndScrollY;
             if (shouldHideShadows !== shadowActive) {
                 shadowActive = shouldHideShadows;
                 cards.forEach((c, idx) => {
@@ -468,12 +390,12 @@ const initCardScroll = () => {
             pinOffsetPerCard = peekHeight;
         };
 
-        // Full refresh: recompute metrics, re-measure natural layout, and re-evaluate
-        // pin state against the current scroll position.
+        // Full refresh: recompute metrics, re-apply sticky offsets, and
+        // re-evaluate cover state against the current scroll position.
         const applyInitialState = () => {
             recalcMetrics();
-            measureNaturalPositions();
-            updatePinStates();
+            applyStickyPositions();
+            updateCoverStates();
         };
 
         // Check immediately and after delays to catch late layout settling
@@ -487,12 +409,12 @@ const initCardScroll = () => {
         let scrollCheckTimeout;
         const handleScroll = () => {
             // Check immediately on scroll
-            updatePinStates();
+            updateCoverStates();
 
             // Also check after a small delay to catch any delayed updates
             clearTimeout(scrollCheckTimeout);
             scrollCheckTimeout = setTimeout(() => {
-                updatePinStates();
+                updateCoverStates();
             }, 10);
         };
         window.addEventListener('scroll', handleScroll, { passive: true });
