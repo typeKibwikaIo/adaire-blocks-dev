@@ -12,7 +12,7 @@
         "anchor": true,
         "customClassName": true
     },
-    "textdomain": "social-banner-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -23,19 +23,36 @@
         },
         "positionType": {
             "type": "string",
-            "default": "fixed"
+            "default": "fixed",
+            "enum": [
+                "fixed",
+                "absolute",
+                "relative"
+            ]
         },
         "displayType": {
             "type": "string",
-            "default": "block"
+            "default": "block",
+            "enum": [
+                "block",
+                "inline"
+            ]
         },
         "layoutDirection": {
             "type": "string",
-            "default": "column"
+            "default": "column",
+            "enum": [
+                "column",
+                "row"
+            ]
         },
         "offsetFrom": {
             "type": "string",
-            "default": "top"
+            "default": "top",
+            "enum": [
+                "top",
+                "bottom"
+            ]
         },
         "offset": {
             "type": "number",
@@ -43,11 +60,19 @@
         },
         "offsetUnit": {
             "type": "string",
-            "default": "px"
+            "default": "px",
+            "enum": [
+                "px",
+                "%"
+            ]
         },
         "horizontalOffsetFrom": {
             "type": "string",
-            "default": "left"
+            "default": "left",
+            "enum": [
+                "left",
+                "right"
+            ]
         },
         "horizontalOffset": {
             "type": "number",
@@ -55,7 +80,11 @@
         },
         "horizontalOffsetUnit": {
             "type": "string",
-            "default": "px"
+            "default": "px",
+            "enum": [
+                "px",
+                "%"
+            ]
         },
         "iconEntries": {
             "type": "array",
@@ -118,7 +147,21 @@
         },
         "hoverAnimation": {
             "type": "string",
-            "default": "up"
+            "default": "up",
+            "enum": [
+                "up",
+                "down",
+                "left",
+                "right",
+                "pulse",
+                "scale-up",
+                "scale-down",
+                "rotate",
+                "shake",
+                "bounce",
+                "glow",
+                "none"
+            ]
         },
         "animationDuration": {
             "type": "number",
@@ -126,7 +169,16 @@
         },
         "animationEasing": {
             "type": "string",
-            "default": "ease"
+            "default": "ease",
+            "enum": [
+                "ease",
+                "ease-in",
+                "ease-out",
+                "ease-in-out",
+                "linear",
+                "cubic-bezier(0.4, 0, 0.2, 1)",
+                "cubic-bezier(0.68, -0.55, 0.265, 1.55)"
+            ]
         },
         "fontFamily": {
             "type": "string",

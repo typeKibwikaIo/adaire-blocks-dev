@@ -15,7 +15,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "case-studies-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./editor.css",
     "style": "file:./style-index.css",
@@ -182,11 +182,25 @@
         },
         "cardShadow": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "0 2px 8px rgba(0, 0, 0, 0.1)",
+                "0 4px 16px rgba(0, 0, 0, 0.12)",
+                "0 8px 32px rgba(0, 0, 0, 0.15)",
+                "0 16px 48px rgba(0, 0, 0, 0.2)"
+            ]
         },
         "cardHoverShadow": {
             "type": "string",
-            "default": "0 10px 40px rgba(0, 0, 0, 0.15)"
+            "default": "0 10px 40px rgba(0, 0, 0, 0.15)",
+            "enum": [
+                "none",
+                "0 4px 12px rgba(0, 0, 0, 0.1)",
+                "0 10px 40px rgba(0, 0, 0, 0.15)",
+                "0 16px 48px rgba(0, 0, 0, 0.2)",
+                "0 24px 64px rgba(0, 0, 0, 0.25)"
+            ]
         },
         "overlayColor": {
             "type": "string",
@@ -401,7 +415,13 @@
         },
         "dragCursorTextTransform": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "uppercase",
+                "lowercase",
+                "capitalize"
+            ]
         },
         "dragCursorBgColor": {
             "type": "string",

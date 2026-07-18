@@ -41,11 +41,11 @@ const bigDesktopIcon = createElement(
 );
 
 const BREAKPOINTS = [
-	{ name: 'mobile',      icon: mobile,          label: __( 'Mobile',       'adaire-blocks-dev2' ) },
-	{ name: 'tablet',      icon: tablet,          label: __( 'Tablet',       'adaire-blocks-dev2' ) },
-	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __( 'Small Laptop', 'adaire-blocks-dev2' ) },
-	{ name: 'desktop',     icon: desktop,         label: __( 'Desktop',      'adaire-blocks-dev2' ) },
-	{ name: 'bigDesktop',  icon: bigDesktopIcon,  label: __( 'Big Desktop',  'adaire-blocks-dev2' ) },
+	{ name: 'mobile',      icon: mobile,          label: __( 'Mobile',       'adaire-blocks' ) },
+	{ name: 'tablet',      icon: tablet,          label: __( 'Tablet',       'adaire-blocks' ) },
+	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __( 'Small Laptop', 'adaire-blocks' ) },
+	{ name: 'desktop',     icon: desktop,         label: __( 'Desktop',      'adaire-blocks' ) },
+	{ name: 'bigDesktop',  icon: bigDesktopIcon,  label: __( 'Big Desktop',  'adaire-blocks' ) },
 ];
 
 // â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -92,15 +92,15 @@ const buildCardVars = ( rcp, riw ) => ( {
 } );
 
 const FONT_WEIGHTS = [
-	{ label: __( '100 â€” Thin',        'adaire-blocks-dev2' ), value: '100' },
-	{ label: __( '200 â€” Extra Light', 'adaire-blocks-dev2' ), value: '200' },
-	{ label: __( '300 â€” Light',       'adaire-blocks-dev2' ), value: '300' },
-	{ label: __( '400 â€” Regular',     'adaire-blocks-dev2' ), value: '400' },
-	{ label: __( '500 â€” Medium',      'adaire-blocks-dev2' ), value: '500' },
-	{ label: __( '600 â€” Semi Bold',   'adaire-blocks-dev2' ), value: '600' },
-	{ label: __( '700 â€” Bold',        'adaire-blocks-dev2' ), value: '700' },
-	{ label: __( '800 â€” Extra Bold',  'adaire-blocks-dev2' ), value: '800' },
-	{ label: __( '900 â€” Black',       'adaire-blocks-dev2' ), value: '900' },
+	{ label: __( '100 â€” Thin',        'adaire-blocks' ), value: '100' },
+	{ label: __( '200 â€” Extra Light', 'adaire-blocks' ), value: '200' },
+	{ label: __( '300 â€” Light',       'adaire-blocks' ), value: '300' },
+	{ label: __( '400 â€” Regular',     'adaire-blocks' ), value: '400' },
+	{ label: __( '500 â€” Medium',      'adaire-blocks' ), value: '500' },
+	{ label: __( '600 â€” Semi Bold',   'adaire-blocks' ), value: '600' },
+	{ label: __( '700 â€” Bold',        'adaire-blocks' ), value: '700' },
+	{ label: __( '800 â€” Extra Bold',  'adaire-blocks' ), value: '800' },
+	{ label: __( '900 â€” Black',       'adaire-blocks' ), value: '900' },
 ];
 
 // â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -186,7 +186,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				{ /* â”€â”€ Device toggle â”€â”€ */ }
 				<div className="adaire-device-toggle">
 					<p className="adaire-device-toggle-label">
-						{ __( 'Device View', 'adaire-blocks-dev2' ) }
+						{ __( 'Device View', 'adaire-blocks' ) }
 					</p>
 					<div className="adaire-device-toggle-group">
 						{ BREAKPOINTS.map( ( bp ) => (
@@ -201,57 +201,57 @@ export default function Edit( { attributes, setAttributes } ) {
 						) ) }
 					</div>
 					<p className="adaire-device-toggle-status">
-						{ __( 'Configuring:', 'adaire-blocks-dev2' ) }{ ' ' }
+						{ __( 'Configuring:', 'adaire-blocks' ) }{ ' ' }
 						<strong>{ activeLabel }</strong>
 					</p>
 				</div>
 
 				{ /* â”€â”€ Card Content â”€â”€ */ }
-				<PanelBody title={ __( 'Card Content', 'adaire-blocks-dev2' ) } initialOpen={ true }>
+				<PanelBody title={ __( 'Card Content', 'adaire-blocks' ) } initialOpen={ true }>
 					<TextControl
-						label={ __( 'Title', 'adaire-blocks-dev2' ) }
+						label={ __( 'Title', 'adaire-blocks' ) }
 						value={ cardTitle }
 						onChange={ ( val ) => setAttributes( { cardTitle: val } ) }
-						placeholder={ __( 'Card titleâ€¦', 'adaire-blocks-dev2' ) }
+						placeholder={ __( 'Card titleâ€¦', 'adaire-blocks' ) }
 					/>
 					<TextareaControl
-						label={ __( 'Description', 'adaire-blocks-dev2' ) }
+						label={ __( 'Description', 'adaire-blocks' ) }
 						value={ cardText }
 						onChange={ ( val ) => setAttributes( { cardText: val } ) }
-						placeholder={ __( 'Card descriptionâ€¦', 'adaire-blocks-dev2' ) }
+						placeholder={ __( 'Card descriptionâ€¦', 'adaire-blocks' ) }
 						rows={ 4 }
-						help={ __( 'Also editable inline by clicking on the canvas.', 'adaire-blocks-dev2' ) }
+						help={ __( 'Also editable inline by clicking on the canvas.', 'adaire-blocks' ) }
 					/>
 				</PanelBody>
 
 				{ /* â”€â”€ Typography â”€â”€ */ }
-				<PanelBody title={ __( 'Typography', 'adaire-blocks-dev2' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Typography', 'adaire-blocks' ) } initialOpen={ false }>
 					<p style={ { margin: '0 0 8px', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', color: '#1e1e1e' } }>
-						{ __( 'Card Title', 'adaire-blocks-dev2' ) }
+						{ __( 'Card Title', 'adaire-blocks' ) }
 					</p>
 					<UnitControl
-						label={ __( 'Font Size', 'adaire-blocks-dev2' ) }
+						label={ __( 'Font Size', 'adaire-blocks' ) }
 						value={ titleFontSize }
 						onChange={ ( val ) => setAttributes( { titleFontSize: val || '1.75rem' } ) }
-						help={ __( 'Supports rem, px, em, vw', 'adaire-blocks-dev2' ) }
+						help={ __( 'Supports rem, px, em, vw', 'adaire-blocks' ) }
 					/>
 					<SelectControl
-						label={ __( 'Font Weight', 'adaire-blocks-dev2' ) }
+						label={ __( 'Font Weight', 'adaire-blocks' ) }
 						value={ titleFontWeight }
 						options={ FONT_WEIGHTS }
 						onChange={ ( val ) => setAttributes( { titleFontWeight: val } ) }
 					/>
 					<p style={ { margin: '16px 0 8px', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', color: '#1e1e1e' } }>
-						{ __( 'Body Text', 'adaire-blocks-dev2' ) }
+						{ __( 'Body Text', 'adaire-blocks' ) }
 					</p>
 					<UnitControl
-						label={ __( 'Font Size', 'adaire-blocks-dev2' ) }
+						label={ __( 'Font Size', 'adaire-blocks' ) }
 						value={ textFontSize }
 						onChange={ ( val ) => setAttributes( { textFontSize: val || '0.9375rem' } ) }
-						help={ __( 'Supports rem, px, em, vw', 'adaire-blocks-dev2' ) }
+						help={ __( 'Supports rem, px, em, vw', 'adaire-blocks' ) }
 					/>
 					<SelectControl
-						label={ __( 'Font Weight', 'adaire-blocks-dev2' ) }
+						label={ __( 'Font Weight', 'adaire-blocks' ) }
 						value={ textFontWeight }
 						options={ FONT_WEIGHTS }
 						onChange={ ( val ) => setAttributes( { textFontWeight: val } ) }
@@ -259,76 +259,76 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 			{ /* â”€â”€ Card Style â”€â”€ */ }
-				<PanelBody title={ __( 'Card Style', 'adaire-blocks-dev2' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Card Style', 'adaire-blocks' ) } initialOpen={ false }>
 					<RangeControl
-						label={ __( 'Border Radius (px)', 'adaire-blocks-dev2' ) }
+						label={ __( 'Border Radius (px)', 'adaire-blocks' ) }
 						value={ borderRadius }
 						onChange={ ( val ) => setAttributes( { borderRadius: val } ) }
 						min={ 0 }
 						max={ 64 }
 					/>
 					<BoxControl
-						label={ `${ __( 'Card Padding', 'adaire-blocks-dev2' ) } (${ activeLabel })` }
+						label={ `${ __( 'Card Padding', 'adaire-blocks' ) } (${ activeLabel })` }
 						values={ responsiveCardPadding?.[ deviceType ] || {} }
 						onChange={ ( val ) => updateResponsive( 'responsiveCardPadding', deviceType, val ) }
 					/>
 					<SelectControl
-						label={ __( 'Left Column Layout', 'adaire-blocks-dev2' ) }
+						label={ __( 'Left Column Layout', 'adaire-blocks' ) }
 						value={ cardLeftJustify }
 						options={ [
-							{ label: __( 'Space Between â€” content top, button bottom', 'adaire-blocks-dev2' ), value: 'space-between' },
-							{ label: __( 'Space Around â€” equal spacing around each item', 'adaire-blocks-dev2' ), value: 'space-around' },
-							{ label: __( 'Flex Start â€” stack from top, button under text', 'adaire-blocks-dev2' ), value: 'flex-start' },
+							{ label: __( 'Space Between â€” content top, button bottom', 'adaire-blocks' ), value: 'space-between' },
+							{ label: __( 'Space Around â€” equal spacing around each item', 'adaire-blocks' ), value: 'space-around' },
+							{ label: __( 'Flex Start â€” stack from top, button under text', 'adaire-blocks' ), value: 'flex-start' },
 						] }
 						onChange={ ( val ) => setAttributes( { cardLeftJustify: val } ) }
-						help={ __( 'Controls how title, body, and button are spaced vertically.', 'adaire-blocks-dev2' ) }
+						help={ __( 'Controls how title, body, and button are spaced vertically.', 'adaire-blocks' ) }
 					/>
 					<UnitControl
-						label={ __( 'Left Column Gap', 'adaire-blocks-dev2' ) }
+						label={ __( 'Left Column Gap', 'adaire-blocks' ) }
 						value={ cardLeftGap }
 						onChange={ ( val ) => setAttributes( { cardLeftGap: val || '16px' } ) }
-						help={ __( 'Gap between title, body text, and button.', 'adaire-blocks-dev2' ) }
+						help={ __( 'Gap between title, body text, and button.', 'adaire-blocks' ) }
 					/>
 				</PanelBody>
 
 				{ /* â”€â”€ Row & Image Layout â”€â”€ */ }
-				<PanelBody title={ __( 'Row & Image Layout', 'adaire-blocks-dev2' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Row & Image Layout', 'adaire-blocks' ) } initialOpen={ false }>
 					<SelectControl
-						label={ __( 'Row Alignment', 'adaire-blocks-dev2' ) }
+						label={ __( 'Row Alignment', 'adaire-blocks' ) }
 						value={ cardInnerJustify }
 						options={ [
-							{ label: __( 'Flex Start â€” text left, image right', 'adaire-blocks-dev2' ),   value: 'flex-start'   },
-							{ label: __( 'Space Between â€” push columns to edges', 'adaire-blocks-dev2' ), value: 'space-between' },
-							{ label: __( 'Space Around â€” equal space around columns', 'adaire-blocks-dev2' ), value: 'space-around' },
-							{ label: __( 'Center â€” columns centred together', 'adaire-blocks-dev2' ),      value: 'center'       },
+							{ label: __( 'Flex Start â€” text left, image right', 'adaire-blocks' ),   value: 'flex-start'   },
+							{ label: __( 'Space Between â€” push columns to edges', 'adaire-blocks' ), value: 'space-between' },
+							{ label: __( 'Space Around â€” equal space around columns', 'adaire-blocks' ), value: 'space-around' },
+							{ label: __( 'Center â€” columns centred together', 'adaire-blocks' ),      value: 'center'       },
 						] }
 						onChange={ ( val ) => setAttributes( { cardInnerJustify: val } ) }
-						help={ __( 'justify-content of the two-column row inside the card.', 'adaire-blocks-dev2' ) }
+						help={ __( 'justify-content of the two-column row inside the card.', 'adaire-blocks' ) }
 					/>
 					<UnitControl
-						label={ __( 'Column Gap', 'adaire-blocks-dev2' ) }
+						label={ __( 'Column Gap', 'adaire-blocks' ) }
 						value={ cardInnerGap }
 						onChange={ ( val ) => setAttributes( { cardInnerGap: val || '32px' } ) }
-						help={ __( 'Space between the text column and the image.', 'adaire-blocks-dev2' ) }
+						help={ __( 'Space between the text column and the image.', 'adaire-blocks' ) }
 					/>
 					<p style={ { margin: '16px 0 8px', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', color: '#1e1e1e' } }>
-						{ __( 'Image Width', 'adaire-blocks-dev2' ) }
+						{ __( 'Image Width', 'adaire-blocks' ) }
 					</p>
 					<p style={ { margin: '0 0 8px', fontSize: '11px', color: '#757575' } }>
-						{ __( `Configuring: ${ BREAKPOINTS.find( b => b.name === deviceType )?.label }`, 'adaire-blocks-dev2' ) }
+						{ __( `Configuring: ${ BREAKPOINTS.find( b => b.name === deviceType )?.label }`, 'adaire-blocks' ) }
 					</p>
 					<UnitControl
-						label={ __( 'Image Column Width', 'adaire-blocks-dev2' ) }
+						label={ __( 'Image Column Width', 'adaire-blocks' ) }
 						value={ responsiveImageWidth?.[ deviceType ] || '45%' }
 						onChange={ ( val ) => updateResponsive( 'responsiveImageWidth', deviceType, val ) }
-						help={ __( 'Supports %, px, vw. Use the device buttons above to set per-breakpoint.', 'adaire-blocks-dev2' ) }
+						help={ __( 'Supports %, px, vw. Use the device buttons above to set per-breakpoint.', 'adaire-blocks' ) }
 					/>
 				</PanelBody>
 
 			{ /* â”€â”€ Shadow â”€â”€ */ }
-				<PanelBody title={ __( 'Shadow', 'adaire-blocks-dev2' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Shadow', 'adaire-blocks' ) } initialOpen={ false }>
 					<SelectControl
-						label={ __( 'Shadow Type', 'adaire-blocks-dev2' ) }
+						label={ __( 'Shadow Type', 'adaire-blocks' ) }
 						value={ shadowType }
 						options={ [
 							{ label: 'Outer (drop shadow)', value: '' },
@@ -337,47 +337,47 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( val ) => setAttributes( { shadowType: val } ) }
 					/>
 					<RangeControl
-						label={ __( 'Blur (px)', 'adaire-blocks-dev2' ) }
+						label={ __( 'Blur (px)', 'adaire-blocks' ) }
 						value={ shadowBlur }
 						onChange={ ( val ) => setAttributes( { shadowBlur: val } ) }
 						min={ 0 } max={ 100 }
 					/>
 					<RangeControl
-						label={ __( 'Spread (px)', 'adaire-blocks-dev2' ) }
+						label={ __( 'Spread (px)', 'adaire-blocks' ) }
 						value={ shadowSpread }
 						onChange={ ( val ) => setAttributes( { shadowSpread: val } ) }
 						min={ -50 } max={ 50 }
 					/>
 					<RangeControl
-						label={ __( 'Opacity', 'adaire-blocks-dev2' ) }
+						label={ __( 'Opacity', 'adaire-blocks' ) }
 						value={ shadowOpacity }
 						onChange={ ( val ) => setAttributes( { shadowOpacity: val } ) }
 						min={ 0 } max={ 1 } step={ 0.01 }
 					/>
 					<AdaireColorControl
-						label={ __( 'Shadow Color', 'adaire-blocks-dev2' ) }
+						label={ __( 'Shadow Color', 'adaire-blocks' ) }
 						value={ shadowColor }
 						onChange={ ( value ) => setAttributes( { shadowColor: value } ) }
 					/>
 				</PanelBody>
 
 				{ /* â”€â”€ Border â”€â”€ */ }
-				<PanelBody title={ __( 'Border', 'adaire-blocks-dev2' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Border', 'adaire-blocks' ) } initialOpen={ false }>
 					<ToggleControl
-						label={ __( 'Enable Border', 'adaire-blocks-dev2' ) }
+						label={ __( 'Enable Border', 'adaire-blocks' ) }
 						checked={ borderEnabled }
 						onChange={ ( val ) => setAttributes( { borderEnabled: val } ) }
 					/>
 					{ borderEnabled && (
 						<>
 							<RangeControl
-								label={ __( 'Border Width (px)', 'adaire-blocks-dev2' ) }
+								label={ __( 'Border Width (px)', 'adaire-blocks' ) }
 								value={ borderWidth }
 								onChange={ ( val ) => setAttributes( { borderWidth: val } ) }
 								min={ 1 } max={ 10 }
 							/>
 							<SelectControl
-								label={ __( 'Border Style', 'adaire-blocks-dev2' ) }
+								label={ __( 'Border Style', 'adaire-blocks' ) }
 								value={ borderStyle }
 								options={ [
 									{ label: 'Solid',  value: 'solid'  },
@@ -389,7 +389,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								onChange={ ( val ) => setAttributes( { borderStyle: val } ) }
 							/>
 							<AdaireColorControl
-								label={ __( 'Border Color', 'adaire-blocks-dev2' ) }
+								label={ __( 'Border Color', 'adaire-blocks' ) }
 								value={ borderColor }
 								onChange={ ( value ) => setAttributes( { borderColor: value } ) }
 							/>
@@ -398,7 +398,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 				{ /* â”€â”€ Right Image â”€â”€ */ }
-				<PanelBody title={ __( 'Right Image', 'adaire-blocks-dev2' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Right Image', 'adaire-blocks' ) } initialOpen={ false }>
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( media ) => setAttributes( { imageId: media.id, imageUrl: media.url, imageAlt: media.alt || '' } ) }
@@ -414,11 +414,11 @@ export default function Edit( { attributes, setAttributes } ) {
 										/>
 									) }
 									<Button variant="secondary" onClick={ open } style={ { width: '100%', marginBottom: 8 } }>
-										{ imageUrl ? __( 'Replace Image', 'adaire-blocks-dev2' ) : __( 'Select Image', 'adaire-blocks-dev2' ) }
+										{ imageUrl ? __( 'Replace Image', 'adaire-blocks' ) : __( 'Select Image', 'adaire-blocks' ) }
 									</Button>
 									{ imageUrl && (
 										<Button variant="tertiary" isDestructive onClick={ () => setAttributes( { imageId: 0, imageUrl: '', imageAlt: '' } ) } style={ { width: '100%' } }>
-											{ __( 'Remove Image', 'adaire-blocks-dev2' ) }
+											{ __( 'Remove Image', 'adaire-blocks' ) }
 										</Button>
 									) }
 								</>
@@ -429,12 +429,12 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				{ /* â”€â”€ Colors â”€â”€ */ }
 				<PanelColorSettings
-					title={ __( 'Colors', 'adaire-blocks-dev2' ) }
+					title={ __( 'Colors', 'adaire-blocks' ) }
 					initialOpen={ false }
 					colorSettings={ [
-						{ value: backgroundColor, onChange: ( val ) => setAttributes( { backgroundColor: val || '#ffffff' } ), label: __( 'Card Background', 'adaire-blocks-dev2' ) },
-						{ value: titleColor,       onChange: ( val ) => setAttributes( { titleColor: val || '#111111' } ),       label: __( 'Title',           'adaire-blocks-dev2' ) },
-						{ value: textColor,        onChange: ( val ) => setAttributes( { textColor: val || '#555555' } ),        label: __( 'Body Text',       'adaire-blocks-dev2' ) },
+						{ value: backgroundColor, onChange: ( val ) => setAttributes( { backgroundColor: val || '#ffffff' } ), label: __( 'Card Background', 'adaire-blocks' ) },
+						{ value: titleColor,       onChange: ( val ) => setAttributes( { titleColor: val || '#111111' } ),       label: __( 'Title',           'adaire-blocks' ) },
+						{ value: textColor,        onChange: ( val ) => setAttributes( { textColor: val || '#555555' } ),        label: __( 'Body Text',       'adaire-blocks' ) },
 					] }
 				/>
 			</InspectorControls>
@@ -454,7 +454,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						className="adaire-hsc__card-title"
 						value={ cardTitle }
 						onChange={ ( val ) => setAttributes( { cardTitle: val } ) }
-						placeholder={ __( 'Card titleâ€¦', 'adaire-blocks-dev2' ) }
+						placeholder={ __( 'Card titleâ€¦', 'adaire-blocks' ) }
 						style={ {
 							color:      titleColor,
 							fontSize:   titleFontSize,
@@ -466,7 +466,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						className="adaire-hsc__card-text"
 						value={ cardText }
 						onChange={ ( val ) => setAttributes( { cardText: val } ) }
-						placeholder={ __( 'Card descriptionâ€¦', 'adaire-blocks-dev2' ) }
+						placeholder={ __( 'Card descriptionâ€¦', 'adaire-blocks' ) }
 						style={ {
 							color:      textColor,
 							fontSize:   textFontSize,
@@ -490,7 +490,7 @@ export default function Edit( { attributes, setAttributes } ) {
 											className="adaire-hsc__card-image"
 											onClick={ open }
 											style={ { cursor: 'pointer' } }
-											title={ __( 'Click to replace image', 'adaire-blocks-dev2' ) }
+											title={ __( 'Click to replace image', 'adaire-blocks' ) }
 										/>
 									) }
 								/>
@@ -508,14 +508,14 @@ export default function Edit( { attributes, setAttributes } ) {
 											role="button"
 											tabIndex={ 0 }
 											onKeyDown={ ( e ) => e.key === 'Enter' && open() }
-											aria-label={ __( 'Upload image', 'adaire-blocks-dev2' ) }
+											aria-label={ __( 'Upload image', 'adaire-blocks' ) }
 										>
 											<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
 												<rect x="3" y="3" width="18" height="18" rx="2" />
 												<circle cx="8.5" cy="8.5" r="1.5" />
 												<polyline points="21 15 16 10 5 21" />
 											</svg>
-											<span>{ __( 'Click to add image', 'adaire-blocks-dev2' ) }</span>
+											<span>{ __( 'Click to add image', 'adaire-blocks' ) }</span>
 										</div>
 									) }
 								/>

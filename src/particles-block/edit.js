@@ -353,30 +353,30 @@ export default function Edit({ attributes, setAttributes }) {
           </Button>
         </PanelBody>
 
-        <PanelBody title={__('Typography', 'particles-block')} initialOpen={false}>
+        <PanelBody title={__('Typography', 'adaire-blocks')} initialOpen={false}>
           <h4>Title Settings</h4>
           <RangeControl
-            label={__('Title Font Size (px)', 'particles-block')}
+            label={__('Title Font Size (px)', 'adaire-blocks')}
             value={attributes.titleFontSize}
             min={16}
             max={120}
             onChange={(value) => setAttributes({ titleFontSize: value })}
           />
           <SelectControl
-            label={__('Title Font Family', 'particles-block')}
+            label={__('Title Font Family', 'adaire-blocks')}
             value={attributes.titleFontFamily}
             options={FONT_FAMILIES}
             onChange={(value) => setAttributes({ titleFontFamily: value })}
           />
           {attributes.titleFontFamily === 'custom' && (
             <TextControl
-              label={__('Custom Title Font Family', 'particles-block')}
+              label={__('Custom Title Font Family', 'adaire-blocks')}
               value={attributes.titleFontFamilyCustom || ''}
               onChange={(value) => setAttributes({ titleFontFamily: value })}
             />
           )}
           <SelectControl
-            label={__('Title Font Weight', 'particles-block')}
+            label={__('Title Font Weight', 'adaire-blocks')}
             value={attributes.titleFontWeight || 'normal'}
             options={[
               { label: 'Normal', value: 'normal' },
@@ -394,14 +394,14 @@ export default function Edit({ attributes, setAttributes }) {
             onChange={(value) => setAttributes({ titleFontWeight: value })}
           />
           <RangeControl
-            label={__('Title Top Margin (px)', 'particles-block')}
+            label={__('Title Top Margin (px)', 'adaire-blocks')}
             value={attributes.titleMarginTop || 0}
             min={0}
             max={100}
             onChange={(value) => setAttributes({ titleMarginTop: value })}
           />
           <RangeControl
-            label={__('Title Bottom Margin (px)', 'particles-block')}
+            label={__('Title Bottom Margin (px)', 'adaire-blocks')}
             value={attributes.titleMarginBottom || 20}
             min={0}
             max={100}
@@ -410,27 +410,27 @@ export default function Edit({ attributes, setAttributes }) {
 
           <h4>Description Settings</h4>
           <RangeControl
-            label={__('Text Font Size (px)', 'particles-block')}
+            label={__('Text Font Size (px)', 'adaire-blocks')}
             value={attributes.textFontSize}
             min={10}
             max={60}
             onChange={(value) => setAttributes({ textFontSize: value })}
           />
           <SelectControl
-            label={__('Text Font Family', 'particles-block')}
+            label={__('Text Font Family', 'adaire-blocks')}
             value={attributes.textFontFamily}
             options={FONT_FAMILIES}
             onChange={(value) => setAttributes({ textFontFamily: value })}
           />
           {attributes.textFontFamily === 'custom' && (
             <TextControl
-              label={__('Custom Text Font Family', 'particles-block')}
+              label={__('Custom Text Font Family', 'adaire-blocks')}
               value={attributes.textFontFamilyCustom || ''}
               onChange={(value) => setAttributes({ textFontFamily: value })}
             />
           )}
           <SelectControl
-            label={__('Text Font Weight', 'particles-block')}
+            label={__('Text Font Weight', 'adaire-blocks')}
             value={attributes.textFontWeight || 'normal'}
             options={[
               { label: 'Normal', value: 'normal' },
@@ -448,14 +448,14 @@ export default function Edit({ attributes, setAttributes }) {
             onChange={(value) => setAttributes({ textFontWeight: value })}
           />
           <RangeControl
-            label={__('Text Top Margin (px)', 'particles-block')}
+            label={__('Text Top Margin (px)', 'adaire-blocks')}
             value={attributes.textMarginTop || 0}
             min={0}
             max={100}
             onChange={(value) => setAttributes({ textMarginTop: value })}
           />
           <RangeControl
-            label={__('Text Bottom Margin (px)', 'particles-block')}
+            label={__('Text Bottom Margin (px)', 'adaire-blocks')}
             value={attributes.textMarginBottom || 0}
             min={0}
             max={100}

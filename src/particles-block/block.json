@@ -11,7 +11,7 @@
         "html": false,
         "anchor": true
     },
-    "textdomain": "particles-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -274,11 +274,37 @@
         },
         "titleFontWeight": {
             "type": "string",
-            "default": "normal"
+            "default": "normal",
+            "enum": [
+                "normal",
+                "bold",
+                "100",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800",
+                "900"
+            ]
         },
         "textFontWeight": {
             "type": "string",
-            "default": "normal"
+            "default": "normal",
+            "enum": [
+                "normal",
+                "bold",
+                "100",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800",
+                "900"
+            ]
         },
         "titleMarginTop": {
             "type": "number",

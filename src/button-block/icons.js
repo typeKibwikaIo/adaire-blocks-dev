@@ -5,11 +5,11 @@ import { __ } from '@wordpress/i18n';
 // hardcoded arrow (24x24, stroke="currentColor", strokeWidth 2, round
 // caps/joins) so switching icons doesn't change the button's weight/feel.
 export const BUTTON_ICON_OPTIONS = [
-	{ label: __( 'Diagonal Arrow', 'button-block' ), value: 'arrow-diagonal' },
-	{ label: __( 'Arrow Right', 'button-block' ), value: 'arrow-right' },
-	{ label: __( 'Chevron Right', 'button-block' ), value: 'chevron-right' },
-	{ label: __( 'Plus', 'button-block' ), value: 'plus' },
-	{ label: __( 'External Link', 'button-block' ), value: 'external-link' },
+	{ label: __( 'Diagonal Arrow', 'adaire-blocks' ), value: 'arrow-diagonal' },
+	{ label: __( 'Arrow Right', 'adaire-blocks' ), value: 'arrow-right' },
+	{ label: __( 'Chevron Right', 'adaire-blocks' ), value: 'chevron-right' },
+	{ label: __( 'Plus', 'adaire-blocks' ), value: 'plus' },
+	{ label: __( 'External Link', 'adaire-blocks' ), value: 'external-link' },
 ];
 
 const ICON_PATHS = {

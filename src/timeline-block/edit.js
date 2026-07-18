@@ -196,8 +196,8 @@ export default function Edit( { attributes, setAttributes } ) {
 			...items,
 			{
 				icon: 'shield',
-				title: __( 'New Milestone', 'timeline-block' ),
-				description: __( 'Describe this milestone.', 'timeline-block' ),
+				title: __( 'New Milestone', 'adaire-blocks' ),
+				description: __( 'Describe this milestone.', 'adaire-blocks' ),
 			},
 		];
 		setAttributes( { items: newItems } );
@@ -218,55 +218,55 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody section="layout" title={ __( 'Layout', 'timeline-block' ) } initialOpen={ true }>
+				<PanelBody section="layout" title={ __( 'Layout', 'adaire-blocks' ) } initialOpen={ true }>
 					<SelectControl
-						label={ __( 'Orientation', 'timeline-block' ) }
+						label={ __( 'Orientation', 'adaire-blocks' ) }
 						value={ orientation }
 						options={ [
-							{ label: __( 'Vertical', 'timeline-block' ), value: 'vertical' },
-							{ label: __( 'Horizontal', 'timeline-block' ), value: 'horizontal' },
+							{ label: __( 'Vertical', 'adaire-blocks' ), value: 'vertical' },
+							{ label: __( 'Horizontal', 'adaire-blocks' ), value: 'horizontal' },
 						] }
 						onChange={ ( value ) => setAttributes( { orientation: value } ) }
 					/>
 					<ToggleControl
-						label={ __( 'Show Connector Line', 'timeline-block' ) }
+						label={ __( 'Show Connector Line', 'adaire-blocks' ) }
 						checked={ showConnector }
 						onChange={ ( value ) => setAttributes( { showConnector: value } ) }
 					/>
 					<ToggleControl
-						label={ __( 'Show Arrows', 'timeline-block' ) }
+						label={ __( 'Show Arrows', 'adaire-blocks' ) }
 						checked={ showArrows }
 						onChange={ ( value ) => setAttributes( { showArrows: value } ) }
 					/>
 				</PanelBody>
-				<PanelBody section="style" priority="high" title={ __( 'Colors', 'timeline-block' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="high" title={ __( 'Colors', 'adaire-blocks' ) } initialOpen={ false }>
 					<ColorPicker
-						label={ __( 'Background Color', 'timeline-block' ) }
+						label={ __( 'Background Color', 'adaire-blocks' ) }
 						value={ attributes.backgroundColor }
 						onChange={ ( value ) => setAttributes( { backgroundColor: value } ) }
 					/>
 					<ColorPicker
-						label={ __( 'Accent Color', 'timeline-block' ) }
+						label={ __( 'Accent Color', 'adaire-blocks' ) }
 						value={ attributes.accentColor }
 						onChange={ ( value ) => setAttributes( { accentColor: value } ) }
 					/>
 					<ColorPicker
-						label={ __( 'Section Header Color', 'timeline-block' ) }
+						label={ __( 'Section Header Color', 'adaire-blocks' ) }
 						value={ attributes.textColor }
 						onChange={ ( value ) => setAttributes( { textColor: value } ) }
 					/>
 					<ColorPicker
-						label={ __( 'Milestone Title Color', 'timeline-block' ) }
+						label={ __( 'Milestone Title Color', 'adaire-blocks' ) }
 						value={ attributes.itemTitleColor }
 						onChange={ ( value ) => setAttributes( { itemTitleColor: value } ) }
 					/>
 					<ColorPicker
-						label={ __( 'Description Color', 'timeline-block' ) }
+						label={ __( 'Description Color', 'adaire-blocks' ) }
 						value={ attributes.descriptionColor }
 						onChange={ ( value ) => setAttributes( { descriptionColor: value } ) }
 					/>
 				</PanelBody>
-				<PanelBody section="style" priority="high" title={ __( 'Typography', 'timeline-block' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="high" title={ __( 'Typography', 'adaire-blocks' ) } initialOpen={ false }>
 					<SelectControl
 						label={ __( 'Font family' ) }
 						value={ a.fontFamily || '' }
@@ -280,7 +280,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TypographySubsection title={ __( 'Milestone title' ) } a={ a } set={ set } prefix="itemTitle" />
 					<TypographySubsection title={ __( 'Milestone description' ) } a={ a } set={ set } prefix="itemDesc" />
 				</PanelBody>
-				<PanelBody section="style" priority="high" title={ __( 'Typography', 'timeline-block' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="high" title={ __( 'Typography', 'adaire-blocks' ) } initialOpen={ false }>
 					<SelectControl
 						label={ __( 'Font family' ) }
 						value={ a.fontFamily || '' }
@@ -294,30 +294,30 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TypographySubsection title={ __( 'Milestone title' ) } a={ a } set={ set } prefix="itemTitle" />
 					<TypographySubsection title={ __( 'Milestone description' ) } a={ a } set={ set } prefix="itemDesc" />
 				</PanelBody>
-				<PanelBody section="style" priority="medium" title={ __( 'Spacing', 'timeline-block' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="medium" title={ __( 'Spacing', 'adaire-blocks' ) } initialOpen={ false }>
 					<RangeControl
-						label={ __( 'Padding top (px)', 'timeline-block' ) }
+						label={ __( 'Padding top (px)', 'adaire-blocks' ) }
 						value={ a.paddingTop ?? 80 }
 						onChange={ ( v ) => setAttributes( { paddingTop: v } ) }
 						min={ 0 }
 						max={ 200 }
 					/>
 					<RangeControl
-						label={ __( 'Padding bottom (px)', 'timeline-block' ) }
+						label={ __( 'Padding bottom (px)', 'adaire-blocks' ) }
 						value={ a.paddingBottom ?? 80 }
 						onChange={ ( v ) => setAttributes( { paddingBottom: v } ) }
 						min={ 0 }
 						max={ 200 }
 					/>
 					<RangeControl
-						label={ __( 'Margin top (px)', 'timeline-block' ) }
+						label={ __( 'Margin top (px)', 'adaire-blocks' ) }
 						value={ a.marginTop ?? 0 }
 						onChange={ ( v ) => setAttributes( { marginTop: v } ) }
 						min={ 0 }
 						max={ 200 }
 					/>
 					<RangeControl
-						label={ __( 'Margin bottom (px)', 'timeline-block' ) }
+						label={ __( 'Margin bottom (px)', 'adaire-blocks' ) }
 						value={ a.marginBottom ?? 0 }
 						onChange={ ( v ) => setAttributes( { marginBottom: v } ) }
 						min={ 0 }
@@ -332,18 +332,18 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ (items || []).map( ( item, index ) => (
 						<div className="adaire-timeline__item-control" key={ index }>
 							<SelectControl
-								label={ __( 'Icon', 'timeline-block' ) }
+								label={ __( 'Icon', 'adaire-blocks' ) }
 								value={ item.icon }
 								options={ ICON_OPTIONS }
 								onChange={ ( value ) => updateItem( index, 'icon', value ) }
 							/>
 							<Button isDestructive onClick={ () => removeItem( index ) }>
-								{ __( 'Remove', 'timeline-block' ) }
+								{ __( 'Remove', 'adaire-blocks' ) }
 							</Button>
 						</div>
 					) ) }
 					<Button variant="primary" onClick={ addItem }>
-						{ __( 'Add Item', 'timeline-block' ) }
+						{ __( 'Add Item', 'adaire-blocks' ) }
 					</Button>
 				</PanelBody>
 			</InspectorTabs>
@@ -357,21 +357,21 @@ export default function Edit( { attributes, setAttributes } ) {
 						className="adaire-timeline__eyebrow"
 						value={ eyebrow }
 						onChange={ ( value ) => setAttributes( { eyebrow: value } ) }
-						placeholder={ __( 'Eyebrow', 'timeline-block' ) }
+						placeholder={ __( 'Eyebrow', 'adaire-blocks' ) }
 					/>
 					<RichText
 						tagName="h2"
 						className="adaire-timeline__section-title"
 						value={ sectionTitle }
 						onChange={ ( value ) => setAttributes( { sectionTitle: value } ) }
-						placeholder={ __( 'Section title', 'timeline-block' ) }
+						placeholder={ __( 'Section title', 'adaire-blocks' ) }
 					/>
 					<RichText
 						tagName="p"
 						className="adaire-timeline__section-desc"
 						value={ sectionDescription }
 						onChange={ ( value ) => setAttributes( { sectionDescription: value } ) }
-						placeholder={ __( 'Section description (optional)', 'timeline-block' ) }
+						placeholder={ __( 'Section description (optional)', 'adaire-blocks' ) }
 					/>
 				</div>
 
@@ -389,19 +389,19 @@ export default function Edit( { attributes, setAttributes } ) {
 						const nodeEl = (
 							<QuickZone
 								id={ `timeline-item-${ index }` }
-								label={ item.title || __( 'Milestone', 'timeline-block' ) }
+								label={ item.title || __( 'Milestone', 'adaire-blocks' ) }
 								activeZone={ activeZone }
 								setActiveZone={ setActiveZone }
 								content={
 									<>
 										<SelectControl
-											label={ __( 'Icon', 'timeline-block' ) }
+											label={ __( 'Icon', 'adaire-blocks' ) }
 											value={ item.icon }
 											options={ ICON_OPTIONS }
 											onChange={ ( value ) => updateItem( index, 'icon', value ) }
 										/>
 										<Button isDestructive onClick={ () => removeItem( index ) }>
-											{ __( 'Remove milestone', 'timeline-block' ) }
+											{ __( 'Remove milestone', 'adaire-blocks' ) }
 										</Button>
 									</>
 								}
@@ -417,14 +417,14 @@ export default function Edit( { attributes, setAttributes } ) {
 									className="adaire-timeline__item-title"
 									value={ item.title }
 									onChange={ ( value ) => updateItem( index, 'title', value ) }
-									placeholder={ __( 'Milestone title', 'timeline-block' ) }
+									placeholder={ __( 'Milestone title', 'adaire-blocks' ) }
 								/>
 								<RichText
 									tagName="p"
 									className="adaire-timeline__item-desc"
 									value={ item.description }
 									onChange={ ( value ) => updateItem( index, 'description', value ) }
-									placeholder={ __( 'Milestone description', 'timeline-block' ) }
+									placeholder={ __( 'Milestone description', 'adaire-blocks' ) }
 								/>
 							</div>
 						);

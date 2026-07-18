@@ -433,7 +433,7 @@ export default function Save({ attributes }) {
                 />
             )}
             {showBreadcrumbs && (
-                <nav className="adaire-hero-1__breadcrumbs" aria-label={__('Breadcrumb', 'hero-1-block')}>
+                <nav className="adaire-hero-1__breadcrumbs" aria-label={__('Breadcrumb', 'adaire-blocks')}>
                     {(breadcrumbsItems || []).map((item, index) => (
                         <span key={index}>
                             {item.url ? (

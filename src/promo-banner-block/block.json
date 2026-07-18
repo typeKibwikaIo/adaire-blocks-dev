@@ -1,148 +1,168 @@
 {
-  "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 3,
-  "name": "create-block/promo-banner-block",
-  "version": "0.1.0",
-  "title": "Promo Banner",
-  "category": "adaire-marketing",
-  "description": "Promo Banner block for Adaire Blocks.",
-  "supports": {
-    "html": false,
-    "anchor": true
-  },
-  "textdomain": "promo-banner-block",
-  "editorScript": "file:./index.js",
-  "viewScript": "file:./view.js",
-  "editorStyle": "file:./index.css",
-  "style": "file:./style-index.css",
-  "attributes": {
-    "eyebrow": {
-      "type": "string",
-      "default": "Limited offer"
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "create-block/promo-banner-block",
+    "version": "0.1.0",
+    "title": "Promo Banner",
+    "category": "adaire-marketing",
+    "description": "Promo Banner block for Adaire Blocks.",
+    "supports": {
+        "html": false,
+        "anchor": true
     },
-    "heading": {
-      "type": "string",
-      "default": "Save 30% today"
-    },
-    "text": {
-      "type": "string",
-      "default": "Highlight promotions, announcements, and campaign messages."
-    },
-    "buttonText": {
-      "type": "string",
-      "default": "Claim offer"
-    },
-    "buttonUrl": {
-      "type": "string",
-      "default": "#"
-    },
-    "accentColor": {
-      "type": "string",
-      "default": "#d52940"
-    },
-    "backgroundColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "textColor": {
-      "type": "string",
-      "default": "#ffffff"
-    },
-    "dismissible": {
-      "type": "boolean",
-      "default": true
-    },
-    "expiryDate": {
-      "type": "string",
-      "default": ""
-    },
-    "countdown": {
-      "type": "boolean",
-      "default": true
-    },
-    "sticky": {
-      "type": "boolean",
-      "default": false
-    },
-    "position": {
-      "type": "string",
-      "default": "top"
-    },
-    "animationType": {
-      "type": "string",
-      "default": "slide-in"
-    },
-    "audience": {
-      "type": "string",
-      "default": "all"
-    },
-    "backgroundImage": {
-      "type": "string",
-      "default": ""
-    },
-    "backgroundGradient": {
-      "type": "string",
-      "default": ""
-    },
-    "minHeight": {
-      "type": "number",
-      "default": 72
-    },
-    "maxHeight": {
-      "type": "number",
-      "default": 220
-    },
-    "padding": {
-      "type": "number",
-      "default": 24
-    },
-    "buttonSize": {
-      "type": "string",
-      "default": "medium"
-    },
-    "buttonRadius": {
-      "type": "number",
-      "default": 999
-    },
-    "fontSize": {
-      "type": "number",
-      "default": 18
-    },
-    "fontWeight": {
-      "type": "string",
-      "default": "700"
-    },
-    "backgroundOpacity": {
-      "type": "number",
-      "default": 100
-    },
-    "buttonWidth": {
-      "type": "string",
-      "default": "auto"
-    },
-    "buttonHeight": {
-      "type": "string",
-      "default": "auto"
-    },
-    "buttonHoverColor": {
-      "type": "string",
-      "default": "#ffffff"
-    },
-    "buttonHoverBackgroundColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "buttonHoverBorderColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "buttonHoverEffect": {
-      "type": "string",
-      "default": "lift"
-    },
-    "backgroundType": {
-      "type": "string",
-      "default": "solid"
+    "textdomain": "adaire-blocks",
+    "editorScript": "file:./index.js",
+    "viewScript": "file:./view.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style-index.css",
+    "attributes": {
+        "eyebrow": {
+            "type": "string",
+            "default": "Limited offer"
+        },
+        "heading": {
+            "type": "string",
+            "default": "Save 30% today"
+        },
+        "text": {
+            "type": "string",
+            "default": "Highlight promotions, announcements, and campaign messages."
+        },
+        "buttonText": {
+            "type": "string",
+            "default": "Claim offer"
+        },
+        "buttonUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "accentColor": {
+            "type": "string",
+            "default": "#d52940"
+        },
+        "backgroundColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "textColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "dismissible": {
+            "type": "boolean",
+            "default": true
+        },
+        "expiryDate": {
+            "type": "string",
+            "default": ""
+        },
+        "countdown": {
+            "type": "boolean",
+            "default": true
+        },
+        "sticky": {
+            "type": "boolean",
+            "default": false
+        },
+        "position": {
+            "type": "string",
+            "default": "top",
+            "enum": [
+                "top",
+                "bottom"
+            ]
+        },
+        "animationType": {
+            "type": "string",
+            "default": "slide-in",
+            "enum": [
+                "slide-in",
+                "fade-in",
+                "none"
+            ]
+        },
+        "audience": {
+            "type": "string",
+            "default": "all"
+        },
+        "backgroundImage": {
+            "type": "string",
+            "default": ""
+        },
+        "backgroundGradient": {
+            "type": "string",
+            "default": ""
+        },
+        "minHeight": {
+            "type": "number",
+            "default": 72
+        },
+        "maxHeight": {
+            "type": "number",
+            "default": 220
+        },
+        "padding": {
+            "type": "number",
+            "default": 24
+        },
+        "buttonSize": {
+            "type": "string",
+            "default": "medium"
+        },
+        "buttonRadius": {
+            "type": "number",
+            "default": 999
+        },
+        "fontSize": {
+            "type": "number",
+            "default": 18
+        },
+        "fontWeight": {
+            "type": "string",
+            "default": "700"
+        },
+        "backgroundOpacity": {
+            "type": "number",
+            "default": 100
+        },
+        "buttonWidth": {
+            "type": "string",
+            "default": "auto"
+        },
+        "buttonHeight": {
+            "type": "string",
+            "default": "auto"
+        },
+        "buttonHoverColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "buttonHoverBackgroundColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "buttonHoverBorderColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "buttonHoverEffect": {
+            "type": "string",
+            "default": "lift",
+            "enum": [
+                "lift",
+                "glow",
+                "darken",
+                "none"
+            ]
+        },
+        "backgroundType": {
+            "type": "string",
+            "default": "solid",
+            "enum": [
+                "solid",
+                "gradient",
+                "image"
+            ]
+        }
     }
-  }
 }

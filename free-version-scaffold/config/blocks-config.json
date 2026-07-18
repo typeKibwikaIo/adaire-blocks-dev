@@ -455,29 +455,15 @@
         "advanced-styling"
       ]
     },
-    "modal-block": {
-      "enabled": true,
-      "limits": {},
-      "features": [
-        "nested-trigger-and-content-blocks",
-        "device-specific-dimensions",
-        "custom-overlay-and-close-button",
-        "accessibility-controls"
-      ]
-    },
-    "modal-trigger-block": {
+    "popup-modal-block": {
       "enabled": true,
       "limits": {},
       "features": [
         "custom-triggers",
-        "advanced-styling"
-      ]
-    },
-    "modal-content-block": {
-      "enabled": true,
-      "limits": {},
-      "features": [
-        "custom-content",
+        "flexible-modal-content",
+        "device-specific-dimensions",
+        "custom-overlay-and-close-button",
+        "accessibility-controls",
         "advanced-styling"
       ]
     }

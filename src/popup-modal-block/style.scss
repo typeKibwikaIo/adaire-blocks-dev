@@ -25,7 +25,7 @@
 
 // ── Block wrapper ─────────────────────────────────────────────────────────────
 
-.adaire-modal-block {
+.adaire-popup-modal-block {
     position: relative;
     display: inline-block;
     width: auto;
@@ -36,6 +36,69 @@
 
     [data-modal-role="content"] { display: none; }
     [data-modal-role="trigger"] { display: inline-block; visibility: visible; opacity: 1; }
+
+    // ── Trigger button ─────────────────────────────────────────────────────────
+
+    &__trigger {
+        display: inline-block;
+        width: auto;
+        max-width: 100%;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+        border: none;
+        color: var(--trigger-color, #ffffff);
+        background: var(--trigger-bg, #111827);
+        border-radius: var(--trigger-radius, 8px);
+        padding: var(--trigger-padding-y, 12px) var(--trigger-padding-x, 20px);
+        font-size: var(--trigger-font-size, 16px);
+        font-weight: var(--trigger-font-weight, 600);
+        line-height: 1.3;
+        transition: filter 0.2s ease, transform 0.2s ease;
+
+        &:hover { filter: brightness(0.92); }
+        &:focus-visible { outline: 2px solid rgba(99, 102, 241, 0.6); outline-offset: 2px; }
+
+        // Floating action button
+        &[data-trigger-type="floating"] {
+            position: fixed;
+            z-index: 9990;
+            filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.25));
+
+            &:hover {
+                filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.35));
+                transform: translateY(-2px);
+            }
+
+            &[data-floating-position="bottom-right"] {
+                bottom: var(--floating-offset-y, 24px);
+                right:  var(--floating-offset-x, 24px);
+            }
+            &[data-floating-position="bottom-left"] {
+                bottom: var(--floating-offset-y, 24px);
+                left:   var(--floating-offset-x, 24px);
+            }
+            &[data-floating-position="top-right"] {
+                top:   var(--floating-offset-y, 24px);
+                right: var(--floating-offset-x, 24px);
+            }
+            &[data-floating-position="top-left"] {
+                top:  var(--floating-offset-y, 24px);
+                left: var(--floating-offset-x, 24px);
+            }
+        }
+
+        // Text-link style — no background/padding, underlined inline text.
+        &[data-trigger-type="link"] {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+
+            &:hover { filter: none; opacity: 0.75; }
+        }
+    }
 
     // ── Overlay ────────────────────────────────────────────────────────────────
 
@@ -50,6 +113,11 @@
         transition: opacity var(--modal-animation-duration, 300ms) var(--modal-animation-easing, ease-out),
                     visibility 0s var(--modal-animation-duration, 300ms);
         z-index: 99998;
+    }
+
+    // Gradient overlay — blends the overlay color diagonally into a second color.
+    &.has-overlay-gradient &__overlay {
+        background: linear-gradient(135deg, var(--modal-overlay-color, rgba(0, 0, 0, 0.6)), var(--modal-overlay-gradient-2, #7c3aed));
     }
 
     &.is-open &__overlay {
@@ -93,6 +161,15 @@
         transition: opacity var(--modal-animation-duration, 300ms) var(--modal-animation-easing, ease-out),
                     transform var(--modal-animation-duration, 300ms) var(--modal-animation-easing, ease-out),
                     visibility 0s 0s;
+    }
+
+    // Glassmorphism — translucent, frosted-glass modal body instead of a
+    // solid background. Falls back to the solid background in browsers
+    // without color-mix() support.
+    &.has-glassmorphism &__modal {
+        background: color-mix(in srgb, var(--modal-background, #ffffff) 65%, transparent);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
     }
 
     // ── Animation variants ─────────────────────────────────────────────────────
@@ -274,6 +351,21 @@
     &[data-close-shape="square"]  &__close { border-radius: 2px; }
     &[data-close-shape="circle"]  &__close { border-radius: 999px; }
 
+    // ── Countdown timer ────────────────────────────────────────────────────────
+
+    &__countdown {
+        display: inline-block;
+        margin: 0 0 16px;
+        padding: 6px 16px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.06);
+        font-size: 15px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+        color: var(--modal-close-color, #111111);
+    }
+
     // ── Responsive ─────────────────────────────────────────────────────────────
 
     @include big-desktop {
@@ -313,32 +405,23 @@
 body.adaire-modal-open { overflow: hidden; }
 
 // ── Editor-only chrome ────────────────────────────────────────────────────────
-// These classes only exist in the editor canvas (generated by edit.js /
-// useInnerBlocksProps). None appear in save.js output so they are inert on
-// the published page. Pattern mirrors saas-hero-block/style.scss.
+// Unlike the old 3-block design (where the trigger/content were separate
+// child blocks with their own editor-canvas wrapper elements), __trigger and
+// __body here share the EXACT same class names as the live frontend markup.
+// Everything below MUST be scoped under `.block-editor-block-list__layout` —
+// a class WordPress only ever adds inside the editor canvas — or it will leak
+// onto the published page.
 
-.adaire-modal-block {
-    // Editor wrapper: neutral container so inner blocks stay editable
-    &__inner-blocks {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        flex: 1 1 auto;
-        width: 100%;
-    }
+.block-editor-block-list__layout .adaire-popup-modal-block {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 12px;
 
-    // Trigger zone — shown as a slim bar above the content preview
-    .adaire-modal-trigger-block {
-        display: inline-block;
-        width: auto;
-        padding: 10px 14px 10px 14px;
-        border-radius: var(--modal-border-radius, 16px) var(--modal-border-radius, 16px) 0 0;
-        background: rgba(17, 24, 39, 0.03);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        border-bottom: none;
+    .adaire-popup-modal-block__trigger {
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
         position: relative;
 
-        // "Trigger" label using a sibling-safe inline element, not a pseudo badge
         &::after {
             content: "Trigger";
             display: block;
@@ -346,25 +429,27 @@ body.adaire-modal-open { overflow: hidden; }
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            color: #94a3b8;
-            margin-top: 6px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 4px;
         }
 
-        // Floating indicator badge
         &[data-trigger-type="floating"] {
-            background: rgba(245, 158, 11, 0.06);
-            border-color: rgba(245, 158, 11, 0.3);
+            position: relative;
+            bottom: unset;
+            right: unset;
+            top: unset;
+            left: unset;
+            border-color: rgba(245, 158, 11, 0.4);
 
             &::after {
                 content: "Trigger · Floating";
-                color: #d97706;
             }
         }
     }
 
     // Content preview — styled with the actual modal vars so the editor shows
     // a faithful preview of background color, radius, and dimensions.
-    .adaire-modal-content-block {
+    .adaire-popup-modal-block__body {
         display: block;
         width: var(--modal-width-desktop, 600px);
         height: var(--modal-height-desktop, 400px);
@@ -376,14 +461,11 @@ body.adaire-modal-open { overflow: hidden; }
         box-sizing: border-box;
         padding: var(--modal-padding, 24px);
 
-        // Apply the real modal look — background, border, radius — just like
-        // the saas-hero renders its real design in the editor.
         background: var(--modal-background, #ffffff);
         border-radius: var(--modal-border-radius, 16px);
         border: var(--modal-border-width, 1px) solid var(--modal-border-color, #e0e0e0);
         box-shadow: 0 8px 32px rgba(15, 23, 42, 0.10);
 
-        // Subtle section label in the corner (non-intrusive)
         position: relative;
 
         &::before {
@@ -398,24 +480,6 @@ body.adaire-modal-open { overflow: hidden; }
             color: #cbd5e1;
             pointer-events: none;
             z-index: 1;
-        }
-    }
-
-    // Input used in the dimensions panel
-    &__dimension-input {
-        width: 100%;
-        padding: 6px 10px;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        font-size: 13px;
-        line-height: 1.4;
-        box-sizing: border-box;
-        transition: border-color 0.15s ease;
-
-        &:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
         }
     }
 
@@ -434,13 +498,32 @@ body.adaire-modal-open { overflow: hidden; }
     }
 }
 
+// Input used in the Dimensions inspector panel — lives in the sidebar, never
+// in canvas/save.js output, so no editor-canvas scoping is needed.
+.adaire-popup-modal-block__dimension-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+    }
+}
+
 // Responsive preview classes set by the editor viewport switcher
-.is-tablet-preview .adaire-modal-block .adaire-modal-content-block {
+.is-tablet-preview .adaire-popup-modal-block .adaire-popup-modal-block__body {
     width: var(--modal-width-tablet, 90%);
     height: var(--modal-height-tablet, 400px);
 }
 
-.is-mobile-preview .adaire-modal-block .adaire-modal-content-block {
+.is-mobile-preview .adaire-popup-modal-block .adaire-popup-modal-block__body {
     width: var(--modal-width-mobile, 90%);
     height: var(--modal-height-mobile, 360px);
 }

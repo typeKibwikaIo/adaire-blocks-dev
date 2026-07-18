@@ -148,10 +148,9 @@ function enqueue_bootstrap_icons_assets() {
         has_block( 'create-block/infogrid-2-block', $post ) ||
         has_block( 'create-block/rating-badge-block', $post )
     ) {
-        // Enqueue Bootstrap Icons CSS from CDN
         wp_enqueue_style(
             'bootstrap-icons',
-            'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
+            ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css',
             array(),
             '1.13.1'
         );
@@ -165,7 +164,7 @@ add_action( 'wp_enqueue_scripts', 'enqueue_bootstrap_icons_assets' );
 function enqueue_bootstrap_icons_editor() {
     wp_enqueue_style(
         'bootstrap-icons',
-        'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
+        ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css',
         array(),
         '1.13.1'
     );

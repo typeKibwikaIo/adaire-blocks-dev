@@ -76,11 +76,11 @@ const bigDesktopIcon = createElement('svg', {
 );
 
 const BREAKPOINTS = [
-    { key: 'mobile', icon: mobile, label: __('Mobile', 'social-banner-block') },
-    { key: 'tablet', icon: tablet, label: __('Tablet', 'social-banner-block') },
-    { key: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'social-banner-block') },
-    { key: 'desktop', icon: desktop, label: __('Desktop', 'social-banner-block') },
-    { key: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'social-banner-block') }
+    { key: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
+    { key: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
+    { key: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks') },
+    { key: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
+    { key: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks') }
 ];
 
 const FONT_FAMILY_OPTIONS = [
@@ -205,46 +205,46 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody section="layout" title={__('Position Settings', 'social-banner-block')} initialOpen={true}>
+                <PanelBody section="layout" title={__('Position Settings', 'adaire-blocks')} initialOpen={true}>
                     <SelectControl
-                        label={__('Position Type', 'social-banner-block')}
+                        label={__('Position Type', 'adaire-blocks')}
                         value={positionType || 'fixed'}
                         options={[
-                            { label: __('Fixed', 'social-banner-block'), value: 'fixed' },
-                            { label: __('Absolute', 'social-banner-block'), value: 'absolute' },
-                            { label: __('Relative', 'social-banner-block'), value: 'relative' },
+                            { label: __('Fixed', 'adaire-blocks'), value: 'fixed' },
+                            { label: __('Absolute', 'adaire-blocks'), value: 'absolute' },
+                            { label: __('Relative', 'adaire-blocks'), value: 'relative' },
                         ]}
                         onChange={(value) => setAttributes({ positionType: value })}
-                        help={__('Fixed: stays in place when scrolling. Absolute: positioned relative to nearest positioned ancestor. Relative: positioned relative to its normal position.', 'social-banner-block')}
+                        help={__('Fixed: stays in place when scrolling. Absolute: positioned relative to nearest positioned ancestor. Relative: positioned relative to its normal position.', 'adaire-blocks')}
                     />
 
                     <SelectControl
-                        label={__('Display Type', 'social-banner-block')}
+                        label={__('Display Type', 'adaire-blocks')}
                         value={displayType || 'block'}
                         options={[
-                            { label: __('Block', 'social-banner-block'), value: 'block' },
-                            { label: __('Inline', 'social-banner-block'), value: 'inline' },
+                            { label: __('Block', 'adaire-blocks'), value: 'block' },
+                            { label: __('Inline', 'adaire-blocks'), value: 'inline' },
                         ]}
                         onChange={(value) => setAttributes({ displayType: value })}
-                        help={__('Block: takes full width. Inline: only takes necessary width, allows easier positioning.', 'social-banner-block')}
+                        help={__('Block: takes full width. Inline: only takes necessary width, allows easier positioning.', 'adaire-blocks')}
                     />
 
                     <SelectControl
-                        label={__('Layout Direction', 'social-banner-block')}
+                        label={__('Layout Direction', 'adaire-blocks')}
                         value={layoutDirection || 'column'}
                         options={[
-                            { label: __('Column (Vertical)', 'social-banner-block'), value: 'column' },
-                            { label: __('Row (Horizontal)', 'social-banner-block'), value: 'row' },
+                            { label: __('Column (Vertical)', 'adaire-blocks'), value: 'column' },
+                            { label: __('Row (Horizontal)', 'adaire-blocks'), value: 'row' },
                         ]}
                         onChange={(value) => setAttributes({ layoutDirection: value })}
                     />
 
                     <SelectControl
-                        label={__('Offset From', 'social-banner-block')}
+                        label={__('Offset From', 'adaire-blocks')}
                         value={offsetFrom}
                         options={[
-                            { label: __('Top', 'social-banner-block'), value: 'top' },
-                            { label: __('Bottom', 'social-banner-block'), value: 'bottom' },
+                            { label: __('Top', 'adaire-blocks'), value: 'top' },
+                            { label: __('Bottom', 'adaire-blocks'), value: 'bottom' },
                         ]}
                         onChange={(value) => setAttributes({ offsetFrom: value })}
                     />
@@ -252,7 +252,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
                         <div style={{ flex: 1 }}>
                             <RangeControl
-                                label={offsetFrom === 'top' ? __('Top Offset', 'social-banner-block') : __('Bottom Offset', 'social-banner-block')}
+                                label={offsetFrom === 'top' ? __('Top Offset', 'adaire-blocks') : __('Bottom Offset', 'adaire-blocks')}
                                 value={offset}
                                 onChange={(value) => setAttributes({ offset: value })}
                                 min={0}
@@ -260,11 +260,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             />
                         </div>
                         <SelectControl
-                            label={__('Unit', 'social-banner-block')}
+                            label={__('Unit', 'adaire-blocks')}
                             value={offsetUnit || 'px'}
                             options={[
-                                { label: __('px', 'social-banner-block'), value: 'px' },
-                                { label: __('%', 'social-banner-block'), value: '%' },
+                                { label: __('px', 'adaire-blocks'), value: 'px' },
+                                { label: __('%', 'adaire-blocks'), value: '%' },
                             ]}
                             onChange={(value) => setAttributes({ offsetUnit: value })}
                             style={{ width: '80px' }}
@@ -272,11 +272,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </div>
 
                     <SelectControl
-                        label={__('Horizontal Offset From', 'social-banner-block')}
+                        label={__('Horizontal Offset From', 'adaire-blocks')}
                         value={horizontalOffsetFrom || 'left'}
                         options={[
-                            { label: __('Left', 'social-banner-block'), value: 'left' },
-                            { label: __('Right', 'social-banner-block'), value: 'right' },
+                            { label: __('Left', 'adaire-blocks'), value: 'left' },
+                            { label: __('Right', 'adaire-blocks'), value: 'right' },
                         ]}
                         onChange={(value) => setAttributes({ horizontalOffsetFrom: value })}
                     />
@@ -284,7 +284,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
                         <div style={{ flex: 1 }}>
                             <RangeControl
-                                label={horizontalOffsetFrom === 'left' ? __('Left Offset', 'social-banner-block') : __('Right Offset', 'social-banner-block')}
+                                label={horizontalOffsetFrom === 'left' ? __('Left Offset', 'adaire-blocks') : __('Right Offset', 'adaire-blocks')}
                                 value={horizontalOffset || 0}
                                 onChange={(value) => setAttributes({ horizontalOffset: value })}
                                 min={0}
@@ -292,11 +292,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             />
                         </div>
                         <SelectControl
-                            label={__('Unit', 'social-banner-block')}
+                            label={__('Unit', 'adaire-blocks')}
                             value={horizontalOffsetUnit || 'px'}
                             options={[
-                                { label: __('px', 'social-banner-block'), value: 'px' },
-                                { label: __('%', 'social-banner-block'), value: '%' },
+                                { label: __('px', 'adaire-blocks'), value: 'px' },
+                                { label: __('%', 'adaire-blocks'), value: '%' },
                             ]}
                             onChange={(value) => setAttributes({ horizontalOffsetUnit: value })}
                             style={{ width: '80px' }}
@@ -304,11 +304,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </div>
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Background & Padding', 'social-banner-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Background & Padding', 'adaire-blocks')} initialOpen={false}>
                   
                 <div style={{ marginTop: '20px' }}>
                         <p style={{ marginBottom: '8px', fontWeight: 600 }}>
-                            {__('Current Breakpoint:', 'social-banner-block')}{' '}
+                            {__('Current Breakpoint:', 'adaire-blocks')}{' '}
                             {BREAKPOINTS.find(bp => bp.key === deviceType)?.label || deviceType}
                         </p>
                         <DeviceSwitcher
@@ -318,7 +318,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
 
                         <BoxControl
-                            label={__('Padding', 'social-banner-block')}
+                            label={__('Padding', 'adaire-blocks')}
                             values={responsivePadding?.[deviceType] || { top: '0px', right: '0px', bottom: '0px', left: '0px' }}
                             onChange={(val) => {
                                 setAttributes({
@@ -331,10 +331,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
                     </div>
                     <PanelColorSettings
-                        title={__('Background Color', 'social-banner-block')}
+                        title={__('Background Color', 'adaire-blocks')}
                         colorSettings={[
                             {
-                                label: __('Background Color', 'social-banner-block'),
+                                label: __('Background Color', 'adaire-blocks'),
                                 value: backgroundColor || '',
                                 onChange: (value) => setAttributes({ backgroundColor: value || '' }),
                             },
@@ -342,7 +342,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <RangeControl
-                        label={__('Background Border Radius', 'social-banner-block')}
+                        label={__('Background Border Radius', 'adaire-blocks')}
                         value={backgroundBorderRadius || 0}
                         onChange={(value) => setAttributes({ backgroundBorderRadius: value })}
                         min={0}
@@ -352,19 +352,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Typography', 'social-banner-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
-                        label={__('Font Family', 'social-banner-block')}
+                        label={__('Font Family', 'adaire-blocks')}
                         value={fontFamily || ''}
                         options={FONT_FAMILY_OPTIONS}
                         onChange={(value) => setAttributes({ fontFamily: value })}
-                        help={__('This block has no text content of its own; the font family applies to any inherited text (e.g. ARIA labels rendered by assistive tech) within it.', 'social-banner-block')}
+                        help={__('This block has no text content of its own; the font family applies to any inherited text (e.g. ARIA labels rendered by assistive tech) within it.', 'adaire-blocks')}
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Icon Settings', 'social-banner-block')} initialOpen={true}>
+                <PanelBody section="style" priority="medium" title={__('Icon Settings', 'adaire-blocks')} initialOpen={true}>
                     <RangeControl
-                        label={__('Icon Size', 'social-banner-block')}
+                        label={__('Icon Size', 'adaire-blocks')}
                         value={iconSize}
                         onChange={(value) => setAttributes({ iconSize: value })}
                         min={16}
@@ -372,7 +372,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <RangeControl
-                        label={__('Spacing Between Icons', 'social-banner-block')}
+                        label={__('Spacing Between Icons', 'adaire-blocks')}
                         value={spacing}
                         onChange={(value) => setAttributes({ spacing: value })}
                         min={0}
@@ -380,7 +380,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <RangeControl
-                        label={__('Border Radius', 'social-banner-block')}
+                        label={__('Border Radius', 'adaire-blocks')}
                         value={borderRadius}
                         onChange={(value) => setAttributes({ borderRadius: value })}
                         min={0}
@@ -388,72 +388,72 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <SelectControl
-                        label={__('Hover Animation', 'social-banner-block')}
+                        label={__('Hover Animation', 'adaire-blocks')}
                         value={hoverAnimation || 'up'}
                         options={[
-                            { label: __('Up', 'social-banner-block'), value: 'up' },
-                            { label: __('Down', 'social-banner-block'), value: 'down' },
-                            { label: __('Left', 'social-banner-block'), value: 'left' },
-                            { label: __('Right', 'social-banner-block'), value: 'right' },
-                            { label: __('Pulse', 'social-banner-block'), value: 'pulse' },
-                            { label: __('Scale Up', 'social-banner-block'), value: 'scale-up' },
-                            { label: __('Scale Down', 'social-banner-block'), value: 'scale-down' },
-                            { label: __('Rotate', 'social-banner-block'), value: 'rotate' },
-                            { label: __('Shake', 'social-banner-block'), value: 'shake' },
-                            { label: __('Bounce', 'social-banner-block'), value: 'bounce' },
-                            { label: __('Glow', 'social-banner-block'), value: 'glow' },
-                            { label: __('None', 'social-banner-block'), value: 'none' },
+                            { label: __('Up', 'adaire-blocks'), value: 'up' },
+                            { label: __('Down', 'adaire-blocks'), value: 'down' },
+                            { label: __('Left', 'adaire-blocks'), value: 'left' },
+                            { label: __('Right', 'adaire-blocks'), value: 'right' },
+                            { label: __('Pulse', 'adaire-blocks'), value: 'pulse' },
+                            { label: __('Scale Up', 'adaire-blocks'), value: 'scale-up' },
+                            { label: __('Scale Down', 'adaire-blocks'), value: 'scale-down' },
+                            { label: __('Rotate', 'adaire-blocks'), value: 'rotate' },
+                            { label: __('Shake', 'adaire-blocks'), value: 'shake' },
+                            { label: __('Bounce', 'adaire-blocks'), value: 'bounce' },
+                            { label: __('Glow', 'adaire-blocks'), value: 'glow' },
+                            { label: __('None', 'adaire-blocks'), value: 'none' },
                         ]}
                         onChange={(value) => setAttributes({ hoverAnimation: value })}
                     />
 
                     <RangeControl
-                        label={__('Animation Duration', 'social-banner-block')}
+                        label={__('Animation Duration', 'adaire-blocks')}
                         value={animationDuration || 0.3}
                         onChange={(value) => setAttributes({ animationDuration: value })}
                         min={0.1}
                         max={2}
                         step={0.1}
-                        help={__('Duration in seconds', 'social-banner-block')}
+                        help={__('Duration in seconds', 'adaire-blocks')}
                     />
 
                     <SelectControl
-                        label={__('Animation Easing', 'social-banner-block')}
+                        label={__('Animation Easing', 'adaire-blocks')}
                         value={animationEasing || 'ease'}
                         options={[
-                            { label: __('Ease', 'social-banner-block'), value: 'ease' },
-                            { label: __('Ease In', 'social-banner-block'), value: 'ease-in' },
-                            { label: __('Ease Out', 'social-banner-block'), value: 'ease-out' },
-                            { label: __('Ease In Out', 'social-banner-block'), value: 'ease-in-out' },
-                            { label: __('Linear', 'social-banner-block'), value: 'linear' },
-                            { label: __('Cubic Bezier (Smooth)', 'social-banner-block'), value: 'cubic-bezier(0.4, 0, 0.2, 1)' },
-                            { label: __('Cubic Bezier (Bounce)', 'social-banner-block'), value: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' },
+                            { label: __('Ease', 'adaire-blocks'), value: 'ease' },
+                            { label: __('Ease In', 'adaire-blocks'), value: 'ease-in' },
+                            { label: __('Ease Out', 'adaire-blocks'), value: 'ease-out' },
+                            { label: __('Ease In Out', 'adaire-blocks'), value: 'ease-in-out' },
+                            { label: __('Linear', 'adaire-blocks'), value: 'linear' },
+                            { label: __('Cubic Bezier (Smooth)', 'adaire-blocks'), value: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+                            { label: __('Cubic Bezier (Bounce)', 'adaire-blocks'), value: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' },
                         ]}
                         onChange={(value) => setAttributes({ animationEasing: value })}
                     />
                 </PanelBody>
 
-                <PanelBody section="content" title={__('Icon Entries', 'social-banner-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Icon Entries', 'adaire-blocks')} initialOpen={true}>
                     <Button
                         onClick={addIconEntry}
                         variant="primary"
                         icon={plus}
                         style={{ width: '100%', marginBottom: '16px' }}
                     >
-                        {__('Add Icon Entry', 'social-banner-block')}
+                        {__('Add Icon Entry', 'adaire-blocks')}
                     </Button>
 
                     {iconEntries.length === 0 ? (
                         <p style={{ color: '#666', fontStyle: 'italic' }}>
-                            {__('No icon entries yet. Click "Add Icon Entry" to get started.', 'social-banner-block')}
+                            {__('No icon entries yet. Click "Add Icon Entry" to get started.', 'adaire-blocks')}
                         </p>
                     ) : (
                         iconEntries.map((entry, index) => (
                             <PanelBody
                                 key={entry.id || index}
                                 title={entry.icon 
-                                    ? `${__('Icon Entry', 'social-banner-block')} #${index + 1} - ${entry.icon.replace('bi bi-', '')}`
-                                    : `${__('Icon Entry', 'social-banner-block')} #${index + 1}`
+                                    ? `${__('Icon Entry', 'adaire-blocks')} #${index + 1} - ${entry.icon.replace('bi bi-', '')}`
+                                    : `${__('Icon Entry', 'adaire-blocks')} #${index + 1}`
                                 }
                                 initialOpen={false}
                                 style={{ marginBottom: '8px' }}
@@ -465,11 +465,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         isDestructive
                                         icon={trash}
                                     >
-                                        {__('Remove', 'social-banner-block')}
+                                        {__('Remove', 'adaire-blocks')}
                                     </Button>
                                 </div>
 
-                                <BaseControl label={__('Bootstrap Icon', 'social-banner-block')}>
+                                <BaseControl label={__('Bootstrap Icon', 'adaire-blocks')}>
                         <Button
                                         onClick={() => {
                                             setEditingIndex(index);
@@ -484,12 +484,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                 {entry.icon}
                                             </>
                                         ) : (
-                                            __('Choose Icon', 'social-banner-block')
+                                            __('Choose Icon', 'adaire-blocks')
                                         )}
                                     </Button>
                                 </BaseControl>
 
-                                <BaseControl label={__('Icon Color', 'social-banner-block')}>
+                                <BaseControl label={__('Icon Color', 'adaire-blocks')}>
                                     <ColorPicker
                                         color={entry.iconColor || '#ffffff'}
                                         onChangeComplete={(color) => updateIconEntry(index, 'iconColor', color.hex)}
@@ -497,7 +497,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     />
                                 </BaseControl>
 
-                                <BaseControl label={__('Background Color', 'social-banner-block')}>
+                                <BaseControl label={__('Background Color', 'adaire-blocks')}>
                                     <ColorPicker
                                         color={entry.backgroundColor || '#000000'}
                                         onChangeComplete={(color) => updateIconEntry(index, 'backgroundColor', color.hex)}
@@ -506,18 +506,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 </BaseControl>
 
                                 <TextControl
-                                    label={__('Link URL', 'social-banner-block')}
+                                    label={__('Link URL', 'adaire-blocks')}
                                     value={entry.linkUrl || ''}
                                     onChange={(value) => updateIconEntry(index, 'linkUrl', value)}
                                     placeholder="https://example.com"
                                 />
 
                                 <SelectControl
-                                    label={__('Link Target', 'social-banner-block')}
+                                    label={__('Link Target', 'adaire-blocks')}
                                     value={entry.linkTarget || '_blank'}
                                     options={[
-                                        { label: __('Same Window', 'social-banner-block'), value: '_self' },
-                                        { label: __('New Window', 'social-banner-block'), value: '_blank' },
+                                        { label: __('Same Window', 'adaire-blocks'), value: '_self' },
+                                        { label: __('New Window', 'adaire-blocks'), value: '_blank' },
                                     ]}
                                     onChange={(value) => updateIconEntry(index, 'linkTarget', value)}
                                 />
@@ -540,7 +540,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             <div {...blockProps}>
                 {iconEntries.length === 0 ? (
                     <div className="adaire-social-banner__placeholder">
-                        <p>{__('Add icon entries from the settings panel to display the social banner.', 'social-banner-block')}</p>
+                        <p>{__('Add icon entries from the settings panel to display the social banner.', 'adaire-blocks')}</p>
                     </div>
                 ) : (
                     <div className="adaire-social-banner__list">
@@ -561,7 +561,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             setActiveZone={setActiveZone}
                             content={
                                 <>
-                                    <BaseControl label={__('Bootstrap Icon', 'social-banner-block')}>
+                                    <BaseControl label={__('Bootstrap Icon', 'adaire-blocks')}>
                                         <Button
                                             onClick={() => {
                                                 setEditingIndex(index);
@@ -576,18 +576,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                     {entry.icon}
                                                 </>
                                             ) : (
-                                                __('Choose Icon', 'social-banner-block')
+                                                __('Choose Icon', 'adaire-blocks')
                                             )}
                                         </Button>
                                     </BaseControl>
-                                    <BaseControl label={__('Icon Color', 'social-banner-block')}>
+                                    <BaseControl label={__('Icon Color', 'adaire-blocks')}>
                                         <ColorPicker
                                             color={entry.iconColor || '#ffffff'}
                                             onChangeComplete={(color) => updateIconEntry(index, 'iconColor', color.hex)}
                                             disableAlpha
                                         />
                                     </BaseControl>
-                                    <BaseControl label={__('Background Color', 'social-banner-block')}>
+                                    <BaseControl label={__('Background Color', 'adaire-blocks')}>
                                         <ColorPicker
                                             color={entry.backgroundColor || '#000000'}
                                             onChangeComplete={(color) => updateIconEntry(index, 'backgroundColor', color.hex)}
@@ -595,17 +595,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         />
                                     </BaseControl>
                                     <TextControl
-                                        label={__('Link URL', 'social-banner-block')}
+                                        label={__('Link URL', 'adaire-blocks')}
                                         value={entry.linkUrl || ''}
                                         onChange={(value) => updateIconEntry(index, 'linkUrl', value)}
                                         placeholder="https://example.com"
                                     />
                                     <SelectControl
-                                        label={__('Link Target', 'social-banner-block')}
+                                        label={__('Link Target', 'adaire-blocks')}
                                         value={entry.linkTarget || '_blank'}
                                         options={[
-                                            { label: __('Same Window', 'social-banner-block'), value: '_self' },
-                                            { label: __('New Window', 'social-banner-block'), value: '_blank' },
+                                            { label: __('Same Window', 'adaire-blocks'), value: '_self' },
+                                            { label: __('New Window', 'adaire-blocks'), value: '_blank' },
                                         ]}
                                         onChange={(value) => updateIconEntry(index, 'linkTarget', value)}
                                     />

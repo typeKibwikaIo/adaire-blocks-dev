@@ -16,7 +16,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "progress-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -24,7 +24,11 @@
     "attributes": {
         "layout": {
             "type": "string",
-            "default": "bar"
+            "default": "bar",
+            "enum": [
+                "bar",
+                "circle"
+            ]
         },
         "columns": {
             "type": "number",
@@ -44,7 +48,11 @@
         },
         "headingAlign": {
             "type": "string",
-            "default": "left"
+            "default": "left",
+            "enum": [
+                "left",
+                "center"
+            ]
         },
         "items": {
             "type": "array",

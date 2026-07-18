@@ -15,7 +15,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "infogrid-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./editor.css",
     "style": "file:./style-index.css",

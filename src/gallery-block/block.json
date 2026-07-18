@@ -19,7 +19,7 @@
             "padding": true
         }
     },
-    "textdomain": "gallery-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -52,7 +52,14 @@
         },
         "aspectRatio": {
             "type": "string",
-            "default": "1/1"
+            "default": "1/1",
+            "enum": [
+                "1/1",
+                "4/3",
+                "3/4",
+                "16/9",
+                "auto"
+            ]
         },
         "imageBorderRadius": {
             "type": "number",
@@ -60,7 +67,13 @@
         },
         "hoverEffect": {
             "type": "string",
-            "default": "zoom"
+            "default": "zoom",
+            "enum": [
+                "zoom",
+                "fade",
+                "lift",
+                "none"
+            ]
         },
         "lightboxEnabled": {
             "type": "boolean",
@@ -101,7 +114,18 @@
         },
         "captionFontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [
+                "100",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800",
+                "900"
+            ]
         },
         "captionLineHeight": {
             "type": "string",
@@ -113,7 +137,13 @@
         },
         "captionTextTransform": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "uppercase",
+                "lowercase",
+                "capitalize"
+            ]
         }
     },
     "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#F0F0F1\"/>\r\n<rect x=\"4\" y=\"4\" width=\"11\" height=\"9\" rx=\"1.2\" fill=\"none\" stroke=\"#D52940\" stroke-width=\"1.3\"/>\r\n<rect x=\"8\" y=\"9\" width=\"12\" height=\"10\" rx=\"1.2\" fill=\"#D52940\"/>\r\n<circle cx=\"11.3\" cy=\"12.4\" r=\"1\" fill=\"#F0F0F1\"/>\r\n<path d=\"M8.8 16.6L11.6 13.6L13.6 15.4L16 12.6L19.2 16.6\" stroke=\"#F0F0F1\" stroke-width=\"1.3\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\r\n</svg>"

@@ -20,7 +20,7 @@ import { getStyleVars, LAYOUT_OPTIONS } from './shared';
 const set = ( setAttributes ) => ( key ) => ( value ) => setAttributes( { [ key ]: value } );
 
 const FONT_FAMILY_OPTIONS = [
-	{ label: __( 'Default (inherit theme)', 'cookie-consent-block' ), value: '' },
+	{ label: __( 'Default (inherit theme)', 'adaire-blocks' ), value: '' },
 	{ label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
 	{ label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
 	{ label: 'Georgia', value: 'Georgia, serif' },
@@ -71,7 +71,7 @@ function CategoriesEditor( { categories, onChange } ) {
 	};
 	const add = () => onChange( [
 		...list,
-		{ key: `custom-${ Date.now() }`, label: __( 'New Category', 'cookie-consent-block' ), description: '', required: false, defaultChecked: false },
+		{ key: `custom-${ Date.now() }`, label: __( 'New Category', 'adaire-blocks' ), description: '', required: false, defaultChecked: false },
 	] );
 
 	return (
@@ -84,36 +84,36 @@ function CategoriesEditor( { categories, onChange } ) {
 						<Button variant="tertiary" size="small" onClick={ () => move( i, 1 ) } disabled={ i === list.length - 1 }>↓</Button>
 						{ ! cat.required && (
 							<Button variant="tertiary" size="small" isDestructive onClick={ () => remove( i ) }>
-								{ __( 'Remove', 'cookie-consent-block' ) }
+								{ __( 'Remove', 'adaire-blocks' ) }
 							</Button>
 						) }
 					</div>
 					<TextControl
-						label={ __( 'Label', 'cookie-consent-block' ) }
+						label={ __( 'Label', 'adaire-blocks' ) }
 						value={ cat.label || '' }
 						onChange={ ( v ) => update( i, { label: v } ) }
 					/>
 					<TextareaControl
-						label={ __( 'Description', 'cookie-consent-block' ) }
+						label={ __( 'Description', 'adaire-blocks' ) }
 						value={ cat.description || '' }
 						onChange={ ( v ) => update( i, { description: v } ) }
 						rows={ 2 }
 					/>
 					<ToggleControl
-						label={ __( 'Required (always active, locked)', 'cookie-consent-block' ) }
+						label={ __( 'Required (always active, locked)', 'adaire-blocks' ) }
 						checked={ !! cat.required }
 						onChange={ ( v ) => update( i, { required: v, defaultChecked: v ? true : cat.defaultChecked } ) }
 					/>
 					{ ! cat.required && (
 						<ToggleControl
-							label={ __( 'On by default', 'cookie-consent-block' ) }
+							label={ __( 'On by default', 'adaire-blocks' ) }
 							checked={ !! cat.defaultChecked }
 							onChange={ ( v ) => update( i, { defaultChecked: v } ) }
 						/>
 					) }
 				</div>
 			) ) }
-			<Button variant="secondary" onClick={ add }>{ __( 'Add category', 'cookie-consent-block' ) }</Button>
+			<Button variant="secondary" onClick={ add }>{ __( 'Add category', 'adaire-blocks' ) }</Button>
 		</div>
 	);
 }
@@ -151,51 +151,51 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		<>
 			<InspectorTabs attributes={ a } setAttributes={ setAttributes }>
 
-				<PanelBody title={ __( 'Content', 'cookie-consent-block' ) } initialOpen={ true }>
-					<p className="adaire-help-note">{ __( 'Title, description, category names, and button labels are editable directly on the banner in the canvas.', 'cookie-consent-block' ) }</p>
-					<TextControl label={ __( 'Learn more label', 'cookie-consent-block' ) } value={ a.learnMoreText } onChange={ bind( 'learnMoreText' ) } />
-					<TextControl label={ __( 'Cookie policy label', 'cookie-consent-block' ) } value={ a.cookiePolicyText } onChange={ bind( 'cookiePolicyText' ) } />
-					<TextControl label={ __( 'Cookie policy URL', 'cookie-consent-block' ) } value={ a.cookiePolicyUrl } onChange={ bind( 'cookiePolicyUrl' ) } />
-					<TextControl label={ __( 'Privacy policy label', 'cookie-consent-block' ) } value={ a.privacyPolicyText } onChange={ bind( 'privacyPolicyText' ) } />
-					<TextControl label={ __( 'Privacy policy URL', 'cookie-consent-block' ) } value={ a.privacyPolicyUrl } onChange={ bind( 'privacyPolicyUrl' ) } />
-					<TextControl label={ __( 'Terms & conditions label', 'cookie-consent-block' ) } value={ a.termsText } onChange={ bind( 'termsText' ) } />
-					<TextControl label={ __( 'Terms & conditions URL', 'cookie-consent-block' ) } value={ a.termsUrl } onChange={ bind( 'termsUrl' ) } help={ __( 'Leave blank to hide this link.', 'cookie-consent-block' ) } />
+				<PanelBody title={ __( 'Content', 'adaire-blocks' ) } initialOpen={ true }>
+					<p className="adaire-help-note">{ __( 'Title, description, category names, and button labels are editable directly on the banner in the canvas.', 'adaire-blocks' ) }</p>
+					<TextControl label={ __( 'Learn more label', 'adaire-blocks' ) } value={ a.learnMoreText } onChange={ bind( 'learnMoreText' ) } />
+					<TextControl label={ __( 'Cookie policy label', 'adaire-blocks' ) } value={ a.cookiePolicyText } onChange={ bind( 'cookiePolicyText' ) } />
+					<TextControl label={ __( 'Cookie policy URL', 'adaire-blocks' ) } value={ a.cookiePolicyUrl } onChange={ bind( 'cookiePolicyUrl' ) } />
+					<TextControl label={ __( 'Privacy policy label', 'adaire-blocks' ) } value={ a.privacyPolicyText } onChange={ bind( 'privacyPolicyText' ) } />
+					<TextControl label={ __( 'Privacy policy URL', 'adaire-blocks' ) } value={ a.privacyPolicyUrl } onChange={ bind( 'privacyPolicyUrl' ) } />
+					<TextControl label={ __( 'Terms & conditions label', 'adaire-blocks' ) } value={ a.termsText } onChange={ bind( 'termsText' ) } />
+					<TextControl label={ __( 'Terms & conditions URL', 'adaire-blocks' ) } value={ a.termsUrl } onChange={ bind( 'termsUrl' ) } help={ __( 'Leave blank to hide this link.', 'adaire-blocks' ) } />
 				</PanelBody>
 
-				<PanelBody title={ __( 'Cookie Categories', 'cookie-consent-block' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Cookie Categories', 'adaire-blocks' ) } initialOpen={ false }>
 					<CategoriesEditor categories={ a.categories } onChange={ ( categories ) => setAttributes( { categories } ) } />
 				</PanelBody>
 
-				<PanelBody title={ __( 'Layout & Position', 'cookie-consent-block' ) } initialOpen={ true }>
+				<PanelBody title={ __( 'Layout & Position', 'adaire-blocks' ) } initialOpen={ true }>
 					<SelectControl
-						label={ __( 'Banner layout', 'cookie-consent-block' ) }
+						label={ __( 'Banner layout', 'adaire-blocks' ) }
 						value={ a.layoutType }
 						options={ LAYOUT_OPTIONS }
 						onChange={ bind( 'layoutType' ) }
 					/>
 					<SelectControl
-						label={ __( 'Density', 'cookie-consent-block' ) }
+						label={ __( 'Density', 'adaire-blocks' ) }
 						value={ a.displayDensity }
 						options={ [
-							{ label: __( 'Expanded', 'cookie-consent-block' ), value: 'expanded' },
-							{ label: __( 'Compact', 'cookie-consent-block' ), value: 'compact' },
+							{ label: __( 'Expanded', 'adaire-blocks' ), value: 'expanded' },
+							{ label: __( 'Compact', 'adaire-blocks' ), value: 'compact' },
 						] }
 						onChange={ bind( 'displayDensity' ) }
 					/>
 					{ isBar && (
 						<SelectControl
-							label={ __( 'Banner width', 'cookie-consent-block' ) }
+							label={ __( 'Banner width', 'adaire-blocks' ) }
 							value={ a.bannerWidth }
 							options={ [
-								{ label: __( 'Full width', 'cookie-consent-block' ), value: 'full' },
-								{ label: __( 'Contained (use max width below)', 'cookie-consent-block' ), value: 'contained' },
+								{ label: __( 'Full width', 'adaire-blocks' ), value: 'full' },
+								{ label: __( 'Contained (use max width below)', 'adaire-blocks' ), value: 'contained' },
 							] }
 							onChange={ bind( 'bannerWidth' ) }
 						/>
 					) }
 					{ ( isFloating || isModal || ( isBar && a.bannerWidth === 'contained' ) ) && (
 						<RangeControl
-							label={ __( 'Max width (px)', 'cookie-consent-block' ) }
+							label={ __( 'Max width (px)', 'adaire-blocks' ) }
 							value={ a.maxWidth }
 							onChange={ bind( 'maxWidth' ) }
 							min={ 280 }
@@ -204,160 +204,160 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					) }
 					{ ( isFloating || isModal ) && (
 						<SelectControl
-							label={ __( 'Content alignment', 'cookie-consent-block' ) }
+							label={ __( 'Content alignment', 'adaire-blocks' ) }
 							value={ a.alignment }
 							options={ [
-								{ label: __( 'Left', 'cookie-consent-block' ), value: 'left' },
-								{ label: __( 'Center', 'cookie-consent-block' ), value: 'center' },
-								{ label: __( 'Right', 'cookie-consent-block' ), value: 'right' },
+								{ label: __( 'Left', 'adaire-blocks' ), value: 'left' },
+								{ label: __( 'Center', 'adaire-blocks' ), value: 'center' },
+								{ label: __( 'Right', 'adaire-blocks' ), value: 'right' },
 							] }
 							onChange={ bind( 'alignment' ) }
 						/>
 					) }
 					<ToggleControl
-						label={ __( 'Show dimmed overlay behind banner', 'cookie-consent-block' ) }
+						label={ __( 'Show dimmed overlay behind banner', 'adaire-blocks' ) }
 						checked={ !! a.showOverlay }
 						onChange={ bind( 'showOverlay' ) }
-						help={ __( 'Recommended for Center Modal layout.', 'cookie-consent-block' ) }
+						help={ __( 'Recommended for Center Modal layout.', 'adaire-blocks' ) }
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Behavior', 'cookie-consent-block' ) } initialOpen={ false }>
-					<ToggleControl label={ __( 'Show close (×) button', 'cookie-consent-block' ) } checked={ !! a.closeButtonEnabled } onChange={ bind( 'closeButtonEnabled' ) } />
-					<ToggleControl label={ __( 'Auto-hide after a choice is made', 'cookie-consent-block' ) } checked={ !! a.autoHide } onChange={ bind( 'autoHide' ) } />
+				<PanelBody title={ __( 'Behavior', 'adaire-blocks' ) } initialOpen={ false }>
+					<ToggleControl label={ __( 'Show close (×) button', 'adaire-blocks' ) } checked={ !! a.closeButtonEnabled } onChange={ bind( 'closeButtonEnabled' ) } />
+					<ToggleControl label={ __( 'Auto-hide after a choice is made', 'adaire-blocks' ) } checked={ !! a.autoHide } onChange={ bind( 'autoHide' ) } />
 					{ a.autoHide && (
-						<RangeControl label={ __( 'Auto-hide delay (ms)', 'cookie-consent-block' ) } value={ a.autoHideDelay } onChange={ bind( 'autoHideDelay' ) } min={ 0 } max={ 3000 } step={ 50 } />
+						<RangeControl label={ __( 'Auto-hide delay (ms)', 'adaire-blocks' ) } value={ a.autoHideDelay } onChange={ bind( 'autoHideDelay' ) } min={ 0 } max={ 3000 } step={ 50 } />
 					) }
-					<RangeControl label={ __( 'Consent expiration (days)', 'cookie-consent-block' ) } value={ a.consentExpirationDays } onChange={ bind( 'consentExpirationDays' ) } min={ 1 } max={ 730 } />
-					<TextControl label={ __( 'Consent version', 'cookie-consent-block' ) } value={ a.consentVersion } onChange={ bind( 'consentVersion' ) } help={ __( 'Bump this to re-prompt everyone (e.g. after a policy change).', 'cookie-consent-block' ) } />
-					<ToggleControl label={ __( 'Show floating "Cookie Settings" reopen tab', 'cookie-consent-block' ) } checked={ !! a.reopenButtonEnabled } onChange={ bind( 'reopenButtonEnabled' ) } />
+					<RangeControl label={ __( 'Consent expiration (days)', 'adaire-blocks' ) } value={ a.consentExpirationDays } onChange={ bind( 'consentExpirationDays' ) } min={ 1 } max={ 730 } />
+					<TextControl label={ __( 'Consent version', 'adaire-blocks' ) } value={ a.consentVersion } onChange={ bind( 'consentVersion' ) } help={ __( 'Bump this to re-prompt everyone (e.g. after a policy change).', 'adaire-blocks' ) } />
+					<ToggleControl label={ __( 'Show floating "Cookie Settings" reopen tab', 'adaire-blocks' ) } checked={ !! a.reopenButtonEnabled } onChange={ bind( 'reopenButtonEnabled' ) } />
 					{ a.reopenButtonEnabled && (
 						<>
-							<TextControl label={ __( 'Reopen tab label', 'cookie-consent-block' ) } value={ a.reopenButtonText } onChange={ bind( 'reopenButtonText' ) } />
+							<TextControl label={ __( 'Reopen tab label', 'adaire-blocks' ) } value={ a.reopenButtonText } onChange={ bind( 'reopenButtonText' ) } />
 							<ButtonGroup style={ { marginBottom: 12 } }>
-								<Button isPrimary={ a.reopenButtonPosition === 'bottom-left' } onClick={ () => setAttributes( { reopenButtonPosition: 'bottom-left' } ) }>{ __( 'Bottom left', 'cookie-consent-block' ) }</Button>
-								<Button isPrimary={ a.reopenButtonPosition === 'bottom-right' } onClick={ () => setAttributes( { reopenButtonPosition: 'bottom-right' } ) }>{ __( 'Bottom right', 'cookie-consent-block' ) }</Button>
+								<Button isPrimary={ a.reopenButtonPosition === 'bottom-left' } onClick={ () => setAttributes( { reopenButtonPosition: 'bottom-left' } ) }>{ __( 'Bottom left', 'adaire-blocks' ) }</Button>
+								<Button isPrimary={ a.reopenButtonPosition === 'bottom-right' } onClick={ () => setAttributes( { reopenButtonPosition: 'bottom-right' } ) }>{ __( 'Bottom right', 'adaire-blocks' ) }</Button>
 							</ButtonGroup>
 						</>
 					) }
 				</PanelBody>
 
-				<PanelBody title={ __( 'Integrations & Scripts', 'cookie-consent-block' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Integrations & Scripts', 'adaire-blocks' ) } initialOpen={ false }>
 					<ToggleControl
-						label={ __( 'Enable Google Consent Mode', 'cookie-consent-block' ) }
+						label={ __( 'Enable Google Consent Mode', 'adaire-blocks' ) }
 						checked={ !! a.googleConsentMode }
 						onChange={ bind( 'googleConsentMode' ) }
-						help={ __( 'Calls gtag("consent","update", …) whenever preferences change, if gtag.js is present (Google Analytics / Ads / Tag Manager).', 'cookie-consent-block' ) }
+						help={ __( 'Calls gtag("consent","update", …) whenever preferences change, if gtag.js is present (Google Analytics / Ads / Tag Manager).', 'adaire-blocks' ) }
 					/>
 					<ToggleControl
-						label={ __( 'Block scripts until consent', 'cookie-consent-block' ) }
+						label={ __( 'Block scripts until consent', 'adaire-blocks' ) }
 						checked={ !! a.blockScriptsUntilConsent }
 						onChange={ bind( 'blockScriptsUntilConsent' ) }
-						help={ __( 'Give any script a type="text/plain" and data-cookie-consent="analytics" (or another category key) and it will only run after that category is accepted.', 'cookie-consent-block' ) }
+						help={ __( 'Give any script a type="text/plain" and data-cookie-consent="analytics" (or another category key) and it will only run after that category is accepted.', 'adaire-blocks' ) }
 					/>
-					<RangeControl label={ __( 'Stacking order (z-index)', 'cookie-consent-block' ) } value={ a.zIndex } onChange={ bind( 'zIndex' ) } min={ 1 } max={ 2147483000 } />
+					<RangeControl label={ __( 'Stacking order (z-index)', 'adaire-blocks' ) } value={ a.zIndex } onChange={ bind( 'zIndex' ) } min={ 1 } max={ 2147483000 } />
 				</PanelBody>
 
-				<PanelBody title={ __( 'Colors', 'cookie-consent-block' ) } initialOpen={ false }>
-					<p className="adaire-help-note">{ __( 'Defaults match a clean, light "Real Cookie Banner"-style theme — white card, dark text, blue accent.', 'cookie-consent-block' ) }</p>
-					<AdaireColorControl label={ __( 'Background', 'cookie-consent-block' ) } value={ a.backgroundColor } onChange={ ( v ) => setAttributes( { backgroundColor: v || '#ffffff' } ) } />
-					<AdaireColorControl label={ __( 'Heading color', 'cookie-consent-block' ) } value={ a.headingColor } onChange={ ( v ) => setAttributes( { headingColor: v || '#202124' } ) } />
-					<AdaireColorControl label={ __( 'Text color', 'cookie-consent-block' ) } value={ a.textColor } onChange={ ( v ) => setAttributes( { textColor: v || '#5f6368' } ) } />
-					<AdaireColorControl label={ __( 'Accent / primary button', 'cookie-consent-block' ) } value={ a.accentColor } onChange={ ( v ) => setAttributes( { accentColor: v || '#1a73e8' } ) } />
-					<AdaireColorControl label={ __( 'Primary button text', 'cookie-consent-block' ) } value={ a.primaryButtonTextColor } onChange={ ( v ) => setAttributes( { primaryButtonTextColor: v || '#ffffff' } ) } />
-					<AdaireColorControl label={ __( 'Secondary button background', 'cookie-consent-block' ) } value={ a.secondaryButtonBg } onChange={ ( v ) => setAttributes( { secondaryButtonBg: v || 'transparent' } ) } />
-					<AdaireColorControl label={ __( 'Secondary button text', 'cookie-consent-block' ) } value={ a.secondaryButtonTextColor } onChange={ ( v ) => setAttributes( { secondaryButtonTextColor: v || '#1a73e8' } ) } />
-					<AdaireColorControl label={ __( 'Border color', 'cookie-consent-block' ) } value={ a.borderColor } onChange={ ( v ) => setAttributes( { borderColor: v || '#e5e7eb' } ) } />
-					<AdaireColorControl label={ __( 'Overlay color', 'cookie-consent-block' ) } value={ a.overlayColor } onChange={ ( v ) => setAttributes( { overlayColor: v || 'rgba(15,23,42,0.55)' } ) } />
+				<PanelBody title={ __( 'Colors', 'adaire-blocks' ) } initialOpen={ false }>
+					<p className="adaire-help-note">{ __( 'Defaults match a clean, light "Real Cookie Banner"-style theme — white card, dark text, blue accent.', 'adaire-blocks' ) }</p>
+					<AdaireColorControl label={ __( 'Background', 'adaire-blocks' ) } value={ a.backgroundColor } onChange={ ( v ) => setAttributes( { backgroundColor: v || '#ffffff' } ) } />
+					<AdaireColorControl label={ __( 'Heading color', 'adaire-blocks' ) } value={ a.headingColor } onChange={ ( v ) => setAttributes( { headingColor: v || '#202124' } ) } />
+					<AdaireColorControl label={ __( 'Text color', 'adaire-blocks' ) } value={ a.textColor } onChange={ ( v ) => setAttributes( { textColor: v || '#5f6368' } ) } />
+					<AdaireColorControl label={ __( 'Accent / primary button', 'adaire-blocks' ) } value={ a.accentColor } onChange={ ( v ) => setAttributes( { accentColor: v || '#1a73e8' } ) } />
+					<AdaireColorControl label={ __( 'Primary button text', 'adaire-blocks' ) } value={ a.primaryButtonTextColor } onChange={ ( v ) => setAttributes( { primaryButtonTextColor: v || '#ffffff' } ) } />
+					<AdaireColorControl label={ __( 'Secondary button background', 'adaire-blocks' ) } value={ a.secondaryButtonBg } onChange={ ( v ) => setAttributes( { secondaryButtonBg: v || 'transparent' } ) } />
+					<AdaireColorControl label={ __( 'Secondary button text', 'adaire-blocks' ) } value={ a.secondaryButtonTextColor } onChange={ ( v ) => setAttributes( { secondaryButtonTextColor: v || '#1a73e8' } ) } />
+					<AdaireColorControl label={ __( 'Border color', 'adaire-blocks' ) } value={ a.borderColor } onChange={ ( v ) => setAttributes( { borderColor: v || '#e5e7eb' } ) } />
+					<AdaireColorControl label={ __( 'Overlay color', 'adaire-blocks' ) } value={ a.overlayColor } onChange={ ( v ) => setAttributes( { overlayColor: v || 'rgba(15,23,42,0.55)' } ) } />
 				</PanelBody>
 
-				<PanelBody title={ __( 'Typography', 'cookie-consent-block' ) } initialOpen={ false }>
-					<SelectControl label={ __( 'Font family', 'cookie-consent-block' ) } value={ a.fontFamily } options={ FONT_FAMILY_OPTIONS } onChange={ bind( 'fontFamily' ) } />
-					<SelectControl label={ __( 'Font weight', 'cookie-consent-block' ) } value={ a.fontWeight } options={ FONT_WEIGHT_OPTIONS } onChange={ bind( 'fontWeight' ) } />
-					<TextControl label={ __( 'Line height', 'cookie-consent-block' ) } value={ a.lineHeight } onChange={ bind( 'lineHeight' ) } />
-					<DeviceSwitcher deviceType={ device } setDeviceType={ setDevice } label={ __( 'Responsive font size', 'cookie-consent-block' ) } />
+				<PanelBody title={ __( 'Typography', 'adaire-blocks' ) } initialOpen={ false }>
+					<SelectControl label={ __( 'Font family', 'adaire-blocks' ) } value={ a.fontFamily } options={ FONT_FAMILY_OPTIONS } onChange={ bind( 'fontFamily' ) } />
+					<SelectControl label={ __( 'Font weight', 'adaire-blocks' ) } value={ a.fontWeight } options={ FONT_WEIGHT_OPTIONS } onChange={ bind( 'fontWeight' ) } />
+					<TextControl label={ __( 'Line height', 'adaire-blocks' ) } value={ a.lineHeight } onChange={ bind( 'lineHeight' ) } />
+					<DeviceSwitcher deviceType={ device } setDeviceType={ setDevice } label={ __( 'Responsive font size', 'adaire-blocks' ) } />
 					<RangeControl
-						label={ __( 'Heading size', 'cookie-consent-block' ) }
+						label={ __( 'Heading size', 'adaire-blocks' ) }
 						value={ a.headingFontSize?.[ device ]?.value ?? 18 }
 						onChange={ ( value ) => setAttributes( { headingFontSize: { ...a.headingFontSize, [ device ]: { value, unit: 'px' } } } ) }
 						min={ 12 } max={ 40 }
 					/>
 					<RangeControl
-						label={ __( 'Body size', 'cookie-consent-block' ) }
+						label={ __( 'Body size', 'adaire-blocks' ) }
 						value={ a.bodyFontSize?.[ device ]?.value ?? 14 }
 						onChange={ ( value ) => setAttributes( { bodyFontSize: { ...a.bodyFontSize, [ device ]: { value, unit: 'px' } } } ) }
 						min={ 10 } max={ 24 }
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Borders & Shadow', 'cookie-consent-block' ) } initialOpen={ false }>
-					<ToggleControl label={ __( 'Show border', 'cookie-consent-block' ) } checked={ !! a.showBorder } onChange={ bind( 'showBorder' ) } />
+				<PanelBody title={ __( 'Borders & Shadow', 'adaire-blocks' ) } initialOpen={ false }>
+					<ToggleControl label={ __( 'Show border', 'adaire-blocks' ) } checked={ !! a.showBorder } onChange={ bind( 'showBorder' ) } />
 					{ a.showBorder && (
-						<RangeControl label={ __( 'Border width (px)', 'cookie-consent-block' ) } value={ a.borderWidth } onChange={ bind( 'borderWidth' ) } min={ 1 } max={ 6 } />
+						<RangeControl label={ __( 'Border width (px)', 'adaire-blocks' ) } value={ a.borderWidth } onChange={ bind( 'borderWidth' ) } min={ 1 } max={ 6 } />
 					) }
-					<RangeControl label={ __( 'Border radius (px)', 'cookie-consent-block' ) } value={ a.borderRadius } onChange={ bind( 'borderRadius' ) } min={ 0 } max={ 48 } />
-					<ToggleControl label={ __( 'Show box shadow', 'cookie-consent-block' ) } checked={ !! a.showShadow } onChange={ bind( 'showShadow' ) } />
+					<RangeControl label={ __( 'Border radius (px)', 'adaire-blocks' ) } value={ a.borderRadius } onChange={ bind( 'borderRadius' ) } min={ 0 } max={ 48 } />
+					<ToggleControl label={ __( 'Show box shadow', 'adaire-blocks' ) } checked={ !! a.showShadow } onChange={ bind( 'showShadow' ) } />
 					{ a.showShadow && (
 						<SelectControl
-							label={ __( 'Shadow intensity', 'cookie-consent-block' ) }
+							label={ __( 'Shadow intensity', 'adaire-blocks' ) }
 							value={ a.shadowIntensity }
 							options={ [
-								{ label: __( 'Soft', 'cookie-consent-block' ), value: 'soft' },
-								{ label: __( 'Medium', 'cookie-consent-block' ), value: 'medium' },
-								{ label: __( 'Strong', 'cookie-consent-block' ), value: 'strong' },
+								{ label: __( 'Soft', 'adaire-blocks' ), value: 'soft' },
+								{ label: __( 'Medium', 'adaire-blocks' ), value: 'medium' },
+								{ label: __( 'Strong', 'adaire-blocks' ), value: 'strong' },
 							] }
 							onChange={ bind( 'shadowIntensity' ) }
 						/>
 					) }
 				</PanelBody>
 
-				<PanelBody title={ __( 'Spacing & Buttons', 'cookie-consent-block' ) } initialOpen={ false }>
-					<DeviceSwitcher deviceType={ device } setDeviceType={ setDevice } label={ __( 'Responsive padding', 'cookie-consent-block' ) } />
+				<PanelBody title={ __( 'Spacing & Buttons', 'adaire-blocks' ) } initialOpen={ false }>
+					<DeviceSwitcher deviceType={ device } setDeviceType={ setDevice } label={ __( 'Responsive padding', 'adaire-blocks' ) } />
 					<RangeControl
-						label={ __( 'Padding', 'cookie-consent-block' ) }
+						label={ __( 'Padding', 'adaire-blocks' ) }
 						value={ a.padding?.[ device ]?.value ?? 24 }
 						onChange={ ( value ) => setAttributes( { padding: { ...a.padding, [ device ]: { value, unit: 'px' } } } ) }
 						min={ 0 } max={ 64 }
 					/>
-					<RangeControl label={ __( 'Gap between elements', 'cookie-consent-block' ) } value={ a.gap } onChange={ bind( 'gap' ) } min={ 4 } max={ 40 } />
+					<RangeControl label={ __( 'Gap between elements', 'adaire-blocks' ) } value={ a.gap } onChange={ bind( 'gap' ) } min={ 4 } max={ 40 } />
 					<SelectControl
-						label={ __( 'Button shape', 'cookie-consent-block' ) }
+						label={ __( 'Button shape', 'adaire-blocks' ) }
 						value={ a.buttonShape }
 						options={ [
-							{ label: __( 'Pill', 'cookie-consent-block' ), value: 'pill' },
-							{ label: __( 'Rounded', 'cookie-consent-block' ), value: 'rounded' },
-							{ label: __( 'Square', 'cookie-consent-block' ), value: 'square' },
+							{ label: __( 'Pill', 'adaire-blocks' ), value: 'pill' },
+							{ label: __( 'Rounded', 'adaire-blocks' ), value: 'rounded' },
+							{ label: __( 'Square', 'adaire-blocks' ), value: 'square' },
 						] }
 						onChange={ bind( 'buttonShape' ) }
 					/>
 					<SelectControl
-						label={ __( 'Button size', 'cookie-consent-block' ) }
+						label={ __( 'Button size', 'adaire-blocks' ) }
 						value={ a.buttonSize }
 						options={ [
-							{ label: __( 'Small', 'cookie-consent-block' ), value: 'sm' },
-							{ label: __( 'Medium', 'cookie-consent-block' ), value: 'md' },
-							{ label: __( 'Large', 'cookie-consent-block' ), value: 'lg' },
+							{ label: __( 'Small', 'adaire-blocks' ), value: 'sm' },
+							{ label: __( 'Medium', 'adaire-blocks' ), value: 'md' },
+							{ label: __( 'Large', 'adaire-blocks' ), value: 'lg' },
 						] }
 						onChange={ bind( 'buttonSize' ) }
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Icon & Animation Effects', 'cookie-consent-block' ) } initialOpen={ false }>
-					<ToggleControl label={ __( 'Show icon', 'cookie-consent-block' ) } checked={ !! a.showIcon } onChange={ bind( 'showIcon' ) } />
+				<PanelBody title={ __( 'Icon & Animation Effects', 'adaire-blocks' ) } initialOpen={ false }>
+					<ToggleControl label={ __( 'Show icon', 'adaire-blocks' ) } checked={ !! a.showIcon } onChange={ bind( 'showIcon' ) } />
 					<SelectControl
-						label={ __( 'Entrance animation', 'cookie-consent-block' ) }
+						label={ __( 'Entrance animation', 'adaire-blocks' ) }
 						value={ a.entranceAnimation }
 						options={ [
-							{ label: __( 'None', 'cookie-consent-block' ), value: 'none' },
-							{ label: __( 'Fade', 'cookie-consent-block' ), value: 'fade' },
-							{ label: __( 'Slide up', 'cookie-consent-block' ), value: 'slide-up' },
-							{ label: __( 'Slide down', 'cookie-consent-block' ), value: 'slide-down' },
-							{ label: __( 'Slide from left', 'cookie-consent-block' ), value: 'slide-left' },
-							{ label: __( 'Slide from right', 'cookie-consent-block' ), value: 'slide-right' },
+							{ label: __( 'None', 'adaire-blocks' ), value: 'none' },
+							{ label: __( 'Fade', 'adaire-blocks' ), value: 'fade' },
+							{ label: __( 'Slide up', 'adaire-blocks' ), value: 'slide-up' },
+							{ label: __( 'Slide down', 'adaire-blocks' ), value: 'slide-down' },
+							{ label: __( 'Slide from left', 'adaire-blocks' ), value: 'slide-left' },
+							{ label: __( 'Slide from right', 'adaire-blocks' ), value: 'slide-right' },
 						] }
 						onChange={ bind( 'entranceAnimation' ) }
 					/>
-					<RangeControl label={ __( 'Animation duration (ms)', 'cookie-consent-block' ) } value={ a.animationDuration } onChange={ bind( 'animationDuration' ) } min={ 100 } max={ 1200 } step={ 50 } />
+					<RangeControl label={ __( 'Animation duration (ms)', 'adaire-blocks' ) } value={ a.animationDuration } onChange={ bind( 'animationDuration' ) } min={ 100 } max={ 1200 } step={ 50 } />
 				</PanelBody>
 
 			</InspectorTabs>
@@ -365,9 +365,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<div { ...blockProps }>
 				{ a.showOverlay && <div className="adaire-cookie-banner__overlay" /> }
 
-				<div className="adaire-cookie-banner__panel" role="dialog" aria-label={ __( 'Cookie consent', 'cookie-consent-block' ) }>
+				<div className="adaire-cookie-banner__panel" role="dialog" aria-label={ __( 'Cookie consent', 'adaire-blocks' ) }>
 					{ a.closeButtonEnabled && (
-						<button type="button" className="adaire-cookie-banner__close" aria-label={ __( 'Close', 'cookie-consent-block' ) }>×</button>
+						<button type="button" className="adaire-cookie-banner__close" aria-label={ __( 'Close', 'adaire-blocks' ) }>×</button>
 					) }
 
 					<div className="adaire-cookie-banner__header">
@@ -377,7 +377,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							className="adaire-cookie-banner__title"
 							value={ a.bannerTitle }
 							onChange={ bind( 'bannerTitle' ) }
-							placeholder={ __( 'Banner title…', 'cookie-consent-block' ) }
+							placeholder={ __( 'Banner title…', 'adaire-blocks' ) }
 							allowedFormats={ [ 'core/bold', 'core/italic' ] }
 						/>
 					</div>
@@ -387,13 +387,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						className="adaire-cookie-banner__description"
 						value={ a.description }
 						onChange={ bind( 'description' ) }
-						placeholder={ __( 'Describe how cookies are used on this site…', 'cookie-consent-block' ) }
+						placeholder={ __( 'Describe how cookies are used on this site…', 'adaire-blocks' ) }
 						allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] }
 					/>
 
 					<QuickZone
 						id="categories"
-						label={ __( 'Cookie Categories', 'cookie-consent-block' ) }
+						label={ __( 'Cookie Categories', 'adaire-blocks' ) }
 						activeZone={ activeZone }
 						setActiveZone={ setActiveZone }
 						content={ <CategoriesEditor categories={ a.categories } onChange={ ( categories ) => setAttributes( { categories } ) } /> }
@@ -403,7 +403,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								<label className="adaire-cookie-banner__cat-row" key={ cat.key }>
 									<input type="checkbox" defaultChecked={ !! cat.defaultChecked } disabled={ !! cat.required } readOnly />
 									<span>
-										<strong>{ cat.label }</strong>{ cat.required ? ` (${ __( 'always active', 'cookie-consent-block' ) })` : '' }
+										<strong>{ cat.label }</strong>{ cat.required ? ` (${ __( 'always active', 'adaire-blocks' ) })` : '' }
 										{ cat.description ? <em className="adaire-cookie-banner__cat-desc">{ cat.description }</em> : null }
 									</span>
 								</label>
@@ -416,7 +416,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						className="adaire-cookie-banner__additional"
 						value={ a.additionalInfo }
 						onChange={ bind( 'additionalInfo' ) }
-						placeholder={ __( 'Optional additional / legal-basis text…', 'cookie-consent-block' ) }
+						placeholder={ __( 'Optional additional / legal-basis text…', 'adaire-blocks' ) }
 						allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] }
 					/>
 

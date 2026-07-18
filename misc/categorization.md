@@ -53,7 +53,7 @@ These blocks are available in Plus and Premium versions.
 These blocks are only available in the Premium version.
 
 - Industries (industries-block)
-- Modal (modal-block)
+- Popup Modal (popup-modal-block)
 - Particles Block (particles-block)
 - Project Block (project-block)
 - Testimonial (Premium) (testimonial3-block)

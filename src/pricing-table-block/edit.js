@@ -24,8 +24,8 @@ import DeviceSwitcher, { THREE_TIERS } from "../components/DeviceSwitcher";
 import "./editor.scss";
 
 const CONTAINER_MODES = [
-	{ label: __("Full Width", "pricing-table-block"), value: "full" },
-	{ label: __("Constrained", "pricing-table-block"), value: "constrained" },
+	{ label: __("Full Width", "adaire-blocks"), value: "full" },
+	{ label: __("Constrained", "adaire-blocks"), value: "constrained" },
 ];
 
 const formatDimensionValue = (dimension, fallbackValue, fallbackUnit) => {
@@ -47,20 +47,20 @@ const FONT_FAMILY_OPTIONS = [
 ];
 
 const TEXT_TRANSFORM_OPTIONS = [
-	{ label: __("None", "pricing-table-block"), value: "none" },
-	{ label: __("Uppercase", "pricing-table-block"), value: "uppercase" },
-	{ label: __("Lowercase", "pricing-table-block"), value: "lowercase" },
-	{ label: __("Capitalize", "pricing-table-block"), value: "capitalize" },
+	{ label: __("None", "adaire-blocks"), value: "none" },
+	{ label: __("Uppercase", "adaire-blocks"), value: "uppercase" },
+	{ label: __("Lowercase", "adaire-blocks"), value: "lowercase" },
+	{ label: __("Capitalize", "adaire-blocks"), value: "capitalize" },
 ];
 
 const FONT_WEIGHT_OPTIONS = [
-	{ label: __("Default", "pricing-table-block"), value: "" },
-	{ label: __("Light (300)", "pricing-table-block"), value: "300" },
-	{ label: __("Normal (400)", "pricing-table-block"), value: "400" },
-	{ label: __("Medium (500)", "pricing-table-block"), value: "500" },
-	{ label: __("Semi Bold (600)", "pricing-table-block"), value: "600" },
-	{ label: __("Bold (700)", "pricing-table-block"), value: "700" },
-	{ label: __("Extra Bold (800)", "pricing-table-block"), value: "800" },
+	{ label: __("Default", "adaire-blocks"), value: "" },
+	{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+	{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+	{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+	{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+	{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
+	{ label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
 ];
 
 /**
@@ -84,21 +84,21 @@ function TypographySubsection({ label, prefix, attributes, setAttributes }) {
 				<strong>{label}</strong>
 			</p>
 			<SelectControl
-				label={__("Font Weight", "pricing-table-block")}
+				label={__("Font Weight", "adaire-blocks")}
 				value={attributes[weightKey] || ""}
 				options={FONT_WEIGHT_OPTIONS}
 				onChange={(value) => setAttributes({ [weightKey]: value })}
 			/>
 			<UnitControl
-				label={__("Line Height", "pricing-table-block")}
+				label={__("Line Height", "adaire-blocks")}
 				value={attributes[lineHeightKey] || ""}
 				onChange={(value) => setAttributes({ [lineHeightKey]: value })}
 				units={[
-					{ value: "", label: __("Default", "pricing-table-block") },
+					{ value: "", label: __("Default", "adaire-blocks") },
 				]}
 			/>
 			<UnitControl
-				label={__("Letter Spacing", "pricing-table-block")}
+				label={__("Letter Spacing", "adaire-blocks")}
 				value={attributes[letterSpacingKey] || ""}
 				onChange={(value) => setAttributes({ [letterSpacingKey]: value })}
 				units={[
@@ -107,7 +107,7 @@ function TypographySubsection({ label, prefix, attributes, setAttributes }) {
 				]}
 			/>
 			<SelectControl
-				label={__("Text Transform", "pricing-table-block")}
+				label={__("Text Transform", "adaire-blocks")}
 				value={attributes[textTransformKey] || "none"}
 				options={TEXT_TRANSFORM_OPTIONS}
 				onChange={(value) => setAttributes({ [textTransformKey]: value })}
@@ -283,13 +283,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			...cards,
 			{
 				id,
-				name: __("New Plan", "pricing-table-block"),
-				tagline: __("Describe this plan", "pricing-table-block"),
+				name: __("New Plan", "adaire-blocks"),
+				tagline: __("Describe this plan", "adaire-blocks"),
 				currency: "$",
 				monthlyPrice: "49",
 				priceSuffix: "/mo",
-				features: [__("Add a feature", "pricing-table-block")],
-				buttonLabel: __("Select Plan", "pricing-table-block"),
+				features: [__("Add a feature", "adaire-blocks")],
+				buttonLabel: __("Select Plan", "adaire-blocks"),
 				buttonUrl: "#",
 				buttonTarget: "_self",
 				isFeatured: false,
@@ -333,7 +333,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const addFeature = (cardIndex) => {
 		const card = cards[cardIndex];
 		const features = Array.isArray(card.features) ? [...card.features] : [];
-		features.push(__("New feature", "pricing-table-block"));
+		features.push(__("New feature", "adaire-blocks"));
 		updateCard(cardIndex, { features });
 	};
 
@@ -617,8 +617,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	return (
 		<>
 			<InspectorTabs attributes={attributes} setAttributes={setAttributes}>
-				<PanelBody section="layout" title={__("Layout", "pricing-table-block")} initialOpen={true}>
-					<p>{__("Container Width", "pricing-table-block")}</p>
+				<PanelBody section="layout" title={__("Layout", "adaire-blocks")} initialOpen={true}>
+					<p>{__("Container Width", "adaire-blocks")}</p>
 					<ButtonGroup>
 						{CONTAINER_MODES.map((mode) => (
 							<Button
@@ -634,7 +634,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<DeviceSwitcher
 						deviceType={deviceType}
 						setDeviceType={setDeviceType}
-						label={__("Device Preview", "pricing-table-block")}
+						label={__("Device Preview", "adaire-blocks")}
 						tiers={THREE_TIERS}
 					/>
 
@@ -666,7 +666,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							return (
 								<div className="adaire-pricing-table__dimension-row">
 									<RangeControl
-										label={__("Max Width", "pricing-table-block")}
+										label={__("Max Width", "adaire-blocks")}
 										value={value}
 										onChange={(rangeValue) =>
 											updateContainerDimension(
@@ -703,7 +703,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					</div>
 
 					<RangeControl
-						label={__("Grid Columns", "pricing-table-block")}
+						label={__("Grid Columns", "adaire-blocks")}
 						value={
 							deviceType === "desktop"
 								? gridColumnsDesktop
@@ -721,7 +721,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					/>
 
 					<RangeControl
-						label={__("Grid Gap", "pricing-table-block")}
+						label={__("Grid Gap", "adaire-blocks")}
 						value={
 							gridGap?.[deviceType] ??
 							(deviceType === "desktop" ? 32 : gridGapDesktop)
@@ -738,7 +738,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 				<PanelBody
 					section="content"
-					title={__("Cards", "pricing-table-block")}
+					title={__("Cards", "adaire-blocks")}
 					initialOpen={false}
 				>
 					{cards.map((card, index) => (
@@ -749,9 +749,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							<div className="adaire-pricing-table__card-control-header">
 								<strong>
 									{sprintf(
-										__("Card %d â€“ %s", "pricing-table-block"),
+										__("Card %d â€“ %s", "adaire-blocks"),
 										index + 1,
-										card.name || __("Untitled", "pricing-table-block"),
+										card.name || __("Untitled", "adaire-blocks"),
 									)}
 								</strong>
 								<div className="adaire-pricing-table__card-control-actions">
@@ -779,32 +779,32 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							</div>
 
 							<TextControl
-								label={__("Plan Name", "pricing-table-block")}
+								label={__("Plan Name", "adaire-blocks")}
 								value={card.name}
 								onChange={(value) => updateCard(index, { name: value })}
 							/>
 							<TextControl
-								label={__("Tagline", "pricing-table-block")}
+								label={__("Tagline", "adaire-blocks")}
 								value={card.tagline}
 								onChange={(value) => updateCard(index, { tagline: value })}
 							/>
 
 							<div className="adaire-pricing-table__card-prices">
 								<TextControl
-									label={__("Currency Symbol", "pricing-table-block")}
+									label={__("Currency Symbol", "adaire-blocks")}
 									value={card.currency}
 									onChange={(value) => updateCard(index, { currency: value })}
 									style={{ maxWidth: "80px" }}
 								/>
 								<TextControl
-									label={__("Monthly Price", "pricing-table-block")}
+									label={__("Monthly Price", "adaire-blocks")}
 									value={card.monthlyPrice}
 									onChange={(value) =>
 										updateCard(index, { monthlyPrice: value })
 									}
 								/>
 								<TextControl
-									label={__("Price Suffix", "pricing-table-block")}
+									label={__("Price Suffix", "adaire-blocks")}
 									value={card.priceSuffix}
 									onChange={(value) =>
 										updateCard(index, { priceSuffix: value })
@@ -813,7 +813,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								/>
 							</div>
 
-							<BaseControl label={__("Features", "pricing-table-block")}>
+							<BaseControl label={__("Features", "adaire-blocks")}>
 								{(card.features || []).map((feature, featureIndex) => (
 									<div
 										key={`${card.id}-feature-${featureIndex}`}
@@ -824,7 +824,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 											onChange={(value) =>
 												updateFeature(index, featureIndex, value)
 											}
-											placeholder={__("Add feature", "pricing-table-block")}
+											placeholder={__("Add feature", "adaire-blocks")}
 										/>
 										<Button
 											icon={trash}
@@ -839,26 +839,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									variant="secondary"
 									onClick={() => addFeature(index)}
 								>
-									{__("Add Feature", "pricing-table-block")}
+									{__("Add Feature", "adaire-blocks")}
 								</Button>
 							</BaseControl>
 
 							<TextControl
-								label={__("Button Label", "pricing-table-block")}
+								label={__("Button Label", "adaire-blocks")}
 								value={card.buttonLabel}
 								onChange={(value) =>
 									updateCard(index, { buttonLabel: value })
 								}
 							/>
 							<TextControl
-								label={__("Button URL", "pricing-table-block")}
+								label={__("Button URL", "adaire-blocks")}
 								value={card.buttonUrl}
 								onChange={(value) =>
 									updateCard(index, { buttonUrl: value })
 								}
 								placeholder="https://example.com"
 							/>
-							<BaseControl label={__("Button Target", "pricing-table-block")}>
+							<BaseControl label={__("Button Target", "adaire-blocks")}>
 								<ButtonGroup>
 									<Button
 										isPrimary={card.buttonTarget !== "_blank"}
@@ -866,7 +866,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 											updateCard(index, { buttonTarget: "_self" })
 										}
 									>
-										{__("Same Tab", "pricing-table-block")}
+										{__("Same Tab", "adaire-blocks")}
 									</Button>
 									<Button
 										isPrimary={card.buttonTarget === "_blank"}
@@ -874,13 +874,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 											updateCard(index, { buttonTarget: "_blank" })
 										}
 									>
-										{__("New Tab", "pricing-table-block")}
+										{__("New Tab", "adaire-blocks")}
 									</Button>
 								</ButtonGroup>
 							</BaseControl>
 
 							<ToggleControl
-								label={__("Highlight as Featured", "pricing-table-block")}
+								label={__("Highlight as Featured", "adaire-blocks")}
 								checked={!!card.isFeatured}
 								onChange={(value) => updateCard(index, { isFeatured: value })}
 							/>
@@ -893,109 +893,109 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						onClick={addCard}
 						style={{ marginTop: "12px" }}
 					>
-						{__("Add Card", "pricing-table-block")}
+						{__("Add Card", "adaire-blocks")}
 					</Button>
 				</PanelBody>
 
 
 
 				<PanelColorSettings
-					title={__("Colors", "pricing-table-block")}
+					title={__("Colors", "adaire-blocks")}
 					initialOpen={false}
 					colorSettings={[
 						{
 							value: backgroundColor,
 							onChange: (value) => setAttributes({ backgroundColor: value }),
-							label: __("Background", "pricing-table-block"),
+							label: __("Background", "adaire-blocks"),
 						},
 						{
 							value: cardBackgroundColor,
 							onChange: (value) =>
 								setAttributes({ cardBackgroundColor: value }),
-							label: __("Card Background", "pricing-table-block"),
+							label: __("Card Background", "adaire-blocks"),
 						},
 						{
 							value: featuredCardBackgroundColor,
 							onChange: (value) =>
 								setAttributes({ featuredCardBackgroundColor: value }),
-							label: __("Featured Card Background", "pricing-table-block"),
+							label: __("Featured Card Background", "adaire-blocks"),
 						},
 						{
 							value: featuredCardTextColor,
 							onChange: (value) =>
 								setAttributes({ featuredCardTextColor: value }),
-							label: __("Featured Card Text", "pricing-table-block"),
+							label: __("Featured Card Text", "adaire-blocks"),
 						},
 						{
 							value: cardBorderColor,
 							onChange: (value) =>
 								setAttributes({ cardBorderColor: value }),
-							label: __("Card Border", "pricing-table-block"),
+							label: __("Card Border", "adaire-blocks"),
 						},
 						{
 							value: cardHoverBorderColor,
 							onChange: (value) =>
 								setAttributes({ cardHoverBorderColor: value }),
-							label: __("Card Hover Border", "pricing-table-block"),
+							label: __("Card Hover Border", "adaire-blocks"),
 						},
 						{
 							value: cardHoverBackgroundColor,
 							onChange: (value) =>
 								setAttributes({ cardHoverBackgroundColor: value }),
-							label: __("Card Hover Background", "pricing-table-block"),
+							label: __("Card Hover Background", "adaire-blocks"),
 						},
 						{
 							value: cardHoverTextColor,
 							onChange: (value) =>
 								setAttributes({ cardHoverTextColor: value }),
-							label: __("Card Hover Text", "pricing-table-block"),
+							label: __("Card Hover Text", "adaire-blocks"),
 						},
 						{
 							value: headingColor,
 							onChange: (value) => setAttributes({ headingColor: value }),
-							label: __("Heading", "pricing-table-block"),
+							label: __("Heading", "adaire-blocks"),
 						},
 						{
 							value: subheadingColor,
 							onChange: (value) => setAttributes({ subheadingColor: value }),
-							label: __("Subheading", "pricing-table-block"),
+							label: __("Subheading", "adaire-blocks"),
 						},
 						{
 							value: planNameColor,
 							onChange: (value) => setAttributes({ planNameColor: value }),
-							label: __("Plan Name", "pricing-table-block"),
+							label: __("Plan Name", "adaire-blocks"),
 						},
 						{
 							value: priceColor,
 							onChange: (value) => setAttributes({ priceColor: value }),
-							label: __("Price", "pricing-table-block"),
+							label: __("Price", "adaire-blocks"),
 						},
 						{
 							value: featureTextColor,
 							onChange: (value) => setAttributes({ featureTextColor: value }),
-							label: __("Feature Text", "pricing-table-block"),
+							label: __("Feature Text", "adaire-blocks"),
 						},
 						{
 							value: buttonTextColor,
 							onChange: (value) => setAttributes({ buttonTextColor: value }),
-							label: __("Button Text", "pricing-table-block"),
+							label: __("Button Text", "adaire-blocks"),
 						},
 						{
 							value: buttonBackgroundColor,
 							onChange: (value) =>
 								setAttributes({ buttonBackgroundColor: value }),
-							label: __("Button Background", "pricing-table-block"),
+							label: __("Button Background", "adaire-blocks"),
 						},
 						{
 							value: buttonHoverBackgroundColor,
 							onChange: (value) =>
 								setAttributes({ buttonHoverBackgroundColor: value }),
-							label: __("Button Hover Background", "pricing-table-block"),
+							label: __("Button Hover Background", "adaire-blocks"),
 						},
 						{
 							value: buttonGlowColor,
 							onChange: (value) => setAttributes({ buttonGlowColor: value }),
-							label: __("Button Glow", "pricing-table-block"),
+							label: __("Button Glow", "adaire-blocks"),
 						},
 					]}
 				/>
@@ -1003,11 +1003,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<PanelBody
 					section="style"
 					priority="medium"
-					title={__("Card Styling", "pricing-table-block")}
+					title={__("Card Styling", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<BoxControl
-						label={__("Card Padding", "pricing-table-block")}
+						label={__("Card Padding", "adaire-blocks")}
 						values={{
 							top: cardPadding?.top ?? 32,
 							right: cardPadding?.right ?? 32,
@@ -1026,41 +1026,41 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						}
 					/>
 					<RangeControl
-						label={__("Card Border Radius", "pricing-table-block")}
+						label={__("Card Border Radius", "adaire-blocks")}
 						value={cardBorderRadius}
 						onChange={(value) => setAttributes({ cardBorderRadius: value })}
 						min={0}
 						max={32}
 					/>
 					<RangeControl
-						label={__("Card Border Width", "pricing-table-block")}
+						label={__("Card Border Width", "adaire-blocks")}
 						value={cardBorderWidth}
 						onChange={(value) => setAttributes({ cardBorderWidth: value })}
 						min={0}
 						max={6}
 					/>
 					<SelectControl
-						label={__("Text Alignment", "pricing-table-block")}
+						label={__("Text Alignment", "adaire-blocks")}
 						value={cardTextAlignment}
 						options={[
-							{ label: __("Left", "pricing-table-block"), value: "left" },
-							{ label: __("Center", "pricing-table-block"), value: "center" },
-							{ label: __("Right", "pricing-table-block"), value: "right" },
+							{ label: __("Left", "adaire-blocks"), value: "left" },
+							{ label: __("Center", "adaire-blocks"), value: "center" },
+							{ label: __("Right", "adaire-blocks"), value: "right" },
 						]}
 						onChange={(value) => setAttributes({ cardTextAlignment: value })}
 					/>
 					<SelectControl
-						label={__("Button Alignment", "pricing-table-block")}
+						label={__("Button Alignment", "adaire-blocks")}
 						value={cardButtonAlignment}
 						options={[
-							{ label: __("Left", "pricing-table-block"), value: "left" },
-							{ label: __("Center", "pricing-table-block"), value: "center" },
-							{ label: __("Right", "pricing-table-block"), value: "right" },
+							{ label: __("Left", "adaire-blocks"), value: "left" },
+							{ label: __("Center", "adaire-blocks"), value: "center" },
+							{ label: __("Right", "adaire-blocks"), value: "right" },
 						]}
 						onChange={(value) => setAttributes({ cardButtonAlignment: value })}
 					/>
 					<RangeControl
-						label={__("Button Glow Opacity", "pricing-table-block")}
+						label={__("Button Glow Opacity", "adaire-blocks")}
 						value={buttonGlowOpacity ?? 25}
 						onChange={(value) => setAttributes({ buttonGlowOpacity: value })}
 						min={0}
@@ -1071,29 +1071,29 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<PanelBody
 					section="style"
 					priority="high"
-					title={__("Typography", "pricing-table-block")}
+					title={__("Typography", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<SelectControl
-						label={__("Font Family", "pricing-table-block")}
+						label={__("Font Family", "adaire-blocks")}
 						value={fontFamily || ""}
 						options={FONT_FAMILY_OPTIONS}
 						onChange={(value) => setAttributes({ fontFamily: value })}
-						help={__("Applies to all text in this block.", "pricing-table-block")}
+						help={__("Applies to all text in this block.", "adaire-blocks")}
 					/>
 
 					<DeviceSwitcher
 						deviceType={deviceType}
 						setDeviceType={setDeviceType}
-						label={__("Device Preview", "pricing-table-block")}
+						label={__("Device Preview", "adaire-blocks")}
 						tiers={THREE_TIERS}
 					/>
 
 					<p>
-						<strong>{__("Heading", "pricing-table-block")}</strong>
+						<strong>{__("Heading", "adaire-blocks")}</strong>
 					</p>
 					<RangeControl
-						label={__("Font Size", "pricing-table-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={
 							headingFontSize?.[deviceType]?.value ||
 							(deviceType === "desktop" ? 40 : deviceType === "tablet" ? 32 : 26)
@@ -1105,17 +1105,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						max={96}
 					/>
 					<TypographySubsection
-						label={__("Heading Style", "pricing-table-block")}
+						label={__("Heading Style", "adaire-blocks")}
 						prefix="heading"
 						attributes={attributes}
 						setAttributes={setAttributes}
 					/>
 
 					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Subheading", "pricing-table-block")}</strong>
+						<strong>{__("Subheading", "adaire-blocks")}</strong>
 					</p>
 					<RangeControl
-						label={__("Font Size", "pricing-table-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={
 							subheadingFontSize?.[deviceType]?.value ||
 							(deviceType === "desktop" ? 18 : deviceType === "tablet" ? 16 : 14)
@@ -1127,17 +1127,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						max={48}
 					/>
 					<TypographySubsection
-						label={__("Subheading Style", "pricing-table-block")}
+						label={__("Subheading Style", "adaire-blocks")}
 						prefix="subheading"
 						attributes={attributes}
 						setAttributes={setAttributes}
 					/>
 
 					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Plan Name", "pricing-table-block")}</strong>
+						<strong>{__("Plan Name", "adaire-blocks")}</strong>
 					</p>
 					<RangeControl
-						label={__("Font Size", "pricing-table-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={
 							planNameFontSize?.[deviceType]?.value ||
 							(deviceType === "desktop" ? 20 : deviceType === "tablet" ? 18 : 16)
@@ -1149,17 +1149,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						max={48}
 					/>
 					<TypographySubsection
-						label={__("Plan Name Style", "pricing-table-block")}
+						label={__("Plan Name Style", "adaire-blocks")}
 						prefix="planName"
 						attributes={attributes}
 						setAttributes={setAttributes}
 					/>
 
 					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Plan Tagline", "pricing-table-block")}</strong>
+						<strong>{__("Plan Tagline", "adaire-blocks")}</strong>
 					</p>
 					<RangeControl
-						label={__("Font Size", "pricing-table-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={
 							planTaglineFontSize?.[deviceType]?.value || 14
 						}
@@ -1170,17 +1170,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						max={32}
 					/>
 					<TypographySubsection
-						label={__("Plan Tagline Style", "pricing-table-block")}
+						label={__("Plan Tagline Style", "adaire-blocks")}
 						prefix="planTagline"
 						attributes={attributes}
 						setAttributes={setAttributes}
 					/>
 
 					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Price", "pricing-table-block")}</strong>
+						<strong>{__("Price", "adaire-blocks")}</strong>
 					</p>
 					<RangeControl
-						label={__("Font Size", "pricing-table-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={
 							priceFontSize?.[deviceType]?.value ||
 							(deviceType === "desktop" ? 40 : deviceType === "tablet" ? 32 : 28)
@@ -1192,17 +1192,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						max={80}
 					/>
 					<TypographySubsection
-						label={__("Price Style", "pricing-table-block")}
+						label={__("Price Style", "adaire-blocks")}
 						prefix="price"
 						attributes={attributes}
 						setAttributes={setAttributes}
 					/>
 
 					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Features", "pricing-table-block")}</strong>
+						<strong>{__("Features", "adaire-blocks")}</strong>
 					</p>
 					<RangeControl
-						label={__("Font Size", "pricing-table-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={
 							featureFontSize?.[deviceType]?.value ||
 							(deviceType === "desktop" ? 14 : 13)
@@ -1214,17 +1214,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						max={32}
 					/>
 					<TypographySubsection
-						label={__("Features Style", "pricing-table-block")}
+						label={__("Features Style", "adaire-blocks")}
 						prefix="feature"
 						attributes={attributes}
 						setAttributes={setAttributes}
 					/>
 
 					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Button", "pricing-table-block")}</strong>
+						<strong>{__("Button", "adaire-blocks")}</strong>
 					</p>
 					<RangeControl
-						label={__("Font Size", "pricing-table-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={
 							buttonFontSize?.[deviceType]?.value ||
 							(deviceType === "desktop" ? 15 : 14)
@@ -1236,17 +1236,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						max={32}
 					/>
 					<TypographySubsection
-						label={__("Button Style", "pricing-table-block")}
+						label={__("Button Style", "adaire-blocks")}
 						prefix="button"
 						attributes={attributes}
 						setAttributes={setAttributes}
 					/>
 
 					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Price Suffix", "pricing-table-block")}</strong>
+						<strong>{__("Price Suffix", "adaire-blocks")}</strong>
 					</p>
 					<RangeControl
-						label={__("Font Size", "pricing-table-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={
 							priceSuffixFontSize?.[deviceType]?.value ||
 							(deviceType === "desktop"
@@ -1262,17 +1262,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						max={32}
 					/>
 					<TypographySubsection
-						label={__("Price Suffix Style", "pricing-table-block")}
+						label={__("Price Suffix Style", "adaire-blocks")}
 						prefix="priceSuffix"
 						attributes={attributes}
 						setAttributes={setAttributes}
 					/>
 
 					<p style={{ marginTop: "16px" }}>
-						<strong>{__("Price Prefix", "pricing-table-block")}</strong>
+						<strong>{__("Price Prefix", "adaire-blocks")}</strong>
 					</p>
 					<RangeControl
-						label={__("Font Size", "pricing-table-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={
 							pricePrefixFontSize?.[deviceType]?.value ||
 							(deviceType === "desktop"
@@ -1288,7 +1288,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						max={32}
 					/>
 					<TypographySubsection
-						label={__("Price Prefix Style", "pricing-table-block")}
+						label={__("Price Prefix Style", "adaire-blocks")}
 						prefix="pricePrefix"
 						attributes={attributes}
 						setAttributes={setAttributes}
@@ -1304,14 +1304,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							tagName="h2"
 							value={heading}
 							onChange={(value) => setAttributes({ heading: value })}
-							placeholder={__("Enter headingâ€¦", "pricing-table-block")}
+							placeholder={__("Enter headingâ€¦", "adaire-blocks")}
 							className="adaire-pricing-table__heading"
 						/>
 						<RichText
 							tagName="p"
 							value={subheading}
 							onChange={(value) => setAttributes({ subheading: value })}
-							placeholder={__("Enter subheadingâ€¦", "pricing-table-block")}
+							placeholder={__("Enter subheadingâ€¦", "adaire-blocks")}
 							className="adaire-pricing-table__subheading"
 						/>
 					</div>
@@ -1334,7 +1334,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 												{ name: value },
 											)
 										}
-										placeholder={__("Plan name", "pricing-table-block")}
+										placeholder={__("Plan name", "adaire-blocks")}
 										className="adaire-pricing-table__plan-name"
 										allowedFormats={[]}
 									/>
@@ -1347,7 +1347,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 												{ tagline: value },
 											)
 										}
-										placeholder={__("Tagline", "pricing-table-block")}
+										placeholder={__("Tagline", "adaire-blocks")}
 										className="adaire-pricing-table__plan-tagline"
 										allowedFormats={[]}
 									/>
@@ -1361,21 +1361,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									content={
 										<>
 											<TextControl
-												label={__("Currency Symbol", "pricing-table-block")}
+												label={__("Currency Symbol", "adaire-blocks")}
 												value={card.currency}
 												onChange={(value) =>
 													updateCard(cardIndex, { currency: value })
 												}
 											/>
 											<TextControl
-												label={__("Monthly Price", "pricing-table-block")}
+												label={__("Monthly Price", "adaire-blocks")}
 												value={card.monthlyPrice}
 												onChange={(value) =>
 													updateCard(cardIndex, { monthlyPrice: value })
 												}
 											/>
 											<TextControl
-												label={__("Price Suffix", "pricing-table-block")}
+												label={__("Price Suffix", "adaire-blocks")}
 												value={card.priceSuffix}
 												onChange={(value) =>
 													updateCard(cardIndex, { priceSuffix: value })
@@ -1408,12 +1408,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 												setActiveZone={setActiveZone}
 												content={
 													<TextControl
-														label={__("Feature", "pricing-table-block")}
+														label={__("Feature", "adaire-blocks")}
 														value={feature}
 														onChange={(value) =>
 															updateFeature(cardIndex, featureIndex, value)
 														}
-														placeholder={__("Add feature", "pricing-table-block")}
+														placeholder={__("Add feature", "adaire-blocks")}
 													/>
 												}
 											>
@@ -1432,14 +1432,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 										content={
 											<>
 												<TextControl
-													label={__("Button Label", "pricing-table-block")}
+													label={__("Button Label", "adaire-blocks")}
 													value={card.buttonLabel}
 													onChange={(value) =>
 														updateCard(cardIndex, { buttonLabel: value })
 													}
 												/>
 												<TextControl
-													label={__("Button URL", "pricing-table-block")}
+													label={__("Button URL", "adaire-blocks")}
 													value={card.buttonUrl}
 													onChange={(value) =>
 														updateCard(cardIndex, { buttonUrl: value })

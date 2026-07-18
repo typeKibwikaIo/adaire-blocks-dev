@@ -17,7 +17,7 @@
         "customClassName": true,
         "innerBlocks": true
     },
-    "textdomain": "animation-scroll-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -53,11 +53,19 @@
         },
         "flipAxis": {
             "type": "string",
-            "default": "horizontal"
+            "default": "horizontal",
+            "enum": [
+                "horizontal",
+                "vertical"
+            ]
         },
         "flipDirection": {
             "type": "string",
-            "default": "clockwise"
+            "default": "clockwise",
+            "enum": [
+                "clockwise",
+                "anticlockwise"
+            ]
         },
         "threshold": {
             "type": "number",

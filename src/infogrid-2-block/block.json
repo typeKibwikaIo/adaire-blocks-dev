@@ -20,7 +20,7 @@
             "padding": true
         }
     },
-    "textdomain": "adaire-blocks-dev2",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./editor.css",
     "style": "file:./style-index.css",
@@ -79,7 +79,12 @@
         },
         "overlayType": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "solid",
+                "gradient"
+            ]
         },
         "overlayColor": {
             "type": "string",
@@ -587,15 +592,37 @@
         },
         "backgroundSize": {
             "type": "string",
-            "default": "cover"
+            "default": "cover",
+            "enum": [
+                "cover",
+                "contain",
+                "auto"
+            ]
         },
         "backgroundPosition": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "top left",
+                "top center",
+                "top right",
+                "center left",
+                "center",
+                "center right",
+                "bottom left",
+                "bottom center",
+                "bottom right"
+            ]
         },
         "backgroundRepeat": {
             "type": "string",
-            "default": "no-repeat"
+            "default": "no-repeat",
+            "enum": [
+                "no-repeat",
+                "repeat",
+                "repeat-x",
+                "repeat-y"
+            ]
         }
     }
 }

@@ -58,7 +58,7 @@ These blocks are only available in the Premium version.
 - **Particles Block (Premium)** (`particles-block`)
 - **Project Block (Premium)** (`project-block`)
 - **Industries (Premium)** (`industries-block`)
-- **Modal (Premium)** (`modal-block`)
+- **Popup Modal (Pro)** (`popup-modal-block`)
 - **Testimonial (Premium)** (`testimonial3-block`)
 
 ## Freemium Blocks

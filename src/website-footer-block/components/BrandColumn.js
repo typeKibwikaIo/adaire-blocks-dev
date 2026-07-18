@@ -38,7 +38,7 @@ export default function BrandColumn({ attributes, setAttributes, isSelected }) {
                 className="website-footer-block__brand-name"
                 value={brandName}
                 onChange={(value) => setAttributes({ brandName: value })}
-                placeholder={__('Brand name', 'website-footer-block')}
+                placeholder={__('Brand name', 'adaire-blocks')}
                 withoutInteractiveFormatting
             />
             
@@ -47,7 +47,7 @@ export default function BrandColumn({ attributes, setAttributes, isSelected }) {
                 className="website-footer-block__brand-description"
                 value={description}
                 onChange={(value) => setAttributes({ description: value })}
-                placeholder={__('Description', 'website-footer-block')}
+                placeholder={__('Description', 'adaire-blocks')}
                 allowedFormats={['bold', 'italic', 'link']}
             />
             
@@ -58,7 +58,7 @@ export default function BrandColumn({ attributes, setAttributes, isSelected }) {
                         className={`website-footer-block__cta website-footer-block__cta--${ctaStyle}`}
                         value={ctaText}
                         onChange={(value) => setAttributes({ ctaText: value })}
-                        placeholder={__('Call to action', 'website-footer-block')}
+                        placeholder={__('Call to action', 'adaire-blocks')}
                         href={ctaUrl}
                         style={{
                             backgroundColor: ctaStyle === 'button' ? ctaBackgroundColor : 'transparent',

@@ -23,84 +23,84 @@ import DeviceSwitcher from "../components/DeviceSwitcher";
 import "./editor.scss";
 
 const THREE_TIERS = [
-    { key: "desktop", label: __("Desktop", "content-toggle-block"), icon: desktop },
-    { key: "tablet", label: __("Tablet", "content-toggle-block"), icon: tablet },
-    { key: "mobile", label: __("Mobile", "content-toggle-block"), icon: mobile },
+    { key: "desktop", label: __("Desktop", "adaire-blocks"), icon: desktop },
+    { key: "tablet", label: __("Tablet", "adaire-blocks"), icon: tablet },
+    { key: "mobile", label: __("Mobile", "adaire-blocks"), icon: mobile },
 ];
 
 const CONTAINER_MODES = [
-    { label: __("Full Width", "content-toggle-block"), value: "full" },
-    { label: __("Constrained", "content-toggle-block"), value: "constrained" },
+    { label: __("Full Width", "adaire-blocks"), value: "full" },
+    { label: __("Constrained", "adaire-blocks"), value: "constrained" },
 ];
 
 const PILL_STYLES = [
-    { label: __("Default", "content-toggle-block"), value: "default" },
-    { label: __("Rounded", "content-toggle-block"), value: "rounded" },
-    { label: __("Outlined", "content-toggle-block"), value: "outlined" },
-    { label: __("Filled", "content-toggle-block"), value: "filled" },
+    { label: __("Default", "adaire-blocks"), value: "default" },
+    { label: __("Rounded", "adaire-blocks"), value: "rounded" },
+    { label: __("Outlined", "adaire-blocks"), value: "outlined" },
+    { label: __("Filled", "adaire-blocks"), value: "filled" },
 ];
 
 const TOGGLE_POSITIONS = [
-    { label: __("Top", "content-toggle-block"), value: "top" },
-    { label: __("Bottom", "content-toggle-block"), value: "bottom" },
+    { label: __("Top", "adaire-blocks"), value: "top" },
+    { label: __("Bottom", "adaire-blocks"), value: "bottom" },
 ];
 
 const PILL_ALIGN_OPTIONS = [
-    { label: __("Left", "content-toggle-block"), value: "flex-start" },
-    { label: __("Center", "content-toggle-block"), value: "center" },
-    { label: __("Right", "content-toggle-block"), value: "flex-end" },
+    { label: __("Left", "adaire-blocks"), value: "flex-start" },
+    { label: __("Center", "adaire-blocks"), value: "center" },
+    { label: __("Right", "adaire-blocks"), value: "flex-end" },
 ];
 
 const DEVICE_TYPES = [
-    { key: "desktop", label: __("Desktop", "content-toggle-block") },
-    { key: "tablet", label: __("Tablet", "content-toggle-block") },
-    { key: "mobile", label: __("Mobile", "content-toggle-block") },
+    { key: "desktop", label: __("Desktop", "adaire-blocks") },
+    { key: "tablet", label: __("Tablet", "adaire-blocks") },
+    { key: "mobile", label: __("Mobile", "adaire-blocks") },
 ];
 
 const TEXT_TRANSFORM_OPTIONS = [
-    { label: __("None", "content-toggle-block"), value: "none" },
-    { label: __("Uppercase", "content-toggle-block"), value: "uppercase" },
-    { label: __("Lowercase", "content-toggle-block"), value: "lowercase" },
-    { label: __("Capitalize", "content-toggle-block"), value: "capitalize" },
+    { label: __("None", "adaire-blocks"), value: "none" },
+    { label: __("Uppercase", "adaire-blocks"), value: "uppercase" },
+    { label: __("Lowercase", "adaire-blocks"), value: "lowercase" },
+    { label: __("Capitalize", "adaire-blocks"), value: "capitalize" },
 ];
 
 const FONT_FAMILY_OPTIONS = [
-    { label: __("Default (inherit theme)", "content-toggle-block"), value: "" },
-    { label: __("Arial", "content-toggle-block"), value: "Arial, Helvetica, sans-serif" },
-    { label: __("Helvetica", "content-toggle-block"), value: "Helvetica, Arial, sans-serif" },
-    { label: __("Georgia", "content-toggle-block"), value: "Georgia, serif" },
-    { label: __("Times New Roman", "content-toggle-block"), value: "'Times New Roman', Times, serif" },
-    { label: __("Verdana", "content-toggle-block"), value: "Verdana, Geneva, sans-serif" },
-    { label: __("Trebuchet MS", "content-toggle-block"), value: "'Trebuchet MS', sans-serif" },
-    { label: __("Courier New", "content-toggle-block"), value: "'Courier New', Courier, monospace" },
-    { label: __("System UI", "content-toggle-block"), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+    { label: __("Default (inherit theme)", "adaire-blocks"), value: "" },
+    { label: __("Arial", "adaire-blocks"), value: "Arial, Helvetica, sans-serif" },
+    { label: __("Helvetica", "adaire-blocks"), value: "Helvetica, Arial, sans-serif" },
+    { label: __("Georgia", "adaire-blocks"), value: "Georgia, serif" },
+    { label: __("Times New Roman", "adaire-blocks"), value: "'Times New Roman', Times, serif" },
+    { label: __("Verdana", "adaire-blocks"), value: "Verdana, Geneva, sans-serif" },
+    { label: __("Trebuchet MS", "adaire-blocks"), value: "'Trebuchet MS', sans-serif" },
+    { label: __("Courier New", "adaire-blocks"), value: "'Courier New', Courier, monospace" },
+    { label: __("System UI", "adaire-blocks"), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
 ];
 
 const UNIT_OPTIONS = ["px", "%", "rem", "vw"];
 
 const DEFAULT_COLORS = [
     {
-        name: __("Dark Navy", "content-toggle-block"),
+        name: __("Dark Navy", "adaire-blocks"),
         slug: "dark-navy",
         color: "#0a0e27",
     },
     {
-        name: __("Blue", "content-toggle-block"),
+        name: __("Blue", "adaire-blocks"),
         slug: "blue",
         color: "#3b82f6",
     },
     {
-        name: __("White", "content-toggle-block"),
+        name: __("White", "adaire-blocks"),
         slug: "white",
         color: "#ffffff",
     },
     {
-        name: __("Slate", "content-toggle-block"),
+        name: __("Slate", "adaire-blocks"),
         slug: "slate",
         color: "#94a3b8",
     },
     {
-        name: __("Transparent", "content-toggle-block"),
+        name: __("Transparent", "adaire-blocks"),
         slug: "transparent",
         color: "transparent",
     },
@@ -160,7 +160,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
     const addToggle = () => {
         const newToggle = {
             id: `toggle-${Date.now()}`,
-            label: __("New Toggle", "content-toggle-block"),
+            label: __("New Toggle", "adaire-blocks"),
         };
         setAttributes({ toggles: [...(toggles || []), newToggle] });
     };
@@ -384,7 +384,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                     setActiveZone={setActiveZone}
                     content={
                         <TextControl
-                            label={__("Label", "content-toggle-block")}
+                            label={__("Label", "adaire-blocks")}
                             value={toggle.label}
                             onChange={(value) => {
                                 const newToggles = [...toggles];
@@ -438,8 +438,8 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody section="layout" title={__("Container Settings", "content-toggle-block")} initialOpen={true}>
-                    <p>{__("Container Width", "content-toggle-block")}</p>
+                <PanelBody section="layout" title={__("Container Settings", "adaire-blocks")} initialOpen={true}>
+                    <p>{__("Container Width", "adaire-blocks")}</p>
                     <ButtonGroup>
                         {CONTAINER_MODES.map((mode) => (
                             <Button
@@ -486,7 +486,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
 
                                         return (
                                             <RangeControl
-                                                label={__("Max Width", "content-toggle-block")}
+                                                label={__("Max Width", "adaire-blocks")}
                                                 value={value}
                                                 onChange={(rangeValue) =>
                                                     updateContainerDimension(
@@ -523,28 +523,28 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                     </div>
 
                     <SelectControl
-                        label={__("Toggle Position", "content-toggle-block")}
+                        label={__("Toggle Position", "adaire-blocks")}
                         value={togglePosition}
                         options={TOGGLE_POSITIONS}
                         onChange={(value) => setAttributes({ togglePosition: value })}
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__("Wrapper Style", "content-toggle-block")} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__("Wrapper Style", "adaire-blocks")} initialOpen={false}>
                     <PanelColorSettings
-                        title={__("Wrapper Background", "content-toggle-block")}
+                        title={__("Wrapper Background", "adaire-blocks")}
                         initialOpen={false}
                         colorSettings={[
                             {
                                 value: wrapperBackgroundColor,
                                 onChange: (value) => setAttributes({ wrapperBackgroundColor: value }),
-                                label: __("Background", "content-toggle-block"),
+                                label: __("Background", "adaire-blocks"),
                                 colors: DEFAULT_COLORS,
                             },
                         ]}
                     />
 
-                    <BaseControl label={__("Wrapper Padding", "content-toggle-block")}>
+                    <BaseControl label={__("Wrapper Padding", "adaire-blocks")}>
                         <DeviceSwitcher
                             deviceType={wrapperPaddingDeviceType}
                             setDeviceType={setWrapperPaddingDeviceType}
@@ -553,7 +553,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                         />
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                             <RangeControl
-                                label={__("Top", "content-toggle-block")}
+                                label={__("Top", "adaire-blocks")}
                                 value={wrapperPadding?.[wrapperPaddingDeviceType]?.top ?? wrapperPadding?.desktop?.top ?? wrapperPadding?.top ?? 0}
                                 onChange={(value) =>
                                     updateWrapperPadding(wrapperPaddingDeviceType, "top", value)
@@ -562,7 +562,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 max={120}
                             />
                             <RangeControl
-                                label={__("Right", "content-toggle-block")}
+                                label={__("Right", "adaire-blocks")}
                                 value={wrapperPadding?.[wrapperPaddingDeviceType]?.right ?? wrapperPadding?.desktop?.right ?? wrapperPadding?.right ?? 0}
                                 onChange={(value) =>
                                     updateWrapperPadding(wrapperPaddingDeviceType, "right", value)
@@ -571,7 +571,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 max={120}
                             />
                             <RangeControl
-                                label={__("Bottom", "content-toggle-block")}
+                                label={__("Bottom", "adaire-blocks")}
                                 value={wrapperPadding?.[wrapperPaddingDeviceType]?.bottom ?? wrapperPadding?.desktop?.bottom ?? wrapperPadding?.bottom ?? 0}
                                 onChange={(value) =>
                                     updateWrapperPadding(wrapperPaddingDeviceType, "bottom", value)
@@ -580,7 +580,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 max={120}
                             />
                             <RangeControl
-                                label={__("Left", "content-toggle-block")}
+                                label={__("Left", "adaire-blocks")}
                                 value={wrapperPadding?.[wrapperPaddingDeviceType]?.left ?? wrapperPadding?.desktop?.left ?? wrapperPadding?.left ?? 0}
                                 onChange={(value) =>
                                     updateWrapperPadding(wrapperPaddingDeviceType, "left", value)
@@ -594,7 +594,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
 
                 <PanelBody
                     section="content"
-                    title={__("Toggle Management", "content-toggle-block")}
+                    title={__("Toggle Management", "adaire-blocks")}
                     initialOpen={false}
                 >
                     <p className="adaire-content-toggle__panel-help">
@@ -617,7 +617,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 }}
                             >
                                 <strong>
-                                    {sprintf(__("Toggle %d", "content-toggle-block"), index + 1)}
+                                    {sprintf(__("Toggle %d", "adaire-blocks"), index + 1)}
                                 </strong>
                                 <div style={{ display: "flex", gap: "4px" }}>
                                     <Button
@@ -625,14 +625,14 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                         onClick={() => moveToggleUp(index)}
                                         isSmall
                                         disabled={index === 0}
-                                        label={__("Move Up", "content-toggle-block")}
+                                        label={__("Move Up", "adaire-blocks")}
                                     />
                                     <Button
                                         icon={arrowDown}
                                         onClick={() => moveToggleDown(index)}
                                         isSmall
                                         disabled={index === toggles.length - 1}
-                                        label={__("Move Down", "content-toggle-block")}
+                                        label={__("Move Down", "adaire-blocks")}
                                     />
                                     {toggles.length > 1 && (
                                         <Button
@@ -640,13 +640,13 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                             onClick={() => removeToggle(index)}
                                             isSmall
                                             isDestructive
-                                            label={__("Remove", "content-toggle-block")}
+                                            label={__("Remove", "adaire-blocks")}
                                         />
                                     )}
                                 </div>
                             </div>
                             <TextControl
-                                label={__("Label", "content-toggle-block")}
+                                label={__("Label", "adaire-blocks")}
                                 value={toggle.label}
                                 onChange={(value) => {
                                     const newToggles = [...toggles];
@@ -662,24 +662,24 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                         variant="secondary"
                         style={{ marginTop: "12px" }}
                     >
-                        {__("Add Toggle", "content-toggle-block")}
+                        {__("Add Toggle", "adaire-blocks")}
                     </Button>
                 </PanelBody>
 
                 <PanelBody
                     section="layout"
-                    title={__("Pill Layout", "content-toggle-block")}
+                    title={__("Pill Layout", "adaire-blocks")}
                     initialOpen={false}
                 >
                     <SelectControl
-                        label={__("Pill Alignment", "content-toggle-block")}
+                        label={__("Pill Alignment", "adaire-blocks")}
                         value={pillAlign}
                         options={PILL_ALIGN_OPTIONS}
                         onChange={(value) => setAttributes({ pillAlign: value })}
                     />
 
                     <SelectControl
-                        label={__("Pill Style", "content-toggle-block")}
+                        label={__("Pill Style", "adaire-blocks")}
                         value={pillStyle}
                         options={PILL_STYLES}
                         onChange={(value) => setAttributes({ pillStyle: value })}
@@ -689,11 +689,11 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                 <PanelBody
                     section="style"
                     priority="medium"
-                    title={__("Pill Spacing & Radius", "content-toggle-block")}
+                    title={__("Pill Spacing & Radius", "adaire-blocks")}
                     initialOpen={false}
                 >
                     <RangeControl
-                        label={__("Border Radius", "content-toggle-block")}
+                        label={__("Border Radius", "adaire-blocks")}
                         value={pillBorderRadius}
                         onChange={(value) => setAttributes({ pillBorderRadius: value })}
                         min={0}
@@ -701,17 +701,17 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                     />
 
                     <RangeControl
-                        label={__("Gap Between Pills", "content-toggle-block")}
+                        label={__("Gap Between Pills", "adaire-blocks")}
                         value={pillGap}
                         onChange={(value) => setAttributes({ pillGap: value })}
                         min={0}
                         max={48}
                     />
 
-                    <BaseControl label={__("Padding", "content-toggle-block")}>
+                    <BaseControl label={__("Padding", "adaire-blocks")}>
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                             <RangeControl
-                                label={__("Top", "content-toggle-block")}
+                                label={__("Top", "adaire-blocks")}
                                 value={pillPadding?.top ?? 12}
                                 onChange={(value) =>
                                     setAttributes({
@@ -722,7 +722,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 max={32}
                             />
                             <RangeControl
-                                label={__("Right", "content-toggle-block")}
+                                label={__("Right", "adaire-blocks")}
                                 value={pillPadding?.right ?? 24}
                                 onChange={(value) =>
                                     setAttributes({
@@ -733,7 +733,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 max={48}
                             />
                             <RangeControl
-                                label={__("Bottom", "content-toggle-block")}
+                                label={__("Bottom", "adaire-blocks")}
                                 value={pillPadding?.bottom ?? 12}
                                 onChange={(value) =>
                                     setAttributes({
@@ -744,7 +744,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 max={32}
                             />
                             <RangeControl
-                                label={__("Left", "content-toggle-block")}
+                                label={__("Left", "adaire-blocks")}
                                 value={pillPadding?.left ?? 24}
                                 onChange={(value) =>
                                     setAttributes({
@@ -761,11 +761,11 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                 <PanelBody
                     section="style"
                     priority="high"
-                    title={__("Pill Typography", "content-toggle-block")}
+                    title={__("Pill Typography", "adaire-blocks")}
                     initialOpen={false}
                 >
                     <RangeControl
-                        label={__("Font Size", "content-toggle-block")}
+                        label={__("Font Size", "adaire-blocks")}
                         value={pillFontSize}
                         onChange={(value) => setAttributes({ pillFontSize: value })}
                         min={12}
@@ -773,7 +773,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                     />
 
                     <SelectControl
-                        label={__("Font Weight", "content-toggle-block")}
+                        label={__("Font Weight", "adaire-blocks")}
                         value={pillFontWeight}
                         options={[
                             { label: "400", value: "400" },
@@ -785,7 +785,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                     />
 
                     <SelectControl
-                        label={__("Active Font Weight", "content-toggle-block")}
+                        label={__("Active Font Weight", "adaire-blocks")}
                         value={pillActiveFontWeight}
                         options={[
                             { label: "400", value: "400" },
@@ -797,73 +797,73 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                     />
 
                     <UnitControl
-                        label={__("Line Height", "content-toggle-block")}
+                        label={__("Line Height", "adaire-blocks")}
                         value={pillLineHeight}
                         onChange={(value) => setAttributes({ pillLineHeight: value })}
                     />
 
                     <UnitControl
-                        label={__("Letter Spacing", "content-toggle-block")}
+                        label={__("Letter Spacing", "adaire-blocks")}
                         value={pillLetterSpacing}
                         onChange={(value) => setAttributes({ pillLetterSpacing: value })}
                     />
 
                     <SelectControl
-                        label={__("Text Transform", "content-toggle-block")}
+                        label={__("Text Transform", "adaire-blocks")}
                         value={pillTextTransform}
                         options={TEXT_TRANSFORM_OPTIONS}
                         onChange={(value) => setAttributes({ pillTextTransform: value })}
                     />
 
                     <SelectControl
-                        label={__("Font Family", "content-toggle-block")}
+                        label={__("Font Family", "adaire-blocks")}
                         value={fontFamily || ""}
                         options={FONT_FAMILY_OPTIONS}
                         onChange={(value) => setAttributes({ fontFamily: value })}
-                        help={__("Applies to the toggle pill labels.", "content-toggle-block")}
+                        help={__("Applies to the toggle pill labels.", "adaire-blocks")}
                     />
                 </PanelBody>
 
                 <PanelColorSettings
                     section="style"
                     priority="high"
-                    title={__("Pill Colors", "content-toggle-block")}
+                    title={__("Pill Colors", "adaire-blocks")}
                     initialOpen={false}
                     colorSettings={[
                         {
                             value: pillBackgroundColor,
                             onChange: (value) => setAttributes({ pillBackgroundColor: value }),
-                            label: __("Background", "content-toggle-block"),
+                            label: __("Background", "adaire-blocks"),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: pillActiveBackgroundColor,
                             onChange: (value) => setAttributes({ pillActiveBackgroundColor: value }),
-                            label: __("Active Background", "content-toggle-block"),
+                            label: __("Active Background", "adaire-blocks"),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: pillTextColor,
                             onChange: (value) => setAttributes({ pillTextColor: value }),
-                            label: __("Text Color", "content-toggle-block"),
+                            label: __("Text Color", "adaire-blocks"),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: pillActiveTextColor,
                             onChange: (value) => setAttributes({ pillActiveTextColor: value }),
-                            label: __("Active Text Color", "content-toggle-block"),
+                            label: __("Active Text Color", "adaire-blocks"),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: pillBorderColor,
                             onChange: (value) => setAttributes({ pillBorderColor: value }),
-                            label: __("Border Color", "content-toggle-block"),
+                            label: __("Border Color", "adaire-blocks"),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: pillActiveBorderColor,
                             onChange: (value) => setAttributes({ pillActiveBorderColor: value }),
-                            label: __("Active Border Color", "content-toggle-block"),
+                            label: __("Active Border Color", "adaire-blocks"),
                             colors: DEFAULT_COLORS,
                         },
                     ]}
@@ -871,10 +871,10 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
 
                 <PanelBody
                     section="layout"
-                    title={__("Content Width", "content-toggle-block")}
+                    title={__("Content Width", "adaire-blocks")}
                     initialOpen={false}
                 >
-                    <BaseControl label={__("Content Width", "content-toggle-block")}>
+                    <BaseControl label={__("Content Width", "adaire-blocks")}>
                         <DeviceSwitcher
                             deviceType={contentWidthDeviceType}
                             setDeviceType={setContentWidthDeviceType}
@@ -895,7 +895,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 return (
                                     <>
                                         <RangeControl
-                                            label={__("Width", "content-toggle-block")}
+                                            label={__("Width", "adaire-blocks")}
                                             value={value}
                                             onChange={(rangeValue) =>
                                                 updateContentWidth(
@@ -937,34 +937,34 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                 <PanelBody
                     section="style"
                     priority="medium"
-                    title={__("Content Style", "content-toggle-block")}
+                    title={__("Content Style", "adaire-blocks")}
                     initialOpen={false}
                 >
                     <PanelColorSettings
-                        title={__("Background Color", "content-toggle-block")}
+                        title={__("Background Color", "adaire-blocks")}
                         initialOpen={true}
                         colorSettings={[
                             {
                                 value: contentBackgroundColor,
                                 onChange: (value) => setAttributes({ contentBackgroundColor: value }),
-                                label: __("Background", "content-toggle-block"),
+                                label: __("Background", "adaire-blocks"),
                                 colors: DEFAULT_COLORS,
                             },
                         ]}
                     />
 
                     <RangeControl
-                        label={__("Border Radius", "content-toggle-block")}
+                        label={__("Border Radius", "adaire-blocks")}
                         value={contentBorderRadius}
                         onChange={(value) => setAttributes({ contentBorderRadius: value })}
                         min={0}
                         max={32}
                     />
 
-                    <BaseControl label={__("Padding", "content-toggle-block")}>
+                    <BaseControl label={__("Padding", "adaire-blocks")}>
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                             <RangeControl
-                                label={__("Top", "content-toggle-block")}
+                                label={__("Top", "adaire-blocks")}
                                 value={contentPadding?.top ?? 40}
                                 onChange={(value) =>
                                     setAttributes({
@@ -975,7 +975,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 max={80}
                             />
                             <RangeControl
-                                label={__("Right", "content-toggle-block")}
+                                label={__("Right", "adaire-blocks")}
                                 value={contentPadding?.right ?? 40}
                                 onChange={(value) =>
                                     setAttributes({
@@ -986,7 +986,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 max={80}
                             />
                             <RangeControl
-                                label={__("Bottom", "content-toggle-block")}
+                                label={__("Bottom", "adaire-blocks")}
                                 value={contentPadding?.bottom ?? 40}
                                 onChange={(value) =>
                                     setAttributes({
@@ -997,7 +997,7 @@ const ContentToggleEdit = ({ attributes, setAttributes, clientId }) => {
                                 max={80}
                             />
                             <RangeControl
-                                label={__("Left", "content-toggle-block")}
+                                label={__("Left", "adaire-blocks")}
                                 value={contentPadding?.left ?? 40}
                                 onChange={(value) =>
                                     setAttributes({

@@ -15,7 +15,7 @@
         "customClassName": true,
         "reusable": true
     },
-    "textdomain": "video-hero-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -99,11 +99,28 @@
         },
         "titleFontSizeUnit": {
             "type": "string",
-            "default": "px"
+            "default": "px",
+            "enum": [
+                "px",
+                "em",
+                "rem",
+                "%",
+                "vw",
+                "vh"
+            ]
         },
         "titleFontWeight": {
             "type": "string",
-            "default": "700"
+            "default": "700",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800",
+                "900"
+            ]
         },
         "descriptionFontSize": {
             "type": "object",
@@ -116,7 +133,15 @@
         },
         "descriptionFontSizeUnit": {
             "type": "string",
-            "default": "px"
+            "default": "px",
+            "enum": [
+                "px",
+                "em",
+                "rem",
+                "%",
+                "vw",
+                "vh"
+            ]
         },
         "overlayOpacity": {
             "type": "number",
@@ -201,7 +226,11 @@
         },
         "overlayType": {
             "type": "string",
-            "default": "solid"
+            "default": "solid",
+            "enum": [
+                "solid",
+                "gradient"
+            ]
         },
         "overlayGradientStart": {
             "type": "string",
@@ -213,7 +242,17 @@
         },
         "overlayGradientDirection": {
             "type": "string",
-            "default": "to bottom"
+            "default": "to bottom",
+            "enum": [
+                "to bottom",
+                "to top",
+                "to right",
+                "to left",
+                "to bottom right",
+                "to bottom left",
+                "to top right",
+                "to top left"
+            ]
         },
         "overlayGradientStartOpacity": {
             "type": "number",

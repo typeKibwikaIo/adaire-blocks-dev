@@ -17,7 +17,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "icon-box-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -85,7 +85,12 @@
         },
         "alignment": {
             "type": "string",
-            "default": "left"
+            "default": "left",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "linkUrl": {
             "type": "string",
@@ -93,7 +98,11 @@
         },
         "linkTarget": {
             "type": "string",
-            "default": "_self"
+            "default": "_self",
+            "enum": [
+                "_self",
+                "_blank"
+            ]
         },
         "marginTop": {
             "type": "object",

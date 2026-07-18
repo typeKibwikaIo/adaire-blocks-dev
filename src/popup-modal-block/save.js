@@ -1,4 +1,4 @@
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks, RichText } from '@wordpress/block-editor';
 
 const formatSize = (size, fallbackValue, fallbackUnit) => {
     if (!size) return `${fallbackValue}${fallbackUnit}`;
@@ -34,6 +34,15 @@ export default function save({ attributes }) {
         backdropBlurEnabled, backdropBlurAmount,
         autoOpen, autoOpenDelay,
         overlayClickClose,
+        contentPadding,
+        triggerText, triggerType, floatingPosition, floatingOffsetX, floatingOffsetY,
+        triggerTextColor, triggerBackgroundColor, triggerBorderRadius,
+        triggerPaddingX, triggerPaddingY, triggerFontSize, triggerFontWeight,
+        autoOpenScrollPercent, autoOpenInactivitySeconds, autoOpenEventName, autoOpenElementSelector,
+        showFrequency,
+        countdownEnabled, countdownMinutes,
+        glassmorphismEnabled,
+        overlayGradientEnabled, overlayGradientColor2,
     } = attributes;
 
     const defaults = {
@@ -56,8 +65,21 @@ export default function save({ attributes }) {
     const normalizedWidth  = normalizeDimension(modalWidth,  defaults.width);
     const normalizedHeight = normalizeDimension(modalHeight, defaults.height);
 
+    const pad = {
+        top:    contentPadding?.top    ?? 24,
+        right:  contentPadding?.right  ?? 24,
+        bottom: contentPadding?.bottom ?? 24,
+        left:   contentPadding?.left   ?? 24,
+    };
+
+    const isFloating = triggerType === 'floating';
+
     const blockProps = useBlockProps.save({
-        className: 'adaire-modal-block',
+        className: [
+            'adaire-popup-modal-block',
+            glassmorphismEnabled ? 'has-glassmorphism' : '',
+            overlayGradientEnabled ? 'has-overlay-gradient' : '',
+        ].filter(Boolean).join(' '),
         style: {
             '--modal-width-mobile':        formatSize(normalizedWidth.mobile,      90,  'vw'),
             '--modal-width-tablet':        formatSize(normalizedWidth.tablet,      90,  'vw'),
@@ -82,6 +104,18 @@ export default function save({ attributes }) {
             '--modal-animation-easing':   animationEasing     || 'ease-out',
             '--modal-backdrop-blur':      backdropBlurEnabled  ? `${backdropBlurAmount ?? 8}px` : '0px',
             '--modal-box-shadow':         boxShadowEnabled !== false ? '0 32px 80px rgba(15, 23, 42, 0.35)' : 'none',
+            '--content-padding-top':    `${pad.top}px`,
+            '--content-padding-right':  `${pad.right}px`,
+            '--content-padding-bottom': `${pad.bottom}px`,
+            '--content-padding-left':  `${pad.left}px`,
+            '--trigger-color':          triggerTextColor       || '#ffffff',
+            '--trigger-bg':             triggerBackgroundColor || '#111827',
+            '--trigger-radius':        `${triggerBorderRadius  ?? 8}px`,
+            '--trigger-padding-x':     `${triggerPaddingX      ?? 20}px`,
+            '--trigger-padding-y':     `${triggerPaddingY      ?? 12}px`,
+            '--trigger-font-size':     `${triggerFontSize      ?? 16}px`,
+            '--trigger-font-weight':    triggerFontWeight      || '600',
+            '--modal-overlay-gradient-2': overlayGradientColor2 || '#7c3aed',
         },
         'data-modal-block':     true,
         'data-modal-open':      'false',
@@ -91,14 +125,40 @@ export default function save({ attributes }) {
         'data-close-shape':     closeButtonShape    || 'circle',
         'data-auto-open':       autoOpen            || 'none',
         'data-auto-open-delay': String(autoOpenDelay ?? 3),
+        'data-scroll-percent':  String(autoOpenScrollPercent ?? 50),
+        'data-inactivity-seconds': String(autoOpenInactivitySeconds ?? 30),
+        'data-event-name':      autoOpenEventName   || 'adaire-modal-open',
+        'data-element-selector': autoOpenElementSelector || '',
+        'data-show-frequency':  showFrequency       || 'always',
         'data-overlay-close':   overlayClickClose !== false ? 'true' : 'false',
         'data-show-close':      showCloseButton   !== false ? 'true' : 'false',
+        'data-countdown-enabled': countdownEnabled ? 'true' : 'false',
+        'data-countdown-minutes': String(countdownMinutes ?? 15),
         id: blockId || undefined,
     });
 
     return (
         <div {...blockProps}>
-            <InnerBlocks.Content />
+            <button
+                type="button"
+                className="adaire-popup-modal-block__trigger"
+                data-modal-role="trigger"
+                data-trigger-type={triggerType || 'button'}
+                {...(isFloating && { 'data-floating-position': floatingPosition || 'bottom-right' })}
+                aria-haspopup="dialog"
+                style={isFloating ? {
+                    '--floating-offset-x': `${floatingOffsetX ?? 24}px`,
+                    '--floating-offset-y': `${floatingOffsetY ?? 24}px`,
+                } : undefined}
+            >
+                <RichText.Content tagName="span" value={triggerText} />
+            </button>
+            {countdownEnabled && (
+                <div className="adaire-popup-modal-block__countdown" data-countdown-display></div>
+            )}
+            <div className="adaire-popup-modal-block__body" data-modal-role="content">
+                <InnerBlocks.Content />
+            </div>
         </div>
     );
 }

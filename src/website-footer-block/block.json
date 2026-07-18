@@ -15,7 +15,7 @@
         "customClassName": true,
         "reusable": true
     },
-    "textdomain": "website-footer-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "render": "file:./render.php",
     "style": "file:./style-index.css",
@@ -35,7 +35,12 @@
         },
         "backgroundType": {
             "type": "string",
-            "default": "solid"
+            "default": "solid",
+            "enum": [
+                "solid",
+                "gradient",
+                "image"
+            ]
         },
         "textColor": {
             "type": "string",

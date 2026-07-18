@@ -24,42 +24,42 @@ import "./editor.scss";
 
 const DEFAULT_COLORS = [
 	{
-		name: __("Adaire Red", "industries-block"),
+		name: __("Adaire Red", "adaire-blocks"),
 		slug: "adaire-red",
 		color: "#ff4e4e",
 	},
 	{
-		name: __("Midnight", "industries-block"),
+		name: __("Midnight", "adaire-blocks"),
 		slug: "adaire-midnight",
 		color: "#0f172a",
 	},
-	{ name: __("Ink", "industries-block"), slug: "adaire-ink", color: "#111111" },
+	{ name: __("Ink", "adaire-blocks"), slug: "adaire-ink", color: "#111111" },
 	{
-		name: __("Ocean", "industries-block"),
+		name: __("Ocean", "adaire-blocks"),
 		slug: "adaire-ocean",
 		color: "#2563eb",
 	},
 	{
-		name: __("White", "industries-block"),
+		name: __("White", "adaire-blocks"),
 		slug: "adaire-white",
 		color: "#ffffff",
 	},
 	{
-		name: __("Slate", "industries-block"),
+		name: __("Slate", "adaire-blocks"),
 		slug: "adaire-slate",
 		color: "#7e7c8a",
 	},
 ];
 
 const CONTAINER_MODES = [
-	{ label: __("Full Width", "industries-block"), value: "full" },
-	{ label: __("Constrained", "industries-block"), value: "constrained" },
+	{ label: __("Full Width", "adaire-blocks"), value: "full" },
+	{ label: __("Constrained", "adaire-blocks"), value: "constrained" },
 ];
 
 const DEVICE_TYPES = [
-	{ key: "desktop", label: __("Desktop", "industries-block") },
-	{ key: "tablet", label: __("Tablet", "industries-block") },
-	{ key: "mobile", label: __("Mobile", "industries-block") },
+	{ key: "desktop", label: __("Desktop", "adaire-blocks") },
+	{ key: "tablet", label: __("Tablet", "adaire-blocks") },
+	{ key: "mobile", label: __("Mobile", "adaire-blocks") },
 ];
 
 // Custom icons for small laptop and big desktop
@@ -118,11 +118,11 @@ const bigDesktopIcon = createElement('svg', {
 );
 
 const BREAKPOINTS = [
-	{ name: 'mobile', icon: mobile, label: __("Mobile", "industries-block") },
-	{ name: 'tablet', icon: tablet, label: __("Tablet", "industries-block") },
-	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __("Small Laptop", "industries-block") },
-	{ name: 'desktop', icon: desktop, label: __("Desktop", "industries-block") },
-	{ name: 'bigDesktop', icon: bigDesktopIcon, label: __("Big Desktop", "industries-block") }
+	{ name: 'mobile', icon: mobile, label: __("Mobile", "adaire-blocks") },
+	{ name: 'tablet', icon: tablet, label: __("Tablet", "adaire-blocks") },
+	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __("Small Laptop", "adaire-blocks") },
+	{ name: 'desktop', icon: desktop, label: __("Desktop", "adaire-blocks") },
+	{ name: 'bigDesktop', icon: bigDesktopIcon, label: __("Big Desktop", "adaire-blocks") }
 ];
 
 const UNIT_OPTIONS = ["px", "%", "rem", "vw"];
@@ -191,7 +191,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 		const newIndustry = {
 			id: `industry-${Date.now()}`,
 			icon: "bi bi-star",
-			label: __("New Industry", "industries-block"),
+			label: __("New Industry", "adaire-blocks"),
 			linkUrl: "",
 			openInNewTab: false,
 		};
@@ -444,7 +444,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 							nextItems[index] = { ...nextItems[index], label: value };
 							setAttributes({ industries: nextItems });
 						}}
-						placeholder={__("Industry nameâ€¦", "industries-block")}
+						placeholder={__("Industry nameâ€¦", "adaire-blocks")}
 						allowedFormats={[]}
 					/>
 					<i
@@ -477,8 +477,8 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={__("Layout", "industries-block")} initialOpen={true}>
-					<p>{__("Container Width", "industries-block")}</p>
+				<PanelBody title={__("Layout", "adaire-blocks")} initialOpen={true}>
+					<p>{__("Container Width", "adaire-blocks")}</p>
 					<ButtonGroup>
 						{CONTAINER_MODES.map((mode) => (
 							<Button
@@ -498,22 +498,22 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 						}}
 					>
 						<ToggleControl
-							label={__("Show Title", "industries-block")}
+							label={__("Show Title", "adaire-blocks")}
 							checked={showTitle !== false}
 							onChange={(value) => setAttributes({ showTitle: value })}
 							help={
 								showTitle !== false
-									? __("Title is visible", "industries-block")
-									: __("Title is hidden (space preserved)", "industries-block")
+									? __("Title is visible", "adaire-blocks")
+									: __("Title is hidden (space preserved)", "adaire-blocks")
 							}
 						/>
 						<ToggleControl
-							label={__("Show Intro Text", "industries-block")}
+							label={__("Show Intro Text", "adaire-blocks")}
 							checked={showIntroText !== false}
 							onChange={(value) => setAttributes({ showIntroText: value })}
 							help={
 								showIntroText !== false
-									? __("Intro text is visible", "industries-block")
+									? __("Intro text is visible", "adaire-blocks")
 									: __(
 											"Intro text is hidden (space preserved)",
 											"industries-block",
@@ -521,13 +521,13 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 							}
 						/>
 						<ToggleControl
-							label={__("Show Image", "industries-block")}
+							label={__("Show Image", "adaire-blocks")}
 							checked={showImage !== false}
 							onChange={(value) => setAttributes({ showImage: value })}
 							help={
 								showImage !== false
-									? __("Image is visible", "industries-block")
-									: __("Image is hidden (space preserved)", "industries-block")
+									? __("Image is visible", "adaire-blocks")
+									: __("Image is hidden (space preserved)", "adaire-blocks")
 							}
 						/>
 					</div>
@@ -539,7 +539,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 						}}
 					>
 						<ToggleControl
-							label={__("Hide First Two Industries", "industries-block")}
+							label={__("Hide First Two Industries", "adaire-blocks")}
 							checked={hideFirstTwoIndustries === true}
 							onChange={(value) =>
 								setAttributes({ hideFirstTwoIndustries: value })
@@ -591,7 +591,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 
 										return (
 											<RangeControl
-												label={__("Max Width", "industries-block")}
+												label={__("Max Width", "adaire-blocks")}
 												value={value}
 												onChange={(rangeValue) =>
 													updateContainerDimension(
@@ -629,11 +629,11 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 				</PanelBody>
 
 				<PanelBody
-					title={__("Container Padding", "industries-block")}
+					title={__("Container Padding", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Device", "industries-block")}
+						{__("Device", "adaire-blocks")}
 					</p>
 					<ButtonGroup style={{ marginBottom: "12px" }}>
 						{BREAKPOINTS.map((breakpoint) => (
@@ -647,7 +647,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 						))}
 					</ButtonGroup>
 					<BoxControl
-						label={__("Padding", "industries-block")}
+						label={__("Padding", "adaire-blocks")}
 						values={{
 							top: `${containerPaddingTop?.[deviceType] ?? (deviceType === "desktop" ? 80 : 80)}px`,
 							right: `${containerPaddingRight?.[deviceType] ?? 0}px`,
@@ -677,7 +677,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 					/>
 				</PanelBody>
 
-				<PanelBody title={__("Image", "industries-block")} initialOpen={false}>
+				<PanelBody title={__("Image", "adaire-blocks")} initialOpen={false}>
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={(media) =>
@@ -694,8 +694,8 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 							render={({ open }) => (
 								<Button variant="primary" onClick={open}>
 									{featureImage?.url
-										? __("Change Image", "industries-block")
-										: __("Select Image", "industries-block")}
+										? __("Change Image", "adaire-blocks")
+										: __("Select Image", "adaire-blocks")}
 								</Button>
 							)}
 						/>
@@ -710,14 +710,14 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 								})
 							}
 						>
-							{__("Remove Image", "industries-block")}
+							{__("Remove Image", "adaire-blocks")}
 						</Button>
 					)}
 
 					{featureImage?.url && (
 						<>
 							<div style={{ marginTop: "24px" }}>
-								<strong>{__("Image Width", "industries-block")}</strong>
+								<strong>{__("Image Width", "adaire-blocks")}</strong>
 								<div className="adaire-industries__dimension-controls" style={{ marginTop: "8px" }}>
 									{DEVICE_TYPES.map((device) => (
 										<div
@@ -735,7 +735,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 													return (
 														<>
 															<RangeControl
-																label={__("Width", "industries-block")}
+																label={__("Width", "adaire-blocks")}
 																value={value === "auto" ? 100 : value}
 																onChange={(rangeValue) =>
 																	updateFontSize("imageWidth", device.key, "value", rangeValue)
@@ -746,7 +746,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 																disabled={value === "auto"}
 															/>
 															<ToggleControl
-																label={__("Auto", "industries-block")}
+																label={__("Auto", "adaire-blocks")}
 																checked={value === "auto"}
 																onChange={(checked) =>
 																	updateFontSize("imageWidth", device.key, "value", checked ? "auto" : 100)
@@ -778,7 +778,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 							</div>
 
 							<div style={{ marginTop: "24px" }}>
-								<strong>{__("Image Height", "industries-block")}</strong>
+								<strong>{__("Image Height", "adaire-blocks")}</strong>
 								<div className="adaire-industries__dimension-controls" style={{ marginTop: "8px" }}>
 									{DEVICE_TYPES.map((device) => (
 										<div
@@ -796,7 +796,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 													return (
 														<>
 															<RangeControl
-																label={__("Height", "industries-block")}
+																label={__("Height", "adaire-blocks")}
 																value={value === "auto" ? 300 : value}
 																onChange={(rangeValue) =>
 																	updateFontSize("imageHeight", device.key, "value", rangeValue)
@@ -807,7 +807,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 																disabled={value === "auto"}
 															/>
 															<ToggleControl
-																label={__("Auto", "industries-block")}
+																label={__("Auto", "adaire-blocks")}
 																checked={value === "auto"}
 																onChange={(checked) =>
 																	updateFontSize("imageHeight", device.key, "value", checked ? "auto" : 300)
@@ -841,11 +841,11 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 					)}
 				</PanelBody>
 
-				<PanelBody title={__("Copy", "industries-block")} initialOpen={false}>
+				<PanelBody title={__("Copy", "adaire-blocks")} initialOpen={false}>
 					{headerLines?.map((line, index) => (
 						<TextControl
 							key={line.id || index}
-							label={sprintf(__("Headline %d", "industries-block"), index + 1)}
+							label={sprintf(__("Headline %d", "adaire-blocks"), index + 1)}
 							value={line.text}
 							onChange={(value) => {
 								const nextLines = [...headerLines];
@@ -855,19 +855,19 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 						/>
 					))}
 					<TextControl
-						label={__("Intro Text", "industries-block")}
+						label={__("Intro Text", "adaire-blocks")}
 						value={descriptionText}
 						onChange={(value) => setAttributes({ descriptionText: value })}
 					/>
 					<TextControl
-						label={__("Description Text", "industries-block")}
+						label={__("Description Text", "adaire-blocks")}
 						value={descriptionText}
 						onChange={(value) => setAttributes({ descriptionText: value })}
 					/>
 				</PanelBody>
 
 				<PanelBody
-					title={__("Industries", "industries-block")}
+					title={__("Industries", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p className="adaire-industries__panel-help">
@@ -890,7 +890,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 								}}
 							>
 								<strong>
-									{sprintf(__("Industry %d", "industries-block"), index + 1)}
+									{sprintf(__("Industry %d", "adaire-blocks"), index + 1)}
 								</strong>
 								<div style={{ display: "flex", gap: "4px" }}>
 									<Button
@@ -898,14 +898,14 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 										onClick={() => moveIndustryUp(index)}
 										isSmall
 										disabled={index === 0}
-										label={__("Move Up", "industries-block")}
+										label={__("Move Up", "adaire-blocks")}
 									/>
 									<Button
 										icon={arrowDown}
 										onClick={() => moveIndustryDown(index)}
 										isSmall
 										disabled={index === industries.length - 1}
-										label={__("Move Down", "industries-block")}
+										label={__("Move Down", "adaire-blocks")}
 									/>
 									{industries.length > 1 && (
 										<Button
@@ -913,12 +913,12 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 											onClick={() => removeIndustry(index)}
 											isSmall
 											isDestructive
-											label={__("Remove", "industries-block")}
+											label={__("Remove", "adaire-blocks")}
 										/>
 									)}
 								</div>
 							</div>
-							<BaseControl label={__("Icon", "industries-block")}>
+							<BaseControl label={__("Icon", "adaire-blocks")}>
 								<Button
 									onClick={() => setIconPickerOpenFor(index)}
 									variant="secondary"
@@ -933,7 +933,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 											{item.icon}
 										</>
 									) : (
-										__("Choose Bootstrap Icon", "industries-block")
+										__("Choose Bootstrap Icon", "adaire-blocks")
 									)}
 								</Button>
 								{item.icon && (
@@ -947,12 +947,12 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 										isDestructive
 										style={{ width: "100%" }}
 									>
-										{__("Remove Icon", "industries-block")}
+										{__("Remove Icon", "adaire-blocks")}
 									</Button>
 								)}
 							</BaseControl>
 							<TextControl
-								label={__("Label", "industries-block")}
+								label={__("Label", "adaire-blocks")}
 								value={item.label}
 								onChange={(value) => {
 									const nextItems = [...industries];
@@ -961,7 +961,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 								}}
 							/>
 							<TextControl
-								label={__("Link URL", "industries-block")}
+								label={__("Link URL", "adaire-blocks")}
 								value={item.linkUrl || ""}
 								onChange={(value) => {
 									const nextItems = [...industries];
@@ -975,7 +975,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 								)}
 							/>
 							<ToggleControl
-								label={__("Open in new tab", "industries-block")}
+								label={__("Open in new tab", "adaire-blocks")}
 								checked={item.openInNewTab || false}
 								onChange={(value) => {
 									const nextItems = [...industries];
@@ -987,8 +987,8 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 								}}
 								help={
 									item.openInNewTab
-										? __("Link will open in a new tab", "industries-block")
-										: __("Link will open in the same tab", "industries-block")
+										? __("Link will open in a new tab", "adaire-blocks")
+										: __("Link will open in the same tab", "adaire-blocks")
 								}
 							/>
 						</div>
@@ -1006,72 +1006,72 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 							variant="primary"
 							style={{ width: "100%" }}
 						>
-							{__("Add Industry", "industries-block")}
+							{__("Add Industry", "adaire-blocks")}
 						</Button>
 					</div>
 				</PanelBody>
 
 				<PanelColorSettings
-					title={__("Colors", "industries-block")}
+					title={__("Colors", "adaire-blocks")}
 					initialOpen={false}
 					colorSettings={[
 						{
-							label: __("Background", "industries-block"),
+							label: __("Background", "adaire-blocks"),
 							value: backgroundColor,
 							onChange: (value) => setAttributes({ backgroundColor: value }),
 							colors: DEFAULT_COLORS,
 						},
 						{
-							label: __("Headline Color", "industries-block"),
+							label: __("Headline Color", "adaire-blocks"),
 							value: headerColor,
 							onChange: (value) => setAttributes({ headerColor: value }),
 							colors: DEFAULT_COLORS,
 						},
 						{
-							label: __("Headline Accent Color", "industries-block"),
+							label: __("Headline Accent Color", "adaire-blocks"),
 							value: headerAccentColor,
 							onChange: (value) => setAttributes({ headerAccentColor: value }),
 							colors: DEFAULT_COLORS,
 						},
 						{
-							label: __("Chevron Color", "industries-block"),
+							label: __("Chevron Color", "adaire-blocks"),
 							value: chevronColor,
 							onChange: (value) => setAttributes({ chevronColor: value }),
 							colors: DEFAULT_COLORS,
 						},
 						{
-							label: __("Tile Border Color", "industries-block"),
+							label: __("Tile Border Color", "adaire-blocks"),
 							value: tileBorderColor,
 							onChange: (value) => setAttributes({ tileBorderColor: value }),
 							colors: DEFAULT_COLORS,
 						},
 						{
-							label: __("Tile Icon Color", "industries-block"),
+							label: __("Tile Icon Color", "adaire-blocks"),
 							value: tileIconColor,
 							onChange: (value) => setAttributes({ tileIconColor: value }),
 							colors: DEFAULT_COLORS,
 						},
 						{
-							label: __("Tile Icon Background", "industries-block"),
+							label: __("Tile Icon Background", "adaire-blocks"),
 							value: tileIconBackground,
 							onChange: (value) => setAttributes({ tileIconBackground: value }),
 							colors: DEFAULT_COLORS,
 						},
 						{
-							label: __("Tile Hover Background", "industries-block"),
+							label: __("Tile Hover Background", "adaire-blocks"),
 							value: tileHoverBackground,
 							onChange: (value) =>
 								setAttributes({ tileHoverBackground: value }),
 							colors: DEFAULT_COLORS,
 						},
 						{
-							label: __("Tile Text Color", "industries-block"),
+							label: __("Tile Text Color", "adaire-blocks"),
 							value: tileTextColor,
 							onChange: (value) => setAttributes({ tileTextColor: value }),
 							colors: DEFAULT_COLORS,
 						},
 						{
-							label: __("Tile Hover Text", "industries-block"),
+							label: __("Tile Hover Text", "adaire-blocks"),
 							value: tileHoverTextColor,
 							onChange: (value) => setAttributes({ tileHoverTextColor: value }),
 							colors: DEFAULT_COLORS,
@@ -1080,17 +1080,17 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 				/>
 
 				<PanelBody
-					title={__("Typography & Spacing", "industries-block")}
+					title={__("Typography & Spacing", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<TextControl
-						label={__("Headline Font Weight", "industries-block")}
+						label={__("Headline Font Weight", "adaire-blocks")}
 						value={headerFontWeight}
 						onChange={(value) => setAttributes({ headerFontWeight: value })}
 					/>
 					
 					<div style={{ marginTop: "16px" }}>
-						<strong>{__("Headline Font Size", "industries-block")}</strong>
+						<strong>{__("Headline Font Size", "adaire-blocks")}</strong>
 						<div className="adaire-industries__dimension-controls" style={{ marginTop: "8px" }}>
 							{DEVICE_TYPES.map((device) => (
 								<div
@@ -1107,7 +1107,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 
 											return (
 												<RangeControl
-													label={__("Font Size", "industries-block")}
+													label={__("Font Size", "adaire-blocks")}
 													value={value}
 													onChange={(rangeValue) =>
 														updateFontSize("headerFontSize", device.key, "value", rangeValue)
@@ -1139,7 +1139,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 					</div>
 
 					<div style={{ marginTop: "24px" }}>
-						<strong>{__("Headline Accent Font Size", "industries-block")}</strong>
+						<strong>{__("Headline Accent Font Size", "adaire-blocks")}</strong>
 						<div className="adaire-industries__dimension-controls" style={{ marginTop: "8px" }}>
 							{DEVICE_TYPES.map((device) => (
 								<div
@@ -1156,7 +1156,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 
 											return (
 												<RangeControl
-													label={__("Font Size", "industries-block")}
+													label={__("Font Size", "adaire-blocks")}
 													value={value}
 													onChange={(rangeValue) =>
 														updateFontSize("headerAccentFontSize", device.key, "value", rangeValue)
@@ -1188,7 +1188,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 					</div>
 
 					<div style={{ marginTop: "24px" }}>
-						<strong>{__("Headline Accent Width", "industries-block")}</strong>
+						<strong>{__("Headline Accent Width", "adaire-blocks")}</strong>
 						<div className="adaire-industries__dimension-controls" style={{ marginTop: "8px" }}>
 							{DEVICE_TYPES.map((device) => (
 								<div
@@ -1205,7 +1205,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 
 											return (
 												<RangeControl
-													label={__("Width", "industries-block")}
+													label={__("Width", "adaire-blocks")}
 													value={value}
 													onChange={(rangeValue) =>
 														updateFontSize("headerAccentWidth", device.key, "value", rangeValue)
@@ -1237,7 +1237,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 					</div>
 
 					<div style={{ marginTop: "24px" }}>
-						<strong>{__("Intro Font Size", "industries-block")}</strong>
+						<strong>{__("Intro Font Size", "adaire-blocks")}</strong>
 						<div className="adaire-industries__dimension-controls" style={{ marginTop: "8px" }}>
 							{DEVICE_TYPES.map((device) => (
 								<div
@@ -1254,7 +1254,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 
 											return (
 												<RangeControl
-													label={__("Font Size", "industries-block")}
+													label={__("Font Size", "adaire-blocks")}
 													value={value}
 													onChange={(rangeValue) =>
 														updateFontSize("introFontSize", device.key, "value", rangeValue)
@@ -1286,7 +1286,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 					</div>
 
 					<div style={{ marginTop: "24px" }}>
-						<strong>{__("Description Font Size", "industries-block")}</strong>
+						<strong>{__("Description Font Size", "adaire-blocks")}</strong>
 						<div className="adaire-industries__dimension-controls" style={{ marginTop: "8px" }}>
 							{DEVICE_TYPES.map((device) => (
 								<div
@@ -1303,7 +1303,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 
 											return (
 												<RangeControl
-													label={__("Font Size", "industries-block")}
+													label={__("Font Size", "adaire-blocks")}
 													value={value}
 													onChange={(rangeValue) =>
 														updateFontSize("descriptionFontSize", device.key, "value", rangeValue)
@@ -1334,42 +1334,42 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 						</div>
 					</div>
 					<RangeControl
-						label={__("Chevron Size", "industries-block")}
+						label={__("Chevron Size", "adaire-blocks")}
 						value={chevronSize}
 						onChange={(value) => setAttributes({ chevronSize: value })}
 						min={12}
 						max={48}
 					/>
 					<RangeControl
-						label={__("Tile Padding (desktop, px)", "industries-block")}
+						label={__("Tile Padding (desktop, px)", "adaire-blocks")}
 						value={tilePadding}
 						onChange={(value) => setAttributes({ tilePadding: value })}
 						min={20}
 						max={120}
 					/>
 					<RangeControl
-						label={__("Tile Padding (mobile, px)", "industries-block")}
+						label={__("Tile Padding (mobile, px)", "adaire-blocks")}
 						value={tilePaddingMobile}
 						onChange={(value) => setAttributes({ tilePaddingMobile: value })}
 						min={0}
 						max={40}
 					/>
 					<RangeControl
-						label={__("Tile Border Radius", "industries-block")}
+						label={__("Tile Border Radius", "adaire-blocks")}
 						value={tileBorderRadius}
 						onChange={(value) => setAttributes({ tileBorderRadius: value })}
 						min={0}
 						max={48}
 					/>
 					<RangeControl
-						label={__("Tile Icon Size", "industries-block")}
+						label={__("Tile Icon Size", "adaire-blocks")}
 						value={tileIconSize}
 						onChange={(value) => setAttributes({ tileIconSize: value })}
 						min={16}
 						max={64}
 					/>
 					<RangeControl
-						label={__("Tile Title Font Size", "industries-block")}
+						label={__("Tile Title Font Size", "adaire-blocks")}
 						value={tileTitleFontSize}
 						onChange={(value) => setAttributes({ tileTitleFontSize: value })}
 						min={16}
@@ -1490,7 +1490,7 @@ const IndustriesEdit = ({ attributes, setAttributes, clientId }) => {
 									/>
 								) : (
 									<div className="adaire-industries__image-placeholder">
-										<span>{__("Select an image", "industries-block")}</span>
+										<span>{__("Select an image", "adaire-blocks")}</span>
 									</div>
 								)}
 							</div>

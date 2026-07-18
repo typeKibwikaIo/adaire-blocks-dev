@@ -1,205 +1,220 @@
-﻿import { gsap } from 'gsap';
+// Maps the small set of GSAP ease names this block ever actually used to a
+// roughly-equivalent CSS cubic-bezier, since there's no Inspector control for
+// animationEase — every real instance carries the block.json default.
+function cssEaseFor( gsapEase ) {
+	switch ( gsapEase ) {
+		case 'power2.in':
+			return 'cubic-bezier(0.55, 0.085, 0.68, 0.53)';
+		case 'power2.out':
+		default:
+			return 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+	}
+}
 
-document.addEventListener('DOMContentLoaded', function () {
-    const contentToggleBlocks = document.querySelectorAll('.adaire-content-toggle');
+document.addEventListener( 'DOMContentLoaded', function () {
+	const contentToggleBlocks = document.querySelectorAll( '.adaire-content-toggle' );
 
-    contentToggleBlocks.forEach(toggleBlock => {
-        const pills = toggleBlock.querySelectorAll('.adaire-content-toggle__pill');
-        const panels = toggleBlock.querySelectorAll('.adaire-content-toggle-panel');
+	contentToggleBlocks.forEach( ( toggleBlock ) => {
+		const pills = toggleBlock.querySelectorAll( '.adaire-content-toggle__pill' );
+		const panels = toggleBlock.querySelectorAll( '.adaire-content-toggle-panel' );
 
-        // Get animation settings from data attributes
-        const duration = parseFloat(toggleBlock.getAttribute('data-animation-duration')) || 0.5;
-        const ease = toggleBlock.getAttribute('data-animation-ease') || 'power2.out';
-        const initialActiveToggle = parseInt(toggleBlock.getAttribute('data-active-toggle')) || 0;
+		// Get animation settings from data attributes
+		const duration = parseFloat( toggleBlock.getAttribute( 'data-animation-duration' ) ) || 0.5;
+		const ease = cssEaseFor( toggleBlock.getAttribute( 'data-animation-ease' ) || 'power2.out' );
+		const initialActiveToggle = parseInt( toggleBlock.getAttribute( 'data-active-toggle' ) ) || 0;
 
-        let currentActiveIndex = initialActiveToggle;
+		let currentActiveIndex = initialActiveToggle;
 
-        // Calculate and set minimum height based on tallest panel
-        const contentWrapper = toggleBlock.querySelector('.adaire-content-toggle__content');
-        let maxHeight = 0;
+		// Calculate and set minimum height based on tallest panel
+		const contentWrapper = toggleBlock.querySelector( '.adaire-content-toggle__content' );
+		let maxHeight = 0;
 
-        // Temporarily show all panels to measure their heights
-        panels.forEach((panel) => {
-            gsap.set(panel, { display: 'block', position: 'relative', opacity: 0, visibility: 'hidden' });
-            const height = panel.scrollHeight;
-            if (height > maxHeight) {
-                maxHeight = height;
-            }
-        });
+		// Temporarily show all panels to measure their heights
+		panels.forEach( ( panel ) => {
+			panel.style.display = 'block';
+			panel.style.position = 'relative';
+			panel.style.opacity = '0';
+			panel.style.visibility = 'hidden';
+			const height = panel.scrollHeight;
+			if ( height > maxHeight ) {
+				maxHeight = height;
+			}
+		} );
 
-        // Set minimum height on the wrapper
-        if (contentWrapper && maxHeight > 0) {
-            contentWrapper.style.minHeight = `${maxHeight}px`;
-        }
+		// Set minimum height on the wrapper
+		if ( contentWrapper && maxHeight > 0 ) {
+			contentWrapper.style.minHeight = `${ maxHeight }px`;
+		}
 
-        // Now hide all panels except the active one
-        panels.forEach((panel, index) => {
-            if (index !== initialActiveToggle) {
-                gsap.set(panel, {
-                    display: 'none',
-                    opacity: 0,
-                    position: 'absolute',
-                    visibility: 'hidden',
-                    pointerEvents: 'none'
-                });
-                panel.classList.remove('is-active');
-            } else {
-                gsap.set(panel, {
-                    display: 'block',
-                    opacity: 1,
-                    position: 'relative',
-                    visibility: 'visible',
-                    pointerEvents: 'auto'
-                });
-                panel.classList.add('is-active');
-            }
-        });
+		function hidePanel( panel ) {
+			panel.style.display = 'none';
+			panel.style.opacity = '0';
+			panel.style.position = 'absolute';
+			panel.style.visibility = 'hidden';
+			panel.style.pointerEvents = 'none';
+			panel.style.transform = '';
+			panel.style.transition = '';
+		}
 
-        // Switch to a specific toggle
-        function switchToToggle(index, immediate = false) {
-            if (index === currentActiveIndex && !immediate) return;
-            if (index < 0 || index >= panels.length) return;
+		function showPanelImmediate( panel ) {
+			panel.style.display = 'block';
+			panel.style.opacity = '1';
+			panel.style.position = 'relative';
+			panel.style.visibility = 'visible';
+			panel.style.pointerEvents = 'auto';
+			panel.style.transform = '';
+			panel.style.transition = '';
+		}
 
-            const oldPanel = panels[currentActiveIndex];
-            const newPanel = panels[index];
+		// Now hide all panels except the active one
+		panels.forEach( ( panel, index ) => {
+			if ( index !== initialActiveToggle ) {
+				hidePanel( panel );
+				panel.classList.remove( 'is-active' );
+			} else {
+				showPanelImmediate( panel );
+				panel.classList.add( 'is-active' );
+			}
+		} );
 
-            // Update pill buttons
-            pills.forEach((pill, i) => {
-                if (i === index) {
-                    pill.classList.add('is-active');
-                    pill.setAttribute('aria-selected', 'true');
-                } else {
-                    pill.classList.remove('is-active');
-                    pill.setAttribute('aria-selected', 'false');
-                }
-            });
+		// Switch to a specific toggle
+		function switchToToggle( index, immediate = false ) {
+			if ( index === currentActiveIndex && ! immediate ) return;
+			if ( index < 0 || index >= panels.length ) return;
 
-            // Animate content transition
-            const tl = gsap.timeline();
+			const oldPanel = panels[ currentActiveIndex ];
+			const newPanel = panels[ index ];
 
-            if (!immediate && oldPanel && oldPanel !== newPanel) {
-                // Fade out old panel smoothly
-                tl.to(oldPanel, {
-                    opacity: 0,
-                    y: -20,
-                    duration: duration * 0.5,
-                    ease: 'power2.in',
-                    onComplete: () => {
-                        oldPanel.classList.remove('is-active');
-                        gsap.set(oldPanel, {
-                            display: 'none',
-                            position: 'absolute',
-                            visibility: 'hidden',
-                            pointerEvents: 'none'
-                        });
-                    }
-                });
-            }
+			// Update pill buttons
+			pills.forEach( ( pill, i ) => {
+				if ( i === index ) {
+					pill.classList.add( 'is-active' );
+					pill.setAttribute( 'aria-selected', 'true' );
+				} else {
+					pill.classList.remove( 'is-active' );
+					pill.setAttribute( 'aria-selected', 'false' );
+				}
+			} );
 
-            // Hide all other panels immediately
-            panels.forEach((panel, i) => {
-                if (i !== index && panel !== oldPanel) {
-                    panel.classList.remove('is-active');
-                    gsap.set(panel, {
-                        display: 'none',
-                        opacity: 0,
-                        position: 'absolute',
-                        visibility: 'hidden',
-                        pointerEvents: 'none'
-                    });
-                }
-            });
+			if ( immediate ) {
+				panels.forEach( ( panel, i ) => {
+					if ( i !== index ) {
+						hidePanel( panel );
+						panel.classList.remove( 'is-active' );
+					}
+				} );
+				showPanelImmediate( newPanel );
+				newPanel.classList.add( 'is-active' );
+				currentActiveIndex = index;
+				return;
+			}
 
-            // Fade in new content
-            tl.set(newPanel, {
-                display: 'block',
-                opacity: 0,
-                y: 20,
-                position: 'relative',
-                visibility: 'visible',
-                pointerEvents: 'auto'
-            });
-            tl.add(() => {
-                newPanel.classList.add('is-active');
-            });
+			// Hide all other panels immediately (not the outgoing/incoming pair)
+			panels.forEach( ( panel, i ) => {
+				if ( i !== index && panel !== oldPanel ) {
+					panel.classList.remove( 'is-active' );
+					hidePanel( panel );
+				}
+			} );
 
-            if (!immediate) {
-                tl.to(newPanel, {
-                    opacity: 1,
-                    y: 0,
-                    duration: duration * 0.6,
-                    ease: ease,
-                });
+			// Fade out old panel smoothly
+			if ( oldPanel && oldPanel !== newPanel ) {
+				const outDuration = duration * 0.5;
+				oldPanel.style.transition = `opacity ${ outDuration }s ease-in, transform ${ outDuration }s ease-in`;
+				oldPanel.style.transform = 'translateY(-20px)';
+				oldPanel.style.opacity = '0';
 
-                // Animate children with stagger
-                const children = newPanel.children;
-                if (children.length > 0) {
-                    gsap.fromTo(children,
-                        {
-                            opacity: 0,
-                            y: 30,
-                        },
-                        {
-                            opacity: 1,
-                            y: 0,
-                            duration: duration * 0.7,
-                            stagger: 0.08,
-                            ease: ease,
-                            delay: duration * 0.3,
-                        }
-                    );
-                }
-            } else {
-                tl.set(newPanel, { opacity: 1, y: 0 });
-            }
+				window.setTimeout( () => {
+					oldPanel.classList.remove( 'is-active' );
+					hidePanel( oldPanel );
+				}, outDuration * 1000 );
+			}
 
-            currentActiveIndex = index;
-        }
+			// Prepare new panel's starting state
+			newPanel.style.transition = '';
+			newPanel.style.display = 'block';
+			newPanel.style.position = 'relative';
+			newPanel.style.visibility = 'visible';
+			newPanel.style.pointerEvents = 'auto';
+			newPanel.style.opacity = '0';
+			newPanel.style.transform = 'translateY(20px)';
+			newPanel.classList.add( 'is-active' );
 
-        // Initialize on page load
-        switchToToggle(initialActiveToggle, true);
+			// Stagger children in, same as the panel-level fade-in
+			const children = Array.from( newPanel.children );
+			children.forEach( ( child ) => {
+				child.style.transition = '';
+				child.style.opacity = '0';
+				child.style.transform = 'translateY(30px)';
+			} );
 
-        // Add click handlers
-        pills.forEach((pill, index) => {
-            pill.addEventListener('click', (e) => {
-                e.preventDefault();
-                switchToToggle(index);
-            });
-        });
+			// Force a reflow so the browser registers the "from" state before
+			// the "to" state is applied on the next frame — otherwise the two
+			// style writes collapse into one and nothing visibly transitions.
+			void newPanel.offsetHeight;
 
-        // Keyboard navigation
-        toggleBlock.addEventListener('keydown', (e) => {
-            if (e.target.classList.contains('adaire-content-toggle__pill')) {
-                const currentIndex = parseInt(e.target.getAttribute('data-toggle-index'));
-                let newIndex = currentIndex;
+			window.requestAnimationFrame( () => {
+				const inDuration = duration * 0.6;
+				const inDelay = duration * 0.3;
+				newPanel.style.transition = `opacity ${ inDuration }s ${ ease }, transform ${ inDuration }s ${ ease }`;
+				newPanel.style.transitionDelay = `${ inDelay }s`;
+				newPanel.style.opacity = '1';
+				newPanel.style.transform = 'translateY(0)';
 
-                switch (e.key) {
-                    case 'ArrowLeft':
-                        newIndex = currentIndex > 0 ? currentIndex - 1 : pills.length - 1;
-                        e.preventDefault();
-                        break;
-                    case 'ArrowRight':
-                        newIndex = currentIndex < pills.length - 1 ? currentIndex + 1 : 0;
-                        e.preventDefault();
-                        break;
-                    case 'Home':
-                        newIndex = 0;
-                        e.preventDefault();
-                        break;
-                    case 'End':
-                        newIndex = pills.length - 1;
-                        e.preventDefault();
-                        break;
-                }
+				const childDuration = duration * 0.7;
+				const stagger = 0.08;
+				children.forEach( ( child, i ) => {
+					child.style.transition = `opacity ${ childDuration }s ${ ease }, transform ${ childDuration }s ${ ease }`;
+					child.style.transitionDelay = `${ inDelay + i * stagger }s`;
+					child.style.opacity = '1';
+					child.style.transform = 'translateY(0)';
+				} );
+			} );
 
-                if (newIndex !== currentIndex) {
-                    pills[newIndex].focus();
-                    switchToToggle(newIndex);
-                }
-            }
-        });
-    });
-});
+			currentActiveIndex = index;
+		}
 
+		// Initialize on page load
+		switchToToggle( initialActiveToggle, true );
 
+		// Add click handlers
+		pills.forEach( ( pill, index ) => {
+			pill.addEventListener( 'click', ( e ) => {
+				e.preventDefault();
+				switchToToggle( index );
+			} );
+		} );
 
+		// Keyboard navigation
+		toggleBlock.addEventListener( 'keydown', ( e ) => {
+			if ( e.target.classList.contains( 'adaire-content-toggle__pill' ) ) {
+				const currentIndex = parseInt( e.target.getAttribute( 'data-toggle-index' ) );
+				let newIndex = currentIndex;
+
+				switch ( e.key ) {
+					case 'ArrowLeft':
+						newIndex = currentIndex > 0 ? currentIndex - 1 : pills.length - 1;
+						e.preventDefault();
+						break;
+					case 'ArrowRight':
+						newIndex = currentIndex < pills.length - 1 ? currentIndex + 1 : 0;
+						e.preventDefault();
+						break;
+					case 'Home':
+						newIndex = 0;
+						e.preventDefault();
+						break;
+					case 'End':
+						newIndex = pills.length - 1;
+						e.preventDefault();
+						break;
+				}
+
+				if ( newIndex !== currentIndex ) {
+					pills[ newIndex ].focus();
+					switchToToggle( newIndex );
+				}
+			}
+		} );
+	} );
+} );

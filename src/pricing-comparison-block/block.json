@@ -22,7 +22,7 @@
             "showGuarantee": true
         }
     },
-    "textdomain": "pricing-comparison-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -62,7 +62,11 @@
         },
         "displayMode": {
             "type": "string",
-            "default": "comparison"
+            "default": "comparison",
+            "enum": [
+                "comparison",
+                "cards"
+            ]
         },
         "planGroups": {
             "type": "array",
@@ -508,7 +512,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "full",
+                "constrained"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

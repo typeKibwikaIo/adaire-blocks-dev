@@ -15,7 +15,7 @@
         "inserter": true,
         "anchor": true
     },
-    "textdomain": "card-scroll-item-block",
+    "textdomain": "adaire-blocks",
     "attributes": {
         "title": {
             "type": "string",
@@ -27,7 +27,11 @@
         },
         "mediaType": {
             "type": "string",
-            "default": "image"
+            "default": "image",
+            "enum": [
+                "image",
+                "video"
+            ]
         },
         "mediaId": {
             "type": "number",
@@ -73,7 +77,11 @@
         },
         "videoType": {
             "type": "string",
-            "default": "local"
+            "default": "local",
+            "enum": [
+                "local",
+                "external"
+            ]
         },
         "externalVideoUrl": {
             "type": "string",
@@ -94,11 +102,29 @@
         },
         "imageBackgroundSize": {
             "type": "string",
-            "default": "cover"
+            "default": "cover",
+            "enum": [
+                "cover",
+                "contain",
+                "auto",
+                "100%",
+                "100% 100%"
+            ]
         },
         "imageBackgroundPosition": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "center",
+                "top",
+                "bottom",
+                "left",
+                "right",
+                "top left",
+                "top right",
+                "bottom left",
+                "bottom right"
+            ]
         },
         "titleFontSize": {
             "type": "string",

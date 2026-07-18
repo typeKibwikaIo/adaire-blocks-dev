@@ -201,7 +201,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
             return; // Don't add if limit reached
         }
         const newId = `accordion-item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        const newItem = { id: newId, title: __('New Item', 'accordion-block'), open: false };
+        const newItem = { id: newId, title: __('New Item', 'adaire-blocks'), open: false };
         
         // Close all other items if multiple open is disabled
         let updatedItems = [...items];
@@ -357,7 +357,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody section="layout" title={ __('Responsive Settings', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="layout" title={ __('Responsive Settings', 'adaire-blocks') } initialOpen={ false }>
                     <DeviceSwitcher
                         deviceType={deviceType}
                         setDeviceType={setDeviceType}
@@ -366,11 +366,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         tiers={ THREE_TIERS }
                     />
                 </PanelBody>
-                <PanelBody section="layout" title={ __('Container Settings', 'accordion-block') } initialOpen={ true }>
+                <PanelBody section="layout" title={ __('Container Settings', 'adaire-blocks') } initialOpen={ true }>
                     <ButtonGroup>
                         { [
-                            { label: __('Full width', 'accordion-block'), value: 'full' },
-                            { label: __('Constrained', 'accordion-block'), value: 'constrained' },
+                            { label: __('Full width', 'adaire-blocks'), value: 'full' },
+                            { label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
                         ].map(opt => (
                             <Button
                                 key={ opt.value }
@@ -383,7 +383,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                     { containerMode === 'constrained' && (
                         <>
                             <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>
-                                { __('Max Width', 'accordion-block') }
+                                { __('Max Width', 'adaire-blocks') }
                             </p>
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 <TextControl
@@ -434,13 +434,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         </>
                     )}
                 </PanelBody>
-                <PanelBody section="content" title={ __('Items', 'accordion-block') } initialOpen={ true }>
+                <PanelBody section="content" title={ __('Items', 'adaire-blocks') } initialOpen={ true }>
                     <Button
                         isPrimary
                         onClick={ addItem }
                         disabled={ isLimitReached }
                     >
-                        { __('Add Item', 'accordion-block') }
+                        { __('Add Item', 'adaire-blocks') }
                     </Button>
                     { showUpgradeNotice && (
                         <UpgradeNotice
@@ -450,50 +450,50 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         />
                     ) }
                     <ToggleControl
-                        label={ __('Allow multiple open', 'accordion-block') }
+                        label={ __('Allow multiple open', 'adaire-blocks') }
                         checked={ allowMultipleOpen }
                         onChange={ (v) => setAttributes( { allowMultipleOpen: v } ) }
                     />
                     <ToggleControl
-                        label={ __('First item open by default', 'accordion-block') }
+                        label={ __('First item open by default', 'adaire-blocks') }
                         checked={ firstItemOpenByDefault !== false }
                         onChange={ (v) => setAttributes( { firstItemOpenByDefault: v } ) }
-                        help={ __('When enabled, the first accordion item will be open when the page loads.', 'accordion-block') }
+                        help={ __('When enabled, the first accordion item will be open when the page loads.', 'adaire-blocks') }
                     />
                 </PanelBody>
-                <PanelBody section="style" priority="medium" title={ __('Item Spacing', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Item Spacing', 'adaire-blocks') } initialOpen={ false }>
                     <RangeControl
-                        label={ __('Gap', 'accordion-block') }
+                        label={ __('Gap', 'adaire-blocks') }
                         value={ getDeviceValue(gap, deviceType, deviceType === 'desktop' ? 12 : deviceType === 'tablet' ? 10 : deviceType === 'mobile' ? 8 : 6) }
                         onChange={ (v) => setAttributes( { gap: updateDeviceAttribute(gap, deviceType, v) } ) }
                         min={ 0 }
                         max={ 48 }
                     />
-                    <BaseControl label={ __('Header Padding', 'accordion-block') }>
+                    <BaseControl label={ __('Header Padding', 'adaire-blocks') }>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                             <RangeControl
-                                label={ __('Top', 'accordion-block') }
+                                label={ __('Top', 'adaire-blocks') }
                                 value={ padding?.[deviceType]?.top ?? padding?.desktop?.top ?? 20 }
                                 onChange={(value) => updatePadding(deviceType, 'top', value)}
                                 min={0}
                                 max={80}
                             />
                             <RangeControl
-                                label={ __('Right', 'accordion-block') }
+                                label={ __('Right', 'adaire-blocks') }
                                 value={ padding?.[deviceType]?.right ?? padding?.desktop?.right ?? 20 }
                                 onChange={(value) => updatePadding(deviceType, 'right', value)}
                                 min={0}
                                 max={80}
                             />
                             <RangeControl
-                                label={ __('Bottom', 'accordion-block') }
+                                label={ __('Bottom', 'adaire-blocks') }
                                 value={ padding?.[deviceType]?.bottom ?? padding?.desktop?.bottom ?? 20 }
                                 onChange={(value) => updatePadding(deviceType, 'bottom', value)}
                                 min={0}
                                 max={80}
                             />
                             <RangeControl
-                                label={ __('Left', 'accordion-block') }
+                                label={ __('Left', 'adaire-blocks') }
                                 value={ padding?.[deviceType]?.left ?? padding?.desktop?.left ?? 20 }
                                 onChange={(value) => updatePadding(deviceType, 'left', value)}
                                 min={0}
@@ -502,29 +502,29 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         </div>
                     </BaseControl>
                     <RangeControl
-                        label={ __('Radius', 'accordion-block') }
+                        label={ __('Radius', 'adaire-blocks') }
                         value={ getDeviceValue(radius, deviceType, deviceType === 'desktop' ? 12 : deviceType === 'tablet' ? 10 : deviceType === 'mobile' ? 8 : 6) }
                         onChange={ (v) => setAttributes( { radius: updateDeviceAttribute(radius, deviceType, v) } ) }
                         min={ 0 }
                         max={ 48 }
                     />
                 </PanelBody>
-                <PanelBody section="style" priority="high" title={ __('Typography', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="high" title={ __('Typography', 'adaire-blocks') } initialOpen={ false }>
                     <RangeControl
-                        label={ __('Title size', 'accordion-block') }
+                        label={ __('Title size', 'adaire-blocks') }
                         value={ getDeviceValue(titleFontSize, deviceType, deviceType === 'desktop' ? 20 : deviceType === 'tablet' ? 18 : deviceType === 'mobile' ? 16 : 14) }
                         onChange={ (v) => setAttributes( { titleFontSize: updateDeviceAttribute(titleFontSize, deviceType, v) } ) }
                         min={ 10 }
                         max={ 60 }
                     />
                     <RangeControl
-                        label={ __('Content size', 'accordion-block') }
+                        label={ __('Content size', 'adaire-blocks') }
                         value={ getDeviceValue(contentFontSize, deviceType, deviceType === 'desktop' ? 16 : deviceType === 'tablet' ? 14 : deviceType === 'mobile' ? 12 : 10) }
                         onChange={ (v) => setAttributes( { contentFontSize: updateDeviceAttribute(contentFontSize, deviceType, v) } ) }
                         min={ 10 }
                         max={ 48 }
                     />
-                    <p>{ __('Title weight', 'accordion-block') }</p>
+                    <p>{ __('Title weight', 'adaire-blocks') }</p>
                     <ButtonGroup>
                         { ['300', '400', '500', '600', '700', '800'].map( (weight) => (
                             <Button
@@ -535,7 +535,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                             >{ weight }</Button>
                         ) ) }
                     </ButtonGroup>
-                    <p>{ __('Content weight', 'accordion-block') }</p>
+                    <p>{ __('Content weight', 'adaire-blocks') }</p>
                     <ButtonGroup>
                         { ['300', '400', '500', '600', '700', "800"].map( (weight) => (
                             <Button
@@ -547,29 +547,29 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         ) ) }
                     </ButtonGroup>
                 </PanelBody>
-                <PanelBody section="style" priority="high" title={ __('Colors', 'accordion-block') } initialOpen={ false }>
-                    <p>{ __('Title', 'accordion-block') }</p>
+                <PanelBody section="style" priority="high" title={ __('Colors', 'adaire-blocks') } initialOpen={ false }>
+                    <p>{ __('Title', 'adaire-blocks') }</p>
                     <BoundColorPalette value={ titleColor } onChange={ (v)=> setAttributes({ titleColor: v }) } />
-                    <p>{ __('Content', 'accordion-block') }</p>
+                    <p>{ __('Content', 'adaire-blocks') }</p>
                     <BoundColorPalette value={ contentColor } onChange={ (v)=> setAttributes({ contentColor: v }) } />
-                    <p>{ __('Background', 'accordion-block') }</p>
+                    <p>{ __('Background', 'adaire-blocks') }</p>
                     <BoundColorPalette value={ backgroundColor } onChange={ (v)=> setAttributes({ backgroundColor: v }) } />
-                    <p>{ __('Chevron', 'accordion-block') }</p>
+                    <p>{ __('Chevron', 'adaire-blocks') }</p>
                     <BoundColorPalette value={ chevronColor } onChange={ (v)=> setAttributes({ chevronColor: v }) } />
                     <RangeControl
-                        label={ __('Chevron Size (px)', 'accordion-block') }
+                        label={ __('Chevron Size (px)', 'adaire-blocks') }
                         value={ getDeviceValue(chevronSize, deviceType, deviceType === 'desktop' ? 16 : deviceType === 'tablet' ? 14 : deviceType === 'mobile' ? 12 : 10) }
                         onChange={ (v) => setAttributes( { chevronSize: updateDeviceAttribute(chevronSize, deviceType, v) } ) }
                         min={ 8 }
                         max={ 80 }
                         step={ 1 }
                     />
-                    <p>{ __('Content Background', 'accordion-block') }</p>
+                    <p>{ __('Content Background', 'adaire-blocks') }</p>
                     <BoundColorPalette value={ contentBackgroundColor } onChange={ (v)=> setAttributes({ contentBackgroundColor: v }) } />
-                    <p>{ __('Divider Line Color', 'accordion-block') }</p>
+                    <p>{ __('Divider Line Color', 'adaire-blocks') }</p>
                     <BoundColorPalette value={ dividerColor } onChange={ (v)=> setAttributes({ dividerColor: v }) } />
                     <RangeControl
-                        label={ __('Divider Line Thickness (px)', 'accordion-block') }
+                        label={ __('Divider Line Thickness (px)', 'adaire-blocks') }
                         value={ dividerThickness }
                         onChange={ (v) => setAttributes( { dividerThickness: v } ) }
                         min={ 0 }
@@ -577,46 +577,46 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         step={ 1 }
                     />
                 </PanelBody>
-                <PanelBody section="style" priority="medium" title={ __('Spacing & Margins', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Spacing & Margins', 'adaire-blocks') } initialOpen={ false }>
                     <RangeControl
-                        label={ __('Margin Top', 'accordion-block') }
+                        label={ __('Margin Top', 'adaire-blocks') }
                         value={ getDeviceValue(marginTop, deviceType, 0) }
                         onChange={ (v) => setAttributes( { marginTop: updateDeviceAttribute(marginTop, deviceType, v) } ) }
                         min={ 0 }
                         max={ 100 }
                     />
                     <RangeControl
-                        label={ __('Margin Right', 'accordion-block') }
+                        label={ __('Margin Right', 'adaire-blocks') }
                         value={ getDeviceValue(marginRight, deviceType, 0) }
                         onChange={ (v) => setAttributes( { marginRight: updateDeviceAttribute(marginRight, deviceType, v) } ) }
                         min={ 0 }
                         max={ 100 }
                     />
                     <RangeControl
-                        label={ __('Margin Bottom', 'accordion-block') }
+                        label={ __('Margin Bottom', 'adaire-blocks') }
                         value={ getDeviceValue(marginBottom, deviceType, 0) }
                         onChange={ (v) => setAttributes( { marginBottom: updateDeviceAttribute(marginBottom, deviceType, v) } ) }
                         min={ 0 }
                         max={ 100 }
                     />
                     <RangeControl
-                        label={ __('Margin Left', 'accordion-block') }
+                        label={ __('Margin Left', 'adaire-blocks') }
                         value={ getDeviceValue(marginLeft, deviceType, 0) }
                         onChange={ (v) => setAttributes( { marginLeft: updateDeviceAttribute(marginLeft, deviceType, v) } ) }
                         min={ 0 }
                         max={ 100 }
                     />
                     <RangeControl
-                        label={ __('Horizontal Margin (Legacy)', 'accordion-block') }
+                        label={ __('Horizontal Margin (Legacy)', 'adaire-blocks') }
                         value={ marginHorizontal?.[deviceType] ?? 0 }
                         onChange={ (v) => setAttributes( { marginHorizontal: { ...marginHorizontal, [deviceType]: v } } ) }
                         min={ 0 }
                         max={ 100 }
                     />
                 </PanelBody>
-                <PanelBody section="style" priority="medium" title={ __('Effects', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Effects', 'adaire-blocks') } initialOpen={ false }>
                     <RangeControl
-                        label={ __('Shadow Intensity', 'accordion-block') }
+                        label={ __('Shadow Intensity', 'adaire-blocks') }
                         value={ shadowIntensity }
                         onChange={ (v) => setAttributes( { shadowIntensity: v } ) }
                         min={ 0 }
@@ -624,16 +624,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                         step={ 0.01 }
                     />
                 </PanelBody>
-                <PanelBody section="style" priority="medium" title={ __('Animation', 'accordion-block') } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __('Animation', 'adaire-blocks') } initialOpen={ false }>
                     <RangeControl
-                        label={ __('Duration (ms)', 'accordion-block') }
+                        label={ __('Duration (ms)', 'adaire-blocks') }
                         value={ animationDuration }
                         onChange={ (v) => setAttributes( { animationDuration: v } ) }
                         min={ 100 }
                         max={ 1500 }
                         step={ 50 }
                     />
-                    <p>{ __('Easing', 'accordion-block') }</p>
+                    <p>{ __('Easing', 'adaire-blocks') }</p>
                     <ButtonGroup>
                         { EASINGS.map( (e) => (
                             <Button
@@ -650,14 +650,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
             <div { ...blockProps } data-allow-multiple={ allowMultipleOpen }>
                 <QuickZone
                     id="colors"
-                    label={ __('Colors', 'accordion-block') }
+                    label={ __('Colors', 'adaire-blocks') }
                     activeZone={ activeZone }
                     setActiveZone={ setActiveZone }
                     content={
                         <>
-                            <p>{ __('Background', 'accordion-block') }</p>
+                            <p>{ __('Background', 'adaire-blocks') }</p>
                             <BoundColorPalette value={ backgroundColor } onChange={ (v)=> setAttributes({ backgroundColor: v }) } />
-                            <p>{ __('Chevron', 'accordion-block') }</p>
+                            <p>{ __('Chevron', 'adaire-blocks') }</p>
                             <BoundColorPalette value={ chevronColor } onChange={ (v)=> setAttributes({ chevronColor: v }) } />
                         </>
                     }

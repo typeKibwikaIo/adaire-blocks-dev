@@ -16,7 +16,7 @@
         "customClassName": true,
         "innerBlocks": true
     },
-    "textdomain": "mega-menu-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -528,7 +528,15 @@
         },
         "level1FontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "level1FontColor": {
             "type": "string",
@@ -540,7 +548,15 @@
         },
         "level2FontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "level2FontColor": {
             "type": "string",
@@ -552,7 +568,15 @@
         },
         "level3FontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "level3FontColor": {
             "type": "string",
@@ -564,7 +588,15 @@
         },
         "canvasFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "canvasFontColor": {
             "type": "string",
@@ -723,7 +755,15 @@
         },
         "ribbonFontWeight": {
             "type": "string",
-            "default": "500"
+            "default": "500",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "ribbonLinkLabel": {
             "type": "string",
@@ -739,7 +779,14 @@
         },
         "ribbonLinkFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "ribbonLinkOpenInNewTab": {
             "type": "boolean",
@@ -799,7 +846,14 @@
         },
         "mobileLevel1FontWeight": {
             "type": "string",
-            "default": "500"
+            "default": "500",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "mobileLevel1FontColor": {
             "type": "string",
@@ -811,7 +865,13 @@
         },
         "mobileLevel2FontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "mobileLevel2FontColor": {
             "type": "string",
@@ -823,7 +883,13 @@
         },
         "mobileLevel3FontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "mobileLevel3FontColor": {
             "type": "string",
@@ -879,11 +945,26 @@
         },
         "ctaButtonStyle": {
             "type": "string",
-            "default": "border"
+            "default": "border",
+            "enum": [
+                "underline",
+                "fill",
+                "border",
+                "gradient",
+                "glass"
+            ]
         },
         "ctaButtonHoverAnimation": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "slide-underline",
+                "scale",
+                "bounce",
+                "glow",
+                "shake"
+            ]
         },
         "ctaButtonFontSize": {
             "type": "number",
@@ -891,7 +972,18 @@
         },
         "ctaButtonFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [
+                "100",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800",
+                "900"
+            ]
         },
         "ctaButtonColor": {
             "type": "string",
@@ -935,7 +1027,17 @@
         },
         "ctaButtonBorderStyle": {
             "type": "string",
-            "default": "solid"
+            "default": "solid",
+            "enum": [
+                "solid",
+                "dashed",
+                "dotted",
+                "double",
+                "groove",
+                "ridge",
+                "inset",
+                "outset"
+            ]
         },
         "ctaButtonPadding": {
             "type": "object",
@@ -1021,7 +1123,14 @@
         },
         "canvasBannerTitleFontWeight": {
             "type": "string",
-            "default": "300"
+            "default": "300",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "canvasBannerDescriptionFontSize": {
             "type": "number",
@@ -1033,7 +1142,14 @@
         },
         "canvasBannerDescriptionFontWeight": {
             "type": "string",
-            "default": "300"
+            "default": "300",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "canvasListPaddingLeft": {
             "type": "number",
@@ -1049,7 +1165,15 @@
         },
         "canvasStoryTitleFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "canvasStoryTitleColor": {
             "type": "string",
@@ -1069,7 +1193,12 @@
         },
         "canvasStoryDescriptionFontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [
+                "400",
+                "500",
+                "600"
+            ]
         },
         "canvasStoryDescriptionColor": {
             "type": "string",
@@ -1089,7 +1218,13 @@
         },
         "canvasStoryLinkFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "canvasStoryLinkColor": {
             "type": "string",
@@ -1190,7 +1325,19 @@
         },
         "ctaMobileButtonFontWeight": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+                "",
+                "100",
+                "200",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800",
+                "900"
+            ]
         },
         "ctaMobileButtonShowIcon": {
             "type": "boolean",
@@ -1198,11 +1345,28 @@
         },
         "ctaMobileButtonStyle": {
             "type": "string",
-            "default": "inherit"
+            "default": "inherit",
+            "enum": [
+                "inherit",
+                "underline",
+                "fill",
+                "border",
+                "gradient",
+                "glass"
+            ]
         },
         "ctaMobileButtonHoverAnimation": {
             "type": "string",
-            "default": "inherit"
+            "default": "inherit",
+            "enum": [
+                "inherit",
+                "none",
+                "slide-underline",
+                "scale",
+                "bounce",
+                "glow",
+                "shake"
+            ]
         },
         "mobileImmersiveMode": {
             "type": "boolean",
@@ -1210,7 +1374,13 @@
         },
         "mobileImmersiveBgType": {
             "type": "string",
-            "default": "solid"
+            "default": "solid",
+            "enum": [
+                "solid",
+                "gradient",
+                "image",
+                "image-overlay"
+            ]
         },
         "mobileImmersiveBgColor": {
             "type": "string",
@@ -1218,7 +1388,11 @@
         },
         "mobileImmersiveGradientType": {
             "type": "string",
-            "default": "linear"
+            "default": "linear",
+            "enum": [
+                "linear",
+                "radial"
+            ]
         },
         "mobileImmersiveGradientAngle": {
             "type": "number",
@@ -1246,11 +1420,27 @@
         },
         "mobileImmersiveBgImageSize": {
             "type": "string",
-            "default": "cover"
+            "default": "cover",
+            "enum": [
+                "cover",
+                "contain",
+                "auto"
+            ]
         },
         "mobileImmersiveBgImagePosition": {
             "type": "string",
-            "default": "center center"
+            "default": "center center",
+            "enum": [
+                "center center",
+                "top left",
+                "top center",
+                "top right",
+                "center left",
+                "center right",
+                "bottom left",
+                "bottom center",
+                "bottom right"
+            ]
         },
         "mobileImmersiveOverlayColor": {
             "type": "string",

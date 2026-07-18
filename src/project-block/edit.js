@@ -46,62 +46,62 @@ export default function Edit({ attributes, setAttributes }) {
   return (
     <>
       <InspectorControls>
-        <PanelBody title={__('Company Info', 'project-block')} initialOpen={true}>
+        <PanelBody title={__('Company Info', 'adaire-blocks')} initialOpen={true}>
           <TextControl
-            label={__('Project/Company Name', 'project-block')}
+            label={__('Project/Company Name', 'adaire-blocks')}
             value={companyName}
             onChange={(v) => updateCompanyField('companyName', v)}
           />
           <TextareaControl
-            label={__('Company Description', 'project-block')}
+            label={__('Company Description', 'adaire-blocks')}
             value={companyDescription}
             onChange={(v) => updateCompanyField('companyDescription', v)}
           />
           <TextControl
-            label={__('Client', 'project-block')}
+            label={__('Client', 'adaire-blocks')}
             value={client}
             onChange={(v) => updateCompanyField('client', v)}
           />
           <TextControl
-            label={__('Country', 'project-block')}
+            label={__('Country', 'adaire-blocks')}
             value={country}
             onChange={(v) => updateCompanyField('country', v)}
           />
           <TextControl
-            label={__('Industry', 'project-block')}
+            label={__('Industry', 'adaire-blocks')}
             value={industry}
             onChange={(v) => updateCompanyField('industry', v)}
           />
           <TextControl
-            label={__('Language', 'project-block')}
+            label={__('Language', 'adaire-blocks')}
             value={language}
             onChange={(v) => updateCompanyField('language', v)}
           />
           <TextControl
-            label={__('Technology', 'project-block')}
+            label={__('Technology', 'adaire-blocks')}
             value={technology}
             onChange={(v) => updateCompanyField('technology', v)}
           />
           <TextControl
-            label={__('Site URL', 'project-block')}
+            label={__('Site URL', 'adaire-blocks')}
             value={siteUrl}
             onChange={(v) => updateCompanyField('siteUrl', v)}
-            help={__('Enter the full URL (e.g., https://example.com)', 'project-block')}
+            help={__('Enter the full URL (e.g., https://example.com)', 'adaire-blocks')}
           />
         </PanelBody>
-        <PanelBody title={__('Gallery Items', 'project-block')} initialOpen={true}>
+        <PanelBody title={__('Gallery Items', 'adaire-blocks')} initialOpen={true}>
           {galleryItems.map((item, i) => (
             <div key={i} style={{ border: '1px solid #ddd', padding: 10, marginBottom: 16, borderRadius: 4 }}>
               <TextControl
-                label={__('Title', 'project-block')}
+                label={__('Title', 'adaire-blocks')}
                 value={item.title}
                 onChange={(v) => updateGalleryItem(i, 'title', v)}
               />
               <TextareaControl
-                label={__('Copy', 'project-block')}
+                label={__('Copy', 'adaire-blocks')}
                 value={item.copy}
                 onChange={(v) => updateGalleryItem(i, 'copy', v)}
-                help={__('Whitespace and line breaks will be preserved in the final view', 'project-block')}
+                help={__('Whitespace and line breaks will be preserved in the final view', 'adaire-blocks')}
               />
               <MediaUploadCheck>
                 <MediaUpload
@@ -111,7 +111,7 @@ export default function Edit({ attributes, setAttributes }) {
                   render={({ open }) => (
                     <div style={{ marginBottom: 8 }}>
                       <Button onClick={open} isSecondary>
-                        {item.img ? __('Change Image', 'project-block') : __('Select Image', 'project-block')}
+                        {item.img ? __('Change Image', 'adaire-blocks') : __('Select Image', 'adaire-blocks')}
                       </Button>
                       {item.img && (
                         <img src={item.img} alt="" style={{ display: 'block', marginTop: 8, maxWidth: 120, borderRadius: 8 }} />
@@ -121,11 +121,11 @@ export default function Edit({ attributes, setAttributes }) {
                 />
               </MediaUploadCheck>
               <Button isDestructive isSmall onClick={() => removeGalleryItem(i)} style={{ marginTop: 8 }}>
-                {__('Remove Item', 'project-block')}
+                {__('Remove Item', 'adaire-blocks')}
               </Button>
             </div>
           ))}
-          <Button isPrimary onClick={addGalleryItem}>{__('Add Gallery Item', 'project-block')}</Button>
+          <Button isPrimary onClick={addGalleryItem}>{__('Add Gallery Item', 'adaire-blocks')}</Button>
         </PanelBody>
 
         <PanelBody title="Next Button" initialOpen={true}>

@@ -15,7 +15,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "video-player-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -181,7 +181,11 @@
         },
         "mediaKind": {
             "type": "string",
-            "default": "video"
+            "default": "video",
+            "enum": [
+                "video",
+                "image"
+            ]
         },
         "mediaFileId": {
             "type": "number",
@@ -197,7 +201,12 @@
         },
         "videoType": {
             "type": "string",
-            "default": "youtube"
+            "default": "youtube",
+            "enum": [
+                "youtube",
+                "vimeo",
+                "upload"
+            ]
         },
         "ytVideoId": {
             "type": "string",

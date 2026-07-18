@@ -82,16 +82,16 @@ const bigDesktopIcon = createElement('svg', {
 );
 
 const BREAKPOINTS = [
-    { name: 'mobile', icon: mobile, label: __('Mobile', 'infogrid-block') },
-    { name: 'tablet', icon: tablet, label: __('Tablet', 'infogrid-block') },
-    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'infogrid-block') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'infogrid-block') },
-    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'infogrid-block') }
+    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
+    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
+    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks') },
+    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
+    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks') }
 ];
 
 const CONTAINER_MODES = [
-    { label: __('Full Width', 'infogrid-block'), value: 'full' },
-    { label: __('Constrained', 'infogrid-block'), value: 'constrained' },
+    { label: __('Full Width', 'adaire-blocks'), value: 'full' },
+    { label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
 ];
 
 const UNIT_OPTIONS = ['px', '%', 'rem', 'vw'];
@@ -262,7 +262,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 <div className="adaire-device-toggle">
-                    <p className="adaire-device-toggle-label">{__('Device View', 'infogrid-block')}</p>
+                    <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks')}</p>
                     <div className="adaire-device-toggle-group">
                         {BREAKPOINTS.map((bp) => (
                             <Button
@@ -276,19 +276,19 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         ))}
                     </div>
                     <p className="adaire-device-toggle-status">
-                        {__('Configuring:', 'infogrid-block')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
+                        {__('Configuring:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
                     </p>
                 </div>
 
                 {/* Items Management */}
-                <PanelBody title={__('Manage Items', 'infogrid-block')} initialOpen={true}>
+                <PanelBody title={__('Manage Items', 'adaire-blocks')} initialOpen={true}>
                     <Button
                         variant="primary"
                         icon={plus}
                         onClick={addItem}
                         style={{ marginBottom: '16px', width: '100%', justifyContent: 'center' }}
                     >
-                        {__('Add New Item', 'infogrid-block')}
+                        {__('Add New Item', 'adaire-blocks')}
                     </Button>
 
                     {items.map((item, index) => (
@@ -305,21 +305,21 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                 size="small"
                                                 onClick={() => moveItem(index, -1)}
                                                 disabled={index === 0}
-                                                label={__('Move Up', 'infogrid-block')}
+                                                label={__('Move Up', 'adaire-blocks')}
                                             />
                                             <Button
                                                 icon={chevronDown}
                                                 size="small"
                                                 onClick={() => moveItem(index, 1)}
                                                 disabled={index === items.length - 1}
-                                                label={__('Move Down', 'infogrid-block')}
+                                                label={__('Move Down', 'adaire-blocks')}
                                             />
                                             <Button
                                                 icon={trash}
                                                 size="small"
                                                 isDestructive
                                                 onClick={() => deleteItem(item.id)}
-                                                label={__('Delete', 'infogrid-block')}
+                                                label={__('Delete', 'adaire-blocks')}
                                             />
                                         </Flex>
                                     </FlexItem>
@@ -327,35 +327,35 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             </CardHeader>
                             <CardBody>
                                 <TextControl
-                                    label={__('Title', 'infogrid-block')}
+                                    label={__('Title', 'adaire-blocks')}
                                     value={item.title}
                                     onChange={(value) => updateItem(item.id, 'title', value)}
                                 />
                                 <ToggleControl
-                                    label={__('Show Title', 'infogrid-block')}
+                                    label={__('Show Title', 'adaire-blocks')}
                                     checked={item.showTitle !== false}
                                     onChange={(value) => updateItem(item.id, 'showTitle', value)}
                                 />
                                 <TextControl
-                                    label={__('Tagline', 'infogrid-block')}
+                                    label={__('Tagline', 'adaire-blocks')}
                                     value={item.tagline}
                                     onChange={(value) => updateItem(item.id, 'tagline', value)}
                                 />
                                 <TextareaControl
-                                    label={__('Description', 'infogrid-block')}
+                                    label={__('Description', 'adaire-blocks')}
                                     value={item.description}
                                     onChange={(value) => updateItem(item.id, 'description', value)}
                                     rows={3}
                                 />
 
                                 <ToggleControl
-                                    label={__('Use icon instead of title', 'infogrid-block')}
+                                    label={__('Use icon instead of title', 'adaire-blocks')}
                                     checked={!!item.useIcon}
                                     onChange={(value) => updateItem(item.id, 'useIcon', value)}
                                 />
 
                                 {item.useIcon && (
-                                    <BaseControl label={__('Item Icon', 'infogrid-block')}>
+                                    <BaseControl label={__('Item Icon', 'adaire-blocks')}>
                                         <Button
                                             variant="secondary"
                                             onClick={() => {
@@ -370,7 +370,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                     {item.iconClass}
                                                 </>
                                             ) : (
-                                                __('Choose Bootstrap Icon', 'infogrid-block')
+                                                __('Choose Bootstrap Icon', 'adaire-blocks')
                                             )}
                                         </Button>
                                         {item.iconClass && (
@@ -379,7 +379,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                 isDestructive
                                                 onClick={() => updateItem(item.id, 'iconClass', '')}
                                             >
-                                                {__('Remove Icon', 'infogrid-block')}
+                                                {__('Remove Icon', 'adaire-blocks')}
                                             </Button>
                                         )}
                                     </BaseControl>
@@ -390,9 +390,9 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 {/* Typography Settings */}
-                <PanelBody title={__('Typography', 'infogrid-block')} initialOpen={false}>
+                <PanelBody title={__('Typography', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Title Font Size', 'infogrid-block')}
+                        label={__('Title Font Size', 'adaire-blocks')}
                         value={titleFontSize}
                         onChange={(value) => setAttributes({ titleFontSize: value })}
                         min={10}
@@ -400,7 +400,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         step={1}
                     />
                     <RangeControl
-                        label={__('Tagline Font Size', 'infogrid-block')}
+                        label={__('Tagline Font Size', 'adaire-blocks')}
                         value={taglineFontSize}
                         onChange={(value) => setAttributes({ taglineFontSize: value })}
                         min={16}
@@ -408,7 +408,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         step={1}
                     />
                     <RangeControl
-                        label={__('Description Font Size', 'infogrid-block')}
+                        label={__('Description Font Size', 'adaire-blocks')}
                         value={descriptionFontSize}
                         onChange={(value) => setAttributes({ descriptionFontSize: value })}
                         min={12}
@@ -416,7 +416,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         step={1}
                     />
                     <RangeControl
-                        label={__('Icon Size', 'infogrid-block')}
+                        label={__('Icon Size', 'adaire-blocks')}
                         value={iconSize}
                         onChange={(value) => setAttributes({ iconSize: value })}
                         min={12}
@@ -426,9 +426,9 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 {/* Layout Settings */}
-                <PanelBody title={__('Layout', 'infogrid-block')} initialOpen={false}>
+                <PanelBody title={__('Layout', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Item Padding', 'infogrid-block')}
+                        label={__('Item Padding', 'adaire-blocks')}
                         value={itemPadding}
                         onChange={(value) => setAttributes({ itemPadding: value })}
                         min={16}
@@ -436,7 +436,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         step={4}
                     />
                     <RangeControl
-                        label={__('Gap Between Items', 'infogrid-block')}
+                        label={__('Gap Between Items', 'adaire-blocks')}
                         value={gap}
                         onChange={(value) => setAttributes({ gap: value })}
                         min={0}
@@ -445,7 +445,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
 
                     <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>
-                        {__('Layout Style', 'infogrid-block')}
+                        {__('Layout Style', 'adaire-blocks')}
                     </p>
                     <ButtonGroup>
                         <Button
@@ -453,28 +453,28 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             isSecondary={layoutStyle !== 'default'}
                             onClick={() => setAttributes({ layoutStyle: 'default' })}
                         >
-                            {__('Default', 'infogrid-block')}
+                            {__('Default', 'adaire-blocks')}
                         </Button>
                         <Button
                             isPrimary={layoutStyle === 'alt'}
                             isSecondary={layoutStyle !== 'alt'}
                             onClick={() => setAttributes({ layoutStyle: 'alt' })}
                         >
-                            {__('Alternate', 'infogrid-block')}
+                            {__('Alternate', 'adaire-blocks')}
                         </Button>
                         <Button
                             isPrimary={layoutStyle === 'grid'}
                             isSecondary={layoutStyle !== 'grid'}
                             onClick={() => setAttributes({ layoutStyle: 'grid' })}
                         >
-                            {__('Flexible Grid', 'infogrid-block')}
+                            {__('Flexible Grid', 'adaire-blocks')}
                         </Button>
                     </ButtonGroup>
 
                     {layoutStyle === 'grid' && (
                         <RangeControl
-                            label={__('Items Per Row (Desktop)', 'infogrid-block')}
-                            help={__('Items are distributed evenly and wrap to new rows automatically — no fixed positions, so any number of items lays out cleanly. Tablet shows up to 2 per row and mobile stacks to 1.', 'infogrid-block')}
+                            label={__('Items Per Row (Desktop)', 'adaire-blocks')}
+                            help={__('Items are distributed evenly and wrap to new rows automatically — no fixed positions, so any number of items lays out cleanly. Tablet shows up to 2 per row and mobile stacks to 1.', 'adaire-blocks')}
                             value={itemsPerRow || 3}
                             onChange={(value) => setAttributes({ itemsPerRow: value })}
                             min={1}
@@ -486,60 +486,60 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
                 {/* Color Settings */}
                 <PanelColorSettings
-                    title={__('Colors', 'infogrid-block')}
+                    title={__('Colors', 'adaire-blocks')}
                     colorSettings={[
                         {
-                            label: __('Background Color', 'infogrid-block'),
+                            label: __('Background Color', 'adaire-blocks'),
                             value: backgroundColor,
                             onChange: (value) => setAttributes({ backgroundColor: value })
                         },
                         {
-                            label: __('Title Color', 'infogrid-block'),
+                            label: __('Title Color', 'adaire-blocks'),
                             value: titleColor,
                             onChange: (value) => setAttributes({ titleColor: value })
                         },
                         {
-                            label: __('Tagline Color', 'infogrid-block'),
+                            label: __('Tagline Color', 'adaire-blocks'),
                             value: taglineColor,
                             onChange: (value) => setAttributes({ taglineColor: value })
                         },
                         {
-                            label: __('Icon Color', 'infogrid-block'),
+                            label: __('Icon Color', 'adaire-blocks'),
                             value: iconColor,
                             onChange: (value) => setAttributes({ iconColor: value })
                         },
                         {
-                            label: __('Hover Icon Color', 'infogrid-block'),
+                            label: __('Hover Icon Color', 'adaire-blocks'),
                             value: hoverIconColor,
                             onChange: (value) => setAttributes({ hoverIconColor: value })
                         },
                         {
-                            label: __('Border Color', 'infogrid-block'),
+                            label: __('Border Color', 'adaire-blocks'),
                             value: borderColor,
                             onChange: (value) => setAttributes({ borderColor: value })
                         },
                         {
-                            label: __('Container Background', 'infogrid-block'),
+                            label: __('Container Background', 'adaire-blocks'),
                             value: containerBackgroundColor,
                             onChange: (value) => setAttributes({ containerBackgroundColor: value })
                         },
                         {
-                            label: __('Hover Background', 'infogrid-block'),
+                            label: __('Hover Background', 'adaire-blocks'),
                             value: hoverBackgroundColor,
                             onChange: (value) => setAttributes({ hoverBackgroundColor: value })
                         },
                         {
-                            label: __('Hover Title Color', 'infogrid-block'),
+                            label: __('Hover Title Color', 'adaire-blocks'),
                             value: hoverTitleColor,
                             onChange: (value) => setAttributes({ hoverTitleColor: value })
                         },
                         {
-                            label: __('Hover Tagline Color', 'infogrid-block'),
+                            label: __('Hover Tagline Color', 'adaire-blocks'),
                             value: hoverTaglineColor,
                             onChange: (value) => setAttributes({ hoverTaglineColor: value })
                         },
                         {
-                            label: __('Hover Description Color', 'infogrid-block'),
+                            label: __('Hover Description Color', 'adaire-blocks'),
                             value: hoverDescriptionColor,
                             onChange: (value) => setAttributes({ hoverDescriptionColor: value })
                         }
@@ -547,8 +547,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 />
 
                 {/* Layout Settings */}
-                <PanelBody title={__('Layout Settings', 'infogrid-block')}>
-                    <p>{__('Container Width', 'infogrid-block')}</p>
+                <PanelBody title={__('Layout Settings', 'adaire-blocks')}>
+                    <p>{__('Container Width', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {CONTAINER_MODES.map((mode) => (
                             <Button
@@ -564,7 +564,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     {/* Max Width Controls using RangeControl + Unit Selection */}
                     <div className="adaire-infogrid__dimension-control" style={{ marginBottom: '16px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                            <strong>{__('Max Width', 'infogrid-block')}</strong>
+                            <strong>{__('Max Width', 'adaire-blocks')}</strong>
                         </div>
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                             <div style={{ flex: 1 }}>
@@ -603,7 +603,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     </div>
 
                     <BoxControl
-                        label={__('Block Padding', 'infogrid-block')}
+                        label={__('Block Padding', 'adaire-blocks')}
                         values={responsivePadding?.[deviceType] || {}}
                         onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, val)}
                     />
@@ -651,33 +651,33 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 content={
                                     <>
                                         <TextControl
-                                            label={__('Title', 'infogrid-block')}
+                                            label={__('Title', 'adaire-blocks')}
                                             value={item.title}
                                             onChange={(value) => updateItem(item.id, 'title', value)}
                                         />
                                         <ToggleControl
-                                            label={__('Show Title', 'infogrid-block')}
+                                            label={__('Show Title', 'adaire-blocks')}
                                             checked={item.showTitle !== false}
                                             onChange={(value) => updateItem(item.id, 'showTitle', value)}
                                         />
                                         <TextControl
-                                            label={__('Tagline', 'infogrid-block')}
+                                            label={__('Tagline', 'adaire-blocks')}
                                             value={item.tagline}
                                             onChange={(value) => updateItem(item.id, 'tagline', value)}
                                         />
                                         <TextareaControl
-                                            label={__('Description', 'infogrid-block')}
+                                            label={__('Description', 'adaire-blocks')}
                                             value={item.description}
                                             onChange={(value) => updateItem(item.id, 'description', value)}
                                             rows={3}
                                         />
                                         <ToggleControl
-                                            label={__('Use icon instead of title', 'infogrid-block')}
+                                            label={__('Use icon instead of title', 'adaire-blocks')}
                                             checked={!!item.useIcon}
                                             onChange={(value) => updateItem(item.id, 'useIcon', value)}
                                         />
                                         {item.useIcon && (
-                                            <BaseControl label={__('Item Icon', 'infogrid-block')}>
+                                            <BaseControl label={__('Item Icon', 'adaire-blocks')}>
                                                 <Button
                                                     variant="secondary"
                                                     onClick={() => {
@@ -692,7 +692,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                             {item.iconClass}
                                                         </>
                                                     ) : (
-                                                        __('Choose Bootstrap Icon', 'infogrid-block')
+                                                        __('Choose Bootstrap Icon', 'adaire-blocks')
                                                     )}
                                                 </Button>
                                             </BaseControl>

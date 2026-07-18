@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
 register_block_pattern( 'adaire-blocks/contact-page', array(
     'title'         => __( 'Contact Page', 'adaire-blocks' ),
     'description'   => __( 'Hero section with a two-column contact layout.', 'adaire-blocks' ),

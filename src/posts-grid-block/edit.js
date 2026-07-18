@@ -43,20 +43,20 @@ const bigDesktopIcon = createElement('svg', { width: 24, height: 24, viewBox: '0
 );
 
 const BREAKPOINTS = [
-	{ name: 'mobile', icon: mobile, label: __('Mobile', 'posts-grid-block') },
-	{ name: 'tablet', icon: tablet, label: __('Tablet', 'posts-grid-block') },
-	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'posts-grid-block') },
-	{ name: 'desktop', icon: desktop, label: __('Desktop', 'posts-grid-block') },
-	{ name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'posts-grid-block') },
+	{ name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
+	{ name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
+	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks') },
+	{ name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
+	{ name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks') },
 ];
 
 // Shared DeviceSwitcher tiers, derived from the same BREAKPOINTS list above.
 const FIVE_TIERS = BREAKPOINTS.map((bp) => ({ key: bp.name, label: bp.label, icon: bp.icon }));
 
 const THREE_TIERS = [
-	{ key: 'desktop', label: __('Desktop', 'posts-grid-block'), icon: desktop },
-	{ key: 'tablet', label: __('Tablet', 'posts-grid-block'), icon: tablet },
-	{ key: 'mobile', label: __('Mobile', 'posts-grid-block'), icon: mobile },
+	{ key: 'desktop', label: __('Desktop', 'adaire-blocks'), icon: desktop },
+	{ key: 'tablet', label: __('Tablet', 'adaire-blocks'), icon: tablet },
+	{ key: 'mobile', label: __('Mobile', 'adaire-blocks'), icon: mobile },
 ];
 
 const FONT_FAMILY_OPTIONS = [
@@ -478,7 +478,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             <div {...blockProps}>
                 <Placeholder>
                     <Spinner />
-                    <p>{__('Loading Posts Grid...', 'posts-grid-block')}</p>
+                    <p>{__('Loading Posts Grid...', 'adaire-blocks')}</p>
                 </Placeholder>
             </div>
         );
@@ -490,10 +490,10 @@ return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 {/* Heading Settings */}
-                <PanelBody section="content" title={__('Heading', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Heading', 'adaire-blocks')} initialOpen={false}>
                     <PanelRow>
                         <ToggleControl
-                            label={__('Enable Heading', 'posts-grid-block')}
+                            label={__('Enable Heading', 'adaire-blocks')}
                             checked={!!showHeading}
                             onChange={(value) => setAttributes({ showHeading: value })}
                         />
@@ -501,11 +501,11 @@ return (
                 </PanelBody>
 
                 {showHeading && (
-                    <PanelBody section="layout" title={__('Heading Layout', 'posts-grid-block')} initialOpen={false}>
+                    <PanelBody section="layout" title={__('Heading Layout', 'adaire-blocks')} initialOpen={false}>
                         <DeviceSwitcher
                             deviceType={headingDeviceType}
                             setDeviceType={setHeadingDeviceType}
-                            label={__('Responsive Heading Settings', 'posts-grid-block')}
+                            label={__('Responsive Heading Settings', 'adaire-blocks')}
                             tiers={FIVE_TIERS}
                             onReset={() => resetToDefaults([
                                 'headingResponsiveAlign', 'headingResponsiveTextAlign',
@@ -513,24 +513,24 @@ return (
                         />
 
                         <SelectControl
-                            label={__('Alignment (block)', 'posts-grid-block')}
+                            label={__('Alignment (block)', 'adaire-blocks')}
                             value={headingResponsiveAlign?.[headingDeviceType] || 'flex-start'}
                             options={[
-                                { label: __('Left', 'posts-grid-block'), value: 'flex-start' },
-                                { label: __('Center', 'posts-grid-block'), value: 'center' },
-                                { label: __('Right', 'posts-grid-block'), value: 'flex-end' },
+                                { label: __('Left', 'adaire-blocks'), value: 'flex-start' },
+                                { label: __('Center', 'adaire-blocks'), value: 'center' },
+                                { label: __('Right', 'adaire-blocks'), value: 'flex-end' },
                             ]}
                             onChange={(value) => updateResponsiveAttribute('headingResponsiveAlign', headingDeviceType, value)}
-                            help={__('Controls how the heading block is positioned within the container.', 'posts-grid-block')}
+                            help={__('Controls how the heading block is positioned within the container.', 'adaire-blocks')}
                         />
 
                         <SelectControl
-                            label={__('Text Align', 'posts-grid-block')}
+                            label={__('Text Align', 'adaire-blocks')}
                             value={headingResponsiveTextAlign?.[headingDeviceType] || 'left'}
                             options={[
-                                { label: __('Left', 'posts-grid-block'), value: 'left' },
-                                { label: __('Center', 'posts-grid-block'), value: 'center' },
-                                { label: __('Right', 'posts-grid-block'), value: 'right' },
+                                { label: __('Left', 'adaire-blocks'), value: 'left' },
+                                { label: __('Center', 'adaire-blocks'), value: 'center' },
+                                { label: __('Right', 'adaire-blocks'), value: 'right' },
                             ]}
                             onChange={(value) => updateResponsiveAttribute('headingResponsiveTextAlign', headingDeviceType, value)}
                         />
@@ -538,7 +538,7 @@ return (
                 )}
 
                 {showHeading && (
-                    <PanelBody section="style" priority="high" title={__('Heading Typography', 'posts-grid-block')} initialOpen={false}>
+                    <PanelBody section="style" priority="high" title={__('Heading Typography', 'adaire-blocks')} initialOpen={false}>
                         <DeviceSwitcher
                             deviceType={headingDeviceType}
                             setDeviceType={setHeadingDeviceType}
@@ -552,13 +552,13 @@ return (
                         />
 
                         <UnitControl
-                            label={__('Font Size', 'posts-grid-block')}
+                            label={__('Font Size', 'adaire-blocks')}
                                 value={headingResponsiveFontSize?.[headingDeviceType] || ''}
                                 onChange={(value) => updateResponsiveAttribute('headingResponsiveFontSize', headingDeviceType, value)}
                             />
 
                             <SelectControl
-                                label={__('Font Weight', 'posts-grid-block')}
+                                label={__('Font Weight', 'adaire-blocks')}
                                 value={headingResponsiveFontWeight?.[headingDeviceType] || '600'}
                                 options={[
                                     { label: '100', value: '100' }, { label: '200', value: '200' },
@@ -571,83 +571,83 @@ return (
                             />
 
                             <UnitControl
-                                label={__('Underline Stroke Width', 'posts-grid-block')}
+                                label={__('Underline Stroke Width', 'adaire-blocks')}
                                 value={headingResponsiveUnderlineWidth?.[headingDeviceType] || ''}
                                 onChange={(value) => updateResponsiveAttribute('headingResponsiveUnderlineWidth', headingDeviceType, value)}
-                                help={__('Applies to any underlined/highlighted text segments in the heading.', 'posts-grid-block')}
+                                help={__('Applies to any underlined/highlighted text segments in the heading.', 'adaire-blocks')}
                             />
 
                             <UnitControl
-                                label={__('Bottom Margin', 'posts-grid-block')}
+                                label={__('Bottom Margin', 'adaire-blocks')}
                                 value={headingResponsiveMarginBottom?.[headingDeviceType] || ''}
                                 onChange={(value) => updateResponsiveAttribute('headingResponsiveMarginBottom', headingDeviceType, value)}
-                                help={__('Controls the spacing below the heading.', 'posts-grid-block')}
+                                help={__('Controls the spacing below the heading.', 'adaire-blocks')}
                             />
 
                             <UnitControl
-                                label={__('Line Height', 'posts-grid-block')}
+                                label={__('Line Height', 'adaire-blocks')}
                                 value={headingResponsiveLineHeight?.[headingDeviceType] || ''}
                                 onChange={(value) => updateResponsiveAttribute('headingResponsiveLineHeight', headingDeviceType, value)}
                             />
 
                             <UnitControl
-                                label={__('Letter Spacing', 'posts-grid-block')}
+                                label={__('Letter Spacing', 'adaire-blocks')}
                                 value={headingResponsiveLetterSpacing?.[headingDeviceType] || ''}
                                 onChange={(value) => updateResponsiveAttribute('headingResponsiveLetterSpacing', headingDeviceType, value)}
                             />
 
                             <SelectControl
-                                label={__('Text Transform', 'posts-grid-block')}
+                                label={__('Text Transform', 'adaire-blocks')}
                                 value={headingTextTransform}
                                 options={[
-                                    { label: __('None', 'posts-grid-block'), value: 'none' },
-                                    { label: __('Uppercase', 'posts-grid-block'), value: 'uppercase' },
-                                    { label: __('Lowercase', 'posts-grid-block'), value: 'lowercase' },
-                                    { label: __('Capitalize', 'posts-grid-block'), value: 'capitalize' },
+                                    { label: __('None', 'adaire-blocks'), value: 'none' },
+                                    { label: __('Uppercase', 'adaire-blocks'), value: 'uppercase' },
+                                    { label: __('Lowercase', 'adaire-blocks'), value: 'lowercase' },
+                                    { label: __('Capitalize', 'adaire-blocks'), value: 'capitalize' },
                                 ]}
                                 onChange={(value) => setAttributes({ headingTextTransform: value })}
                             />
 
                             <SelectControl
-                                label={__('Font Family', 'posts-grid-block')}
+                                label={__('Font Family', 'adaire-blocks')}
                                 value={fontFamily}
                                 options={FONT_FAMILY_OPTIONS}
                                 onChange={(value) => setAttributes({ fontFamily: value })}
-                                help={__('Applies to the entire block.', 'posts-grid-block')}
+                                help={__('Applies to the entire block.', 'adaire-blocks')}
                             />
                     </PanelBody>
                 )}
 
                 {/* Content Settings */}
-                <PanelBody section="content" title={__('Content Settings', 'posts-grid-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Content Settings', 'adaire-blocks')} initialOpen={true}>
                     <TextControl
-                        label={__('Posts Per Page', 'posts-grid-block')}
+                        label={__('Posts Per Page', 'adaire-blocks')}
                         type="number"
                         value={postsPerPage}
                         onChange={(value) => setAttributes({ postsPerPage: parseInt(value) || 6 })}
                         min={1}
                         max={100}
-                        help={__('Number of posts to display per page', 'posts-grid-block')}
+                        help={__('Number of posts to display per page', 'adaire-blocks')}
                     />
 
                     <PanelRow>
                         <ToggleControl
-                            label={__('Enable Pagination', 'posts-grid-block')}
+                            label={__('Enable Pagination', 'adaire-blocks')}
                             checked={enablePagination}
                             onChange={(value) => setAttributes({ enablePagination: value })}
-                            help={__('Show pagination when there are more posts than posts per page', 'posts-grid-block')}
+                            help={__('Show pagination when there are more posts than posts per page', 'adaire-blocks')}
                         />
                     </PanelRow>
 
                     {enablePagination && (
                         <PanelRow>
                             <SelectControl
-                                label={__('Pagination Style', 'posts-grid-block')}
+                                label={__('Pagination Style', 'adaire-blocks')}
                                 value={paginationStyle}
                                 options={[
-                                    { label: __('Page Numbers', 'posts-grid-block'), value: 'numbers' },
-                                    { label: __('Load More Button', 'posts-grid-block'), value: 'loadmore' },
-                                    { label: __('Previous/Next', 'posts-grid-block'), value: 'prevnext' }
+                                    { label: __('Page Numbers', 'adaire-blocks'), value: 'numbers' },
+                                    { label: __('Load More Button', 'adaire-blocks'), value: 'loadmore' },
+                                    { label: __('Previous/Next', 'adaire-blocks'), value: 'prevnext' }
                                 ]}
                                 onChange={(value) => setAttributes({ paginationStyle: value })}
                             />
@@ -656,7 +656,7 @@ return (
                     
                     <PanelRow>
                         <ToggleControl
-                            label={__('Exclude Current Post', 'posts-grid-block')}
+                            label={__('Exclude Current Post', 'adaire-blocks')}
                             checked={excludeCurrentPost}
                             onChange={(value) => setAttributes({ excludeCurrentPost: value })}
                         />
@@ -664,7 +664,7 @@ return (
 
                     <PanelRow>
                         <ToggleControl
-                            label={__('Show Categories', 'posts-grid-block')}
+                            label={__('Show Categories', 'adaire-blocks')}
                             checked={showCategories}
                             onChange={(value) => setAttributes({ showCategories: value })}
                         />
@@ -672,7 +672,7 @@ return (
 
                     <PanelRow>
                         <ToggleControl
-                            label={__('Show Date', 'posts-grid-block')}
+                            label={__('Show Date', 'adaire-blocks')}
                             checked={showDate}
                             onChange={(value) => setAttributes({ showDate: value })}
                         />
@@ -680,7 +680,7 @@ return (
 
                     <PanelRow>
                         <ToggleControl
-                            label={__('Show Author', 'posts-grid-block')}
+                            label={__('Show Author', 'adaire-blocks')}
                             checked={showAuthor}
                             onChange={(value) => setAttributes({ showAuthor: value })}
                         />
@@ -688,7 +688,7 @@ return (
 
                     <PanelRow>
                         <ToggleControl
-                            label={__('Show Read Time', 'posts-grid-block')}
+                            label={__('Show Read Time', 'adaire-blocks')}
                             checked={showReadTime}
                             onChange={(value) => setAttributes({ showReadTime: value })}
                         />
@@ -696,7 +696,7 @@ return (
 
                     <PanelRow>
                         <ToggleControl
-                            label={__('Show Excerpt', 'posts-grid-block')}
+                            label={__('Show Excerpt', 'adaire-blocks')}
                             checked={showExcerpt}
                             onChange={(value) => setAttributes({ showExcerpt: value })}
                         />
@@ -705,7 +705,7 @@ return (
                     {showExcerpt && (
                         <PanelRow>
                             <RangeControl
-                                label={__('Excerpt Length', 'posts-grid-block')}
+                                label={__('Excerpt Length', 'adaire-blocks')}
                                 value={excerptLength}
                                 onChange={(value) => setAttributes({ excerptLength: value })}
                                 min={10}
@@ -716,8 +716,8 @@ return (
                 </PanelBody>
 
                 {/* Category Selection */}
-                <PanelBody section="content" title={__('Category Selection', 'posts-grid-block')} initialOpen={false}>
-                    <p>{__('Select categories to filter posts:', 'posts-grid-block')}</p>
+                <PanelBody section="content" title={__('Category Selection', 'adaire-blocks')} initialOpen={false}>
+                    <p>{__('Select categories to filter posts:', 'adaire-blocks')}</p>
                     <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ddd', padding: '10px' }}>
                         {categories.map(category => (
                             <label key={category.id} style={{ display: 'block', marginBottom: '8px' }}>
@@ -736,17 +736,17 @@ return (
                         onClick={() => setAttributes({ selectedCategories: [] })}
                         style={{ marginTop: '10px' }}
                     >
-                        {__('Clear All', 'posts-grid-block')}
+                        {__('Clear All', 'adaire-blocks')}
                     </Button>
                 </PanelBody>
 
                 {/* Layout Settings */}
-                <PanelBody section="layout" title={__('Layout Settings', 'posts-grid-block')} initialOpen={false}>
-                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Layout Type', 'posts-grid-block')}</p>
+                <PanelBody section="layout" title={__('Layout Settings', 'adaire-blocks')} initialOpen={false}>
+                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Layout Type', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {[
-                            { label: __('Grid', 'posts-grid-block'), value: 'normal' },
-                            { label: __('List', 'posts-grid-block'), value: 'list' }
+                            { label: __('Grid', 'adaire-blocks'), value: 'normal' },
+                            { label: __('List', 'adaire-blocks'), value: 'list' }
                         ].map(opt => (
                             <Button
                                 key={opt.value}
@@ -759,7 +759,7 @@ return (
 
                     {layoutType !== 'list' && (
                         <RangeControl
-                            label={__('Columns', 'posts-grid-block')}
+                            label={__('Columns', 'adaire-blocks')}
                             value={columns}
                             onChange={(value) => setAttributes({ columns: value })}
                             min={1}
@@ -767,12 +767,12 @@ return (
                             step={1}
                             withInputField={true}
                             allowReset={true}
-                            help={__('Number of columns for grid layout', 'posts-grid-block')}
+                            help={__('Number of columns for grid layout', 'adaire-blocks')}
                         />
                     )}
 
                     <SelectControl
-                            label={__('Text Alignment', 'posts-grid-block')}
+                            label={__('Text Alignment', 'adaire-blocks')}
                             value={textAlign}
                             options={[
                                 { label: 'Left', value: 'left' },
@@ -783,9 +783,9 @@ return (
                         />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Card & Image Style', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Card & Image Style', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Card Gap', 'posts-grid-block')}
+                        label={__('Card Gap', 'adaire-blocks')}
                         value={cardGap}
                         onChange={(value) => setAttributes({ cardGap: value })}
                         min={0}
@@ -796,7 +796,7 @@ return (
                     />
 
                     <RangeControl
-                        label={__('Card Border Radius', 'posts-grid-block')}
+                        label={__('Card Border Radius', 'adaire-blocks')}
                         value={cardBorderRadius}
                         onChange={(value) => setAttributes({ cardBorderRadius: value })}
                         min={0}
@@ -807,7 +807,7 @@ return (
                     />
 
                     <RangeControl
-                        label={__('Filter Button Border Radius', 'posts-grid-block')}
+                        label={__('Filter Button Border Radius', 'adaire-blocks')}
                         value={filterBorderRadius}
                         onChange={(value) => setAttributes({ filterBorderRadius: value })}
                         min={0}
@@ -818,7 +818,7 @@ return (
                     />
 
                     <RangeControl
-                        label={__('Pagination Border Radius', 'posts-grid-block')}
+                        label={__('Pagination Border Radius', 'adaire-blocks')}
                         value={paginationBorderRadius}
                         onChange={(value) => setAttributes({ paginationBorderRadius: value })}
                         min={0}
@@ -829,7 +829,7 @@ return (
                     />
 
                     <RangeControl
-                        label={__('Card Padding', 'posts-grid-block')}
+                        label={__('Card Padding', 'adaire-blocks')}
                             value={cardPadding}
                             onChange={(value) => setAttributes({ cardPadding: value })}
                             min={0}
@@ -840,7 +840,7 @@ return (
                         />
 
                     <RangeControl
-                        label={__('Image Height', 'posts-grid-block')}
+                        label={__('Image Height', 'adaire-blocks')}
                             value={imageHeight}
                             onChange={(value) => setAttributes({ imageHeight: value })}
                             min={100}
@@ -851,7 +851,7 @@ return (
                         />
 
                     <SelectControl
-                        label={__('Image Fit', 'posts-grid-block')}
+                        label={__('Image Fit', 'adaire-blocks')}
                             value={imageFit}
                             options={[
                                 { label: 'Cover', value: 'cover' },
@@ -863,10 +863,10 @@ return (
                 </PanelBody>
 
                 {/* Filtering Settings */}
-                <PanelBody section="content" title={__('Filtering Settings', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Filtering Settings', 'adaire-blocks')} initialOpen={false}>
                     <PanelRow>
                         <ToggleControl
-                            label={__('Enable Category Filtering', 'posts-grid-block')}
+                            label={__('Enable Category Filtering', 'adaire-blocks')}
                             checked={enableFiltering}
                             onChange={(value) => setAttributes({ enableFiltering: value })}
                         />
@@ -875,9 +875,9 @@ return (
                 </PanelBody>
 
                 {/* Typography Settings */}
-                <PanelBody section="style" priority="high" title={__('Typography Settings', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography Settings', 'adaire-blocks')} initialOpen={false}>
                     <TextControl
-                        label={__('Title Font Size (px)', 'posts-grid-block')}
+                        label={__('Title Font Size (px)', 'adaire-blocks')}
                         type="number"
                         value={titleFontSize}
                         onChange={(value) => setAttributes({ titleFontSize: parseInt(value) || 18 })}
@@ -886,7 +886,7 @@ return (
                     />
 
                     <SelectControl
-                        label={__('Title Font Weight', 'posts-grid-block')}
+                        label={__('Title Font Weight', 'adaire-blocks')}
                         value={titleFontWeight}
                         options={[
                             { label: 'Normal', value: '400' },
@@ -898,7 +898,7 @@ return (
                     />
 
                     <TextControl
-                        label={__('Excerpt Font Size (px)', 'posts-grid-block')}
+                        label={__('Excerpt Font Size (px)', 'adaire-blocks')}
                         type="number"
                         value={excerptFontSize}
                         onChange={(value) => setAttributes({ excerptFontSize: parseInt(value) || 14 })}
@@ -907,7 +907,7 @@ return (
                     />
 
                     <SelectControl
-                        label={__('Excerpt Font Weight', 'posts-grid-block')}
+                        label={__('Excerpt Font Weight', 'adaire-blocks')}
                         value={excerptFontWeight}
                         options={[
                             { label: 'Normal', value: '400' },
@@ -919,7 +919,7 @@ return (
                     />
 
                     <TextControl
-                        label={__('Meta Font Size (px)', 'posts-grid-block')}
+                        label={__('Meta Font Size (px)', 'adaire-blocks')}
                         type="number"
                         value={metaFontSize}
                         onChange={(value) => setAttributes({ metaFontSize: parseInt(value) || 12 })}
@@ -928,7 +928,7 @@ return (
                     />
 
                     <SelectControl
-                        label={__('Meta Font Weight', 'posts-grid-block')}
+                        label={__('Meta Font Weight', 'adaire-blocks')}
                         value={metaFontWeight}
                         options={[
                             { label: 'Normal', value: '400' },
@@ -944,42 +944,42 @@ return (
                 <PanelColorSettings
                     section="style"
                     priority="high"
-                    title={__('Color Settings', 'posts-grid-block')}
+                    title={__('Color Settings', 'adaire-blocks')}
                     colorSettings={[
                         ...(showHeading ? [
                             {
-                                label: __('Heading Color', 'posts-grid-block'),
+                                label: __('Heading Color', 'adaire-blocks'),
                                 value: headingColor,
                                 onChange: (value) => setAttributes({ headingColor: value })
                             },
                             {
-                                label: __('Heading Underline/Highlight Color', 'posts-grid-block'),
+                                label: __('Heading Underline/Highlight Color', 'adaire-blocks'),
                                 value: headingUnderlineColor,
                                 onChange: (value) => setAttributes({ headingUnderlineColor: value })
                             }
                         ] : []),
                         {
-                            label: __('Title Color', 'posts-grid-block'),
+                            label: __('Title Color', 'adaire-blocks'),
                             value: titleColor,
                             onChange: (value) => setAttributes({ titleColor: value })
                         },
                         {
-                            label: __('Excerpt Color', 'posts-grid-block'),
+                            label: __('Excerpt Color', 'adaire-blocks'),
                             value: excerptColor,
                             onChange: (value) => setAttributes({ excerptColor: value })
                         },
                         {
-                            label: __('Meta Color', 'posts-grid-block'),
+                            label: __('Meta Color', 'adaire-blocks'),
                             value: metaColor,
                             onChange: (value) => setAttributes({ metaColor: value })
                         },
                         {
-                            label: __('Category Color', 'posts-grid-block'),
+                            label: __('Category Color', 'adaire-blocks'),
                             value: categoryColor,
                             onChange: (value) => setAttributes({ categoryColor: value })
                         },
                         {
-                            label: __('Category Background', 'posts-grid-block'),
+                            label: __('Category Background', 'adaire-blocks'),
                             value: categoryBackgroundColor,
                             onChange: (value) => setAttributes({ categoryBackgroundColor: value })
                         }
@@ -987,10 +987,10 @@ return (
                 />
 
                 {/* Animation Settings */}
-                <PanelBody section="style" priority="medium" title={__('Animation Settings', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Animation Settings', 'adaire-blocks')} initialOpen={false}>
                     <PanelRow>
                         <ToggleControl
-                            label={__('Enable Animations', 'posts-grid-block')}
+                            label={__('Enable Animations', 'adaire-blocks')}
                             checked={enableAnimations}
                             onChange={(value) => setAttributes({ enableAnimations: value })}
                         />
@@ -1000,26 +1000,26 @@ return (
                         <>
                             <PanelRow>
                                 <SelectControl
-                                    label={__('Transition Animation', 'posts-grid-block')}
+                                    label={__('Transition Animation', 'adaire-blocks')}
                                     value={transitionAnimation}
                                     options={[
-                                        { label: __('Fade', 'posts-grid-block'), value: 'fade' },
-                                        { label: __('Fade Up', 'posts-grid-block'), value: 'fadeUp' },
-                                        { label: __('Fade Down', 'posts-grid-block'), value: 'fadeDown' },
-                                        { label: __('Scale', 'posts-grid-block'), value: 'scale' },
-                                        { label: __('Slide Left', 'posts-grid-block'), value: 'slideLeft' },
-                                        { label: __('Slide Right', 'posts-grid-block'), value: 'slideRight' },
-                                        { label: __('Flip', 'posts-grid-block'), value: 'flip' },
-                                        { label: __('FLIP (Smart Position)', 'posts-grid-block'), value: 'flipPosition' }
+                                        { label: __('Fade', 'adaire-blocks'), value: 'fade' },
+                                        { label: __('Fade Up', 'adaire-blocks'), value: 'fadeUp' },
+                                        { label: __('Fade Down', 'adaire-blocks'), value: 'fadeDown' },
+                                        { label: __('Scale', 'adaire-blocks'), value: 'scale' },
+                                        { label: __('Slide Left', 'adaire-blocks'), value: 'slideLeft' },
+                                        { label: __('Slide Right', 'adaire-blocks'), value: 'slideRight' },
+                                        { label: __('Flip', 'adaire-blocks'), value: 'flip' },
+                                        { label: __('FLIP (Smart Position)', 'adaire-blocks'), value: 'flipPosition' }
                                     ]}
                                     onChange={(value) => setAttributes({ transitionAnimation: value })}
-                                    help={__('Animation when switching pages or categories', 'posts-grid-block')}
+                                    help={__('Animation when switching pages or categories', 'adaire-blocks')}
                                 />
                             </PanelRow>
 
                             <PanelRow>
                                 <RangeControl
-                                    label={__('Animation Duration', 'posts-grid-block')}
+                                    label={__('Animation Duration', 'adaire-blocks')}
                                     value={animationDuration}
                                     onChange={(value) => setAttributes({ animationDuration: value })}
                                     min={0.1}
@@ -1032,7 +1032,7 @@ return (
 
                             <PanelRow>
                                 <RangeControl
-                                    label={__('Animation Delay', 'posts-grid-block')}
+                                    label={__('Animation Delay', 'adaire-blocks')}
                                     value={animationDelay}
                                     onChange={(value) => setAttributes({ animationDelay: value })}
                                     min={0}
@@ -1045,7 +1045,7 @@ return (
 
                             <PanelRow>
                                 <SelectControl
-                                    label={__('Animation Ease', 'posts-grid-block')}
+                                    label={__('Animation Ease', 'adaire-blocks')}
                                     value={animationEase}
                                     options={easeTypes}
                                     onChange={(value) => setAttributes({ animationEase: value })}
@@ -1054,7 +1054,7 @@ return (
 
                             <PanelRow>
                                 <ToggleControl
-                                    label={__('Enable Hover Effects', 'posts-grid-block')}
+                                    label={__('Enable Hover Effects', 'adaire-blocks')}
                                     checked={enableHoverEffects}
                                     onChange={(value) => setAttributes({ enableHoverEffects: value })}
                                 />
@@ -1064,7 +1064,7 @@ return (
                                 <>
                                     <PanelRow>
                                         <RangeControl
-                                            label={__('Hover Scale', 'posts-grid-block')}
+                                            label={__('Hover Scale', 'adaire-blocks')}
                                             value={hoverScale}
                                             onChange={(value) => setAttributes({ hoverScale: value })}
                                             min={1}
@@ -1077,7 +1077,7 @@ return (
 
                                     <PanelRow>
                                         <ToggleControl
-                                            label={__('Hover Shadow', 'posts-grid-block')}
+                                            label={__('Hover Shadow', 'adaire-blocks')}
                                             checked={hoverShadow}
                                             onChange={(value) => setAttributes({ hoverShadow: value })}
                                         />
@@ -1089,11 +1089,11 @@ return (
                 </PanelBody>
 
                 {/* Container Settings */}
-                <PanelBody section="layout" title={__('Container Settings', 'posts-grid-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Container Settings', 'adaire-blocks')} initialOpen={false}>
                     <ButtonGroup>
                         {[
-                            { label: __('Full Width', 'posts-grid-block'), value: 'full' },
-                            { label: __('Constrained', 'posts-grid-block'), value: 'constrained' }
+                            { label: __('Full Width', 'adaire-blocks'), value: 'full' },
+                            { label: __('Constrained', 'adaire-blocks'), value: 'constrained' }
                         ].map(opt => (
                             <Button
                                 key={opt.value}
@@ -1105,7 +1105,7 @@ return (
                     </ButtonGroup>
                     {containerMode === 'constrained' && (
                         <>
-                            <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>{__('Max Width', 'posts-grid-block')}</p>
+                            <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>{__('Max Width', 'adaire-blocks')}</p>
                             <DeviceSwitcher
                                 deviceType={deviceType}
                                 setDeviceType={setDeviceType}
@@ -1150,8 +1150,8 @@ return (
 
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Container Spacing', 'posts-grid-block')} initialOpen={false}>
-                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Margins', 'posts-grid-block')}</p>
+                <PanelBody section="style" priority="medium" title={__('Container Spacing', 'adaire-blocks')} initialOpen={false}>
+                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Margins', 'adaire-blocks')}</p>
                     <DeviceSwitcher
                         deviceType={deviceType}
                         setDeviceType={setDeviceType}
@@ -1196,7 +1196,7 @@ return (
                                 className="adaire-posts-grid__heading"
                                 value={headingText}
                                 onChange={(value) => setAttributes({ headingText: value })}
-                                placeholder={__('Add headingâ€¦', 'posts-grid-block')}
+                                placeholder={__('Add headingâ€¦', 'adaire-blocks')}
                                 allowedFormats={[
                                     'core/bold',
                                     'core/italic',
@@ -1215,7 +1215,7 @@ return (
                         <div className="adaire-posts-grid__filters">
                             <div className="adaire-posts-grid__filter-list">
                                 <button className="adaire-posts-grid__filter-btn is-active">
-                                    {__('All', 'posts-grid-block')}
+                                    {__('All', 'adaire-blocks')}
                                 </button>
                                 {categories.slice(0, 5).map(category => (
                                     <button key={category.id} className="adaire-posts-grid__filter-btn">
@@ -1228,14 +1228,14 @@ return (
                     
                     <QuickZone
                         id="layout"
-                        label={__('Layout', 'posts-grid-block')}
+                        label={__('Layout', 'adaire-blocks')}
                         activeZone={activeZone}
                         setActiveZone={setActiveZone}
                         content={
                             <>
                                 {layoutType !== 'list' && (
                                     <RangeControl
-                                        label={__('Columns', 'posts-grid-block')}
+                                        label={__('Columns', 'adaire-blocks')}
                                         value={columns}
                                         onChange={(value) => setAttributes({ columns: value })}
                                         min={1}
@@ -1244,7 +1244,7 @@ return (
                                     />
                                 )}
                                 <RangeControl
-                                    label={__('Card Gap', 'posts-grid-block')}
+                                    label={__('Card Gap', 'adaire-blocks')}
                                     value={cardGap}
                                     onChange={(value) => setAttributes({ cardGap: value })}
                                     min={0}
@@ -1406,7 +1406,7 @@ return (
                         <div className="adaire-posts-grid__filters">
                             <div className="adaire-posts-grid__filter-list">
                                 <button className="adaire-posts-grid__filter-btn is-active">
-                                    {__('All', 'posts-grid-block')}
+                                    {__('All', 'adaire-blocks')}
                                 </button>
                                 {categories.slice(0, 5).map(category => (
                                     <button key={category.id} className="adaire-posts-grid__filter-btn">
@@ -1437,7 +1437,7 @@ return (
                             {paginationStyle === 'loadmore' && (
                                 <div className="adaire-posts-grid__pagination-wrapper adaire-posts-grid__pagination-wrapper--loadmore">
                                     <button className="adaire-posts-grid__pagination-loadmore">
-                                        {__('Load More', 'posts-grid-block')}
+                                        {__('Load More', 'adaire-blocks')}
                                     </button>
                                 </div>
                             )}
@@ -1447,7 +1447,7 @@ return (
                                         <span>&larr; Previous</span>
                                     </button>
                                     <span className="adaire-posts-grid__pagination-info">
-                                        {__('Page 1 of 3', 'posts-grid-block')}
+                                        {__('Page 1 of 3', 'adaire-blocks')}
                                     </span>
                                     <button className="adaire-posts-grid__pagination-btn adaire-posts-grid__pagination-next">
                                         <span>Next &rarr;</span>

@@ -100,7 +100,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "constrained"
+            "default": "constrained",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "responsiveMaxWidth": {
             "type": "object",
@@ -296,7 +300,7 @@
             }
         }
     },
-    "textdomain": "adaire-blocks-dev2",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",

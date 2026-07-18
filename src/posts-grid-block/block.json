@@ -15,7 +15,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "posts-grid-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "style": "file:./style-index.css",
     "viewScript": "file:./view.js",
@@ -124,7 +124,13 @@
         },
         "headingTextTransform": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "uppercase",
+                "lowercase",
+                "capitalize"
+            ]
         },
         "fontFamily": {
             "type": "string",
@@ -140,7 +146,12 @@
         },
         "paginationStyle": {
             "type": "string",
-            "default": "numbers"
+            "default": "numbers",
+            "enum": [
+                "numbers",
+                "loadmore",
+                "prevnext"
+            ]
         },
         "selectedCategories": {
             "type": "array",
@@ -220,7 +231,12 @@
         },
         "imageFit": {
             "type": "string",
-            "default": "cover"
+            "default": "cover",
+            "enum": [
+                "cover",
+                "contain",
+                "fill"
+            ]
         },
         "titleColor": {
             "type": "string",
@@ -232,7 +248,13 @@
         },
         "titleFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "excerptColor": {
             "type": "string",
@@ -244,7 +266,13 @@
         },
         "excerptFontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "metaColor": {
             "type": "string",
@@ -256,7 +284,13 @@
         },
         "metaFontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "categoryColor": {
             "type": "string",
@@ -288,7 +322,17 @@
         },
         "transitionAnimation": {
             "type": "string",
-            "default": "fade"
+            "default": "fade",
+            "enum": [
+                "fade",
+                "fadeUp",
+                "fadeDown",
+                "scale",
+                "slideLeft",
+                "slideRight",
+                "flip",
+                "flipPosition"
+            ]
         },
         "animationDuration": {
             "type": "number",
@@ -324,7 +368,12 @@
         },
         "textAlign": {
             "type": "string",
-            "default": "left"
+            "default": "left",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "containerMode": {
             "type": "string",

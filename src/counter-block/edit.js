@@ -486,21 +486,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 
 				{/* Counter Content Panel */}
-				<PanelBody title={__("Counter Content", "counter-block")} initialOpen={false}>
+				<PanelBody title={__("Counter Content", "adaire-blocks")} initialOpen={false}>
 					<TextControl
-						label={__("Prefix", "counter-block")}
+						label={__("Prefix", "adaire-blocks")}
 						value={prefix}
 						onChange={(val) => setAttributes({ prefix: val })}
-						help={__("Text before the number (e.g., $, +, #)", "counter-block")}
+						help={__("Text before the number (e.g., $, +, #)", "adaire-blocks")}
 					/>
 					<TextControl
-						label={__("Suffix", "counter-block")}
+						label={__("Suffix", "adaire-blocks")}
 						value={suffix}
 						onChange={(val) => setAttributes({ suffix: val })}
-						help={__("Text after the number (e.g., %, K, M)", "counter-block")}
+						help={__("Text after the number (e.g., %, K, M)", "adaire-blocks")}
 					/>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Counter Direction", "counter-block")}
+						{__("Counter Direction", "adaire-blocks")}
 					</p>
 					{(() => {
 						const blockConfig = window.adaireBlocksConfig?.blocks?.['counter-block'] || {};
@@ -512,8 +512,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							<>
 								<ButtonGroup>
 									{[
-										{ label: __("Count Up", "counter-block"), value: "up" },
-										{ label: __("Count Down", "counter-block"), value: "down" },
+										{ label: __("Count Up", "adaire-blocks"), value: "up" },
+										{ label: __("Count Down", "adaire-blocks"), value: "down" },
 									].map((opt) => (
 										<Button
 											key={opt.value}
@@ -529,27 +529,27 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								</ButtonGroup>
 								{isCountUpOnly && (
 									<p style={{ fontSize: '12px', color: '#666', marginTop: '8px', fontStyle: 'italic' }}>
-										{blockConfig.upgradeMessage || __("Upgrade to Pro to enable Count Down", "counter-block")}
+										{blockConfig.upgradeMessage || __("Upgrade to Pro to enable Count Down", "adaire-blocks")}
 									</p>
 								)}
 							</>
 						);
 					})()}
 					<TextControl
-						label={__("Caption", "counter-block")}
+						label={__("Caption", "adaire-blocks")}
 						value={caption}
 						onChange={(val) => setAttributes({ caption: val })}
-						help={__("Text below or above the counter", "counter-block")}
+						help={__("Text below or above the counter", "adaire-blocks")}
 					/>
 					{caption && (
 						<>
 							<p style={{ marginTop: "12px", marginBottom: "8px", fontWeight: 600 }}>
-								{__("Caption Position", "counter-block")}
+								{__("Caption Position", "adaire-blocks")}
 							</p>
 							<ButtonGroup>
 								{[
-									{ label: __("Top", "counter-block"), value: "top" },
-									{ label: __("Bottom", "counter-block"), value: "bottom" },
+									{ label: __("Top", "adaire-blocks"), value: "top" },
+									{ label: __("Bottom", "adaire-blocks"), value: "bottom" },
 								].map((opt) => (
 									<Button
 										key={opt.value}
@@ -566,9 +566,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 
 				{/* Typography Panel */}
-				<PanelBody title={__("Typography", "counter-block")} initialOpen={false}>
+				<PanelBody title={__("Typography", "adaire-blocks")} initialOpen={false}>
 					<RangeControl
-						label={__("Font Size", "counter-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={getDeviceValue(fontSize, deviceType, deviceType === 'desktop' ? 48 : deviceType === 'tablet' ? 42 : deviceType === 'mobile' ? 36 : 28)}
 						onChange={(val) => setAttributes({ fontSize: updateDeviceAttribute(fontSize, deviceType, val) })}
 						min={12}
@@ -576,7 +576,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						step={1}
 					/>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Font Weight", "counter-block")}
+						{__("Font Weight", "adaire-blocks")}
 					</p>
 					<ButtonGroup>
 						{["300", "400", "500", "600", "700", "800", "900"].map((weight) => (
@@ -591,7 +591,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						))}
 					</ButtonGroup>
 					<RangeControl
-						label={__("Letter Spacing (px)", "counter-block")}
+						label={__("Letter Spacing (px)", "adaire-blocks")}
 						value={letterSpacing}
 						onChange={(val) => setAttributes({ letterSpacing: val })}
 						min={-5}
@@ -600,7 +600,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					/>
 					{caption && (
 						<RangeControl
-							label={__("Caption Font Size", "counter-block")}
+							label={__("Caption Font Size", "adaire-blocks")}
 							value={getDeviceValue(captionFontSize, deviceType, deviceType === 'desktop' ? 16 : deviceType === 'tablet' ? 14 : deviceType === 'mobile' ? 12 : 10)}
 							onChange={(val) => setAttributes({ captionFontSize: updateDeviceAttribute(captionFontSize, deviceType, val) })}
 							min={10}
@@ -611,15 +611,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 
 				{/* Colors Panel */}
-				<PanelBody title={__("Colors", "counter-block")} initialOpen={false}>
-					<p>{__("Counter Color", "counter-block")}</p>
+				<PanelBody title={__("Colors", "adaire-blocks")} initialOpen={false}>
+					<p>{__("Counter Color", "adaire-blocks")}</p>
 					<ColorPalette
 						value={color}
 						onChange={(val) => setAttributes({ color: val })}
 					/>
 					{caption && (
 						<>
-							<p style={{ marginTop: "16px" }}>{__("Caption Color", "counter-block")}</p>
+							<p style={{ marginTop: "16px" }}>{__("Caption Color", "adaire-blocks")}</p>
 							<ColorPalette
 								value={captionColor}
 								onChange={(val) => setAttributes({ captionColor: val })}

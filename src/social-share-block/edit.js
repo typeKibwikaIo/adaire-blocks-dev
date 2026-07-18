@@ -128,8 +128,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody section="layout" title={__('Button Settings', 'social-share-block')} initialOpen={true}>
-                    <BaseControl label={__('Button Icon', 'social-share-block')}>
+                <PanelBody section="layout" title={__('Button Settings', 'adaire-blocks')} initialOpen={true}>
+                    <BaseControl label={__('Button Icon', 'adaire-blocks')}>
                         <Button
                             onClick={() => setIsButtonIconPickerOpen(true)}
                             variant="secondary"
@@ -141,7 +141,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     {buttonIcon}
                                 </>
                             ) : (
-                                __('Choose Icon', 'social-share-block')
+                                __('Choose Icon', 'adaire-blocks')
                             )}
                         </Button>
                         {buttonIcon && (
@@ -151,20 +151,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 isDestructive
                                 style={{ width: '100%' }}
                             >
-                                {__('Reset to Default', 'social-share-block')}
+                                {__('Reset to Default', 'adaire-blocks')}
                             </Button>
                         )}
                     </BaseControl>
 
                     <RangeControl
-                        label={__('Icon Size', 'social-share-block')}
+                        label={__('Icon Size', 'adaire-blocks')}
                         value={iconSize}
                         onChange={(value) => setAttributes({ iconSize: value })}
                         min={16}
                         max={64}
                     />
 
-                    <BaseControl label={__('Icon Color', 'social-share-block')}>
+                    <BaseControl label={__('Icon Color', 'adaire-blocks')}>
                         <BoundColorPalette
                             value={iconColor}
                             onChange={(v) => setAttributes({ iconColor: v || "" })}
@@ -172,26 +172,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </BaseControl>
 
                     <SelectControl
-                        label={__('Alignment', 'social-share-block')}
+                        label={__('Alignment', 'adaire-blocks')}
                         value={alignment}
                         options={[
-                            { label: __('Left', 'social-share-block'), value: 'left' },
-                            { label: __('Center', 'social-share-block'), value: 'center' },
-                            { label: __('Right', 'social-share-block'), value: 'right' },
+                            { label: __('Left', 'adaire-blocks'), value: 'left' },
+                            { label: __('Center', 'adaire-blocks'), value: 'center' },
+                            { label: __('Right', 'adaire-blocks'), value: 'right' },
                         ]}
                         onChange={(value) => setAttributes({ alignment: value })}
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Button Styling', 'social-share-block')} initialOpen={false}>
-                    <BaseControl label={__('Background Color', 'social-share-block')}>
+                <PanelBody section="style" priority="medium" title={__('Button Styling', 'adaire-blocks')} initialOpen={false}>
+                    <BaseControl label={__('Background Color', 'adaire-blocks')}>
                         <BoundColorPalette
                             value={buttonBackgroundColor || ""}
                             onChange={(v) => setAttributes({ buttonBackgroundColor: v || "" })}
                         />
                     </BaseControl>
 
-                    <BaseControl label={__('Hover Background Color', 'social-share-block')}>
+                    <BaseControl label={__('Hover Background Color', 'adaire-blocks')}>
                         <BoundColorPalette
                             value={buttonHoverBackgroundColor || ""}
                             onChange={(v) => setAttributes({ buttonHoverBackgroundColor: v || "" })}
@@ -199,7 +199,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </BaseControl>
 
                     <BoxControl
-                        label={__('Button Padding', 'social-share-block')}
+                        label={__('Button Padding', 'adaire-blocks')}
                         values={buttonPadding}
                         onChange={(value) => setAttributes({ buttonPadding: value })}
                         units={[
@@ -210,7 +210,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <RangeControl
-                        label={__('Border Radius', 'social-share-block')}
+                        label={__('Border Radius', 'adaire-blocks')}
                         value={borderRadius}
                         onChange={(value) => setAttributes({ borderRadius: value })}
                         min={0}
@@ -218,7 +218,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <RangeControl
-                        label={__('Border Width', 'social-share-block')}
+                        label={__('Border Width', 'adaire-blocks')}
                         value={borderWidth}
                         onChange={(value) => setAttributes({ borderWidth: value })}
                         min={0}
@@ -226,7 +226,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     {borderWidth > 0 && (
-                        <BaseControl label={__('Border Color', 'social-share-block')}>
+                        <BaseControl label={__('Border Color', 'adaire-blocks')}>
                             <BoundColorPalette
                                 value={borderColor}
                                 onChange={(v) => setAttributes({ borderColor: v || "" })}
@@ -235,9 +235,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Typography', 'social-share-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Platform Label Font Size (px)', 'social-share-block')}
+                        label={__('Platform Label Font Size (px)', 'adaire-blocks')}
                         value={platformFontSize}
                         onChange={(value) => setAttributes({ platformFontSize: value })}
                         min={8}
@@ -246,7 +246,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <SelectControl
-                        label={__('Platform Label Font Weight', 'social-share-block')}
+                        label={__('Platform Label Font Weight', 'adaire-blocks')}
                         value={platformFontWeight}
                         options={[
                             { label: 'Thin (100)', value: '100' },
@@ -263,19 +263,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <UnitControl
-                        label={__('Platform Label Line Height', 'social-share-block')}
+                        label={__('Platform Label Line Height', 'adaire-blocks')}
                         value={platformLineHeight}
                         onChange={(value) => setAttributes({ platformLineHeight: value })}
                     />
 
                     <UnitControl
-                        label={__('Platform Label Letter Spacing', 'social-share-block')}
+                        label={__('Platform Label Letter Spacing', 'adaire-blocks')}
                         value={platformLetterSpacing}
                         onChange={(value) => setAttributes({ platformLetterSpacing: value })}
                     />
 
                     <SelectControl
-                        label={__('Platform Label Text Transform', 'social-share-block')}
+                        label={__('Platform Label Text Transform', 'adaire-blocks')}
                         value={platformTextTransform}
                         options={[
                             { label: 'None', value: 'none' },
@@ -287,23 +287,23 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <SelectControl
-                        label={__('Font Family', 'social-share-block')}
+                        label={__('Font Family', 'adaire-blocks')}
                         value={fontFamily || ''}
                         options={FONT_FAMILY_OPTIONS}
                         onChange={(value) => setAttributes({ fontFamily: value })}
-                        help={__('Applies to the share platform labels.', 'social-share-block')}
+                        help={__('Applies to the share platform labels.', 'adaire-blocks')}
                     />
                 </PanelBody>
 
-                <PanelBody section="content" title={__('Platform Settings', 'social-share-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Platform Settings', 'adaire-blocks')} initialOpen={true}>
                     <SelectControl
-                        label={__('Tooltip Position', 'social-share-block')}
+                        label={__('Tooltip Position', 'adaire-blocks')}
                         value={tooltipPosition}
                         options={[
-                            { label: __('Top', 'social-share-block'), value: 'top' },
-                            { label: __('Bottom', 'social-share-block'), value: 'bottom' },
-                            { label: __('Left', 'social-share-block'), value: 'left' },
-                            { label: __('Right', 'social-share-block'), value: 'right' },
+                            { label: __('Top', 'adaire-blocks'), value: 'top' },
+                            { label: __('Bottom', 'adaire-blocks'), value: 'bottom' },
+                            { label: __('Left', 'adaire-blocks'), value: 'left' },
+                            { label: __('Right', 'adaire-blocks'), value: 'right' },
                         ]}
                         onChange={(value) => setAttributes({ tooltipPosition: value })}
                     />
@@ -318,7 +318,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                             {enabledPlatforms[platform.key] && (
                                 <>
-                                    <BaseControl label={__('Icon', 'social-share-block')} style={{ marginTop: '12px' }}>
+                                    <BaseControl label={__('Icon', 'adaire-blocks')} style={{ marginTop: '12px' }}>
                                         <Button
                                             onClick={() => setPlatformIconPickerOpen(platform.key)}
                                             variant="secondary"
@@ -331,13 +331,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                     {platformIcons[platform.key]}
                                                 </>
                                             ) : (
-                                                __('Choose Icon', 'social-share-block')
+                                                __('Choose Icon', 'adaire-blocks')
                                             )}
                                         </Button>
                                     </BaseControl>
 
                                     <TextControl
-                                        label={__('Label', 'social-share-block')}
+                                        label={__('Label', 'adaire-blocks')}
                                         value={platformLabels[platform.key] || platform.defaultLabel}
                                         onChange={(value) => handlePlatformLabelChange(platform.key, value)}
                                     />
@@ -374,7 +374,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     activeZone={activeZone}
                     setActiveZone={setActiveZone}
                     content={
-                        <BaseControl label={__('Button Icon', 'social-share-block')}>
+                        <BaseControl label={__('Button Icon', 'adaire-blocks')}>
                             <Button
                                 onClick={() => setIsButtonIconPickerOpen(true)}
                                 variant="secondary"
@@ -386,7 +386,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         {buttonIcon}
                                     </>
                                 ) : (
-                                    __('Choose Icon', 'social-share-block')
+                                    __('Choose Icon', 'adaire-blocks')
                                 )}
                             </Button>
                         </BaseControl>
@@ -395,7 +395,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 <button
                     className="adaire-social-share__button"
                     type="button"
-                    aria-label={__('Share', 'social-share-block')}
+                    aria-label={__('Share', 'adaire-blocks')}
                 >
                     <i className={buttonIcon || 'bi bi-share'}></i>
                 </button>
@@ -413,7 +413,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     setActiveZone={setActiveZone}
                                     content={
                                         <>
-                                            <BaseControl label={__('Platform Icon', 'social-share-block')}>
+                                            <BaseControl label={__('Platform Icon', 'adaire-blocks')}>
                                                 <Button
                                                     onClick={() => setPlatformIconPickerOpen(platform.key)}
                                                     variant="secondary"
@@ -425,12 +425,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                             {platformIcons[platform.key]}
                                                         </>
                                                     ) : (
-                                                        __('Choose Icon', 'social-share-block')
+                                                        __('Choose Icon', 'adaire-blocks')
                                                     )}
                                                 </Button>
                                             </BaseControl>
                                             <TextControl
-                                                label={__('Label', 'social-share-block')}
+                                                label={__('Label', 'adaire-blocks')}
                                                 value={platformLabels[platform.key] || platform.defaultLabel}
                                                 onChange={(value) => handlePlatformLabelChange(platform.key, value)}
                                             />

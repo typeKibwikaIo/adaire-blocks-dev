@@ -159,7 +159,13 @@
         },
         "dragCursorTextTransform": {
             "type": "string",
-            "default": "uppercase"
+            "default": "uppercase",
+            "enum": [
+                "uppercase",
+                "lowercase",
+                "capitalize",
+                "none"
+            ]
         },
         "borderRadius": {
             "type": "object",

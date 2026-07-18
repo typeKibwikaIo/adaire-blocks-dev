@@ -1,6 +1,252 @@
-﻿import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-gsap.registerPlugin(ScrollTrigger);
+﻿/**
+ * Lightweight CSS-transition/animation engine that replaces GSAP.
+ *
+ * GSAP's "Standard 'no charge' license" is not GPL-compatible and cannot be
+ * bundled in a WordPress.org (GPL) plugin. This module reimplements the small
+ * subset of the previous animation library's set/to/fromTo/scroll-trigger
+ * behaviour that this block relies on, using native CSS transitions,
+ * keyframe animations, and IntersectionObserver.
+ */
+
+// Inject the one-off @keyframes needed for the "bounceIn" entrance effect,
+// which requires an overshoot that a single CSS transition cannot express.
+(function injectAdaireAnimationKeyframes() {
+    if (document.getElementById('adaire-blocks-css-anim-keyframes')) return;
+    const style = document.createElement('style');
+    style.id = 'adaire-blocks-css-anim-keyframes';
+    style.textContent = `
+@keyframes adaireBlocksBounceIn {
+    0% { opacity: 0; transform: scale(0.3); }
+    50% { opacity: 1; transform: scale(1.08); }
+    70% { transform: scale(0.94); }
+    100% { opacity: 1; transform: scale(1); }
+}
+`;
+    document.head.appendChild(style);
+})();
+
+// Approximate CSS cubic-bezier equivalents for the GSAP ease names used by
+// this block's Inspector controls. elastic/bounce cannot be reproduced
+// exactly with a single cubic-bezier curve, so they use an overshoot
+// approximation instead.
+const ADAIRE_EASE_MAP = {
+    'power1.out': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    'power2.out': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    'power2.in': 'cubic-bezier(0.55, 0.085, 0.68, 0.53)',
+    'power3.out': 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+    'back.out': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+    'elastic.out': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+    'bounce.out': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+    'circ.out': 'cubic-bezier(0.075, 0.82, 0.165, 1)',
+    'linear': 'linear',
+};
+
+// Resolves an ease name (including parameterized ones such as
+// "back.out(1.7)") to a CSS timing function. Parameterized eases fall back
+// to their base curve - a reasonable approximation for the small cosmetic
+// bounce/back effects this block uses internally (not user-configurable).
+function adaireEaseToCSS(ease) {
+    if (!ease) return ADAIRE_EASE_MAP['power2.out'];
+    if (ADAIRE_EASE_MAP[ease]) return ADAIRE_EASE_MAP[ease];
+    const baseName = ease.split('(')[0];
+    return ADAIRE_EASE_MAP[baseName] || ADAIRE_EASE_MAP['power2.out'];
+}
+
+// Config keys that describe the tween itself rather than a CSS property.
+const ADAIRE_ANIM_OPTION_KEYS = ['duration', 'stagger', 'ease', 'delay', 'onComplete', 'onStart', 'clearProps', 'overwrite'];
+
+function adaireSplitAnimConfig(config) {
+    const options = {};
+    const props = {};
+    Object.keys(config || {}).forEach((key) => {
+        if (ADAIRE_ANIM_OPTION_KEYS.indexOf(key) !== -1) {
+            options[key] = config[key];
+        } else {
+            props[key] = config[key];
+        }
+    });
+    return { props, options };
+}
+
+function adaireToArray(elements) {
+    if (!elements) return [];
+    if (elements instanceof window.Element) return [elements];
+    return Array.prototype.slice.call(elements);
+}
+
+const ADAIRE_TRANSFORM_KEYS = ['x', 'y', 'xPercent', 'yPercent', 'scale', 'rotation', 'rotationY'];
+
+function adaireHasTransformProp(props) {
+    return ADAIRE_TRANSFORM_KEYS.some((key) => props[key] !== undefined);
+}
+
+// Per-element transform state, so that separate calls setting different
+// transform properties (e.g. one call sets xPercent/yPercent to center an
+// element on the cursor, a later call updates only x/y to follow the mouse)
+// compose into a single `transform`, the way GSAP's internal engine does.
+const adaireTransformState = new WeakMap();
+
+function adaireMergeTransformState(el, props) {
+    let state = adaireTransformState.get(el);
+    if (!state) {
+        state = {};
+        adaireTransformState.set(el, state);
+    }
+    ADAIRE_TRANSFORM_KEYS.forEach((key) => {
+        if (props[key] !== undefined) state[key] = props[key];
+    });
+    return state;
+}
+
+function adaireBuildTransform(state) {
+    const parts = [];
+    if (state.xPercent !== undefined || state.yPercent !== undefined) {
+        parts.push(`translate(${state.xPercent || 0}%, ${state.yPercent || 0}%)`);
+    }
+    if (state.x !== undefined || state.y !== undefined) {
+        parts.push(`translate(${state.x || 0}px, ${state.y || 0}px)`);
+    }
+    if (state.rotation !== undefined) parts.push(`rotate(${state.rotation}deg)`);
+    if (state.rotationY !== undefined) parts.push(`rotateY(${state.rotationY}deg)`);
+    if (state.scale !== undefined) parts.push(`scale(${state.scale})`);
+    return parts.join(' ');
+}
+
+function adaireApplyProps(el, props) {
+    if (props.opacity !== undefined) el.style.opacity = props.opacity;
+    if (adaireHasTransformProp(props)) {
+        const state = adaireMergeTransformState(el, props);
+        el.style.transform = adaireBuildTransform(state);
+    }
+    if (props.boxShadow !== undefined) el.style.boxShadow = props.boxShadow;
+    if (props.color !== undefined) el.style.color = props.color;
+    if (props.pointerEvents !== undefined) el.style.pointerEvents = props.pointerEvents;
+}
+
+// Sets element styles directly, with an option to clear previously-applied inline styles.
+function cssSet(elements, config) {
+    const els = adaireToArray(elements);
+    const { props, options } = adaireSplitAnimConfig(config);
+    els.forEach((el) => {
+        if (options.clearProps) {
+            el.style.transition = '';
+            el.style.transform = '';
+            el.style.opacity = '';
+            el.style.boxShadow = '';
+            el.style.color = '';
+            el.style.animation = '';
+            adaireTransformState.delete(el);
+            return;
+        }
+        el.style.transition = 'none';
+        adaireApplyProps(el, props);
+    });
+}
+
+// Animates elements to the given target CSS properties (opacity, transform, box-shadow, color)
+// via a CSS transition, supporting duration/stagger/ease/delay/onComplete.
+function cssTo(elements, config) {
+    const els = adaireToArray(elements);
+    const { props, options } = adaireSplitAnimConfig(config);
+
+    if (els.length === 0) {
+        if (options.onComplete) options.onComplete();
+        return els;
+    }
+
+    const duration = options.duration !== undefined ? options.duration : 0.3;
+    const ease = options.ease || 'power2.out';
+    const stagger = options.stagger || 0;
+    const baseDelay = options.delay || 0;
+    const timingFn = adaireEaseToCSS(ease);
+
+    let maxTime = 0;
+    els.forEach((el, index) => {
+        const itemDelay = baseDelay + index * stagger;
+        maxTime = Math.max(maxTime, itemDelay + duration);
+        const transitionProps = ['opacity', 'transform', 'box-shadow', 'color'];
+        el.style.transition = transitionProps
+            .map((p) => `${p} ${duration}s ${timingFn} ${itemDelay}s`)
+            .join(', ');
+        // Force reflow so the transition is registered before the next style write.
+        void el.offsetHeight;
+    });
+
+    window.requestAnimationFrame(() => {
+        els.forEach((el) => adaireApplyProps(el, props));
+    });
+
+    if (options.onComplete) {
+        setTimeout(options.onComplete, maxTime * 1000 + 30);
+    }
+
+    return els;
+}
+
+// Sets a starting style instantly, then animates to the target style on the next frame.
+function cssFromTo(elements, fromConfig, toConfig) {
+    const els = adaireToArray(elements);
+    const { options: toOptions } = adaireSplitAnimConfig(toConfig);
+
+    if (els.length === 0) {
+        if (toOptions.onComplete) toOptions.onComplete();
+        return els;
+    }
+
+    const { props: fromProps } = adaireSplitAnimConfig(fromConfig);
+    els.forEach((el) => {
+        el.style.transition = 'none';
+        adaireApplyProps(el, fromProps);
+        void el.offsetHeight;
+    });
+
+    window.requestAnimationFrame(() => {
+        cssTo(els, toConfig);
+    });
+
+    return els;
+}
+
+// Plays the keyframe-based bounce-in effect used by animationType: 'bounceIn'.
+function cssBounceIn(el, duration, delay, onComplete) {
+    el.style.transition = 'none';
+    el.style.opacity = 0;
+    el.style.transform = 'scale(0.3)';
+    void el.offsetHeight;
+    el.style.animation = `adaireBlocksBounceIn ${duration}s ${delay}s both`;
+    const cleanup = () => {
+        el.style.animation = '';
+        if (onComplete) onComplete();
+    };
+    setTimeout(cleanup, (duration + delay) * 1000 + 30);
+}
+
+// Fires `callback` once, the first time `el` scrolls into view - the same
+// "animate in on first scroll into view" pattern the old scroll-trigger
+// setup provided. `startPercent` mirrors that library's `start: 'top X%'`
+// option (0-100).
+function adaireObserveEntrance(el, startPercent, callback, observerBag) {
+    if (!el) return;
+    if (!('IntersectionObserver' in window)) {
+        callback();
+        return;
+    }
+    const bottomMargin = -(100 - startPercent);
+    const observer = new window.IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    callback();
+                    observer.disconnect();
+                }
+            });
+        },
+        { root: null, rootMargin: `0px 0px ${bottomMargin}% 0px`, threshold: 0 }
+    );
+    observer.observe(el);
+    if (observerBag) observerBag.push(observer);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const postsGridBlocks = document.querySelectorAll('.adaire-posts-grid');
     if (postsGridBlocks.length === 0) {
@@ -52,6 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentPage = 1;
         let totalPages = 1;
         let categoriesData = {}; // Store category details for display
+        const activeObservers = []; // IntersectionObservers created by this block instance
 
         // Initialize the posts grid
         initPostsGrid();
@@ -343,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Fade out removing elements
             if (elementsToRemove.length > 0) {
-                gsap.to(elementsToRemove, {
+                cssTo(elementsToRemove, {
                     opacity: 0,
                     scale: 0.8,
                     duration: 0.2,
@@ -396,7 +643,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
                             // Position changed - animate it with linear easing (no spring/bounce)
-                            gsap.fromTo(el,
+                            cssFromTo(el,
                                 { x: deltaX, y: deltaY },
                                 { x: 0, y: 0, duration: 0.3, ease: 'linear' }
                             );
@@ -409,7 +656,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Animate in new posts
                 if (newElements.length > 0) {
-                    gsap.fromTo(newElements,
+                    cssFromTo(newElements,
                         { opacity: 0, scale: 0.8 },
                         {
                             opacity: 1,
@@ -451,7 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const shouldAnimate = enableAnimations && grid.children.length > 0 && !isInitialRender;
             if (shouldAnimate) {
                 const exitAnimation = getExitAnimation(transitionAnimation);
-                gsap.to(grid.children, {
+                cssTo(grid.children, {
                     ...exitAnimation,
                     duration: animationDuration * 0.6,
                     stagger: animationDelay * 0.5,
@@ -467,12 +714,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                         // Update grid layout
                         updateGridLayout();
-                        
+
                         // Fade in new posts
                         const enterAnimation = getEnterAnimation(transitionAnimation);
-                        gsap.fromTo(grid.children, 
+                        cssFromTo(grid.children,
                             enterAnimation.from,
-                            { 
+                            {
                                 ...enterAnimation.to,
                                 duration: animationDuration,
                                 stagger: animationDelay,
@@ -494,7 +741,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // If there are existing posts and it's not initial render, fade out first to prevent flash
                 if (hasExistingPosts && !isInitialRender) {
-                    gsap.to(grid.children, {
+                    cssTo(grid.children, {
                         opacity: 0,
                         duration: 0.15,
                         ease: 'linear',
@@ -506,11 +753,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 grid.appendChild(postElement);
                             });
                             updateGridLayout();
-                            
+
                             // Fade in new posts
-                            gsap.fromTo(grid.children,
+                            cssFromTo(grid.children,
                                 { opacity: 0 },
-                                { 
+                                {
                                     opacity: 1,
                                     duration: 0.2,
                                     ease: 'linear',
@@ -534,15 +781,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Only fade in on initial render, not on page switches
                     if (enableAnimations && isInitialRender) {
                         const enterAnimation = getEnterAnimation(transitionAnimation);
-                        gsap.fromTo(grid.children, 
+                        cssFromTo(grid.children,
                             enterAnimation.from,
-                            { 
+                            {
                                 ...enterAnimation.to,
                                 duration: animationDuration,
                                 stagger: animationDelay,
                                 ease: animationEase,
                                 onComplete: () => {
-                                    // Clear GSAP props after animation completes
+                                    // Clear inline animation styles after animation completes
                                     initializeHoverEffects();
                                 }
                             }
@@ -912,20 +1159,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function initializeHoverEffects() {
             // Hover effects are handled by CSS
-            // Clear GSAP transform/opacity but preserve positioning
+            // Clear inline animation styles but preserve positioning
             const items = postsGrid.querySelectorAll('.adaire-posts-grid__item');
-            
+
             items.forEach(item => {
-                // Only clear GSAP-related transform properties, not all styles
-                gsap.set(item, { 
-                    clearProps: 'opacity,transform,x,y,scale,rotation,rotationX,rotationY,rotationZ' 
-                });
-                
+                // Only clear animation-related inline styles, not all styles
+                cssSet(item, { clearProps: true });
+
                 const img = item.querySelector('.adaire-posts-grid__image img');
                 if (img) {
-                    gsap.set(img, { 
-                        clearProps: 'opacity,transform,x,y,scale,rotation,rotationX,rotationY,rotationZ' 
-                    });
+                    cssSet(img, { clearProps: true });
                 }
             });
         }
@@ -933,122 +1176,109 @@ document.addEventListener('DOMContentLoaded', function() {
         function setupAnimations() {
             const grid = postsGrid.querySelector('.adaire-posts-grid__grid');
             const items = grid.querySelectorAll('.adaire-posts-grid__item');
-            
+
             if (items.length === 0) return;
 
             // Set initial animation state
-            gsap.set(items, {
+            cssSet(items, {
                 opacity: 0,
                 y: animationType === 'fadeUp' ? 50 : 0,
                 scale: animationType === 'scaleUp' ? 0.8 : 1,
                 rotation: animationType === 'rotateIn' ? -10 : 0
             });
 
-            // Create animation timeline
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: grid,
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
+            // Play the entrance animation once the grid scrolls into view
+            // (equivalent to the old scroll-triggered timeline with start: 'top 80%').
+            adaireObserveEntrance(grid, 80, () => {
+                items.forEach((item, index) => {
+                    const delay = index * animationDelay;
 
-            // Animate items based on animation type
-            items.forEach((item, index) => {
-                const delay = index * animationDelay;
-                
-                switch (animationType) {
-                    case 'fadeUp':
-                        tl.to(item, {
-                            opacity: 1,
-                            y: 0,
-                            duration: animationDuration,
-                            ease: animationEase,
-                            delay: delay
-                        }, delay);
-                        break;
-                    case 'fadeIn':
-                        tl.to(item, {
-                            opacity: 1,
-                            duration: animationDuration,
-                            ease: animationEase,
-                            delay: delay
-                        }, delay);
-                        break;
-                    case 'scaleUp':
-                        tl.to(item, {
-                            opacity: 1,
-                            scale: 1,
-                            duration: animationDuration,
-                            ease: animationEase,
-                            delay: delay
-                        }, delay);
-                        break;
-                    case 'slideUp':
-                        tl.fromTo(item, {
-                            opacity: 0,
-                            y: 100
-                        }, {
-                            opacity: 1,
-                            y: 0,
-                            duration: animationDuration,
-                            ease: animationEase,
-                            delay: delay
-                        }, delay);
-                        break;
-                    case 'rotateIn':
-                        tl.to(item, {
-                            opacity: 1,
-                            rotation: 0,
-                            duration: animationDuration,
-                            ease: animationEase,
-                            delay: delay
-                        }, delay);
-                        break;
-                    case 'bounceIn':
-                        tl.fromTo(item, {
-                            opacity: 0,
-                            scale: 0.3
-                        }, {
-                            opacity: 1,
-                            scale: 1,
-                            duration: animationDuration,
-                            ease: 'bounce.out',
-                            delay: delay
-                        }, delay);
-                        break;
-                }
-            });
+                    switch (animationType) {
+                        case 'fadeUp':
+                            cssTo(item, {
+                                opacity: 1,
+                                y: 0,
+                                duration: animationDuration,
+                                ease: animationEase,
+                                delay: delay
+                            });
+                            break;
+                        case 'fadeIn':
+                            cssTo(item, {
+                                opacity: 1,
+                                duration: animationDuration,
+                                ease: animationEase,
+                                delay: delay
+                            });
+                            break;
+                        case 'scaleUp':
+                            cssTo(item, {
+                                opacity: 1,
+                                scale: 1,
+                                duration: animationDuration,
+                                ease: animationEase,
+                                delay: delay
+                            });
+                            break;
+                        case 'slideUp':
+                            cssFromTo(item, {
+                                opacity: 0,
+                                y: 100
+                            }, {
+                                opacity: 1,
+                                y: 0,
+                                duration: animationDuration,
+                                ease: animationEase,
+                                delay: delay
+                            });
+                            break;
+                        case 'rotateIn':
+                            cssTo(item, {
+                                opacity: 1,
+                                rotation: 0,
+                                duration: animationDuration,
+                                ease: animationEase,
+                                delay: delay
+                            });
+                            break;
+                        case 'bounceIn':
+                            // Bounce needs an overshoot, which a single CSS
+                            // transition can't express - use @keyframes instead.
+                            cssBounceIn(item, animationDuration, delay);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }, activeObservers);
 
             // Animate filter buttons if filtering is enabled
             if (enableFiltering) {
                 const filterButtons = postsGrid.querySelectorAll('.adaire-posts-grid__filter-btn');
-                gsap.fromTo(filterButtons, 
-                    {
-                        opacity: 0,
-                        y: -20
-                    },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        duration: animationDuration,
-                        stagger: 0.05,
-                        ease: animationEase,
-                        scrollTrigger: {
-                            trigger: postsGrid.querySelector('.adaire-posts-grid__filters'),
-                            start: 'top 90%'
+                const filtersContainer = postsGrid.querySelector('.adaire-posts-grid__filters');
+                adaireObserveEntrance(filtersContainer, 90, () => {
+                    cssFromTo(filterButtons,
+                        {
+                            opacity: 0,
+                            y: -20
+                        },
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: animationDuration,
+                            stagger: 0.05,
+                            ease: animationEase
                         }
-                    }
-                );
+                    );
+                }, activeObservers);
             }
         }
 
         function animateFilterTransition() {
             const items = postsGrid.querySelectorAll('.adaire-posts-grid__item');
-            
+
             // Exit animation
-            gsap.to(items, {
+            cssTo(items, {
                 opacity: 0,
                 scale: 0.8,
                 duration: 0.3,
@@ -1056,10 +1286,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 onComplete: () => {
                     // Re-render posts
                     renderPosts();
-                    
+
                     // Enter animation
                     const newItems = postsGrid.querySelectorAll('.adaire-posts-grid__item');
-                    gsap.fromTo(newItems,
+                    cssFromTo(newItems,
                         {
                             opacity: 0,
                             scale: 0.8
@@ -1084,63 +1314,55 @@ document.addEventListener('DOMContentLoaded', function() {
                 const title = item.querySelector('.adaire-posts-grid__title a');
                 
                 item.addEventListener('mouseenter', () => {
-                    const tl = gsap.timeline();
-                    
-                    tl.to(item, {
+                    // All of these run concurrently (the original GSAP timeline
+                    // positioned every tween at time 0), so plain parallel
+                    // cssTo calls reproduce the same result.
+                    cssTo(item, {
                         scale: hoverScale,
+                        boxShadow: hoverShadow ? '0 20px 40px rgba(0,0,0,0.1)' : undefined,
                         duration: 0.3,
                         ease: 'power2.out'
                     });
-                    
-                    if (hoverShadow) {
-                        tl.to(item, {
-                            boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-                            duration: 0.3,
-                            ease: 'power2.out'
-                        }, 0);
-                    }
-                    
+
                     if (image) {
-                        tl.to(image, {
+                        cssTo(image, {
                             scale: 1.1,
                             duration: 0.3,
                             ease: 'power2.out'
-                        }, 0);
+                        });
                     }
-                    
+
                     if (title) {
-                        tl.to(title, {
+                        cssTo(title, {
                             color: 'var(--adaire-posts-grid-category-color, #3b82f6)',
                             duration: 0.3,
                             ease: 'power2.out'
-                        }, 0);
+                        });
                     }
                 });
-                
+
                 item.addEventListener('mouseleave', () => {
-                    const tl = gsap.timeline();
-                    
-                    tl.to(item, {
+                    cssTo(item, {
                         scale: 1,
                         boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
                         duration: 0.3,
                         ease: 'power2.out'
                     });
-                    
+
                     if (image) {
-                        tl.to(image, {
+                        cssTo(image, {
                             scale: 1,
                             duration: 0.3,
                             ease: 'power2.out'
-                        }, 0);
+                        });
                     }
-                    
+
                     if (title) {
-                        tl.to(title, {
+                        cssTo(title, {
                             color: 'var(--adaire-posts-grid-title-color, #1f2937)',
                             duration: 0.3,
                             ease: 'power2.out'
-                        }, 0);
+                        });
                     }
                 });
             });
@@ -1161,10 +1383,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle responsive behavior
         function handleResize() {
-            // Refresh ScrollTrigger on resize
-            ScrollTrigger.refresh();
-            
             // Update grid layout for responsive columns
+            // (IntersectionObserver-based entrance triggers recalculate
+            // automatically and don't need an explicit refresh.)
             updateGridLayout();
         }
 
@@ -1172,7 +1393,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Cleanup on page unload
         window.addEventListener('beforeunload', () => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+            activeObservers.forEach(observer => observer.disconnect());
         });
     });
 });

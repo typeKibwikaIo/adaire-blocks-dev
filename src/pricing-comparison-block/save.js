@@ -395,7 +395,7 @@ export default function save({ attributes }) {
 
 							<div className="pc-comparison-toggle-wrapper">
 								<button className="pc-comparison-toggle" type="button">
-									<span>{__("Compare features", "pricing-comparison-block")}</span>
+									<span>{__("Compare features", "adaire-blocks")}</span>
 									<span className="pc-toggle-icon">+</span>
 								</button>
 							</div>

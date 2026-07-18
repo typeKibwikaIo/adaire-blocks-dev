@@ -42,7 +42,7 @@ export default function Edit({ attributes, clientId }) {
             template: [
                 ['core/group', {}, [
                     ['core/paragraph', { 
-                        placeholder: __('Add content for this toggle...', 'content-toggle-panel-block')
+                        placeholder: __('Add content for this toggle...', 'adaire-blocks')
                     }]
                 ]]
             ],

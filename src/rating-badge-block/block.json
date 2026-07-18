@@ -15,7 +15,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "rating-badge-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -47,7 +47,12 @@
         },
         "alignment": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "accentColor": {
             "type": "string",

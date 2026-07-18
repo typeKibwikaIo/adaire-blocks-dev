@@ -1,4 +1,4 @@
-﻿import { registerBlockType, getBlockType, unregisterBlockType } from '@wordpress/blocks';
+import { registerBlockType, getBlockType, unregisterBlockType } from '@wordpress/blocks';
 import metadata from './block.json';
 import Edit from './edit';
 import save from './save';
@@ -17,7 +17,3 @@ registerBlockType(metadata.name, {
     save,
     icon: ModalIcon,
 });
-
-
-
-

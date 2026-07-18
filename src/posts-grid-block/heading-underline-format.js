@@ -11,14 +11,14 @@ if (!globalThis.__ADAIRE_FORMATS__) {
 
 if (!globalThis.__ADAIRE_FORMATS__[FORMAT_NAME]) {
 	registerFormatType(FORMAT_NAME, {
-		title: __('Underline/Highlight', 'posts-grid-block'),
+		title: __('Underline/Highlight', 'adaire-blocks'),
 		tagName: 'span',
 		className: 'adaire-text-underline',
 		edit({ isActive, value, onChange }) {
 			return (
 				<RichTextToolbarButton
 					icon="editor-underline"
-					title={__('Underline/Highlight', 'posts-grid-block')}
+					title={__('Underline/Highlight', 'adaire-blocks')}
 					isActive={isActive}
 					onClick={() => {
 						onChange(toggleFormat(value, { type: FORMAT_NAME }));

@@ -15,7 +15,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "map-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -189,7 +189,14 @@
         },
         "navFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "singleMapMode": {
             "type": "boolean",

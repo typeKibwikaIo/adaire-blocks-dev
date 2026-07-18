@@ -23,9 +23,9 @@ import { plus, trash, arrowUp, arrowDown, desktop, tablet, mobile } from '@wordp
 import { sprintf } from '@wordpress/i18n';
 
 const DEFAULT_COLORS = [
-    { name: __('Purple', 'testimonial3-block'), slug: 'purple', color: '#6B46C1' },
-    { name: __('White', 'testimonial3-block'), slug: 'white', color: '#ffffff' },
-    { name: __('Black', 'testimonial3-block'), slug: 'black', color: '#1f2937' },
+    { name: __('Purple', 'adaire-blocks'), slug: 'purple', color: '#6B46C1' },
+    { name: __('White', 'adaire-blocks'), slug: 'white', color: '#ffffff' },
+    { name: __('Black', 'adaire-blocks'), slug: 'black', color: '#1f2937' },
 ];
 
 // Custom icons for small laptop and big desktop
@@ -141,9 +141,9 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     const addTestimonial = () => {
         const newTestimonial = {
             id: `testimonial-${Date.now()}`,
-            quote: __('Add testimonial quote here...', 'testimonial3-block'),
-            name: __('Name', 'testimonial3-block'),
-            title: __('Title', 'testimonial3-block'),
+            quote: __('Add testimonial quote here...', 'adaire-blocks'),
+            name: __('Name', 'adaire-blocks'),
+            title: __('Title', 'adaire-blocks'),
             profileImage: { id: 0, url: '', alt: '' }
         };
         setAttributes({ testimonials: [...testimonials, newTestimonial] });
@@ -297,25 +297,25 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     return (
         <>
             <InspectorControls>
-                <PanelBody title={__('Testimonials', 'testimonial3-block')} initialOpen={true}>
+                <PanelBody title={__('Testimonials', 'adaire-blocks')} initialOpen={true}>
                     {testimonials.map((testimonial, index) => (
                         <div key={testimonial.id} style={{ marginBottom: '20px', padding: '12px', border: '1px solid #ddd', borderRadius: '4px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                                <strong>{sprintf(__('Testimonial %d', 'testimonial3-block'), index + 1)}</strong>
+                                <strong>{sprintf(__('Testimonial %d', 'adaire-blocks'), index + 1)}</strong>
                                 <div style={{ display: 'flex', gap: '4px' }}>
                                     <Button
                                         icon={arrowUp}
                                         onClick={() => moveTestimonial(index, -1)}
                                         isSmall
                                         disabled={index === 0}
-                                        label={__('Move Up', 'testimonial3-block')}
+                                        label={__('Move Up', 'adaire-blocks')}
                                     />
                                     <Button
                                         icon={arrowDown}
                                         onClick={() => moveTestimonial(index, 1)}
                                         isSmall
                                         disabled={index === testimonials.length - 1}
-                                        label={__('Move Down', 'testimonial3-block')}
+                                        label={__('Move Down', 'adaire-blocks')}
                                     />
                                     {testimonials.length > 1 && (
                                         <Button
@@ -323,7 +323,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                             onClick={() => removeTestimonial(index)}
                                             isSmall
                                             isDestructive
-                                            label={__('Remove', 'testimonial3-block')}
+                                            label={__('Remove', 'adaire-blocks')}
                                         />
                                     )}
                                 </div>
@@ -332,16 +332,16 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 tagName="p"
                                 value={testimonial.quote}
                                 onChange={(value) => updateTestimonial(index, 'quote', value)}
-                                placeholder={__('Testimonial quote...', 'testimonial3-block')}
+                                placeholder={__('Testimonial quote...', 'adaire-blocks')}
                                 style={{ marginBottom: '12px' }}
                             />
                             <TextControl
-                                label={__('Name', 'testimonial3-block')}
+                                label={__('Name', 'adaire-blocks')}
                                 value={testimonial.name}
                                 onChange={(value) => updateTestimonial(index, 'name', value)}
                             />
                             <TextControl
-                                label={__('Title', 'testimonial3-block')}
+                                label={__('Title', 'adaire-blocks')}
                                 value={testimonial.title}
                                 onChange={(value) => updateTestimonial(index, 'title', value)}
                             />
@@ -356,7 +356,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     value={testimonial.profileImage?.id}
                                     render={({ open }) => (
                                         <Button onClick={open} variant="secondary" style={{ width: '100%', marginTop: '8px' }}>
-                                            {testimonial.profileImage?.url ? __('Change Image', 'testimonial3-block') : __('Select Profile Image', 'testimonial3-block')}
+                                            {testimonial.profileImage?.url ? __('Change Image', 'adaire-blocks') : __('Select Profile Image', 'adaire-blocks')}
                                         </Button>
                                     )}
                                 />
@@ -368,7 +368,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     isDestructive
                                     style={{ width: '100%', marginTop: '4px' }}
                                 >
-                                    {__('Remove Image', 'testimonial3-block')}
+                                    {__('Remove Image', 'adaire-blocks')}
                                 </Button>
                             )}
                     </div>
@@ -379,14 +379,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         variant="secondary"
                         style={{ width: '100%', marginTop: '12px' }}
                     >
-                        {__('Add Testimonial', 'testimonial3-block')}
+                        {__('Add Testimonial', 'adaire-blocks')}
                     </Button>
                 </PanelBody>
 
-                <PanelBody title={__('Layout', 'testimonial3-block')} initialOpen={false}>
+                <PanelBody title={__('Layout', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
                         label={sprintf(
-                            __('Card Height (%s)', 'testimonial3-block'),
+                            __('Card Height (%s)', 'adaire-blocks'),
                             normalizedCardHeight.unit || 'px'
                         )}
                         value={normalizedCardHeight.value}
@@ -402,7 +402,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         max={1000}
                         step={5}
                     />
-                    <BaseControl label={__('Card Height Unit', 'testimonial3-block')}>
+                    <BaseControl label={__('Card Height Unit', 'adaire-blocks')}>
                         <ButtonGroup>
                             {['px', 'vh', 'vw', 'rem', '%', 'auto'].map((u) => (
                                 <Button
@@ -424,7 +424,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         </ButtonGroup>
                     </BaseControl>
                     <RangeControl
-                        label={__('Gap Between Cards', 'testimonial3-block')}
+                        label={__('Gap Between Cards', 'adaire-blocks')}
                         value={cardGap}
                         onChange={(value) => setAttributes({ cardGap: value })}
                         min={4}
@@ -432,9 +432,9 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         step={2}
                     />
 
-                    <BaseControl label={__('Cards per view', 'testimonial3-block')}>
+                    <BaseControl label={__('Cards per view', 'adaire-blocks')}>
                         <div style={{ marginBottom: 8 }}>
-                            <strong>{__('Big Desktop (â‰¥ 1921px)', 'testimonial3-block')}</strong>
+                            <strong>{__('Big Desktop (â‰¥ 1921px)', 'adaire-blocks')}</strong>
                             <RangeControl
                                 value={slidesPerView?.bigDesktop ?? slidesPerView?.desktop ?? 5}
                                 onChange={(value) =>
@@ -450,7 +450,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             />
                         </div>
                         <div style={{ marginBottom: 8 }}>
-                            <strong>{__('Desktop (1301â€“1920px)', 'testimonial3-block')}</strong>
+                            <strong>{__('Desktop (1301â€“1920px)', 'adaire-blocks')}</strong>
                             <RangeControl
                                 value={slidesPerView?.desktop ?? 3}
                                 onChange={(value) =>
@@ -466,7 +466,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             />
                         </div>
                         <div style={{ marginBottom: 8 }}>
-                            <strong>{__('Small Laptop (1025â€“1300px)', 'testimonial3-block')}</strong>
+                            <strong>{__('Small Laptop (1025â€“1300px)', 'adaire-blocks')}</strong>
                             <RangeControl
                                 value={slidesPerView?.smallLaptop ?? slidesPerView?.desktop ?? 3}
                                 onChange={(value) =>
@@ -482,7 +482,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             />
                         </div>
                         <div style={{ marginBottom: 8 }}>
-                            <strong>{__('Tablet (601â€“1024px)', 'testimonial3-block')}</strong>
+                            <strong>{__('Tablet (601â€“1024px)', 'adaire-blocks')}</strong>
                             <RangeControl
                                 value={slidesPerView?.tablet ?? 2}
                                 onChange={(value) =>
@@ -498,7 +498,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             />
                         </div>
                         <div>
-                            <strong>{__('Mobile (â‰¤ 600px)', 'testimonial3-block')}</strong>
+                            <strong>{__('Mobile (â‰¤ 600px)', 'adaire-blocks')}</strong>
                             <RangeControl
                                 value={slidesPerView?.mobile ?? 1}
                                 onChange={(value) =>
@@ -516,29 +516,29 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     </BaseControl>
 
                     <ToggleControl
-                        label={__('Enable Loop', 'testimonial3-block')}
+                        label={__('Enable Loop', 'adaire-blocks')}
                         checked={!!loop}
                         onChange={(value) => setAttributes({ loop: value })}
-                        help={__('Enable infinite loop scrolling', 'testimonial3-block')}
+                        help={__('Enable infinite loop scrolling', 'adaire-blocks')}
                     />
 
                     <RangeControl
-                        label={__('Mobile next card visibility (%)', 'testimonial3-block')}
+                        label={__('Mobile next card visibility (%)', 'adaire-blocks')}
                         value={mobilePeekPercent ?? 20}
                         onChange={(value) => setAttributes({ mobilePeekPercent: value })}
                         min={0}
                         max={50}
                         step={5}
-                        help={__('How much of the next card should be visible on mobile.', 'testimonial3-block')}
+                        help={__('How much of the next card should be visible on mobile.', 'adaire-blocks')}
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Container', 'testimonial3-block')} initialOpen={false}>
-                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Mode', 'testimonial3-block')}</p>
+                <PanelBody title={__('Container', 'adaire-blocks')} initialOpen={false}>
+                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Mode', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {[
-                            { label: __('Full Width', 'testimonial3-block'), value: 'full' },
-                            { label: __('Constrained', 'testimonial3-block'), value: 'constrained' },
+                            { label: __('Full Width', 'adaire-blocks'), value: 'full' },
+                            { label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
                         ].map((opt) => (
                             <Button
                                 key={opt.value}
@@ -554,7 +554,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     {containerMode === 'constrained' && (
                         <>
                             <p style={{ marginTop: 8, marginBottom: 8, fontWeight: 600 }}>
-                                {__('Max Width', 'testimonial3-block')}
+                                {__('Max Width', 'adaire-blocks')}
                             </p>
                             <ButtonGroup style={{ marginBottom: 12, flexWrap: 'wrap' }}>
                                 <Button
@@ -644,7 +644,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
 
                     <RangeControl
-                        label={__('Margin Top', 'testimonial3-block')}
+                        label={__('Margin Top', 'adaire-blocks')}
                         value={marginTop?.[deviceType] ?? marginTop?.desktop ?? marginTop ?? 0}
                         onChange={(value) => setAttributes({
                             marginTop: {
@@ -656,7 +656,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         max={120}
                     />
                     <RangeControl
-                        label={__('Margin Bottom', 'testimonial3-block')}
+                        label={__('Margin Bottom', 'adaire-blocks')}
                         value={marginBottom?.[deviceType] ?? marginBottom?.desktop ?? marginBottom ?? 0}
                         onChange={(value) => setAttributes({
                             marginBottom: {
@@ -669,14 +669,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Drag Cursor', 'testimonial3-block')} initialOpen={false}>
+                <PanelBody title={__('Drag Cursor', 'adaire-blocks')} initialOpen={false}>
                     <TextControl
-                        label={__('Cursor Text', 'testimonial3-block')}
+                        label={__('Cursor Text', 'adaire-blocks')}
                         value={dragCursorText}
                         onChange={(value) => setAttributes({ dragCursorText: value })}
                     />
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>
-                        {__('Breakpoint', 'testimonial3-block')}
+                        {__('Breakpoint', 'adaire-blocks')}
                     </p>
                     <ButtonGroup style={{ marginBottom: '12px', flexWrap: 'wrap' }}>
                         <Button
@@ -706,20 +706,20 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         />
                     </ButtonGroup>
                     <RangeControl
-                        label={sprintf(__('Cursor Size (%s)', 'testimonial3-block'), deviceType)}
+                        label={sprintf(__('Cursor Size (%s)', 'adaire-blocks'), deviceType)}
                         value={getResponsiveValue(dragCursorSize, 80)}
                         onChange={(value) => setResponsiveValue('dragCursorSize', value)}
                         min={40}
                         max={150}
                     />
                     <RangeControl
-                        label={sprintf(__('Font Size (%s)', 'testimonial3-block'), deviceType)}
+                        label={sprintf(__('Font Size (%s)', 'adaire-blocks'), deviceType)}
                         value={getResponsiveValue(dragCursorFontSize, 16)}
                         onChange={(value) => setResponsiveValue('dragCursorFontSize', value)}
                         min={10}
                         max={32}
                     />
-                    <BaseControl label={sprintf(__('Font Weight (%s)', 'testimonial3-block'), deviceType)}>
+                    <BaseControl label={sprintf(__('Font Weight (%s)', 'adaire-blocks'), deviceType)}>
                         <ButtonGroup>
                             {['400', '500', '600', '700'].map((w) => (
                                 <Button
@@ -733,28 +733,28 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         </ButtonGroup>
                     </BaseControl>
                     <SelectControl
-                        label={sprintf(__('Text Transform (%s)', 'testimonial3-block'), deviceType)}
+                        label={sprintf(__('Text Transform (%s)', 'adaire-blocks'), deviceType)}
                         value={getResponsiveValue(dragCursorTextTransform, 'uppercase')}
                         options={[
-                            { label: __('Uppercase', 'testimonial3-block'), value: 'uppercase' },
-                            { label: __('Lowercase', 'testimonial3-block'), value: 'lowercase' },
-                            { label: __('Capitalize', 'testimonial3-block'), value: 'capitalize' },
-                            { label: __('None', 'testimonial3-block'), value: 'none' },
+                            { label: __('Uppercase', 'adaire-blocks'), value: 'uppercase' },
+                            { label: __('Lowercase', 'adaire-blocks'), value: 'lowercase' },
+                            { label: __('Capitalize', 'adaire-blocks'), value: 'capitalize' },
+                            { label: __('None', 'adaire-blocks'), value: 'none' },
                         ]}
                         onChange={(value) => setResponsiveValue('dragCursorTextTransform', value)}
                     />
                 </PanelBody>
 
                 <PanelColorSettings
-                    title={__('Drag Cursor Colors', 'testimonial3-block')}
+                    title={__('Drag Cursor Colors', 'adaire-blocks')}
                     colorSettings={[
                         {
-                            label: __('Cursor Background', 'testimonial3-block'),
+                            label: __('Cursor Background', 'adaire-blocks'),
                             value: getResponsiveValue(dragCursorBgColor, '#7c3aed'),
                             onChange: (value) => setResponsiveValue('dragCursorBgColor', value),
                         },
                         {
-                            label: __('Cursor Text', 'testimonial3-block'),
+                            label: __('Cursor Text', 'adaire-blocks'),
                             value: getResponsiveValue(dragCursorColor, '#ffffff'),
                             onChange: (value) => setResponsiveValue('dragCursorColor', value),
                         },
@@ -762,60 +762,60 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 />
 
                 <PanelColorSettings
-                    title={__('Colors', 'testimonial3-block')}
+                    title={__('Colors', 'adaire-blocks')}
                     initialOpen={false}
                     colorSettings={[
                         {
                             value: backgroundColor,
                             onChange: (value) => setAttributes({ backgroundColor: value }),
-                            label: __('Background Color', 'testimonial3-block'),
+                            label: __('Background Color', 'adaire-blocks'),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: cardBackgroundColor,
                             onChange: (value) => setAttributes({ cardBackgroundColor: value }),
-                            label: __('Card Background', 'testimonial3-block'),
+                            label: __('Card Background', 'adaire-blocks'),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: quoteIconColor,
                             onChange: (value) => setAttributes({ quoteIconColor: value }),
-                            label: __('Quote Icon Color', 'testimonial3-block'),
+                            label: __('Quote Icon Color', 'adaire-blocks'),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: quoteColor,
                             onChange: (value) => setAttributes({ quoteColor: value }),
-                            label: __('Quote Text Color', 'testimonial3-block'),
+                            label: __('Quote Text Color', 'adaire-blocks'),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: nameColor,
                             onChange: (value) => setAttributes({ nameColor: value }),
-                            label: __('Name Color', 'testimonial3-block'),
+                            label: __('Name Color', 'adaire-blocks'),
                             colors: DEFAULT_COLORS,
                         },
                         {
                             value: titleColor,
                             onChange: (value) => setAttributes({ titleColor: value }),
-                            label: __('Title Color', 'testimonial3-block'),
+                            label: __('Title Color', 'adaire-blocks'),
                             colors: DEFAULT_COLORS,
                         },
                     ]}
                 />
 
-                <PanelBody title={__('Typography', 'testimonial3-block')} initialOpen={false}>
-                    <p><strong>{__('Quote Icon Size', 'testimonial3-block')}</strong></p>
+                <PanelBody title={__('Typography', 'adaire-blocks')} initialOpen={false}>
+                    <p><strong>{__('Quote Icon Size', 'adaire-blocks')}</strong></p>
                                 <RangeControl
-                        label={__('Icon Size', 'testimonial3-block')}
+                        label={__('Icon Size', 'adaire-blocks')}
                         value={quoteIconSize}
                         onChange={(value) => setAttributes({ quoteIconSize: value })}
                         min={20}
                         max={100}
                     />
-                    <p style={{ marginTop: '16px' }}><strong>{__('Profile Image Size', 'testimonial3-block')}</strong></p>
+                    <p style={{ marginTop: '16px' }}><strong>{__('Profile Image Size', 'adaire-blocks')}</strong></p>
                                 <RangeControl
-                        label={__('Image Size', 'testimonial3-block')}
+                        label={__('Image Size', 'adaire-blocks')}
                         value={profileImageSize}
                         onChange={(value) => setAttributes({ profileImageSize: value })}
                         min={30}
@@ -823,29 +823,29 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Spacing', 'testimonial3-block')} initialOpen={false}>
+                <PanelBody title={__('Spacing', 'adaire-blocks')} initialOpen={false}>
                     <ButtonGroup style={{ marginBottom: '12px' }}>
                         <Button
                             icon={desktop}
                             isPressed={deviceType === 'desktop'}
                             onClick={() => setDeviceType('desktop')}
-                            label={__('Desktop', 'testimonial3-block')}
+                            label={__('Desktop', 'adaire-blocks')}
                         />
                         <Button
                             icon={tablet}
                             isPressed={deviceType === 'tablet'}
                             onClick={() => setDeviceType('tablet')}
-                            label={__('Tablet', 'testimonial3-block')}
+                            label={__('Tablet', 'adaire-blocks')}
                         />
                         <Button
                             icon={mobile}
                             isPressed={deviceType === 'mobile'}
                             onClick={() => setDeviceType('mobile')}
-                            label={__('Mobile', 'testimonial3-block')}
+                            label={__('Mobile', 'adaire-blocks')}
                         />
                     </ButtonGroup>
                     <BoxControl
-                        label={__('Margin', 'testimonial3-block')}
+                        label={__('Margin', 'adaire-blocks')}
                         values={{
                             top: marginTop?.[deviceType] ?? marginTop?.desktop ?? marginTop ?? 0,
                             right: marginRight?.[deviceType] ?? marginRight?.desktop ?? marginRight ?? 0,
@@ -863,9 +863,9 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Pagination', 'testimonial3-block')} initialOpen={false}>
+                <PanelBody title={__('Pagination', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Show Pagination Dots', 'testimonial3-block')}
+                        label={__('Show Pagination Dots', 'adaire-blocks')}
                         checked={showPagination}
                         onChange={(value) => setAttributes({ showPagination: value })}
                     />

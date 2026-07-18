@@ -102,11 +102,11 @@ const bigDesktopIcon = createElement('svg', {
 );
 
 const BREAKPOINTS = [
-    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks-dev2') },
-    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks-dev2') },
-    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks-dev2') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks-dev2') },
-    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks-dev2') }
+    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
+    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
+    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks') },
+    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
+    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks') }
 ];
 
 // Shared DeviceSwitcher tiers, derived from the same BREAKPOINTS list above.
@@ -173,24 +173,24 @@ const QuickTypographyControls = ({ attributes, updateResponsiveAttribute, device
     return (
         <>
             <UnitControl
-                label={__('Font Size', 'adaire-blocks-dev2')}
+                label={__('Font Size', 'adaire-blocks')}
                 value={attributes[fontSizeAttr]?.[deviceType]}
                 onChange={(val) => updateResponsiveAttribute(fontSizeAttr, deviceType, val)}
             />
             <SelectControl
-                label={__('Font Weight', 'adaire-blocks-dev2')}
+                label={__('Font Weight', 'adaire-blocks')}
                 value={attributes[fontWeightAttr]?.[deviceType]}
                 options={FONT_WEIGHT_OPTIONS}
                 onChange={(val) => updateResponsiveAttribute(fontWeightAttr, deviceType, val)}
             />
             <PanelColorSettings
-                title={__('Color', 'adaire-blocks-dev2')}
+                title={__('Color', 'adaire-blocks')}
                 initialOpen={true}
                 colorSettings={[
                     {
                         value: resolveColor( attributes[colorAttr]?.[deviceType] ),
                         onChange: (val) => updateResponsiveAttribute(colorAttr, deviceType, bindColor(val)),
-                        label: __('Color', 'adaire-blocks-dev2'),
+                        label: __('Color', 'adaire-blocks'),
                     }
                 ]}
             />
@@ -223,12 +223,12 @@ const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, 
         <div className="adaire-typography-section" style={{ borderBottom: '1px solid #eee', paddingBottom: '16px', marginBottom: '16px' }}>
             <p className="adaire-typography-section-name" style={{ fontWeight: 600, marginBottom: '12px' }}>{label}</p>
             <UnitControl
-                label={__('Font Size', 'adaire-blocks-dev2')}
+                label={__('Font Size', 'adaire-blocks')}
                 value={attributes[fontSizeAttr][deviceType]}
                 onChange={(val) => updateResponsiveAttribute(fontSizeAttr, deviceType, val)}
             />
             <SelectControl
-                label={__('Font Weight', 'adaire-blocks-dev2')}
+                label={__('Font Weight', 'adaire-blocks')}
                 value={attributes[fontWeightAttr][deviceType]}
                 options={[
                     { label: '100', value: '100' }, { label: '200', value: '200' },
@@ -240,40 +240,40 @@ const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, 
                 onChange={(val) => updateResponsiveAttribute(fontWeightAttr, deviceType, val)}
             />
             <UnitControl
-                label={__('Line Height', 'adaire-blocks-dev2')}
+                label={__('Line Height', 'adaire-blocks')}
                 value={attributes[lineHeightAttr][deviceType]}
                 onChange={(val) => updateResponsiveAttribute(lineHeightAttr, deviceType, val)}
             />
             <UnitControl
-                label={__('Letter Spacing', 'adaire-blocks-dev2')}
+                label={__('Letter Spacing', 'adaire-blocks')}
                 value={attributes[letterSpacingAttr][deviceType]}
                 onChange={(val) => updateResponsiveAttribute(letterSpacingAttr, deviceType, val)}
             />
             <SelectControl
-                label={__('Text Transform', 'adaire-blocks-dev2')}
+                label={__('Text Transform', 'adaire-blocks')}
                 value={attributes[textTransformAttr][deviceType]}
                 options={[
-                    { label: __('None', 'adaire-blocks-dev2'), value: 'none' },
-                    { label: __('Uppercase', 'adaire-blocks-dev2'), value: 'uppercase' },
-                    { label: __('Lowercase', 'adaire-blocks-dev2'), value: 'lowercase' },
-                    { label: __('Capitalize', 'adaire-blocks-dev2'), value: 'capitalize' }
+                    { label: __('None', 'adaire-blocks'), value: 'none' },
+                    { label: __('Uppercase', 'adaire-blocks'), value: 'uppercase' },
+                    { label: __('Lowercase', 'adaire-blocks'), value: 'lowercase' },
+                    { label: __('Capitalize', 'adaire-blocks'), value: 'capitalize' }
                 ]}
                 onChange={(val) => updateResponsiveAttribute(textTransformAttr, deviceType, val)}
             />
             <PanelColorSettings
-                title={__('Text Color', 'adaire-blocks-dev2')}
+                title={__('Text Color', 'adaire-blocks')}
                 initialOpen={false}
                 colorSettings={[
                     {
                         value: resolveColor( attributes[colorAttr][deviceType] ),
                         onChange: (val) => updateResponsiveAttribute(colorAttr, deviceType, bindColor(val)),
-                        label: __('Color', 'adaire-blocks-dev2'),
+                        label: __('Color', 'adaire-blocks'),
                     }
                 ]}
             />
             {marginAttr && (
                 <UnitControl
-                    label={__('Margin Bottom', 'adaire-blocks-dev2')}
+                    label={__('Margin Bottom', 'adaire-blocks')}
                     value={attributes[marginAttr][deviceType]}
                     onChange={(val) => updateResponsiveAttribute(marginAttr, deviceType, val)}
                 />
@@ -389,8 +389,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     }, [setAttributes]);
 
     const CONTAINER_MODES = [
-        { label: __('Full Width', 'adaire-blocks-dev2'), value: 'full' },
-        { label: __('Constrained', 'adaire-blocks-dev2'), value: 'constrained' },
+        { label: __('Full Width', 'adaire-blocks'), value: 'full' },
+        { label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
     ];
 
     const UNIT_OPTIONS = ['px', '%'];
@@ -547,7 +547,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         if (typeof document !== 'undefined' && !document.querySelector('[data-bi-infogrid]')) {
             const link = document.createElement('link');
             link.rel = 'stylesheet';
-            link.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css';
+            link.href = (window.AdaireBlocksPluginUrl || '') + 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css';
             link.setAttribute('data-bi-infogrid', '1');
             document.head.appendChild(link);
         }
@@ -623,28 +623,28 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody section="layout" title={__('Responsive Settings', 'adaire-blocks-dev2')} initialOpen={true}>
+                <PanelBody section="layout" title={__('Responsive Settings', 'adaire-blocks')} initialOpen={true}>
                     <DeviceSwitcher
                         deviceType={deviceType}
                         setDeviceType={setDeviceType}
-                        label={__('Device View', 'adaire-blocks-dev2')}
+                        label={__('Device View', 'adaire-blocks')}
                         tiers={FIVE_TIERS}
                         onReset={resetResponsiveDefaults}
                     />
                     <p className="adaire-device-toggle-status">
-                        {__('Configuring:', 'adaire-blocks-dev2')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
+                        {__('Configuring:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
                     </p>
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Background & Overlay', 'adaire-blocks-dev2')}>
+                <PanelBody section="style" priority="high" title={__('Background & Overlay', 'adaire-blocks')}>
                     <PanelColorSettings
-                        title={__('Solid Background Color', 'adaire-blocks-dev2')}
+                        title={__('Solid Background Color', 'adaire-blocks')}
                         initialOpen={false}
                         colorSettings={[
                             {
                                 value: solidBgColor,
                                 onChange: (val) => setAttributes({ solidBgColor: val || '' }),
-                                label: __('Background Color', 'adaire-blocks-dev2'),
+                                label: __('Background Color', 'adaire-blocks'),
                             }
                         ]}
                     />
@@ -662,7 +662,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     {backgroundImageUrl ? (
                                         <img src={backgroundImageUrl} alt="Background" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     ) : (
-                                        __('Upload Background Image', 'adaire-blocks-dev2')
+                                        __('Upload Background Image', 'adaire-blocks')
                                     )}
                                 </Button>
                             )}
@@ -671,42 +671,42 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     {backgroundImageUrl && (
                         <>
                             <Button onClick={() => setAttributes({ backgroundImage: null, backgroundImageUrl: '' })} isDestructive variant="link">
-                                {__('Remove Image', 'adaire-blocks-dev2')}
+                                {__('Remove Image', 'adaire-blocks')}
                             </Button>
                             <SelectControl
-                                label={__('Background Size', 'adaire-blocks-dev2')}
+                                label={__('Background Size', 'adaire-blocks')}
                                 value={backgroundSize}
                                 options={[
-                                    { label: __('Cover', 'adaire-blocks-dev2'), value: 'cover' },
-                                    { label: __('Contain', 'adaire-blocks-dev2'), value: 'contain' },
-                                    { label: __('Auto', 'adaire-blocks-dev2'), value: 'auto' }
+                                    { label: __('Cover', 'adaire-blocks'), value: 'cover' },
+                                    { label: __('Contain', 'adaire-blocks'), value: 'contain' },
+                                    { label: __('Auto', 'adaire-blocks'), value: 'auto' }
                                 ]}
                                 onChange={(val) => setAttributes({ backgroundSize: val })}
                             />
                             <SelectControl
-                                label={__('Background Position', 'adaire-blocks-dev2')}
+                                label={__('Background Position', 'adaire-blocks')}
                                 value={backgroundPosition}
                                 options={[
-                                    { label: __('Top Left', 'adaire-blocks-dev2'), value: 'top left' },
-                                    { label: __('Top Center', 'adaire-blocks-dev2'), value: 'top center' },
-                                    { label: __('Top Right', 'adaire-blocks-dev2'), value: 'top right' },
-                                    { label: __('Center Left', 'adaire-blocks-dev2'), value: 'center left' },
-                                    { label: __('Center Center', 'adaire-blocks-dev2'), value: 'center' },
-                                    { label: __('Center Right', 'adaire-blocks-dev2'), value: 'center right' },
-                                    { label: __('Bottom Left', 'adaire-blocks-dev2'), value: 'bottom left' },
-                                    { label: __('Bottom Center', 'adaire-blocks-dev2'), value: 'bottom center' },
-                                    { label: __('Bottom Right', 'adaire-blocks-dev2'), value: 'bottom right' }
+                                    { label: __('Top Left', 'adaire-blocks'), value: 'top left' },
+                                    { label: __('Top Center', 'adaire-blocks'), value: 'top center' },
+                                    { label: __('Top Right', 'adaire-blocks'), value: 'top right' },
+                                    { label: __('Center Left', 'adaire-blocks'), value: 'center left' },
+                                    { label: __('Center Center', 'adaire-blocks'), value: 'center' },
+                                    { label: __('Center Right', 'adaire-blocks'), value: 'center right' },
+                                    { label: __('Bottom Left', 'adaire-blocks'), value: 'bottom left' },
+                                    { label: __('Bottom Center', 'adaire-blocks'), value: 'bottom center' },
+                                    { label: __('Bottom Right', 'adaire-blocks'), value: 'bottom right' }
                                 ]}
                                 onChange={(val) => setAttributes({ backgroundPosition: val })}
                             />
                             <SelectControl
-                                label={__('Background Repeat', 'adaire-blocks-dev2')}
+                                label={__('Background Repeat', 'adaire-blocks')}
                                 value={backgroundRepeat}
                                 options={[
-                                    { label: __('No Repeat', 'adaire-blocks-dev2'), value: 'no-repeat' },
-                                    { label: __('Repeat', 'adaire-blocks-dev2'), value: 'repeat' },
-                                    { label: __('Repeat X', 'adaire-blocks-dev2'), value: 'repeat-x' },
-                                    { label: __('Repeat Y', 'adaire-blocks-dev2'), value: 'repeat-y' }
+                                    { label: __('No Repeat', 'adaire-blocks'), value: 'no-repeat' },
+                                    { label: __('Repeat', 'adaire-blocks'), value: 'repeat' },
+                                    { label: __('Repeat X', 'adaire-blocks'), value: 'repeat-x' },
+                                    { label: __('Repeat Y', 'adaire-blocks'), value: 'repeat-y' }
                                 ]}
                                 onChange={(val) => setAttributes({ backgroundRepeat: val })}
                             />
@@ -714,12 +714,12 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
 
                     <SelectControl
-                        label={__('Overlay Type', 'adaire-blocks-dev2')}
+                        label={__('Overlay Type', 'adaire-blocks')}
                         value={overlayType}
                         options={[
-                            { label: __('None', 'adaire-blocks-dev2'), value: 'none' },
-                            { label: __('Solid', 'adaire-blocks-dev2'), value: 'solid' },
-                            { label: __('Gradient', 'adaire-blocks-dev2'), value: 'gradient' }
+                            { label: __('None', 'adaire-blocks'), value: 'none' },
+                            { label: __('Solid', 'adaire-blocks'), value: 'solid' },
+                            { label: __('Gradient', 'adaire-blocks'), value: 'gradient' }
                         ]}
                         onChange={(val) => setAttributes({ overlayType: val })}
                     />
@@ -727,18 +727,18 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     {overlayType === 'solid' && (
                         <>
                             <PanelColorSettings
-                                title={__('Overlay Color', 'adaire-blocks-dev2')}
+                                title={__('Overlay Color', 'adaire-blocks')}
                                 initialOpen={true}
                                 colorSettings={[
                                     {
                                         value: resolveColor( overlayColor ),
                                         onChange: (val) => setAttributes({ overlayColor: bindColor(val) }),
-                                        label: __('Solid Color', 'adaire-blocks-dev2'),
+                                        label: __('Solid Color', 'adaire-blocks'),
                                     }
                                 ]}
                             />
                             <RangeControl
-                                label={__('Overlay Opacity', 'adaire-blocks-dev2')}
+                                label={__('Overlay Opacity', 'adaire-blocks')}
                                 value={overlayOpacity}
                                 onChange={(val) => setAttributes({ overlayOpacity: val })}
                                 min={0}
@@ -749,7 +749,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
 
                     {overlayType === 'gradient' && (
-                        <BaseControl label={__('Overlay Gradient', 'adaire-blocks-dev2')}>
+                        <BaseControl label={__('Overlay Gradient', 'adaire-blocks')}>
                             <GradientPicker
                                 value={overlayGradient}
                                 onChange={(val) => setAttributes({ overlayGradient: val })}
@@ -758,15 +758,15 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
                 </PanelBody>
 
-                <PanelBody section="layout" title={__('Layout Settings', 'adaire-blocks-dev2')}>
+                <PanelBody section="layout" title={__('Layout Settings', 'adaire-blocks')}>
                     <ToggleControl
-                        label={__('Show Heading', 'adaire-blocks-dev2')}
+                        label={__('Show Heading', 'adaire-blocks')}
                         checked={showHeading !== false}
                         onChange={(val) => setAttributes({ showHeading: val })}
-                        help={__('Hide the main heading above the grid items.', 'adaire-blocks-dev2')}
+                        help={__('Hide the main heading above the grid items.', 'adaire-blocks')}
                     />
 
-                    <p>{__('Container Width', 'adaire-blocks-dev2')}</p>
+                    <p>{__('Container Width', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {CONTAINER_MODES.map((mode) => (
                             <Button
@@ -780,7 +780,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     </ButtonGroup>
 
                     <UnitControl
-                        label={__('Block Width', 'adaire-blocks-dev2')}
+                        label={__('Block Width', 'adaire-blocks')}
                         value={responsiveBlockWidth[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveBlockWidth', deviceType, val)}
                     />
@@ -788,7 +788,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     {/* Max Width Controls using RangeControl + Unit Selection */}
                     <div className="adaire-infogrid-2__dimension-control" style={{ marginBottom: '16px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                            <strong>{__('Max Width', 'adaire-blocks-dev2')}</strong>
+                            <strong>{__('Max Width', 'adaire-blocks')}</strong>
                         </div>
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                             <div style={{ flex: 1 }}>
@@ -827,33 +827,33 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     </div>
 
                     <UnitControl
-                        label={__('Grid Width', 'adaire-blocks-dev2')}
+                        label={__('Grid Width', 'adaire-blocks')}
                         value={responsiveGridWidth[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveGridWidth', deviceType, val)}
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Container Spacing', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Container Spacing', 'adaire-blocks')} initialOpen={false}>
                     <BoxControl
-                        label={__('Block Padding', 'adaire-blocks-dev2')}
+                        label={__('Block Padding', 'adaire-blocks')}
                         values={responsivePadding[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, val)}
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Typography Settings', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography Settings', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
-                        label={__('Font Family', 'adaire-blocks-dev2')}
+                        label={__('Font Family', 'adaire-blocks')}
                         value={fontFamily || ''}
                         options={FONT_FAMILY_OPTIONS}
                         onChange={(val) => setAttributes({ fontFamily: val })}
-                        help={__('Applies to the entire block (heading, item title, and item text) unless overridden by theme styles.', 'adaire-blocks-dev2')}
+                        help={__('Applies to the entire block (heading, item title, and item text) unless overridden by theme styles.', 'adaire-blocks')}
                     />
                     <TypographySection
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Main Heading', 'adaire-blocks-dev2')}
+                        label={__('Main Heading', 'adaire-blocks')}
                         fontSizeAttr="responsiveHeadingFontSize"
                         fontWeightAttr="responsiveHeadingFontWeight"
                         lineHeightAttr="responsiveHeadingLineHeight"
@@ -866,7 +866,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Item Title', 'adaire-blocks-dev2')}
+                        label={__('Item Title', 'adaire-blocks')}
                         fontSizeAttr="responsiveTitleFontSize"
                         fontWeightAttr="responsiveTitleFontWeight"
                         lineHeightAttr="responsiveTitleLineHeight"
@@ -879,7 +879,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Item Text', 'adaire-blocks-dev2')}
+                        label={__('Item Text', 'adaire-blocks')}
                         fontSizeAttr="responsiveTextFontSize"
                         fontWeightAttr="responsiveTextFontWeight"
                         lineHeightAttr="responsiveTextLineHeight"
@@ -890,83 +890,83 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Item Styles', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Item Styles', 'adaire-blocks')} initialOpen={false}>
                     <UnitControl
-                        label={__('Icon Size', 'adaire-blocks-dev2')}
+                        label={__('Icon Size', 'adaire-blocks')}
                         value={responsiveIconSize[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveIconSize', deviceType, val)}
                     />
                     <PanelColorSettings
-                        title={__('Icon Color', 'adaire-blocks-dev2')}
+                        title={__('Icon Color', 'adaire-blocks')}
                         initialOpen={false}
                         colorSettings={[
                             {
                                 value: resolveColor( responsiveIconColor[deviceType] ),
                                 onChange: (val) => updateResponsiveAttribute('responsiveIconColor', deviceType, bindColor(val)),
-                                label: __('Color', 'adaire-blocks-dev2'),
+                                label: __('Color', 'adaire-blocks'),
                             }
                         ]}
                     />
                     <BoxControl
-                        label={__('Item Padding', 'adaire-blocks-dev2')}
+                        label={__('Item Padding', 'adaire-blocks')}
                         values={responsiveItemPadding[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveItemPadding', deviceType, val)}
                     />
                     <SelectControl
-                        label={__('Text Alignment', 'adaire-blocks-dev2')}
+                        label={__('Text Alignment', 'adaire-blocks')}
                         value={responsiveItemTextAlign?.[deviceType] || 'left'}
                         options={[
-                            { label: __('Left', 'adaire-blocks-dev2'), value: 'left' },
-                            { label: __('Center', 'adaire-blocks-dev2'), value: 'center' },
-                            { label: __('Right', 'adaire-blocks-dev2'), value: 'right' },
+                            { label: __('Left', 'adaire-blocks'), value: 'left' },
+                            { label: __('Center', 'adaire-blocks'), value: 'center' },
+                            { label: __('Right', 'adaire-blocks'), value: 'right' },
                         ]}
                         onChange={(val) => updateResponsiveAttribute('responsiveItemTextAlign', deviceType, val)}
                     />
                     <hr style={{ margin: '20px 0', border: '0', borderTop: '1px solid #ccc' }} />
-                    <p style={{ fontWeight: 600, fontSize: '12px', marginBottom: '12px' }}>{__('Item Border', 'adaire-blocks-dev2')}</p>
+                    <p style={{ fontWeight: 600, fontSize: '12px', marginBottom: '12px' }}>{__('Item Border', 'adaire-blocks')}</p>
                     <UnitControl
-                        label={__('Border Width', 'adaire-blocks-dev2')}
+                        label={__('Border Width', 'adaire-blocks')}
                         value={responsiveItemBorderWidth[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveItemBorderWidth', deviceType, val)}
                     />
                     <SelectControl
-                        label={__('Border Style', 'adaire-blocks-dev2')}
+                        label={__('Border Style', 'adaire-blocks')}
                         value={responsiveItemBorderStyle[deviceType]}
                         options={[
-                            { label: __('Solid', 'adaire-blocks-dev2'), value: 'solid' },
-                            { label: __('Dashed', 'adaire-blocks-dev2'), value: 'dashed' },
-                            { label: __('Dotted', 'adaire-blocks-dev2'), value: 'dotted' },
-                            { label: __('Double', 'adaire-blocks-dev2'), value: 'double' },
-                            { label: __('None', 'adaire-blocks-dev2'), value: 'none' }
+                            { label: __('Solid', 'adaire-blocks'), value: 'solid' },
+                            { label: __('Dashed', 'adaire-blocks'), value: 'dashed' },
+                            { label: __('Dotted', 'adaire-blocks'), value: 'dotted' },
+                            { label: __('Double', 'adaire-blocks'), value: 'double' },
+                            { label: __('None', 'adaire-blocks'), value: 'none' }
                         ]}
                         onChange={(val) => updateResponsiveAttribute('responsiveItemBorderStyle', deviceType, val)}
                     />
                     <PanelColorSettings
-                        title={__('Border Color', 'adaire-blocks-dev2')}
+                        title={__('Border Color', 'adaire-blocks')}
                         initialOpen={false}
                         colorSettings={[
                             {
                                 value: resolveColor( responsiveItemBorderColor[deviceType] ),
                                 onChange: (val) => updateResponsiveAttribute('responsiveItemBorderColor', deviceType, bindColor(val)),
-                                label: __('Color', 'adaire-blocks-dev2'),
+                                label: __('Color', 'adaire-blocks'),
                             }
                         ]}
                     />
                     <UnitControl
-                        label={__('Border Radius', 'adaire-blocks-dev2')}
+                        label={__('Border Radius', 'adaire-blocks')}
                         value={responsiveItemBorderRadius?.[deviceType] || '12px'}
                         onChange={(val) => updateResponsiveAttribute('responsiveItemBorderRadius', deviceType, val)}
                     />
                 </PanelBody>
 
-                <PanelBody section="content" title={__('Manage Grid Items', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody section="content" title={__('Manage Grid Items', 'adaire-blocks')} initialOpen={false}>
                     <Button
                         variant="primary"
                         icon={plus}
                         onClick={addItem}
                         style={{ width: '100%', marginBottom: '20px', justifyContent: 'center' }}
                     >
-                        {__('Add New Item', 'adaire-blocks-dev2')}
+                        {__('Add New Item', 'adaire-blocks')}
                     </Button>
 
                     <div className="adaire-infogrid-2-controls">
@@ -975,7 +975,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 <CardHeader>
                                     <Flex justify="space-between" align="center" style={{ width: '100%' }}>
                                         <FlexItem>
-                                            <strong>{__('Item', 'adaire-blocks-dev2')} #{index + 1}</strong>
+                                            <strong>{__('Item', 'adaire-blocks')} #{index + 1}</strong>
                                         </FlexItem>
                                         <FlexItem>
                                             <ButtonGroup>
@@ -996,10 +996,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                         style={{ width: '100%', marginBottom: '12px' }}
                                     >
                                         <i className={item.icon} style={{ marginRight: '8px' }}></i>
-                                        {item.icon ? item.icon : __('Select Icon', 'adaire-blocks-dev2')}
+                                        {item.icon ? item.icon : __('Select Icon', 'adaire-blocks')}
                                     </Button>
                                     <p style={{ fontSize: '11px', color: '#757575', margin: '0 0 6px' }}>
-                                        {__('Or use an uploaded image instead of the icon:', 'adaire-blocks-dev2')}
+                                        {__('Or use an uploaded image instead of the icon:', 'adaire-blocks')}
                                     </p>
                                     <MediaUploadCheck>
                                         <MediaUpload
@@ -1015,7 +1015,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                     {item.imageUrl ? (
                                                         <img src={item.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                                     ) : (
-                                                        __('Upload Image', 'adaire-blocks-dev2')
+                                                        __('Upload Image', 'adaire-blocks')
                                                     )}
                                                 </Button>
                                             )}
@@ -1028,21 +1028,21 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                             variant="link"
                                             style={{ marginBottom: '12px' }}
                                         >
-                                            {__('Remove Image (use icon instead)', 'adaire-blocks-dev2')}
+                                            {__('Remove Image (use icon instead)', 'adaire-blocks')}
                                         </Button>
                                     )}
                                     <TextControl
-                                        label={__('Title', 'adaire-blocks-dev2')}
+                                        label={__('Title', 'adaire-blocks')}
                                         value={item.title}
                                         onChange={(val) => updateItem(item.id, 'title', val)}
                                     />
                                     <ToggleControl
-                                        label={__('Show Title', 'adaire-blocks-dev2')}
+                                        label={__('Show Title', 'adaire-blocks')}
                                         checked={item.showTitle !== false}
                                         onChange={(val) => updateItem(item.id, 'showTitle', val)}
                                     />
                                     <TextareaControl
-                                        label={__('Text', 'adaire-blocks-dev2')}
+                                        label={__('Text', 'adaire-blocks')}
                                         value={item.text}
                                         onChange={(val) => updateItem(item.id, 'text', val)}
                                     />
@@ -1093,7 +1093,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 className="adaire-infogrid-2-heading"
                                 value={headingText}
                                 onChange={(val) => setAttributes({ headingText: val })}
-                                placeholder={__('Enter heading...', 'adaire-blocks-dev2')}
+                                placeholder={__('Enter heading...', 'adaire-blocks')}
                             />
                         </QuickZone>
                     )}
@@ -1116,7 +1116,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                 style={{ width: '100%', marginBottom: '8px' }}
                                             >
                                                 {item.icon && <i className={item.icon} style={{ marginRight: '8px' }}></i>}
-                                                {item.icon ? item.icon : __('Select Icon', 'adaire-blocks-dev2')}
+                                                {item.icon ? item.icon : __('Select Icon', 'adaire-blocks')}
                                             </Button>
                                             <MediaUploadCheck>
                                                 <MediaUpload
@@ -1132,7 +1132,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                             {item.imageUrl ? (
                                                                 <img src={item.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                                             ) : (
-                                                                __('Upload Image', 'adaire-blocks-dev2')
+                                                                __('Upload Image', 'adaire-blocks')
                                                             )}
                                                         </Button>
                                                     )}
@@ -1144,7 +1144,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                     isDestructive
                                                     variant="link"
                                                 >
-                                                    {__('Remove Image', 'adaire-blocks-dev2')}
+                                                    {__('Remove Image', 'adaire-blocks')}
                                                 </Button>
                                             )}
                                         </>
@@ -1160,7 +1160,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     </div>
                                 ) : (
                                     <div className="adaire-infogrid-2-item-icon adaire-infogrid-2-item-icon--placeholder">
-                                        <span>{__('Add Icon', 'adaire-blocks-dev2')}</span>
+                                        <span>{__('Add Icon', 'adaire-blocks')}</span>
                                     </div>
                                 )}
                                 </QuickZone>
@@ -1172,7 +1172,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                     content={
                                         <>
                                             <ToggleControl
-                                                label={__('Show Title', 'adaire-blocks-dev2')}
+                                                label={__('Show Title', 'adaire-blocks')}
                                                 checked={item.showTitle !== false}
                                                 onChange={(val) => updateItem(item.id, 'showTitle', val)}
                                             />
@@ -1193,7 +1193,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                             className="adaire-infogrid-2-item-title"
                                             value={item.title}
                                             onChange={(val) => updateItem(item.id, 'title', val)}
-                                            placeholder={__('Enter title...', 'adaire-blocks-dev2')}
+                                            placeholder={__('Enter title...', 'adaire-blocks')}
                                         />
                                     )}
                                 </QuickZone>
@@ -1218,7 +1218,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                         className="adaire-infogrid-2-item-text"
                                         value={item.text}
                                         onChange={(val) => updateItem(item.id, 'text', val)}
-                                        placeholder={__('Enter text...', 'adaire-blocks-dev2')}
+                                        placeholder={__('Enter text...', 'adaire-blocks')}
                                     />
                                 </QuickZone>
                             </div>

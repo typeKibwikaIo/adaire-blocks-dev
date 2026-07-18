@@ -60,10 +60,10 @@ const hexToRgba = (hex, alpha = 1) => {
 };
 
 const navigationSourceOptions = [
-	{ label: __("Custom (manual)", "mega-menu-block"), value: "legacy" },
-	{ label: __("Primary Menu", "mega-menu-block"), value: "primary" },
-	{ label: __("Footer Menu", "mega-menu-block"), value: "footer" },
-	{ label: __("Select existing menu", "mega-menu-block"), value: "menu" },
+	{ label: __("Custom (manual)", "adaire-blocks"), value: "legacy" },
+	{ label: __("Primary Menu", "adaire-blocks"), value: "primary" },
+	{ label: __("Footer Menu", "adaire-blocks"), value: "footer" },
+	{ label: __("Select existing menu", "adaire-blocks"), value: "menu" },
 ];
 
 // Same two plugin-owned locations header-block and website-footer-block
@@ -1031,7 +1031,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 			const newId = `menu-item-${Date.now()}`;
 			const newItem = {
 				id: newId,
-				title: __("New Menu Item", "mega-menu-block"),
+				title: __("New Menu Item", "adaire-blocks"),
 				url: "#",
 				isBold: false,
 				openInNewTab: false,
@@ -1180,7 +1180,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						<>
 							<div style={{ marginBottom: "8px" }}>
 								<TextareaControl
-									label={__("Banner Description", "mega-menu-block")}
+									label={__("Banner Description", "adaire-blocks")}
 									value={item.bannerDescription || ""}
 									onChange={(value) =>
 										updateMenuItem(item.id, { bannerDescription: value }, parentId)
@@ -1193,7 +1193,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</div>
 							<div style={{ marginBottom: "8px" }}>
 								<ToggleControl
-									label={__("Show Canvas Banner", "mega-menu-block")}
+									label={__("Show Canvas Banner", "adaire-blocks")}
 									checked={item.canvasBannerEnabled !== false}
 									onChange={(value) =>
 										updateMenuItem(
@@ -1243,11 +1243,11 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							<h4
 								style={{ margin: "0 0 8px 0", fontSize: "12px", color: "#666" }}
 							>
-								{__("Canvas Story", "mega-menu-block")}
+								{__("Canvas Story", "adaire-blocks")}
 							</h4>
 
 							<ToggleControl
-								label={__("Mark Canvas as Smaller", "mega-menu-block")}
+								label={__("Mark Canvas as Smaller", "adaire-blocks")}
 								help={__(
 									"Adds a .smaller class to this canvas dropdown",
 									"mega-menu-block",
@@ -1266,7 +1266,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<ToggleControl
-								label={__("Mark Canvas as Smallest", "mega-menu-block")}
+								label={__("Mark Canvas as Smallest", "adaire-blocks")}
 								help={__(
 									"Applies a .smallest class with the tightest layout. Cannot be combined with the smaller option.",
 									"mega-menu-block",
@@ -1285,7 +1285,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<TextControl
-								label={__("Story Title", "mega-menu-block")}
+								label={__("Story Title", "adaire-blocks")}
 								value={item.canvasStoryTitle || ""}
 								onChange={(value) =>
 									updateMenuItem(item.id, { canvasStoryTitle: value }, parentId)
@@ -1293,7 +1293,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<TextareaControl
-								label={__("Story Description", "mega-menu-block")}
+								label={__("Story Description", "adaire-blocks")}
 								value={item.canvasStoryDescription || ""}
 								onChange={(value) =>
 									updateMenuItem(
@@ -1305,7 +1305,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<TextControl
-								label={__("Learn More Label", "mega-menu-block")}
+								label={__("Learn More Label", "adaire-blocks")}
 								value={item.canvasStoryLinkLabel || ""}
 								onChange={(value) =>
 									updateMenuItem(
@@ -1317,7 +1317,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<TextControl
-								label={__("Learn More URL", "mega-menu-block")}
+								label={__("Learn More URL", "adaire-blocks")}
 								value={item.canvasStoryLinkUrl || ""}
 								onChange={(value) =>
 									updateMenuItem(
@@ -1329,7 +1329,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<ToggleControl
-								label={__("Open Story Link in New Tab", "mega-menu-block")}
+								label={__("Open Story Link in New Tab", "adaire-blocks")}
 								checked={item.canvasStoryLinkOpenInNewTab || false}
 								onChange={(value) =>
 									updateMenuItem(
@@ -1340,7 +1340,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								}
 							/>
 
-							<BaseControl label={__("Story Image", "mega-menu-block")}>
+							<BaseControl label={__("Story Image", "adaire-blocks")}>
 								<MediaUploadCheck>
 									<MediaUpload
 										onSelect={(media) =>
@@ -1372,8 +1372,8 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 												)}
 												<Button onClick={open} isSecondary isSmall>
 													{item.canvasImageUrl
-														? __("Change", "mega-menu-block")
-														: __("Select Image", "mega-menu-block")}
+														? __("Change", "adaire-blocks")
+														: __("Select Image", "adaire-blocks")}
 												</Button>
 												{item.canvasImageUrl && (
 													<Button
@@ -1391,7 +1391,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 														isSmall
 														style={{ marginLeft: "8px" }}
 													>
-														{__("Remove", "mega-menu-block")}
+														{__("Remove", "adaire-blocks")}
 													</Button>
 												)}
 											</div>
@@ -1401,11 +1401,11 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<SelectControl
-								label={__("Position", "mega-menu-block")}
+								label={__("Position", "adaire-blocks")}
 								value={item.canvasImagePosition}
 								options={[
-									{ label: __("Left", "mega-menu-block"), value: "left" },
-									{ label: __("Right", "mega-menu-block"), value: "right" },
+									{ label: __("Left", "adaire-blocks"), value: "left" },
+									{ label: __("Right", "adaire-blocks"), value: "right" },
 								]}
 								onChange={(value) =>
 									updateMenuItem(
@@ -1418,7 +1418,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 							<div style={{ display: "flex", gap: "8px" }}>
 								<RangeControl
-									label={__("Width (Desktop)", "mega-menu-block")}
+									label={__("Width (Desktop)", "adaire-blocks")}
 									value={item.canvasImageWidth?.desktop?.value || 300}
 									onChange={(value) =>
 										updateMenuItem(
@@ -1436,7 +1436,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									max={600}
 								/>
 								<SelectControl
-									label={__("Desktop Unit", "mega-menu-block")}
+									label={__("Desktop Unit", "adaire-blocks")}
 									value={item.canvasImageWidth?.desktop?.unit || "px"}
 									options={[
 										{ label: "px", value: "px" },
@@ -1464,7 +1464,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 							<div style={{ display: "flex", gap: "8px" }}>
 								<RangeControl
-									label={__("Width (Tablet)", "mega-menu-block")}
+									label={__("Width (Tablet)", "adaire-blocks")}
 									value={item.canvasImageWidth?.tablet?.value || 250}
 									onChange={(value) =>
 										updateMenuItem(
@@ -1482,7 +1482,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									max={500}
 								/>
 								<SelectControl
-									label={__("Tablet Unit", "mega-menu-block")}
+									label={__("Tablet Unit", "adaire-blocks")}
 									value={item.canvasImageWidth?.tablet?.unit || "px"}
 									options={[
 										{ label: "px", value: "px" },
@@ -1510,7 +1510,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 							<div style={{ display: "flex", gap: "8px" }}>
 								<RangeControl
-									label={__("Height (Desktop)", "mega-menu-block")}
+									label={__("Height (Desktop)", "adaire-blocks")}
 									value={item.canvasImageHeight?.desktop?.value || 200}
 									onChange={(value) =>
 										updateMenuItem(
@@ -1531,7 +1531,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									max={800}
 								/>
 								<SelectControl
-									label={__("Desktop Unit", "mega-menu-block")}
+									label={__("Desktop Unit", "adaire-blocks")}
 									value={item.canvasImageHeight?.desktop?.unit || "px"}
 									options={[
 										{ label: "px", value: "px" },
@@ -1559,7 +1559,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 							<div style={{ display: "flex", gap: "8px" }}>
 								<RangeControl
-									label={__("Height (Tablet)", "mega-menu-block")}
+									label={__("Height (Tablet)", "adaire-blocks")}
 									value={item.canvasImageHeight?.tablet?.value || 150}
 									onChange={(value) =>
 										updateMenuItem(
@@ -1577,7 +1577,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									max={600}
 								/>
 								<SelectControl
-									label={__("Tablet Unit", "mega-menu-block")}
+									label={__("Tablet Unit", "adaire-blocks")}
 									value={item.canvasImageHeight?.tablet?.unit || "px"}
 									options={[
 										{ label: "px", value: "px" },
@@ -1605,7 +1605,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 							<div style={{ display: "flex", gap: "8px" }}>
 								<RangeControl
-									label={__("Height (Mobile)", "mega-menu-block")}
+									label={__("Height (Mobile)", "adaire-blocks")}
 									value={item.canvasImageHeight?.mobile?.value || 120}
 									onChange={(value) =>
 										updateMenuItem(
@@ -1623,7 +1623,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									max={400}
 								/>
 								<SelectControl
-									label={__("Mobile Unit", "mega-menu-block")}
+									label={__("Mobile Unit", "adaire-blocks")}
 									value={item.canvasImageHeight?.mobile?.unit || "px"}
 									options={[
 										{ label: "px", value: "px" },
@@ -1689,7 +1689,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						<h4
 							style={{ margin: "0 0 8px 0", fontSize: "14px", color: "#666" }}
 						>
-							{__("Sub-items:", "mega-menu-block")}
+							{__("Sub-items:", "adaire-blocks")}
 						</h4>
 						{item.children.map((child) =>
 							renderMenuItem(child, level + 1, item.id),
@@ -1704,14 +1704,14 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={__("Container Settings", "mega-menu-block")}
+					title={__("Container Settings", "adaire-blocks")}
 					initialOpen={true}
 				>
 					<ButtonGroup>
 						{[
-							{ label: __("Full width", "mega-menu-block"), value: "full" },
+							{ label: __("Full width", "adaire-blocks"), value: "full" },
 							{
-								label: __("Constrained", "mega-menu-block"),
+								label: __("Constrained", "adaire-blocks"),
 								value: "constrained",
 							},
 						].map((opt) => (
@@ -1734,26 +1734,26 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									fontWeight: 600,
 								}}
 							>
-								{__("Max Width", "mega-menu-block")}
+								{__("Max Width", "adaire-blocks")}
 							</p>
 							<ButtonGroup style={{ marginBottom: "12px" }}>
 								<Button
 									icon={desktop}
 									isPrimary={deviceType === "desktop"}
 									onClick={() => setDeviceType("desktop")}
-									label={__("Desktop", "mega-menu-block")}
+									label={__("Desktop", "adaire-blocks")}
 								/>
 								<Button
 									icon={tablet}
 									isPrimary={deviceType === "tablet"}
 									onClick={() => setDeviceType("tablet")}
-									label={__("Tablet", "mega-menu-block")}
+									label={__("Tablet", "adaire-blocks")}
 								/>
 								<Button
 									icon={mobile}
 									isPrimary={deviceType === "mobile"}
 									onClick={() => setDeviceType("mobile")}
-									label={__("Mobile", "mega-menu-block")}
+									label={__("Mobile", "adaire-blocks")}
 								/>
 							</ButtonGroup>
 							<div style={{ display: "flex", gap: "8px" }}>
@@ -1815,7 +1815,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 					{containerMode === "constrained" && (
 						<ToggleControl
-							label={__("Center horizontally", "mega-menu-block")}
+							label={__("Center horizontally", "adaire-blocks")}
 							checked={centerMenu}
 							onChange={(value) => setAttributes({ centerMenu: value })}
 							help={__(
@@ -1826,9 +1826,9 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					)}
 				</PanelBody>
 
-				<PanelBody title={__("Ribbon", "mega-menu-block")} initialOpen={true}>
+				<PanelBody title={__("Ribbon", "adaire-blocks")} initialOpen={true}>
 					<ToggleControl
-						label={__("Enable Ribbon", "mega-menu-block")}
+						label={__("Enable Ribbon", "adaire-blocks")}
 						checked={ribbonEnabled}
 						onChange={(value) => setAttributes({ ribbonEnabled: value })}
 					/>
@@ -1836,12 +1836,12 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					{ribbonEnabled && (
 						<>
 							<TextControl
-								label={__("Ribbon Text", "mega-menu-block")}
+								label={__("Ribbon Text", "adaire-blocks")}
 								value={ribbonText}
 								onChange={(value) => setAttributes({ ribbonText: value })}
 							/>
 
-							<BaseControl label={__("Background Color", "mega-menu-block")}>
+							<BaseControl label={__("Background Color", "adaire-blocks")}>
 								<ColorPalette
 									value={ribbonBackgroundColor}
 									onChange={(value) =>
@@ -1850,7 +1850,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 							</BaseControl>
 
-							<BaseControl label={__("Text Color", "mega-menu-block")}>
+							<BaseControl label={__("Text Color", "adaire-blocks")}>
 								<ColorPalette
 									value={ribbonTextColor}
 									onChange={(value) => setAttributes({ ribbonTextColor: value })}
@@ -1858,7 +1858,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<RangeControl
-								label={__("Font Size (px)", "mega-menu-block")}
+								label={__("Font Size (px)", "adaire-blocks")}
 								value={ribbonFontSize}
 								onChange={(value) => setAttributes({ ribbonFontSize: value })}
 								min={10}
@@ -1866,33 +1866,33 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<SelectControl
-								label={__("Font Weight", "mega-menu-block")}
+								label={__("Font Weight", "adaire-blocks")}
 								value={ribbonFontWeight}
 								options={[
-									{ label: __("Light (300)", "mega-menu-block"), value: "300" },
-									{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-									{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-									{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-									{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
-									{ label: __("Extra Bold (800)", "mega-menu-block"), value: "800" },
+									{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+									{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+									{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+									{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+									{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
+									{ label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
 								]}
 								onChange={(value) => setAttributes({ ribbonFontWeight: value })}
 							/>
 
 							<TextControl
-								label={__("Link Label", "mega-menu-block")}
+								label={__("Link Label", "adaire-blocks")}
 								value={ribbonLinkLabel}
 								onChange={(value) => setAttributes({ ribbonLinkLabel: value })}
 							/>
 
 							<TextControl
-								label={__("Link URL", "mega-menu-block")}
+								label={__("Link URL", "adaire-blocks")}
 								value={ribbonLinkUrl}
 								onChange={(value) => setAttributes({ ribbonLinkUrl: value })}
 								type="url"
 							/>
 
-							<BaseControl label={__("Link Color", "mega-menu-block")}>
+							<BaseControl label={__("Link Color", "adaire-blocks")}>
 								<ColorPalette
 									value={ribbonLinkColor}
 									onChange={(value) => setAttributes({ ribbonLinkColor: value })}
@@ -1900,20 +1900,20 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<SelectControl
-								label={__("Link Font Weight", "mega-menu-block")}
+								label={__("Link Font Weight", "adaire-blocks")}
 								value={ribbonLinkFontWeight}
 								options={[
-									{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-									{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-									{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-									{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
-									{ label: __("Extra Bold (800)", "mega-menu-block"), value: "800" },
+									{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+									{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+									{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+									{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
+									{ label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
 								]}
 								onChange={(value) => setAttributes({ ribbonLinkFontWeight: value })}
 							/>
 
 							<ToggleControl
-								label={__("Open Link in New Tab", "mega-menu-block")}
+								label={__("Open Link in New Tab", "adaire-blocks")}
 								checked={ribbonLinkOpenInNewTab}
 								onChange={(value) =>
 									setAttributes({ ribbonLinkOpenInNewTab: value })
@@ -1921,7 +1921,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<ToggleControl
-								label={__("Underline Link", "mega-menu-block")}
+								label={__("Underline Link", "adaire-blocks")}
 								checked={ribbonLinkUnderline !== false}
 								onChange={(value) =>
 									setAttributes({ ribbonLinkUnderline: value })
@@ -1930,7 +1930,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 							{ribbonLinkUnderline !== false && (
 								<>
-									<BaseControl label={__("Underline Color", "mega-menu-block")}>
+									<BaseControl label={__("Underline Color", "adaire-blocks")}>
 										<ColorPalette
 											value={ribbonLinkUnderlineColor}
 											onChange={(value) =>
@@ -1939,7 +1939,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										/>
 									</BaseControl>
 									<RangeControl
-										label={__("Underline Width (px)", "mega-menu-block")}
+										label={__("Underline Width (px)", "adaire-blocks")}
 										value={ribbonLinkUnderlineWidth || 1}
 										onChange={(value) =>
 											setAttributes({ ribbonLinkUnderlineWidth: value })
@@ -1952,7 +1952,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							)}
 
 							<RangeControl
-								label={__("Ribbon Height (px)", "mega-menu-block")}
+								label={__("Ribbon Height (px)", "adaire-blocks")}
 								value={ribbonHeight}
 								onChange={(value) => setAttributes({ ribbonHeight: value })}
 								min={24}
@@ -1960,7 +1960,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<RangeControl
-								label={__("Padding Top (px)", "mega-menu-block")}
+								label={__("Padding Top (px)", "adaire-blocks")}
 								value={ribbonPaddingTop}
 								onChange={(value) => setAttributes({ ribbonPaddingTop: value })}
 								min={0}
@@ -1968,7 +1968,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<RangeControl
-								label={__("Padding Bottom (px)", "mega-menu-block")}
+								label={__("Padding Bottom (px)", "adaire-blocks")}
 								value={ribbonPaddingBottom}
 								onChange={(value) => setAttributes({ ribbonPaddingBottom: value })}
 								min={0}
@@ -1979,7 +1979,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 				</PanelBody>
 
 				<PanelBody
-					title={__("Ribbon link arrow", "mega-menu-block")}
+					title={__("Ribbon link arrow", "adaire-blocks")}
 					initialOpen={true}
 				>
 					{!ribbonEnabled ? (
@@ -2004,7 +2004,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								)}
 							</p>
 							<ToggleControl
-								label={__("Show arrow next to link", "mega-menu-block")}
+								label={__("Show arrow next to link", "adaire-blocks")}
 								checked={ribbonLinkArrowEnabled}
 								onChange={(value) =>
 									setAttributes({ ribbonLinkArrowEnabled: value })
@@ -2013,7 +2013,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							{ribbonLinkArrowEnabled && (
 								<>
 									<BaseControl
-										label={__("Arrow color", "mega-menu-block")}
+										label={__("Arrow color", "adaire-blocks")}
 										help={__(
 											"Leave empty to match the link color.",
 											"mega-menu-block",
@@ -2027,7 +2027,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										/>
 									</BaseControl>
 									<RangeControl
-										label={__("Arrow size (px)", "mega-menu-block")}
+										label={__("Arrow size (px)", "adaire-blocks")}
 										value={
 											ribbonLinkArrowSize !== undefined &&
 											ribbonLinkArrowSize !== null
@@ -2042,7 +2042,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										step={1}
 									/>
 									<RangeControl
-										label={__("Arrow rotation (degrees)", "mega-menu-block")}
+										label={__("Arrow rotation (degrees)", "adaire-blocks")}
 										value={
 											ribbonLinkArrowRotation !== undefined &&
 											ribbonLinkArrowRotation !== null
@@ -2062,9 +2062,9 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					)}
 				</PanelBody>
 
-				<PanelBody title={__("Menu Button", "mega-menu-block")} initialOpen={false}>
+				<PanelBody title={__("Menu Button", "adaire-blocks")} initialOpen={false}>
 					<ToggleControl
-						label={__("Show Menu Button", "mega-menu-block")}
+						label={__("Show Menu Button", "adaire-blocks")}
 						checked={ctaButtonEnabled}
 						onChange={(value) => setAttributes({ ctaButtonEnabled: value })}
 					/>
@@ -2072,20 +2072,20 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					{ctaButtonEnabled && (
 						<>
 							<TextControl
-								label={__("Button Text", "mega-menu-block")}
+								label={__("Button Text", "adaire-blocks")}
 								value={ctaButtonText}
 								onChange={(value) => setAttributes({ ctaButtonText: value })}
 							/>
 
 							<TextControl
-								label={__("Button Link", "mega-menu-block")}
+								label={__("Button Link", "adaire-blocks")}
 								value={ctaButtonLink}
 								onChange={(value) => setAttributes({ ctaButtonLink: value })}
 								type="url"
 							/>
 
 							<ToggleControl
-								label={__("Open in new tab", "mega-menu-block")}
+								label={__("Open in new tab", "adaire-blocks")}
 								checked={ctaButtonOpenInNewTab}
 								onChange={(value) =>
 									setAttributes({ ctaButtonOpenInNewTab: value })
@@ -2093,12 +2093,12 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<ToggleControl
-								label={__("Show icon", "mega-menu-block")}
+								label={__("Show icon", "adaire-blocks")}
 								checked={ctaButtonShowIcon !== false}
 								onChange={(value) => setAttributes({ ctaButtonShowIcon: value })}
 							/>
 
-							<BaseControl label={__("Button Text Color", "mega-menu-block")}>
+							<BaseControl label={__("Button Text Color", "adaire-blocks")}>
 								<ColorPicker
 									color={ctaButtonColor}
 									onChangeComplete={handleSolidColorChange("ctaButtonColor")}
@@ -2107,7 +2107,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<BaseControl
-								label={__("Button Background Color", "mega-menu-block")}
+								label={__("Button Background Color", "adaire-blocks")}
 							>
 								<ColorPicker
 									color={
@@ -2133,12 +2133,12 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 											}
 											style={{ marginTop: "8px" }}
 										>
-											{__("Clear Background", "mega-menu-block")}
+											{__("Clear Background", "adaire-blocks")}
 										</Button>
 									)}
 							</BaseControl>
 
-							<BaseControl label={__("Hover Text Color", "mega-menu-block")}>
+							<BaseControl label={__("Hover Text Color", "adaire-blocks")}>
 								<ColorPicker
 									color={ctaButtonHoverColor}
 									onChangeComplete={handleSolidColorChange(
@@ -2149,7 +2149,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<BaseControl
-								label={__("Hover Background Color", "mega-menu-block")}
+								label={__("Hover Background Color", "adaire-blocks")}
 							>
 								<ColorPicker
 									color={
@@ -2175,12 +2175,12 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 											}
 											style={{ marginTop: "8px" }}
 										>
-											{__("Clear Hover Background", "mega-menu-block")}
+											{__("Clear Hover Background", "adaire-blocks")}
 										</Button>
 									)}
 							</BaseControl>
 
-							<BaseControl label={__("Underline Color", "mega-menu-block")}>
+							<BaseControl label={__("Underline Color", "adaire-blocks")}>
 								<ColorPicker
 									color={ctaButtonUnderlineColor}
 									onChangeComplete={handleSolidColorChange(
@@ -2191,14 +2191,14 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<SelectControl
-								label={__("Button Style", "mega-menu-block")}
+								label={__("Button Style", "adaire-blocks")}
 								value={ctaButtonStyle}
 								options={[
-									{ label: __("Underline", "mega-menu-block"), value: "underline" },
-									{ label: __("Background Fill", "mega-menu-block"), value: "fill" },
-									{ label: __("Border", "mega-menu-block"), value: "border" },
-									{ label: __("Gradient", "mega-menu-block"), value: "gradient" },
-									{ label: __("Glass Effect", "mega-menu-block"), value: "glass" },
+									{ label: __("Underline", "adaire-blocks"), value: "underline" },
+									{ label: __("Background Fill", "adaire-blocks"), value: "fill" },
+									{ label: __("Border", "adaire-blocks"), value: "border" },
+									{ label: __("Gradient", "adaire-blocks"), value: "gradient" },
+									{ label: __("Glass Effect", "adaire-blocks"), value: "glass" },
 								]}
 								onChange={(value) => setAttributes({ ctaButtonStyle: value })}
 							/>
@@ -2206,7 +2206,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							{ctaButtonStyle === "border" && (
 								<>
 									<RangeControl
-										label={__("Border Width (px)", "mega-menu-block")}
+										label={__("Border Width (px)", "adaire-blocks")}
 										value={ctaButtonBorderWidth}
 										onChange={(value) =>
 											setAttributes({ ctaButtonBorderWidth: value })
@@ -2216,7 +2216,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										step={1}
 									/>
 
-									<BaseControl label={__("Border Color", "mega-menu-block")}>
+									<BaseControl label={__("Border Color", "adaire-blocks")}>
 										<ColorPicker
 											color={ctaButtonBorderColor}
 											onChangeComplete={handleSolidColorChange(
@@ -2226,7 +2226,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										/>
 									</BaseControl>
 
-									<BaseControl label={__("Hover Border Color", "mega-menu-block")}>
+									<BaseControl label={__("Hover Border Color", "adaire-blocks")}>
 										<ColorPicker
 											color={ctaButtonHoverBorderColor || ctaButtonBorderColor}
 											onChangeComplete={handleSolidColorChange(
@@ -2237,17 +2237,17 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									</BaseControl>
 
 									<SelectControl
-										label={__("Border Style", "mega-menu-block")}
+										label={__("Border Style", "adaire-blocks")}
 										value={ctaButtonBorderStyle}
 										options={[
-											{ label: __("Solid", "mega-menu-block"), value: "solid" },
-											{ label: __("Dashed", "mega-menu-block"), value: "dashed" },
-											{ label: __("Dotted", "mega-menu-block"), value: "dotted" },
-											{ label: __("Double", "mega-menu-block"), value: "double" },
-											{ label: __("Groove", "mega-menu-block"), value: "groove" },
-											{ label: __("Ridge", "mega-menu-block"), value: "ridge" },
-											{ label: __("Inset", "mega-menu-block"), value: "inset" },
-											{ label: __("Outset", "mega-menu-block"), value: "outset" },
+											{ label: __("Solid", "adaire-blocks"), value: "solid" },
+											{ label: __("Dashed", "adaire-blocks"), value: "dashed" },
+											{ label: __("Dotted", "adaire-blocks"), value: "dotted" },
+											{ label: __("Double", "adaire-blocks"), value: "double" },
+											{ label: __("Groove", "adaire-blocks"), value: "groove" },
+											{ label: __("Ridge", "adaire-blocks"), value: "ridge" },
+											{ label: __("Inset", "adaire-blocks"), value: "inset" },
+											{ label: __("Outset", "adaire-blocks"), value: "outset" },
 										]}
 										onChange={(value) =>
 											setAttributes({ ctaButtonBorderStyle: value })
@@ -2257,7 +2257,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							)}
 
 							<RangeControl
-								label={__("Font Size (px)", "mega-menu-block")}
+								label={__("Font Size (px)", "adaire-blocks")}
 								value={ctaButtonFontSize}
 								onChange={(value) => setAttributes({ ctaButtonFontSize: value })}
 								min={12}
@@ -2266,24 +2266,24 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<SelectControl
-								label={__("Font Weight", "mega-menu-block")}
+								label={__("Font Weight", "adaire-blocks")}
 								value={ctaButtonFontWeight}
 								options={[
-									{ label: __("Thin (100)", "mega-menu-block"), value: "100" },
-									{ label: __("Extra Light (200)", "mega-menu-block"), value: "200" },
-									{ label: __("Light (300)", "mega-menu-block"), value: "300" },
-									{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-									{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-									{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-									{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
-									{ label: __("Extra Bold (800)", "mega-menu-block"), value: "800" },
-									{ label: __("Black (900)", "mega-menu-block"), value: "900" },
+									{ label: __("Thin (100)", "adaire-blocks"), value: "100" },
+									{ label: __("Extra Light (200)", "adaire-blocks"), value: "200" },
+									{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+									{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+									{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+									{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+									{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
+									{ label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
+									{ label: __("Black (900)", "adaire-blocks"), value: "900" },
 								]}
 								onChange={(value) => setAttributes({ ctaButtonFontWeight: value })}
 							/>
 
 							<RangeControl
-								label={__("Blur Amount (px)", "mega-menu-block")}
+								label={__("Blur Amount (px)", "adaire-blocks")}
 								value={ctaButtonBlurAmount}
 								onChange={(value) => setAttributes({ ctaButtonBlurAmount: value })}
 								min={0}
@@ -2292,7 +2292,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<RangeControl
-								label={__("Border Radius (px)", "mega-menu-block")}
+								label={__("Border Radius (px)", "adaire-blocks")}
 								value={ctaButtonBorderRadius}
 								onChange={(value) => setAttributes({ ctaButtonBorderRadius: value })}
 								min={0}
@@ -2300,15 +2300,15 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<SelectControl
-								label={__("Hover Animation", "mega-menu-block")}
+								label={__("Hover Animation", "adaire-blocks")}
 								value={ctaButtonHoverAnimation}
 								options={[
-									{ label: __("None", "mega-menu-block"), value: "none" },
-									{ label: __("Slide Underline", "mega-menu-block"), value: "slide-underline" },
-									{ label: __("Scale", "mega-menu-block"), value: "scale" },
-									{ label: __("Bounce", "mega-menu-block"), value: "bounce" },
-									{ label: __("Glow", "mega-menu-block"), value: "glow" },
-									{ label: __("Shake", "mega-menu-block"), value: "shake" },
+									{ label: __("None", "adaire-blocks"), value: "none" },
+									{ label: __("Slide Underline", "adaire-blocks"), value: "slide-underline" },
+									{ label: __("Scale", "adaire-blocks"), value: "scale" },
+									{ label: __("Bounce", "adaire-blocks"), value: "bounce" },
+									{ label: __("Glow", "adaire-blocks"), value: "glow" },
+									{ label: __("Shake", "adaire-blocks"), value: "shake" },
 								]}
 								onChange={(value) =>
 									setAttributes({ ctaButtonHoverAnimation: value })
@@ -2316,7 +2316,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<BoxControl
-								label={__("Button Padding", "mega-menu-block")}
+								label={__("Button Padding", "adaire-blocks")}
 								values={ctaButtonPadding}
 								onChange={(value) => setAttributes({ ctaButtonPadding: value })}
 								units={[
@@ -2327,7 +2327,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<BoxControl
-								label={__("Button Margin", "mega-menu-block")}
+								label={__("Button Margin", "adaire-blocks")}
 								values={ctaButtonMargin}
 								onChange={(value) => setAttributes({ ctaButtonMargin: value })}
 								units={[
@@ -2338,11 +2338,11 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<h4 style={{ margin: "16px 0 8px", fontSize: "14px", fontWeight: 600 }}>
-								{__("Scroll Overrides", "mega-menu-block")}
+								{__("Scroll Overrides", "adaire-blocks")}
 							</h4>
 
 							<BaseControl
-								label={__("Text Color (Scroll)", "mega-menu-block")}
+								label={__("Text Color (Scroll)", "adaire-blocks")}
 							>
 								<ColorPicker
 									color={ctaButtonColorScroll || ctaButtonColor}
@@ -2354,7 +2354,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<BaseControl
-								label={__("Background Color (Scroll)", "mega-menu-block")}
+								label={__("Background Color (Scroll)", "adaire-blocks")}
 							>
 								<ColorPicker
 									color={
@@ -2380,13 +2380,13 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 											}
 											style={{ marginTop: "8px" }}
 										>
-											{__("Clear Scroll Background", "mega-menu-block")}
+											{__("Clear Scroll Background", "adaire-blocks")}
 										</Button>
 									)}
 							</BaseControl>
 
 							<BaseControl
-								label={__("Border Color (Scroll)", "mega-menu-block")}
+								label={__("Border Color (Scroll)", "adaire-blocks")}
 							>
 								<ColorPicker
 									color={ctaButtonBorderColorScroll || ctaButtonBorderColor}
@@ -2398,7 +2398,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<BaseControl
-								label={__("Hover Text Color (Scroll)", "mega-menu-block")}
+								label={__("Hover Text Color (Scroll)", "adaire-blocks")}
 							>
 								<ColorPicker
 									color={
@@ -2412,7 +2412,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<BaseControl
-								label={__("Hover Background (Scroll)", "mega-menu-block")}
+								label={__("Hover Background (Scroll)", "adaire-blocks")}
 							>
 								<ColorPicker
 									color={
@@ -2439,13 +2439,13 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 											}
 											style={{ marginTop: "8px" }}
 										>
-											{__("Clear Scroll Hover Background", "mega-menu-block")}
+											{__("Clear Scroll Hover Background", "adaire-blocks")}
 										</Button>
 									)}
 							</BaseControl>
 
 							<BaseControl
-								label={__("Hover Border Color (Scroll)", "mega-menu-block")}
+								label={__("Hover Border Color (Scroll)", "adaire-blocks")}
 							>
 								<ColorPicker
 									color={
@@ -2465,11 +2465,11 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 				{ctaButtonEnabled && (
 					<PanelBody
-						title={__("Mobile Menu Button", "mega-menu-block")}
+						title={__("Mobile Menu Button", "adaire-blocks")}
 						initialOpen={false}
 					>
 						<ToggleControl
-							label={__("Use separate mobile styles", "mega-menu-block")}
+							label={__("Use separate mobile styles", "adaire-blocks")}
 							checked={ctaMobileUseSeparateStyles}
 							onChange={(value) =>
 								setAttributes({ ctaMobileUseSeparateStyles: value })
@@ -2483,7 +2483,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						{ctaMobileUseSeparateStyles && (
 							<>
 								<ToggleControl
-									label={__("Show icon on mobile", "mega-menu-block")}
+									label={__("Show icon on mobile", "adaire-blocks")}
 									checked={ctaMobileButtonShowIcon !== false}
 									onChange={(value) =>
 										setAttributes({ ctaMobileButtonShowIcon: value })
@@ -2491,7 +2491,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 
 								<BaseControl
-									label={__("Button Text Color", "mega-menu-block")}
+									label={__("Button Text Color", "adaire-blocks")}
 								>
 									<ColorPicker
 										color={ctaMobileButtonColor}
@@ -2503,7 +2503,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								</BaseControl>
 
 								<BaseControl
-									label={__("Button Background Color", "mega-menu-block")}
+									label={__("Button Background Color", "adaire-blocks")}
 								>
 									<ColorPicker
 										color={
@@ -2529,12 +2529,12 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 												}
 												style={{ marginTop: "8px" }}
 											>
-												{__("Clear Background", "mega-menu-block")}
+												{__("Clear Background", "adaire-blocks")}
 											</Button>
 										)}
 								</BaseControl>
 
-								<BaseControl label={__("Border Color", "mega-menu-block")}>
+								<BaseControl label={__("Border Color", "adaire-blocks")}>
 									<ColorPicker
 										color={ctaMobileButtonBorderColor}
 										onChangeComplete={handleSolidColorChange(
@@ -2545,7 +2545,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								</BaseControl>
 
 								<BaseControl
-									label={__("Hover Text Color", "mega-menu-block")}
+									label={__("Hover Text Color", "adaire-blocks")}
 								>
 									<ColorPicker
 										color={ctaMobileButtonHoverColor}
@@ -2557,7 +2557,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								</BaseControl>
 
 								<BaseControl
-									label={__("Hover Background Color", "mega-menu-block")}
+									label={__("Hover Background Color", "adaire-blocks")}
 								>
 									<ColorPicker
 										color={
@@ -2584,13 +2584,13 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 												}
 												style={{ marginTop: "8px" }}
 											>
-												{__("Clear Hover Background", "mega-menu-block")}
+												{__("Clear Hover Background", "adaire-blocks")}
 											</Button>
 										)}
 								</BaseControl>
 
 								<BaseControl
-									label={__("Hover Border Color", "mega-menu-block")}
+									label={__("Hover Border Color", "adaire-blocks")}
 								>
 									<ColorPicker
 										color={ctaMobileButtonHoverBorderColor}
@@ -2602,7 +2602,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								</BaseControl>
 
 								<RangeControl
-									label={__("Font Size (px)", "mega-menu-block")}
+									label={__("Font Size (px)", "adaire-blocks")}
 									value={ctaMobileButtonFontSize}
 									onChange={(value) =>
 										setAttributes({ ctaMobileButtonFontSize: value })
@@ -2612,25 +2612,25 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 
 								<SelectControl
-									label={__("Font Weight", "mega-menu-block")}
+									label={__("Font Weight", "adaire-blocks")}
 									value={ctaMobileButtonFontWeight}
 									options={[
-										{ label: __("Inherit desktop", "mega-menu-block"), value: "" },
-										{ label: __("Thin (100)", "mega-menu-block"), value: "100" },
+										{ label: __("Inherit desktop", "adaire-blocks"), value: "" },
+										{ label: __("Thin (100)", "adaire-blocks"), value: "100" },
 										{
-											label: __("Extra Light (200)", "mega-menu-block"),
+											label: __("Extra Light (200)", "adaire-blocks"),
 											value: "200",
 										},
-										{ label: __("Light (300)", "mega-menu-block"), value: "300" },
-										{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-										{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-										{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-										{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+										{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+										{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+										{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+										{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+										{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 										{
-											label: __("Extra Bold (800)", "mega-menu-block"),
+											label: __("Extra Bold (800)", "adaire-blocks"),
 											value: "800",
 										},
-										{ label: __("Black (900)", "mega-menu-block"), value: "900" },
+										{ label: __("Black (900)", "adaire-blocks"), value: "900" },
 									]}
 									onChange={(value) =>
 										setAttributes({ ctaMobileButtonFontWeight: value })
@@ -2638,7 +2638,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 
 								<RangeControl
-									label={__("Border Radius (px)", "mega-menu-block")}
+									label={__("Border Radius (px)", "adaire-blocks")}
 									value={ctaMobileButtonBorderRadius}
 									onChange={(value) =>
 										setAttributes({ ctaMobileButtonBorderRadius: value })
@@ -2648,7 +2648,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 
 								<RangeControl
-									label={__("Border Width (px)", "mega-menu-block")}
+									label={__("Border Width (px)", "adaire-blocks")}
 									value={ctaMobileButtonBorderWidth}
 									onChange={(value) =>
 										setAttributes({ ctaMobileButtonBorderWidth: value })
@@ -2659,15 +2659,15 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 
 								<SelectControl
-									label={__("Button Style", "mega-menu-block")}
+									label={__("Button Style", "adaire-blocks")}
 									value={ctaMobileButtonStyle || "inherit"}
 									options={[
-										{ label: __("Match desktop", "mega-menu-block"), value: "inherit" },
-										{ label: __("Underline", "mega-menu-block"), value: "underline" },
-										{ label: __("Background Fill", "mega-menu-block"), value: "fill" },
-										{ label: __("Border", "mega-menu-block"), value: "border" },
-										{ label: __("Gradient", "mega-menu-block"), value: "gradient" },
-										{ label: __("Glass Effect", "mega-menu-block"), value: "glass" },
+										{ label: __("Match desktop", "adaire-blocks"), value: "inherit" },
+										{ label: __("Underline", "adaire-blocks"), value: "underline" },
+										{ label: __("Background Fill", "adaire-blocks"), value: "fill" },
+										{ label: __("Border", "adaire-blocks"), value: "border" },
+										{ label: __("Gradient", "adaire-blocks"), value: "gradient" },
+										{ label: __("Glass Effect", "adaire-blocks"), value: "glass" },
 									]}
 									onChange={(value) =>
 										setAttributes({ ctaMobileButtonStyle: value })
@@ -2675,19 +2675,19 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 
 								<SelectControl
-									label={__("Hover Animation", "mega-menu-block")}
+									label={__("Hover Animation", "adaire-blocks")}
 									value={ctaMobileButtonHoverAnimation || "inherit"}
 									options={[
-										{ label: __("Match desktop", "mega-menu-block"), value: "inherit" },
-										{ label: __("None", "mega-menu-block"), value: "none" },
+										{ label: __("Match desktop", "adaire-blocks"), value: "inherit" },
+										{ label: __("None", "adaire-blocks"), value: "none" },
 										{
-											label: __("Slide Underline", "mega-menu-block"),
+											label: __("Slide Underline", "adaire-blocks"),
 											value: "slide-underline",
 										},
-										{ label: __("Scale", "mega-menu-block"), value: "scale" },
-										{ label: __("Bounce", "mega-menu-block"), value: "bounce" },
-										{ label: __("Glow", "mega-menu-block"), value: "glow" },
-										{ label: __("Shake", "mega-menu-block"), value: "shake" },
+										{ label: __("Scale", "adaire-blocks"), value: "scale" },
+										{ label: __("Bounce", "adaire-blocks"), value: "bounce" },
+										{ label: __("Glow", "adaire-blocks"), value: "glow" },
+										{ label: __("Shake", "adaire-blocks"), value: "shake" },
 									]}
 									onChange={(value) =>
 										setAttributes({ ctaMobileButtonHoverAnimation: value })
@@ -2695,7 +2695,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 
 								<BoxControl
-									label={__("Button Padding", "mega-menu-block")}
+									label={__("Button Padding", "adaire-blocks")}
 									values={ctaMobileButtonPadding}
 									onChange={(value) =>
 										setAttributes({ ctaMobileButtonPadding: value })
@@ -2712,10 +2712,10 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 				)}
 
 				<PanelBody
-					title={__("Logo Settings", "mega-menu-block")}
+					title={__("Logo Settings", "adaire-blocks")}
 					initialOpen={true}
 				>
-					<BaseControl label={__("Logo", "mega-menu-block")}>
+					<BaseControl label={__("Logo", "adaire-blocks")}>
 						<MediaUploadCheck>
 							<MediaUpload
 								onSelect={(media) =>
@@ -2739,8 +2739,8 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										)}
 										<Button onClick={open} isSecondary>
 											{logoUrl
-												? __("Change Logo", "mega-menu-block")
-												: __("Select Logo", "mega-menu-block")}
+												? __("Change Logo", "adaire-blocks")
+												: __("Select Logo", "adaire-blocks")}
 										</Button>
 										{logoUrl && (
 											<Button
@@ -2751,7 +2751,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 												isSmall
 												style={{ marginLeft: "8px" }}
 											>
-												{__("Remove", "mega-menu-block")}
+												{__("Remove", "adaire-blocks")}
 											</Button>
 										)}
 									</div>
@@ -2760,7 +2760,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						</MediaUploadCheck>
 					</BaseControl>
 					<TextControl
-						label={__("Logo Link URL", "mega-menu-block")}
+						label={__("Logo Link URL", "adaire-blocks")}
 						value={logoLinkUrl}
 						onChange={(value) =>
 							setAttributes({ logoLinkUrl: value || "/" })
@@ -2772,7 +2772,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<RangeControl
-						label={__("Logo Size", "mega-menu-block")}
+						label={__("Logo Size", "adaire-blocks")}
 						value={logoSize}
 						onChange={(value) => setAttributes({ logoSize: value })}
 						min={20}
@@ -2784,10 +2784,10 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<h4 style={{ margin: "16px 0 8px", fontSize: "14px", fontWeight: 600 }}>
-						{__("Logos (Optional)", "mega-menu-block")}
+						{__("Logos (Optional)", "adaire-blocks")}
 					</h4>
 
-					<BaseControl label={__("Logo at Top", "mega-menu-block")}>
+					<BaseControl label={__("Logo at Top", "adaire-blocks")}>
 						<MediaUploadCheck>
 							<MediaUpload
 								onSelect={(media) =>
@@ -2811,8 +2811,8 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										)}
 										<Button onClick={open} isSecondary>
 											{menuImageAtTop
-												? __("Change Image", "mega-menu-block")
-												: __("Select Image", "mega-menu-block")}
+												? __("Change Image", "adaire-blocks")
+												: __("Select Image", "adaire-blocks")}
 										</Button>
 										{menuImageAtTop && (
 											<Button
@@ -2826,7 +2826,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 												isSmall
 												style={{ marginLeft: "8px" }}
 											>
-												{__("Remove", "mega-menu-block")}
+												{__("Remove", "adaire-blocks")}
 											</Button>
 										)}
 									</div>
@@ -2835,7 +2835,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						</MediaUploadCheck>
 					</BaseControl>
 
-					<BaseControl label={__("Logo on Scroll", "mega-menu-block")}>
+					<BaseControl label={__("Logo on Scroll", "adaire-blocks")}>
 						<MediaUploadCheck>
 							<MediaUpload
 								onSelect={(media) =>
@@ -2859,8 +2859,8 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										)}
 										<Button onClick={open} isSecondary>
 											{menuImageOnScroll
-												? __("Change Image", "mega-menu-block")
-												: __("Select Image", "mega-menu-block")}
+												? __("Change Image", "adaire-blocks")
+												: __("Select Image", "adaire-blocks")}
 										</Button>
 										{menuImageOnScroll && (
 											<Button
@@ -2874,7 +2874,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 												isSmall
 												style={{ marginLeft: "8px" }}
 											>
-												{__("Remove", "mega-menu-block")}
+												{__("Remove", "adaire-blocks")}
 											</Button>
 										)}
 									</div>
@@ -2884,7 +2884,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					</BaseControl>
 
 					<RangeControl
-						label={__("Logo Size", "mega-menu-block")}
+						label={__("Logo Size", "adaire-blocks")}
 						value={menuImageSize}
 						onChange={(value) => setAttributes({ menuImageSize: value })}
 						min={20}
@@ -2897,11 +2897,11 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 				</PanelBody>
 
 				<PanelBody
-					title={__("Menu Items", "mega-menu-block")}
+					title={__("Menu Items", "adaire-blocks")}
 					initialOpen={true}
 				>
 					<SelectControl
-						label={__("Navigation Source", "mega-menu-block")}
+						label={__("Navigation Source", "adaire-blocks")}
 						value={navigationSource || "legacy"}
 						options={navigationSourceOptions}
 						onChange={(v) => setAttributes({ navigationSource: v })}
@@ -2912,10 +2912,10 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 					{navigationSource === "menu" && (
 						<SelectControl
-							label={__("Menu", "mega-menu-block")}
+							label={__("Menu", "adaire-blocks")}
 							value={selectedMenuId || 0}
 							options={[
-								{ label: __("Select a menu…", "mega-menu-block"), value: 0 },
+								{ label: __("Select a menu…", "adaire-blocks"), value: 0 },
 								...(resolvedMenuStatus.menus || []).map((menu) => ({
 									label: menu.name,
 									value: menu.id,
@@ -2927,7 +2927,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					{isUsingWpMenu && (
 						<p style={{ fontSize: "12px", color: "#666", marginBottom: "12px" }}>
 							{resolvedMenuStatus.isLoading
-								? __("Loading menu…", "mega-menu-block")
+								? __("Loading menu…", "adaire-blocks")
 								: resolvedMenuStatus.hasMenu
 									? sprintf(
 											__(
@@ -2962,7 +2962,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								disabled={isLimitReached}
 								icon={plus}
 							>
-								{__("Add Menu Item", "mega-menu-block")}
+								{__("Add Menu Item", "adaire-blocks")}
 							</Button>
 							{showUpgradeNotice && <UpgradeNotice message={upgradeMessage} />}
 							<div
@@ -2974,15 +2974,15 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					)}
 				</PanelBody>
 
-				<PanelBody title={__("Colors", "mega-menu-block")} initialOpen={false}>
-					<BaseControl label={__("Background Color", "mega-menu-block")}>
+				<PanelBody title={__("Colors", "adaire-blocks")} initialOpen={false}>
+					<BaseControl label={__("Background Color", "adaire-blocks")}>
 						<ColorPalette
 							value={backgroundColor}
 							onChange={(value) => setAttributes({ backgroundColor: value })}
 						/>
 					</BaseControl>
 
-					<BaseControl label={__("Underline Color", "mega-menu-block")}>
+					<BaseControl label={__("Underline Color", "adaire-blocks")}>
 						<ColorPalette
 							value={underlineColor}
 							onChange={(value) => setAttributes({ underlineColor: value })}
@@ -2991,11 +2991,11 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 				</PanelBody>
 
 				<PanelBody
-					title={__("Mobile Menu", "mega-menu-block")}
+					title={__("Mobile Menu", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<ToggleControl
-						label={__("Immersive Mode", "mega-menu-block")}
+						label={__("Immersive Mode", "adaire-blocks")}
 						checked={mobileImmersiveMode}
 						onChange={(value) => setAttributes({ mobileImmersiveMode: value })}
 						help={__(
@@ -3009,17 +3009,17 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							<h4
 								style={{ margin: "16px 0 8px", fontSize: "14px", fontWeight: 600 }}
 							>
-								{__("Immersive Background", "mega-menu-block")}
+								{__("Immersive Background", "adaire-blocks")}
 							</h4>
 							<SelectControl
-								label={__("Background Type", "mega-menu-block")}
+								label={__("Background Type", "adaire-blocks")}
 								value={mobileImmersiveBgType}
 								options={[
-									{ label: __("Solid Color", "mega-menu-block"), value: "solid" },
-									{ label: __("Gradient", "mega-menu-block"), value: "gradient" },
-									{ label: __("Image", "mega-menu-block"), value: "image" },
+									{ label: __("Solid Color", "adaire-blocks"), value: "solid" },
+									{ label: __("Gradient", "adaire-blocks"), value: "gradient" },
+									{ label: __("Image", "adaire-blocks"), value: "image" },
 									{
-										label: __("Image with Overlay", "mega-menu-block"),
+										label: __("Image with Overlay", "adaire-blocks"),
 										value: "image-overlay",
 									},
 								]}
@@ -3029,7 +3029,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							{mobileImmersiveBgType === "solid" && (
-								<BaseControl label={__("Background Color", "mega-menu-block")}>
+								<BaseControl label={__("Background Color", "adaire-blocks")}>
 									<ColorPalette
 										value={mobileImmersiveBgColor}
 										onChange={(value) =>
@@ -3042,11 +3042,11 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							{mobileImmersiveBgType === "gradient" && (
 								<>
 									<SelectControl
-										label={__("Gradient Type", "mega-menu-block")}
+										label={__("Gradient Type", "adaire-blocks")}
 										value={mobileImmersiveGradientType}
 										options={[
-											{ label: __("Linear", "mega-menu-block"), value: "linear" },
-											{ label: __("Radial", "mega-menu-block"), value: "radial" },
+											{ label: __("Linear", "adaire-blocks"), value: "linear" },
+											{ label: __("Radial", "adaire-blocks"), value: "radial" },
 										]}
 										onChange={(value) =>
 											setAttributes({ mobileImmersiveGradientType: value })
@@ -3054,7 +3054,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									/>
 									{mobileImmersiveGradientType === "linear" && (
 										<RangeControl
-											label={__("Gradient Angle", "mega-menu-block")}
+											label={__("Gradient Angle", "adaire-blocks")}
 											value={mobileImmersiveGradientAngle}
 											onChange={(value) =>
 												setAttributes({ mobileImmersiveGradientAngle: value })
@@ -3065,7 +3065,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										/>
 									)}
 									<BaseControl
-										label={__("Gradient Start Color", "mega-menu-block")}
+										label={__("Gradient Start Color", "adaire-blocks")}
 									>
 										<ColorPalette
 											value={mobileImmersiveGradientColor1}
@@ -3076,7 +3076,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 											}
 										/>
 									</BaseControl>
-									<BaseControl label={__("Gradient End Color", "mega-menu-block")}>
+									<BaseControl label={__("Gradient End Color", "adaire-blocks")}>
 										<ColorPalette
 											value={mobileImmersiveGradientColor2}
 											onChange={(value) =>
@@ -3087,7 +3087,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										/>
 									</BaseControl>
 									<RangeControl
-										label={__("Start Stop (%)", "mega-menu-block")}
+										label={__("Start Stop (%)", "adaire-blocks")}
 										value={mobileImmersiveGradientStartStop}
 										onChange={(value) =>
 											setAttributes({
@@ -3099,7 +3099,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										step={1}
 									/>
 									<RangeControl
-										label={__("End Stop (%)", "mega-menu-block")}
+										label={__("End Stop (%)", "adaire-blocks")}
 										value={mobileImmersiveGradientEndStop}
 										onChange={(value) =>
 											setAttributes({
@@ -3116,7 +3116,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							{(mobileImmersiveBgType === "image" ||
 								mobileImmersiveBgType === "image-overlay") && (
 								<>
-									<BaseControl label={__("Background Image", "mega-menu-block")}>
+									<BaseControl label={__("Background Image", "adaire-blocks")}>
 										<MediaUploadCheck>
 											<MediaUpload
 												onSelect={(media) =>
@@ -3141,8 +3141,8 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 														)}
 														<Button onClick={open} variant="secondary">
 															{mobileImmersiveBgImage
-																? __("Replace Image", "mega-menu-block")
-																: __("Select Image", "mega-menu-block")}
+																? __("Replace Image", "adaire-blocks")
+																: __("Select Image", "adaire-blocks")}
 														</Button>
 														{mobileImmersiveBgImage && (
 															<Button
@@ -3155,7 +3155,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 																isDestructive
 																style={{ marginLeft: "10px" }}
 															>
-																{__("Remove", "mega-menu-block")}
+																{__("Remove", "adaire-blocks")}
 															</Button>
 														)}
 													</div>
@@ -3166,12 +3166,12 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									{mobileImmersiveBgImage && (
 										<>
 											<SelectControl
-												label={__("Image Size", "mega-menu-block")}
+												label={__("Image Size", "adaire-blocks")}
 												value={mobileImmersiveBgImageSize}
 												options={[
-													{ label: __("Cover", "mega-menu-block"), value: "cover" },
-													{ label: __("Contain", "mega-menu-block"), value: "contain" },
-													{ label: __("Auto", "mega-menu-block"), value: "auto" },
+													{ label: __("Cover", "adaire-blocks"), value: "cover" },
+													{ label: __("Contain", "adaire-blocks"), value: "contain" },
+													{ label: __("Auto", "adaire-blocks"), value: "auto" },
 												]}
 												onChange={(value) =>
 													setAttributes({
@@ -3180,43 +3180,43 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 												}
 											/>
 											<SelectControl
-												label={__("Image Position", "mega-menu-block")}
+												label={__("Image Position", "adaire-blocks")}
 												value={mobileImmersiveBgImagePosition}
 												options={[
 													{
-														label: __("Center Center", "mega-menu-block"),
+														label: __("Center Center", "adaire-blocks"),
 														value: "center center",
 													},
 													{
-														label: __("Top Left", "mega-menu-block"),
+														label: __("Top Left", "adaire-blocks"),
 														value: "top left",
 													},
 													{
-														label: __("Top Center", "mega-menu-block"),
+														label: __("Top Center", "adaire-blocks"),
 														value: "top center",
 													},
 													{
-														label: __("Top Right", "mega-menu-block"),
+														label: __("Top Right", "adaire-blocks"),
 														value: "top right",
 													},
 													{
-														label: __("Center Left", "mega-menu-block"),
+														label: __("Center Left", "adaire-blocks"),
 														value: "center left",
 													},
 													{
-														label: __("Center Right", "mega-menu-block"),
+														label: __("Center Right", "adaire-blocks"),
 														value: "center right",
 													},
 													{
-														label: __("Bottom Left", "mega-menu-block"),
+														label: __("Bottom Left", "adaire-blocks"),
 														value: "bottom left",
 													},
 													{
-														label: __("Bottom Center", "mega-menu-block"),
+														label: __("Bottom Center", "adaire-blocks"),
 														value: "bottom center",
 													},
 													{
-														label: __("Bottom Right", "mega-menu-block"),
+														label: __("Bottom Right", "adaire-blocks"),
 														value: "bottom right",
 													},
 												]}
@@ -3240,9 +3240,9 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 											fontWeight: 600,
 										}}
 									>
-										{__("Overlay Settings", "mega-menu-block")}
+										{__("Overlay Settings", "adaire-blocks")}
 									</h4>
-									<BaseControl label={__("Overlay Color", "mega-menu-block")}>
+									<BaseControl label={__("Overlay Color", "adaire-blocks")}>
 										<ColorPalette
 											value={mobileImmersiveOverlayColor}
 											onChange={(value) =>
@@ -3251,7 +3251,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										/>
 									</BaseControl>
 									<RangeControl
-										label={__("Overlay Opacity", "mega-menu-block")}
+										label={__("Overlay Opacity", "adaire-blocks")}
 										value={mobileImmersiveOverlayOpacity}
 										onChange={(value) =>
 											setAttributes({ mobileImmersiveOverlayOpacity: value })
@@ -3274,10 +3274,10 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									fontWeight: 600,
 								}}
 							>
-								{__("Button Row Settings", "mega-menu-block")}
+								{__("Button Row Settings", "adaire-blocks")}
 							</h4>
 							<RangeControl
-								label={__("Icon Size", "mega-menu-block")}
+								label={__("Icon Size", "adaire-blocks")}
 								value={mobileImmersiveIconSize}
 								onChange={(value) =>
 									setAttributes({ mobileImmersiveIconSize: value })
@@ -3286,7 +3286,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								max={48}
 								step={1}
 							/>
-							<BaseControl label={__("Icon Color", "mega-menu-block")}>
+							<BaseControl label={__("Icon Color", "adaire-blocks")}>
 								<ColorPalette
 									value={mobileImmersiveIconColor}
 									onChange={(value) =>
@@ -3295,7 +3295,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 							</BaseControl>
 							<BaseControl
-								label={__("Button Row Padding", "mega-menu-block")}
+								label={__("Button Row Padding", "adaire-blocks")}
 							>
 								<BoxControl
 									values={
@@ -3361,7 +3361,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					)}
 
 					{!mobileImmersiveMode && (
-						<BaseControl label={__("Background Color", "mega-menu-block")}>
+						<BaseControl label={__("Background Color", "adaire-blocks")}>
 							<ColorPalette
 								value={mobileMenuBgColor}
 								onChange={(value) => setAttributes({ mobileMenuBgColor: value })}
@@ -3372,7 +3372,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 				
 
 					<BaseControl
-						label={__("Menu Item Hover Background Color", "mega-menu-block")}
+						label={__("Menu Item Hover Background Color", "adaire-blocks")}
 					>
 						<ColorPalette
 							value={mobileMenuItemHoverBgColor}
@@ -3385,23 +3385,23 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					<h4
 						style={{ margin: "16px 0 8px", fontSize: "14px", fontWeight: 600 }}
 					>
-						{__("Chevron Settings", "mega-menu-block")}
+						{__("Chevron Settings", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Chevron Size", "mega-menu-block")}
+						label={__("Chevron Size", "adaire-blocks")}
 						value={mobileChevronSize}
 						onChange={(value) => setAttributes({ mobileChevronSize: value })}
 						min={12}
 						max={32}
 					/>
-					<BaseControl label={__("Chevron Color", "mega-menu-block")}>
+					<BaseControl label={__("Chevron Color", "adaire-blocks")}>
 						<ColorPalette
 							value={mobileChevronColor}
 							onChange={(value) => setAttributes({ mobileChevronColor: value })}
 						/>
 					</BaseControl>
 
-					<BaseControl label={__("Hamburger Icon Color", "mega-menu-block")}>
+					<BaseControl label={__("Hamburger Icon Color", "adaire-blocks")}>
 						<ColorPalette
 							value={mobileMenuIconColor}
 							onChange={(value) => setAttributes({ mobileMenuIconColor: value })}
@@ -3409,7 +3409,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					</BaseControl>
 
 					<BaseControl
-						label={__("Hamburger Icon Color (Scroll)", "mega-menu-block")}
+						label={__("Hamburger Icon Color (Scroll)", "adaire-blocks")}
 					>
 						<ColorPalette
 							value={mobileMenuIconColorScroll || mobileMenuIconColor}
@@ -3420,25 +3420,25 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					</BaseControl>
 
 					<h4 style={{ margin: "8px 0", fontSize: "14px", fontWeight: 600 }}>
-						{__("Level 1 Typography", "mega-menu-block")}
+						{__("Level 1 Typography", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Font Size", "mega-menu-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={mobileLevel1FontSize}
 						onChange={(value) => setAttributes({ mobileLevel1FontSize: value })}
 						min={8}
 						max={28}
 					/>
 					<SelectControl
-						label={__("Font Weight", "mega-menu-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={mobileLevel1FontWeight}
 						options={[
-							{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 							{
-								label: __("Extra Bold (800)", "mega-menu-block"),
+								label: __("Extra Bold (800)", "adaire-blocks"),
 								value: "800",
 							},
 						]}
@@ -3446,7 +3446,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							setAttributes({ mobileLevel1FontWeight: value })
 						}
 					/>
-					<BaseControl label={__("Font Color", "mega-menu-block")}>
+					<BaseControl label={__("Font Color", "adaire-blocks")}>
 						<ColorPalette
 							value={mobileLevel1FontColor}
 							onChange={(value) =>
@@ -3458,29 +3458,29 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					<h4
 						style={{ margin: "16px 0 8px", fontSize: "14px", fontWeight: 600 }}
 					>
-						{__("Level 2 Typography", "mega-menu-block")}
+						{__("Level 2 Typography", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Font Size", "mega-menu-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={mobileLevel2FontSize}
 						onChange={(value) => setAttributes({ mobileLevel2FontSize: value })}
 						min={8}
 						max={26}
 					/>
 					<SelectControl
-						label={__("Font Weight", "mega-menu-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={mobileLevel2FontWeight}
 						options={[
-							{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 						]}
 						onChange={(value) =>
 							setAttributes({ mobileLevel2FontWeight: value })
 						}
 					/>
-					<BaseControl label={__("Font Color", "mega-menu-block")}>
+					<BaseControl label={__("Font Color", "adaire-blocks")}>
 						<ColorPalette
 							value={mobileLevel2FontColor}
 							onChange={(value) =>
@@ -3492,29 +3492,29 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					<h4
 						style={{ margin: "16px 0 8px", fontSize: "14px", fontWeight: 600 }}
 					>
-						{__("Level 3 Typography", "mega-menu-block")}
+						{__("Level 3 Typography", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Font Size", "mega-menu-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={mobileLevel3FontSize}
 						onChange={(value) => setAttributes({ mobileLevel3FontSize: value })}
 						min={8}
 						max={24}
 					/>
 					<SelectControl
-						label={__("Font Weight", "mega-menu-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={mobileLevel3FontWeight}
 						options={[
-							{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 						]}
 						onChange={(value) =>
 							setAttributes({ mobileLevel3FontWeight: value })
 						}
 					/>
-					<BaseControl label={__("Font Color", "mega-menu-block")}>
+					<BaseControl label={__("Font Color", "adaire-blocks")}>
 						<ColorPalette
 							value={mobileLevel3FontColor}
 							onChange={(value) =>
@@ -3524,9 +3524,9 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					</BaseControl>
 				</PanelBody>
 
-				<PanelBody title={__("Layout", "mega-menu-block")} initialOpen={false}>
+				<PanelBody title={__("Layout", "adaire-blocks")} initialOpen={false}>
 					<RangeControl
-						label={__("Menu Border Radius", "mega-menu-block")}
+						label={__("Menu Border Radius", "adaire-blocks")}
 						value={menuBorderRadius}
 						onChange={(value) => setAttributes({ menuBorderRadius: value })}
 						min={0}
@@ -3537,7 +3537,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						)}
 					/>
 					<RangeControl
-						label={__("Dropdown Offset (px)", "mega-menu-block")}
+						label={__("Dropdown Offset (px)", "adaire-blocks")}
 						value={menuDropdownOffset}
 						onChange={(value) => setAttributes({ menuDropdownOffset: value })}
 						min={0}
@@ -3548,7 +3548,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						)}
 					/>
 					<ToggleControl
-						label={__("Sticky Menu", "mega-menu-block")}
+						label={__("Sticky Menu", "adaire-blocks")}
 						checked={isSticky}
 						onChange={(value) => setAttributes({ isSticky: value })}
 						help={__(
@@ -3558,7 +3558,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<ToggleControl
-						label={__("Increase Opacity on Scroll", "mega-menu-block")}
+						label={__("Increase Opacity on Scroll", "adaire-blocks")}
 						checked={increaseOpacity}
 						onChange={(value) => setAttributes({ increaseOpacity: value })}
 						help={__(
@@ -3569,7 +3569,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					{increaseOpacity && (
 						<>
 							<BaseControl
-								label={__("Scroll Background Color", "mega-menu-block")}
+								label={__("Scroll Background Color", "adaire-blocks")}
 							>
 								<ColorPalette
 									value={scrollBackgroundColor}
@@ -3582,7 +3582,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<BaseControl
-								label={__("Menu items color at top", "mega-menu-block")}
+								label={__("Menu items color at top", "adaire-blocks")}
 								initialOpen={false}
 							>
 								<ColorPalette
@@ -3595,7 +3595,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								/>
 							</BaseControl>
 							<BaseControl
-								label={__("Menu items color on scroll", "mega-menu-block")}
+								label={__("Menu items color on scroll", "adaire-blocks")}
 								initialOpen={false}
 							>
 								<ColorPalette
@@ -3609,7 +3609,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<BaseControl
-								label={__("Underline color at top", "mega-menu-block")}
+								label={__("Underline color at top", "adaire-blocks")}
 							>
 								<ColorPalette
 									value={menuItemsUnderlineColorTop}
@@ -3622,7 +3622,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							</BaseControl>
 
 							<BaseControl
-								label={__("Underline color on scroll", "mega-menu-block")}
+								label={__("Underline color on scroll", "adaire-blocks")}
 							>
 								<ColorPalette
 									value={menuItemsUnderlineColorScroll}
@@ -3637,7 +3637,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					)}
 
 					<ToggleControl
-						label={__("Persistent Canvas Mode", "mega-menu-block")}
+						label={__("Persistent Canvas Mode", "adaire-blocks")}
 						checked={keepCanvasOpenOnClick}
 						onChange={(value) => setAttributes({ keepCanvasOpenOnClick: value })}
 						help={__(
@@ -3648,18 +3648,18 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 				</PanelBody>
 
 				<PanelBody
-					title={__("Canvas Banner", "mega-menu-block")}
+					title={__("Canvas Banner", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<RangeControl
-						label={__("Panel Gap (px)", "mega-menu-block")}
+						label={__("Panel Gap (px)", "adaire-blocks")}
 						value={menuPanelGap}
 						onChange={(value) => setAttributes({ menuPanelGap: value })}
 						min={0}
 						max={80}
 					/>
 					<RangeControl
-						label={__("Panel Padding Bottom (px)", "mega-menu-block")}
+						label={__("Panel Padding Bottom (px)", "adaire-blocks")}
 						value={menuPanelPaddingBottom}
 						onChange={(value) =>
 							setAttributes({ menuPanelPaddingBottom: value })
@@ -3667,7 +3667,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						min={0}
 						max={80}
 					/>
-					<BaseControl label={__("Banner Background Color", "mega-menu-block")}>
+					<BaseControl label={__("Banner Background Color", "adaire-blocks")}>
 						<ColorPalette
 							value={canvasBannerBackgroundColor}
 							onChange={(value) =>
@@ -3676,14 +3676,14 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						/>
 					</BaseControl>
 					<RangeControl
-						label={__("Banner Width (%)", "mega-menu-block")}
+						label={__("Banner Width (%)", "adaire-blocks")}
 						value={canvasBannerWidth}
 						onChange={(value) => setAttributes({ canvasBannerWidth: value })}
 						min={40}
 						max={100}
 					/>
 					<RangeControl
-						label={__("Banner Padding Top (px)", "mega-menu-block")}
+						label={__("Banner Padding Top (px)", "adaire-blocks")}
 						value={canvasBannerPaddingTop}
 						onChange={(value) =>
 							setAttributes({ canvasBannerPaddingTop: value })
@@ -3692,7 +3692,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={160}
 					/>
 					<RangeControl
-						label={__("Banner Padding Bottom (px)", "mega-menu-block")}
+						label={__("Banner Padding Bottom (px)", "adaire-blocks")}
 						value={canvasBannerPaddingBottom}
 						onChange={(value) =>
 							setAttributes({ canvasBannerPaddingBottom: value })
@@ -3701,7 +3701,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={160}
 					/>
 					<RangeControl
-						label={__("Banner Padding Left (px)", "mega-menu-block")}
+						label={__("Banner Padding Left (px)", "adaire-blocks")}
 						value={canvasBannerPaddingLeft}
 						onChange={(value) =>
 							setAttributes({ canvasBannerPaddingLeft: value })
@@ -3710,7 +3710,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={160}
 					/>
 					<RangeControl
-						label={__("Banner Padding Right (px)", "mega-menu-block")}
+						label={__("Banner Padding Right (px)", "adaire-blocks")}
 						value={canvasBannerPaddingRight}
 						onChange={(value) =>
 							setAttributes({ canvasBannerPaddingRight: value })
@@ -3718,7 +3718,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						min={0}
 						max={160}
 					/>
-					<BaseControl label={__("Title Color", "mega-menu-block")}>
+					<BaseControl label={__("Title Color", "adaire-blocks")}>
 						<ColorPalette
 							value={canvasBannerTitleColor}
 							onChange={(value) =>
@@ -3727,7 +3727,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						/>
 					</BaseControl>
 					<RangeControl
-						label={__("Title Font Size (px)", "mega-menu-block")}
+						label={__("Title Font Size (px)", "adaire-blocks")}
 						value={canvasBannerTitleFontSize}
 						onChange={(value) =>
 							setAttributes({ canvasBannerTitleFontSize: value })
@@ -3736,20 +3736,20 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={80}
 					/>
 					<SelectControl
-						label={__("Title Font Weight", "mega-menu-block")}
+						label={__("Title Font Weight", "adaire-blocks")}
 						value={canvasBannerTitleFontWeight}
 						options={[
-							{ label: __("Light (300)", "mega-menu-block"), value: "300" },
-							{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 						]}
 						onChange={(value) =>
 							setAttributes({ canvasBannerTitleFontWeight: value })
 						}
 					/>
-					<BaseControl label={__("Description Color", "mega-menu-block")}>
+					<BaseControl label={__("Description Color", "adaire-blocks")}>
 						<ColorPalette
 							value={canvasBannerDescriptionColor}
 							onChange={(value) =>
@@ -3758,7 +3758,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						/>
 					</BaseControl>
 					<RangeControl
-						label={__("Description Font Size (px)", "mega-menu-block")}
+						label={__("Description Font Size (px)", "adaire-blocks")}
 						value={canvasBannerDescriptionFontSize}
 						onChange={(value) =>
 							setAttributes({ canvasBannerDescriptionFontSize: value })
@@ -3767,21 +3767,21 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={60}
 					/>
 					<SelectControl
-						label={__("Description Font Weight", "mega-menu-block")}
+						label={__("Description Font Weight", "adaire-blocks")}
 						value={canvasBannerDescriptionFontWeight}
 						options={[
-							{ label: __("Light (300)", "mega-menu-block"), value: "300" },
-							{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 						]}
 						onChange={(value) =>
 							setAttributes({ canvasBannerDescriptionFontWeight: value })
 						}
 					/>
 					<RangeControl
-						label={__("List Padding Left (px)", "mega-menu-block")}
+						label={__("List Padding Left (px)", "adaire-blocks")}
 						value={canvasListPaddingLeft}
 						onChange={(value) =>
 							setAttributes({ canvasListPaddingLeft: value })
@@ -3790,7 +3790,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={160}
 					/>
 					<RangeControl
-						label={__("List Padding Right (px)", "mega-menu-block")}
+						label={__("List Padding Right (px)", "adaire-blocks")}
 						value={canvasListPaddingRight}
 						onChange={(value) =>
 							setAttributes({ canvasListPaddingRight: value })
@@ -3800,9 +3800,9 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 				</PanelBody>
 
-				<PanelBody title={__("Spacing", "mega-menu-block")} initialOpen={false}>
+				<PanelBody title={__("Spacing", "adaire-blocks")} initialOpen={false}>
 					<RangeControl
-						label={__("Padding Top", "mega-menu-block")}
+						label={__("Padding Top", "adaire-blocks")}
 						value={padding.top}
 						onChange={(value) =>
 							setAttributes({ padding: { ...padding, top: value } })
@@ -3811,7 +3811,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={100}
 					/>
 					<RangeControl
-						label={__("Padding Right", "mega-menu-block")}
+						label={__("Padding Right", "adaire-blocks")}
 						value={padding.right}
 						onChange={(value) =>
 							setAttributes({ padding: { ...padding, right: value } })
@@ -3820,7 +3820,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={100}
 					/>
 					<RangeControl
-						label={__("Padding Bottom", "mega-menu-block")}
+						label={__("Padding Bottom", "adaire-blocks")}
 						value={padding.bottom}
 						onChange={(value) =>
 							setAttributes({ padding: { ...padding, bottom: value } })
@@ -3829,7 +3829,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={100}
 					/>
 					<RangeControl
-						label={__("Padding Left", "mega-menu-block")}
+						label={__("Padding Left", "adaire-blocks")}
 						value={padding.left}
 						onChange={(value) =>
 							setAttributes({ padding: { ...padding, left: value } })
@@ -3838,7 +3838,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={100}
 					/>
 					<RangeControl
-						label={__("Margin Top", "mega-menu-block")}
+						label={__("Margin Top", "adaire-blocks")}
 						value={margin.top}
 						onChange={(value) =>
 							setAttributes({ margin: { ...margin, top: value } })
@@ -3847,7 +3847,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={200}
 					/>
 					<RangeControl
-						label={__("Margin Right", "mega-menu-block")}
+						label={__("Margin Right", "adaire-blocks")}
 						value={margin.right}
 						onChange={(value) =>
 							setAttributes({ margin: { ...margin, right: value } })
@@ -3856,7 +3856,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={200}
 					/>
 					<RangeControl
-						label={__("Margin Bottom", "mega-menu-block")}
+						label={__("Margin Bottom", "adaire-blocks")}
 						value={margin.bottom}
 						onChange={(value) =>
 							setAttributes({ margin: { ...margin, bottom: value } })
@@ -3865,7 +3865,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={200}
 					/>
 					<RangeControl
-						label={__("Margin Left", "mega-menu-block")}
+						label={__("Margin Left", "adaire-blocks")}
 						value={margin.left}
 						onChange={(value) =>
 							setAttributes({ margin: { ...margin, left: value } })
@@ -3877,16 +3877,16 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 				{/* Level 1 Settings */}
 				<PanelBody
-					title={__("Level 1 Menu Settings", "mega-menu-block")}
+					title={__("Level 1 Menu Settings", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<h4
 						style={{ margin: "0 0 8px 0", fontSize: "14px", fontWeight: "600" }}
 					>
-						{__("Font Settings", "mega-menu-block")}
+						{__("Font Settings", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Font Size", "mega-menu-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={level1FontSize}
 						onChange={(value) => setAttributes({ level1FontSize: value })}
 						min={8}
@@ -3894,30 +3894,30 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<SelectControl
-						label={__("Font Weight", "mega-menu-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={level1FontWeight}
 						options={[
-							{ label: __("Light (300)", "mega-menu-block"), value: "300" },
-							{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 							{
-								label: __("Extra Bold (800)", "mega-menu-block"),
+								label: __("Extra Bold (800)", "adaire-blocks"),
 								value: "800",
 							},
 						]}
 						onChange={(value) => setAttributes({ level1FontWeight: value })}
 					/>
 
-					<BaseControl label={__("Font Color", "mega-menu-block")}>
+					<BaseControl label={__("Font Color", "adaire-blocks")}>
 						<ColorPalette
 							value={level1FontColor}
 							onChange={(value) => setAttributes({ level1FontColor: value })}
 						/>
 					</BaseControl>
 
-					<BaseControl label={__("Hover Color", "mega-menu-block")}>
+					<BaseControl label={__("Hover Color", "adaire-blocks")}>
 						<ColorPalette
 							value={level1HoverColor}
 							onChange={(value) => setAttributes({ level1HoverColor: value })}
@@ -3926,7 +3926,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 					<>
 						<ToggleControl
-							label={__("Show Hover Underline", "mega-menu-block")}
+							label={__("Show Hover Underline", "adaire-blocks")}
 							checked={level1ShowHoverUnderline}
 							onChange={(value) =>
 								setAttributes({ level1ShowHoverUnderline: value })
@@ -3934,7 +3934,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						/>
 
 						<RangeControl
-							label={__("Underline Width", "mega-menu-block")}
+							label={__("Underline Width", "adaire-blocks")}
 							value={level1UnderlineWidth}
 							onChange={(value) =>
 								setAttributes({ level1UnderlineWidth: value })
@@ -3943,7 +3943,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							max={10}
 						/>
 
-						<BaseControl label={__("Underline Color", "mega-menu-block")}>
+						<BaseControl label={__("Underline Color", "adaire-blocks")}>
 							<ColorPalette
 								value={level1UnderlineColor}
 								onChange={(value) =>
@@ -3953,7 +3953,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						</BaseControl>
 
 						<RangeControl
-							label={__("Underline Border Radius", "mega-menu-block")}
+							label={__("Underline Border Radius", "adaire-blocks")}
 							value={level1UnderlineBorderRadius}
 							onChange={(value) =>
 								setAttributes({ level1UnderlineBorderRadius: value })
@@ -3970,9 +3970,9 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							fontWeight: "600",
 						}}
 					>
-						{__("Hover Background", "mega-menu-block")}
+						{__("Hover Background", "adaire-blocks")}
 					</h4>
-					<BaseControl label={__("Hover Background Color", "mega-menu-block")}>
+					<BaseControl label={__("Hover Background Color", "adaire-blocks")}>
 						<ColorPalette
 							value={level1HoverBgColor}
 							onChange={(value) =>
@@ -3988,10 +3988,10 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							fontWeight: "600",
 						}}
 					>
-						{__("Hover Padding", "mega-menu-block")}
+						{__("Hover Padding", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Top Padding", "mega-menu-block")}
+						label={__("Top Padding", "adaire-blocks")}
 						value={level1HoverPadding?.top ?? 10}
 						onChange={(value) =>
 							setAttributes({
@@ -4005,7 +4005,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={50}
 					/>
 					<RangeControl
-						label={__("Right Padding", "mega-menu-block")}
+						label={__("Right Padding", "adaire-blocks")}
 						value={level1HoverPadding?.right ?? 5}
 						onChange={(value) =>
 							setAttributes({
@@ -4019,7 +4019,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={50}
 					/>
 					<RangeControl
-						label={__("Bottom Padding", "mega-menu-block")}
+						label={__("Bottom Padding", "adaire-blocks")}
 						value={level1HoverPadding?.bottom ?? 10}
 						onChange={(value) =>
 							setAttributes({
@@ -4033,7 +4033,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={50}
 					/>
 					<RangeControl
-						label={__("Left Padding", "mega-menu-block")}
+						label={__("Left Padding", "adaire-blocks")}
 						value={level1HoverPadding?.left ?? 5}
 						onChange={(value) =>
 							setAttributes({
@@ -4048,7 +4048,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<RangeControl
-						label={__("Hover Border Radius", "mega-menu-block")}
+						label={__("Hover Border Radius", "adaire-blocks")}
 						value={level1HoverBorderRadius ?? 0}
 						onChange={(value) =>
 							setAttributes({ level1HoverBorderRadius: value })
@@ -4060,16 +4060,16 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 				{/* Level 2 Settings */}
 				<PanelBody
-					title={__("Level 2 Menu Settings", "mega-menu-block")}
+					title={__("Level 2 Menu Settings", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<h4
 						style={{ margin: "0 0 8px 0", fontSize: "14px", fontWeight: "600" }}
 					>
-						{__("Font Settings", "mega-menu-block")}
+						{__("Font Settings", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Font Size", "mega-menu-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={level2FontSize}
 						onChange={(value) => setAttributes({ level2FontSize: value })}
 						min={8}
@@ -4077,23 +4077,23 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<SelectControl
-						label={__("Font Weight", "mega-menu-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={level2FontWeight}
 						options={[
-							{ label: __("Light (300)", "mega-menu-block"), value: "300" },
-							{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 							{
-								label: __("Extra Bold (800)", "mega-menu-block"),
+								label: __("Extra Bold (800)", "adaire-blocks"),
 								value: "800",
 							},
 						]}
 						onChange={(value) => setAttributes({ level2FontWeight: value })}
 					/>
 
-					<BaseControl label={__("Font Color", "mega-menu-block")}>
+					<BaseControl label={__("Font Color", "adaire-blocks")}>
 						<ColorPalette
 							value={level2FontColor}
 							onChange={(value) => setAttributes({ level2FontColor: value })}
@@ -4107,9 +4107,9 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							fontWeight: "600",
 						}}
 					>
-						{__("Hover Settings", "mega-menu-block")}
+						{__("Hover Settings", "adaire-blocks")}
 					</h4>
-					<BaseControl label={__("Hover Color", "mega-menu-block")}>
+					<BaseControl label={__("Hover Color", "adaire-blocks")}>
 						<ColorPalette
 							value={level2HoverColor}
 							onChange={(value) => setAttributes({ level2HoverColor: value })}
@@ -4132,14 +4132,14 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<ToggleControl
-						label={__("Show Hover Underline", "mega-menu-block")}
+						label={__("Show Hover Underline", "adaire-blocks")}
 						checked={level2ShowHoverUnderline}
 						onChange={(value) =>
 							setAttributes({ level2ShowHoverUnderline: value })
 						}
 					/>
 
-					<BaseControl label={__("Hover Background Color", "mega-menu-block")}>
+					<BaseControl label={__("Hover Background Color", "adaire-blocks")}>
 						<ColorPalette
 							value={level2HoverBgColor}
 							onChange={(value) => setAttributes({ level2HoverBgColor: value })}
@@ -4153,10 +4153,10 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							fontWeight: "600",
 						}}
 					>
-						{__("Hover Padding", "mega-menu-block")}
+						{__("Hover Padding", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Top Padding", "mega-menu-block")}
+						label={__("Top Padding", "adaire-blocks")}
 						value={level2HoverPadding?.top || 8}
 						onChange={(value) =>
 							setAttributes({
@@ -4170,7 +4170,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={50}
 					/>
 					<RangeControl
-						label={__("Right Padding", "mega-menu-block")}
+						label={__("Right Padding", "adaire-blocks")}
 						value={level2HoverPadding?.right || 12}
 						onChange={(value) =>
 							setAttributes({
@@ -4184,7 +4184,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={50}
 					/>
 					<RangeControl
-						label={__("Bottom Padding", "mega-menu-block")}
+						label={__("Bottom Padding", "adaire-blocks")}
 						value={level2HoverPadding?.bottom || 8}
 						onChange={(value) =>
 							setAttributes({
@@ -4198,7 +4198,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={50}
 					/>
 					<RangeControl
-						label={__("Left Padding", "mega-menu-block")}
+						label={__("Left Padding", "adaire-blocks")}
 						value={level2HoverPadding?.left || 12}
 						onChange={(value) =>
 							setAttributes({
@@ -4213,7 +4213,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<RangeControl
-						label={__("Sub-header Spacing (px)", "mega-menu-block")}
+						label={__("Sub-header Spacing (px)", "adaire-blocks")}
 						value={level2HeaderSpacing ?? 16}
 						onChange={(value) => setAttributes({ level2HeaderSpacing: value })}
 						min={0}
@@ -4224,16 +4224,16 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 				{/* Level 3 Settings */}
 				<PanelBody
-					title={__("Level 3 Menu Settings", "mega-menu-block")}
+					title={__("Level 3 Menu Settings", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<h4
 						style={{ margin: "0 0 8px 0", fontSize: "14px", fontWeight: "600" }}
 					>
-						{__("Font Settings", "mega-menu-block")}
+						{__("Font Settings", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Font Size", "mega-menu-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={level3FontSize}
 						onChange={(value) => setAttributes({ level3FontSize: value })}
 						min={8}
@@ -4241,23 +4241,23 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<SelectControl
-						label={__("Font Weight", "mega-menu-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={level3FontWeight}
 						options={[
-							{ label: __("Light (300)", "mega-menu-block"), value: "300" },
-							{ label: __("Normal (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 							{
-								label: __("Extra Bold (800)", "mega-menu-block"),
+								label: __("Extra Bold (800)", "adaire-blocks"),
 								value: "800",
 							},
 						]}
 						onChange={(value) => setAttributes({ level3FontWeight: value })}
 					/>
 
-					<BaseControl label={__("Font Color", "mega-menu-block")}>
+					<BaseControl label={__("Font Color", "adaire-blocks")}>
 						<ColorPalette
 							value={level3FontColor}
 							onChange={(value) => setAttributes({ level3FontColor: value })}
@@ -4271,9 +4271,9 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							fontWeight: "600",
 						}}
 					>
-						{__("Hover Settings", "mega-menu-block")}
+						{__("Hover Settings", "adaire-blocks")}
 					</h4>
-					<BaseControl label={__("Hover Color", "mega-menu-block")}>
+					<BaseControl label={__("Hover Color", "adaire-blocks")}>
 						<ColorPalette
 							value={level3HoverColor}
 							onChange={(value) => setAttributes({ level3HoverColor: value })}
@@ -4281,7 +4281,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					</BaseControl>
 
 					<ToggleControl
-						label={__("Show Hover Underline", "mega-menu-block")}
+						label={__("Show Hover Underline", "adaire-blocks")}
 						checked={level3ShowHoverUnderline}
 						onChange={(value) =>
 							setAttributes({ level3ShowHoverUnderline: value })
@@ -4291,7 +4291,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					{level3ShowHoverUnderline && (
 						<>
 							<RangeControl
-								label={__("Underline Width", "mega-menu-block")}
+								label={__("Underline Width", "adaire-blocks")}
 								value={level3UnderlineWidth}
 								onChange={(value) =>
 									setAttributes({ level3UnderlineWidth: value })
@@ -4300,7 +4300,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 								max={10}
 							/>
 
-							<BaseControl label={__("Underline Color", "mega-menu-block")}>
+							<BaseControl label={__("Underline Color", "adaire-blocks")}>
 								<ColorPalette
 									value={level3UnderlineColor}
 									onChange={(value) =>
@@ -4311,7 +4311,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						</>
 					)}
 
-					<BaseControl label={__("Hover Background Color", "mega-menu-block")}>
+					<BaseControl label={__("Hover Background Color", "adaire-blocks")}>
 						<ColorPalette
 							value={level3HoverBgColor}
 							onChange={(value) => setAttributes({ level3HoverBgColor: value })}
@@ -4325,10 +4325,10 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							fontWeight: "600",
 						}}
 					>
-						{__("Hover Padding", "mega-menu-block")}
+						{__("Hover Padding", "adaire-blocks")}
 					</h4>
 					<RangeControl
-						label={__("Top Padding", "mega-menu-block")}
+						label={__("Top Padding", "adaire-blocks")}
 						value={level3HoverPadding?.top || 8}
 						onChange={(value) =>
 							setAttributes({
@@ -4342,7 +4342,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={50}
 					/>
 					<RangeControl
-						label={__("Right Padding", "mega-menu-block")}
+						label={__("Right Padding", "adaire-blocks")}
 						value={level3HoverPadding?.right || 12}
 						onChange={(value) =>
 							setAttributes({
@@ -4356,7 +4356,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={50}
 					/>
 					<RangeControl
-						label={__("Bottom Padding", "mega-menu-block")}
+						label={__("Bottom Padding", "adaire-blocks")}
 						value={level3HoverPadding?.bottom || 8}
 						onChange={(value) =>
 							setAttributes({
@@ -4370,7 +4370,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={50}
 					/>
 					<RangeControl
-						label={__("Left Padding", "mega-menu-block")}
+						label={__("Left Padding", "adaire-blocks")}
 						value={level3HoverPadding?.left || 12}
 						onChange={(value) =>
 							setAttributes({
@@ -4385,7 +4385,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<RangeControl
-						label={__("Sub-item Spacing (px)", "mega-menu-block")}
+						label={__("Sub-item Spacing (px)", "adaire-blocks")}
 						value={level3ItemSpacing ?? 8}
 						onChange={(value) => setAttributes({ level3ItemSpacing: value })}
 						min={0}
@@ -4396,11 +4396,11 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 				{/* Canvas Settings */}
 				<PanelBody
-					title={__("Canvas Settings", "mega-menu-block")}
+					title={__("Canvas Settings", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<ToggleControl
-						label={__("Show Canvas Title", "mega-menu-block")}
+						label={__("Show Canvas Title", "adaire-blocks")}
 						checked={showCanvasTitle}
 						onChange={(value) => setAttributes({ showCanvasTitle: value })}
 					/>
@@ -4408,7 +4408,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					{showCanvasTitle && (
 						<>
 							<RangeControl
-								label={__("Canvas Font Size", "mega-menu-block")}
+								label={__("Canvas Font Size", "adaire-blocks")}
 								value={canvasFontSize}
 								onChange={(value) => setAttributes({ canvasFontSize: value })}
 								min={8}
@@ -4416,32 +4416,32 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							/>
 
 							<SelectControl
-								label={__("Canvas Font Weight", "mega-menu-block")}
+								label={__("Canvas Font Weight", "adaire-blocks")}
 								value={canvasFontWeight}
 								options={[
-									{ label: __("Light (300)", "mega-menu-block"), value: "300" },
+									{ label: __("Light (300)", "adaire-blocks"), value: "300" },
 									{
-										label: __("Normal (400)", "mega-menu-block"),
+										label: __("Normal (400)", "adaire-blocks"),
 										value: "400",
 									},
 									{
-										label: __("Medium (500)", "mega-menu-block"),
+										label: __("Medium (500)", "adaire-blocks"),
 										value: "500",
 									},
 									{
-										label: __("Semi Bold (600)", "mega-menu-block"),
+										label: __("Semi Bold (600)", "adaire-blocks"),
 										value: "600",
 									},
-									{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+									{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 									{
-										label: __("Extra Bold (800)", "mega-menu-block"),
+										label: __("Extra Bold (800)", "adaire-blocks"),
 										value: "800",
 									},
 								]}
 								onChange={(value) => setAttributes({ canvasFontWeight: value })}
 							/>
 
-							<BaseControl label={__("Canvas Font Color", "mega-menu-block")}>
+							<BaseControl label={__("Canvas Font Color", "adaire-blocks")}>
 								<ColorPalette
 									value={canvasFontColor}
 									onChange={(value) =>
@@ -4453,7 +4453,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					)}
 
 					<RangeControl
-						label={__("Canvas Border Radius", "mega-menu-block")}
+						label={__("Canvas Border Radius", "adaire-blocks")}
 						value={menuCanvasBorderRadius}
 						onChange={(value) =>
 							setAttributes({ menuCanvasBorderRadius: value })
@@ -4468,14 +4468,14 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 				</PanelBody>
 
 				<PanelBody
-					title={__("Canvas Story Styling", "mega-menu-block")}
+					title={__("Canvas Story Styling", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<strong style={{ display: "block", marginBottom: "8px" }}>
-						{__("Story Image", "mega-menu-block")}
+						{__("Story Image", "adaire-blocks")}
 					</strong>
 					<RangeControl
-						label={__("Border Radius", "mega-menu-block")}
+						label={__("Border Radius", "adaire-blocks")}
 						value={canvasImageBorderRadius}
 						onChange={(value) =>
 							setAttributes({ canvasImageBorderRadius: value })
@@ -4485,25 +4485,25 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<strong style={{ display: "block", marginBottom: "8px" }}>
-						{__("Story Title", "mega-menu-block")}
+						{__("Story Title", "adaire-blocks")}
 					</strong>
 					<RangeControl
-						label={__("Font Size", "mega-menu-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={canvasStoryTitleFontSize}
 						onChange={(value) => setAttributes({ canvasStoryTitleFontSize: value })}
 						min={12}
 						max={72}
 					/>
 					<SelectControl
-						label={__("Font Weight", "mega-menu-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={canvasStoryTitleFontWeight}
 						options={[
-							{ label: __("Light (300)", "mega-menu-block"), value: "300" },
-							{ label: __("Regular (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
-							{ label: __("Extra Bold (800)", "mega-menu-block"), value: "800" },
+							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+							{ label: __("Regular (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
+							{ label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
 						]}
 						onChange={(value) =>
 							setAttributes({
@@ -4511,14 +4511,14 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							})
 						}
 					/>
-					<BaseControl label={__("Color", "mega-menu-block")}>
+					<BaseControl label={__("Color", "adaire-blocks")}>
 						<ColorPalette
 							value={canvasStoryTitleColor}
 							onChange={(value) => setAttributes({ canvasStoryTitleColor: value })}
 						/>
 					</BaseControl>
 					<RangeControl
-						label={__("Margin Top", "mega-menu-block")}
+						label={__("Margin Top", "adaire-blocks")}
 						value={canvasStoryTitleMarginTop}
 						onChange={(value) =>
 							setAttributes({ canvasStoryTitleMarginTop: value })
@@ -4527,7 +4527,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={200}
 					/>
 					<RangeControl
-						label={__("Margin Bottom", "mega-menu-block")}
+						label={__("Margin Bottom", "adaire-blocks")}
 						value={canvasStoryTitleMarginBottom}
 						onChange={(value) =>
 							setAttributes({ canvasStoryTitleMarginBottom: value })
@@ -4537,10 +4537,10 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<strong style={{ display: "block", margin: "16px 0 8px" }}>
-						{__("Story Description", "mega-menu-block")}
+						{__("Story Description", "adaire-blocks")}
 					</strong>
 					<RangeControl
-						label={__("Font Size", "mega-menu-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={canvasStoryDescriptionFontSize}
 						onChange={(value) =>
 							setAttributes({ canvasStoryDescriptionFontSize: value })
@@ -4549,12 +4549,12 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={40}
 					/>
 					<SelectControl
-						label={__("Font Weight", "mega-menu-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={canvasStoryDescriptionFontWeight}
 						options={[
-							{ label: __("Regular (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
+							{ label: __("Regular (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
 						]}
 						onChange={(value) =>
 							setAttributes({
@@ -4562,7 +4562,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							})
 						}
 					/>
-					<BaseControl label={__("Color", "mega-menu-block")}>
+					<BaseControl label={__("Color", "adaire-blocks")}>
 						<ColorPalette
 							value={canvasStoryDescriptionColor}
 							onChange={(value) =>
@@ -4571,7 +4571,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						/>
 					</BaseControl>
 					<RangeControl
-						label={__("Margin Top", "mega-menu-block")}
+						label={__("Margin Top", "adaire-blocks")}
 						value={canvasStoryDescriptionMarginTop}
 						onChange={(value) =>
 							setAttributes({ canvasStoryDescriptionMarginTop: value })
@@ -4580,7 +4580,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={200}
 					/>
 					<RangeControl
-						label={__("Margin Bottom", "mega-menu-block")}
+						label={__("Margin Bottom", "adaire-blocks")}
 						value={canvasStoryDescriptionMarginBottom}
 						onChange={(value) =>
 							setAttributes({ canvasStoryDescriptionMarginBottom: value })
@@ -4590,10 +4590,10 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					/>
 
 					<strong style={{ display: "block", margin: "16px 0 8px" }}>
-						{__("Learn More Link", "mega-menu-block")}
+						{__("Learn More Link", "adaire-blocks")}
 					</strong>
 					<RangeControl
-						label={__("Font Size", "mega-menu-block")}
+						label={__("Font Size", "adaire-blocks")}
 						value={canvasStoryLinkFontSize}
 						onChange={(value) =>
 							setAttributes({ canvasStoryLinkFontSize: value })
@@ -4602,13 +4602,13 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={32}
 					/>
 					<SelectControl
-						label={__("Font Weight", "mega-menu-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={canvasStoryLinkFontWeight}
 						options={[
-							{ label: __("Regular (400)", "mega-menu-block"), value: "400" },
-							{ label: __("Medium (500)", "mega-menu-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "mega-menu-block"), value: "600" },
-							{ label: __("Bold (700)", "mega-menu-block"), value: "700" },
+							{ label: __("Regular (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 						]}
 						onChange={(value) =>
 							setAttributes({
@@ -4616,7 +4616,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							})
 						}
 					/>
-					<BaseControl label={__("Color", "mega-menu-block")}>
+					<BaseControl label={__("Color", "adaire-blocks")}>
 						<ColorPalette
 							value={canvasStoryLinkColor}
 							onChange={(value) =>
@@ -4624,7 +4624,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Hover Color", "mega-menu-block")}>
+					<BaseControl label={__("Hover Color", "adaire-blocks")}>
 						<ColorPalette
 							value={canvasStoryLinkHoverColor}
 							onChange={(value) =>
@@ -4632,7 +4632,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 							}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Underline Color", "mega-menu-block")}>
+					<BaseControl label={__("Underline Color", "adaire-blocks")}>
 						<ColorPalette
 							value={canvasStoryLinkUnderlineColor}
 							onChange={(value) =>
@@ -4641,7 +4641,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						/>
 					</BaseControl>
 					<RangeControl
-						label={__("Underline Thickness", "mega-menu-block")}
+						label={__("Underline Thickness", "adaire-blocks")}
 						value={canvasStoryLinkUnderlineHeight ?? 2}
 						onChange={(value) =>
 							setAttributes({ canvasStoryLinkUnderlineHeight: value })
@@ -4650,7 +4650,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={8}
 					/>
 					<RangeControl
-						label={__("Underline Radius", "mega-menu-block")}
+						label={__("Underline Radius", "adaire-blocks")}
 						value={canvasStoryLinkUnderlineBorderRadius ?? 0}
 						onChange={(value) =>
 							setAttributes({ canvasStoryLinkUnderlineBorderRadius: value })
@@ -4659,7 +4659,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={12}
 					/>
 					<RangeControl
-						label={__("Margin Top", "mega-menu-block")}
+						label={__("Margin Top", "adaire-blocks")}
 						value={canvasStoryLinkMarginTop}
 						onChange={(value) =>
 							setAttributes({ canvasStoryLinkMarginTop: value })
@@ -4668,7 +4668,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						max={200}
 					/>
 					<RangeControl
-						label={__("Margin Bottom", "mega-menu-block")}
+						label={__("Margin Bottom", "adaire-blocks")}
 						value={canvasStoryLinkMarginBottom}
 						onChange={(value) =>
 							setAttributes({ canvasStoryLinkMarginBottom: value })
@@ -4679,7 +4679,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 
 					<div style={{ marginTop: "16px" }}>
 						<ToggleControl
-							label={__("Show Divider", "mega-menu-block")}
+							label={__("Show Divider", "adaire-blocks")}
 							checked={canvasStoryDividerEnabled}
 							help={__(
 								"Divider width, height, color and alpha controls live directly below this toggle.",
@@ -4693,7 +4693,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						{canvasStoryDividerEnabled && (
 							<>
 								<RangeControl
-									label={__("Divider Width (px)", "mega-menu-block")}
+									label={__("Divider Width (px)", "adaire-blocks")}
 									value={canvasStoryDividerWidth}
 									onChange={(value) =>
 										setAttributes({ canvasStoryDividerWidth: value })
@@ -4702,7 +4702,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									max={12}
 								/>
 								<RangeControl
-									label={__("Divider Height (%)", "mega-menu-block")}
+									label={__("Divider Height (%)", "adaire-blocks")}
 									value={canvasStoryDividerHeight}
 									onChange={(value) =>
 										setAttributes({ canvasStoryDividerHeight: value })
@@ -4710,7 +4710,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									min={10}
 									max={100}
 								/>
-								<BaseControl label={__("Divider Color", "mega-menu-block")}>
+								<BaseControl label={__("Divider Color", "adaire-blocks")}>
 									<ColorPalette
 										value={canvasStoryDividerColor}
 										onChange={(value) =>
@@ -4719,7 +4719,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 									/>
 								</BaseControl>
 								<RangeControl
-									label={__("Divider Alpha", "mega-menu-block")}
+									label={__("Divider Alpha", "adaire-blocks")}
 									value={canvasStoryDividerAlpha}
 									onChange={(value) =>
 										setAttributes({ canvasStoryDividerAlpha: value })
@@ -4757,7 +4757,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 										rel={ribbonLinkOpenInNewTab ? "noopener noreferrer" : undefined}
 									>
 										<span className="adaire-mega-menu__ribbon-link-label">
-											{ribbonLinkLabel || __("Learn more", "mega-menu-block")}
+											{ribbonLinkLabel || __("Learn more", "adaire-blocks")}
 										</span>
 										{ribbonLinkArrowEnabled && (
 											<span

@@ -15,7 +15,7 @@
         "inserter": false,
         "anchor": true
     },
-    "textdomain": "tab-panel-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "style": "file:./style-index.css",
     "attributes": {

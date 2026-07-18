@@ -22,9 +22,9 @@ import BoundColorPalette from '../components/BoundColorPalette';
 import './editor.scss';
 
 const THREE_TIERS = [
-    { key: 'desktop', label: __('Desktop', 'icon-box-block'), icon: desktop },
-    { key: 'tablet', label: __('Tablet', 'icon-box-block'), icon: tablet },
-    { key: 'mobile', label: __('Mobile', 'icon-box-block'), icon: mobile },
+    { key: 'desktop', label: __('Desktop', 'adaire-blocks'), icon: desktop },
+    { key: 'tablet', label: __('Tablet', 'adaire-blocks'), icon: tablet },
+    { key: 'mobile', label: __('Mobile', 'adaire-blocks'), icon: mobile },
 ];
 
 export default function Edit({ attributes, setAttributes, clientId }) {
@@ -122,8 +122,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     return (
         <>
             <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
-                <PanelBody section="content" title={__('Icon', 'icon-box-block')} initialOpen={true}>
-                    <BaseControl label={__('Bootstrap Icon', 'icon-box-block')}>
+                <PanelBody section="content" title={__('Icon', 'adaire-blocks')} initialOpen={true}>
+                    <BaseControl label={__('Bootstrap Icon', 'adaire-blocks')}>
                         <Button
                             onClick={() => setIsIconPickerOpen(true)}
                             variant="secondary"
@@ -135,7 +135,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     {chosenIcon}
                                 </>
                             ) : (
-                                __('Choose Bootstrap Icon', 'icon-box-block')
+                                __('Choose Bootstrap Icon', 'adaire-blocks')
                             )}
                         </Button>
                         {chosenIcon && (
@@ -145,35 +145,35 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 isDestructive
                                 style={{ width: '100%' }}
                             >
-                                {__('Remove Icon', 'icon-box-block')}
+                                {__('Remove Icon', 'adaire-blocks')}
                             </Button>
                         )}
                     </BaseControl>
                 </PanelBody>
 
-                <PanelBody section="layout" title={__('Layout', 'icon-box-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Layout', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
-                        label={__('Alignment', 'icon-box-block')}
+                        label={__('Alignment', 'adaire-blocks')}
                         value={alignment}
                         options={[
-                            { label: __('Left', 'icon-box-block'), value: 'left' },
-                            { label: __('Center', 'icon-box-block'), value: 'center' },
-                            { label: __('Right', 'icon-box-block'), value: 'right' },
+                            { label: __('Left', 'adaire-blocks'), value: 'left' },
+                            { label: __('Center', 'adaire-blocks'), value: 'center' },
+                            { label: __('Right', 'adaire-blocks'), value: 'right' },
                         ]}
                         onChange={(v) => setAttributes({ alignment: v })}
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Icon Style', 'icon-box-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Icon Style', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Icon Size', 'icon-box-block')}
+                        label={__('Icon Size', 'adaire-blocks')}
                         value={iconSize}
                         onChange={(v) => setAttributes({ iconSize: v })}
                         min={16}
                         max={200}
                     />
 
-                    <BaseControl label={__('Icon Color', 'icon-box-block')}>
+                    <BaseControl label={__('Icon Color', 'adaire-blocks')}>
                         <BoundColorPalette
                             value={iconColor}
                             onChange={(v) => setAttributes({ iconColor: v || "" })}
@@ -181,41 +181,41 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </BaseControl>
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Card Style', 'icon-box-block')} initialOpen={false}>
-                    <BaseControl label={__('Background Color', 'icon-box-block')}>
+                <PanelBody section="style" priority="high" title={__('Card Style', 'adaire-blocks')} initialOpen={false}>
+                    <BaseControl label={__('Background Color', 'adaire-blocks')}>
                         <BoundColorPalette
                             value={backgroundColor || ""}
                             onChange={(v) => setAttributes({ backgroundColor: v || "" })}
                         />
                     </BaseControl>
-                    <BaseControl label={__('Background Hover Color', 'icon-box-block')}>
+                    <BaseControl label={__('Background Hover Color', 'adaire-blocks')}>
                         <BoundColorPalette
                             value={backgroundHoverColor || ""}
                             onChange={(v) => setAttributes({ backgroundHoverColor: v || "" })}
                         />
                     </BaseControl>
-                    <BaseControl label={__('Text Color', 'icon-box-block')}>
+                    <BaseControl label={__('Text Color', 'adaire-blocks')}>
                         <BoundColorPalette
                             value={textColor || ""}
                             onChange={(v) => setAttributes({ textColor: v || "" })}
                         />
                     </BaseControl>
                     <RangeControl
-                        label={__('Border Radius (px)', 'icon-box-block')}
+                        label={__('Border Radius (px)', 'adaire-blocks')}
                         value={borderRadius}
                         onChange={(v) => setAttributes({ borderRadius: v })}
                         min={0}
                         max={60}
                     />
                     <RangeControl
-                        label={__('Border Width (px)', 'icon-box-block')}
+                        label={__('Border Width (px)', 'adaire-blocks')}
                         value={borderWidth}
                         onChange={(v) => setAttributes({ borderWidth: v })}
                         min={0}
                         max={10}
                     />
                     {borderWidth > 0 && (
-                        <BaseControl label={__('Border Color', 'icon-box-block')}>
+                        <BaseControl label={__('Border Color', 'adaire-blocks')}>
                             <BoundColorPalette
                                 value={borderColor || ""}
                                 onChange={(v) => setAttributes({ borderColor: v || "" })}
@@ -224,31 +224,31 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
                 </PanelBody>
 
-                <PanelBody section="content" title={__('Button', 'icon-box-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Button', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Show Button', 'icon-box-block')}
+                        label={__('Show Button', 'adaire-blocks')}
                         checked={showButton !== false}
                         onChange={(v) => setAttributes({ showButton: v })}
                     />
                     {showButton !== false && (
                         <>
                             <TextControl
-                                label={__('Button Text', 'icon-box-block')}
+                                label={__('Button Text', 'adaire-blocks')}
                                 value={buttonText || ''}
                                 onChange={(v) => setAttributes({ buttonText: v })}
                             />
                             <TextControl
-                                label={__('Button URL', 'icon-box-block')}
+                                label={__('Button URL', 'adaire-blocks')}
                                 value={linkUrl || ''}
                                 onChange={(v) => setAttributes({ linkUrl: v })}
                                 placeholder="https://"
                             />
                             <SelectControl
-                                label={__('Open in', 'icon-box-block')}
+                                label={__('Open in', 'adaire-blocks')}
                                 value={linkTarget}
                                 options={[
-                                    { label: __('Same window', 'icon-box-block'), value: '_self' },
-                                    { label: __('New window', 'icon-box-block'), value: '_blank' },
+                                    { label: __('Same window', 'adaire-blocks'), value: '_self' },
+                                    { label: __('New window', 'adaire-blocks'), value: '_blank' },
                                 ]}
                                 onChange={(v) => setAttributes({ linkTarget: v })}
                             />
@@ -257,14 +257,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {showButton !== false && (
-                    <PanelBody section="style" priority="high" title={__('Button Style', 'icon-box-block')} initialOpen={false}>
-                        <BaseControl label={__('Button Background', 'icon-box-block')}>
+                    <PanelBody section="style" priority="high" title={__('Button Style', 'adaire-blocks')} initialOpen={false}>
+                        <BaseControl label={__('Button Background', 'adaire-blocks')}>
                             <BoundColorPalette
                                 value={buttonBgColor || ""}
                                 onChange={(v) => setAttributes({ buttonBgColor: v || "" })}
                             />
                         </BaseControl>
-                        <BaseControl label={__('Button Text Color', 'icon-box-block')}>
+                        <BaseControl label={__('Button Text Color', 'adaire-blocks')}>
                             <BoundColorPalette
                                 value={buttonTextColor || ""}
                                 onChange={(v) => setAttributes({ buttonTextColor: v || "" })}
@@ -273,7 +273,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </PanelBody>
                 )}
 
-                <PanelBody section="style" priority="medium" title={__('Spacing', 'icon-box-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Spacing', 'adaire-blocks')} initialOpen={false}>
                     <DeviceSwitcher
                         deviceType={deviceType}
                         setDeviceType={setDeviceType}
@@ -282,7 +282,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <BoxControl
-                        label={__('Padding', 'icon-box-block')}
+                        label={__('Padding', 'adaire-blocks')}
                         values={{
                             top:    paddingTop?.[deviceType]    ?? paddingTop?.desktop    ?? 40,
                             right:  paddingRight?.[deviceType]  ?? paddingRight?.desktop  ?? 40,
@@ -298,7 +298,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <BoxControl
-                        label={__('Margin', 'icon-box-block')}
+                        label={__('Margin', 'adaire-blocks')}
                         values={{
                             top:    marginTop?.[deviceType]    ?? marginTop?.desktop    ?? 0,
                             right:  marginRight?.[deviceType]  ?? marginRight?.desktop  ?? 0,
@@ -336,10 +336,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     variant="secondary"
                                     style={{ width: '100%', marginBottom: '8px' }}
                                 >
-                                    {__('Change Icon', 'icon-box-block')}
+                                    {__('Change Icon', 'adaire-blocks')}
                                 </Button>
                                 <RangeControl
-                                    label={__('Icon Size', 'icon-box-block')}
+                                    label={__('Icon Size', 'adaire-blocks')}
                                     value={iconSize}
                                     onChange={(v) => setAttributes({ iconSize: v })}
                                     min={16}
@@ -367,7 +367,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         onClick={() => setIsIconPickerOpen(true)}
                         type="button"
                     >
-                        {__('+ Add Icon', 'icon-box-block')}
+                        {__('+ Add Icon', 'adaire-blocks')}
                     </button>
                 )}
 
@@ -376,7 +376,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     className="adaire-icon-box__title"
                     value={title}
                     onChange={(v) => setAttributes({ title: v })}
-                    placeholder={__('Card title…', 'icon-box-block')}
+                    placeholder={__('Card title…', 'adaire-blocks')}
                 />
 
                 <RichText
@@ -384,7 +384,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     className="adaire-icon-box__description"
                     value={description}
                     onChange={(v) => setAttributes({ description: v })}
-                    placeholder={__('Description…', 'icon-box-block')}
+                    placeholder={__('Description…', 'adaire-blocks')}
                 />
 
                 {showButton !== false && (
@@ -395,7 +395,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             color: buttonTextColor || '#503AA8',
                         }}
                     >
-                        {buttonText || __('Learn More', 'icon-box-block')}
+                        {buttonText || __('Learn More', 'adaire-blocks')}
                     </span>
                 )}
             </div>

@@ -16,7 +16,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "pricing-table-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -324,11 +324,21 @@
         },
         "cardTextAlignment": {
             "type": "string",
-            "default": "left"
+            "default": "left",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "cardButtonAlignment": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "cardHoverBackgroundColor": {
             "type": "string",

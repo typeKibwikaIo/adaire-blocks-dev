@@ -107,14 +107,14 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const renderAddImagesButton = ( { open } ) => (
 		<Button variant="primary" onClick={ open } disabled={ isLimitReached }>
-			{ __( 'Add Images', 'gallery-block' ) }
+			{ __( 'Add Images', 'adaire-blocks' ) }
 		</Button>
 	);
 
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody title={ __( 'Images', 'gallery-block' ) } initialOpen={ true }>
+				<PanelBody title={ __( 'Images', 'adaire-blocks' ) } initialOpen={ true }>
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ onSelectImages }
@@ -126,9 +126,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					<p className="gallery-block__count-hint">
 						{ sprintf(
 							/* translators: 1: current image count, 2: max images allowed (or unlimited) */
-							__( '%1$d of %2$s images used', 'gallery-block' ),
+							__( '%1$d of %2$s images used', 'adaire-blocks' ),
 							images?.length || 0,
-							maxItems === Infinity ? __( 'unlimited', 'gallery-block' ) : maxItems
+							maxItems === Infinity ? __( 'unlimited', 'adaire-blocks' ) : maxItems
 						) }
 					</p>
 					{ showUpgradeNotice && (
@@ -136,9 +136,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					) }
 				</PanelBody>
 
-				<PanelBody title={ __( 'Layout', 'gallery-block' ) } initialOpen={ true }>
+				<PanelBody title={ __( 'Layout', 'adaire-blocks' ) } initialOpen={ true }>
 					<p style={ { fontWeight: 600, marginBottom: 8 } }>
-						{ __( 'Layout Mode', 'gallery-block' ) }
+						{ __( 'Layout Mode', 'adaire-blocks' ) }
 					</p>
 					<ButtonGroup style={ { display: 'flex', marginBottom: 16 } }>
 						<Button
@@ -146,21 +146,21 @@ export default function Edit( { attributes, setAttributes } ) {
 							isSecondary={ layoutMode !== 'grid' }
 							onClick={ () => setAttributes( { layoutMode: 'grid' } ) }
 						>
-							{ __( 'Grid', 'gallery-block' ) }
+							{ __( 'Grid', 'adaire-blocks' ) }
 						</Button>
 						<Button
 							isPrimary={ layoutMode === 'masonry' }
 							isSecondary={ layoutMode !== 'masonry' }
 							onClick={ () => setAttributes( { layoutMode: 'masonry' } ) }
 						>
-							{ __( 'Masonry', 'gallery-block' ) }
+							{ __( 'Masonry', 'adaire-blocks' ) }
 						</Button>
 					</ButtonGroup>
 
 					<DeviceSwitcher
 						deviceType={ device }
 						setDeviceType={ setDevice }
-						label={ __( 'Columns', 'gallery-block' ) }
+						label={ __( 'Columns', 'adaire-blocks' ) }
 					/>
 					<RangeControl
 						value={ getColumnsForDevice( columns, device ) }
@@ -171,12 +171,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 						help={ __(
 							'Set columns to 1 for a single stacked image layout, or higher for a multi-image grid.',
-							'gallery-block'
+							'adaire-blocks'
 						) }
 					/>
 
 					<RangeControl
-						label={ __( 'Gap', 'gallery-block' ) }
+						label={ __( 'Gap', 'adaire-blocks' ) }
 						value={ gap }
 						min={ 0 }
 						max={ 60 }
@@ -185,34 +185,34 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ layoutMode === 'grid' && (
 						<SelectControl
-							label={ __( 'Image Aspect Ratio', 'gallery-block' ) }
+							label={ __( 'Image Aspect Ratio', 'adaire-blocks' ) }
 							value={ aspectRatio }
 							options={ [
-								{ label: __( 'Square (1:1)', 'gallery-block' ), value: '1/1' },
-								{ label: __( 'Landscape (4:3)', 'gallery-block' ), value: '4/3' },
-								{ label: __( 'Portrait (3:4)', 'gallery-block' ), value: '3/4' },
-								{ label: __( 'Widescreen (16:9)', 'gallery-block' ), value: '16/9' },
-								{ label: __( 'Original', 'gallery-block' ), value: 'auto' },
+								{ label: __( 'Square (1:1)', 'adaire-blocks' ), value: '1/1' },
+								{ label: __( 'Landscape (4:3)', 'adaire-blocks' ), value: '4/3' },
+								{ label: __( 'Portrait (3:4)', 'adaire-blocks' ), value: '3/4' },
+								{ label: __( 'Widescreen (16:9)', 'adaire-blocks' ), value: '16/9' },
+								{ label: __( 'Original', 'adaire-blocks' ), value: 'auto' },
 							] }
 							onChange={ ( value ) => setAttributes( { aspectRatio: value } ) }
 						/>
 					) }
 				</PanelBody>
 
-				<PanelBody title={ __( 'Hover Effect', 'gallery-block' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Hover Effect', 'adaire-blocks' ) } initialOpen={ false }>
 					<SelectControl
-						label={ __( 'Hover Effect', 'gallery-block' ) }
+						label={ __( 'Hover Effect', 'adaire-blocks' ) }
 						value={ hoverEffect }
 						options={ [
-							{ label: __( 'Zoom', 'gallery-block' ), value: 'zoom' },
-							{ label: __( 'Fade', 'gallery-block' ), value: 'fade' },
-							{ label: __( 'Lift', 'gallery-block' ), value: 'lift' },
-							{ label: __( 'None', 'gallery-block' ), value: 'none' },
+							{ label: __( 'Zoom', 'adaire-blocks' ), value: 'zoom' },
+							{ label: __( 'Fade', 'adaire-blocks' ), value: 'fade' },
+							{ label: __( 'Lift', 'adaire-blocks' ), value: 'lift' },
+							{ label: __( 'None', 'adaire-blocks' ), value: 'none' },
 						] }
 						onChange={ ( value ) => setAttributes( { hoverEffect: value } ) }
 					/>
 					<RangeControl
-						label={ __( 'Image Corner Radius', 'gallery-block' ) }
+						label={ __( 'Image Corner Radius', 'adaire-blocks' ) }
 						value={ imageBorderRadius }
 						min={ 0 }
 						max={ 40 }
@@ -220,22 +220,22 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Captions & Lightbox', 'gallery-block' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Captions & Lightbox', 'adaire-blocks' ) } initialOpen={ false }>
 					<ToggleControl
-						label={ __( 'Enable click-to-enlarge lightbox', 'gallery-block' ) }
+						label={ __( 'Enable click-to-enlarge lightbox', 'adaire-blocks' ) }
 						checked={ !! lightboxEnabled }
 						onChange={ ( value ) => setAttributes( { lightboxEnabled: value } ) }
 					/>
 					<ToggleControl
-						label={ __( 'Show image captions', 'gallery-block' ) }
+						label={ __( 'Show image captions', 'adaire-blocks' ) }
 						checked={ !! captionsEnabled }
 						onChange={ ( value ) => setAttributes( { captionsEnabled: value } ) }
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Typography', 'gallery-block' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Typography', 'adaire-blocks' ) } initialOpen={ false }>
 					<RangeControl
-						label={ __( 'Caption Font Size (px)', 'gallery-block' ) }
+						label={ __( 'Caption Font Size (px)', 'adaire-blocks' ) }
 						value={ captionFontSize }
 						onChange={ ( value ) => setAttributes( { captionFontSize: value } ) }
 						min={ 8 }
@@ -244,7 +244,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 
 					<SelectControl
-						label={ __( 'Caption Font Weight', 'gallery-block' ) }
+						label={ __( 'Caption Font Weight', 'adaire-blocks' ) }
 						value={ captionFontWeight }
 						options={ [
 							{ label: 'Thin (100)', value: '100' },
@@ -261,19 +261,19 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 
 					<UnitControl
-						label={ __( 'Caption Line Height', 'gallery-block' ) }
+						label={ __( 'Caption Line Height', 'adaire-blocks' ) }
 						value={ captionLineHeight }
 						onChange={ ( value ) => setAttributes( { captionLineHeight: value } ) }
 					/>
 
 					<UnitControl
-						label={ __( 'Caption Letter Spacing', 'gallery-block' ) }
+						label={ __( 'Caption Letter Spacing', 'adaire-blocks' ) }
 						value={ captionLetterSpacing }
 						onChange={ ( value ) => setAttributes( { captionLetterSpacing: value } ) }
 					/>
 
 					<SelectControl
-						label={ __( 'Caption Text Transform', 'gallery-block' ) }
+						label={ __( 'Caption Text Transform', 'adaire-blocks' ) }
 						value={ captionTextTransform }
 						options={ [
 							{ label: 'None', value: 'none' },
@@ -285,17 +285,17 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 
 					<SelectControl
-						label={ __( 'Font Family', 'gallery-block' ) }
+						label={ __( 'Font Family', 'adaire-blocks' ) }
 						value={ fontFamily || '' }
 						options={ FONT_FAMILY_OPTIONS }
 						onChange={ ( value ) => setAttributes( { fontFamily: value } ) }
-						help={ __( 'Applies to the gallery block (e.g. captions).', 'gallery-block' ) }
+						help={ __( 'Applies to the gallery block (e.g. captions).', 'adaire-blocks' ) }
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Container Settings', 'gallery-block' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Container Settings', 'adaire-blocks' ) } initialOpen={ false }>
 					<p style={ { fontWeight: 600, marginBottom: 8 } }>
-						{ __( 'Width', 'gallery-block' ) }
+						{ __( 'Width', 'adaire-blocks' ) }
 					</p>
 					<ButtonGroup style={ { display: 'flex', marginBottom: 16 } }>
 						<Button
@@ -303,20 +303,20 @@ export default function Edit( { attributes, setAttributes } ) {
 							isSecondary={ containerMode !== 'full' }
 							onClick={ () => setAttributes( { containerMode: 'full' } ) }
 						>
-							{ __( 'Full Width', 'gallery-block' ) }
+							{ __( 'Full Width', 'adaire-blocks' ) }
 						</Button>
 						<Button
 							isPrimary={ containerMode === 'constrained' }
 							isSecondary={ containerMode !== 'constrained' }
 							onClick={ () => setAttributes( { containerMode: 'constrained' } ) }
 						>
-							{ __( 'Constrained', 'gallery-block' ) }
+							{ __( 'Constrained', 'adaire-blocks' ) }
 						</Button>
 					</ButtonGroup>
 					{ containerMode === 'constrained' && (
 						<TextControl
 							type="number"
-							label={ __( 'Max Width (px)', 'gallery-block' ) }
+							label={ __( 'Max Width (px)', 'adaire-blocks' ) }
 							value={ containerMaxWidth?.desktop?.value ?? 1200 }
 							onChange={ ( value ) =>
 								setAttributes( {
@@ -329,10 +329,10 @@ export default function Edit( { attributes, setAttributes } ) {
 						/>
 					) }
 					<TextControl
-						label={ __( 'Block ID', 'gallery-block' ) }
+						label={ __( 'Block ID', 'adaire-blocks' ) }
 						value={ blockId }
 						onChange={ ( value ) => setAttributes( { blockId: value } ) }
-						help={ __( 'Optional. Add a custom ID for CSS targeting or anchor links.', 'gallery-block' ) }
+						help={ __( 'Optional. Add a custom ID for CSS targeting or anchor links.', 'adaire-blocks' ) }
 					/>
 				</PanelBody>
 			</InspectorTabs>
@@ -346,10 +346,10 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ ! hasImages ? (
 						<Placeholder
 							icon={ imageIcon }
-							label={ __( 'Gallery', 'gallery-block' ) }
+							label={ __( 'Gallery', 'adaire-blocks' ) }
 							instructions={ __(
 								'Add one or more images to build your gallery. Use a single image for a hero-style layout, or add many for a full grid or masonry wall — change this anytime from the sidebar.',
-								'gallery-block'
+								'adaire-blocks'
 							) }
 						>
 							<MediaUploadCheck>
@@ -375,19 +375,19 @@ export default function Edit( { attributes, setAttributes } ) {
 											<div className="gallery-block__item-controls">
 												<Button
 													icon="arrow-left-alt2"
-													label={ __( 'Move earlier', 'gallery-block' ) }
+													label={ __( 'Move earlier', 'adaire-blocks' ) }
 													onClick={ () => moveImage( index, -1 ) }
 													disabled={ index === 0 }
 												/>
 												<Button
 													icon="arrow-right-alt2"
-													label={ __( 'Move later', 'gallery-block' ) }
+													label={ __( 'Move later', 'adaire-blocks' ) }
 													onClick={ () => moveImage( index, 1 ) }
 													disabled={ index === images.length - 1 }
 												/>
 												<Button
 													icon="trash"
-													label={ __( 'Remove image', 'gallery-block' ) }
+													label={ __( 'Remove image', 'adaire-blocks' ) }
 													isDestructive
 													onClick={ () => removeImage( index ) }
 												/>
@@ -396,7 +396,7 @@ export default function Edit( { attributes, setAttributes } ) {
 										{ captionsEnabled && (
 											<TextControl
 												className="gallery-block__caption-input"
-												placeholder={ __( 'Add a caption…', 'gallery-block' ) }
+												placeholder={ __( 'Add a caption…', 'adaire-blocks' ) }
 												value={ image.caption || '' }
 												onChange={ ( value ) => updateImage( index, { caption: value } ) }
 											/>

@@ -78,11 +78,11 @@ const bigDesktopIcon = createElement('svg', {
 );
 
 const BREAKPOINTS = [
-    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks-dev2') },
-    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks-dev2') },
-    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks-dev2') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks-dev2') },
-    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks-dev2') },
+    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
+    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
+    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks') },
+    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
+    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks') },
 ];
 
 // Helper components moved outside Edit to prevent focus loss
@@ -90,13 +90,13 @@ const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, 
     <div className="adaire-typography-section" style={{ borderBottom: '1px solid #eee', paddingBottom: '16px', marginBottom: '16px' }}>
         <p className="adaire-typography-section-name" style={{ fontWeight: 600, marginBottom: '12px' }}>{label}</p>
         <UnitControl
-            label={__('Font Size', 'adaire-blocks-dev2')}
+            label={__('Font Size', 'adaire-blocks')}
             value={attributes[fontSizeAttr][deviceType]}
             onChange={(val) => updateResponsiveAttribute(fontSizeAttr, deviceType, val)}
         />
         {fontWeightAttr && (
             <SelectControl
-                label={__('Font Weight', 'adaire-blocks-dev2')}
+                label={__('Font Weight', 'adaire-blocks')}
                 value={attributes[fontWeightAttr][deviceType]}
                 options={[
                     { label: '100', value: '100' }, { label: '200', value: '200' },
@@ -110,19 +110,19 @@ const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, 
         )}
         {lineHeightAttr && (
             <UnitControl
-                label={__('Line Height', 'adaire-blocks-dev2')}
+                label={__('Line Height', 'adaire-blocks')}
                 value={attributes[lineHeightAttr][deviceType]}
                 onChange={(val) => updateResponsiveAttribute(lineHeightAttr, deviceType, val)}
             />
         )}
         <PanelColorSettings
-            title={__('Color', 'adaire-blocks-dev2')}
+            title={__('Color', 'adaire-blocks')}
             initialOpen={false}
             colorSettings={[
                 {
                     value: attributes[colorAttr][deviceType],
                     onChange: (val) => updateResponsiveAttribute(colorAttr, deviceType, val),
-                    label: __('Text Color', 'adaire-blocks-dev2'),
+                    label: __('Text Color', 'adaire-blocks'),
                 }
             ]}
         />
@@ -176,8 +176,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
 
     const CONTAINER_MODES = [
-        { label: __('Full Width', 'adaire-blocks-dev2'), value: 'full' },
-        { label: __('Constrained', 'adaire-blocks-dev2'), value: 'constrained' },
+        { label: __('Full Width', 'adaire-blocks'), value: 'full' },
+        { label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
     ];
 
     const UNIT_OPTIONS = ['px', '%', 'rem', 'vw'];
@@ -414,7 +414,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         <>
             <InspectorControls>
                 <div className="adaire-device-toggle">
-                    <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks-dev2')}</p>
+                    <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks')}</p>
                     <div className="adaire-device-toggle-group">
                         {BREAKPOINTS.map((bp) => (
                             <Button
@@ -428,13 +428,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         ))}
                     </div>
                     <p className="adaire-device-toggle-status">
-                        {__('Configuring:', 'adaire-blocks-dev2')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
+                        {__('Configuring:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
                     </p>
                 </div>
 
-                <PanelBody title={__('Content', 'adaire-blocks-dev2')} initialOpen={true}>
+                <PanelBody title={__('Content', 'adaire-blocks')} initialOpen={true}>
                     <TextControl
-                        label={__('Main Title', 'adaire-blocks-dev2')}
+                        label={__('Main Title', 'adaire-blocks')}
                         value={mainTitle}
                         onChange={(value) => setAttributes({ mainTitle: value })}
                     />
@@ -445,10 +445,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             style={{ borderTop: '1px solid #eee', paddingTop: '12px', marginTop: '12px' }}
                         >
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <strong>{__('Card', 'adaire-blocks-dev2')} {index + 1}</strong>
+                                <strong>{__('Card', 'adaire-blocks')} {index + 1}</strong>
                                 <Button
                                     icon="trash"
-                                    label={__('Remove Card', 'adaire-blocks-dev2')}
+                                    label={__('Remove Card', 'adaire-blocks')}
                                     isDestructive
                                     isSmall
                                     disabled={cards.length <= 1}
@@ -456,46 +456,46 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 />
                             </div>
                             <TextareaControl
-                                label={__('Title', 'adaire-blocks-dev2')}
+                                label={__('Title', 'adaire-blocks')}
                                 value={card.title}
                                 onChange={(value) => updateCard(index, 'title', value)}
                             />
                             <TextareaControl
-                                label={__('Description', 'adaire-blocks-dev2')}
+                                label={__('Description', 'adaire-blocks')}
                                 value={card.description}
                                 onChange={(value) => updateCard(index, 'description', value)}
                             />
                         </div>
                     ))}
                     <Button variant="secondary" icon="plus" onClick={addCard} style={{ marginTop: '8px' }}>
-                        {__('Add Card', 'adaire-blocks-dev2')}
+                        {__('Add Card', 'adaire-blocks')}
                     </Button>
                 </PanelBody>
 
                 <PanelColorSettings
-                    title={__('Colors', 'adaire-blocks-dev2')}
+                    title={__('Colors', 'adaire-blocks')}
                     initialOpen={false}
                     colorSettings={[
                         {
                             value: backgroundColor,
                             onChange: (value) => setAttributes({ backgroundColor: value }),
-                            label: __('Background', 'adaire-blocks-dev2'),
+                            label: __('Background', 'adaire-blocks'),
                         },
                         {
                             value: cardBackgroundColor,
                             onChange: (value) => setAttributes({ cardBackgroundColor: value }),
-                            label: __('Card Background', 'adaire-blocks-dev2'),
+                            label: __('Card Background', 'adaire-blocks'),
                         },
                         {
                             value: gridBorderColor,
                             onChange: (value) => setAttributes({ gridBorderColor: value }),
-                            label: __('Grid Border', 'adaire-blocks-dev2'),
+                            label: __('Grid Border', 'adaire-blocks'),
                         }
                     ].filter(Boolean)}
                 />
 
-                <PanelBody title={__('Layout Settings', 'adaire-blocks-dev2')} initialOpen={false}>
-                    <p>{__('Grid Layout', 'adaire-blocks-dev2')}</p>
+                <PanelBody title={__('Layout Settings', 'adaire-blocks')} initialOpen={false}>
+                    <p>{__('Grid Layout', 'adaire-blocks')}</p>
                     <div className="adaire-bento-preset-grid" style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '16px' }}>
                         {BENTO_LAYOUTS.map((layout) => (
                             <Button
@@ -513,7 +513,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             </Button>
                         ))}
                     </div>
-                    <p>{__('Container Width', 'adaire-blocks-dev2')}</p>
+                    <p>{__('Container Width', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {CONTAINER_MODES.map((mode) => (
                             <Button
@@ -528,7 +528,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
                     <div className="adaire-infogrid-4__dimension-control" style={{ marginBottom: '16px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                            <strong>{__('Max Width', 'adaire-blocks-dev2')}</strong>
+                            <strong>{__('Max Width', 'adaire-blocks')}</strong>
                         </div>
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                             <div style={{ flex: 1 }}>
@@ -569,51 +569,51 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     </div>
 
                     <BoxControl
-                        label={__('Padding (Outer)', 'adaire-blocks-dev2')}
+                        label={__('Padding (Outer)', 'adaire-blocks')}
                         values={attributes.responsivePadding?.[deviceType] || {}}
                         onChange={(value) => updateResponsive('responsivePadding', deviceType, value)}
                     />
 
                     <BoxControl
-                        label={__('Card Padding', 'adaire-blocks-dev2')}
+                        label={__('Card Padding', 'adaire-blocks')}
                         values={attributes.responsiveCardPadding?.[deviceType] || {}}
                         onChange={(value) => updateResponsive('responsiveCardPadding', deviceType, value)}
                     />
 
                     <RangeControl
-                        label={__('Card Border Radius', 'adaire-blocks-dev2')}
+                        label={__('Card Border Radius', 'adaire-blocks')}
                         value={cardBorderRadius}
                         onChange={(value) => setAttributes({ cardBorderRadius: value })}
                         min={0}
                         max={40}
                     />
                     <RangeControl
-                        label={__('Grid Border Width', 'adaire-blocks-dev2')}
+                        label={__('Grid Border Width', 'adaire-blocks')}
                         value={gridBorderWidth}
                         onChange={(value) => setAttributes({ gridBorderWidth: value })}
                         min={0}
                         max={4}
                     />
                     <RangeControl
-                        label={__('Grid Gap', 'adaire-blocks-dev2')}
+                        label={__('Grid Gap', 'adaire-blocks')}
                         value={gridGap}
                         onChange={(value) => setAttributes({ gridGap: value })}
                         min={0}
                         max={64}
                     />
                     <ToggleControl
-                        label={__('Card Shadow', 'adaire-blocks-dev2')}
+                        label={__('Card Shadow', 'adaire-blocks')}
                         checked={cardShadow}
                         onChange={(value) => setAttributes({ cardShadow: value })}
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Typography Settings', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Typography Settings', 'adaire-blocks')} initialOpen={false}>
                     <TypographySection
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Main Title', 'adaire-blocks-dev2')}
+                        label={__('Main Title', 'adaire-blocks')}
                         fontSizeAttr="responsiveMainTitleFontSize"
                         fontWeightAttr="responsiveMainTitleFontWeight"
                         lineHeightAttr="responsiveMainTitleLineHeight"
@@ -623,7 +623,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Item Title', 'adaire-blocks-dev2')}
+                        label={__('Item Title', 'adaire-blocks')}
                         fontSizeAttr="responsiveItemTitleFontSize"
                         fontWeightAttr="responsiveItemTitleFontWeight"
                         lineHeightAttr="responsiveItemTitleLineHeight"
@@ -633,7 +633,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Item Description', 'adaire-blocks-dev2')}
+                        label={__('Item Description', 'adaire-blocks')}
                         fontSizeAttr="responsiveItemDescriptionFontSize"
                         fontWeightAttr="responsiveItemDescriptionFontWeight"
                         lineHeightAttr="responsiveItemDescriptionLineHeight"
@@ -641,57 +641,57 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Background SVG Icon', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Background SVG Icon', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
-                        label={__('Enable Icon', 'adaire-blocks-dev2')}
+                        label={__('Enable Icon', 'adaire-blocks')}
                         value={showSvgIcon ? 'yes' : 'no'}
                         options={[
-                            { label: __('No', 'adaire-blocks-dev2'), value: 'no' },
-                            { label: __('Yes', 'adaire-blocks-dev2'), value: 'yes' },
+                            { label: __('No', 'adaire-blocks'), value: 'no' },
+                            { label: __('Yes', 'adaire-blocks'), value: 'yes' },
                         ]}
                         onChange={(value) => setAttributes({ showSvgIcon: value === 'yes' })}
                     />
                     {showSvgIcon && (
                         <>
                             <TextareaControl
-                                label={__('SVG Markup', 'adaire-blocks-dev2')}
-                                help={__('Paste inline SVG. Use currentColor for fills/strokes to inherit the configured color.', 'adaire-blocks-dev2')}
+                                label={__('SVG Markup', 'adaire-blocks')}
+                                help={__('Paste inline SVG. Use currentColor for fills/strokes to inherit the configured color.', 'adaire-blocks')}
                                 rows={6}
                                 value={svgIconCode}
                                 onChange={(value) => setAttributes({ svgIconCode: value })}
                             />
                             <SelectControl
-                                label={__('Horizontal Position', 'adaire-blocks-dev2')}
+                                label={__('Horizontal Position', 'adaire-blocks')}
                                 value={svgIconPosition}
                                 options={[
-                                    { label: __('Left', 'adaire-blocks-dev2'), value: 'left' },
-                                    { label: __('Right', 'adaire-blocks-dev2'), value: 'right' },
+                                    { label: __('Left', 'adaire-blocks'), value: 'left' },
+                                    { label: __('Right', 'adaire-blocks'), value: 'right' },
                                 ]}
                                 onChange={(value) => setAttributes({ svgIconPosition: value })}
                             />
                             <SelectControl
-                                label={__('Vertical Position', 'adaire-blocks-dev2')}
+                                label={__('Vertical Position', 'adaire-blocks')}
                                 value={svgIconVerticalPosition}
                                 options={[
-                                    { label: __('Top', 'adaire-blocks-dev2'), value: 'top' },
-                                    { label: __('Bottom', 'adaire-blocks-dev2'), value: 'bottom' },
+                                    { label: __('Top', 'adaire-blocks'), value: 'top' },
+                                    { label: __('Bottom', 'adaire-blocks'), value: 'bottom' },
                                 ]}
                                 onChange={(value) => setAttributes({ svgIconVerticalPosition: value })}
                             />
 
                             {/* Responsive SVG Controls using global deviceType */}
                             <UnitControl
-                                label={__('SVG Width', 'adaire-blocks-dev2')}
+                                label={__('SVG Width', 'adaire-blocks')}
                                 value={responsiveSvgIconWidth?.[deviceType]}
                                 onChange={(value) => updateResponsive('responsiveSvgIconWidth', deviceType, value)}
                             />
                             <UnitControl
-                                label={__('SVG Vertical Offset', 'adaire-blocks-dev2')}
+                                label={__('SVG Vertical Offset', 'adaire-blocks')}
                                 value={responsiveSvgIconVerticalOffset?.[deviceType]}
                                 onChange={(value) => updateResponsive('responsiveSvgIconVerticalOffset', deviceType, value)}
                             />
                             <UnitControl
-                                label={__('SVG Horizontal Offset', 'adaire-blocks-dev2')}
+                                label={__('SVG Horizontal Offset', 'adaire-blocks')}
                                 value={responsiveSvgIconHorizontalOffset?.[deviceType]}
                                 onChange={(value) => updateResponsive('responsiveSvgIconHorizontalOffset', deviceType, value)}
                             />
@@ -718,7 +718,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             className="adaire-infogrid-4__title"
                             value={mainTitle}
                             onChange={(value) => setAttributes({ mainTitle: value })}
-                            placeholder={__('Add main titleâ€¦', 'adaire-blocks-dev2')}
+                            placeholder={__('Add main titleâ€¦', 'adaire-blocks')}
                         />
                     </div>
 

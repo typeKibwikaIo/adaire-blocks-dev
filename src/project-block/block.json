@@ -10,7 +10,7 @@
     "supports": {
         "html": false
     },
-    "textdomain": "project-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",

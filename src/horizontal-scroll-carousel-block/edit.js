@@ -36,11 +36,11 @@ const bigDesktopIcon = createElement(
 );
 
 const BREAKPOINTS = [
-	{ name: 'mobile',      icon: mobile,          label: __( 'Mobile',       'adaire-blocks-dev2' ) },
-	{ name: 'tablet',      icon: tablet,          label: __( 'Tablet',       'adaire-blocks-dev2' ) },
-	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __( 'Small Laptop', 'adaire-blocks-dev2' ) },
-	{ name: 'desktop',     icon: desktop,         label: __( 'Desktop',      'adaire-blocks-dev2' ) },
-	{ name: 'bigDesktop',  icon: bigDesktopIcon,  label: __( 'Big Desktop',  'adaire-blocks-dev2' ) },
+	{ name: 'mobile',      icon: mobile,          label: __( 'Mobile',       'adaire-blocks' ) },
+	{ name: 'tablet',      icon: tablet,          label: __( 'Tablet',       'adaire-blocks' ) },
+	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __( 'Small Laptop', 'adaire-blocks' ) },
+	{ name: 'desktop',     icon: desktop,         label: __( 'Desktop',      'adaire-blocks' ) },
+	{ name: 'bigDesktop',  icon: bigDesktopIcon,  label: __( 'Big Desktop',  'adaire-blocks' ) },
 ];
 
 // â”€â”€â”€ Inner-blocks template â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -105,15 +105,15 @@ const buildCssVars = ( attrs ) => {
 // â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const FONT_WEIGHTS = [
-	{ label: __( '100 â€” Thin',        'adaire-blocks-dev2' ), value: '100' },
-	{ label: __( '200 â€” Extra Light', 'adaire-blocks-dev2' ), value: '200' },
-	{ label: __( '300 â€” Light',       'adaire-blocks-dev2' ), value: '300' },
-	{ label: __( '400 â€” Regular',     'adaire-blocks-dev2' ), value: '400' },
-	{ label: __( '500 â€” Medium',      'adaire-blocks-dev2' ), value: '500' },
-	{ label: __( '600 â€” Semi Bold',   'adaire-blocks-dev2' ), value: '600' },
-	{ label: __( '700 â€” Bold',        'adaire-blocks-dev2' ), value: '700' },
-	{ label: __( '800 â€” Extra Bold',  'adaire-blocks-dev2' ), value: '800' },
-	{ label: __( '900 â€” Black',       'adaire-blocks-dev2' ), value: '900' },
+	{ label: __( '100 â€” Thin',        'adaire-blocks' ), value: '100' },
+	{ label: __( '200 â€” Extra Light', 'adaire-blocks' ), value: '200' },
+	{ label: __( '300 â€” Light',       'adaire-blocks' ), value: '300' },
+	{ label: __( '400 â€” Regular',     'adaire-blocks' ), value: '400' },
+	{ label: __( '500 â€” Medium',      'adaire-blocks' ), value: '500' },
+	{ label: __( '600 â€” Semi Bold',   'adaire-blocks' ), value: '600' },
+	{ label: __( '700 â€” Bold',        'adaire-blocks' ), value: '700' },
+	{ label: __( '800 â€” Extra Bold',  'adaire-blocks' ), value: '800' },
+	{ label: __( '900 â€” Black',       'adaire-blocks' ), value: '900' },
 ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
@@ -178,7 +178,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				{ /* â”€â”€ Device toggle (project standard) â”€â”€ */ }
 				<div className="adaire-device-toggle">
 					<p className="adaire-device-toggle-label">
-						{ __( 'Device View', 'adaire-blocks-dev2' ) }
+						{ __( 'Device View', 'adaire-blocks' ) }
 					</p>
 					<div className="adaire-device-toggle-group">
 						{ BREAKPOINTS.map( ( bp ) => (
@@ -193,72 +193,72 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						) ) }
 					</div>
 					<p className="adaire-device-toggle-status">
-						{ __( 'Configuring:', 'adaire-blocks-dev2' ) }{ ' ' }
+						{ __( 'Configuring:', 'adaire-blocks' ) }{ ' ' }
 						<strong>{ activeLabel }</strong>
 					</p>
 				</div>
 
 				{ /* â”€â”€ Layout Settings â”€â”€ */ }
 				<PanelBody
-					title={ __( 'Layout Settings', 'adaire-blocks-dev2' ) }
+					title={ __( 'Layout Settings', 'adaire-blocks' ) }
 					initialOpen={ true }
 				>
 					<BoxControl
-						label={ `${ __( 'Section Padding', 'adaire-blocks-dev2' ) } (${ activeLabel })` }
+						label={ `${ __( 'Section Padding', 'adaire-blocks' ) } (${ activeLabel })` }
 						values={ responsivePadding?.[ deviceType ] || {} }
 						onChange={ ( val ) => updateResponsive( 'responsivePadding', deviceType, val ) }
 					/>
 
 					<UnitControl
-						label={ `${ __( 'Card Width', 'adaire-blocks-dev2' ) } (${ activeLabel })` }
+						label={ `${ __( 'Card Width', 'adaire-blocks' ) } (${ activeLabel })` }
 						value={ responsiveCardWidth?.[ deviceType ] || '560px' }
 						onChange={ ( val ) => updateResponsive( 'responsiveCardWidth', deviceType, val ) }
-						help={ __( 'Width of each card. Supports px, vw, %', 'adaire-blocks-dev2' ) }
+						help={ __( 'Width of each card. Supports px, vw, %', 'adaire-blocks' ) }
 					/>
 
 					<UnitControl
-						label={ `${ __( 'Card Gap', 'adaire-blocks-dev2' ) } (${ activeLabel })` }
+						label={ `${ __( 'Card Gap', 'adaire-blocks' ) } (${ activeLabel })` }
 						value={ responsiveCardGap?.[ deviceType ] || '24px' }
 						onChange={ ( val ) => updateResponsive( 'responsiveCardGap', deviceType, val ) }
 					/>
 
 					<UnitControl
-						label={ `${ __( 'Track Side Padding', 'adaire-blocks-dev2' ) } (${ activeLabel })` }
+						label={ `${ __( 'Track Side Padding', 'adaire-blocks' ) } (${ activeLabel })` }
 						value={ responsiveTrackPaddingX?.[ deviceType ] || '80px' }
 						onChange={ ( val ) => updateResponsive( 'responsiveTrackPaddingX', deviceType, val ) }
-						help={ __( 'Left/right breathing room before first and after last card.', 'adaire-blocks-dev2' ) }
+						help={ __( 'Left/right breathing room before first and after last card.', 'adaire-blocks' ) }
 					/>
 				</PanelBody>
 
 				{ /* â”€â”€ Animation â”€â”€ */ }
 				<PanelBody
-					title={ __( 'Animation', 'adaire-blocks-dev2' ) }
+					title={ __( 'Animation', 'adaire-blocks' ) }
 					initialOpen={ false }
 				>
 					<RangeControl
-						label={ __( 'Scrub Speed', 'adaire-blocks-dev2' ) }
+						label={ __( 'Scrub Speed', 'adaire-blocks' ) }
 						value={ scrubSpeed }
 						onChange={ ( val ) => setAttributes( { scrubSpeed: val } ) }
 						min={ 0.1 }
 						max={ 5 }
 						step={ 0.1 }
-						help={ __( 'Lower = snappier. Higher = more lag/smoothness.', 'adaire-blocks-dev2' ) }
+						help={ __( 'Lower = snappier. Higher = more lag/smoothness.', 'adaire-blocks' ) }
 					/>
 				</PanelBody>
 
 				{ /* â”€â”€ Heading Typography â”€â”€ */ }
 				<PanelBody
-					title={ __( 'Heading Typography', 'adaire-blocks-dev2' ) }
+					title={ __( 'Heading Typography', 'adaire-blocks' ) }
 					initialOpen={ false }
 				>
 					<UnitControl
-						label={ __( 'Font Size', 'adaire-blocks-dev2' ) }
+						label={ __( 'Font Size', 'adaire-blocks' ) }
 						value={ headingFontSize }
 						onChange={ ( val ) => setAttributes( { headingFontSize: val || '2.5rem' } ) }
-						help={ __( 'Supports rem, px, em, vw', 'adaire-blocks-dev2' ) }
+						help={ __( 'Supports rem, px, em, vw', 'adaire-blocks' ) }
 					/>
 					<SelectControl
-						label={ __( 'Font Weight', 'adaire-blocks-dev2' ) }
+						label={ __( 'Font Weight', 'adaire-blocks' ) }
 						value={ headingFontWeight }
 						options={ FONT_WEIGHTS }
 						onChange={ ( val ) => setAttributes( { headingFontWeight: val } ) }
@@ -267,18 +267,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			{ /* â”€â”€ Colors â”€â”€ */ }
 				<PanelColorSettings
-					title={ __( 'Colors', 'adaire-blocks-dev2' ) }
+					title={ __( 'Colors', 'adaire-blocks' ) }
 					initialOpen={ false }
 					colorSettings={ [
 						{
 							value: sectionBackground,
 							onChange: ( val ) => setAttributes( { sectionBackground: val || '#f8f8f8' } ),
-							label: __( 'Section Background', 'adaire-blocks-dev2' ),
+							label: __( 'Section Background', 'adaire-blocks' ),
 						},
 						{
 							value: headingColor,
 							onChange: ( val ) => setAttributes( { headingColor: val || '#111111' } ),
-							label: __( 'Heading Color', 'adaire-blocks-dev2' ),
+							label: __( 'Heading Color', 'adaire-blocks' ),
 						},
 					] }
 				/>
@@ -290,14 +290,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				isDismissible={ false }
 				className="adaire-hsc__editor-notice"
 			>
-				{ __( 'Horizontal Scroll Carousel â€” scroll the cards below to preview. Scroll animation only runs on the frontend.', 'adaire-blocks-dev2' ) }
+				{ __( 'Horizontal Scroll Carousel â€” scroll the cards below to preview. Scroll animation only runs on the frontend.', 'adaire-blocks' ) }
 			</Notice>
 			<RichText
 				tagName="h2"
 				className="adaire-hsc__heading"
 				value={ headingText }
 				onChange={ ( val ) => setAttributes( { headingText: val } ) }
-				placeholder={ __( 'Section headingâ€¦', 'adaire-blocks-dev2' ) }
+				placeholder={ __( 'Section headingâ€¦', 'adaire-blocks' ) }
 				style={ {
 					fontSize:   headingFontSize,
 					color:      headingColor,

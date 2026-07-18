@@ -8,6 +8,7 @@
 	"scripts": {
 		"prebuild": "node scripts/apply-new-icons.js && node scripts/update-block-icons.js",
 		"build": "wp-scripts build --blocks-manifest",
+		"postbuild": "node scripts/patch-blocks-manifest-guard.js",
 		"build:free": "node scripts/generate-free-version.js",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
