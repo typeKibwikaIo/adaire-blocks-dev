@@ -27,9 +27,6 @@ const POSITION_OPTIONS = [
 	{ label: __( 'Bottom Right (floating)' ), value: 'floating-bottom-right' },
 	{ label: __( 'Bottom Left (floating)' ), value: 'floating-bottom-left' },
 	{ label: __( 'Bottom Center (full-width bar)' ), value: 'floating-bottom-center' },
-	{ label: __( 'Top Right (floating)' ), value: 'floating-top-right' },
-	{ label: __( 'Top Left (floating)' ), value: 'floating-top-left' },
-	{ label: __( 'Top Center (full-width bar)' ), value: 'floating-top-center' },
 ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
