@@ -1,8 +1,13 @@
-/* Adaire Blocks Admin Settings Styles */
+/* Adaire Blocks Admin Settings Styles
+ * Retheme of the Adaire Blocks admin design system (see adaire-admin-theme.css)
+ * — same class names/structure as before (admin-settings.js depends on them),
+ * just restyled.
+ */
 
 .adaire-blocks-settings-container {
-    max-width: 1200px;
-    margin: 20px 0;
+    max-width: 1240px;
+    margin: 0;
+    font-family: var(--aa-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
 }
 
 /* Main menu icon styling */
@@ -17,99 +22,130 @@
     display: none !important;
 }
 
-/* Page header styling */
-.wrap h1 {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.wrap h1 .dashicons {
-    color: #0073aa;
-}
-
 .adaire-blocks-header {
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    border-radius: 4px;
-    padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 1px rgba(0,0,0,.04);
 }
 
 .adaire-blocks-logo h2 {
-    margin: 0 0 10px 0;
-    color: #23282d;
-    font-size: 24px;
+    display: none; /* replaced by .aa-header's <h1>; kept in markup for JS/back-compat */
 }
 
 .adaire-blocks-logo .description {
     margin: 0;
-    color: #666;
-    font-size: 14px;
+    color: var(--aa-muted, #6b7280);
+    font-size: 13.5px;
 }
 
 .adaire-blocks-controls {
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    border-radius: 4px;
-    padding: 15px 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    background: var(--aa-panel, #fff);
+    border: 1px solid var(--aa-line, rgba(20,24,31,0.1));
+    border-radius: var(--aa-radius-lg, 16px);
+    box-shadow: var(--aa-shadow-sm, 0 1px 2px rgba(20,24,31,0.05));
+    padding: 16px 20px;
+    margin-bottom: 24px;
 }
 
 .adaire-blocks-bulk-actions {
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .adaire-blocks-bulk-actions .button {
-    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1.4px solid var(--aa-line, rgba(20,24,31,0.1));
+    box-shadow: none;
+    text-shadow: none;
+    background: #fff;
+    color: var(--aa-ink, #14181f);
+    margin-right: 0;
+}
+
+.adaire-blocks-bulk-actions .button:hover {
+    border-color: rgba(20,24,31,0.28);
+}
+
+.adaire-blocks-tier-heading {
+    font-family: var(--aa-font, sans-serif);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.005em;
+    color: var(--aa-ink, #14181f);
+    margin: 28px 0 14px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.adaire-blocks-tier-heading:first-of-type {
+    margin-top: 0;
+}
+
+.adaire-block-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--aa-accent-dark, #4f46e5);
+    background: var(--aa-accent-soft, rgba(99,102,241,0.1));
+    padding: 2px 9px;
+    border-radius: 100px;
 }
 
 .adaire-blocks-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
     margin-bottom: 20px;
 }
 
 .adaire-block-card {
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.1);
-    transition: all 0.3s ease;
+    background: var(--aa-panel, #fff);
+    border: 1px solid var(--aa-line, rgba(20,24,31,0.1));
+    border-radius: var(--aa-radius-lg, 16px);
+    padding: 18px;
+    box-shadow: var(--aa-shadow-sm, 0 1px 2px rgba(20,24,31,0.05));
+    transition: box-shadow 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
     position: relative;
 }
 
+.adaire-block-card:hover {
+    box-shadow: var(--aa-shadow-md, 0 8px 24px -8px rgba(20,24,31,0.14));
+    transform: translateY(-2px);
+    border-color: rgba(20,24,31,0.16);
+}
+
 .adaire-block-premium {
-    opacity: 0.6;
-    position: relative;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 2px dashed #dee2e6;
+    opacity: 0.85;
+    background: var(--aa-panel, #fff);
+    border: 1.4px dashed var(--aa-line, rgba(20,24,31,0.16));
 }
 
 .adaire-block-premium-badge {
     position: absolute;
     top: -8px;
-    right: -8px;
-    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-    color: #333;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
+    right: 14px;
+    background: var(--aa-accent, #6366f1);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: 0.04em;
+    box-shadow: 0 2px 6px rgba(99,102,241,0.35);
     z-index: 10;
 }
 
 .adaire-block-premium-badge .dashicons {
-    font-size: 12px;
+    font-size: 11px;
+    width: 11px;
+    height: 11px;
     margin-right: 2px;
     vertical-align: middle;
 }
@@ -118,103 +154,102 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 24px;
 }
 
 .adaire-upgrade-button {
-    background: linear-gradient(135deg, #0073aa 0%, #005177 100%);
+    background: var(--aa-accent, #6366f1);
     color: #fff;
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 6px 14px;
+    border-radius: 100px;
     text-decoration: none;
     font-size: 12px;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,115,170,0.2);
+    gap: 5px;
+    transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 .adaire-upgrade-button:hover {
-    background: linear-gradient(135deg, #005177 0%, #003d5c 100%);
+    background: var(--aa-accent-dark, #4f46e5);
     color: #fff;
     text-decoration: none;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,115,170,0.3);
 }
 
 .adaire-upgrade-button .dashicons {
     font-size: 12px;
-}
-
-.adaire-block-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,.15);
-    transform: translateY(-2px);
+    width: 12px;
+    height: 12px;
 }
 
 .adaire-block-card.disabled {
-    opacity: 0.6;
-    background: #f9f9f9;
+    opacity: 0.65;
+    background: var(--aa-bg, #f6f7fb);
 }
 
 .adaire-block-header {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .adaire-block-icon {
-    margin-right: 15px;
+    margin-right: 14px;
     width: 40px;
     height: 40px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f0f0f1;
-    border-radius: 8px;
+    background: var(--aa-bg, #f6f7fb);
+    border-radius: var(--aa-radius-sm, 8px);
 }
 
 .adaire-block-icon .dashicons {
     font-size: 20px;
-    color: #50575e;
+    color: var(--aa-muted, #6b7280);
 }
 
 .adaire-block-icon svg {
     width: 24px;
     height: 24px;
     display: block;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
 .adaire-block-info {
     flex: 1;
+    min-width: 0;
 }
 
 .adaire-block-info h3 {
-    margin: 0 0 5px 0;
-    font-size: 16px;
+    margin: 0;
+    font-size: 14.5px;
     font-weight: 600;
-    color: #23282d;
+    color: var(--aa-ink, #14181f);
 }
 
 .adaire-block-category {
-    font-size: 12px;
-    color: #666;
-    background: #f0f0f1;
-    padding: 2px 8px;
-    border-radius: 12px;
+    font-size: 11px;
+    color: var(--aa-muted, #6b7280);
+    background: var(--aa-bg, #f6f7fb);
+    padding: 2px 9px;
+    border-radius: 100px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.03em;
 }
 
 .adaire-block-toggle {
-    margin-left: 15px;
+    margin-left: 12px;
+    flex-shrink: 0;
 }
 
 .adaire-toggle-switch {
     position: relative;
     display: inline-block;
-    width: 50px;
+    width: 42px;
     height: 24px;
 }
 
@@ -231,9 +266,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 24px;
+    background-color: #d1d5db;
+    transition: .18s;
+    border-radius: 100px;
+    box-shadow: inset 0 1px 2px rgba(20,24,31,0.08);
 }
 
 .adaire-toggle-slider:before {
@@ -244,21 +280,26 @@
     left: 3px;
     bottom: 3px;
     background-color: white;
-    transition: .4s;
+    transition: .18s;
     border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
 
 .adaire-toggle-switch input:checked + .adaire-toggle-slider {
-    background-color: #0073aa;
+    background-color: var(--aa-accent, #6366f1);
 }
 
 .adaire-toggle-switch input:checked + .adaire-toggle-slider:before {
-    transform: translateX(26px);
+    transform: translateX(18px);
+}
+
+.adaire-toggle-switch input:focus + .adaire-toggle-slider {
+    box-shadow: 0 0 0 3px var(--aa-accent-soft, rgba(99,102,241,0.1));
 }
 
 .adaire-block-description {
-    color: #666;
-    font-size: 14px;
+    color: var(--aa-muted, #6b7280);
+    font-size: 13px;
     line-height: 1.5;
 }
 
@@ -267,26 +308,26 @@
 }
 
 .adaire-blocks-footer {
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    border-radius: 4px;
-    padding: 20px;
+    background: var(--aa-panel, #fff);
+    border: 1px solid var(--aa-line, rgba(20,24,31,0.1));
+    border-radius: var(--aa-radius-lg, 16px);
+    box-shadow: var(--aa-shadow-sm, 0 1px 2px rgba(20,24,31,0.05));
+    padding: 18px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 1px 1px rgba(0,0,0,.04);
 }
 
 .adaire-blocks-status {
     display: flex;
     align-items: center;
-    color: #666;
-    font-size: 14px;
+    color: var(--aa-muted, #6b7280);
+    font-size: 13.5px;
 }
 
 .adaire-blocks-status .dashicons {
-    margin-right: 5px;
-    color: #0073aa;
+    margin-right: 6px;
+    color: var(--aa-accent, #6366f1);
 }
 
 /* Responsive Design */
@@ -294,17 +335,18 @@
     .adaire-blocks-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .adaire-blocks-bulk-actions {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .adaire-blocks-bulk-actions .button {
         margin-right: 0;
         margin-bottom: 10px;
+        justify-content: center;
     }
-    
+
     .adaire-blocks-footer {
         flex-direction: column;
         gap: 15px;
@@ -312,22 +354,13 @@
     }
 }
 
-/* Animation for toggles */
-.adaire-toggle-slider {
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.adaire-toggle-switch input:focus + .adaire-toggle-slider {
-    box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.2);
-}
-
 /* Status indicators */
 .adaire-block-card.enabled {
-    border-left: 4px solid #00a32a;
+    border-left: 3px solid var(--aa-success, #16a34a);
 }
 
 .adaire-block-card.disabled {
-    border-left: 4px solid #d63638;
+    border-left: 3px solid var(--aa-danger, #dc2626);
 }
 
 /* Loading state */

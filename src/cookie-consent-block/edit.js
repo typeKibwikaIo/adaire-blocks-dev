@@ -2,11 +2,11 @@ import { RichText, useBlockProps } from '@wordpress/block-editor';
 import {
 	Button,
 	ButtonGroup,
+	ExternalLink,
 	PanelBody,
 	RangeControl,
 	SelectControl,
 	TextControl,
-	TextareaControl,
 	ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -52,68 +52,33 @@ const SlidersIcon = () => (
 	</svg>
 );
 
-// ─── Cookie-category repeater — shared between the Inspector panel and the
-// on-canvas QuickZone popover so both stay in sync automatically. ──────────
-function CategoriesEditor( { categories, onChange } ) {
-	const list = Array.isArray( categories ) ? categories : [];
-	const update = ( i, patch ) => {
-		const next = list.slice();
-		next[ i ] = { ...next[ i ], ...patch };
-		onChange( next );
-	};
-	const remove = ( i ) => onChange( list.filter( ( _, idx ) => idx !== i ) );
-	const move = ( i, dir ) => {
-		const j = i + dir;
-		if ( j < 0 || j >= list.length ) return;
-		const next = list.slice();
-		[ next[ i ], next[ j ] ] = [ next[ j ], next[ i ] ];
-		onChange( next );
-	};
-	const add = () => onChange( [
-		...list,
-		{ key: `custom-${ Date.now() }`, label: __( 'New Category', 'adaire-blocks' ), description: '', required: false, defaultChecked: false },
-	] );
+// Categories are managed site-wide on the Cookie Categories admin page (see
+// admin/cookie-categories-page.php) so every Cookie Banner block on the site
+// shares one definition — render.php always reads that shared list, never a
+// per-block copy. window.adaireCookieCategoriesData is localized by that
+// page's enqueue_block_editor_assets hook; the empty-array/'#' fallbacks only
+// matter if this component somehow renders before that hook fires.
+const COOKIE_CATEGORIES_DATA = typeof window !== 'undefined' ? window.adaireCookieCategoriesData : null;
+const SITE_WIDE_CATEGORIES = COOKIE_CATEGORIES_DATA?.categories || [];
+const COOKIE_CATEGORIES_MANAGE_URL = COOKIE_CATEGORIES_DATA?.manageUrl || '#';
 
+// ─── Read-only category list — shared between the Inspector panel and the
+// on-canvas QuickZone popover. Editing happens on the Cookie Categories
+// admin page, not per-block, so every instance of this block stays in sync
+// with each other automatically. ────────────────────────────────────────
+function CategoriesPreview() {
 	return (
 		<div className="adaire-repeater">
-			{ list.map( ( cat, i ) => (
-				<div className="adaire-repeater__item" key={ cat.key || i }>
-					<div className="adaire-repeater__row-head">
-						<span className="adaire-repeater__index">{ i + 1 }</span>
-						<Button variant="tertiary" size="small" onClick={ () => move( i, -1 ) } disabled={ i === 0 }>↑</Button>
-						<Button variant="tertiary" size="small" onClick={ () => move( i, 1 ) } disabled={ i === list.length - 1 }>↓</Button>
-						{ ! cat.required && (
-							<Button variant="tertiary" size="small" isDestructive onClick={ () => remove( i ) }>
-								{ __( 'Remove', 'adaire-blocks' ) }
-							</Button>
-						) }
-					</div>
-					<TextControl
-						label={ __( 'Label', 'adaire-blocks' ) }
-						value={ cat.label || '' }
-						onChange={ ( v ) => update( i, { label: v } ) }
-					/>
-					<TextareaControl
-						label={ __( 'Description', 'adaire-blocks' ) }
-						value={ cat.description || '' }
-						onChange={ ( v ) => update( i, { description: v } ) }
-						rows={ 2 }
-					/>
-					<ToggleControl
-						label={ __( 'Required (always active, locked)', 'adaire-blocks' ) }
-						checked={ !! cat.required }
-						onChange={ ( v ) => update( i, { required: v, defaultChecked: v ? true : cat.defaultChecked } ) }
-					/>
-					{ ! cat.required && (
-						<ToggleControl
-							label={ __( 'On by default', 'adaire-blocks' ) }
-							checked={ !! cat.defaultChecked }
-							onChange={ ( v ) => update( i, { defaultChecked: v } ) }
-						/>
-					) }
+			{ SITE_WIDE_CATEGORIES.map( ( cat ) => (
+				<div className="adaire-repeater__item" key={ cat.key }>
+					<strong>{ cat.label }</strong>
+					{ cat.required ? ` (${ __( 'always active', 'adaire-blocks' ) })` : '' }
+					{ cat.description ? <p className="adaire-help-note" style={ { margin: '2px 0 0' } }>{ cat.description }</p> : null }
 				</div>
 			) ) }
-			<Button variant="secondary" onClick={ add }>{ __( 'Add category', 'adaire-blocks' ) }</Button>
+			<ExternalLink href={ COOKIE_CATEGORIES_MANAGE_URL }>
+				{ __( 'Manage categories', 'adaire-blocks' ) }
+			</ExternalLink>
 		</div>
 	);
 }
@@ -137,7 +102,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockProps = useBlockProps( {
 		className: 'adaire-cookie-banner',
 		style: getStyleVars( a ),
-		'data-layout': a.layoutType || 'bar-bottom',
+		'data-layout': a.layoutType || 'floating-bottom-right',
 		'data-density': a.displayDensity || 'expanded',
 		'data-align': a.alignment || 'center',
 		'data-shadow': a.showShadow ? ( a.shadowIntensity || 'medium' ) : 'none',
@@ -163,7 +128,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				<PanelBody title={ __( 'Cookie Categories', 'adaire-blocks' ) } initialOpen={ false }>
-					<CategoriesEditor categories={ a.categories } onChange={ ( categories ) => setAttributes( { categories } ) } />
+					<p className="adaire-help-note">{ __( 'Shared site-wide — every Cookie Banner block uses this same list.', 'adaire-blocks' ) }</p>
+					<CategoriesPreview />
 				</PanelBody>
 
 				<PanelBody title={ __( 'Layout & Position', 'adaire-blocks' ) } initialOpen={ true }>
@@ -259,14 +225,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</PanelBody>
 
 				<PanelBody title={ __( 'Colors', 'adaire-blocks' ) } initialOpen={ false }>
-					<p className="adaire-help-note">{ __( 'Defaults match a clean, light "Real Cookie Banner"-style theme — white card, dark text, blue accent.', 'adaire-blocks' ) }</p>
-					<AdaireColorControl label={ __( 'Background', 'adaire-blocks' ) } value={ a.backgroundColor } onChange={ ( v ) => setAttributes( { backgroundColor: v || '#ffffff' } ) } />
-					<AdaireColorControl label={ __( 'Heading color', 'adaire-blocks' ) } value={ a.headingColor } onChange={ ( v ) => setAttributes( { headingColor: v || '#202124' } ) } />
-					<AdaireColorControl label={ __( 'Text color', 'adaire-blocks' ) } value={ a.textColor } onChange={ ( v ) => setAttributes( { textColor: v || '#5f6368' } ) } />
-					<AdaireColorControl label={ __( 'Accent / primary button', 'adaire-blocks' ) } value={ a.accentColor } onChange={ ( v ) => setAttributes( { accentColor: v || '#1a73e8' } ) } />
+					<p className="adaire-help-note">{ __( 'Defaults match the free Cookie Notice block — dark card, light text, indigo accent.', 'adaire-blocks' ) }</p>
+					<AdaireColorControl label={ __( 'Background', 'adaire-blocks' ) } value={ a.backgroundColor } onChange={ ( v ) => setAttributes( { backgroundColor: v || '#111827' } ) } />
+					<AdaireColorControl label={ __( 'Heading color', 'adaire-blocks' ) } value={ a.headingColor } onChange={ ( v ) => setAttributes( { headingColor: v || '#f9fafb' } ) } />
+					<AdaireColorControl label={ __( 'Text color', 'adaire-blocks' ) } value={ a.textColor } onChange={ ( v ) => setAttributes( { textColor: v || '#f9fafb' } ) } />
+					<AdaireColorControl label={ __( 'Accent / primary button', 'adaire-blocks' ) } value={ a.accentColor } onChange={ ( v ) => setAttributes( { accentColor: v || '#6366f1' } ) } />
 					<AdaireColorControl label={ __( 'Primary button text', 'adaire-blocks' ) } value={ a.primaryButtonTextColor } onChange={ ( v ) => setAttributes( { primaryButtonTextColor: v || '#ffffff' } ) } />
 					<AdaireColorControl label={ __( 'Secondary button background', 'adaire-blocks' ) } value={ a.secondaryButtonBg } onChange={ ( v ) => setAttributes( { secondaryButtonBg: v || 'transparent' } ) } />
-					<AdaireColorControl label={ __( 'Secondary button text', 'adaire-blocks' ) } value={ a.secondaryButtonTextColor } onChange={ ( v ) => setAttributes( { secondaryButtonTextColor: v || '#1a73e8' } ) } />
+					<AdaireColorControl label={ __( 'Secondary button text', 'adaire-blocks' ) } value={ a.secondaryButtonTextColor } onChange={ ( v ) => setAttributes( { secondaryButtonTextColor: v || '#a5b4fc' } ) } />
 					<AdaireColorControl label={ __( 'Border color', 'adaire-blocks' ) } value={ a.borderColor } onChange={ ( v ) => setAttributes( { borderColor: v || '#e5e7eb' } ) } />
 					<AdaireColorControl label={ __( 'Overlay color', 'adaire-blocks' ) } value={ a.overlayColor } onChange={ ( v ) => setAttributes( { overlayColor: v || 'rgba(15,23,42,0.55)' } ) } />
 				</PanelBody>
@@ -396,10 +362,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						label={ __( 'Cookie Categories', 'adaire-blocks' ) }
 						activeZone={ activeZone }
 						setActiveZone={ setActiveZone }
-						content={ <CategoriesEditor categories={ a.categories } onChange={ ( categories ) => setAttributes( { categories } ) } /> }
+						content={ <CategoriesPreview /> }
 					>
 						<div className="adaire-cookie-banner__categories">
-							{ ( a.categories || [] ).map( ( cat ) => (
+							{ SITE_WIDE_CATEGORIES.map( ( cat ) => (
 								<label className="adaire-cookie-banner__cat-row" key={ cat.key }>
 									<input type="checkbox" defaultChecked={ !! cat.defaultChecked } disabled={ !! cat.required } readOnly />
 									<span>

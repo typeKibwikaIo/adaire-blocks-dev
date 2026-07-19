@@ -1,0 +1,304 @@
+/**
+ * Adaire Blocks — shared admin design system.
+ *
+ * A common visual language for every Adaire Blocks admin screen (Block
+ * Management, License, Cookie Categories, Migration): the layout/typography
+ * language of the onboarding prototype (onboardingprototype.html) — clean
+ * cards, pill buttons, eyebrow labels, soft shadows, generous spacing — but
+ * using the plugin's own current indigo accent (#6366F1, the same color
+ * already used throughout the actual blocks: cookie-consent-block,
+ * popup-modal-block, etc.) instead of the prototype's coral-red, which was
+ * from the pre-rebrand "g.b" (gutenblocks) era and would look inconsistent
+ * with everything already shipped under the Adaire Blocks identity.
+ *
+ * Deliberately NOT full-screen: this only themes the page's own content
+ * within WordPress's normal admin chrome (sidebar, admin bar, "wrap"
+ * container) — it never touches #adminmenu/#wpadminbar or takes over the
+ * viewport the way the onboarding wizard prototype does.
+ *
+ * Uses a system font stack rather than the prototype's Google Fonts
+ * (Poppins/Inter) — loading fonts from fonts.googleapis.com is a remote
+ * asset call, the same class of issue already fixed for Bootstrap Icons
+ * elsewhere in this plugin (see the WordPress.org "calling files remotely"
+ * guideline). A modern system stack reads just as clean without it.
+ */
+
+:root {
+	--aa-bg: #f6f7fb;
+	--aa-panel: #ffffff;
+	--aa-ink: #14181f;
+	--aa-muted: #6b7280;
+	--aa-accent: #6366f1;
+	--aa-accent-dark: #4f46e5;
+	--aa-accent-soft: rgba(99, 102, 241, 0.1);
+	--aa-line: rgba(20, 24, 31, 0.1);
+	--aa-success: #16a34a;
+	--aa-success-soft: rgba(22, 163, 74, 0.1);
+	--aa-danger: #dc2626;
+	--aa-danger-soft: rgba(220, 38, 38, 0.08);
+	--aa-radius-lg: 16px;
+	--aa-radius-md: 12px;
+	--aa-radius-sm: 8px;
+	--aa-shadow-sm: 0 1px 2px rgba(20, 24, 31, 0.05);
+	--aa-shadow-md: 0 8px 24px -8px rgba(20, 24, 31, 0.14);
+	--aa-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.aa-page {
+	max-width: 1240px;
+	margin: 24px 0 40px;
+	font-family: var(--aa-font);
+	color: var(--aa-ink);
+}
+
+.aa-page * {
+	box-sizing: border-box;
+}
+
+/* ---------- Header ---------- */
+.aa-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	flex-wrap: wrap;
+	margin-bottom: 24px;
+}
+
+.aa-header-text h1 {
+	font-family: var(--aa-font);
+	font-weight: 800;
+	font-size: 24px;
+	letter-spacing: -0.01em;
+	color: var(--aa-ink);
+	margin: 0 0 6px;
+	padding: 0;
+	line-height: 1.2;
+}
+
+.aa-header-text p {
+	margin: 0;
+	font-size: 14px;
+	color: var(--aa-muted);
+	max-width: 560px;
+}
+
+.aa-eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--aa-accent-dark);
+	background: var(--aa-accent-soft);
+	padding: 6px 12px;
+	border-radius: 100px;
+	margin-bottom: 12px;
+	letter-spacing: 0.01em;
+}
+
+/* ---------- Cards ---------- */
+.aa-card {
+	background: var(--aa-panel);
+	border: 1px solid var(--aa-line);
+	border-radius: var(--aa-radius-lg);
+	box-shadow: var(--aa-shadow-sm);
+	padding: 24px;
+	margin-bottom: 20px;
+}
+
+.aa-card-title {
+	font-family: var(--aa-font);
+	font-weight: 700;
+	font-size: 16px;
+	letter-spacing: -0.005em;
+	color: var(--aa-ink);
+	margin: 0 0 4px;
+}
+
+.aa-card-subtitle {
+	font-size: 13px;
+	color: var(--aa-muted);
+	margin: 0 0 16px;
+}
+
+.aa-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: 16px;
+}
+
+/* ---------- Buttons ---------- */
+.aa-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	font-family: var(--aa-font);
+	font-size: 13.5px;
+	font-weight: 600;
+	padding: 10px 20px;
+	border-radius: 100px;
+	border: 1.4px solid transparent;
+	cursor: pointer;
+	transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+	text-decoration: none;
+}
+
+.aa-btn:active {
+	transform: translateY(1px);
+}
+
+.aa-btn-primary {
+	background: var(--aa-accent);
+	color: #ffffff;
+}
+
+.aa-btn-primary:hover,
+.aa-btn-primary:focus {
+	background: var(--aa-accent-dark);
+	color: #ffffff;
+}
+
+.aa-btn-secondary {
+	background: #ffffff;
+	color: var(--aa-ink);
+	border-color: var(--aa-line);
+}
+
+.aa-btn-secondary:hover,
+.aa-btn-secondary:focus {
+	border-color: rgba(20, 24, 31, 0.28);
+	color: var(--aa-ink);
+}
+
+.aa-btn-danger {
+	background: transparent;
+	color: var(--aa-danger);
+	border-color: var(--aa-danger-soft);
+}
+
+.aa-btn-danger:hover,
+.aa-btn-danger:focus {
+	background: var(--aa-danger-soft);
+	color: var(--aa-danger);
+}
+
+.aa-btn:disabled {
+	background: #e5e7eb;
+	color: #9aa1a8;
+	border-color: transparent;
+	cursor: default;
+}
+
+/* ---------- Pills / badges / status ---------- */
+.aa-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	padding: 3px 10px;
+	border-radius: 100px;
+}
+
+.aa-pill-success {
+	color: var(--aa-success);
+	background: var(--aa-success-soft);
+}
+
+.aa-pill-muted {
+	color: var(--aa-muted);
+	background: rgba(107, 114, 128, 0.12);
+}
+
+.aa-pill-accent {
+	color: var(--aa-accent-dark);
+	background: var(--aa-accent-soft);
+}
+
+/* ---------- Form fields ---------- */
+.aa-page input[type="text"],
+.aa-page input[type="email"],
+.aa-page input[type="url"],
+.aa-page input[type="number"],
+.aa-page input[type="password"],
+.aa-page textarea,
+.aa-page select {
+	font-family: var(--aa-font);
+	border: 1.4px solid var(--aa-line);
+	border-radius: var(--aa-radius-sm);
+	padding: 9px 12px;
+	font-size: 13.5px;
+	color: var(--aa-ink);
+	background: #ffffff;
+	transition: border-color 0.15s ease;
+}
+
+.aa-page input[type="text"]:focus,
+.aa-page input[type="email"]:focus,
+.aa-page input[type="url"]:focus,
+.aa-page input[type="number"]:focus,
+.aa-page input[type="password"]:focus,
+.aa-page textarea:focus,
+.aa-page select:focus {
+	border-color: var(--aa-accent);
+	outline: none;
+	box-shadow: 0 0 0 3px var(--aa-accent-soft);
+}
+
+.aa-page label {
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var(--aa-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+}
+
+/* ---------- Progress bar ---------- */
+.aa-progress-track {
+	height: 8px;
+	background: var(--aa-line);
+	border-radius: 100px;
+	overflow: hidden;
+}
+
+.aa-progress-fill {
+	height: 100%;
+	background: var(--aa-accent);
+	border-radius: 100px;
+	transition: width 0.3s ease;
+}
+
+/* ---------- Notices ---------- */
+.aa-notice {
+	border-radius: var(--aa-radius-md);
+	padding: 14px 16px;
+	font-size: 13.5px;
+	margin-bottom: 16px;
+	border: 1px solid transparent;
+}
+
+.aa-notice-success {
+	background: var(--aa-success-soft);
+	color: #15803d;
+	border-color: rgba(22, 163, 74, 0.2);
+}
+
+.aa-notice-error {
+	background: var(--aa-danger-soft);
+	color: #b91c1c;
+	border-color: rgba(220, 38, 38, 0.2);
+}
+
+@media (max-width: 782px) {
+	.aa-grid {
+		grid-template-columns: 1fr;
+	}
+	.aa-header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}

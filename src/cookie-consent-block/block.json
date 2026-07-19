@@ -27,6 +27,7 @@
     "viewScript": "file:./view.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
+    "render": "file:./render.php",
     "attributes": {
         "blockId": {
             "type": "string",
@@ -159,7 +160,18 @@
         },
         "layoutType": {
             "type": "string",
-            "default": "bar-bottom"
+            "default": "floating-bottom-right",
+            "enum": [
+                "bar-bottom",
+                "bar-top",
+                "floating-bottom-right",
+                "floating-bottom-left",
+                "floating-top-right",
+                "floating-top-left",
+                "center-modal",
+                "slide-in-bottom",
+                "slide-in-right"
+            ]
         },
         "displayDensity": {
             "type": "string",
@@ -179,7 +191,7 @@
         },
         "maxWidth": {
             "type": "number",
-            "default": 440
+            "default": 480
         },
         "alignment": {
             "type": "string",
@@ -200,19 +212,19 @@
         },
         "backgroundColor": {
             "type": "string",
-            "default": "#ffffff"
+            "default": "#111827"
         },
         "textColor": {
             "type": "string",
-            "default": "#5f6368"
+            "default": "#f9fafb"
         },
         "headingColor": {
             "type": "string",
-            "default": "#202124"
+            "default": "#f9fafb"
         },
         "accentColor": {
             "type": "string",
-            "default": "#1a73e8"
+            "default": "#6366f1"
         },
         "primaryButtonTextColor": {
             "type": "string",
@@ -224,7 +236,7 @@
         },
         "secondaryButtonTextColor": {
             "type": "string",
-            "default": "#1a73e8"
+            "default": "#a5b4fc"
         },
         "borderColor": {
             "type": "string",
@@ -240,7 +252,7 @@
         },
         "lineHeight": {
             "type": "string",
-            "default": "1.6"
+            "default": "1.5"
         },
         "headingFontSize": {
             "type": "object",
@@ -280,7 +292,7 @@
             "type": "object",
             "default": {
                 "desktop": {
-                    "value": 28,
+                    "value": 22,
                     "unit": "px"
                 },
                 "tablet": {
@@ -295,7 +307,7 @@
         },
         "showBorder": {
             "type": "boolean",
-            "default": true
+            "default": false
         },
         "borderWidth": {
             "type": "number",
@@ -303,7 +315,7 @@
         },
         "borderRadius": {
             "type": "number",
-            "default": 10
+            "default": 14
         },
         "showShadow": {
             "type": "boolean",
@@ -311,7 +323,7 @@
         },
         "shadowIntensity": {
             "type": "string",
-            "default": "soft",
+            "default": "strong",
             "enum": [
                 "soft",
                 "medium",
@@ -320,7 +332,7 @@
         },
         "gap": {
             "type": "number",
-            "default": 14
+            "default": 12
         },
         "buttonShape": {
             "type": "string",
@@ -378,7 +390,8 @@
         },
         "reopenButtonPosition": {
             "type": "string",
-            "default": "bottom-left"
+            "default": "bottom-left",
+            "enum": [ "bottom-left", "bottom-right" ]
         },
         "reopenButtonText": {
             "type": "string",
