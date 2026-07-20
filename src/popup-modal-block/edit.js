@@ -115,6 +115,7 @@ const FREQUENCY_OPTIONS = [
     { label: __('Every page load', 'adaire-blocks'), value: 'always' },
     { label: __('Once per browser session', 'adaire-blocks'), value: 'once-per-session' },
     { label: __('Once per day', 'adaire-blocks'), value: 'once-per-day' },
+    { label: __('Once every N days (cookie)', 'adaire-blocks'), value: 'once-per-n-days' },
     { label: __('Once ever (this browser)', 'adaire-blocks'), value: 'once-ever' },
 ];
 
@@ -318,6 +319,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         boxShadowEnabled,
         backdropBlurEnabled, backdropBlurAmount,
         autoOpen, autoOpenDelay,
+        autoOpenClickSelector,
+        autoCloseEnabled, autoCloseDelay,
         overlayClickClose,
         contentPadding,
         triggerText, triggerType, floatingPosition, floatingOffsetX, floatingOffsetY,
@@ -325,7 +328,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         triggerPaddingX, triggerPaddingY, triggerFontSize, triggerFontWeight,
         modalLayout,
         autoOpenScrollPercent, autoOpenInactivitySeconds, autoOpenEventName, autoOpenElementSelector,
-        showFrequency,
+        showFrequency, frequencyDays,
         countdownEnabled, countdownMinutes,
         glassmorphismEnabled,
         overlayGradientEnabled, overlayGradientColor2,
@@ -444,7 +447,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         'data-inactivity-seconds': autoOpenInactivitySeconds ?? 30,
         'data-event-name':      autoOpenEventName   || 'adaire-modal-open',
         'data-element-selector': autoOpenElementSelector || '',
+        'data-click-selector':  autoOpenClickSelector || '',
+        'data-auto-close':      autoCloseEnabled ? 'true' : 'false',
+        'data-auto-close-delay': autoCloseDelay     ?? 5,
         'data-show-frequency':  showFrequency       || 'always',
+        'data-frequency-days':  frequencyDays       ?? 7,
         'data-overlay-close':   overlayClickClose   !== false ? 'true' : 'false',
         'data-show-close':      showCloseButton     !== false ? 'true' : 'false',
         'data-countdown-enabled': countdownEnabled ? 'true' : 'false',
@@ -559,6 +566,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             { label: __('Exit intent — cursor leaves viewport', 'adaire-blocks'), value: 'exit-intent' },
                             { label: __('Scroll depth — opens after scrolling X%', 'adaire-blocks'), value: 'scroll-depth' },
                             { label: __('Element visible — opens when an element scrolls into view', 'adaire-blocks'), value: 'element-visible' },
+                            { label: __('Element click — opens when a matching element is clicked', 'adaire-blocks'), value: 'element-click' },
                             { label: __('Inactivity — opens after the visitor stops interacting', 'adaire-blocks'), value: 'inactivity' },
                             { label: __('Custom JS event — opens when your own script fires an event', 'adaire-blocks'), value: 'custom-event' },
                         ]}
@@ -586,6 +594,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             help={__('e.g. #pricing-table or .my-section. Opens once that element scrolls into the viewport.', 'adaire-blocks')}
                             value={autoOpenElementSelector || ''}
                             onChange={(value) => setAttributes({ autoOpenElementSelector: value })}
+                        />
+                    )}
+                    {autoOpen === 'element-click' && (
+                        <TextControl
+                            label={__('CSS selector of the element(s) to click', 'adaire-blocks')}
+                            help={__('e.g. #open-popup or .js-open-modal. Clicking any matching element opens the modal — works for elements added after page load too.', 'adaire-blocks')}
+                            value={autoOpenClickSelector || ''}
+                            onChange={(value) => setAttributes({ autoOpenClickSelector: value })}
                         />
                     )}
                     {autoOpen === 'inactivity' && (
@@ -617,6 +633,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         checked={showCloseButton !== false}
                         onChange={(value) => setAttributes({ showCloseButton: value })}
                     />
+                    <ToggleControl
+                        label={__('Auto-close after a delay', 'adaire-blocks')}
+                        checked={!!autoCloseEnabled}
+                        onChange={(value) => setAttributes({ autoCloseEnabled: value })}
+                        help={__('Automatically closes the modal a set number of seconds after it opens.', 'adaire-blocks')}
+                    />
+                    {autoCloseEnabled && (
+                        <RangeControl
+                            label={__('Auto-close after (seconds)', 'adaire-blocks')}
+                            value={autoCloseDelay ?? 5}
+                            onChange={(value) => setAttributes({ autoCloseDelay: value })}
+                            min={1} max={60} step={1}
+                        />
+                    )}
                     <SelectControl
                         label={__('How often to auto-open', 'adaire-blocks')}
                         help={__('Limits automatic opening (delay, exit-intent, scroll, etc.) per visitor. Manual button clicks always work.', 'adaire-blocks')}
@@ -624,6 +654,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         options={FREQUENCY_OPTIONS}
                         onChange={(value) => setAttributes({ showFrequency: value })}
                     />
+                    {showFrequency === 'once-per-n-days' && (
+                        <RangeControl
+                            label={__('Show again after (days)', 'adaire-blocks')}
+                            value={frequencyDays ?? 7}
+                            onChange={(value) => setAttributes({ frequencyDays: value })}
+                            min={1} max={365} step={1}
+                            help={__('Uses a cookie to remember when the modal was last shown to this visitor.', 'adaire-blocks')}
+                        />
+                    )}
                 </PanelBody>
 
                 <PanelBody section="content" title={__('Countdown Timer', 'adaire-blocks')} initialOpen={false}>

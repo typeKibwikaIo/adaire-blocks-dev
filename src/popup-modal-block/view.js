@@ -28,10 +28,35 @@ const FREQUENCY_STORAGE_PREFIX = 'adaire-modal-shown-';
 
 const getFrequencyKey = (block) => FREQUENCY_STORAGE_PREFIX + (block.id || 'default');
 
+// Cookie helpers — used by the "once every N days" frequency option so the gate
+// can persist for an arbitrary, author-configured number of days.
+const getCookie = (name) => {
+    const target = name + '=';
+    const parts = document.cookie ? document.cookie.split(';') : [];
+    for (let i = 0; i < parts.length; i += 1) {
+        const c = parts[i].trim();
+        if (c.indexOf(target) === 0) return c.substring(target.length);
+    }
+    return '';
+};
+
+const setCookie = (name, value, days) => {
+    let expires = '';
+    if (days > 0) {
+        const d = new Date();
+        d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+        expires = '; expires=' + d.toUTCString();
+    }
+    document.cookie = name + '=' + value + expires + '; path=/; SameSite=Lax';
+};
+
 const shouldAutoOpen = (block) => {
     const frequency = block.dataset.showFrequency || 'always';
     if (frequency === 'always') return true;
     const key = getFrequencyKey(block);
+    if (frequency === 'once-per-n-days') {
+        return !getCookie(key);
+    }
     try {
         if (frequency === 'once-per-session') {
             return !sessionStorage.getItem(key);
@@ -54,6 +79,11 @@ const markShown = (block) => {
     const frequency = block.dataset.showFrequency || 'always';
     if (frequency === 'always') return;
     const key = getFrequencyKey(block);
+    if (frequency === 'once-per-n-days') {
+        const days = parseInt(block.dataset.frequencyDays || '7', 10) || 7;
+        setCookie(key, String(Date.now()), days);
+        return;
+    }
     try {
         if (frequency === 'once-per-session') {
             sessionStorage.setItem(key, '1');
@@ -104,6 +134,19 @@ const setupCountdown = (block) => {
     intervalId = setInterval(tick, 1000);
 };
 
+// Stop any playing media inside the modal when it closes — pause native
+// audio/video and reload iframes (YouTube/Vimeo/etc.) so they stop playing.
+const stopMedia = (container) => {
+    container.querySelectorAll('video, audio').forEach((media) => {
+        try { media.pause(); } catch (e) { /* ignore */ }
+    });
+    container.querySelectorAll('iframe').forEach((iframe) => {
+        // Resetting src to itself forces embedded players to stop.
+        const src = iframe.getAttribute('src');
+        if (src) iframe.setAttribute('src', src);
+    });
+};
+
 let openModals = 0;
 
 const setupModal = (block) => {
@@ -120,6 +163,8 @@ const setupModal = (block) => {
     const showCloseBtn      = block.dataset.showClose    !== 'false';
     const autoOpen          = block.dataset.autoOpen     || 'none';
     const autoOpenDelay     = parseFloat(block.dataset.autoOpenDelay || '0') * 1000;
+    const autoCloseEnabled  = block.dataset.autoClose    === 'true';
+    const autoCloseDelay    = parseFloat(block.dataset.autoCloseDelay || '5') * 1000;
 
     const overlay = document.createElement('div');
     overlay.className = 'adaire-popup-modal-block__overlay';
@@ -164,6 +209,7 @@ const setupModal = (block) => {
     });
 
     let previouslyFocused = null;
+    let autoCloseTimer = null;
 
     const getCloseButton = () => modal.querySelector('.adaire-popup-modal-block__close');
 
@@ -200,14 +246,22 @@ const setupModal = (block) => {
         modal.addEventListener('keydown', handleKeydown);
         modal.dataset.keydownAttached = 'true';
         modal.__handleKeydown = handleKeydown;
+
+        // Auto-close after a delay (cleared on any earlier close).
+        if (autoCloseEnabled) {
+            autoCloseTimer = setTimeout(() => closeModal(), autoCloseDelay);
+        }
     };
 
     const closeModal = () => {
         if (!block.classList.contains('is-open')) return;
 
+        if (autoCloseTimer) { clearTimeout(autoCloseTimer); autoCloseTimer = null; }
+
         block.classList.remove('is-open');
         block.dataset.modalOpen = 'false';
         modal.setAttribute('aria-hidden', 'true');
+        stopMedia(contentContainer);
         openModals = Math.max(0, openModals - 1);
         if (openModals === 0) document.body.classList.remove('adaire-modal-open');
 
@@ -309,6 +363,21 @@ const setupModal = (block) => {
             if (!shouldAutoOpen(block)) return;
             autoOpenAndMark();
         });
+    }
+
+    // External element click — clicking any element matching the selector opens
+    // the modal. Delegated on document so it also catches elements added after
+    // load. Like the trigger button, this is a manual action: never gated.
+    if (autoOpen === 'element-click') {
+        const selector = (block.dataset.clickSelector || '').trim();
+        if (selector) {
+            document.addEventListener('click', (event) => {
+                const match = event.target.closest?.(selector);
+                if (!match) return;
+                event.preventDefault();
+                openModal(event);
+            });
+        }
     }
 
     setupCountdown(block);
