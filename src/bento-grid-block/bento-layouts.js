@@ -170,5 +170,12 @@ export function makeDefaultCard(index) {
     return {
         title: `Card ${index + 1}`,
         description: 'Add a short description for this card.',
+        backgroundImageId: 0,
+        backgroundImageUrl: '',
+        backgroundImageAlt: '',
+        overlayType: 'none',
+        overlayColor: '#000000',
+        overlayOpacity: 0.5,
+        overlayGradient: '',
     };
 }
