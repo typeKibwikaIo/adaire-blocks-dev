@@ -33,19 +33,47 @@
             "default": [
                 {
                     "title": "Fulfilling work",
-                    "description": "Build cutting-edge tech with great client partners and team members. Solve complex problems in an environment where you have the freedom to optimize for possibilities."
+                    "description": "Build cutting-edge tech with great client partners and team members. Solve complex problems in an environment where you have the freedom to optimize for possibilities.",
+                    "backgroundImageId": 0,
+                    "backgroundImageUrl": "",
+                    "backgroundImageAlt": "",
+                    "overlayType": "none",
+                    "overlayColor": "#000000",
+                    "overlayOpacity": 0.5,
+                    "overlayGradient": ""
                 },
                 {
                     "title": "Remote from the start",
-                    "description": "Since the beginning we've been an office-less company so you can be as ambitious in your professional life as you are in your personal life."
+                    "description": "Since the beginning we've been an office-less company so you can be as ambitious in your professional life as you are in your personal life.",
+                    "backgroundImageId": 0,
+                    "backgroundImageUrl": "",
+                    "backgroundImageAlt": "",
+                    "overlayType": "none",
+                    "overlayColor": "#000000",
+                    "overlayOpacity": 0.5,
+                    "overlayGradient": ""
                 },
                 {
                     "title": "Dedicated teams",
-                    "description": "Brain space for one problem set at a time, no burdensome time sheets. High expectations for your professionalism, but total trust in you."
+                    "description": "Brain space for one problem set at a time, no burdensome time sheets. High expectations for your professionalism, but total trust in you.",
+                    "backgroundImageId": 0,
+                    "backgroundImageUrl": "",
+                    "backgroundImageAlt": "",
+                    "overlayType": "none",
+                    "overlayColor": "#000000",
+                    "overlayOpacity": 0.5,
+                    "overlayGradient": ""
                 },
                 {
                     "title": "Diverse",
-                    "description": "We foster a culture of diversity and inclusion, valuing unique perspectives and empowering everyone to thrive and contribute fully."
+                    "description": "We foster a culture of diversity and inclusion, valuing unique perspectives and empowering everyone to thrive and contribute fully.",
+                    "backgroundImageId": 0,
+                    "backgroundImageUrl": "",
+                    "backgroundImageAlt": "",
+                    "overlayType": "none",
+                    "overlayColor": "#000000",
+                    "overlayOpacity": 0.5,
+                    "overlayGradient": ""
                 }
             ]
         },
@@ -196,19 +224,7 @@
                     "bottom": "60px",
                     "left": "40px"
                 },
-                "smallLaptop": {
-                    "top": "80px",
-                    "right": "60px",
-                    "bottom": "80px",
-                    "left": "60px"
-                },
                 "desktop": {
-                    "top": "100px",
-                    "right": "80px",
-                    "bottom": "100px",
-                    "left": "80px"
-                },
-                "bigDesktop": {
                     "top": "100px",
                     "right": "80px",
                     "bottom": "100px",
@@ -227,15 +243,7 @@
                     "value": 100,
                     "unit": "%"
                 },
-                "smallLaptop": {
-                    "value": 1200,
-                    "unit": "px"
-                },
                 "desktop": {
-                    "value": 1400,
-                    "unit": "px"
-                },
-                "bigDesktop": {
                     "value": 1400,
                     "unit": "px"
                 }
@@ -246,9 +254,7 @@
             "default": {
                 "mobile": "24px",
                 "tablet": "28px",
-                "smallLaptop": "32px",
-                "desktop": "36px",
-                "bigDesktop": "36px"
+                "desktop": "36px"
             }
         },
         "responsiveMainTitleFontWeight": {
@@ -256,9 +262,7 @@
             "default": {
                 "mobile": "600",
                 "tablet": "600",
-                "smallLaptop": "600",
-                "desktop": "600",
-                "bigDesktop": "600"
+                "desktop": "600"
             }
         },
         "responsiveMainTitleLineHeight": {
@@ -266,9 +270,7 @@
             "default": {
                 "mobile": "1.2",
                 "tablet": "1.2",
-                "smallLaptop": "1.2",
-                "desktop": "1.2",
-                "bigDesktop": "1.2"
+                "desktop": "1.2"
             }
         },
         "responsiveMainTitleColor": {
@@ -276,9 +278,7 @@
             "default": {
                 "mobile": "#111827",
                 "tablet": "#111827",
-                "smallLaptop": "#111827",
-                "desktop": "#111827",
-                "bigDesktop": "#111827"
+                "desktop": "#111827"
             }
         },
         "responsiveItemTitleFontSize": {
@@ -286,9 +286,7 @@
             "default": {
                 "mobile": "18px",
                 "tablet": "20px",
-                "smallLaptop": "22px",
-                "desktop": "24px",
-                "bigDesktop": "24px"
+                "desktop": "24px"
             }
         },
         "responsiveItemTitleFontWeight": {
@@ -296,9 +294,7 @@
             "default": {
                 "mobile": "600",
                 "tablet": "600",
-                "smallLaptop": "600",
-                "desktop": "600",
-                "bigDesktop": "600"
+                "desktop": "600"
             }
         },
         "responsiveItemTitleLineHeight": {
@@ -306,9 +302,7 @@
             "default": {
                 "mobile": "1.3",
                 "tablet": "1.3",
-                "smallLaptop": "1.3",
-                "desktop": "1.3",
-                "bigDesktop": "1.3"
+                "desktop": "1.3"
             }
         },
         "responsiveItemTitleColor": {
@@ -316,9 +310,7 @@
             "default": {
                 "mobile": "#111827",
                 "tablet": "#111827",
-                "smallLaptop": "#111827",
-                "desktop": "#111827",
-                "bigDesktop": "#111827"
+                "desktop": "#111827"
             }
         },
         "responsiveItemDescriptionFontSize": {
@@ -326,9 +318,7 @@
             "default": {
                 "mobile": "14px",
                 "tablet": "15px",
-                "smallLaptop": "16px",
-                "desktop": "16px",
-                "bigDesktop": "16px"
+                "desktop": "16px"
             }
         },
         "responsiveItemDescriptionFontWeight": {
@@ -336,9 +326,7 @@
             "default": {
                 "mobile": "400",
                 "tablet": "400",
-                "smallLaptop": "400",
-                "desktop": "400",
-                "bigDesktop": "400"
+                "desktop": "400"
             }
         },
         "responsiveItemDescriptionLineHeight": {
@@ -346,9 +334,7 @@
             "default": {
                 "mobile": "1.5",
                 "tablet": "1.5",
-                "smallLaptop": "1.5",
-                "desktop": "1.5",
-                "bigDesktop": "1.5"
+                "desktop": "1.5"
             }
         },
         "responsiveItemDescriptionColor": {
@@ -356,9 +342,7 @@
             "default": {
                 "mobile": "#4b5563",
                 "tablet": "#4b5563",
-                "smallLaptop": "#4b5563",
-                "desktop": "#4b5563",
-                "bigDesktop": "#4b5563"
+                "desktop": "#4b5563"
             }
         },
         "responsiveCardPadding": {
@@ -376,19 +360,7 @@
                     "bottom": "40px",
                     "left": "30px"
                 },
-                "smallLaptop": {
-                    "top": "50px",
-                    "right": "40px",
-                    "bottom": "50px",
-                    "left": "40px"
-                },
                 "desktop": {
-                    "top": "60px",
-                    "right": "50px",
-                    "bottom": "60px",
-                    "left": "50px"
-                },
-                "bigDesktop": {
                     "top": "60px",
                     "right": "50px",
                     "bottom": "60px",
@@ -429,9 +401,7 @@
             "default": {
                 "mobile": "0px",
                 "tablet": "0px",
-                "smallLaptop": "400px",
-                "desktop": "500px",
-                "bigDesktop": "500px"
+                "desktop": "500px"
             }
         },
         "responsiveSvgIconTransform": {
@@ -439,9 +409,7 @@
             "default": {
                 "mobile": "none",
                 "tablet": "none",
-                "smallLaptop": "translateY(-50%)",
-                "desktop": "translateY(-50%)",
-                "bigDesktop": "translateY(-50%)"
+                "desktop": "translateY(-50%)"
             }
         },
         "responsiveSvgIconVerticalOffset": {
@@ -449,9 +417,7 @@
             "default": {
                 "mobile": "0px",
                 "tablet": "0px",
-                "smallLaptop": "0px",
-                "desktop": "0px",
-                "bigDesktop": "0px"
+                "desktop": "0px"
             }
         },
         "responsiveSvgIconHorizontalOffset": {
@@ -459,9 +425,7 @@
             "default": {
                 "mobile": "0px",
                 "tablet": "0px",
-                "smallLaptop": "0px",
-                "desktop": "0px",
-                "bigDesktop": "0px"
+                "desktop": "0px"
             }
         }
     },

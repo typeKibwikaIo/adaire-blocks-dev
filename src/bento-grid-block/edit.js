@@ -1,12 +1,15 @@
 ﻿import { __ } from '@wordpress/i18n';
 import {
     useBlockProps,
-    InspectorControls,
     PanelColorSettings,
     RichText,
+    MediaUpload,
+    MediaUploadCheck,
+    GradientPicker,
 } from '@wordpress/block-editor';
 import {
     PanelBody,
+    BaseControl,
     TextControl,
     TextareaControl,
     RangeControl,
@@ -17,73 +20,12 @@ import {
     __experimentalUnitControl as UnitControl,
     __experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
-import { useState, useEffect, createElement, useCallback, useRef } from '@wordpress/element';
-import { desktop, tablet, mobile } from '@wordpress/icons';
+import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { BENTO_LAYOUTS, getBentoLayout, makeDefaultCard } from './bento-layouts';
 import BentoPresetIcon from './BentoPresetIcon';
-
-// Custom icons for small laptop and big desktop (copied from other blocks for consistency)
-const smallLaptopIcon = createElement('svg', {
-    width: 24,
-    height: 24,
-    viewBox: '0 0 24 24',
-    fill: 'none',
-    xmlns: 'http://www.w3.org/2000/svg',
-},
-    createElement('path', {
-        d: 'M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V15C20 16.1046 19.1046 17 18 17H6C4.89543 17 4 16.1046 4 15V6Z',
-        stroke: 'currentColor',
-        strokeWidth: '1.5',
-        fill: 'none',
-    }),
-    createElement('path', {
-        d: 'M2 19H22',
-        stroke: 'currentColor',
-        strokeWidth: '1.5',
-        strokeLinecap: 'round',
-    }),
-);
-
-const bigDesktopIcon = createElement('svg', {
-    width: 24,
-    height: 24,
-    viewBox: '0 0 24 24',
-    fill: 'none',
-    xmlns: 'http://www.w3.org/2000/svg',
-},
-    createElement('rect', {
-        x: '3',
-        y: '4',
-        width: '18',
-        height: '12',
-        rx: '1',
-        stroke: 'currentColor',
-        strokeWidth: '1.5',
-        fill: 'none',
-    }),
-    createElement('path', {
-        d: 'M8 20H16',
-        stroke: 'currentColor',
-        strokeWidth: '1.5',
-        strokeLinecap: 'round',
-    }),
-    createElement('rect', {
-        x: '10',
-        y: '20',
-        width: '4',
-        height: '2',
-        rx: '0.5',
-        fill: 'currentColor',
-    }),
-);
-
-const BREAKPOINTS = [
-    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
-    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
-    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
-    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks') },
-];
+import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher, { THREE_TIERS } from '../components/DeviceSwitcher';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 // Helper components moved outside Edit to prevent focus loss
 const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, label, fontSizeAttr, fontWeightAttr, lineHeightAttr, colorAttr }) => (
@@ -174,6 +116,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     } = attributes;
 
     const [deviceType, setDeviceType] = useState('desktop');
+    const [expandedCard, setExpandedCard] = useState(null);
 
     const CONTAINER_MODES = [
         { label: __('Full Width', 'adaire-blocks'), value: 'full' },
@@ -208,6 +151,11 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     const updateCard = (index, field, value) => {
         const next = cards.map((card, i) => (i === index ? { ...card, [field]: value } : card));
+        setAttributes({ cards: next });
+    };
+
+    const updateCardFields = (index, patch) => {
+        const next = cards.map((card, i) => (i === index ? { ...card, ...patch } : card));
         setAttributes({ cards: next });
     };
 
@@ -271,68 +219,44 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             // Title typography
             '--infogrid4-title-font-size-mobile': responsiveMainTitleFontSize?.mobile,
             '--infogrid4-title-font-size-tablet': responsiveMainTitleFontSize?.tablet,
-            '--infogrid4-title-font-size-small-laptop': responsiveMainTitleFontSize?.smallLaptop,
             '--infogrid4-title-font-size-desktop': responsiveMainTitleFontSize?.desktop,
-            '--infogrid4-title-font-size-big-desktop': responsiveMainTitleFontSize?.bigDesktop,
             '--infogrid4-title-font-weight-mobile': responsiveMainTitleFontWeight?.mobile,
             '--infogrid4-title-font-weight-tablet': responsiveMainTitleFontWeight?.tablet,
-            '--infogrid4-title-font-weight-small-laptop': responsiveMainTitleFontWeight?.smallLaptop,
             '--infogrid4-title-font-weight-desktop': responsiveMainTitleFontWeight?.desktop,
-            '--infogrid4-title-font-weight-big-desktop': responsiveMainTitleFontWeight?.bigDesktop,
             '--infogrid4-title-line-height-mobile': responsiveMainTitleLineHeight?.mobile,
             '--infogrid4-title-line-height-tablet': responsiveMainTitleLineHeight?.tablet,
-            '--infogrid4-title-line-height-small-laptop': responsiveMainTitleLineHeight?.smallLaptop,
             '--infogrid4-title-line-height-desktop': responsiveMainTitleLineHeight?.desktop,
-            '--infogrid4-title-line-height-big-desktop': responsiveMainTitleLineHeight?.bigDesktop,
             '--infogrid4-title-color-mobile': responsiveMainTitleColor?.mobile,
             '--infogrid4-title-color-tablet': responsiveMainTitleColor?.tablet,
-            '--infogrid4-title-color-small-laptop': responsiveMainTitleColor?.smallLaptop,
             '--infogrid4-title-color-desktop': responsiveMainTitleColor?.desktop,
-            '--infogrid4-title-color-big-desktop': responsiveMainTitleColor?.bigDesktop,
 
             // Item title typography
             '--infogrid4-item-title-font-size-mobile': responsiveItemTitleFontSize?.mobile,
             '--infogrid4-item-title-font-size-tablet': responsiveItemTitleFontSize?.tablet,
-            '--infogrid4-item-title-font-size-small-laptop': responsiveItemTitleFontSize?.smallLaptop,
             '--infogrid4-item-title-font-size-desktop': responsiveItemTitleFontSize?.desktop,
-            '--infogrid4-item-title-font-size-big-desktop': responsiveItemTitleFontSize?.bigDesktop,
             '--infogrid4-item-title-font-weight-mobile': responsiveItemTitleFontWeight?.mobile,
             '--infogrid4-item-title-font-weight-tablet': responsiveItemTitleFontWeight?.tablet,
-            '--infogrid4-item-title-font-weight-small-laptop': responsiveItemTitleFontWeight?.smallLaptop,
             '--infogrid4-item-title-font-weight-desktop': responsiveItemTitleFontWeight?.desktop,
-            '--infogrid4-item-title-font-weight-big-desktop': responsiveItemTitleFontWeight?.bigDesktop,
             '--infogrid4-item-title-line-height-mobile': responsiveItemTitleLineHeight?.mobile,
             '--infogrid4-item-title-line-height-tablet': responsiveItemTitleLineHeight?.tablet,
-            '--infogrid4-item-title-line-height-small-laptop': responsiveItemTitleLineHeight?.smallLaptop,
             '--infogrid4-item-title-line-height-desktop': responsiveItemTitleLineHeight?.desktop,
-            '--infogrid4-item-title-line-height-big-desktop': responsiveItemTitleLineHeight?.bigDesktop,
             '--infogrid4-item-title-color-mobile': responsiveItemTitleColor?.mobile,
             '--infogrid4-item-title-color-tablet': responsiveItemTitleColor?.tablet,
-            '--infogrid4-item-title-color-small-laptop': responsiveItemTitleColor?.smallLaptop,
             '--infogrid4-item-title-color-desktop': responsiveItemTitleColor?.desktop,
-            '--infogrid4-item-title-color-big-desktop': responsiveItemTitleColor?.bigDesktop,
 
             // Item description typography
             '--infogrid4-item-text-font-size-mobile': responsiveItemDescriptionFontSize?.mobile,
             '--infogrid4-item-text-font-size-tablet': responsiveItemDescriptionFontSize?.tablet,
-            '--infogrid4-item-text-font-size-small-laptop': responsiveItemDescriptionFontSize?.smallLaptop,
             '--infogrid4-item-text-font-size-desktop': responsiveItemDescriptionFontSize?.desktop,
-            '--infogrid4-item-text-font-size-big-desktop': responsiveItemDescriptionFontSize?.bigDesktop,
             '--infogrid4-item-text-font-weight-mobile': responsiveItemDescriptionFontWeight?.mobile,
             '--infogrid4-item-text-font-weight-tablet': responsiveItemDescriptionFontWeight?.tablet,
-            '--infogrid4-item-text-font-weight-small-laptop': responsiveItemDescriptionFontWeight?.smallLaptop,
             '--infogrid4-item-text-font-weight-desktop': responsiveItemDescriptionFontWeight?.desktop,
-            '--infogrid4-item-text-font-weight-big-desktop': responsiveItemDescriptionFontWeight?.bigDesktop,
             '--infogrid4-item-text-line-height-mobile': responsiveItemDescriptionLineHeight?.mobile,
             '--infogrid4-item-text-line-height-tablet': responsiveItemDescriptionLineHeight?.tablet,
-            '--infogrid4-item-text-line-height-small-laptop': responsiveItemDescriptionLineHeight?.smallLaptop,
             '--infogrid4-item-text-line-height-desktop': responsiveItemDescriptionLineHeight?.desktop,
-            '--infogrid4-item-text-line-height-big-desktop': responsiveItemDescriptionLineHeight?.bigDesktop,
             '--infogrid4-item-text-color-mobile': responsiveItemDescriptionColor?.mobile,
             '--infogrid4-item-text-color-tablet': responsiveItemDescriptionColor?.tablet,
-            '--infogrid4-item-text-color-small-laptop': responsiveItemDescriptionColor?.smallLaptop,
             '--infogrid4-item-text-color-desktop': responsiveItemDescriptionColor?.desktop,
-            '--infogrid4-item-text-color-big-desktop': responsiveItemDescriptionColor?.bigDesktop,
 
             // Container padding
             '--infogrid4-padding-top-mobile': responsivePadding?.mobile?.top || '40px',
@@ -343,24 +267,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             '--infogrid4-padding-right-tablet': responsivePadding?.tablet?.right || '40px',
             '--infogrid4-padding-bottom-tablet': responsivePadding?.tablet?.bottom || '60px',
             '--infogrid4-padding-left-tablet': responsivePadding?.tablet?.left || '40px',
-            '--infogrid4-padding-top-small-laptop': responsivePadding?.smallLaptop?.top || '80px',
-            '--infogrid4-padding-right-small-laptop': responsivePadding?.smallLaptop?.right || '60px',
-            '--infogrid4-padding-bottom-small-laptop': responsivePadding?.smallLaptop?.bottom || '80px',
-            '--infogrid4-padding-left-small-laptop': responsivePadding?.smallLaptop?.left || '60px',
             '--infogrid4-padding-top-desktop': responsivePadding?.desktop?.top || '100px',
             '--infogrid4-padding-right-desktop': responsivePadding?.desktop?.right || '80px',
             '--infogrid4-padding-bottom-desktop': responsivePadding?.desktop?.bottom || '100px',
             '--infogrid4-padding-left-desktop': responsivePadding?.desktop?.left || '80px',
-            '--infogrid4-padding-top-big-desktop': responsivePadding?.bigDesktop?.top || '100px',
-            '--infogrid4-padding-right-big-desktop': responsivePadding?.bigDesktop?.right || '80px',
-            '--infogrid4-padding-bottom-big-desktop': responsivePadding?.bigDesktop?.bottom || '100px',
-            '--infogrid4-padding-left-big-desktop': responsivePadding?.bigDesktop?.left || '80px',
             // Max width
             '--infogrid4-container-max-width-mobile': formatDimensionValue(responsiveMaxWidth?.mobile, 100, '%'),
             '--infogrid4-container-max-width-tablet': formatDimensionValue(responsiveMaxWidth?.tablet, 100, '%'),
-            '--infogrid4-container-max-width-small-laptop': formatDimensionValue(responsiveMaxWidth?.smallLaptop, 1200, 'px'),
             '--infogrid4-container-max-width-desktop': formatDimensionValue(responsiveMaxWidth?.desktop, 1400, 'px'),
-            '--infogrid4-container-max-width-big-desktop': formatDimensionValue(responsiveMaxWidth?.bigDesktop, 1400, 'px'),
             // Card padding
             '--infogrid4-card-padding-top-mobile': responsiveCardPadding?.mobile?.top || '30px',
             '--infogrid4-card-padding-right-mobile': responsiveCardPadding?.mobile?.right || '20px',
@@ -370,40 +284,24 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             '--infogrid4-card-padding-right-tablet': responsiveCardPadding?.tablet?.right || '30px',
             '--infogrid4-card-padding-bottom-tablet': responsiveCardPadding?.tablet?.bottom || '40px',
             '--infogrid4-card-padding-left-tablet': responsiveCardPadding?.tablet?.left || '30px',
-            '--infogrid4-card-padding-top-small-laptop': responsiveCardPadding?.smallLaptop?.top || '50px',
-            '--infogrid4-card-padding-right-small-laptop': responsiveCardPadding?.smallLaptop?.right || '40px',
-            '--infogrid4-card-padding-bottom-small-laptop': responsiveCardPadding?.smallLaptop?.bottom || '50px',
-            '--infogrid4-card-padding-left-small-laptop': responsiveCardPadding?.smallLaptop?.left || '40px',
             '--infogrid4-card-padding-top-desktop': responsiveCardPadding?.desktop?.top || '60px',
             '--infogrid4-card-padding-right-desktop': responsiveCardPadding?.desktop?.right || '50px',
             '--infogrid4-card-padding-bottom-desktop': responsiveCardPadding?.desktop?.bottom || '60px',
             '--infogrid4-card-padding-left-desktop': responsiveCardPadding?.desktop?.left || '50px',
-            '--infogrid4-card-padding-top-big-desktop': responsiveCardPadding?.bigDesktop?.top || '60px',
-            '--infogrid4-card-padding-right-big-desktop': responsiveCardPadding?.bigDesktop?.right || '50px',
-            '--infogrid4-card-padding-bottom-big-desktop': responsiveCardPadding?.bigDesktop?.bottom || '60px',
-            '--infogrid4-card-padding-left-big-desktop': responsiveCardPadding?.bigDesktop?.left || '50px',
             // SVG icon
             '--infogrid4-svg-color': svgIconColor || '#d1d5db',
             '--infogrid4-svg-width-mobile': responsiveSvgIconWidth?.mobile || '0px',
             '--infogrid4-svg-width-tablet': responsiveSvgIconWidth?.tablet || '0px',
-            '--infogrid4-svg-width-small-laptop': responsiveSvgIconWidth?.smallLaptop || '400px',
             '--infogrid4-svg-width-desktop': responsiveSvgIconWidth?.desktop || '500px',
-            '--infogrid4-svg-width-big-desktop': responsiveSvgIconWidth?.bigDesktop || '500px',
             '--infogrid4-svg-transform-mobile': responsiveSvgIconTransform?.mobile || 'none',
             '--infogrid4-svg-transform-tablet': responsiveSvgIconTransform?.tablet || 'none',
-            '--infogrid4-svg-transform-small-laptop': responsiveSvgIconTransform?.smallLaptop || 'translateY(-50%)',
             '--infogrid4-svg-transform-desktop': responsiveSvgIconTransform?.desktop || 'translateY(-50%)',
-            '--infogrid4-svg-transform-big-desktop': responsiveSvgIconTransform?.bigDesktop || 'translateY(-50%)',
             '--infogrid4-svg-vertical-offset-mobile': responsiveSvgIconVerticalOffset?.mobile || '0px',
             '--infogrid4-svg-vertical-offset-tablet': responsiveSvgIconVerticalOffset?.tablet || '0px',
-            '--infogrid4-svg-vertical-offset-small-laptop': responsiveSvgIconVerticalOffset?.smallLaptop || '0px',
             '--infogrid4-svg-vertical-offset-desktop': responsiveSvgIconVerticalOffset?.desktop || '0px',
-            '--infogrid4-svg-vertical-offset-big-desktop': responsiveSvgIconVerticalOffset?.bigDesktop || '0px',
             '--infogrid4-svg-horizontal-offset-mobile': responsiveSvgIconHorizontalOffset?.mobile || '0px',
             '--infogrid4-svg-horizontal-offset-tablet': responsiveSvgIconHorizontalOffset?.tablet || '0px',
-            '--infogrid4-svg-horizontal-offset-small-laptop': responsiveSvgIconHorizontalOffset?.smallLaptop || '0px',
             '--infogrid4-svg-horizontal-offset-desktop': responsiveSvgIconHorizontalOffset?.desktop || '0px',
-            '--infogrid4-svg-horizontal-offset-big-desktop': responsiveSvgIconHorizontalOffset?.bigDesktop || '0px',
             '--infogrid4-svg-position': svgIconPosition || 'right',
             '--infogrid4-svg-vertical-position': svgIconVerticalPosition || 'top',
         },
@@ -418,89 +316,167 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
     return (
         <>
-            <InspectorControls>
-                <div className="adaire-device-toggle">
-                    <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks')}</p>
-                    <div className="adaire-device-toggle-group">
-                        {BREAKPOINTS.map((bp) => (
-                            <Button
-                                key={bp.name}
-                                isPrimary={deviceType === bp.name}
-                                onClick={() => setDeviceType(bp.name)}
-                                icon={bp.icon}
-                            >
-                                <span>{bp.label}</span>
-                            </Button>
-                        ))}
-                    </div>
-                    <p className="adaire-device-toggle-status">
-                        {__('Configuring:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
-                    </p>
-                </div>
+            <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
+                <PanelBody section="layout" title={__('Responsive Settings', 'adaire-blocks')} initialOpen={true}>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        label={__('Device Preview', 'adaire-blocks')}
+                        tiers={THREE_TIERS}
+                    />
+                </PanelBody>
 
-                <PanelBody title={__('Content', 'adaire-blocks')} initialOpen={true}>
+                <PanelBody section="content" title={__('Content', 'adaire-blocks')} initialOpen={true}>
                     <TextControl
                         label={__('Main Title', 'adaire-blocks')}
                         value={mainTitle}
                         onChange={(value) => setAttributes({ mainTitle: value })}
                     />
-                    {cards.map((card, index) => (
-                        <div
-                            key={index}
-                            className="adaire-bento-card-fields"
-                            style={{ borderTop: '1px solid #eee', paddingTop: '12px', marginTop: '12px' }}
-                        >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <strong>{__('Card', 'adaire-blocks')} {index + 1}</strong>
-                                <Button
-                                    icon="trash"
-                                    label={__('Remove Card', 'adaire-blocks')}
-                                    isDestructive
-                                    isSmall
-                                    disabled={cards.length <= 1}
-                                    onClick={() => removeCard(index)}
-                                />
+                    {cards.map((card, index) => {
+                        const isExpanded = expandedCard === index;
+                        return (
+                            <div
+                                key={index}
+                                className="adaire-bento-card-fields"
+                                style={{ border: '1px solid #ddd', borderRadius: '4px', marginTop: '12px', overflow: 'hidden' }}
+                            >
+                                <div
+                                    role="button"
+                                    tabIndex={0}
+                                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', padding: '10px 12px', backgroundColor: '#f7f7f7', cursor: 'pointer' }}
+                                    onClick={() => setExpandedCard(isExpanded ? null : index)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            setExpandedCard(isExpanded ? null : index);
+                                        }
+                                    }}
+                                >
+                                    <strong style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                        {index + 1}. {card.title || __('Untitled', 'adaire-blocks')}
+                                    </strong>
+                                    <Button
+                                        icon="trash"
+                                        label={__('Remove Card', 'adaire-blocks')}
+                                        isDestructive
+                                        isSmall
+                                        disabled={cards.length <= 1}
+                                        onClick={(e) => { e.stopPropagation(); removeCard(index); }}
+                                    />
+                                    <span aria-hidden="true" style={{ fontSize: '11px', color: '#666' }}>
+                                        {isExpanded ? '▼' : '▶'}
+                                    </span>
+                                </div>
+
+                                {isExpanded && (
+                                    <div style={{ padding: '12px' }}>
+                                        <TextareaControl
+                                            label={__('Title', 'adaire-blocks')}
+                                            value={card.title}
+                                            onChange={(value) => updateCard(index, 'title', value)}
+                                        />
+                                        <TextareaControl
+                                            label={__('Description', 'adaire-blocks')}
+                                            value={card.description}
+                                            onChange={(value) => updateCard(index, 'description', value)}
+                                        />
+
+                                        <BaseControl label={__('Card Background Image', 'adaire-blocks')} style={{ marginTop: '8px' }}>
+                                            <MediaUploadCheck>
+                                                <MediaUpload
+                                                    onSelect={(media) => updateCardFields(index, {
+                                                        backgroundImageId: media.id,
+                                                        backgroundImageUrl: media.url,
+                                                        backgroundImageAlt: media.alt || '',
+                                                    })}
+                                                    allowedTypes={['image']}
+                                                    value={card.backgroundImageId}
+                                                    render={({ open }) => (
+                                                        <Button
+                                                            onClick={open}
+                                                            variant="secondary"
+                                                            style={{ width: '100%', height: card.backgroundImageUrl ? '80px' : 'auto', padding: card.backgroundImageUrl ? 0 : undefined, overflow: 'hidden' }}
+                                                        >
+                                                            {card.backgroundImageUrl ? (
+                                                                <img
+                                                                    src={card.backgroundImageUrl}
+                                                                    alt=""
+                                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                                />
+                                                            ) : (
+                                                                __('Select Background Image', 'adaire-blocks')
+                                                            )}
+                                                        </Button>
+                                                    )}
+                                                />
+                                            </MediaUploadCheck>
+                                            {card.backgroundImageUrl && (
+                                                <Button
+                                                    onClick={() => updateCardFields(index, {
+                                                        backgroundImageId: 0,
+                                                        backgroundImageUrl: '',
+                                                        backgroundImageAlt: '',
+                                                    })}
+                                                    isDestructive
+                                                    isSmall
+                                                    variant="link"
+                                                >
+                                                    {__('Remove Image', 'adaire-blocks')}
+                                                </Button>
+                                            )}
+                                        </BaseControl>
+
+                                        {card.backgroundImageUrl && (
+                                            <>
+                                                <SelectControl
+                                                    label={__('Overlay', 'adaire-blocks')}
+                                                    value={card.overlayType || 'none'}
+                                                    options={[
+                                                        { label: __('None', 'adaire-blocks'), value: 'none' },
+                                                        { label: __('Solid Color', 'adaire-blocks'), value: 'solid' },
+                                                        { label: __('Gradient', 'adaire-blocks'), value: 'gradient' },
+                                                    ]}
+                                                    onChange={(value) => updateCard(index, 'overlayType', value)}
+                                                />
+                                                {card.overlayType === 'solid' && (
+                                                    <>
+                                                        <BaseControl label={__('Overlay Color', 'adaire-blocks')}>
+                                                            <BoundColorPalette
+                                                                value={card.overlayColor}
+                                                                onChange={(value) => updateCard(index, 'overlayColor', value || '#000000')}
+                                                            />
+                                                        </BaseControl>
+                                                        <RangeControl
+                                                            label={__('Overlay Opacity', 'adaire-blocks')}
+                                                            value={card.overlayOpacity ?? 0.5}
+                                                            onChange={(value) => updateCard(index, 'overlayOpacity', value)}
+                                                            min={0}
+                                                            max={1}
+                                                            step={0.1}
+                                                        />
+                                                    </>
+                                                )}
+                                                {card.overlayType === 'gradient' && (
+                                                    <BaseControl label={__('Overlay Gradient', 'adaire-blocks')}>
+                                                        <GradientPicker
+                                                            value={card.overlayGradient}
+                                                            onChange={(value) => updateCard(index, 'overlayGradient', value || '')}
+                                                        />
+                                                    </BaseControl>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                )}
                             </div>
-                            <TextareaControl
-                                label={__('Title', 'adaire-blocks')}
-                                value={card.title}
-                                onChange={(value) => updateCard(index, 'title', value)}
-                            />
-                            <TextareaControl
-                                label={__('Description', 'adaire-blocks')}
-                                value={card.description}
-                                onChange={(value) => updateCard(index, 'description', value)}
-                            />
-                        </div>
-                    ))}
+                        );
+                    })}
                     <Button variant="secondary" icon="plus" onClick={addCard} style={{ marginTop: '8px' }}>
                         {__('Add Card', 'adaire-blocks')}
                     </Button>
                 </PanelBody>
 
-                <PanelColorSettings
-                    title={__('Colors', 'adaire-blocks')}
-                    initialOpen={false}
-                    colorSettings={[
-                        {
-                            value: backgroundColor,
-                            onChange: (value) => setAttributes({ backgroundColor: value }),
-                            label: __('Background', 'adaire-blocks'),
-                        },
-                        {
-                            value: cardBackgroundColor,
-                            onChange: (value) => setAttributes({ cardBackgroundColor: value }),
-                            label: __('Card Background', 'adaire-blocks'),
-                        },
-                        {
-                            value: gridBorderColor,
-                            onChange: (value) => setAttributes({ gridBorderColor: value }),
-                            label: __('Grid Border', 'adaire-blocks'),
-                        }
-                    ].filter(Boolean)}
-                />
-
-                <PanelBody title={__('Layout Settings', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Layout Settings', 'adaire-blocks')} initialOpen={false}>
                     <p>{__('Grid Layout', 'adaire-blocks')}</p>
                     <div className="adaire-bento-preset-grid" style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '16px' }}>
                         {BENTO_LAYOUTS.map((layout) => (
@@ -573,19 +549,33 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             </ButtonGroup>
                         </div>
                     </div>
+                </PanelBody>
 
-                    <BoxControl
-                        label={__('Padding (Outer)', 'adaire-blocks')}
-                        values={attributes.responsivePadding?.[deviceType] || {}}
-                        onChange={(value) => updateResponsive('responsivePadding', deviceType, value)}
-                    />
+                <PanelColorSettings
+                    section="style"
+                    priority="high"
+                    title={__('Colors', 'adaire-blocks')}
+                    initialOpen={false}
+                    colorSettings={[
+                        {
+                            value: backgroundColor,
+                            onChange: (value) => setAttributes({ backgroundColor: value }),
+                            label: __('Background', 'adaire-blocks'),
+                        },
+                        {
+                            value: cardBackgroundColor,
+                            onChange: (value) => setAttributes({ cardBackgroundColor: value }),
+                            label: __('Card Background', 'adaire-blocks'),
+                        },
+                        {
+                            value: gridBorderColor,
+                            onChange: (value) => setAttributes({ gridBorderColor: value }),
+                            label: __('Grid Border', 'adaire-blocks'),
+                        }
+                    ].filter(Boolean)}
+                />
 
-                    <BoxControl
-                        label={__('Card Padding', 'adaire-blocks')}
-                        values={attributes.responsiveCardPadding?.[deviceType] || {}}
-                        onChange={(value) => updateResponsive('responsiveCardPadding', deviceType, value)}
-                    />
-
+                <PanelBody section="style" priority="high" title={__('Card & Border Style', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
                         label={__('Card Border Radius', 'adaire-blocks')}
                         value={cardBorderRadius}
@@ -600,13 +590,6 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         min={0}
                         max={4}
                     />
-                    <RangeControl
-                        label={__('Grid Gap', 'adaire-blocks')}
-                        value={gridGap}
-                        onChange={(value) => setAttributes({ gridGap: value })}
-                        min={0}
-                        max={64}
-                    />
                     <ToggleControl
                         label={__('Card Shadow', 'adaire-blocks')}
                         checked={cardShadow}
@@ -614,7 +597,29 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Typography Settings', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Spacing', 'adaire-blocks')} initialOpen={false}>
+                    <BoxControl
+                        label={__('Padding (Outer)', 'adaire-blocks')}
+                        values={attributes.responsivePadding?.[deviceType] || {}}
+                        onChange={(value) => updateResponsive('responsivePadding', deviceType, value)}
+                    />
+
+                    <BoxControl
+                        label={__('Card Padding', 'adaire-blocks')}
+                        values={attributes.responsiveCardPadding?.[deviceType] || {}}
+                        onChange={(value) => updateResponsive('responsiveCardPadding', deviceType, value)}
+                    />
+
+                    <RangeControl
+                        label={__('Grid Gap', 'adaire-blocks')}
+                        value={gridGap}
+                        onChange={(value) => setAttributes({ gridGap: value })}
+                        min={0}
+                        max={64}
+                    />
+                </PanelBody>
+
+                <PanelBody section="style" priority="high" title={__('Typography Settings', 'adaire-blocks')} initialOpen={false}>
                     <TypographySection
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
@@ -647,7 +652,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Background SVG Icon', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Background SVG Icon', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
                         label={__('Enable Icon', 'adaire-blocks')}
                         value={showSvgIcon ? 'yes' : 'no'}
@@ -704,7 +709,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         </>
                     )}
                 </PanelBody>
-            </InspectorControls>
+            </InspectorTabs>
 
             <div {...blockProps}>
                 <div className="adaire-infogrid-4__inner">
@@ -724,13 +729,28 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             className="adaire-infogrid-4__title"
                             value={mainTitle}
                             onChange={(value) => setAttributes({ mainTitle: value })}
-                            placeholder={__('Add main titleâ€¦', 'adaire-blocks')}
+                            placeholder={__('Add main title...', 'adaire-blocks')}
                         />
                     </div>
 
                     <div className="adaire-infogrid-4__grid" data-layout={bentoLayout || 'symmetrical'}>
                         {cards.map((card, index) => (
-                            <div key={index} className={`adaire-infogrid-4__item adaire-infogrid-4__item--${index + 1}`}>
+                            <div
+                                key={index}
+                                className={`adaire-infogrid-4__item adaire-infogrid-4__item--${index + 1}${card.backgroundImageUrl ? ' has-bg-image' : ''}`}
+                                style={card.backgroundImageUrl ? { backgroundImage: `url(${card.backgroundImageUrl})` } : undefined}
+                            >
+                                {card.backgroundImageUrl && card.overlayType && card.overlayType !== 'none' && (
+                                    <div
+                                        className="adaire-infogrid-4__item-overlay"
+                                        aria-hidden="true"
+                                        style={
+                                            card.overlayType === 'gradient'
+                                                ? { backgroundImage: card.overlayGradient || undefined }
+                                                : { backgroundColor: card.overlayColor || '#000000', opacity: card.overlayOpacity ?? 0.5 }
+                                        }
+                                    />
+                                )}
                                 <RichText
                                     tagName="h3"
                                     className="adaire-infogrid-4__item-title"
