@@ -2549,31 +2549,3 @@ function adaire_blocks_enqueue_admin_icons() {
 	);
 }
 add_action( 'admin_enqueue_scripts', 'adaire_blocks_enqueue_admin_icons' );
-
-/**
- * Enqueue the Elementor-style editor panel (compiled via webpack.config.js).
- */
-function adaire_enqueue_editor_panel() {
-	$asset_file_path = plugin_dir_path( __FILE__ ) . 'build/editor-panel/index.asset.php';
-	if ( ! file_exists( $asset_file_path ) ) {
-		return; // Not yet built — skip silently.
-	}
-	$asset_file = include $asset_file_path;
-	wp_enqueue_script(
-		'adaire-editor-panel',
-		plugins_url( 'build/editor-panel/index.js', __FILE__ ),
-		$asset_file['dependencies'],
-		$asset_file['version'],
-		true
-	);
-	$style_path = plugin_dir_path( __FILE__ ) . 'build/editor-panel/style-index.css';
-	if ( file_exists( $style_path ) ) {
-		wp_enqueue_style(
-			'adaire-editor-panel-style',
-			plugins_url( 'build/editor-panel/style-index.css', __FILE__ ),
-			array(),
-			$asset_file['version']
-		);
-	}
-}
-add_action( 'enqueue_block_editor_assets', 'adaire_enqueue_editor_panel' );
