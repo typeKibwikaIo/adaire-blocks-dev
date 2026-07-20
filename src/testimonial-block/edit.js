@@ -27,22 +27,22 @@ import BoundColorPalette from '../components/BoundColorPalette';
 const FREE_TIER_ITEM_LIMIT = 3;
 
 const TEXT_TRANSFORM_OPTIONS = [
-	{ label: __('None', 'testimonial-block'), value: 'none' },
-	{ label: __('Uppercase', 'testimonial-block'), value: 'uppercase' },
-	{ label: __('Lowercase', 'testimonial-block'), value: 'lowercase' },
-	{ label: __('Capitalize', 'testimonial-block'), value: 'capitalize' },
+	{ label: __('None', 'adaire-blocks'), value: 'none' },
+	{ label: __('Uppercase', 'adaire-blocks'), value: 'uppercase' },
+	{ label: __('Lowercase', 'adaire-blocks'), value: 'lowercase' },
+	{ label: __('Capitalize', 'adaire-blocks'), value: 'capitalize' },
 ];
 
 const FONT_FAMILY_OPTIONS = [
-	{ label: __('Default (inherit theme)', 'testimonial-block'), value: '' },
-	{ label: __('Arial', 'testimonial-block'), value: 'Arial, Helvetica, sans-serif' },
-	{ label: __('Helvetica', 'testimonial-block'), value: 'Helvetica, Arial, sans-serif' },
-	{ label: __('Georgia', 'testimonial-block'), value: 'Georgia, serif' },
-	{ label: __('Times New Roman', 'testimonial-block'), value: "'Times New Roman', Times, serif" },
-	{ label: __('Verdana', 'testimonial-block'), value: 'Verdana, Geneva, sans-serif' },
-	{ label: __('Trebuchet MS', 'testimonial-block'), value: "'Trebuchet MS', sans-serif" },
-	{ label: __('Courier New', 'testimonial-block'), value: "'Courier New', Courier, monospace" },
-	{ label: __('System UI', 'testimonial-block'), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+	{ label: __('Default (inherit theme)', 'adaire-blocks'), value: '' },
+	{ label: __('Arial', 'adaire-blocks'), value: 'Arial, Helvetica, sans-serif' },
+	{ label: __('Helvetica', 'adaire-blocks'), value: 'Helvetica, Arial, sans-serif' },
+	{ label: __('Georgia', 'adaire-blocks'), value: 'Georgia, serif' },
+	{ label: __('Times New Roman', 'adaire-blocks'), value: "'Times New Roman', Times, serif" },
+	{ label: __('Verdana', 'adaire-blocks'), value: 'Verdana, Geneva, sans-serif' },
+	{ label: __('Trebuchet MS', 'adaire-blocks'), value: "'Trebuchet MS', sans-serif" },
+	{ label: __('Courier New', 'adaire-blocks'), value: "'Courier New', Courier, monospace" },
+	{ label: __('System UI', 'adaire-blocks'), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
 ];
 
 const FONT_WEIGHT_OPTIONS = [
@@ -464,8 +464,8 @@ export default function Edit({ attributes, setAttributes }) {
 				<PanelBody section="layout" title="Container Settings" initialOpen={true}>
 					<ButtonGroup>
 						{[
-							{ label: __('Full width', 'testimonial-block'), value: 'full' },
-							{ label: __('Constrained', 'testimonial-block'), value: 'constrained' },
+							{ label: __('Full width', 'adaire-blocks'), value: 'full' },
+							{ label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
 						].map(opt => (
 							<Button
 								key={opt.value}
@@ -480,7 +480,7 @@ export default function Edit({ attributes, setAttributes }) {
 							<DeviceSwitcher
 								deviceType={deviceType}
 								setDeviceType={setDeviceType}
-								label={__('Max Width', 'testimonial-block')}
+								label={__('Max Width', 'adaire-blocks')}
 								tiers={THREE_TIERS}
 							/>
 							<div style={{ display: 'flex', gap: '8px' }}>
@@ -552,11 +552,11 @@ export default function Edit({ attributes, setAttributes }) {
 
 					<hr style={{ margin: '20px 0' }} />
 					<p style={{ fontWeight: 600, marginBottom: '12px' }}>
-						{__('Responsive Slides Per View', 'testimonial-block')}
+						{__('Responsive Slides Per View', 'adaire-blocks')}
 					</p>
 
 					<TextControl
-						label={__('Mobile (< 768px)', 'testimonial-block')}
+						label={__('Mobile (< 768px)', 'adaire-blocks')}
 						value={slidesPerViewMobile}
 						type="number"
 						onChange={(value) => {
@@ -567,11 +567,11 @@ export default function Edit({ attributes, setAttributes }) {
 						}}
 						min={1}
 						max={5}
-						help={__('Number of slides visible on mobile devices', 'testimonial-block')}
+						help={__('Number of slides visible on mobile devices', 'adaire-blocks')}
 					/>
 
 					<TextControl
-						label={__('Tablet (768px - 1024px)', 'testimonial-block')}
+						label={__('Tablet (768px - 1024px)', 'adaire-blocks')}
 						value={slidesPerViewTablet}
 						type="number"
 						onChange={(value) => {
@@ -582,11 +582,11 @@ export default function Edit({ attributes, setAttributes }) {
 						}}
 						min={1}
 						max={5}
-						help={__('Number of slides visible on tablet devices', 'testimonial-block')}
+						help={__('Number of slides visible on tablet devices', 'adaire-blocks')}
 					/>
 
 					<TextControl
-						label={__('Desktop (> 1024px)', 'testimonial-block')}
+						label={__('Desktop (> 1024px)', 'adaire-blocks')}
 						value={slidesPerViewDesktop}
 						type="number"
 						onChange={(value) => {
@@ -597,7 +597,7 @@ export default function Edit({ attributes, setAttributes }) {
 						}}
 						min={1}
 						max={5}
-						help={__('Number of slides visible on desktop devices', 'testimonial-block')}
+						help={__('Number of slides visible on desktop devices', 'adaire-blocks')}
 					/>
 
 					<TextControl
@@ -709,11 +709,11 @@ export default function Edit({ attributes, setAttributes }) {
 
 				<PanelBody section="layout" title="Card Width Settings" initialOpen={false}>
 					<p style={{ marginBottom: '16px', color: '#666' }}>
-						{__('Control the width of individual testimonial cards at different screen sizes', 'testimonial-block')}
+						{__('Control the width of individual testimonial cards at different screen sizes', 'adaire-blocks')}
 					</p>
 					
 					<p style={{ fontWeight: 600, marginBottom: '8px' }}>
-						{__('Desktop Card Width', 'testimonial-block')}
+						{__('Desktop Card Width', 'adaire-blocks')}
 					</p>
 					<div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
 						<TextControl
@@ -756,7 +756,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</div>
 
 					<p style={{ fontWeight: 600, marginBottom: '8px' }}>
-						{__('Tablet Card Width', 'testimonial-block')}
+						{__('Tablet Card Width', 'adaire-blocks')}
 					</p>
 					<div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
 						<TextControl
@@ -799,7 +799,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</div>
 
 					<p style={{ fontWeight: 600, marginBottom: '8px' }}>
-						{__('Mobile Card Width', 'testimonial-block')}
+						{__('Mobile Card Width', 'adaire-blocks')}
 					</p>
 					<div style={{ display: 'flex', gap: '8px' }}>
 						<TextControl
@@ -842,17 +842,17 @@ export default function Edit({ attributes, setAttributes }) {
 					</div>
 
 					<p style={{ marginTop: '16px', fontSize: '12px', color: '#666', fontStyle: 'italic' }}>
-						{__('ðŸ’¡ Tip: Use 100% for full-width cards on mobile, or adjust to create partial views', 'testimonial-block')}
+						{__('ðŸ’¡ Tip: Use 100% for full-width cards on mobile, or adjust to create partial views', 'adaire-blocks')}
 					</p>
 				</PanelBody>
 
 				<PanelBody section="layout" title="Card Gap Settings" initialOpen={false}>
 					<p style={{ marginBottom: '16px', color: '#666' }}>
-						{__('Control the spacing between testimonial cards at different screen sizes', 'testimonial-block')}
+						{__('Control the spacing between testimonial cards at different screen sizes', 'adaire-blocks')}
 					</p>
 					
 					<p style={{ fontWeight: 600, marginBottom: '8px' }}>
-						{__('Desktop Card Gap', 'testimonial-block')}
+						{__('Desktop Card Gap', 'adaire-blocks')}
 					</p>
 					<div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
 						<TextControl
@@ -895,7 +895,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</div>
 
 					<p style={{ fontWeight: 600, marginBottom: '8px' }}>
-						{__('Tablet Card Gap', 'testimonial-block')}
+						{__('Tablet Card Gap', 'adaire-blocks')}
 					</p>
 					<div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
 						<TextControl
@@ -938,7 +938,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</div>
 
 					<p style={{ fontWeight: 600, marginBottom: '8px' }}>
-						{__('Mobile Card Gap', 'testimonial-block')}
+						{__('Mobile Card Gap', 'adaire-blocks')}
 					</p>
 					<div style={{ display: 'flex', gap: '8px' }}>
 						<TextControl
@@ -981,7 +981,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</div>
 
 					<p style={{ marginTop: '16px', fontSize: '12px', color: '#666', fontStyle: 'italic' }}>
-						{__('ðŸ’¡ Tip: Smaller gaps on mobile create a more compact layout', 'testimonial-block')}
+						{__('ðŸ’¡ Tip: Smaller gaps on mobile create a more compact layout', 'adaire-blocks')}
 					</p>
 				</PanelBody>
 
@@ -1192,18 +1192,18 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 				</PanelBody>
 
-				<PanelBody section="style" priority="high" title={__('Typography', 'testimonial-block')} initialOpen={false}>
+				<PanelBody section="style" priority="high" title={__('Typography', 'adaire-blocks')} initialOpen={false}>
 					<p style={{ marginBottom: '16px', color: '#666' }}>
-						{__('Heading and content text now have independent font-size controls, per device.', 'testimonial-block')}
+						{__('Heading and content text now have independent font-size controls, per device.', 'adaire-blocks')}
 					</p>
 
 					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Device')} tiers={THREE_TIERS} />
 
 					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '0' }}>
-						{__('Heading Font Size', 'testimonial-block')}
+						{__('Heading Font Size', 'adaire-blocks')}
 					</p>
 					<p style={{ marginTop: '2px', marginBottom: '8px', fontSize: '12px', color: '#666' }}>
-						{__('Author name', 'testimonial-block')}
+						{__('Author name', 'adaire-blocks')}
 					</p>
 					<RangeControl
 						value={getDeviceValue(headingFontSize, deviceType, 18)}
@@ -1213,10 +1213,10 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '0' }}>
-						{__('Content Font Size', 'testimonial-block')}
+						{__('Content Font Size', 'adaire-blocks')}
 					</p>
 					<p style={{ marginTop: '2px', marginBottom: '8px', fontSize: '12px', color: '#666' }}>
-						{__('Quote text', 'testimonial-block')}
+						{__('Quote text', 'adaire-blocks')}
 					</p>
 					<RangeControl
 						value={getDeviceValue(contentFontSize, deviceType, 16)}
@@ -1226,140 +1226,140 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<hr style={{ margin: '20px 0' }} />
-					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Quote', 'testimonial-block')}</p>
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Quote', 'adaire-blocks')}</p>
 					<SelectControl
-						label={__('Font Weight', 'testimonial-block')}
+						label={__('Font Weight', 'adaire-blocks')}
 						value={getDeviceValue(quoteFontWeight, deviceType, '400')}
 						options={FONT_WEIGHT_OPTIONS}
 						onChange={(v) => setAttributes({ quoteFontWeight: updateDeviceAttribute(quoteFontWeight, deviceType, v) })}
 					/>
 					<UnitControl
-						label={__('Line Height', 'testimonial-block')}
+						label={__('Line Height', 'adaire-blocks')}
 						value={getDeviceValue(quoteLineHeight, deviceType, '1.6')}
 						onChange={(v) => setAttributes({ quoteLineHeight: updateDeviceAttribute(quoteLineHeight, deviceType, v) })}
 					/>
 					<UnitControl
-						label={__('Letter Spacing', 'testimonial-block')}
+						label={__('Letter Spacing', 'adaire-blocks')}
 						value={quoteLetterSpacing}
 						onChange={(v) => setAttributes({ quoteLetterSpacing: v })}
 					/>
 					<SelectControl
-						label={__('Text Transform', 'testimonial-block')}
+						label={__('Text Transform', 'adaire-blocks')}
 						value={quoteTextTransform}
 						options={TEXT_TRANSFORM_OPTIONS}
 						onChange={(v) => setAttributes({ quoteTextTransform: v })}
 					/>
 
 					<hr style={{ margin: '20px 0' }} />
-					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Author Name', 'testimonial-block')}</p>
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Author Name', 'adaire-blocks')}</p>
 					<SelectControl
-						label={__('Font Weight', 'testimonial-block')}
+						label={__('Font Weight', 'adaire-blocks')}
 						value={getDeviceValue(authorNameFontWeight, deviceType, '700')}
 						options={FONT_WEIGHT_OPTIONS}
 						onChange={(v) => setAttributes({ authorNameFontWeight: updateDeviceAttribute(authorNameFontWeight, deviceType, v) })}
 					/>
 					<UnitControl
-						label={__('Line Height', 'testimonial-block')}
+						label={__('Line Height', 'adaire-blocks')}
 						value={getDeviceValue(authorNameLineHeight, deviceType, '1.5')}
 						onChange={(v) => setAttributes({ authorNameLineHeight: updateDeviceAttribute(authorNameLineHeight, deviceType, v) })}
 					/>
 					<UnitControl
-						label={__('Letter Spacing', 'testimonial-block')}
+						label={__('Letter Spacing', 'adaire-blocks')}
 						value={authorNameLetterSpacing}
 						onChange={(v) => setAttributes({ authorNameLetterSpacing: v })}
 					/>
 					<SelectControl
-						label={__('Text Transform', 'testimonial-block')}
+						label={__('Text Transform', 'adaire-blocks')}
 						value={authorNameTextTransform}
 						options={TEXT_TRANSFORM_OPTIONS}
 						onChange={(v) => setAttributes({ authorNameTextTransform: v })}
 					/>
 
 					<hr style={{ margin: '20px 0' }} />
-					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Author Title', 'testimonial-block')}</p>
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Author Title', 'adaire-blocks')}</p>
 					<UnitControl
-						label={__('Font Size', 'testimonial-block')}
+						label={__('Font Size', 'adaire-blocks')}
 						value={authorTitleFontSize}
 						onChange={(v) => setAttributes({ authorTitleFontSize: v })}
 					/>
 					<SelectControl
-						label={__('Font Weight', 'testimonial-block')}
+						label={__('Font Weight', 'adaire-blocks')}
 						value={authorTitleFontWeight}
 						options={FONT_WEIGHT_OPTIONS}
 						onChange={(v) => setAttributes({ authorTitleFontWeight: v })}
 					/>
 					<UnitControl
-						label={__('Line Height', 'testimonial-block')}
+						label={__('Line Height', 'adaire-blocks')}
 						value={authorTitleLineHeight}
 						onChange={(v) => setAttributes({ authorTitleLineHeight: v })}
 					/>
 					<UnitControl
-						label={__('Letter Spacing', 'testimonial-block')}
+						label={__('Letter Spacing', 'adaire-blocks')}
 						value={authorTitleLetterSpacing}
 						onChange={(v) => setAttributes({ authorTitleLetterSpacing: v })}
 					/>
 					<SelectControl
-						label={__('Text Transform', 'testimonial-block')}
+						label={__('Text Transform', 'adaire-blocks')}
 						value={authorTitleTextTransform}
 						options={TEXT_TRANSFORM_OPTIONS}
 						onChange={(v) => setAttributes({ authorTitleTextTransform: v })}
 					/>
 
 					<hr style={{ margin: '20px 0' }} />
-					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Company Name', 'testimonial-block')}</p>
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Company Name', 'adaire-blocks')}</p>
 					<p style={{ marginTop: '-8px', marginBottom: '8px', fontSize: '12px', color: '#666' }}>
-						{__('Used as a text fallback when no company logo is uploaded.', 'testimonial-block')}
+						{__('Used as a text fallback when no company logo is uploaded.', 'adaire-blocks')}
 					</p>
 					<UnitControl
-						label={__('Font Size', 'testimonial-block')}
+						label={__('Font Size', 'adaire-blocks')}
 						value={companyNameFontSize}
 						onChange={(v) => setAttributes({ companyNameFontSize: v })}
 					/>
 					<SelectControl
-						label={__('Font Weight', 'testimonial-block')}
+						label={__('Font Weight', 'adaire-blocks')}
 						value={companyNameFontWeight}
 						options={FONT_WEIGHT_OPTIONS}
 						onChange={(v) => setAttributes({ companyNameFontWeight: v })}
 					/>
 					<UnitControl
-						label={__('Line Height', 'testimonial-block')}
+						label={__('Line Height', 'adaire-blocks')}
 						value={companyNameLineHeight}
 						onChange={(v) => setAttributes({ companyNameLineHeight: v })}
 					/>
 					<UnitControl
-						label={__('Letter Spacing', 'testimonial-block')}
+						label={__('Letter Spacing', 'adaire-blocks')}
 						value={companyNameLetterSpacing}
 						onChange={(v) => setAttributes({ companyNameLetterSpacing: v })}
 					/>
 					<SelectControl
-						label={__('Text Transform', 'testimonial-block')}
+						label={__('Text Transform', 'adaire-blocks')}
 						value={companyNameTextTransform}
 						options={TEXT_TRANSFORM_OPTIONS}
 						onChange={(v) => setAttributes({ companyNameTextTransform: v })}
 					/>
 
 					<hr style={{ margin: '20px 0' }} />
-					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Block', 'testimonial-block')}</p>
+					<p style={{ fontWeight: 600, marginBottom: '12px' }}>{__('Block', 'adaire-blocks')}</p>
 					<SelectControl
-						label={__('Font Family', 'testimonial-block')}
+						label={__('Font Family', 'adaire-blocks')}
 						value={fontFamily || ''}
 						options={FONT_FAMILY_OPTIONS}
 						onChange={(v) => setAttributes({ fontFamily: v })}
-						help={__('Applies to all text in this block.', 'testimonial-block')}
+						help={__('Applies to all text in this block.', 'adaire-blocks')}
 					/>
 				</PanelBody>
 
-				<PanelBody section="style" priority="medium" title={__('Spacing', 'testimonial-block')} initialOpen={false}>
+				<PanelBody section="style" priority="medium" title={__('Spacing', 'adaire-blocks')} initialOpen={false}>
 					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Device')} tiers={THREE_TIERS} />
 					<RangeControl
-						label={__('Padding top (px)', 'testimonial-block')}
+						label={__('Padding top (px)', 'adaire-blocks')}
 						value={getDeviceValue(responsivePaddingTop, deviceType, deviceType === 'desktop' ? 60 : deviceType === 'tablet' ? 48 : deviceType === 'mobile' ? 36 : 24)}
 						onChange={(v) => setAttributes({ responsivePaddingTop: updateDeviceAttribute(responsivePaddingTop, deviceType, v) })}
 						min={0}
 						max={200}
 					/>
 					<RangeControl
-						label={__('Padding bottom (px)', 'testimonial-block')}
+						label={__('Padding bottom (px)', 'adaire-blocks')}
 						value={getDeviceValue(responsivePaddingBottom, deviceType, deviceType === 'desktop' ? 60 : deviceType === 'tablet' ? 48 : deviceType === 'mobile' ? 36 : 24)}
 						onChange={(v) => setAttributes({ responsivePaddingBottom: updateDeviceAttribute(responsivePaddingBottom, deviceType, v) })}
 						min={0}

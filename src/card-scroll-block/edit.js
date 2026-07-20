@@ -20,11 +20,11 @@ import { useDispatch } from '@wordpress/data';
 import InspectorTabs from '../components/InspectorTabs';
 
 const BREAKPOINTS = [
-    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks-dev2') },
-    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks-dev2') },
-    { name: 'smallLaptop', icon: desktop, label: __('Small Laptop', 'adaire-blocks-dev2') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks-dev2') },
-    { name: 'bigDesktop', icon: desktop, label: __('Big Desktop', 'adaire-blocks-dev2') },
+    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
+    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
+    { name: 'smallLaptop', icon: desktop, label: __('Small Laptop', 'adaire-blocks') },
+    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
+    { name: 'bigDesktop', icon: desktop, label: __('Big Desktop', 'adaire-blocks') },
 ];
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
@@ -188,7 +188,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     </ButtonGroup>
                 </div>
 
-                <PanelBody title={__('Layout Settings', 'adaire-blocks-dev2')}>
+                <PanelBody title={__('Layout Settings', 'adaire-blocks')}>
                     <SelectControl
                         label="Container Mode"
                         value={containerMode}
@@ -231,7 +231,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         onChange={(val) => updateResponsive('responsiveCardMinHeight', deviceType, val)}
                     />
                     <RangeControl
-                        label={__('Card Width — drag to resize', 'adaire-blocks-dev2')}
+                        label={__('Card Width — drag to resize', 'adaire-blocks')}
                         value={parsePercent(responsiveCardWidth?.[deviceType], 100)}
                         min={10}
                         max={100}
@@ -242,30 +242,30 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         label={`Card Width (${deviceType})`}
                         value={responsiveCardWidth?.[deviceType] || '100%'}
                         onChange={(val) => updateResponsive('responsiveCardWidth', deviceType, val)}
-                        help={__('Width of each card relative to the slider container. 100% fills the available space; narrower values center the card automatically. Type an exact value in any unit instead of dragging.', 'adaire-blocks-dev2')}
+                        help={__('Width of each card relative to the slider container. 100% fills the available space; narrower values center the card automatically. Type an exact value in any unit instead of dragging.', 'adaire-blocks')}
                     />
                     <UnitControl
                         label={`Last Card Bottom Height (${deviceType})`}
                         value={responsiveLastCardBottomHeight?.[deviceType] || '0px'}
                         onChange={(val) => updateResponsive('responsiveLastCardBottomHeight', deviceType, val)}
-                        help={__('Adds spacing at the bottom of the last card. This ensures the last card appears above other cards.', 'adaire-blocks-dev2')}
+                        help={__('Adds spacing at the bottom of the last card. This ensures the last card appears above other cards.', 'adaire-blocks')}
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Spacing', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Spacing', 'adaire-blocks')} initialOpen={false}>
                     <BoxControl
-                        label={__('Container Padding', 'adaire-blocks-dev2')}
+                        label={__('Container Padding', 'adaire-blocks')}
                         values={responsivePadding?.[deviceType] || {}}
                         onChange={(value) => updateResponsive('responsivePadding', deviceType, value)}
                     />
                     <BoxControl
-                        label={__('Card Padding', 'adaire-blocks-dev2')}
+                        label={__('Card Padding', 'adaire-blocks')}
                         values={responsiveCardPadding?.[deviceType] || {}}
                         onChange={(value) => updateResponsive('responsiveCardPadding', deviceType, value)}
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Global Media Dimensions', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Global Media Dimensions', 'adaire-blocks')} initialOpen={false}>
                     <UnitControl
                         label={`Width (${deviceType})`}
                         value={responsiveImageDimensions?.[deviceType]?.width}
@@ -286,7 +286,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Global Header Typography', 'adaire-blocks-dev2')}>
+                <PanelBody title={__('Global Header Typography', 'adaire-blocks')}>
                     <UnitControl
                         label={`Font Size (${deviceType})`}
                         value={responsiveTitleFontSize?.[deviceType]}
@@ -312,7 +312,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Global Description Typography', 'adaire-blocks-dev2')}>
+                <PanelBody title={__('Global Description Typography', 'adaire-blocks')}>
                     <UnitControl
                         label={`Font Size (${deviceType})`}
                         value={responsiveDescriptionFontSize?.[deviceType]}

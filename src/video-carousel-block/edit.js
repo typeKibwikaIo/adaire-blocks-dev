@@ -245,7 +245,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 		const newId = items.length > 0 ? Math.max(...items.map((i) => i.id)) + 1 : 1;
 		const newItem = {
 			id: newId,
-			title: __('New video', 'video-carousel-block'),
+			title: __('New video', 'adaire-blocks'),
 			videoUrl: '',
 			posterUrl: '',
 		};
@@ -290,14 +290,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 		<>
 			<InspectorControls>
 				<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} />
-				<PanelBody title={__('Videos', 'video-carousel-block')} initialOpen={true}>
+				<PanelBody title={__('Videos', 'adaire-blocks')} initialOpen={true}>
 					<Button
 						variant="primary"
 						icon={plus}
 						onClick={addItem}
 						style={{ marginBottom: '16px', width: '100%', justifyContent: 'center' }}
 					>
-						{__('Add Video', 'video-carousel-block')}
+						{__('Add Video', 'adaire-blocks')}
 					</Button>
 
 					{items.map((item, index) => (
@@ -318,7 +318,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 									marginBottom: 8,
 								}}
 							>
-								<strong>{sprintf(__('Video %d', 'video-carousel-block'), index + 1)}</strong>
+								<strong>{sprintf(__('Video %d', 'adaire-blocks'), index + 1)}</strong>
 								<div style={{ display: 'flex', gap: 4 }}>
 									<Button
 										icon={chevronUp}
@@ -341,18 +341,18 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 								</div>
 							</div>
 							<TextControl
-								label={__('Title / Name', 'video-carousel-block')}
+								label={__('Title / Name', 'adaire-blocks')}
 								value={item.title}
 								onChange={(value) => updateItem(item.id, 'title', value)}
 							/>
 							<TextControl
-								label={__('Position', 'video-carousel-block')}
+								label={__('Position', 'adaire-blocks')}
 								value={item.position || ''}
 								onChange={(value) => updateItem(item.id, 'position', value)}
 							/>
 							<div style={{ marginTop: 8, marginBottom: 8 }}>
 								<p style={{ marginBottom: 4, fontWeight: 600 }}>
-									{__('Video', 'video-carousel-block')}
+									{__('Video', 'adaire-blocks')}
 								</p>
 								<MediaUploadCheck>
 									<MediaUpload
@@ -379,13 +379,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 											<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
 												<Button variant="secondary" onClick={open}>
 													{item.videoUrl
-														? __('Change video', 'video-carousel-block')
-														: __('Select video', 'video-carousel-block')}
+														? __('Change video', 'adaire-blocks')
+														: __('Select video', 'adaire-blocks')}
 												</Button>
 												{item.videoUrl && (
 													<>
 														<span style={{ fontSize: 11, color: '#16a34a' }}>
-															{__('Video selected', 'video-carousel-block')}
+															{__('Video selected', 'adaire-blocks')}
 														</span>
 														<Button
 															isDestructive
@@ -403,7 +403,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 																setAttributes({ items: newItems });
 															}}
 														>
-															{__('Remove', 'video-carousel-block')}
+															{__('Remove', 'adaire-blocks')}
 														</Button>
 													</>
 												)}
@@ -420,7 +420,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
 							<div style={{ marginTop: 8 }}>
 								<p style={{ marginBottom: 4, fontWeight: 600 }}>
-									{__('Poster Image (optional)', 'video-carousel-block')}
+									{__('Poster Image (optional)', 'adaire-blocks')}
 								</p>
 								<MediaUploadCheck>
 									<MediaUpload
@@ -447,8 +447,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 											<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
 												<Button variant="secondary" onClick={open}>
 													{item.posterUrl
-														? __('Change poster', 'video-carousel-block')
-														: __('Select poster', 'video-carousel-block')}
+														? __('Change poster', 'adaire-blocks')
+														: __('Select poster', 'adaire-blocks')}
 												</Button>
 												{item.posterUrl && (
 													<Button
@@ -467,7 +467,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 															setAttributes({ items: newItems });
 														}}
 													>
-														{__('Remove', 'video-carousel-block')}
+														{__('Remove', 'adaire-blocks')}
 													</Button>
 												)}
 											</div>
@@ -483,10 +483,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
 							<div style={{ marginTop: 12 }}>
 								<p style={{ marginBottom: 4, fontWeight: 600 }}>
-									{__('Image-only card', 'video-carousel-block')}
+									{__('Image-only card', 'adaire-blocks')}
 								</p>
 								<ToggleControl
-									label={__('Use image instead of video', 'video-carousel-block')}
+									label={__('Use image instead of video', 'adaire-blocks')}
 									checked={!!item.useImageOnly}
 									onChange={(value) => {
 										const newItems = items.map((it) => {
@@ -508,13 +508,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 									}}
 									help={__(
 										'When enabled, this card will render a static image instead of a video.',
-										'video-carousel-block'
+										'adaire-blocks'
 									)}
 								/>
 								{item.useImageOnly && (
 									<div style={{ marginTop: 8 }}>
 										<p style={{ marginBottom: 4, fontWeight: 600 }}>
-											{__('Card Image', 'video-carousel-block')}
+											{__('Card Image', 'adaire-blocks')}
 										</p>
 										<MediaUploadCheck>
 											<MediaUpload
@@ -542,8 +542,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 													<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
 														<Button variant="secondary" onClick={open}>
 															{item.imageUrl
-																? __('Change image', 'video-carousel-block')
-																: __('Select image', 'video-carousel-block')}
+																? __('Change image', 'adaire-blocks')
+																: __('Select image', 'adaire-blocks')}
 														</Button>
 														{item.imageUrl && (
 															<Button
@@ -562,7 +562,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 																	setAttributes({ items: newItems });
 																}}
 															>
-																{__('Remove', 'video-carousel-block')}
+																{__('Remove', 'adaire-blocks')}
 															</Button>
 														)}
 													</div>
@@ -580,11 +580,11 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
 							<div style={{ marginTop: 12 }}>
 								<p style={{ marginBottom: 4, fontWeight: 600 }}>
-									{__('Social Icons', 'video-carousel-block')}
+									{__('Social Icons', 'adaire-blocks')}
 								</p>
 								<div style={{ marginBottom: 8 }}>
 									<p style={{ marginBottom: 4 }}>
-										{__('Icon 1', 'video-carousel-block')}
+										{__('Icon 1', 'adaire-blocks')}
 									</p>
 									<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
 										<Button
@@ -594,10 +594,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 											{item.social1IconClass ? (
 												<>
 													<i className={item.social1IconClass} style={{ marginRight: 6 }} />
-													{__('Change icon', 'video-carousel-block')}
+													{__('Change icon', 'adaire-blocks')}
 												</>
 											) : (
-												__('Select icon', 'video-carousel-block')
+												__('Select icon', 'adaire-blocks')
 											)}
 										</Button>
 										{item.social1IconClass && (
@@ -608,14 +608,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 									</div>
 								</div>
 								<TextControl
-									label={__('Icon 1 URL', 'video-carousel-block')}
+									label={__('Icon 1 URL', 'adaire-blocks')}
 									placeholder="https://"
 									value={item.social1Url || ''}
 									onChange={(value) => updateItem(item.id, 'social1Url', value)}
 								/>
 								<div style={{ marginBottom: 8 }}>
 									<p style={{ marginBottom: 4 }}>
-										{__('Icon 2', 'video-carousel-block')}
+										{__('Icon 2', 'adaire-blocks')}
 									</p>
 									<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
 										<Button
@@ -625,10 +625,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 											{item.social2IconClass ? (
 												<>
 													<i className={item.social2IconClass} style={{ marginRight: 6 }} />
-													{__('Change icon', 'video-carousel-block')}
+													{__('Change icon', 'adaire-blocks')}
 												</>
 											) : (
-												__('Select icon', 'video-carousel-block')
+												__('Select icon', 'adaire-blocks')
 											)}
 										</Button>
 										{item.social2IconClass && (
@@ -639,14 +639,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 									</div>
 								</div>
 								<TextControl
-									label={__('Icon 2 URL', 'video-carousel-block')}
+									label={__('Icon 2 URL', 'adaire-blocks')}
 									placeholder="https://"
 									value={item.social2Url || ''}
 									onChange={(value) => updateItem(item.id, 'social2Url', value)}
 								/>
 								<div style={{ marginBottom: 8 }}>
 									<p style={{ marginBottom: 4 }}>
-										{__('Icon 3', 'video-carousel-block')}
+										{__('Icon 3', 'adaire-blocks')}
 									</p>
 									<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
 										<Button
@@ -656,10 +656,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 											{item.social3IconClass ? (
 												<>
 													<i className={item.social3IconClass} style={{ marginRight: 6 }} />
-													{__('Change icon', 'video-carousel-block')}
+													{__('Change icon', 'adaire-blocks')}
 												</>
 											) : (
-												__('Select icon', 'video-carousel-block')
+												__('Select icon', 'adaire-blocks')
 											)}
 										</Button>
 										{item.social3IconClass && (
@@ -670,7 +670,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 									</div>
 								</div>
 								<TextControl
-									label={__('Icon 3 URL', 'video-carousel-block')}
+									label={__('Icon 3 URL', 'adaire-blocks')}
 									placeholder="https://"
 									value={item.social3Url || ''}
 									onChange={(value) => updateItem(item.id, 'social3Url', value)}
@@ -680,10 +680,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					))}
 				</PanelBody>
 
-				<PanelBody title={__('Layout', 'video-carousel-block')} initialOpen={false}>
+				<PanelBody title={__('Layout', 'adaire-blocks')} initialOpen={false}>
 					<RangeControl
 						label={sprintf(
-							__('Card Height (%s)', 'video-carousel-block'),
+							__('Card Height (%s)', 'adaire-blocks'),
 							normalizedCardHeight.unit || 'px'
 						)}
 						value={normalizedCardHeight.value}
@@ -699,7 +699,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						max={1000}
 						step={5}
 					/>
-					<BaseControl label={__('Card Height Unit', 'video-carousel-block')}>
+					<BaseControl label={__('Card Height Unit', 'adaire-blocks')}>
 						<ButtonGroup>
 							{['px', 'vh', 'vw', 'rem', '%', 'auto'].map((u) => (
 								<Button
@@ -721,7 +721,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						</ButtonGroup>
 					</BaseControl>
 					<RangeControl
-						label={__('Gap Between Cards', 'video-carousel-block')}
+						label={__('Gap Between Cards', 'adaire-blocks')}
 						value={cardGap}
 						onChange={(value) => setAttributes({ cardGap: value })}
 						min={4}
@@ -729,9 +729,9 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						step={2}
 					/>
 
-					<BaseControl label={__('Cards per view', 'video-carousel-block')}>
+					<BaseControl label={__('Cards per view', 'adaire-blocks')}>
 						<div style={{ marginBottom: 8 }}>
-							<strong>{__('Big Desktop (â‰¥ 1921px)', 'video-carousel-block')}</strong>
+							<strong>{__('Big Desktop (â‰¥ 1921px)', 'adaire-blocks')}</strong>
 							<RangeControl
 								value={slidesPerView?.bigDesktop ?? slidesPerView?.desktop ?? 5}
 								onChange={(value) =>
@@ -747,7 +747,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 							/>
 						</div>
 						<div style={{ marginBottom: 8 }}>
-							<strong>{__('Desktop (1301â€“1920px)', 'video-carousel-block')}</strong>
+							<strong>{__('Desktop (1301â€“1920px)', 'adaire-blocks')}</strong>
 							<RangeControl
 								value={slidesPerView?.desktop ?? 4}
 								onChange={(value) =>
@@ -763,7 +763,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 							/>
 						</div>
 						<div style={{ marginBottom: 8 }}>
-							<strong>{__('Small Laptop (1025â€“1300px)', 'video-carousel-block')}</strong>
+							<strong>{__('Small Laptop (1025â€“1300px)', 'adaire-blocks')}</strong>
 							<RangeControl
 								value={slidesPerView?.smallLaptop ?? slidesPerView?.desktop ?? 4}
 								onChange={(value) =>
@@ -779,7 +779,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 							/>
 						</div>
 						<div style={{ marginBottom: 8 }}>
-							<strong>{__('Tablet (601â€“1024px)', 'video-carousel-block')}</strong>
+							<strong>{__('Tablet (601â€“1024px)', 'adaire-blocks')}</strong>
 							<RangeControl
 								value={slidesPerView?.tablet ?? 3}
 								onChange={(value) =>
@@ -795,7 +795,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 							/>
 						</div>
 						<div>
-							<strong>{__('Mobile (â‰¤ 600px)', 'video-carousel-block')}</strong>
+							<strong>{__('Mobile (â‰¤ 600px)', 'adaire-blocks')}</strong>
 							<RangeControl
 								value={slidesPerView?.mobile ?? 2}
 								onChange={(value) =>
@@ -813,29 +813,29 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					</BaseControl>
 
 					<ToggleControl
-						label={__('Enable Loop', 'video-carousel-block')}
+						label={__('Enable Loop', 'adaire-blocks')}
 						checked={!!loop}
 						onChange={(value) => setAttributes({ loop: value })}
-						help={__('Enable infinite loop scrolling', 'video-carousel-block')}
+						help={__('Enable infinite loop scrolling', 'adaire-blocks')}
 					/>
 
 					<RangeControl
-						label={__('Mobile next card visibility (%)', 'video-carousel-block')}
+						label={__('Mobile next card visibility (%)', 'adaire-blocks')}
 						value={mobilePeekPercent ?? 20}
 						onChange={(value) => setAttributes({ mobilePeekPercent: value })}
 						min={0}
 						max={50}
 						step={5}
-						help={__('How much of the next card should be visible on mobile.', 'video-carousel-block')}
+						help={__('How much of the next card should be visible on mobile.', 'adaire-blocks')}
 					/>
 				</PanelBody>
 
-				<PanelBody title={__('Container', 'video-carousel-block')} initialOpen={false}>
-					<p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Mode', 'video-carousel-block')}</p>
+				<PanelBody title={__('Container', 'adaire-blocks')} initialOpen={false}>
+					<p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Mode', 'adaire-blocks')}</p>
 					<ButtonGroup style={{ marginBottom: '16px' }}>
 						{[
-							{ label: __('Full Width', 'video-carousel-block'), value: 'full' },
-							{ label: __('Constrained', 'video-carousel-block'), value: 'constrained' },
+							{ label: __('Full Width', 'adaire-blocks'), value: 'full' },
+							{ label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
 						].map((opt) => (
 							<Button
 								key={opt.value}
@@ -851,7 +851,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					{containerMode === 'constrained' && (
 						<>
 							<p style={{ marginTop: 8, marginBottom: 8, fontWeight: 600 }}>
-								{__('Max Width', 'video-carousel-block')}
+								{__('Max Width', 'adaire-blocks')}
 							</p>
 							<ButtonGroup style={{ marginBottom: 12, flexWrap: 'wrap' }}>
 								<Button
@@ -941,14 +941,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					)}
 
 					<RangeControl
-						label={__('Margin Top', 'video-carousel-block')}
+						label={__('Margin Top', 'adaire-blocks')}
 						value={marginTop}
 						onChange={(value) => setAttributes({ marginTop: value })}
 						min={0}
 						max={120}
 					/>
 					<RangeControl
-						label={__('Margin Bottom', 'video-carousel-block')}
+						label={__('Margin Bottom', 'adaire-blocks')}
 						value={marginBottom}
 						onChange={(value) => setAttributes({ marginBottom: value })}
 						min={0}
@@ -956,9 +956,9 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 				</PanelBody>
 
-				<PanelBody title={__('List Padding', 'video-carousel-block')} initialOpen={false}>
+				<PanelBody title={__('List Padding', 'adaire-blocks')} initialOpen={false}>
 					<p style={{ marginBottom: '8px', fontWeight: 600 }}>
-						{__('Padding Left', 'video-carousel-block')}
+						{__('Padding Left', 'adaire-blocks')}
 					</p>
 					<ButtonGroup style={{ marginBottom: '12px', flexWrap: 'wrap' }}>
 						<Button
@@ -989,7 +989,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					</ButtonGroup>
 					<RangeControl
 						label={sprintf(
-							__('Padding Left (%s, px)', 'video-carousel-block'),
+							__('Padding Left (%s, px)', 'adaire-blocks'),
 							deviceType
 						)}
 						value={currentListPaddingLeft}
@@ -1000,27 +1000,27 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 				</PanelBody>
 
-				<PanelBody title={__('Drag Cursor', 'video-carousel-block')} initialOpen={false}>
+				<PanelBody title={__('Drag Cursor', 'adaire-blocks')} initialOpen={false}>
 					<TextControl
-						label={__('Cursor Text', 'video-carousel-block')}
+						label={__('Cursor Text', 'adaire-blocks')}
 						value={dragCursorText}
 						onChange={(value) => setAttributes({ dragCursorText: value })}
 					/>
 					<RangeControl
-						label={__('Cursor Size', 'video-carousel-block')}
+						label={__('Cursor Size', 'adaire-blocks')}
 						value={dragCursorSize}
 						onChange={(value) => setAttributes({ dragCursorSize: value })}
 						min={40}
 						max={150}
 					/>
 					<RangeControl
-						label={__('Font Size', 'video-carousel-block')}
+						label={__('Font Size', 'adaire-blocks')}
 						value={dragCursorFontSize}
 						onChange={(value) => setAttributes({ dragCursorFontSize: value })}
 						min={10}
 						max={32}
 					/>
-					<BaseControl label={__('Font Weight', 'video-carousel-block')}>
+					<BaseControl label={__('Font Weight', 'adaire-blocks')}>
 						<ButtonGroup>
 							{['400', '500', '600', '700'].map((w) => (
 								<Button
@@ -1034,81 +1034,81 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						</ButtonGroup>
 					</BaseControl>
 					<SelectControl
-						label={__('Text Transform', 'video-carousel-block')}
+						label={__('Text Transform', 'adaire-blocks')}
 						value={dragCursorTextTransform}
 						options={[
-							{ label: __('Uppercase', 'video-carousel-block'), value: 'uppercase' },
-							{ label: __('Lowercase', 'video-carousel-block'), value: 'lowercase' },
-							{ label: __('Capitalize', 'video-carousel-block'), value: 'capitalize' },
-							{ label: __('None', 'video-carousel-block'), value: 'none' },
+							{ label: __('Uppercase', 'adaire-blocks'), value: 'uppercase' },
+							{ label: __('Lowercase', 'adaire-blocks'), value: 'lowercase' },
+							{ label: __('Capitalize', 'adaire-blocks'), value: 'capitalize' },
+							{ label: __('None', 'adaire-blocks'), value: 'none' },
 						]}
 						onChange={(value) => setAttributes({ dragCursorTextTransform: value })}
 					/>
 				</PanelBody>
 
 				<PanelColorSettings
-					title={__('Drag Cursor Colors', 'video-carousel-block')}
+					title={__('Drag Cursor Colors', 'adaire-blocks')}
 					colorSettings={[
 						{
-							label: __('Cursor Background', 'video-carousel-block'),
+							label: __('Cursor Background', 'adaire-blocks'),
 							value: dragCursorBgColor,
 							onChange: (value) => setAttributes({ dragCursorBgColor: value }),
 						},
 						{
-							label: __('Cursor Text', 'video-carousel-block'),
+							label: __('Cursor Text', 'adaire-blocks'),
 							value: dragCursorColor,
 							onChange: (value) => setAttributes({ dragCursorColor: value }),
 						},
 					]}
 				/>
 
-				<PanelBody title={__('Meta Layout & Typography (Responsive)', 'video-carousel-block')} initialOpen={false}>
+				<PanelBody title={__('Meta Layout & Typography (Responsive)', 'adaire-blocks')} initialOpen={false}>
 					<p style={{ marginBottom: '8px', fontWeight: 600 }}>
-						{__('Breakpoint', 'video-carousel-block')}
+						{__('Breakpoint', 'adaire-blocks')}
 					</p>
 					<ButtonGroup style={{ marginBottom: '12px', flexWrap: 'wrap' }}>
 						<Button
 							isPrimary={deviceType === 'mobile'}
 							onClick={() => setDeviceType('mobile')}
 						>
-							{__('Mobile', 'video-carousel-block')}
+							{__('Mobile', 'adaire-blocks')}
 						</Button>
 						<Button
 							isPrimary={deviceType === 'tablet'}
 							onClick={() => setDeviceType('tablet')}
 						>
-							{__('Tablet', 'video-carousel-block')}
+							{__('Tablet', 'adaire-blocks')}
 						</Button>
 						<Button
 							isPrimary={deviceType === 'smallLaptop'}
 							onClick={() => setDeviceType('smallLaptop')}
 						>
-							{__('Small Laptop', 'video-carousel-block')}
+							{__('Small Laptop', 'adaire-blocks')}
 						</Button>
 						<Button
 							isPrimary={deviceType === 'desktop'}
 							onClick={() => setDeviceType('desktop')}
 						>
-							{__('Desktop', 'video-carousel-block')}
+							{__('Desktop', 'adaire-blocks')}
 						</Button>
 						<Button
 							isPrimary={deviceType === 'bigDesktop'}
 							onClick={() => setDeviceType('bigDesktop')}
 						>
-							{__('Big Desktop', 'video-carousel-block')}
+							{__('Big Desktop', 'adaire-blocks')}
 						</Button>
 					</ButtonGroup>
 					<SelectControl
 						label={sprintf(
 							/* translators: %s is breakpoint name */
-							__('Text Alignment (%s)', 'video-carousel-block'),
+							__('Text Alignment (%s)', 'adaire-blocks'),
 							deviceType
 						)}
 						value={currentMetaTextAlign}
 						options={[
-							{ label: __('Left', 'video-carousel-block'), value: 'left' },
-							{ label: __('Center', 'video-carousel-block'), value: 'center' },
-							{ label: __('Right', 'video-carousel-block'), value: 'right' },
+							{ label: __('Left', 'adaire-blocks'), value: 'left' },
+							{ label: __('Center', 'adaire-blocks'), value: 'center' },
+							{ label: __('Right', 'adaire-blocks'), value: 'right' },
 						]}
 						onChange={(value) => {
 							setAttributes({ metaTextAlign: value });
@@ -1117,7 +1117,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 					<RangeControl
 						label={sprintf(
-							__('Name Font Size (%s, px)', 'video-carousel-block'),
+							__('Name Font Size (%s, px)', 'adaire-blocks'),
 							deviceType
 						)}
 						value={currentNameFontSize}
@@ -1130,7 +1130,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 					<RangeControl
 						label={sprintf(
-							__('Position Font Size (%s, px)', 'video-carousel-block'),
+							__('Position Font Size (%s, px)', 'adaire-blocks'),
 							deviceType
 						)}
 						value={currentPositionFontSize}
@@ -1143,7 +1143,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 					<RangeControl
 						label={sprintf(
-							__('Social Icon Size (%s, px)', 'video-carousel-block'),
+							__('Social Icon Size (%s, px)', 'adaire-blocks'),
 							deviceType
 						)}
 						value={currentSocialIconSize}
@@ -1157,30 +1157,30 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 				</PanelBody>
 
 				<PanelColorSettings
-					title={__('Meta Colors', 'video-carousel-block')}
+					title={__('Meta Colors', 'adaire-blocks')}
 					colorSettings={[
 						{
-							label: __('Meta Background', 'video-carousel-block'),
+							label: __('Meta Background', 'adaire-blocks'),
 							value: metaBgColor,
 							onChange: (value) => setAttributes({ metaBgColor: value }),
 						},
 						{
-							label: __('Name Color', 'video-carousel-block'),
+							label: __('Name Color', 'adaire-blocks'),
 							value: nameColor,
 							onChange: (value) => setAttributes({ nameColor: value }),
 						},
 						{
-							label: __('Position Color', 'video-carousel-block'),
+							label: __('Position Color', 'adaire-blocks'),
 							value: positionColor,
 							onChange: (value) => setAttributes({ positionColor: value }),
 						},
 						{
-							label: __('Social Icon Color', 'video-carousel-block'),
+							label: __('Social Icon Color', 'adaire-blocks'),
 							value: socialIconColor,
 							onChange: (value) => setAttributes({ socialIconColor: value }),
 						},
 						{
-							label: __('Social Icon Hover Color', 'video-carousel-block'),
+							label: __('Social Icon Hover Color', 'adaire-blocks'),
 							value: socialIconHoverColor,
 							onChange: (value) => setAttributes({ socialIconHoverColor: value }),
 						},
@@ -1216,7 +1216,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 												/>
 											) : (
 												<div className="adaire-video-carousel__placeholder">
-													<span>{__('Add a video or image', 'video-carousel-block')}</span>
+													<span>{__('Add a video or image', 'adaire-blocks')}</span>
 												</div>
 											)}
 										</div>

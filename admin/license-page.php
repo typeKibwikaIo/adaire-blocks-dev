@@ -54,9 +54,16 @@ class AdaireBlocksLicensePage {
         }
         
         wp_enqueue_style(
+            'adaire-admin-theme',
+            plugin_dir_url(__FILE__) . 'css/adaire-admin-theme.css',
+            array(),
+            ADAIRE_BLOCKS_VERSION
+        );
+
+        wp_enqueue_style(
             'adaire-blocks-license',
             plugin_dir_url(__FILE__) . 'css/license-page.css',
-            array(),
+            array('adaire-admin-theme'),
             ADAIRE_BLOCKS_VERSION
         );
         
@@ -105,19 +112,16 @@ class AdaireBlocksLicensePage {
         
         ?>
         <div class="wrap">
-            <h1>
-                <svg width="24" height="24" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px; vertical-align: middle;">
-                    <path d="M408.523 321.353H163.388V393.981H401.889V483.583H195.142C156 483.583 125 516.017 125 556.18V645.814C125 685.978 156 718.411 195.142 718.411H401.889V645.814H201.776V556.18H401.889V645.814H477.941V393.981C477.941 353.818 446.941 321.353 408.523 321.353Z" fill="currentColor"/>
-                    <path d="M603.247 267.692V357.441H801.292C842.251 357.441 875 389.932 875 429.647V643.346C875 686.658 838.511 718.412 793.842 718.412H592.057C553.348 718.412 522.059 688.102 522.059 650.569V189C566.728 189 603.217 224.381 603.217 267.692H603.247ZM603.247 650.569H793.842V429.647H603.247V650.569Z" fill="currentColor"/>
-                </svg>
-                License Management
-            </h1>
-            
-            <div class="adaire-license-container" data-license-key="<?php echo esc_attr($license_data['license_key'] ?? ''); ?>">
-                <div class="adaire-license-header">
-                    <h2>Adaire Blocks License</h2>
-                    <p class="description">Manage your Adaire Blocks license activation and status.</p>
+        <div class="aa-page">
+            <div class="aa-header">
+                <div class="aa-header-text">
+                    <div class="aa-eyebrow">Account</div>
+                    <h1>License Management</h1>
+                    <p>Manage your Adaire Blocks license activation and status.</p>
                 </div>
+            </div>
+
+            <div class="adaire-license-container" data-license-key="<?php echo esc_attr($license_data['license_key'] ?? ''); ?>">
                 
                 <div class="adaire-license-content">
                     <!-- License Status Card -->
@@ -231,7 +235,8 @@ class AdaireBlocksLicensePage {
                 <div id="adaire-license-messages" class="adaire-license-messages"></div>
             </div>
         </div>
-        
+        </div>
+
         <?php
     }
     

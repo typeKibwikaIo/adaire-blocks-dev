@@ -56,7 +56,7 @@ export default function BootstrapIconPicker({ isOpen, onClose, onSelect, current
 
     return (
         <Modal
-            title={__('Select Bootstrap Icon', 'icon-box-block')}
+            title={__('Select Bootstrap Icon', 'adaire-blocks')}
             onRequestClose={onClose}
             className="adaire-bootstrap-icon-picker"
             style={{ maxWidth: '900px' }}
@@ -65,12 +65,12 @@ export default function BootstrapIconPicker({ isOpen, onClose, onSelect, current
                 {/* Search */}
                 <div className="adaire-bootstrap-icon-picker__search">
                     <TextControl
-                        placeholder={__('Search icons...', 'icon-box-block')}
+                        placeholder={__('Search icons...', 'adaire-blocks')}
                         value={searchQuery}
                         onChange={handleSearchChange}
                     />
                     <div className="adaire-bootstrap-icon-picker__count">
-                        {filteredIcons.length} {__('icon(s) found', 'icon-box-block')}
+                        {filteredIcons.length} {__('icon(s) found', 'adaire-blocks')}
                     </div>
                 </div>
 
@@ -98,7 +98,7 @@ export default function BootstrapIconPicker({ isOpen, onClose, onSelect, current
                         ))
                     ) : (
                         <div className="adaire-bootstrap-icon-picker__empty">
-                            <p>{__('No icons found', 'icon-box-block')}</p>
+                            <p>{__('No icons found', 'adaire-blocks')}</p>
                         </div>
                     )}
                 </div>
@@ -111,11 +111,11 @@ export default function BootstrapIconPicker({ isOpen, onClose, onSelect, current
                             disabled={currentPage === 1}
                             variant="secondary"
                         >
-                            {__('Previous', 'icon-box-block')}
+                            {__('Previous', 'adaire-blocks')}
                         </Button>
                         
                         <div className="adaire-bootstrap-icon-picker__page-info">
-                            {__('Page', 'icon-box-block')} {currentPage} {__('of', 'icon-box-block')} {totalPages}
+                            {__('Page', 'adaire-blocks')} {currentPage} {__('of', 'adaire-blocks')} {totalPages}
                             {totalPages > 5 && (
                                 <div className="adaire-bootstrap-icon-picker__page-jump">
                                     <TextControl
@@ -140,7 +140,7 @@ export default function BootstrapIconPicker({ isOpen, onClose, onSelect, current
                             disabled={currentPage === totalPages}
                             variant="secondary"
                         >
-                            {__('Next', 'icon-box-block')}
+                            {__('Next', 'adaire-blocks')}
                         </Button>
                     </div>
                 )}

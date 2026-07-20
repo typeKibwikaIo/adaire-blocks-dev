@@ -279,9 +279,9 @@ export default function Edit({ attributes, setAttributes }) {
 	return (
 		<div {...useBlockProps()} style={{height: "95vh"}}>
 			<InspectorControls>
-				<PanelBody title={__('Video Slider Settings', 'video-hero-block')}>
+				<PanelBody title={__('Video Slider Settings', 'adaire-blocks')}>
 					<RangeControl
-						label={__('Transition Duration (ms)', 'video-hero-block')}
+						label={__('Transition Duration (ms)', 'adaire-blocks')}
 						value={transitionDuration}
 						onChange={(value) => setAttributes({ transitionDuration: value })}
 						min={3000}
@@ -289,17 +289,17 @@ export default function Edit({ attributes, setAttributes }) {
 						step={500}
 					/>
 					<ToggleControl
-						label={__('Auto Play', 'video-hero-block')}
+						label={__('Auto Play', 'adaire-blocks')}
 						checked={autoPlay}
 						onChange={(value) => setAttributes({ autoPlay: value })}
 					/>
 					<ToggleControl
-						label={__('Show Controls', 'video-hero-block')}
+						label={__('Show Controls', 'adaire-blocks')}
 						checked={showControls}
 						onChange={(value) => setAttributes({ showControls: value })}
 					/>
 					<RangeControl
-						label={__('Overlay Opacity', 'video-hero-block')}
+						label={__('Overlay Opacity', 'adaire-blocks')}
 						value={overlayOpacity}
 						onChange={(value) => setAttributes({ overlayOpacity: value })}
 						min={0}
@@ -308,15 +308,15 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={__('Styling', 'video-hero-block')}>
-					<BaseControl label={__('Background Color', 'video-hero-block')}>
+				<PanelBody title={__('Styling', 'adaire-blocks')}>
+					<BaseControl label={__('Background Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={backgroundColor}
 							onChangeComplete={(color) => setAttributes({ backgroundColor: color.hex })}
 							disableAlpha
 						/>
 					</BaseControl>
-					<BaseControl label={__('Text Color', 'video-hero-block')}>
+					<BaseControl label={__('Text Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={textColor}
 							onChangeComplete={(color) => setAttributes({ textColor: color.hex })}
@@ -326,7 +326,7 @@ export default function Edit({ attributes, setAttributes }) {
 					<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
 						<div style={{ flex: 1 }}>
 							<TextControl
-								label={__('Title Font Size', 'video-hero-block')}
+								label={__('Title Font Size', 'adaire-blocks')}
 								value={titleFontSize}
 								onChange={(value) => {
 									// Allow any input - we'll validate on blur
@@ -372,59 +372,59 @@ export default function Edit({ attributes, setAttributes }) {
 						</div>
 					</div>
 					<SelectControl
-						label={__('Title Font Weight', 'video-hero-block')}
+						label={__('Title Font Weight', 'adaire-blocks')}
 						value={titleFontWeight}
 						onChange={(value) => setAttributes({ titleFontWeight: value })}
 						options={[
-							{ label: __('Light (300)', 'video-hero-block'), value: '300' },
-							{ label: __('Normal (400)', 'video-hero-block'), value: '400' },
-							{ label: __('Medium (500)', 'video-hero-block'), value: '500' },
-							{ label: __('Semi Bold (600)', 'video-hero-block'), value: '600' },
-							{ label: __('Bold (700)', 'video-hero-block'), value: '700' },
-							{ label: __('Extra Bold (800)', 'video-hero-block'), value: '800' },
-							{ label: __('Black (900)', 'video-hero-block'), value: '900' }
+							{ label: __('Light (300)', 'adaire-blocks'), value: '300' },
+							{ label: __('Normal (400)', 'adaire-blocks'), value: '400' },
+							{ label: __('Medium (500)', 'adaire-blocks'), value: '500' },
+							{ label: __('Semi Bold (600)', 'adaire-blocks'), value: '600' },
+							{ label: __('Bold (700)', 'adaire-blocks'), value: '700' },
+							{ label: __('Extra Bold (800)', 'adaire-blocks'), value: '800' },
+							{ label: __('Black (900)', 'adaire-blocks'), value: '900' }
 						]}
 					/>
 					<RangeControl
-						label={__('Title Scrolling Gap', 'video-hero-block')}
+						label={__('Title Scrolling Gap', 'adaire-blocks')}
 						value={titleScrollingGap}
 						onChange={(value) => setAttributes({ titleScrollingGap: value })}
 						min={0}
 						max={1000}
 						step={10}
-						help={__('Space between repeated text copies in the scrolling animation', 'video-hero-block')}
+						help={__('Space between repeated text copies in the scrolling animation', 'adaire-blocks')}
 					/>
 					<RangeControl
-						label={__('Title Scrolling Gap (Tablet)', 'video-hero-block')}
+						label={__('Title Scrolling Gap (Tablet)', 'adaire-blocks')}
 						value={titleScrollingGapTablet}
 						onChange={(value) => setAttributes({ titleScrollingGapTablet: value })}
 						min={0}
 						max={800}
 						step={10}
-						help={__('Space between repeated text copies on tablet screens (768px and below)', 'video-hero-block')}
+						help={__('Space between repeated text copies on tablet screens (768px and below)', 'adaire-blocks')}
 					/>
 					<RangeControl
-						label={__('Title Scrolling Gap (Mobile)', 'video-hero-block')}
+						label={__('Title Scrolling Gap (Mobile)', 'adaire-blocks')}
 						value={titleScrollingGapMobile}
 						onChange={(value) => setAttributes({ titleScrollingGapMobile: value })}
 						min={0}
 						max={600}
 						step={10}
-						help={__('Space between repeated text copies on mobile screens (480px and below)', 'video-hero-block')}
+						help={__('Space between repeated text copies on mobile screens (480px and below)', 'adaire-blocks')}
 					/>
 					<RangeControl
-						label={__('Title Scrolling Speed', 'video-hero-block')}
+						label={__('Title Scrolling Speed', 'adaire-blocks')}
 						value={titleScrollingSpeed}
 						onChange={(value) => setAttributes({ titleScrollingSpeed: value })}
 						min={20}
 						max={500}
 						step={10}
-						help={__('Speed of the scrolling animation in pixels per second', 'video-hero-block')}
+						help={__('Speed of the scrolling animation in pixels per second', 'adaire-blocks')}
 					/>
 					<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
 						<div style={{ flex: 1 }}>
 							<TextControl
-								label={__('Description Font Size', 'video-hero-block')}
+								label={__('Description Font Size', 'adaire-blocks')}
 								value={descriptionFontSize}
 								onChange={(value) => {
 									// Allow any input - we'll validate on blur
@@ -471,69 +471,69 @@ export default function Edit({ attributes, setAttributes }) {
 					</div>
 				</PanelBody>
 				
-				<PanelBody title={__('Responsive Settings', 'video-hero-block')} initialOpen={false}>
+				<PanelBody title={__('Responsive Settings', 'adaire-blocks')} initialOpen={false}>
 					<RangeControl
-						label={__('Title Font Size (Tablet)', 'video-hero-block')}
+						label={__('Title Font Size (Tablet)', 'adaire-blocks')}
 						value={titleFontSizeTablet}
 						onChange={(value) => setAttributes({ titleFontSizeTablet: value })}
 						min={16}
 						max={200}
 						step={1}
-						help={__('Font size for title on tablet screens (768px and below)', 'video-hero-block')}
+						help={__('Font size for title on tablet screens (768px and below)', 'adaire-blocks')}
 					/>
 					<RangeControl
-						label={__('Title Font Size (Mobile)', 'video-hero-block')}
+						label={__('Title Font Size (Mobile)', 'adaire-blocks')}
 						value={titleFontSizeMobile}
 						onChange={(value) => setAttributes({ titleFontSizeMobile: value })}
 						min={12}
 						max={200}
 						step={1}
-						help={__('Font size for title on mobile screens (480px and below)', 'video-hero-block')}
+						help={__('Font size for title on mobile screens (480px and below)', 'adaire-blocks')}
 					/>
 					<RangeControl
-						label={__('Description Font Size (Tablet)', 'video-hero-block')}
+						label={__('Description Font Size (Tablet)', 'adaire-blocks')}
 						value={descriptionFontSizeTablet}
 						onChange={(value) => setAttributes({ descriptionFontSizeTablet: value })}
 						min={8}
 						max={200}
 						step={1}
-						help={__('Font size for description on tablet screens (768px and below)', 'video-hero-block')}
+						help={__('Font size for description on tablet screens (768px and below)', 'adaire-blocks')}
 					/>
 					<RangeControl
-						label={__('Description Font Size (Mobile)', 'video-hero-block')}
+						label={__('Description Font Size (Mobile)', 'adaire-blocks')}
 						value={descriptionFontSizeMobile}
 						onChange={(value) => setAttributes({ descriptionFontSizeMobile: value })}
 						min={8}
 						max={200}
 						step={1}
-						help={__('Font size for description on mobile screens (480px and below)', 'video-hero-block')}
+						help={__('Font size for description on mobile screens (480px and below)', 'adaire-blocks')}
 					/>
 				</PanelBody>
 				
-				<PanelBody title={__('Video Overlay', 'video-hero-block')} initialOpen={false}>
+				<PanelBody title={__('Video Overlay', 'adaire-blocks')} initialOpen={false}>
 					<SelectControl
-						label={__('Overlay Type', 'video-hero-block')}
+						label={__('Overlay Type', 'adaire-blocks')}
 						value={overlayType}
 						onChange={(value) => setAttributes({ overlayType: value })}
 						options={[
-							{ label: __('Solid Color', 'video-hero-block'), value: 'solid' },
-							{ label: __('Gradient', 'video-hero-block'), value: 'gradient' }
+							{ label: __('Solid Color', 'adaire-blocks'), value: 'solid' },
+							{ label: __('Gradient', 'adaire-blocks'), value: 'gradient' }
 						]}
 					/>
 					{overlayType === 'solid' && (
 						<RangeControl
-							label={__('Overlay Opacity', 'video-hero-block')}
+							label={__('Overlay Opacity', 'adaire-blocks')}
 							value={overlayOpacity}
 							onChange={(value) => setAttributes({ overlayOpacity: value })}
 							min={0}
 							max={1}
 							step={0.1}
-							help={__('Opacity of the solid overlay (0 = transparent, 1 = opaque)', 'video-hero-block')}
+							help={__('Opacity of the solid overlay (0 = transparent, 1 = opaque)', 'adaire-blocks')}
 						/>
 					)}
 					{overlayType === 'gradient' && (
 						<>
-							<BaseControl label={__('Gradient Start Color', 'video-hero-block')}>
+							<BaseControl label={__('Gradient Start Color', 'adaire-blocks')}>
 								<ColorPicker
 									color={overlayGradientStart}
 									onChangeComplete={(color) => setAttributes({ overlayGradientStart: color.hex })}
@@ -541,15 +541,15 @@ export default function Edit({ attributes, setAttributes }) {
 								/>
 							</BaseControl>
 							<RangeControl
-								label={__('Start Color Opacity', 'video-hero-block')}
+								label={__('Start Color Opacity', 'adaire-blocks')}
 								value={overlayGradientStartOpacity}
 								onChange={(value) => setAttributes({ overlayGradientStartOpacity: value })}
 								min={0}
 								max={1}
 								step={0.1}
-								help={__('Opacity of the gradient start color (0 = transparent, 1 = opaque)', 'video-hero-block')}
+								help={__('Opacity of the gradient start color (0 = transparent, 1 = opaque)', 'adaire-blocks')}
 							/>
-							<BaseControl label={__('Gradient End Color', 'video-hero-block')}>
+							<BaseControl label={__('Gradient End Color', 'adaire-blocks')}>
 								<ColorPicker
 									color={overlayGradientEnd}
 									onChangeComplete={(color) => setAttributes({ overlayGradientEnd: color.hex })}
@@ -557,53 +557,53 @@ export default function Edit({ attributes, setAttributes }) {
 								/>
 							</BaseControl>
 							<RangeControl
-								label={__('End Color Opacity', 'video-hero-block')}
+								label={__('End Color Opacity', 'adaire-blocks')}
 								value={overlayGradientEndOpacity}
 								onChange={(value) => setAttributes({ overlayGradientEndOpacity: value })}
 								min={0}
 								max={1}
 								step={0.1}
-								help={__('Opacity of the gradient end color (0 = transparent, 1 = opaque)', 'video-hero-block')}
+								help={__('Opacity of the gradient end color (0 = transparent, 1 = opaque)', 'adaire-blocks')}
 							/>
 							<SelectControl
-								label={__('Gradient Direction', 'video-hero-block')}
+								label={__('Gradient Direction', 'adaire-blocks')}
 								value={overlayGradientDirection}
 								onChange={(value) => setAttributes({ overlayGradientDirection: value })}
 								options={[
-									{ label: __('To Bottom', 'video-hero-block'), value: 'to bottom' },
-									{ label: __('To Top', 'video-hero-block'), value: 'to top' },
-									{ label: __('To Right', 'video-hero-block'), value: 'to right' },
-									{ label: __('To Left', 'video-hero-block'), value: 'to left' },
-									{ label: __('To Bottom Right', 'video-hero-block'), value: 'to bottom right' },
-									{ label: __('To Bottom Left', 'video-hero-block'), value: 'to bottom left' },
-									{ label: __('To Top Right', 'video-hero-block'), value: 'to top right' },
-									{ label: __('To Top Left', 'video-hero-block'), value: 'to top left' }
+									{ label: __('To Bottom', 'adaire-blocks'), value: 'to bottom' },
+									{ label: __('To Top', 'adaire-blocks'), value: 'to top' },
+									{ label: __('To Right', 'adaire-blocks'), value: 'to right' },
+									{ label: __('To Left', 'adaire-blocks'), value: 'to left' },
+									{ label: __('To Bottom Right', 'adaire-blocks'), value: 'to bottom right' },
+									{ label: __('To Bottom Left', 'adaire-blocks'), value: 'to bottom left' },
+									{ label: __('To Top Right', 'adaire-blocks'), value: 'to top right' },
+									{ label: __('To Top Left', 'adaire-blocks'), value: 'to top left' }
 								]}
 							/>
 						</>
 					)}
 				</PanelBody>
 				
-				<PanelBody title={__('Navigation Arrow Colors', 'video-hero-block')} initialOpen={false}>
-					<BaseControl label={__('Left Arrow Color', 'video-hero-block')}>
+				<PanelBody title={__('Navigation Arrow Colors', 'adaire-blocks')} initialOpen={false}>
+					<BaseControl label={__('Left Arrow Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowLeftColor}
 							onChangeComplete={(color) => setAttributes({ navArrowLeftColor: color.hex })}
 						/>
 					</BaseControl>
-					<BaseControl label={__('Left Arrow Hover Color', 'video-hero-block')}>
+					<BaseControl label={__('Left Arrow Hover Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowLeftColorHover}
 							onChangeComplete={(color) => setAttributes({ navArrowLeftColorHover: color.hex })}
 						/>
 					</BaseControl>
-					<BaseControl label={__('Right Arrow Color', 'video-hero-block')}>
+					<BaseControl label={__('Right Arrow Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowRightColor}
 							onChangeComplete={(color) => setAttributes({ navArrowRightColor: color.hex })}
 						/>
 					</BaseControl>
-					<BaseControl label={__('Right Arrow Hover Color', 'video-hero-block')}>
+					<BaseControl label={__('Right Arrow Hover Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowRightColorHover}
 							onChangeComplete={(color) => setAttributes({ navArrowRightColorHover: color.hex })}
@@ -611,26 +611,26 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 				</PanelBody>
 				
-				<PanelBody title={__('Navigation Arrow Background Colors', 'video-hero-block')} initialOpen={false}>
-					<BaseControl label={__('Left Arrow Background Color', 'video-hero-block')}>
+				<PanelBody title={__('Navigation Arrow Background Colors', 'adaire-blocks')} initialOpen={false}>
+					<BaseControl label={__('Left Arrow Background Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowLeftBgColor}
 							onChangeComplete={(color) => setAttributes({ navArrowLeftBgColor: color.hex })}
 						/>
 					</BaseControl>
-					<BaseControl label={__('Left Arrow Background Hover Color', 'video-hero-block')}>
+					<BaseControl label={__('Left Arrow Background Hover Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowLeftBgColorHover}
 							onChangeComplete={(color) => setAttributes({ navArrowLeftBgColorHover: color.hex })}
 						/>
 					</BaseControl>
-					<BaseControl label={__('Right Arrow Background Color', 'video-hero-block')}>
+					<BaseControl label={__('Right Arrow Background Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowRightBgColor}
 							onChangeComplete={(color) => setAttributes({ navArrowRightBgColor: color.hex })}
 						/>
 					</BaseControl>
-					<BaseControl label={__('Right Arrow Background Hover Color', 'video-hero-block')}>
+					<BaseControl label={__('Right Arrow Background Hover Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowRightBgColorHover}
 							onChangeComplete={(color) => setAttributes({ navArrowRightBgColorHover: color.hex })}
@@ -638,7 +638,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 					
 					<RangeControl
-						label={__('Left Arrow Background Opacity', 'video-hero-block')}
+						label={__('Left Arrow Background Opacity', 'adaire-blocks')}
 						value={navArrowLeftBgOpacity}
 						onChange={(value) => setAttributes({ navArrowLeftBgOpacity: value })}
 						min={0}
@@ -647,7 +647,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 					
 					<RangeControl
-						label={__('Left Arrow Background Opacity (Hover)', 'video-hero-block')}
+						label={__('Left Arrow Background Opacity (Hover)', 'adaire-blocks')}
 						value={navArrowLeftBgOpacityHover}
 						onChange={(value) => setAttributes({ navArrowLeftBgOpacityHover: value })}
 						min={0}
@@ -656,7 +656,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 					
 					<RangeControl
-						label={__('Right Arrow Background Opacity', 'video-hero-block')}
+						label={__('Right Arrow Background Opacity', 'adaire-blocks')}
 						value={navArrowRightBgOpacity}
 						onChange={(value) => setAttributes({ navArrowRightBgOpacity: value })}
 						min={0}
@@ -665,7 +665,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 					
 					<RangeControl
-						label={__('Right Arrow Background Opacity (Hover)', 'video-hero-block')}
+						label={__('Right Arrow Background Opacity (Hover)', 'adaire-blocks')}
 						value={navArrowRightBgOpacityHover}
 						onChange={(value) => setAttributes({ navArrowRightBgOpacityHover: value })}
 						min={0}
@@ -674,7 +674,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 					
 					<RangeControl
-						label={__('Left Arrow Background Blur', 'video-hero-block')}
+						label={__('Left Arrow Background Blur', 'adaire-blocks')}
 						value={navArrowLeftBgBlur}
 						onChange={(value) => setAttributes({ navArrowLeftBgBlur: value })}
 						min={0}
@@ -683,7 +683,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 					
 					<RangeControl
-						label={__('Left Arrow Background Blur (Hover)', 'video-hero-block')}
+						label={__('Left Arrow Background Blur (Hover)', 'adaire-blocks')}
 						value={navArrowLeftBgBlurHover}
 						onChange={(value) => setAttributes({ navArrowLeftBgBlurHover: value })}
 						min={0}
@@ -692,7 +692,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 					
 					<RangeControl
-						label={__('Right Arrow Background Blur', 'video-hero-block')}
+						label={__('Right Arrow Background Blur', 'adaire-blocks')}
 						value={navArrowRightBgBlur}
 						onChange={(value) => setAttributes({ navArrowRightBgBlur: value })}
 						min={0}
@@ -701,7 +701,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 					
 					<RangeControl
-						label={__('Right Arrow Background Blur (Hover)', 'video-hero-block')}
+						label={__('Right Arrow Background Blur (Hover)', 'adaire-blocks')}
 						value={navArrowRightBgBlurHover}
 						onChange={(value) => setAttributes({ navArrowRightBgBlurHover: value })}
 						min={0}
@@ -713,23 +713,23 @@ export default function Edit({ attributes, setAttributes }) {
 				{(videos || []).map((video, index) => (
 					<PanelBody 
 						key={index}
-						title={__('Video', 'video-hero-block') + ' ' + (index + 1)}
+						title={__('Video', 'adaire-blocks') + ' ' + (index + 1)}
 						initialOpen={index === 0}
 					>
 						<TextControl
-							label={__('Video Title', 'video-hero-block')}
+							label={__('Video Title', 'adaire-blocks')}
 							value={video.title || ''}
 							onChange={(value) => updateVideo(index, 'title', value)}
 						/>
 
 						<TextareaControl
-							label={__('Video Description', 'video-hero-block')}
+							label={__('Video Description', 'adaire-blocks')}
 							value={video.description || ''}
 							onChange={(value) => updateVideo(index, 'description', value)}
 						/>
 
 						<SelectControl
-							label={__('Video Type', 'video-hero-block')}
+							label={__('Video Type', 'adaire-blocks')}
 							value={video.videoType || 'youtube'}
 							options={[
 								{ label: 'YouTube', value: 'youtube' },
@@ -739,34 +739,34 @@ export default function Edit({ attributes, setAttributes }) {
 						/>
 
 						<TextControl
-							label={__('Video URL', 'video-hero-block')}
+							label={__('Video URL', 'adaire-blocks')}
 							value={video.videoUrl || ''}
 							onChange={(value) => updateVideo(index, 'videoUrl', value)}
-							help={__('Enter YouTube or Vimeo URL', 'video-hero-block')}
+							help={__('Enter YouTube or Vimeo URL', 'adaire-blocks')}
 						/>
 
 						<ToggleControl
-							label={__('Autoplay', 'video-hero-block')}
+							label={__('Autoplay', 'adaire-blocks')}
 							checked={video.autoplay !== false}
 							onChange={(value) => updateVideo(index, 'autoplay', value)}
 						/>
 
 						<ToggleControl
-							label={__('Muted', 'video-hero-block')}
+							label={__('Muted', 'adaire-blocks')}
 							checked={video.muted !== false}
 							onChange={(value) => updateVideo(index, 'muted', value)}
 						/>
 
 						<ToggleControl
-							label={__('Use Static Image Instead of Video', 'video-hero-block')}
+							label={__('Use Static Image Instead of Video', 'adaire-blocks')}
 							checked={video.useImage === true}
 							onChange={(value) => updateVideo(index, 'useImage', value)}
-							help={__('Toggle to use a static background image instead of video', 'video-hero-block')}
+							help={__('Toggle to use a static background image instead of video', 'adaire-blocks')}
 						/>
 
 						{video.useImage && (
 							<>
-								<BaseControl label={__('Background Image', 'video-hero-block')}>
+								<BaseControl label={__('Background Image', 'adaire-blocks')}>
 									<MediaUploadCheck>
 										<MediaUpload
 											onSelect={(media) => {
@@ -781,7 +781,7 @@ export default function Edit({ attributes, setAttributes }) {
 														<div className="image-preview">
 															<img src={video.imageUrl} alt="Background" style={{ maxWidth: '100%', height: 'auto', maxHeight: '200px' }} />
 															<Button onClick={open} variant="secondary" style={{ marginTop: '10px' }}>
-																{__('Change Image', 'video-hero-block')}
+																{__('Change Image', 'adaire-blocks')}
 															</Button>
 															<Button 
 																onClick={() => {
@@ -792,12 +792,12 @@ export default function Edit({ attributes, setAttributes }) {
 																isDestructive
 																style={{ marginTop: '5px' }}
 															>
-																{__('Remove Image', 'video-hero-block')}
+																{__('Remove Image', 'adaire-blocks')}
 															</Button>
 														</div>
 													) : (
 														<Button onClick={open} variant="primary">
-															{__('Select Background Image', 'video-hero-block')}
+															{__('Select Background Image', 'adaire-blocks')}
 														</Button>
 													)}
 												</div>
@@ -816,21 +816,21 @@ export default function Edit({ attributes, setAttributes }) {
 											<Button
 												onClick={() => moveVideoUp(index)}
 												disabled={index === 0}
-												label={__('Move Up', 'video-hero-block')}
+												label={__('Move Up', 'adaire-blocks')}
 											>
-												â†‘ {__('Up', 'video-hero-block')}
+												â†‘ {__('Up', 'adaire-blocks')}
 											</Button>
 											<Button
 												onClick={() => moveVideoDown(index)}
 												disabled={index === (videos ? videos.length - 1 : 0)}
-												label={__('Move Down', 'video-hero-block')}
+												label={__('Move Down', 'adaire-blocks')}
 											>
-												â†“ {__('Down', 'video-hero-block')}
+												â†“ {__('Down', 'adaire-blocks')}
 											</Button>
 										</ButtonGroup>
 									</div>
 									<Button isDestructive onClick={() => removeVideo(index)}>
-										{__('Remove Video', 'video-hero-block')}
+										{__('Remove Video', 'adaire-blocks')}
 									</Button>
 								</>
 							)}
@@ -838,9 +838,9 @@ export default function Edit({ attributes, setAttributes }) {
 					</PanelBody>
 				))}
 
-				<PanelBody title={__('Add New Video', 'video-hero-block')}>
+				<PanelBody title={__('Add New Video', 'adaire-blocks')}>
 					<Button isPrimary onClick={addVideo}>
-						{__('Add Video', 'video-hero-block')}
+						{__('Add Video', 'adaire-blocks')}
 					</Button>
 				</PanelBody>
 

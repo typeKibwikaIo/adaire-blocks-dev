@@ -147,6 +147,18 @@
 		var prefsPanel = root.querySelector( '.adaire-cookie-banner__prefs' );
 		var reopenBtn = root.querySelector( '.adaire-cookie-banner__reopen' );
 
+		// The preferences list (up to 8+ categories) can be much taller than the
+		// intro panel, so whichever corner/edge the banner is normally anchored
+		// to, expanding it in place risks overlapping page content. The
+		// is-prefs-open class lets style.scss reposition to a centered, wider
+		// layout only while preferences are actually showing — see the "manage
+		// preferences" ask this was added for.
+		function setPrefsOpen( open ) {
+			if ( ! prefsPanel ) return;
+			prefsPanel.hidden = ! open;
+			root.classList.toggle( 'is-prefs-open', open );
+		}
+
 		function focusFirst() {
 			var target = panel && panel.querySelector( 'button, a, input' );
 			if ( target ) target.focus( { preventScroll: true } );
@@ -163,7 +175,7 @@
 			var finish = function () {
 				root.classList.add( 'is-hidden' );
 				root.classList.remove( 'is-visible' );
-				if ( prefsPanel ) prefsPanel.hidden = true;
+				setPrefsOpen( false );
 				if ( reopenBtn ) reopenBtn.hidden = false;
 			};
 			if ( autoHide ) {
@@ -208,13 +220,17 @@
 			} else if ( action === 'reject' ) {
 				commit( 'rejected', categoriesFromConfig( configList, {} ) );
 			} else if ( action === 'manage' ) {
-				if ( prefsPanel ) prefsPanel.hidden = ! prefsPanel.hidden;
+				if ( prefsPanel ) setPrefsOpen( prefsPanel.hidden );
 			} else if ( action === 'save-prefs' ) {
 				commit( 'custom', readPrefCheckboxes( prefsPanel, configList ) );
 			} else if ( action === 'reopen' ) {
+				// A returning visitor clicking this is almost always here to
+				// change a setting, not re-read the intro — so skip straight to
+				// the preferences view instead of making them click "Manage" again.
 				var stored = readConsent( version );
 				if ( stored && stored.categories ) setPrefCheckboxes( prefsPanel, stored.categories );
 				showBanner();
+				setPrefsOpen( true );
 			} else if ( action === 'dismiss' || action === 'dismiss-overlay' ) {
 				var kept = readConsent( version );
 				if ( ! kept ) {

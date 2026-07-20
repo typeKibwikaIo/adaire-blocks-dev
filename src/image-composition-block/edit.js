@@ -101,14 +101,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody section="content" title={__('Images', 'image-composition-block')} initialOpen={true}>
+				<PanelBody section="content" title={__('Images', 'adaire-blocks')} initialOpen={true}>
 					<Button
 						variant="primary"
 						icon={plus}
 						onClick={addImage}
 						style={{ marginBottom: '16px', width: '100%', justifyContent: 'center' }}
 					>
-						{__('Add Image', 'image-composition-block')}
+						{__('Add Image', 'adaire-blocks')}
 					</Button>
 
 					{images.map((image, index) => (
@@ -130,7 +130,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 									marginBottom: 8,
 								}}
 							>
-								<strong>{__('Image', 'image-composition-block')} {index + 1}</strong>
+								<strong>{__('Image', 'adaire-blocks')} {index + 1}</strong>
 								<div style={{ display: 'flex', gap: 4 }}>
 									<Button
 										icon={chevronUp}
@@ -183,8 +183,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 										<div style={{ marginBottom: 8 }}>
 											<Button variant="secondary" onClick={open}>
 												{image.url
-													? __('Change image', 'image-composition-block')
-													: __('Select image', 'image-composition-block')}
+													? __('Change image', 'adaire-blocks')
+													: __('Select image', 'adaire-blocks')}
 											</Button>
 											{image.url && (
 												<div style={{ marginTop: 8 }}>
@@ -206,7 +206,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 							</MediaUploadCheck>
 
 							<TextControl
-								label={__('Alt text', 'image-composition-block')}
+								label={__('Alt text', 'adaire-blocks')}
 								value={image.alt || ''}
 								onChange={(value) => updateImage(index, 'alt', value)}
 							/>
@@ -214,16 +214,16 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					))}
 				</PanelBody>
 
-				<PanelBody section="style" priority="medium" title={__('Spacing', 'image-composition-block')} initialOpen={false}>
+				<PanelBody section="style" priority="medium" title={__('Spacing', 'adaire-blocks')} initialOpen={false}>
 					<RangeControl
-						label={__('Gap between images (px)', 'image-composition-block')}
+						label={__('Gap between images (px)', 'adaire-blocks')}
 						value={gap}
 						onChange={(value) => setAttributes({ gap: value })}
 						min={8}
 						max={80}
 					/>
 					<RangeControl
-						label={__('Image border radius (px)', 'image-composition-block')}
+						label={__('Image border radius (px)', 'adaire-blocks')}
 						value={borderRadius}
 						onChange={(value) => setAttributes({ borderRadius: value })}
 						min={0}
@@ -231,12 +231,12 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 				</PanelBody>
 
-				<PanelBody section="layout" title={__('Container', 'image-composition-block')} initialOpen={false}>
-					<p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Mode', 'image-composition-block')}</p>
+				<PanelBody section="layout" title={__('Container', 'adaire-blocks')} initialOpen={false}>
+					<p style={{ marginBottom: '8px', fontWeight: 600 }}>{__('Mode', 'adaire-blocks')}</p>
 					<ButtonGroup style={{ marginBottom: '16px' }}>
 						{[
-							{ label: __('Full Width', 'image-composition-block'), value: 'full' },
-							{ label: __('Constrained', 'image-composition-block'), value: 'constrained' },
+							{ label: __('Full Width', 'adaire-blocks'), value: 'full' },
+							{ label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
 						].map((opt) => (
 							<Button
 								key={opt.value}
@@ -252,7 +252,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 					{containerMode === 'constrained' && (
 						<>
 							<p style={{ marginTop: 8, marginBottom: 8, fontWeight: 600 }}>
-								{__('Max width', 'image-composition-block')}
+								{__('Max width', 'adaire-blocks')}
 							</p>
 							<DeviceSwitcher
 								deviceType={deviceType}
@@ -317,20 +317,20 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 				>
 					<QuickZone
 						id="layout"
-						label={__('Layout', 'image-composition-block')}
+						label={__('Layout', 'adaire-blocks')}
 						activeZone={activeZone}
 						setActiveZone={setActiveZone}
 						content={
 							<>
 								<RangeControl
-									label={__('Gap between images (px)', 'image-composition-block')}
+									label={__('Gap between images (px)', 'adaire-blocks')}
 									value={gap}
 									onChange={(value) => setAttributes({ gap: value })}
 									min={8}
 									max={80}
 								/>
 								<RangeControl
-									label={__('Image border radius (px)', 'image-composition-block')}
+									label={__('Image border radius (px)', 'adaire-blocks')}
 									value={borderRadius}
 									onChange={(value) => setAttributes({ borderRadius: value })}
 									min={0}
@@ -342,7 +342,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 						<div className="adaire-image-composition__grid">
 							{images.length === 0 && (
 								<div className="adaire-image-composition__placeholder">
-									<p>{__('Add images from the sidebar to build your composition.', 'image-composition-block')}</p>
+									<p>{__('Add images from the sidebar to build your composition.', 'adaire-blocks')}</p>
 								</div>
 							)}
 							{images.map((image, index) => (
@@ -354,7 +354,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 										<img src={image.url} alt={image.alt || ''} />
 									) : (
 										<div className="adaire-image-composition__item-placeholder">
-											<span>{__('Select an image', 'image-composition-block')}</span>
+											<span>{__('Select an image', 'adaire-blocks')}</span>
 										</div>
 									)}
 								</div>

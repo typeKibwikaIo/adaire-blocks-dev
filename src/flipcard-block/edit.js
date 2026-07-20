@@ -91,33 +91,33 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody title={__('Card Dimensions', 'flipcard-block')} initialOpen={true}>
+                <PanelBody title={__('Card Dimensions', 'adaire-blocks')} initialOpen={true}>
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>
-                        {__('Device', 'flipcard-block')}
+                        {__('Device', 'adaire-blocks')}
                     </p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         <Button
                             icon={desktop}
                             isPrimary={deviceType === 'desktop'}
                             onClick={() => setDeviceType('desktop')}
-                            label={__('Desktop', 'flipcard-block')}
+                            label={__('Desktop', 'adaire-blocks')}
                         />
                         <Button
                             icon={tablet}
                             isPrimary={deviceType === 'tablet'}
                             onClick={() => setDeviceType('tablet')}
-                            label={__('Tablet', 'flipcard-block')}
+                            label={__('Tablet', 'adaire-blocks')}
                         />
                         <Button
                             icon={mobile}
                             isPrimary={deviceType === 'mobile'}
                             onClick={() => setDeviceType('mobile')}
-                            label={__('Mobile', 'flipcard-block')}
+                            label={__('Mobile', 'adaire-blocks')}
                         />
                     </ButtonGroup>
 
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>
-                        {__('Card Width', 'flipcard-block')}
+                        {__('Card Width', 'adaire-blocks')}
                     </p>
                     <div style={{ marginBottom: '16px' }}>
                         <TextControl
@@ -164,7 +164,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </div>
 
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>
-                        {__('Card Height', 'flipcard-block')}
+                        {__('Card Height', 'adaire-blocks')}
                     </p>
                     <div style={{ marginBottom: '16px' }}>
                         <TextControl
@@ -211,8 +211,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </div>
                 </PanelBody>
 
-                <PanelBody title={__('Card Styling', 'flipcard-block')} initialOpen={false}>
-                    <BaseControl label={__('Front Background Color', 'flipcard-block')}>
+                <PanelBody title={__('Card Styling', 'adaire-blocks')} initialOpen={false}>
+                    <BaseControl label={__('Front Background Color', 'adaire-blocks')}>
                         <ColorPicker
                             color={frontBackgroundColor || '#ffffff'}
                             onChangeComplete={(color) => {
@@ -229,11 +229,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             isSmall
                             style={{ marginTop: '8px' }}
                         >
-                            {__('Reset', 'flipcard-block')}
+                            {__('Reset', 'adaire-blocks')}
                         </Button>
                     </BaseControl>
 
-                    <BaseControl label={__('Back Background Color', 'flipcard-block')} style={{ marginTop: '16px' }}>
+                    <BaseControl label={__('Back Background Color', 'adaire-blocks')} style={{ marginTop: '16px' }}>
                         <ColorPicker
                             color={backBackgroundColor || '#f5f5f5'}
                             onChangeComplete={(color) => {
@@ -250,14 +250,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             isSmall
                             style={{ marginTop: '8px' }}
                         >
-                            {__('Reset', 'flipcard-block')}
+                            {__('Reset', 'adaire-blocks')}
                         </Button>
                     </BaseControl>
 
                     <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>
-                        {__('Front Face Border', 'flipcard-block')}
+                        {__('Front Face Border', 'adaire-blocks')}
                     </p>
-                    <BaseControl label={__('Front Border Color', 'flipcard-block')}>
+                    <BaseControl label={__('Front Border Color', 'adaire-blocks')}>
                         <ColorPicker
                             color={frontBorderColor || '#e0e0e0'}
                             onChangeComplete={(color) => {
@@ -274,12 +274,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             isSmall
                             style={{ marginTop: '8px' }}
                         >
-                            {__('Reset', 'flipcard-block')}
+                            {__('Reset', 'adaire-blocks')}
                         </Button>
                     </BaseControl>
 
                     <RangeControl
-                        label={__('Front Border Width (px)', 'flipcard-block')}
+                        label={__('Front Border Width (px)', 'adaire-blocks')}
                         value={frontBorderWidth ?? 1}
                         onChange={(value) => setAttributes({ frontBorderWidth: value })}
                         min={0}
@@ -288,9 +288,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>
-                        {__('Back Face Border', 'flipcard-block')}
+                        {__('Back Face Border', 'adaire-blocks')}
                     </p>
-                    <BaseControl label={__('Back Border Color', 'flipcard-block')}>
+                    <BaseControl label={__('Back Border Color', 'adaire-blocks')}>
                         <ColorPicker
                             color={backBorderColor || '#e0e0e0'}
                             onChangeComplete={(color) => {
@@ -307,12 +307,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             isSmall
                             style={{ marginTop: '8px' }}
                         >
-                            {__('Reset', 'flipcard-block')}
+                            {__('Reset', 'adaire-blocks')}
                         </Button>
                     </BaseControl>
 
                     <RangeControl
-                        label={__('Back Border Width (px)', 'flipcard-block')}
+                        label={__('Back Border Width (px)', 'adaire-blocks')}
                         value={backBorderWidth ?? 1}
                         onChange={(value) => setAttributes({ backBorderWidth: value })}
                         min={0}
@@ -321,7 +321,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <RangeControl
-                        label={__('Border Radius (px)', 'flipcard-block')}
+                        label={__('Border Radius (px)', 'adaire-blocks')}
                         value={borderRadius ?? 8}
                         onChange={(value) => setAttributes({ borderRadius: value })}
                         min={0}
@@ -330,7 +330,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <RangeControl
-                        label={__('Padding (px)', 'flipcard-block')}
+                        label={__('Padding (px)', 'adaire-blocks')}
                         value={padding ?? 20}
                         onChange={(value) => setAttributes({ padding: value })}
                         min={0}
@@ -339,7 +339,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <RangeControl
-                        label={__('Shadow Intensity', 'flipcard-block')}
+                        label={__('Shadow Intensity', 'adaire-blocks')}
                         value={shadowIntensity ?? 0.1}
                         onChange={(value) => setAttributes({ shadowIntensity: value })}
                         min={0}
@@ -348,18 +348,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Flip Animation', 'flipcard-block')} initialOpen={false}>
+                <PanelBody title={__('Flip Animation', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
-                        label={__('Flip Direction', 'flipcard-block')}
+                        label={__('Flip Direction', 'adaire-blocks')}
                         value={flipDirection}
                         options={[
-                            { label: __('Horizontal', 'flipcard-block'), value: 'horizontal' },
-                            { label: __('Vertical', 'flipcard-block'), value: 'vertical' },
+                            { label: __('Horizontal', 'adaire-blocks'), value: 'horizontal' },
+                            { label: __('Vertical', 'adaire-blocks'), value: 'vertical' },
                         ]}
                         onChange={(value) => setAttributes({ flipDirection: value })}
                     />
                     <RangeControl
-                        label={__('Animation Duration (s)', 'flipcard-block')}
+                        label={__('Animation Duration (s)', 'adaire-blocks')}
                         value={animationDuration}
                         onChange={(value) => setAttributes({ animationDuration: value })}
                         min={0.3}
@@ -367,13 +367,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         step={0.1}
                     />
                     <SelectControl
-                        label={__('Animation Easing', 'flipcard-block')}
+                        label={__('Animation Easing', 'adaire-blocks')}
                         value={animationEasing}
                         options={[
-                            { label: __('Ease In Out', 'flipcard-block'), value: 'ease-in-out' },
-                            { label: __('Ease In', 'flipcard-block'), value: 'ease-in' },
-                            { label: __('Ease Out', 'flipcard-block'), value: 'ease-out' },
-                            { label: __('Linear', 'flipcard-block'), value: 'linear' },
+                            { label: __('Ease In Out', 'adaire-blocks'), value: 'ease-in-out' },
+                            { label: __('Ease In', 'adaire-blocks'), value: 'ease-in' },
+                            { label: __('Ease Out', 'adaire-blocks'), value: 'ease-out' },
+                            { label: __('Linear', 'adaire-blocks'), value: 'linear' },
                         ]}
                         onChange={(value) => setAttributes({ animationEasing: value })}
                     />
@@ -383,12 +383,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             <div {...blockProps}>
                 <QuickZone
                     id="colors"
-                    label={__('Colors', 'flipcard-block')}
+                    label={__('Colors', 'adaire-blocks')}
                     activeZone={activeZone}
                     setActiveZone={setActiveZone}
                     content={
                         <>
-                            <p>{__('Front Background', 'flipcard-block')}</p>
+                            <p>{__('Front Background', 'adaire-blocks')}</p>
                             <ColorPicker
                                 color={frontBackgroundColor || '#ffffff'}
                                 onChangeComplete={(color) => {
@@ -400,7 +400,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 }}
                                 enableAlpha={true}
                             />
-                            <p>{__('Back Background', 'flipcard-block')}</p>
+                            <p>{__('Back Background', 'adaire-blocks')}</p>
                             <ColorPicker
                                 color={backBackgroundColor || '#f5f5f5'}
                                 onChangeComplete={(color) => {

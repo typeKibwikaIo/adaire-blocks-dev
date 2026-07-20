@@ -173,7 +173,7 @@ export default function Edit( { attributes: a, setAttributes } ) {
 		<>
 			{ /* ── Sidebar ─────────────────────────────────────── */ }
 			<InspectorTabs attributes={a} setAttributes={setAttributes}>
-				<PanelBody title={ __( 'Layout', 'about-us-block' ) } initialOpen>
+				<PanelBody title={ __( 'Layout', 'adaire-blocks' ) } initialOpen>
 					<ToggleGroupControl
 						label={ __( 'Content Width' ) }
 						value={ a.contentWidth || '' }
@@ -204,7 +204,7 @@ export default function Edit( { attributes: a, setAttributes } ) {
 						) ) }
 					</ToggleGroupControl>
 				</PanelBody>
-				<PanelBody title={ __( 'Hero', 'about-us-block' ) } initialOpen>
+				<PanelBody title={ __( 'Hero', 'adaire-blocks' ) } initialOpen>
 					<ToggleControl
 						label={ __( 'Show scroll button' ) }
 						checked={ a.showScrollButton }

@@ -15,7 +15,7 @@
         "customClassName": true,
         "reusable": true
     },
-    "textdomain": "logos-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -66,7 +66,15 @@
         },
         "titleFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "titleColor": {
             "type": "string",
@@ -94,7 +102,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

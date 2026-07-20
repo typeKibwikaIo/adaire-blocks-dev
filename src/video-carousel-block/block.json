@@ -15,7 +15,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "video-carousel-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "style": "file:./style-index.css",
     "viewScript": "file:./view.js",
@@ -136,7 +136,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",
@@ -213,7 +217,13 @@
         },
         "dragCursorTextTransform": {
             "type": "string",
-            "default": "uppercase"
+            "default": "uppercase",
+            "enum": [
+                "uppercase",
+                "lowercase",
+                "capitalize",
+                "none"
+            ]
         },
         "metaTextAlign": {
             "type": "string",

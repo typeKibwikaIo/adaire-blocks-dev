@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Adaire Blocks
  * Description:       A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.
- * Version:           1.2.9
+ * Version:           1.3.0
  * Requires at least: 6.7
  * Requires PHP:      7.0
  * Author:            <a href="https://adaireblocks.com" target="_blank">Adaire Digital</a>
@@ -227,7 +227,7 @@ add_action('admin_notices', function () {
 // End of version rollback code
 
 // Define plugin constants
-define('ADAIRE_BLOCKS_VERSION', '1.2.9');
+define('ADAIRE_BLOCKS_VERSION', '1.3.0');
 define('ADAIRE_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
@@ -390,6 +390,9 @@ function adaire_render_license_notice($block_name) {
 
 // Include block migration tool
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/block-migration.php';
+
+// Site-wide Cookie Categories admin page (Pro Cookie Banner block).
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/cookie-categories-page.php';
 
 // Make the free Cookie Notice block render on every front-end page, not just
 // the one page/post it's inserted into.
@@ -2147,6 +2150,18 @@ function adaire_blocks_filter_editor_blocks() {
 	}
 }
 
+// Expose the plugin URL to block editor JS so blocks that need to load an
+// asset directly (e.g. infogrid-2-block's iframe-safe Bootstrap Icons link,
+// see src/infogrid-2-block/edit.js) can build a local URL instead of hardcoding one.
+function adaire_blocks_expose_plugin_url_to_editor() {
+	wp_add_inline_script(
+		'wp-blocks',
+		'window.AdaireBlocksPluginUrl = ' . wp_json_encode( ADAIRE_BLOCKS_PLUGIN_URL ) . ';',
+		'before'
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'adaire_blocks_expose_plugin_url_to_editor', 1 );
+
 // Enqueue Locomotive Scroll assets if the locomotive-block is present on the page
 function enqueue_locomotive_scroll_assets() {
     if ( is_admin() ) {
@@ -2175,7 +2190,8 @@ function enqueue_locomotive_scroll_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_locomotive_scroll_assets' );
 
-// Enqueue Bootstrap Icons CSS if any block that uses Bootstrap icons is present on the page
+// Enqueue Bootstrap Icons CSS (bundled locally — see assets/vendor/bootstrap-icons/)
+// if any block that uses Bootstrap icons is present on the page.
 function enqueue_bootstrap_icons_assets() {
     if ( is_admin() ) {
         return;
@@ -2194,10 +2210,9 @@ function enqueue_bootstrap_icons_assets() {
         has_block( 'create-block/saas-hero-block', $post ) ||
         has_block( 'create-block/rating-badge-block', $post )
     ) {
-        // Enqueue Bootstrap Icons CSS from CDN
         wp_enqueue_style(
             'bootstrap-icons',
-            'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
+            ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css',
             array(),
             '1.13.1'
         );
@@ -2210,7 +2225,7 @@ function enqueue_bootstrap_icons_editor() {
     // Use admin_enqueue_scripts instead to avoid interfering with block registration
     wp_enqueue_style(
         'bootstrap-icons',
-        'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
+        ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css',
         array(),
         '1.13.1'
     );
@@ -2536,15 +2551,29 @@ function adaire_blocks_enqueue_admin_icons() {
 add_action( 'admin_enqueue_scripts', 'adaire_blocks_enqueue_admin_icons' );
 
 /**
- * Enqueue Bootstrap Icons for the editor and frontend.
+ * Enqueue the Elementor-style editor panel (compiled via webpack.config.js).
  */
-function adaire_blocks_enqueue_bootstrap_icons() {
-	wp_enqueue_style(
-		'adaire-blocks-bootstrap-icons',
-		'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
-		array(),
-		'1.11.3'
+function adaire_enqueue_editor_panel() {
+	$asset_file_path = plugin_dir_path( __FILE__ ) . 'build/editor-panel/index.asset.php';
+	if ( ! file_exists( $asset_file_path ) ) {
+		return; // Not yet built — skip silently.
+	}
+	$asset_file = include $asset_file_path;
+	wp_enqueue_script(
+		'adaire-editor-panel',
+		plugins_url( 'build/editor-panel/index.js', __FILE__ ),
+		$asset_file['dependencies'],
+		$asset_file['version'],
+		true
 	);
+	$style_path = plugin_dir_path( __FILE__ ) . 'build/editor-panel/style-index.css';
+	if ( file_exists( $style_path ) ) {
+		wp_enqueue_style(
+			'adaire-editor-panel-style',
+			plugins_url( 'build/editor-panel/style-index.css', __FILE__ ),
+			array(),
+			$asset_file['version']
+		);
+	}
 }
-add_action( 'wp_enqueue_scripts', 'adaire_blocks_enqueue_bootstrap_icons' );
-add_action( 'enqueue_block_editor_assets', 'adaire_blocks_enqueue_bootstrap_icons' );
+add_action( 'enqueue_block_editor_assets', 'adaire_enqueue_editor_panel' );

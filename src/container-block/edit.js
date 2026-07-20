@@ -58,67 +58,67 @@ export default function Edit({ attributes, setAttributes }) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody section="layout" title={__('Container Settings', 'container-block')} initialOpen={true}>
+                <PanelBody section="layout" title={__('Container Settings', 'adaire-blocks')} initialOpen={true}>
                     <TextControl
-                        label={__('Max Width', 'container-block')}
+                        label={__('Max Width', 'adaire-blocks')}
                         value={maxWidth}
                         onChange={(value) => setAttributes({ maxWidth: value })}
                         placeholder="1200px"
                     />
                     <SelectControl
-                        label={__('Alignment', 'container-block')}
+                        label={__('Alignment', 'adaire-blocks')}
                         value={alignContainer}
                         options={[
-                            { label: __('Center', 'container-block'), value: 'center' },
-                            { label: __('Left', 'container-block'), value: 'left' },
-                            { label: __('Right', 'container-block'), value: 'right' },
-                            { label: __('Full Width', 'container-block'), value: 'full' }
+                            { label: __('Center', 'adaire-blocks'), value: 'center' },
+                            { label: __('Left', 'adaire-blocks'), value: 'left' },
+                            { label: __('Right', 'adaire-blocks'), value: 'right' },
+                            { label: __('Full Width', 'adaire-blocks'), value: 'full' }
                         ]}
                         onChange={(value) => setAttributes({ alignContainer: value })}
                     />
                     <TextControl
-                        label={__('Min Height', 'container-block')}
+                        label={__('Min Height', 'adaire-blocks')}
                         value={minHeight}
                         onChange={(value) => setAttributes({ minHeight: value })}
                         placeholder="auto"
                     />
                     <SelectControl
-                        label={__('Overflow', 'container-block')}
+                        label={__('Overflow', 'adaire-blocks')}
                         value={overflow}
                         options={[
-                            { label: __('Visible', 'container-block'), value: 'visible' },
-                            { label: __('Hidden', 'container-block'), value: 'hidden' },
-                            { label: ('Auto', 'container-block'), value: 'auto' },
-                            { label: ('Scroll', 'container-block'), value: 'scroll' }
+                            { label: __('Visible', 'adaire-blocks'), value: 'visible' },
+                            { label: __('Hidden', 'adaire-blocks'), value: 'hidden' },
+                            { label: ('Auto', 'adaire-blocks'), value: 'auto' },
+                            { label: ('Scroll', 'adaire-blocks'), value: 'scroll' }
                         ]}
                         onChange={(value) => setAttributes({ overflow: value })}
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Padding', 'container-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Padding', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Padding Top (px)', 'container-block')}
+                        label={__('Padding Top (px)', 'adaire-blocks')}
                         value={paddingTop}
                         onChange={(value) => setAttributes({ paddingTop: value })}
                         min={0}
                         max={200}
                     />
                     <RangeControl
-                        label={__('Padding Bottom (px)', 'container-block')}
+                        label={__('Padding Bottom (px)', 'adaire-blocks')}
                         value={paddingBottom}
                         onChange={(value) => setAttributes({ paddingBottom: value })}
                         min={0}
                         max={200}
                     />
                     <RangeControl
-                        label={__('Padding Left (px)', 'container-block')}
+                        label={__('Padding Left (px)', 'adaire-blocks')}
                         value={paddingLeft}
                         onChange={(value) => setAttributes({ paddingLeft: value })}
                         min={0}
                         max={200}
                     />
                     <RangeControl
-                        label={__('Padding Right (px)', 'container-block')}
+                        label={__('Padding Right (px)', 'adaire-blocks')}
                         value={paddingRight}
                         onChange={(value) => setAttributes({ paddingRight: value })}
                         min={0}
@@ -126,16 +126,16 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Margin', 'container-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Margin', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Margin Top (px)', 'container-block')}
+                        label={__('Margin Top (px)', 'adaire-blocks')}
                         value={marginTop}
                         onChange={(value) => setAttributes({ marginTop: value })}
                         min={0}
                         max={200}
                     />
                     <RangeControl
-                        label={__('Margin Bottom (px)', 'container-block')}
+                        label={__('Margin Bottom (px)', 'adaire-blocks')}
                         value={marginBottom}
                         onChange={(value) => setAttributes({ marginBottom: value })}
                         min={0}
@@ -143,20 +143,20 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Background', 'container-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Background', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
-                        label={__('Background Type', 'container-block')}
+                        label={__('Background Type', 'adaire-blocks')}
                         value={backgroundType}
                         options={[
-                            { label: __('Solid Color', 'container-block'), value: 'solid' },
-                            { label: __('Gradient', 'container-block'), value: 'gradient' },
-                            { label: __('Image', 'container-block'), value: 'image' }
+                            { label: __('Solid Color', 'adaire-blocks'), value: 'solid' },
+                            { label: __('Gradient', 'adaire-blocks'), value: 'gradient' },
+                            { label: __('Image', 'adaire-blocks'), value: 'image' }
                         ]}
                         onChange={(value) => setAttributes({ backgroundType: value })}
                     />
                     {backgroundType === 'solid' && (
                         <div style={{ marginBottom: '16px' }}>
-                            <label>{__('Background Color', 'container-block')}</label>
+                            <label>{__('Background Color', 'adaire-blocks')}</label>
                             <ColorPicker
                                 color={backgroundColor}
                                 onChangeComplete={(color) => setAttributes({ backgroundColor: color.hex })}
@@ -166,7 +166,7 @@ export default function Edit({ attributes, setAttributes }) {
                     )}
                     {backgroundType === 'gradient' && (
                         <div style={{ marginBottom: '16px' }}>
-                            <label>{__('Gradient', 'container-block')}</label>
+                            <label>{__('Gradient', 'adaire-blocks')}</label>
                             <ColorPicker
                                 color={backgroundGradient}
                                 onChangeComplete={(color) => setAttributes({ backgroundGradient: color.hex })}
@@ -176,7 +176,7 @@ export default function Edit({ attributes, setAttributes }) {
                     )}
                     {backgroundType === 'image' && (
                         <TextControl
-                            label={__('Background Image URL', 'container-block')}
+                            label={__('Background Image URL', 'adaire-blocks')}
                             value={backgroundImage}
                             onChange={(value) => setAttributes({ backgroundImage: value })}
                             placeholder="https://example.com/image.jpg"
@@ -184,23 +184,23 @@ export default function Edit({ attributes, setAttributes }) {
                     )}
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Border', 'container-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Border', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Border Radius (px)', 'container-block')}
+                        label={__('Border Radius (px)', 'adaire-blocks')}
                         value={borderRadius}
                         onChange={(value) => setAttributes({ borderRadius: value })}
                         min={0}
                         max={100}
                     />
                     <RangeControl
-                        label={__('Border Width (px)', 'container-block')}
+                        label={__('Border Width (px)', 'adaire-blocks')}
                         value={borderWidth}
                         onChange={(value) => setAttributes({ borderWidth: value })}
                         min={0}
                         max= {20}
                     />
                     <div style={{ marginBottom: '16px' }}>
-                        <label>{__('Border Color', 'container-block')}</label>
+                        <label>{__('Border Color', 'adaire-blocks')}</label>
                         <ColorPicker
                             color={borderColor}
                             onChangeComplete={(color) => setAttributes({ borderColor: color.hex })}
@@ -208,14 +208,14 @@ export default function Edit({ attributes, setAttributes }) {
                         />
                     </div>
                     <SelectControl
-                        label={__('Box Shadow', 'container-block')}
+                        label={__('Box Shadow', 'adaire-blocks')}
                         value={boxShadow}
                         options={[
-                            { label: __('None', 'container-block'), value: 'none' },
-                            { label: __('Small', 'container-block'), value: '0 2px 4px rgba(0,0,0,0.1)' },
-                            { label: __('Medium', 'container-block'), value: '0 4px 8px rgba(0,0,0,0.15)' },
-                            { label: __('Large', 'container-block'), value: '0 8px 16px rgba(0,0,0,0.2)' },
-                            { label: __('Custom', 'container-block'), value: 'custom' }
+                            { label: __('None', 'adaire-blocks'), value: 'none' },
+                            { label: __('Small', 'adaire-blocks'), value: '0 2px 4px rgba(0,0,0,0.1)' },
+                            { label: __('Medium', 'adaire-blocks'), value: '0 4px 8px rgba(0,0,0,0.15)' },
+                            { label: __('Large', 'adaire-blocks'), value: '0 8px 16px rgba(0,0,0,0.2)' },
+                            { label: __('Custom', 'adaire-blocks'), value: 'custom' }
                         ]}
                         onChange={(value) => setAttributes({ boxShadow: value })}
                     />
@@ -225,18 +225,18 @@ export default function Edit({ attributes, setAttributes }) {
             <div {...blockProps}>
                 <QuickZone
                     id="background"
-                    label={__('Background', 'container-block')}
+                    label={__('Background', 'adaire-blocks')}
                     activeZone={activeZone}
                     setActiveZone={setActiveZone}
                     content={
                         <>
                             <SelectControl
-                                label={__('Background Type', 'container-block')}
+                                label={__('Background Type', 'adaire-blocks')}
                                 value={backgroundType}
                                 options={[
-                                    { label: __('Solid Color', 'container-block'), value: 'solid' },
-                                    { label: __('Gradient', 'container-block'), value: 'gradient' },
-                                    { label: __('Image', 'container-block'), value: 'image' }
+                                    { label: __('Solid Color', 'adaire-blocks'), value: 'solid' },
+                                    { label: __('Gradient', 'adaire-blocks'), value: 'gradient' },
+                                    { label: __('Image', 'adaire-blocks'), value: 'image' }
                                 ]}
                                 onChange={(value) => setAttributes({ backgroundType: value })}
                             />
@@ -248,7 +248,7 @@ export default function Edit({ attributes, setAttributes }) {
                                 />
                             )}
                             <RangeControl
-                                label={__('Border Radius (px)', 'container-block')}
+                                label={__('Border Radius (px)', 'adaire-blocks')}
                                 value={borderRadius}
                                 onChange={(value) => setAttributes({ borderRadius: value })}
                                 min={0}

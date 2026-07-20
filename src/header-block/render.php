@@ -408,7 +408,7 @@ if ( ! function_exists( 'adaire_header_render_cart' ) ) {
 			$count = function_exists( 'WC' ) && WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
 			$badge = ( $show_count ) ? '<span class="adaire-header-cart-count">' . esc_html( $count ) . '</span>' : '';
 
-			return '<a class="adaire-header-cart" href="' . esc_url( wc_get_cart_url() ) . '" aria-label="' . esc_attr__( 'View cart', 'header-block' ) . '">' . $icon_html . $badge . '</a>';
+			return '<a class="adaire-header-cart" href="' . esc_url( wc_get_cart_url() ) . '" aria-label="' . esc_attr__( 'View cart', 'adaire-blocks' ) . '">' . $icon_html . $badge . '</a>';
 		}
 
 		// WooCommerce not active — render a non-functional placeholder so the
@@ -543,13 +543,13 @@ if ( ! function_exists( 'adaire_header_label_from_url' ) ) {
 	function adaire_header_label_from_url( $url ) {
 		$path = trim( (string) wp_parse_url( (string) $url, PHP_URL_PATH ), '/' );
 		if ( '' === $path ) {
-			return __( 'Menu item', 'header-block' );
+			return __( 'Menu item', 'adaire-blocks' );
 		}
 		$segments = explode( '/', $path );
 		$slug     = end( $segments );
 		$slug     = str_replace( array( '-', '_' ), ' ', $slug );
 		$slug     = trim( $slug );
-		return '' !== $slug ? ucwords( $slug ) : __( 'Menu item', 'header-block' );
+		return '' !== $slug ? ucwords( $slug ) : __( 'Menu item', 'adaire-blocks' );
 	}
 }
 
@@ -691,7 +691,7 @@ if ( ! function_exists( 'adaire_header_render_menu_node' ) ) {
 		$out .= '<a class="adaire-header-nav-item" href="' . esc_url( $url ) . '">' . $label_inner . '</a>';
 		$out .= '<button type="button" class="adaire-header-submenu-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="' . esc_attr( $submenu_id ) . '">';
 		$out .= '<svg class="adaire-header-submenu-caret" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" /></svg>';
-		$out .= '<span class="screen-reader-text">' . esc_html__( 'Toggle submenu', 'header-block' ) . '</span>';
+		$out .= '<span class="screen-reader-text">' . esc_html__( 'Toggle submenu', 'adaire-blocks' ) . '</span>';
 		$out .= '</button>';
 		$out .= '</span>';
 
@@ -758,7 +758,7 @@ if ( ! function_exists( 'adaire_header_render_nav' ) ) {
 		$close_btn = '';
 		if ( $nav_id && in_array( $attributes['mobileMenuStyle'] ?? 'dropdown', array( 'slide-in', 'overlay' ), true ) ) {
 			$close_icon = '<svg class="adaire-header-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
-			$close_btn  = '<button class="adaire-header-mobile-close" type="button" aria-label="' . esc_attr__( 'Close menu', 'header-block' ) . '">' . $close_icon . '</button>';
+			$close_btn  = '<button class="adaire-header-mobile-close" type="button" aria-label="' . esc_attr__( 'Close menu', 'adaire-blocks' ) . '">' . $close_icon . '</button>';
 		}
 
 		// Mobile-only CTA — reuses the existing "Get started" CTA settings
@@ -775,11 +775,11 @@ if ( ! function_exists( 'adaire_header_render_nav' ) ) {
 		$mobile_cta = '';
 		if ( $nav_id && ! empty( $attributes['showCta'] ) ) {
 			$show_icon_cta_mobile = ! isset( $attributes['showCtaIcon'] ) || $attributes['showCtaIcon'];
-			$cta_html              = adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'header-block' ), $attributes['ctaIconPosition'], 'cta', $show_icon_cta_mobile );
+			$cta_html              = adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'adaire-blocks' ), $attributes['ctaIconPosition'], 'cta', $show_icon_cta_mobile );
 			$mobile_cta             = '<div class="adaire-header-nav-mobile-cta">' . $cta_html . '</div>';
 		}
 
-		return '<nav' . $id_attr . ' class="adaire-header-nav is-' . esc_attr( $attributes['navOrientation'] ) . '" aria-label="' . esc_attr__( 'Header navigation', 'header-block' ) . '">' . $close_btn . $inner . $mobile_cta . '</nav>';
+		return '<nav' . $id_attr . ' class="adaire-header-nav is-' . esc_attr( $attributes['navOrientation'] ) . '" aria-label="' . esc_attr__( 'Header navigation', 'adaire-blocks' ) . '">' . $close_btn . $inner . $mobile_cta . '</nav>';
 	}
 }
 
@@ -800,7 +800,7 @@ if ( ! function_exists( 'adaire_header_render_search' ) ) {
 
 		$out = '<div class="adaire-header-search is-' . esc_attr( $mode ) . ' layout-' . esc_attr( $layout ) . '">';
 		if ( 'expanded' !== $layout ) {
-			$out .= '<button class="adaire-header-search-button" type="button" aria-label="' . esc_attr__( 'Open search', 'header-block' ) . '">' . adaire_header_icon_svg( 'search' ) . '</button>';
+			$out .= '<button class="adaire-header-search-button" type="button" aria-label="' . esc_attr__( 'Open search', 'adaire-blocks' ) . '">' . adaire_header_icon_svg( 'search' ) . '</button>';
 		}
 		$out .= '<form class="adaire-header-search-form" role="search" method="get" action="/">';
 		if ( 'expanded' === $layout ) {
@@ -981,7 +981,7 @@ if ( ! function_exists( 'adaire_header_render_mobile_toggle' ) ) {
 		$icon_style_class = ( 'bars' !== $icon_style ) ? ( ' icon-style-' . $icon_style ) : '';
 		$controls_attr    = $nav_id ? ( ' aria-controls="' . esc_attr( $nav_id ) . '"' ) : '';
 
-		return '<button class="adaire-header-mobile-toggle' . esc_attr( $icon_style_class ) . '" type="button" aria-label="' . esc_attr__( 'Toggle menu', 'header-block' ) . '" aria-expanded="false"' . $controls_attr . '><span></span><span></span><span></span></button>';
+		return '<button class="adaire-header-mobile-toggle' . esc_attr( $icon_style_class ) . '" type="button" aria-label="' . esc_attr__( 'Toggle menu', 'adaire-blocks' ) . '" aria-expanded="false"' . $controls_attr . '><span></span><span></span><span></span></button>';
 	}
 }
 
@@ -1133,9 +1133,9 @@ if ( ! in_array( $search_position, array( 'end', 'center', 'floating' ), true ) 
 if ( 'actions' === $social_placement ) {
 	$html .= $social_html;
 }
-$html .= adaire_header_render_action( $attributes['showSignIn'], $attributes['signInText'], $attributes['signInUrl'], $attributes['signInNewTab'], $attributes['signInStyle'], $attributes['signInIcon'], __( 'Sign in', 'header-block' ), 'left', 'signin', $show_icon_signin );
-$html .= adaire_header_render_action( $attributes['showSignUp'], $attributes['signUpText'], $attributes['signUpUrl'], $attributes['signUpNewTab'], $attributes['signUpStyle'], $attributes['signUpIcon'], __( 'Sign up', 'header-block' ), 'left', 'signup', $show_icon_signup );
-$html .= adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'header-block' ), $attributes['ctaIconPosition'], 'cta', $show_icon_cta );
+$html .= adaire_header_render_action( $attributes['showSignIn'], $attributes['signInText'], $attributes['signInUrl'], $attributes['signInNewTab'], $attributes['signInStyle'], $attributes['signInIcon'], __( 'Sign in', 'adaire-blocks' ), 'left', 'signin', $show_icon_signin );
+$html .= adaire_header_render_action( $attributes['showSignUp'], $attributes['signUpText'], $attributes['signUpUrl'], $attributes['signUpNewTab'], $attributes['signUpStyle'], $attributes['signUpIcon'], __( 'Sign up', 'adaire-blocks' ), 'left', 'signup', $show_icon_signup );
+$html .= adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'adaire-blocks' ), $attributes['ctaIconPosition'], 'cta', $show_icon_cta );
 if ( 'actions' === $payment_placement ) {
 	$html .= $payment_html;
 }

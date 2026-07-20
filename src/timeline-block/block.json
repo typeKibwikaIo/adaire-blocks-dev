@@ -15,14 +15,18 @@
         ],
         "customClassName": true
     },
-    "textdomain": "timeline-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
     "attributes": {
         "orientation": {
             "type": "string",
-            "default": "vertical"
+            "default": "vertical",
+            "enum": [
+                "vertical",
+                "horizontal"
+            ]
         },
         "eyebrow": {
             "type": "string",

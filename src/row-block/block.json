@@ -19,7 +19,18 @@
   "attributes": {
     "layout": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "enum": [
+        "",
+        "manual",
+        "1-col",
+        "2-col-50-50",
+        "2-col-66-33",
+        "2-col-33-66",
+        "3-col-33-33-33",
+        "3-col-25-50-25",
+        "4-col-25-25-25-25"
+      ]
     },
     "columnWidths": {
       "type": "array",
@@ -27,7 +38,8 @@
     },
     "align": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "enum": [ "", "wide", "full" ]
     },
     "gap": {
       "type": "number",
@@ -35,11 +47,13 @@
     },
     "verticalAlign": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "enum": [ "", "top", "center", "bottom" ]
     },
     "mobileColumns": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "enum": [ "", "1", "2" ]
     },
     "borderEnabled": {
       "type": "boolean",
@@ -51,7 +65,8 @@
     },
     "borderStyle": {
       "type": "string",
-      "default": "solid"
+      "default": "solid",
+      "enum": [ "solid", "dashed", "dotted", "double", "groove" ]
     },
     "borderColor": {
       "type": "string",

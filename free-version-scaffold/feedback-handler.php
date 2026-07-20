@@ -6,6 +6,9 @@
  *   https://adaire.com/feedback-handler.php
  *
  * Set your SendGrid API key below — this file never ships in the plugin.
+ * (Excluded from the packaged plugin by scripts/generate-free-version.js —
+ * it is a standalone script that runs on adaire.com, not inside WordPress,
+ * so it intentionally has no ABSPATH guard.)
  */
 
 define( 'ADAIRE_SENDGRID_API_KEY', 'YOUR_SENDGRID_API_KEY_HERE' );

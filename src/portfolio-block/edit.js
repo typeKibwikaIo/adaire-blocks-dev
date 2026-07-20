@@ -201,7 +201,7 @@ export default function Edit({ attributes, setAttributes }) {
 			[
 				"create-block/button-block",
 				{
-					buttonText: ctaButtonText || __("View Full Portfolio", "portfolio-block"),
+					buttonText: ctaButtonText || __("View Full Portfolio", "adaire-blocks"),
 					buttonLink: "#",
 					showIcon: true,
 				},
@@ -442,7 +442,7 @@ export default function Edit({ attributes, setAttributes }) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={__("Responsive Settings", "portfolio-block")} initialOpen={false}>
+				<PanelBody title={__("Responsive Settings", "adaire-blocks")} initialOpen={false}>
 					<DeviceSwitcher 
 						deviceType={deviceType} 
 						setDeviceType={setDeviceType}
@@ -450,35 +450,35 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 				<PanelBody
-					title={__("Agency Section Settings", "portfolio-block")}
+					title={__("Agency Section Settings", "adaire-blocks")}
 					initialOpen={true}
 				>
 					<TextControl
-						label={__("Section Title", "portfolio-block")}
+						label={__("Section Title", "adaire-blocks")}
 						value={agencyTitle}
 						onChange={(value) => setAttributes({ agencyTitle: value })}
 					/>
 
 					<TextareaControl
-						label={__("Section Description", "portfolio-block")}
+						label={__("Section Description", "adaire-blocks")}
 						value={agencyDescription}
 						onChange={(value) => setAttributes({ agencyDescription: value })}
 						rows={4}
 					/>
 
 					<TextControl
-						label={__("CTA Button Text", "portfolio-block")}
+						label={__("CTA Button Text", "adaire-blocks")}
 						value={ctaButtonText}
 						onChange={(value) => setAttributes({ ctaButtonText: value })}
 					/>
 				</PanelBody>
 
 				<PanelBody
-					title={__("Styling Options", "portfolio-block")}
+					title={__("Styling Options", "adaire-blocks")}
 					initialOpen={true}
 				>
 					<SelectControl
-						label={__("Background Type", "portfolio-block")}
+						label={__("Background Type", "adaire-blocks")}
 						value={backgroundColor?.includes("gradient") ? "gradient" : "solid"}
 						options={[
 							{ label: "Solid Color", value: "solid" },
@@ -534,7 +534,7 @@ export default function Edit({ attributes, setAttributes }) {
 					{(!backgroundColor || !backgroundColor.includes("gradient")) && (
 						<>
 							<ColorPicker
-								label={__("Background Color", "portfolio-block")}
+								label={__("Background Color", "adaire-blocks")}
 								color={backgroundColor}
 								onChangeComplete={(color) =>
 									setAttributes({ backgroundColor: color.hex })
@@ -571,7 +571,7 @@ export default function Edit({ attributes, setAttributes }) {
 					{backgroundColor && backgroundColor.includes("gradient") && (
 						<>
 							<SelectControl
-								label={__("Gradient Type", "portfolio-block")}
+								label={__("Gradient Type", "adaire-blocks")}
 								value={gradientType}
 								options={[
 									{ label: "Linear", value: "linear" },
@@ -587,7 +587,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 							{gradientType === "linear" && (
 								<RangeControl
-									label={__("Gradient Angle", "portfolio-block")}
+									label={__("Gradient Angle", "adaire-blocks")}
 									value={gradientAngle}
 									onChange={(value) => {
 										setAttributes({ gradientAngle: value });
@@ -612,11 +612,11 @@ export default function Edit({ attributes, setAttributes }) {
 								}}
 							>
 								<h4 style={{ margin: "0 0 10px 0" }}>
-									{__("Gradient Colors", "portfolio-block")}
+									{__("Gradient Colors", "adaire-blocks")}
 								</h4>
 
 								<ColorPicker
-									label={__("Color 1", "portfolio-block")}
+									label={__("Color 1", "adaire-blocks")}
 									color={gradientColor1}
 									onChangeComplete={(color) => {
 										setAttributes({ gradientColor1: color.hex });
@@ -627,7 +627,7 @@ export default function Edit({ attributes, setAttributes }) {
 								/>
 
 								<RangeControl
-									label={__("Color 1 Stop (%)", "portfolio-block")}
+									label={__("Color 1 Stop (%)", "adaire-blocks")}
 									value={gradientStop1}
 									onChange={(value) => {
 										setAttributes({ gradientStop1: value });
@@ -640,7 +640,7 @@ export default function Edit({ attributes, setAttributes }) {
 								/>
 
 								<ColorPicker
-									label={__("Color 2", "portfolio-block")}
+									label={__("Color 2", "adaire-blocks")}
 									color={gradientColor2}
 									onChangeComplete={(color) => {
 										setAttributes({ gradientColor2: color.hex });
@@ -651,7 +651,7 @@ export default function Edit({ attributes, setAttributes }) {
 								/>
 
 								<RangeControl
-									label={__("Color 2 Stop (%)", "portfolio-block")}
+									label={__("Color 2 Stop (%)", "adaire-blocks")}
 									value={gradientStop2}
 									onChange={(value) => {
 										setAttributes({ gradientStop2: value });
@@ -664,7 +664,7 @@ export default function Edit({ attributes, setAttributes }) {
 								/>
 
 								<ToggleControl
-									label={__("Add Third Color", "portfolio-block")}
+									label={__("Add Third Color", "adaire-blocks")}
 									checked={!!gradientColor3}
 									onChange={(checked) => {
 										if (checked) {
@@ -688,7 +688,7 @@ export default function Edit({ attributes, setAttributes }) {
 								{gradientColor3 && (
 									<>
 										<ColorPicker
-											label={__("Color 3", "portfolio-block")}
+											label={__("Color 3", "adaire-blocks")}
 											color={gradientColor3}
 											onChangeComplete={(color) => {
 												setAttributes({ gradientColor3: color.hex });
@@ -699,7 +699,7 @@ export default function Edit({ attributes, setAttributes }) {
 										/>
 
 										<RangeControl
-											label={__("Color 3 Stop (%)", "portfolio-block")}
+											label={__("Color 3 Stop (%)", "adaire-blocks")}
 											value={gradientStop3}
 											onChange={(value) => {
 												setAttributes({ gradientStop3: value });
@@ -743,7 +743,7 @@ export default function Edit({ attributes, setAttributes }) {
 					)}
 
 					<ColorPicker
-						label={__("Text Color", "portfolio-block")}
+						label={__("Text Color", "adaire-blocks")}
 						color={textColor}
 						onChangeComplete={(color) =>
 							setAttributes({ textColor: color.hex })
@@ -752,7 +752,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<RangeControl
-						label={__("Title Font Size", "portfolio-block")}
+						label={__("Title Font Size", "adaire-blocks")}
 						value={titleFontSize}
 						onChange={(value) => setAttributes({ titleFontSize: value })}
 						min={20}
@@ -760,7 +760,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<RangeControl
-						label={__("Text Font Size", "portfolio-block")}
+						label={__("Text Font Size", "adaire-blocks")}
 						value={textFontSize}
 						onChange={(value) => setAttributes({ textFontSize: value })}
 						min={12}
@@ -768,7 +768,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<RangeControl
-						label={__("Slide Title Font Size", "portfolio-block")}
+						label={__("Slide Title Font Size", "adaire-blocks")}
 						value={slideTitleFontSize}
 						onChange={(value) => setAttributes({ slideTitleFontSize: value })}
 						min={40}
@@ -776,7 +776,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<RangeControl
-						label={__("Slide Description Font Size", "portfolio-block")}
+						label={__("Slide Description Font Size", "adaire-blocks")}
 						value={slideDescriptionFontSize}
 						onChange={(value) =>
 							setAttributes({ slideDescriptionFontSize: value })
@@ -786,7 +786,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<RangeControl
-						label={__("Slide Tag Font Size", "portfolio-block")}
+						label={__("Slide Tag Font Size", "adaire-blocks")}
 						value={slideTagFontSize}
 						onChange={(value) => setAttributes({ slideTagFontSize: value })}
 						min={12}
@@ -795,10 +795,10 @@ export default function Edit({ attributes, setAttributes }) {
 				</PanelBody>
 
 				<PanelBody
-					title={__("Agency Section Typography", "portfolio-block")}
+					title={__("Agency Section Typography", "adaire-blocks")}
 					initialOpen={false}
 				>
-					<BaseControl label={__("Agency Title Color", "portfolio-block")}>
+					<BaseControl label={__("Agency Title Color", "adaire-blocks")}>
 						<ColorPicker
 							color={agencyTitleColor}
 							onChangeComplete={(color) =>
@@ -809,7 +809,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 
 					<SelectControl
-						label={__("Agency Title Font Weight", "portfolio-block")}
+						label={__("Agency Title Font Weight", "adaire-blocks")}
 						value={agencyTitleFontWeight || "600"}
 						options={[
 							{ label: "300 (Light)", value: "300" },
@@ -828,7 +828,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<BaseControl
-						label={__("Agency Description Color", "portfolio-block")}
+						label={__("Agency Description Color", "adaire-blocks")}
 					>
 						<ColorPicker
 							color={agencyDescriptionColor}
@@ -840,7 +840,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 
 					<SelectControl
-						label={__("Agency Description Font Weight", "portfolio-block")}
+						label={__("Agency Description Font Weight", "adaire-blocks")}
 						value={agencyDescriptionFontWeight || "400"}
 						options={[
 							{ label: "300 (Light)", value: "300" },
@@ -860,10 +860,10 @@ export default function Edit({ attributes, setAttributes }) {
 				</PanelBody>
 
 				<PanelBody
-					title={__("Modal Typography", "portfolio-block")}
+					title={__("Modal Typography", "adaire-blocks")}
 					initialOpen={false}
 				>
-					<BaseControl label={__("Modal Title Color", "portfolio-block")}>
+					<BaseControl label={__("Modal Title Color", "adaire-blocks")}>
 						<ColorPicker
 							color={modalTitleColor}
 							onChangeComplete={(color) =>
@@ -874,7 +874,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 
 					<SelectControl
-						label={__("Modal Title Font Weight", "portfolio-block")}
+						label={__("Modal Title Font Weight", "adaire-blocks")}
 						value={modalTitleFontWeight || "700"}
 						options={[
 							{ label: "300 (Light)", value: "300" },
@@ -890,7 +890,7 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={(value) => setAttributes({ modalTitleFontWeight: value })}
 					/>
 
-					<BaseControl label={__("Modal Description Color", "portfolio-block")}>
+					<BaseControl label={__("Modal Description Color", "adaire-blocks")}>
 						<ColorPicker
 							color={modalDescriptionColor}
 							onChangeComplete={(color) =>
@@ -901,7 +901,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 
 					<SelectControl
-						label={__("Modal Description Font Weight", "portfolio-block")}
+						label={__("Modal Description Font Weight", "adaire-blocks")}
 						value={modalDescriptionFontWeight || "400"}
 						options={[
 							{ label: "300 (Light)", value: "300" },
@@ -919,7 +919,7 @@ export default function Edit({ attributes, setAttributes }) {
 						}
 					/>
 
-					<BaseControl label={__("Modal Tag Color", "portfolio-block")}>
+					<BaseControl label={__("Modal Tag Color", "adaire-blocks")}>
 						<ColorPicker
 							color={modalTagColor}
 							onChangeComplete={(color) =>
@@ -930,7 +930,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 
 					<SelectControl
-						label={__("Modal Tag Font Weight", "portfolio-block")}
+						label={__("Modal Tag Font Weight", "adaire-blocks")}
 						value={modalTagFontWeight || "400"}
 						options={[
 							{ label: "300 (Light)", value: "300" },
@@ -1127,7 +1127,7 @@ export default function Edit({ attributes, setAttributes }) {
 				</PanelBody>
 
 				<PanelBody
-					title={__("Portfolio Slides", "portfolio-block")}
+					title={__("Portfolio Slides", "adaire-blocks")}
 					initialOpen={true}
 				>
 					<div
@@ -1159,7 +1159,7 @@ export default function Edit({ attributes, setAttributes }) {
 						}}
 					>
 						<span style={{ fontWeight: "bold" }}>
-							{__("Total Slides:", "portfolio-block")} {slides.length}
+							{__("Total Slides:", "adaire-blocks")} {slides.length}
 						</span>
 
 						<Button
@@ -1173,7 +1173,7 @@ export default function Edit({ attributes, setAttributes }) {
 								color: "white",
 							}}
 						>
-							{__("âž• Add New Slide", "portfolio-block")}
+							{__("âž• Add New Slide", "adaire-blocks")}
 						</Button>
 					</div>
 
@@ -1202,7 +1202,7 @@ export default function Edit({ attributes, setAttributes }) {
 								}}
 							>
 								<h4 style={{ margin: 0 }}>
-									{__("Slide", "portfolio-block")} {index + 1}
+									{__("Slide", "adaire-blocks")} {index + 1}
 								</h4>
 
 								<Button
@@ -1210,18 +1210,18 @@ export default function Edit({ attributes, setAttributes }) {
 									isDestructive
 									onClick={() => removeSlide(index)}
 								>
-									{__("Remove", "portfolio-block")}
+									{__("Remove", "adaire-blocks")}
 								</Button>
 							</div>
 
 							<TextControl
-								label={__("Title", "portfolio-block")}
+								label={__("Title", "adaire-blocks")}
 								value={slide.slideTitle}
 								onChange={(value) => updateSlide(index, "slideTitle", value)}
 							/>
 
 							<TextareaControl
-								label={__("Description", "portfolio-block")}
+								label={__("Description", "adaire-blocks")}
 								value={slide.slideDescription}
 								onChange={(value) =>
 									updateSlide(index, "slideDescription", value)
@@ -1230,7 +1230,7 @@ export default function Edit({ attributes, setAttributes }) {
 							/>
 
 							<TextControl
-								label={__("Project URL", "portfolio-block")}
+								label={__("Project URL", "adaire-blocks")}
 								value={slide.slideUrl}
 								onChange={(value) => updateSlide(index, "slideUrl", value)}
 							/>
@@ -1245,7 +1245,7 @@ export default function Edit({ attributes, setAttributes }) {
 										fontWeight: "500",
 									}}
 								>
-									{__("Tags", "portfolio-block")}
+									{__("Tags", "adaire-blocks")}
 								</label>
 
 								{/* Tag Input */}
@@ -1394,7 +1394,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 							<div style={{ marginTop: "10px" }}>
 								<label style={{ display: "block", marginBottom: "5px" }}>
-									{__("Project Image", "portfolio-block")}
+									{__("Project Image", "adaire-blocks")}
 								</label>
 
 								<MediaUpload
@@ -1445,7 +1445,7 @@ export default function Edit({ attributes, setAttributes }) {
 															}}
 														>
 															<Button variant="secondary" onClick={open}>
-																{__("Change Image", "portfolio-block")}
+																{__("Change Image", "adaire-blocks")}
 															</Button>
 
 															<Button
@@ -1453,13 +1453,13 @@ export default function Edit({ attributes, setAttributes }) {
 																isDestructive
 																onClick={() => removeImage(index)}
 															>
-																{__("Remove", "portfolio-block")}
+																{__("Remove", "adaire-blocks")}
 															</Button>
 														</div>
 													</>
 												) : (
 													<Button variant="secondary" onClick={open}>
-														{__("Select Image", "portfolio-block")}
+														{__("Select Image", "adaire-blocks")}
 													</Button>
 												)}
 											</div>
@@ -1541,7 +1541,7 @@ export default function Edit({ attributes, setAttributes }) {
 													/>
 												) : (
 													<div className="ad-portfolio-block__gallery-placeholder">
-														<span>{__("No Image", "portfolio-block")}</span>
+														<span>{__("No Image", "adaire-blocks")}</span>
 													</div>
 												)}
 

@@ -16,7 +16,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "pricing-table-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -28,7 +28,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "constrained"
+            "default": "constrained",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",
@@ -324,11 +328,21 @@
         },
         "cardTextAlignment": {
             "type": "string",
-            "default": "left"
+            "default": "left",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "cardButtonAlignment": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "cardHoverBackgroundColor": {
             "type": "string",
@@ -365,7 +379,18 @@
         },
         "fontFamily": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+                "",
+                "Arial, Helvetica, sans-serif",
+                "Helvetica, Arial, sans-serif",
+                "Georgia, serif",
+                "'Times New Roman', Times, serif",
+                "Verdana, Geneva, sans-serif",
+                "'Trebuchet MS', sans-serif",
+                "'Courier New', Courier, monospace",
+                "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+            ]
         },
         "headingFontWeight": {
             "type": "string",

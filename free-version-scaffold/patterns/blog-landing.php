@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
 register_block_pattern( 'adaire-blocks/blog-landing', array(
     'title'         => __( 'Blog Landing', 'adaire-blocks' ),
     'description'   => __( 'Hero section followed by a posts grid.', 'adaire-blocks' ),

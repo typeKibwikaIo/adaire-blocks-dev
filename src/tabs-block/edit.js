@@ -1,6 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
-import { gsap } from 'gsap';
 import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import {
     PanelBody,
@@ -22,65 +21,83 @@ import InspectorTabs from '../components/InspectorTabs';
 import BoundColorPalette from '../components/BoundColorPalette';
 
 const TAB_STYLE_OPTIONS = [
-    { label: __('Underline', 'tabs-block'), value: 'underline' },
-    { label: __('Pills', 'tabs-block'), value: 'pills' },
+    { label: __('Underline', 'adaire-blocks'), value: 'underline' },
+    { label: __('Pills', 'adaire-blocks'), value: 'pills' },
 ];
 
 const TAB_STYLE_HELP = {
-    underline: __('Classic tabs with an animated underline beneath the active title.', 'tabs-block'),
-    pills: __('Rounded button-style tabs, like a content switcher.', 'tabs-block'),
+    underline: __('Classic tabs with an animated underline beneath the active title.', 'adaire-blocks'),
+    pills: __('Rounded button-style tabs, like a content switcher.', 'adaire-blocks'),
 };
 
 const PILL_STYLES = [
-    { label: __('Default — outlined until active', 'tabs-block'), value: 'default' },
-    { label: __('Rounded — fully round ends', 'tabs-block'), value: 'rounded' },
-    { label: __('Outlined — border only, no fill', 'tabs-block'), value: 'outlined' },
-    { label: __('Filled — solid background', 'tabs-block'), value: 'filled' },
+    { label: __('Default — outlined until active', 'adaire-blocks'), value: 'default' },
+    { label: __('Rounded — fully round ends', 'adaire-blocks'), value: 'rounded' },
+    { label: __('Outlined — border only, no fill', 'adaire-blocks'), value: 'outlined' },
+    { label: __('Filled — solid background', 'adaire-blocks'), value: 'filled' },
 ];
 
 const HORIZONTAL_ALIGN_OPTIONS = [
-    { label: __('Left', 'tabs-block'), value: 'flex-start' },
-    { label: __('Center', 'tabs-block'), value: 'center' },
-    { label: __('Right', 'tabs-block'), value: 'flex-end' },
-    { label: __('Space Between', 'tabs-block'), value: 'space-between' },
+    { label: __('Left', 'adaire-blocks'), value: 'flex-start' },
+    { label: __('Center', 'adaire-blocks'), value: 'center' },
+    { label: __('Right', 'adaire-blocks'), value: 'flex-end' },
+    { label: __('Space Between', 'adaire-blocks'), value: 'space-between' },
 ];
 
 const VERTICAL_ALIGN_OPTIONS = [
-    { label: __('Top', 'tabs-block'), value: 'flex-start' },
-    { label: __('Center', 'tabs-block'), value: 'center' },
-    { label: __('Bottom', 'tabs-block'), value: 'flex-end' },
-    { label: __('Space Between', 'tabs-block'), value: 'space-between' },
+    { label: __('Top', 'adaire-blocks'), value: 'flex-start' },
+    { label: __('Center', 'adaire-blocks'), value: 'center' },
+    { label: __('Bottom', 'adaire-blocks'), value: 'flex-end' },
+    { label: __('Space Between', 'adaire-blocks'), value: 'space-between' },
 ];
 
 const EASE_OPTIONS = [
-    { label: __('Smooth (default)', 'tabs-block'), value: 'power2.out' },
-    { label: __('Smoother', 'tabs-block'), value: 'power3.out' },
-    { label: __('Snappy', 'tabs-block'), value: 'power4.out' },
-    { label: __('Elastic bounce', 'tabs-block'), value: 'elastic.out(1, 0.5)' },
-    { label: __('Slight overshoot', 'tabs-block'), value: 'back.out(1.2)' },
+    { label: __('Smooth (default)', 'adaire-blocks'), value: 'power2.out' },
+    { label: __('Smoother', 'adaire-blocks'), value: 'power3.out' },
+    { label: __('Snappy', 'adaire-blocks'), value: 'power4.out' },
+    { label: __('Elastic bounce', 'adaire-blocks'), value: 'elastic.out(1, 0.5)' },
+    { label: __('Slight overshoot', 'adaire-blocks'), value: 'back.out(1.2)' },
 ];
 
 const TEXT_TRANSFORM_OPTIONS = [
-    { label: __('None', 'tabs-block'), value: 'none' },
-    { label: __('UPPERCASE', 'tabs-block'), value: 'uppercase' },
-    { label: __('lowercase', 'tabs-block'), value: 'lowercase' },
-    { label: __('Capitalize', 'tabs-block'), value: 'capitalize' },
+    { label: __('None', 'adaire-blocks'), value: 'none' },
+    { label: __('UPPERCASE', 'adaire-blocks'), value: 'uppercase' },
+    { label: __('lowercase', 'adaire-blocks'), value: 'lowercase' },
+    { label: __('Capitalize', 'adaire-blocks'), value: 'capitalize' },
 ];
 
 const FONT_FAMILY_OPTIONS = [
-    { label: __('Default (inherit theme)', 'tabs-block'), value: '' },
-    { label: __('Arial', 'tabs-block'), value: 'Arial, Helvetica, sans-serif' },
-    { label: __('Helvetica', 'tabs-block'), value: 'Helvetica, Arial, sans-serif' },
-    { label: __('Georgia', 'tabs-block'), value: 'Georgia, serif' },
-    { label: __('Times New Roman', 'tabs-block'), value: "'Times New Roman', Times, serif" },
-    { label: __('Verdana', 'tabs-block'), value: 'Verdana, Geneva, sans-serif' },
-    { label: __('Trebuchet MS', 'tabs-block'), value: "'Trebuchet MS', sans-serif" },
-    { label: __('Courier New', 'tabs-block'), value: "'Courier New', Courier, monospace" },
-    { label: __('System UI', 'tabs-block'), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+    { label: __('Default (inherit theme)', 'adaire-blocks'), value: '' },
+    { label: __('Arial', 'adaire-blocks'), value: 'Arial, Helvetica, sans-serif' },
+    { label: __('Helvetica', 'adaire-blocks'), value: 'Helvetica, Arial, sans-serif' },
+    { label: __('Georgia', 'adaire-blocks'), value: 'Georgia, serif' },
+    { label: __('Times New Roman', 'adaire-blocks'), value: "'Times New Roman', Times, serif" },
+    { label: __('Verdana', 'adaire-blocks'), value: 'Verdana, Geneva, sans-serif' },
+    { label: __('Trebuchet MS', 'adaire-blocks'), value: "'Trebuchet MS', sans-serif" },
+    { label: __('Courier New', 'adaire-blocks'), value: "'Courier New', Courier, monospace" },
+    { label: __('System UI', 'adaire-blocks'), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
 ];
 
 const DEFAULT_ANIMATION_DURATION = 0.6;
 const DEFAULT_ANIMATION_EASE = 'power2.out';
+
+// Maps the GSAP ease names in EASE_OPTIONS (above) to the closest CSS
+// cubic-bezier equivalent — mirrors view.js's cssEaseFor, kept local here
+// since this is the only animation call in the editor bundle.
+const cssEaseFor = (gsapEase) => {
+    switch (gsapEase) {
+        case 'power3.out':
+            return 'cubic-bezier(0.215, 0.61, 0.355, 1)';
+        case 'power4.out':
+            return 'cubic-bezier(0.165, 0.84, 0.44, 1)';
+        case 'elastic.out(1, 0.5)':
+        case 'back.out(1.2)':
+            return 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+        case 'power2.out':
+        default:
+            return 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    }
+};
 
 // Several older attributes store per-device objects but their controls write
 // plain numbers; show the effective desktop value either way.
@@ -195,18 +212,33 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         if (!panel) {
             return;
         }
-        gsap.fromTo(
-            panel,
-            { opacity: 0, y: 20 },
-            {
-                opacity: 1,
-                y: 0,
-                duration: (animationDuration || DEFAULT_ANIMATION_DURATION) * 0.6,
-                ease: animationEase || DEFAULT_ANIMATION_EASE,
-                // Hand styling back to React/CSS once the preview finishes
-                clearProps: 'opacity,transform',
-            }
-        );
+
+        const previewDuration = (animationDuration || DEFAULT_ANIMATION_DURATION) * 0.6;
+        const previewEase = cssEaseFor(animationEase || DEFAULT_ANIMATION_EASE);
+
+        panel.style.transition = '';
+        panel.style.opacity = '0';
+        panel.style.transform = 'translateY(20px)';
+
+        void panel.offsetHeight; // force reflow
+
+        const raf = window.requestAnimationFrame(() => {
+            panel.style.transition = `opacity ${previewDuration}s ${previewEase}, transform ${previewDuration}s ${previewEase}`;
+            panel.style.opacity = '1';
+            panel.style.transform = 'translateY(0)';
+        });
+
+        // Hand styling back to React/CSS once the preview finishes.
+        const cleanupTimeout = window.setTimeout(() => {
+            panel.style.transition = '';
+            panel.style.opacity = '';
+            panel.style.transform = '';
+        }, previewDuration * 1000);
+
+        return () => {
+            window.cancelAnimationFrame(raf);
+            window.clearTimeout(cleanupTimeout);
+        };
     }, [activeTab, animationDuration, animationEase]);
 
     // Helper function to ensure we have a valid color with opacity
@@ -302,7 +334,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         const newId = `tab-${Date.now()}`;
         setAttributes({
             tabs: [...tabs, {
-                title: __('New Tab', 'tabs-block'),
+                title: __('New Tab', 'adaire-blocks'),
                 id: newId
             }]
         });
@@ -386,9 +418,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
                 {/* ————— LAYOUT TAB: Tabs (content) ————— */}
-                <PanelBody section="content" title={__('Tabs', 'tabs-block')} initialOpen={true}>
+                <PanelBody section="content" title={__('Tabs', 'adaire-blocks')} initialOpen={true}>
                     <p style={helpTextStyle}>
-                        {__('The highlighted tab is shown in the editor preview — click "Show" to edit another tab\'s content.', 'tabs-block')}
+                        {__('The highlighted tab is shown in the editor preview — click "Show" to edit another tab\'s content.', 'adaire-blocks')}
                     </p>
                     {(tabs || []).map((tab, index) => (
                         <div key={tab.id} style={{
@@ -400,7 +432,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                 <strong style={{ fontSize: '12px', color: activeTab === index ? '#503AA8' : '#555' }}>
-                                    {sprintf(__('Tab %d', 'tabs-block'), index + 1)}
+                                    {sprintf(__('Tab %d', 'adaire-blocks'), index + 1)}
                                 </strong>
                                 <div style={{ display: 'flex', gap: '2px' }}>
                                     <Button
@@ -409,21 +441,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         onClick={() => setAttributes({ activeTab: index })}
                                         aria-pressed={activeTab === index}
                                     >
-                                        {activeTab === index ? __('Showing', 'tabs-block') : __('Show', 'tabs-block')}
+                                        {activeTab === index ? __('Showing', 'adaire-blocks') : __('Show', 'adaire-blocks')}
                                     </Button>
                                     <Button
                                         icon={arrowUp}
                                         isSmall
                                         onClick={() => moveTab(index, -1)}
                                         disabled={index === 0}
-                                        label={__('Move tab up', 'tabs-block')}
+                                        label={__('Move tab up', 'adaire-blocks')}
                                     />
                                     <Button
                                         icon={arrowDown}
                                         isSmall
                                         onClick={() => moveTab(index, 1)}
                                         disabled={index === tabs.length - 1}
-                                        label={__('Move tab down', 'tabs-block')}
+                                        label={__('Move tab down', 'adaire-blocks')}
                                     />
                                     <Button
                                         icon={trash}
@@ -431,14 +463,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         isDestructive
                                         onClick={() => removeTab(index)}
                                         disabled={tabs.length <= 1}
-                                        label={__('Remove tab', 'tabs-block')}
+                                        label={__('Remove tab', 'adaire-blocks')}
                                     />
                                 </div>
                             </div>
                             <TextControl
-                                label={__('Title', 'tabs-block')}
+                                label={__('Title', 'adaire-blocks')}
                                 hideLabelFromVision
-                                placeholder={__('Tab title…', 'tabs-block')}
+                                placeholder={__('Tab title…', 'adaire-blocks')}
                                 value={tab.title}
                                 onChange={(v) => updateTab(index, { title: v })}
                             />
@@ -450,7 +482,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         onClick={addTab}
                         disabled={ isLimitReached }
                     >
-                        {__('Add Tab', 'tabs-block')}
+                        {__('Add Tab', 'adaire-blocks')}
                     </Button>
                     { showUpgradeNotice && (
                         <UpgradeNotice
@@ -461,21 +493,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     ) }
                     <div style={{ marginTop: '16px' }}>
                         <SelectControl
-                            label={__('First Tab Shown', 'tabs-block')}
+                            label={__('First Tab Shown', 'adaire-blocks')}
                             value={activeTab}
                             options={(tabs || []).map((tab, index) => ({
                                 label: `${index + 1}. ${tab.title}`,
                                 value: index
                             }))}
                             onChange={(value) => setAttributes({ activeTab: parseInt(value) })}
-                            help={__('The tab visitors see first when the page loads.', 'tabs-block')}
+                            help={__('The tab visitors see first when the page loads.', 'adaire-blocks')}
                         />
                     </div>
                 </PanelBody>
 
                 {/* ————— LAYOUT TAB: Layout ————— */}
-                <PanelBody section="layout" title={__('Layout', 'tabs-block')} initialOpen={false}>
-                    <p style={sectionLabel}>{__('Tab Design', 'tabs-block')}</p>
+                <PanelBody section="layout" title={__('Layout', 'adaire-blocks')} initialOpen={false}>
+                    <p style={sectionLabel}>{__('Tab Design', 'adaire-blocks')}</p>
                     <ButtonGroup>
                         {TAB_STYLE_OPTIONS.map(opt => (
                             <Button
@@ -488,11 +520,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </ButtonGroup>
                     <p style={helpTextStyle}>{TAB_STYLE_HELP[tabStyle] ?? TAB_STYLE_HELP.underline}</p>
 
-                    <p style={sectionLabel}>{__('Orientation', 'tabs-block')}</p>
+                    <p style={sectionLabel}>{__('Orientation', 'adaire-blocks')}</p>
                     <ButtonGroup>
                         {[
-                            { label: __('Horizontal', 'tabs-block'), value: 'horizontal' },
-                            { label: __('Vertical', 'tabs-block'), value: 'vertical' },
+                            { label: __('Horizontal', 'adaire-blocks'), value: 'horizontal' },
+                            { label: __('Vertical', 'adaire-blocks'), value: 'vertical' },
                         ].map(opt => (
                             <Button
                                 key={opt.value}
@@ -504,20 +536,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </ButtonGroup>
                     <p style={helpTextStyle}>
                         {isVertical
-                            ? __('Tab titles sit beside the content.', 'tabs-block')
-                            : __('Tab titles sit in a row above or below the content.', 'tabs-block')}
+                            ? __('Tab titles sit beside the content.', 'adaire-blocks')
+                            : __('Tab titles sit in a row above or below the content.', 'adaire-blocks')}
                     </p>
 
-                    <p style={sectionLabel}>{__('Tab Bar Position', 'tabs-block')}</p>
+                    <p style={sectionLabel}>{__('Tab Bar Position', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '12px' }}>
                         {(isVertical
                             ? [
-                                { label: __('Left of Content', 'tabs-block'), value: 'left' },
-                                { label: __('Right of Content', 'tabs-block'), value: 'right' },
+                                { label: __('Left of Content', 'adaire-blocks'), value: 'left' },
+                                { label: __('Right of Content', 'adaire-blocks'), value: 'right' },
                             ]
                             : [
-                                { label: __('Above Content', 'tabs-block'), value: 'top' },
-                                { label: __('Below Content', 'tabs-block'), value: 'bottom' },
+                                { label: __('Above Content', 'adaire-blocks'), value: 'top' },
+                                { label: __('Below Content', 'adaire-blocks'), value: 'bottom' },
                             ]
                         ).map(opt => (
                             <Button
@@ -530,28 +562,28 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </ButtonGroup>
 
                     <SelectControl
-                        label={__('Tab Alignment', 'tabs-block')}
+                        label={__('Tab Alignment', 'adaire-blocks')}
                         value={tabsAlign}
                         options={isVertical ? VERTICAL_ALIGN_OPTIONS : HORIZONTAL_ALIGN_OPTIONS}
                         onChange={(v) => setAttributes({ tabsAlign: v })}
                         help={isVertical
-                            ? __('How tab buttons are distributed in the side column.', 'tabs-block')
-                            : __('How tab titles are aligned along the tab bar.', 'tabs-block')}
+                            ? __('How tab buttons are distributed in the side column.', 'adaire-blocks')
+                            : __('How tab titles are aligned along the tab bar.', 'adaire-blocks')}
                     />
 
                     <RangeControl
-                        label={__('Space Between Tabs (px)', 'tabs-block')}
+                        label={__('Space Between Tabs (px)', 'adaire-blocks')}
                         value={numValue(tabGap, 32)}
                         onChange={(v) => setAttributes({ tabGap: v })}
                         min={8}
                         max={80}
                     />
 
-                    <p style={sectionLabel}>{__('Block Width', 'tabs-block')}</p>
+                    <p style={sectionLabel}>{__('Block Width', 'adaire-blocks')}</p>
                     <ButtonGroup>
                         {[
-                            { label: __('Full Width', 'tabs-block'), value: 'full' },
-                            { label: __('Constrained', 'tabs-block'), value: 'constrained' },
+                            { label: __('Full Width', 'adaire-blocks'), value: 'full' },
+                            { label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
                         ].map(opt => (
                             <Button
                                 key={opt.value}
@@ -563,11 +595,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </ButtonGroup>
                     {containerMode === 'constrained' && (
                         <div style={{ marginTop: '12px' }}>
-                            <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Max Width Device', 'tabs-block')} tiers={THREE_TIERS} />
+                            <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Max Width Device', 'adaire-blocks')} tiers={THREE_TIERS} />
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
                                 <TextControl
                                     type="number"
-                                    label={__('Max Width', 'tabs-block')}
+                                    label={__('Max Width', 'adaire-blocks')}
                                     value={
                                         containerMaxWidth?.[deviceType]?.value ??
                                         (deviceType === 'desktop' ? (containerMaxWidth?.value ?? 1200) : 100)
@@ -619,18 +651,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* ————— LAYOUT TAB: Animation (pro-gated) ————— */}
-                <PanelBody section="layout" title={__('Animation', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Animation', 'adaire-blocks')} initialOpen={false}>
                     <p style={helpTextStyle}>
-                        {__('Controls how panels fade and slide when switching tabs.', 'tabs-block')}
+                        {__('Controls how panels fade and slide when switching tabs.', 'adaire-blocks')}
                     </p>
                     {animationLocked && (
                         <UpgradeNotice
                             variant="full"
-                            message={__('Upgrade to customize the animation and transition between tabs.', 'tabs-block')}
+                            message={__('Upgrade to customize the animation and transition between tabs.', 'adaire-blocks')}
                         />
                     )}
                     <RangeControl
-                        label={__('Duration (seconds)', 'tabs-block')}
+                        label={__('Duration (seconds)', 'adaire-blocks')}
                         value={animationDuration}
                         onChange={(v) => setAttributes({ animationDuration: v })}
                         min={0.1}
@@ -639,7 +671,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         disabled={animationLocked}
                     />
                     <SelectControl
-                        label={__('Transition Feel', 'tabs-block')}
+                        label={__('Transition Feel', 'adaire-blocks')}
                         value={animationEase}
                         options={EASE_OPTIONS}
                         onChange={(v) => setAttributes({ animationEase: v })}
@@ -649,21 +681,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 {/* ————— STYLE TAB: colors (auto-sorted by InspectorTabs) ————— */}
                 {!isPills && (
-                    <PanelBody section="style" priority="high" title={__('Tab Colors', 'tabs-block')} initialOpen={false}>
-                        <p style={sectionLabel}>{__('Title', 'tabs-block')}</p>
+                    <PanelBody section="style" priority="high" title={__('Tab Colors', 'adaire-blocks')} initialOpen={false}>
+                        <p style={sectionLabel}>{__('Title', 'adaire-blocks')}</p>
                         <BoundColorPalette
                             value={tabTitleColor}
                             onChange={(v) => setAttributes({ tabTitleColor: v })}
                         />
-                        <p style={sectionLabel}>{__('Title (Active Tab)', 'tabs-block')}</p>
+                        <p style={sectionLabel}>{__('Title (Active Tab)', 'adaire-blocks')}</p>
                         <BoundColorPalette
                             value={tabTitleActiveColor}
                             onChange={(v) => setAttributes({ tabTitleActiveColor: v })}
                         />
                         {isVertical && (
                             <>
-                                <p style={sectionLabel}>{__('Active Tab Background', 'tabs-block')}</p>
-                                <p style={helpTextStyle}>{__('Shown behind the selected tab button in vertical layout.', 'tabs-block')}</p>
+                                <p style={sectionLabel}>{__('Active Tab Background', 'adaire-blocks')}</p>
+                                <p style={helpTextStyle}>{__('Shown behind the selected tab button in vertical layout.', 'adaire-blocks')}</p>
                                 <ColorPicker
                                     color={verticalActiveBgColor}
                                     onChange={(color) => setAttributes({ verticalActiveBgColor: color })}
@@ -675,36 +707,36 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {isPills && (
-                    <PanelBody section="style" priority="high" title={__('Pill Colors', 'tabs-block')} initialOpen={false}>
+                    <PanelBody section="style" priority="high" title={__('Pill Colors', 'adaire-blocks')} initialOpen={false}>
                         <p style={helpTextStyle}>
-                            {__('"Active" colors apply to the selected pill and on hover.', 'tabs-block')}
+                            {__('"Active" colors apply to the selected pill and on hover.', 'adaire-blocks')}
                         </p>
-                        <p style={sectionLabel}>{__('Background', 'tabs-block')}</p>
+                        <p style={sectionLabel}>{__('Background', 'adaire-blocks')}</p>
                         <BoundColorPalette
                             value={pillBackgroundColor}
                             onChange={(v) => setAttributes({ pillBackgroundColor: v })}
                         />
-                        <p style={sectionLabel}>{__('Background (Active)', 'tabs-block')}</p>
+                        <p style={sectionLabel}>{__('Background (Active)', 'adaire-blocks')}</p>
                         <BoundColorPalette
                             value={pillActiveBackgroundColor}
                             onChange={(v) => setAttributes({ pillActiveBackgroundColor: v })}
                         />
-                        <p style={sectionLabel}>{__('Text', 'tabs-block')}</p>
+                        <p style={sectionLabel}>{__('Text', 'adaire-blocks')}</p>
                         <BoundColorPalette
                             value={pillTextColor}
                             onChange={(v) => setAttributes({ pillTextColor: v })}
                         />
-                        <p style={sectionLabel}>{__('Text (Active)', 'tabs-block')}</p>
+                        <p style={sectionLabel}>{__('Text (Active)', 'adaire-blocks')}</p>
                         <BoundColorPalette
                             value={pillActiveTextColor}
                             onChange={(v) => setAttributes({ pillActiveTextColor: v })}
                         />
-                        <p style={sectionLabel}>{__('Border', 'tabs-block')}</p>
+                        <p style={sectionLabel}>{__('Border', 'adaire-blocks')}</p>
                         <BoundColorPalette
                             value={pillBorderColor}
                             onChange={(v) => setAttributes({ pillBorderColor: v })}
                         />
-                        <p style={sectionLabel}>{__('Border (Active)', 'tabs-block')}</p>
+                        <p style={sectionLabel}>{__('Border (Active)', 'adaire-blocks')}</p>
                         <BoundColorPalette
                             value={pillActiveBorderColor}
                             onChange={(v) => setAttributes({ pillActiveBorderColor: v })}
@@ -713,22 +745,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {/* ————— STYLE TAB: typography ————— */}
-                <PanelBody section="style" priority="high" title={__('Typography', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Typography', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
-                        label={__('Font Family', 'tabs-block')}
+                        label={__('Font Family', 'adaire-blocks')}
                         value={fontFamily || ''}
                         options={FONT_FAMILY_OPTIONS}
                         onChange={(v) => setAttributes({ fontFamily: v })}
-                        help={__('Applies to the tab title labels.', 'tabs-block')}
+                        help={__('Applies to the tab title labels.', 'adaire-blocks')}
                     />
                     <RangeControl
-                        label={__('Title Size (px)', 'tabs-block')}
+                        label={__('Title Size (px)', 'adaire-blocks')}
                         value={numValue(tabTitleFontSize, 18)}
                         onChange={(v) => setAttributes({ tabTitleFontSize: v })}
                         min={12}
                         max={48}
                     />
-                    <p style={sectionLabel}>{__('Weight', 'tabs-block')}</p>
+                    <p style={sectionLabel}>{__('Weight', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '12px' }}>
                         {['300', '400', '500', '600', '700', '800'].map((weight) => (
                             <Button
@@ -740,7 +772,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             >{weight}</Button>
                         ))}
                     </ButtonGroup>
-                    <p style={sectionLabel}>{__('Weight (Active Tab)', 'tabs-block')}</p>
+                    <p style={sectionLabel}>{__('Weight (Active Tab)', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '12px' }}>
                         {['300', '400', '500', '600', '700', '800'].map((weight) => (
                             <Button
@@ -753,19 +785,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ))}
                     </ButtonGroup>
 
-                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Fine-tuning Device', 'tabs-block')} tiers={THREE_TIERS} />
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Fine-tuning Device', 'adaire-blocks')} tiers={THREE_TIERS} />
                     <UnitControl
-                        label={__('Line Height', 'tabs-block')}
+                        label={__('Line Height', 'adaire-blocks')}
                         value={getDeviceValue(tabTitleLineHeight, deviceType, 'normal')}
                         onChange={(v) => setAttributes({ tabTitleLineHeight: updateDeviceAttribute(tabTitleLineHeight, deviceType, v) })}
                     />
                     <UnitControl
-                        label={__('Letter Spacing', 'tabs-block')}
+                        label={__('Letter Spacing', 'adaire-blocks')}
                         value={getDeviceValue(tabTitleLetterSpacing, deviceType, '-0.01em')}
                         onChange={(v) => setAttributes({ tabTitleLetterSpacing: updateDeviceAttribute(tabTitleLetterSpacing, deviceType, v) })}
                     />
                     <SelectControl
-                        label={__('Text Case', 'tabs-block')}
+                        label={__('Text Case', 'adaire-blocks')}
                         value={getDeviceValue(tabTitleTextTransform, deviceType, 'none')}
                         options={TEXT_TRANSFORM_OPTIONS}
                         onChange={(v) => setAttributes({ tabTitleTextTransform: updateDeviceAttribute(tabTitleTextTransform, deviceType, v) })}
@@ -774,18 +806,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 {/* ————— STYLE TAB: shape (mode-specific) ————— */}
                 {!isPills && (
-                    <PanelBody section="style" priority="medium" title={__('Underline Style', 'tabs-block')} initialOpen={false}>
+                    <PanelBody section="style" priority="medium" title={__('Underline Style', 'adaire-blocks')} initialOpen={false}>
                         <p style={helpTextStyle}>
-                            {__('The animated line under the active tab (horizontal layout).', 'tabs-block')}
+                            {__('The animated line under the active tab (horizontal layout).', 'adaire-blocks')}
                         </p>
                         <RangeControl
-                            label={__('Thickness (px)', 'tabs-block')}
+                            label={__('Thickness (px)', 'adaire-blocks')}
                             value={numValue(underlineHeight, 3)}
                             onChange={(v) => setAttributes({ underlineHeight: v })}
                             min={1}
                             max={10}
                         />
-                        <p style={sectionLabel}>{__('Color', 'tabs-block')}</p>
+                        <p style={sectionLabel}>{__('Color', 'adaire-blocks')}</p>
                         <BoundColorPalette
                             value={tabUnderlineColor}
                             onChange={(v) => setAttributes({ tabUnderlineColor: v })}
@@ -794,45 +826,45 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {isPills && (
-                    <PanelBody section="style" priority="medium" title={__('Pill Shape & Padding', 'tabs-block')} initialOpen={false}>
+                    <PanelBody section="style" priority="medium" title={__('Pill Shape & Padding', 'adaire-blocks')} initialOpen={false}>
                         <SelectControl
-                            label={__('Pill Style', 'tabs-block')}
+                            label={__('Pill Style', 'adaire-blocks')}
                             value={pillStyle}
                             options={PILL_STYLES}
                             onChange={(v) => setAttributes({ pillStyle: v })}
                         />
                         <RangeControl
-                            label={__('Corner Roundness (px)', 'tabs-block')}
+                            label={__('Corner Roundness (px)', 'adaire-blocks')}
                             value={pillBorderRadius}
                             onChange={(v) => setAttributes({ pillBorderRadius: v })}
                             min={0}
                             max={50}
                         />
-                        <p style={sectionLabel}>{__('Padding Inside Each Pill', 'tabs-block')}</p>
+                        <p style={sectionLabel}>{__('Padding Inside Each Pill', 'adaire-blocks')}</p>
                         <div style={twoColGrid}>
                             <RangeControl
-                                label={__('Top', 'tabs-block')}
+                                label={__('Top', 'adaire-blocks')}
                                 value={pillPadding?.top ?? 12}
                                 onChange={(v) => setAttributes({ pillPadding: { ...pillPadding, top: v } })}
                                 min={0}
                                 max={32}
                             />
                             <RangeControl
-                                label={__('Right', 'tabs-block')}
+                                label={__('Right', 'adaire-blocks')}
                                 value={pillPadding?.right ?? 24}
                                 onChange={(v) => setAttributes({ pillPadding: { ...pillPadding, right: v } })}
                                 min={0}
                                 max={48}
                             />
                             <RangeControl
-                                label={__('Bottom', 'tabs-block')}
+                                label={__('Bottom', 'adaire-blocks')}
                                 value={pillPadding?.bottom ?? 12}
                                 onChange={(v) => setAttributes({ pillPadding: { ...pillPadding, bottom: v } })}
                                 min={0}
                                 max={32}
                             />
                             <RangeControl
-                                label={__('Left', 'tabs-block')}
+                                label={__('Left', 'adaire-blocks')}
                                 value={pillPadding?.left ?? 24}
                                 onChange={(v) => setAttributes({ pillPadding: { ...pillPadding, left: v } })}
                                 min={0}
@@ -843,27 +875,27 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {/* ————— STYLE TAB: content area ————— */}
-                <PanelBody section="style" priority="medium" title={__('Content Area Styling', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Content Area Styling', 'adaire-blocks')} initialOpen={false}>
                     <p style={helpTextStyle}>
-                        {__('The panel that holds each tab\'s content.', 'tabs-block')}
+                        {__('The panel that holds each tab\'s content.', 'adaire-blocks')}
                     </p>
-                    <p style={sectionLabel}>{__('Background', 'tabs-block')}</p>
+                    <p style={sectionLabel}>{__('Background', 'adaire-blocks')}</p>
                     <BoundColorPalette
                         value={contentBackgroundColor}
                         onChange={(v) => setAttributes({ contentBackgroundColor: v })}
                     />
                     <RangeControl
-                        label={__('Corner Roundness (px)', 'tabs-block')}
+                        label={__('Corner Roundness (px)', 'adaire-blocks')}
                         value={contentBorderRadius}
                         onChange={(v) => setAttributes({ contentBorderRadius: v })}
                         min={0}
                         max={32}
                     />
-                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Width Device', 'tabs-block')} tiers={THREE_TIERS} />
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Width Device', 'adaire-blocks')} tiers={THREE_TIERS} />
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
                         <TextControl
                             type="number"
-                            label={__('Content Width', 'tabs-block')}
+                            label={__('Content Width', 'adaire-blocks')}
                             value={contentWidth?.[deviceType]?.value ?? 100}
                             onChange={(v) => updateContentWidth(deviceType, 'value', Number(v))}
                         />
@@ -881,31 +913,31 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             ))}
                         </ButtonGroup>
                     </div>
-                    <p style={{ ...sectionLabel, marginTop: '16px' }}>{__('Padding Around Content', 'tabs-block')}</p>
+                    <p style={{ ...sectionLabel, marginTop: '16px' }}>{__('Padding Around Content', 'adaire-blocks')}</p>
                     <div style={twoColGrid}>
                         <RangeControl
-                            label={__('Top', 'tabs-block')}
+                            label={__('Top', 'adaire-blocks')}
                             value={numValue(contentPaddingTop, 40)}
                             onChange={(v) => setAttributes({ contentPaddingTop: v })}
                             min={0}
                             max={120}
                         />
                         <RangeControl
-                            label={__('Right', 'tabs-block')}
+                            label={__('Right', 'adaire-blocks')}
                             value={numValue(contentPaddingRight, 0)}
                             onChange={(v) => setAttributes({ contentPaddingRight: v })}
                             min={0}
                             max={120}
                         />
                         <RangeControl
-                            label={__('Bottom', 'tabs-block')}
+                            label={__('Bottom', 'adaire-blocks')}
                             value={numValue(contentPaddingBottom, 40)}
                             onChange={(v) => setAttributes({ contentPaddingBottom: v })}
                             min={0}
                             max={120}
                         />
                         <RangeControl
-                            label={__('Left', 'tabs-block')}
+                            label={__('Left', 'adaire-blocks')}
                             value={numValue(contentPaddingLeft, 0)}
                             onChange={(v) => setAttributes({ contentPaddingLeft: v })}
                             min={0}
@@ -915,40 +947,40 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* ————— STYLE TAB: wrapper ————— */}
-                <PanelBody section="style" priority="medium" title={__('Wrapper Spacing', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Wrapper Spacing', 'adaire-blocks')} initialOpen={false}>
                     <p style={helpTextStyle}>
-                        {__('The outer box around the tab bar and content together.', 'tabs-block')}
+                        {__('The outer box around the tab bar and content together.', 'adaire-blocks')}
                     </p>
-                    <p style={sectionLabel}>{__('Background', 'tabs-block')}</p>
+                    <p style={sectionLabel}>{__('Background', 'adaire-blocks')}</p>
                     <BoundColorPalette
                         value={wrapperBackgroundColor}
                         onChange={(v) => setAttributes({ wrapperBackgroundColor: v })}
                     />
-                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Padding Device', 'tabs-block')} tiers={THREE_TIERS} />
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} label={__('Padding Device', 'adaire-blocks')} tiers={THREE_TIERS} />
                     <div style={twoColGrid}>
                         <RangeControl
-                            label={__('Top', 'tabs-block')}
+                            label={__('Top', 'adaire-blocks')}
                             value={wrapperPadding?.[deviceType]?.top ?? 0}
                             onChange={(v) => updateWrapperPadding(deviceType, 'top', v)}
                             min={0}
                             max={120}
                         />
                         <RangeControl
-                            label={__('Right', 'tabs-block')}
+                            label={__('Right', 'adaire-blocks')}
                             value={wrapperPadding?.[deviceType]?.right ?? 0}
                             onChange={(v) => updateWrapperPadding(deviceType, 'right', v)}
                             min={0}
                             max={120}
                         />
                         <RangeControl
-                            label={__('Bottom', 'tabs-block')}
+                            label={__('Bottom', 'adaire-blocks')}
                             value={wrapperPadding?.[deviceType]?.bottom ?? 0}
                             onChange={(v) => updateWrapperPadding(deviceType, 'bottom', v)}
                             min={0}
                             max={120}
                         />
                         <RangeControl
-                            label={__('Left', 'tabs-block')}
+                            label={__('Left', 'adaire-blocks')}
                             value={wrapperPadding?.[deviceType]?.left ?? 0}
                             onChange={(v) => updateWrapperPadding(deviceType, 'left', v)}
                             min={0}
@@ -958,34 +990,34 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* ————— STYLE TAB: margins ————— */}
-                <PanelBody section="style" priority="medium" title={__('Margins', 'tabs-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Margins', 'adaire-blocks')} initialOpen={false}>
                     <p style={helpTextStyle}>
-                        {__('Space between this block and the blocks around it.', 'tabs-block')}
+                        {__('Space between this block and the blocks around it.', 'adaire-blocks')}
                     </p>
                     <div style={twoColGrid}>
                         <RangeControl
-                            label={__('Top', 'tabs-block')}
+                            label={__('Top', 'adaire-blocks')}
                             value={numValue(marginTop, 0)}
                             onChange={(v) => setAttributes({ marginTop: v })}
                             min={0}
                             max={200}
                         />
                         <RangeControl
-                            label={__('Right', 'tabs-block')}
+                            label={__('Right', 'adaire-blocks')}
                             value={numValue(marginRight, 0)}
                             onChange={(v) => setAttributes({ marginRight: v })}
                             min={0}
                             max={200}
                         />
                         <RangeControl
-                            label={__('Bottom', 'tabs-block')}
+                            label={__('Bottom', 'adaire-blocks')}
                             value={numValue(marginBottom, 0)}
                             onChange={(v) => setAttributes({ marginBottom: v })}
                             min={0}
                             max={200}
                         />
                         <RangeControl
-                            label={__('Left', 'tabs-block')}
+                            label={__('Left', 'adaire-blocks')}
                             value={numValue(marginLeft, 0)}
                             onChange={(v) => setAttributes({ marginLeft: v })}
                             min={0}
@@ -1017,7 +1049,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     setActiveZone={setActiveZone}
                                     content={
                                         <TextControl
-                                            label={__('Tab Title', 'tabs-block')}
+                                            label={__('Tab Title', 'adaire-blocks')}
                                             value={tab.title}
                                             onChange={(v) => updateTab(index, { title: v })}
                                         />

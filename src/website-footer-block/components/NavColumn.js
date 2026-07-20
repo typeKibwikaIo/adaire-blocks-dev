@@ -28,7 +28,7 @@ export default function NavColumn({ attributes, setAttributes, isSelected }) {
     const addNavItem = () => {
         const newItem = {
             id: Date.now(),
-            label: __('New Link', 'website-footer-block'),
+            label: __('New Link', 'adaire-blocks'),
             url: '#'
         };
         setAttributes({ navItems: [...navItems, newItem] });
@@ -52,14 +52,14 @@ export default function NavColumn({ attributes, setAttributes, isSelected }) {
                             value={item.label}
                             onChange={(value) => updateNavItem(index, 'label', value)}
                             href={item.url}
-                            placeholder={__('Link text', 'website-footer-block')}
+                            placeholder={__('Link text', 'adaire-blocks')}
                             withoutInteractiveFormatting
                         />
                         {isSelected && (
                             <button
                                 className="website-footer-block__remove-item"
                                 onClick={() => removeNavItem(index)}
-                                aria-label={__('Remove link', 'website-footer-block')}
+                                aria-label={__('Remove link', 'adaire-blocks')}
                             >
                                 ×
                             </button>
@@ -72,7 +72,7 @@ export default function NavColumn({ attributes, setAttributes, isSelected }) {
                     className="website-footer-block__add-item"
                     onClick={addNavItem}
                 >
-                    {__('+ Add Link', 'website-footer-block')}
+                    {__('+ Add Link', 'adaire-blocks')}
                 </button>
             )}
         </div>

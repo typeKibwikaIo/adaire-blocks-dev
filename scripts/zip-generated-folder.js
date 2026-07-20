@@ -32,6 +32,10 @@ const excludeNames = new Set([
     'webpack.config.js',
     '.eslintrc.js',
     '.prettierrc',
+    // Dev/build tooling (node scripts) — needed to build the generated folder
+    // itself, but has no purpose inside a live WordPress install and must
+    // never reach the submitted plugin package.
+    'scripts',
 ]);
 
 if (!fs.existsSync(generatedDir)) {

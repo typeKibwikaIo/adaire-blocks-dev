@@ -65,7 +65,7 @@ export default function SocialColumn({ attributes, setAttributes, isSelected }) 
                                 value={item.label}
                                 onChange={(value) => updateSocialItem(index, 'label', value)}
                                 href={item.url}
-                                placeholder={__('Social link', 'website-footer-block')}
+                                placeholder={__('Social link', 'adaire-blocks')}
                                 withoutInteractiveFormatting
                             />
                         ) : (
@@ -80,7 +80,7 @@ export default function SocialColumn({ attributes, setAttributes, isSelected }) 
                             <button
                                 className="website-footer-block__remove-item"
                                 onClick={() => removeSocialItem(index)}
-                                aria-label={__('Remove social link', 'website-footer-block')}
+                                aria-label={__('Remove social link', 'adaire-blocks')}
                             >
                                 ×
                             </button>
@@ -93,7 +93,7 @@ export default function SocialColumn({ attributes, setAttributes, isSelected }) 
                     className="website-footer-block__add-item"
                     onClick={addSocialItem}
                 >
-                    {__('+ Add Social Link', 'website-footer-block')}
+                    {__('+ Add Social Link', 'adaire-blocks')}
                 </button>
             )}
         </div>

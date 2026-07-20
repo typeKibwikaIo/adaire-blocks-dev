@@ -10,26 +10,26 @@ import {
 import './style.scss';
 
 const TEXT_TRANSFORM_OPTIONS = [
-    { label: __( 'None', 'accordion-item-block' ), value: 'none' },
-    { label: __( 'Uppercase', 'accordion-item-block' ), value: 'uppercase' },
-    { label: __( 'Lowercase', 'accordion-item-block' ), value: 'lowercase' },
-    { label: __( 'Capitalize', 'accordion-item-block' ), value: 'capitalize' },
+    { label: __( 'None', 'adaire-blocks' ), value: 'none' },
+    { label: __( 'Uppercase', 'adaire-blocks' ), value: 'uppercase' },
+    { label: __( 'Lowercase', 'adaire-blocks' ), value: 'lowercase' },
+    { label: __( 'Capitalize', 'adaire-blocks' ), value: 'capitalize' },
 ];
 
 const FONT_FAMILY_OPTIONS = [
-    { label: __( 'Default (inherit theme)', 'accordion-item-block' ), value: '' },
-    { label: __( 'Arial', 'accordion-item-block' ), value: 'Arial, Helvetica, sans-serif' },
-    { label: __( 'Helvetica', 'accordion-item-block' ), value: 'Helvetica, Arial, sans-serif' },
-    { label: __( 'Georgia', 'accordion-item-block' ), value: 'Georgia, serif' },
-    { label: __( 'Times New Roman', 'accordion-item-block' ), value: "'Times New Roman', Times, serif" },
-    { label: __( 'Verdana', 'accordion-item-block' ), value: 'Verdana, Geneva, sans-serif' },
-    { label: __( 'Trebuchet MS', 'accordion-item-block' ), value: "'Trebuchet MS', sans-serif" },
-    { label: __( 'Courier New', 'accordion-item-block' ), value: "'Courier New', Courier, monospace" },
-    { label: __( 'System UI', 'accordion-item-block' ), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+    { label: __( 'Default (inherit theme)', 'adaire-blocks' ), value: '' },
+    { label: __( 'Arial', 'adaire-blocks' ), value: 'Arial, Helvetica, sans-serif' },
+    { label: __( 'Helvetica', 'adaire-blocks' ), value: 'Helvetica, Arial, sans-serif' },
+    { label: __( 'Georgia', 'adaire-blocks' ), value: 'Georgia, serif' },
+    { label: __( 'Times New Roman', 'adaire-blocks' ), value: "'Times New Roman', Times, serif" },
+    { label: __( 'Verdana', 'adaire-blocks' ), value: 'Verdana, Geneva, sans-serif' },
+    { label: __( 'Trebuchet MS', 'adaire-blocks' ), value: "'Trebuchet MS', sans-serif" },
+    { label: __( 'Courier New', 'adaire-blocks' ), value: "'Courier New', Courier, monospace" },
+    { label: __( 'System UI', 'adaire-blocks' ), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
 ];
 
 const FONT_WEIGHT_OPTIONS = [
-    { label: __( 'Default (inherit)', 'accordion-item-block' ), value: '' },
+    { label: __( 'Default (inherit)', 'adaire-blocks' ), value: '' },
     { label: '300', value: '300' },
     { label: '400', value: '400' },
     { label: '500', value: '500' },
@@ -159,7 +159,7 @@ export default function Edit({ attributes, clientId, setAttributes }) {
             template: [
                 ['core/group', {}, [
                     ['core/paragraph', { 
-                        placeholder: __('Add content for this accordion item...', 'accordion-item-block')
+                        placeholder: __('Add content for this accordion item...', 'adaire-blocks')
                     }]
                 ]]
             ],
@@ -171,42 +171,42 @@ export default function Edit({ attributes, clientId, setAttributes }) {
     return (
         <>
             <InspectorControls>
-                <PanelBody title={__( 'Title Typography', 'accordion-item-block' )} initialOpen={false}>
+                <PanelBody title={__( 'Title Typography', 'adaire-blocks' )} initialOpen={false}>
                     <UnitControl
-                        label={__( 'Font Size', 'accordion-item-block' )}
+                        label={__( 'Font Size', 'adaire-blocks' )}
                         value={fontSize}
                         onChange={(value) => setAttributes({ fontSize: value })}
-                        help={__( 'Leave blank to use the accordion block\'s title size.', 'accordion-item-block' )}
+                        help={__( 'Leave blank to use the accordion block\'s title size.', 'adaire-blocks' )}
                     />
                     <SelectControl
-                        label={__( 'Font Weight', 'accordion-item-block' )}
+                        label={__( 'Font Weight', 'adaire-blocks' )}
                         value={fontWeight || ''}
                         options={FONT_WEIGHT_OPTIONS}
                         onChange={(value) => setAttributes({ fontWeight: value })}
-                        help={__( 'Leave blank to use the accordion block\'s title weight.', 'accordion-item-block' )}
+                        help={__( 'Leave blank to use the accordion block\'s title weight.', 'adaire-blocks' )}
                     />
                     <UnitControl
-                        label={__( 'Line Height', 'accordion-item-block' )}
+                        label={__( 'Line Height', 'adaire-blocks' )}
                         value={lineHeight}
                         onChange={(value) => setAttributes({ lineHeight: value })}
                     />
                     <UnitControl
-                        label={__( 'Letter Spacing', 'accordion-item-block' )}
+                        label={__( 'Letter Spacing', 'adaire-blocks' )}
                         value={letterSpacing}
                         onChange={(value) => setAttributes({ letterSpacing: value })}
                     />
                     <SelectControl
-                        label={__( 'Text Transform', 'accordion-item-block' )}
+                        label={__( 'Text Transform', 'adaire-blocks' )}
                         value={textTransform}
                         options={TEXT_TRANSFORM_OPTIONS}
                         onChange={(value) => setAttributes({ textTransform: value })}
                     />
                     <SelectControl
-                        label={__( 'Font Family', 'accordion-item-block' )}
+                        label={__( 'Font Family', 'adaire-blocks' )}
                         value={fontFamily || ''}
                         options={FONT_FAMILY_OPTIONS}
                         onChange={(value) => setAttributes({ fontFamily: value })}
-                        help={__( 'Applies to this item\'s title only.', 'accordion-item-block' )}
+                        help={__( 'Applies to this item\'s title only.', 'adaire-blocks' )}
                     />
                 </PanelBody>
             </InspectorControls>
@@ -221,7 +221,7 @@ export default function Edit({ attributes, clientId, setAttributes }) {
                     className="adaire-accordion__title"
                     value={title || currentItem?.title || ''}
                     onChange={updateTitle}
-                    placeholder={__('Titleâ€¦', 'accordion-item-block')}
+                    placeholder={__('Titleâ€¦', 'adaire-blocks')}
                     allowedFormats={['core/bold', 'core/italic', 'core/strikethrough']}
                 />
                 <span className="adaire-accordion__chevron" aria-hidden="true">

@@ -18,7 +18,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "constrained"
+            "default": "constrained",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "mainTitle": {
             "type": "string",
@@ -63,7 +67,7 @@
         },
         "gridBorderWidth": {
             "type": "number",
-            "default": 1
+            "default": 0
         },
         "gridGap": {
             "type": "number",
@@ -406,11 +410,19 @@
         },
         "svgIconPosition": {
             "type": "string",
-            "default": "right"
+            "default": "right",
+            "enum": [
+                "left",
+                "right"
+            ]
         },
         "svgIconVerticalPosition": {
             "type": "string",
-            "default": "top"
+            "default": "top",
+            "enum": [
+                "top",
+                "bottom"
+            ]
         },
         "responsiveSvgIconWidth": {
             "type": "object",
@@ -453,7 +465,7 @@
             }
         }
     },
-    "textdomain": "adaire-blocks-dev2",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css"

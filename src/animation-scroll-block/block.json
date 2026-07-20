@@ -17,7 +17,7 @@
         "customClassName": true,
         "innerBlocks": true
     },
-    "textdomain": "animation-scroll-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -29,7 +29,24 @@
         },
         "animationType": {
             "type": "string",
-            "default": "fade-in"
+            "default": "fade-in",
+            "enum": [
+                "fade-in",
+                "fade-out",
+                "fade-left",
+                "fade-right",
+                "fly-up",
+                "fly-down",
+                "fly-left",
+                "fly-right",
+                "grow",
+                "shrink",
+                "bounce",
+                "flip",
+                "rotate",
+                "blur-in",
+                "blur-out"
+            ]
         },
         "animationDuration": {
             "type": "number",
@@ -41,7 +58,16 @@
         },
         "animationEasing": {
             "type": "string",
-            "default": "ease-out"
+            "default": "ease-out",
+            "enum": [
+                "ease-out",
+                "ease-in",
+                "ease-in-out",
+                "linear",
+                "cubic-bezier(0.34, 1.56, 0.64, 1)",
+                "cubic-bezier(0.25, 1, 0.5, 1)",
+                "cubic-bezier(0.68, -0.55, 0.265, 1.55)"
+            ]
         },
         "reverseOnScrollOut": {
             "type": "boolean",
@@ -53,11 +79,19 @@
         },
         "flipAxis": {
             "type": "string",
-            "default": "horizontal"
+            "default": "horizontal",
+            "enum": [
+                "horizontal",
+                "vertical"
+            ]
         },
         "flipDirection": {
             "type": "string",
-            "default": "clockwise"
+            "default": "clockwise",
+            "enum": [
+                "clockwise",
+                "anticlockwise"
+            ]
         },
         "threshold": {
             "type": "number",
@@ -69,7 +103,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

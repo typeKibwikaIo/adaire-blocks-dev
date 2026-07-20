@@ -1,0 +1,40 @@
+.adaire-popup-modal-block {
+    position: relative;
+    padding: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 12px;
+    background: rgba(17, 24, 39, 0.02);
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    display: inline-flex;
+    flex-direction: column;
+    width: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    &.is-selected,
+    &:focus-within {
+        border-color: rgba(99, 102, 241, 0.55);
+        box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.2);
+    }
+
+    &.is-preview-open {
+        border-color: #6d28d9;
+        box-shadow: 0 0 0 1px rgba(109, 40, 217, 0.25);
+
+        &::after {
+            content: "Preview";
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: #6d28d9;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+    }
+}

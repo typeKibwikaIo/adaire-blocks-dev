@@ -104,7 +104,7 @@ function isPlaceholderMenuTitle(title) {
 }
 
 function menuLabelFromUrl(url) {
-    const fallback = __('Menu item', 'website-footer-block');
+    const fallback = __('Menu item', 'adaire-blocks');
     if (!url) return fallback;
     const path = String(url).replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]+/i, '').split(/[?#]/)[0];
     const trimmed = path.replace(/^\/+|\/+$/g, '');
@@ -166,7 +166,7 @@ function FooterDynamicMenuNode({ item, column }) {
 // Matches the four sidebars registered in adaire-blocks.php
 // (adaire-footer-widget-1..4).
 const widgetAreaOptions = [
-    { label: __( 'Select a widget area…', 'website-footer-block' ), value: '' },
+    { label: __( 'Select a widget area…', 'adaire-blocks' ), value: '' },
     { label: 'Footer Widget Area 1', value: 'adaire-footer-widget-1' },
     { label: 'Footer Widget Area 2', value: 'adaire-footer-widget-2' },
     { label: 'Footer Widget Area 3', value: 'adaire-footer-widget-3' },
@@ -492,22 +492,22 @@ export default function Edit({ attributes, setAttributes }) {
     // mutually exclusive via the single `backgroundType` attribute. ────────
     const backgroundControls = (
         <>
-            <SelectControl label={__('Background Type', 'website-footer-block')} value={backgroundType}
+            <SelectControl label={__('Background Type', 'adaire-blocks')} value={backgroundType}
                 options={[
-                    { label: __('Solid Color', 'website-footer-block'), value: 'solid' },
-                    { label: __('Gradient', 'website-footer-block'),    value: 'gradient' },
-                    { label: __('Image', 'website-footer-block'),       value: 'image' },
+                    { label: __('Solid Color', 'adaire-blocks'), value: 'solid' },
+                    { label: __('Gradient', 'adaire-blocks'),    value: 'gradient' },
+                    { label: __('Image', 'adaire-blocks'),       value: 'image' },
                 ]}
                 onChange={(v) => setAttributes({ backgroundType: v })} />
             {backgroundType === 'solid' && (
                 <div style={{ marginBottom: 16 }}>
-                    <label>{__('Background Color', 'website-footer-block')}</label>
+                    <label>{__('Background Color', 'adaire-blocks')}</label>
                     <BoundColorPalette value={backgroundColor} onChange={(v) => setAttributes({ backgroundColor: v || '' })} />
                 </div>
             )}
             {backgroundType === 'gradient' && (
                 <div style={{ marginBottom: 16 }}>
-                    <label>{__('Gradient', 'website-footer-block')}</label>
+                    <label>{__('Gradient', 'adaire-blocks')}</label>
                     <BoundColorPalette value={backgroundGradient} onChange={(v) => setAttributes({ backgroundGradient: v || '' })} />
                 </div>
             )}
@@ -524,18 +524,18 @@ export default function Edit({ attributes, setAttributes }) {
                                         <img src={backgroundImage} alt="" style={{ width: '100%', height: 70, objectFit: 'cover', borderRadius: 4, border: '1px solid rgba(255,255,255,0.2)' }} />
                                     )}
                                     <Button variant="secondary" onClick={open}>
-                                        {backgroundImage ? __('Replace Image', 'website-footer-block') : __('Select Image', 'website-footer-block')}
+                                        {backgroundImage ? __('Replace Image', 'adaire-blocks') : __('Select Image', 'adaire-blocks')}
                                     </Button>
                                     {backgroundImage && (
                                         <Button variant="link" isDestructive onClick={() => setAttributes({ backgroundImage: '' })}>
-                                            {__('Remove Image', 'website-footer-block')}
+                                            {__('Remove Image', 'adaire-blocks')}
                                         </Button>
                                     )}
                                 </div>
                             )}
                         />
                     </MediaUploadCheck>
-                    <TextControl label={__('Background Image URL', 'website-footer-block')} value={backgroundImage}
+                    <TextControl label={__('Background Image URL', 'adaire-blocks')} value={backgroundImage}
                         onChange={(v) => setAttributes({ backgroundImage: v })} placeholder="https://example.com/image.jpg" />
                 </>
             )}
@@ -549,7 +549,7 @@ export default function Edit({ attributes, setAttributes }) {
             <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
 
                 {/* ── Footer Styling ──────────────────────────────────── */}
-                <PanelBody title={__('Footer Styling', 'website-footer-block')} initialOpen={true}>
+                <PanelBody title={__('Footer Styling', 'adaire-blocks')} initialOpen={true}>
                     <SelectControl
                         label="Font family"
                         value={fontFamily || ''}
@@ -574,7 +574,7 @@ export default function Edit({ attributes, setAttributes }) {
                 </PanelBody>
 
                 {/* ── Zone Visibility ─────────────────────────────────── */}
-                <PanelBody title={__('Zone Visibility', 'website-footer-block')} initialOpen={false}>
+                <PanelBody title={__('Zone Visibility', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl label="Show Top Bar"         checked={showTopBar}         onChange={(v) => setAttributes({ showTopBar: v })} />
                     <ToggleControl label="Show Columns Section" checked={showColumnsSection} onChange={(v) => setAttributes({ showColumnsSection: v })} />
                     <ToggleControl label="Show Bottom Bar"      checked={showBottomBar}      onChange={(v) => setAttributes({ showBottomBar: v })} />
@@ -582,31 +582,31 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Top Bar Settings ────────────────────────────────── */}
                 {showTopBar && (
-                    <PanelBody title={__('Top Bar Settings', 'website-footer-block')} initialOpen={false}>
+                    <PanelBody title={__('Top Bar Settings', 'adaire-blocks')} initialOpen={false}>
                         <ToggleControl label="Show Copyright"   checked={topBar.showCopyright}   onChange={(v) => updateTopBar({ showCopyright: v })} />
                         <ToggleControl label="Show Contact Link" checked={topBar.showContactLink} onChange={(v) => updateTopBar({ showContactLink: v })} />
                         {topBar.showContactLink && (
                             <>
                                 <TextControl label="Contact URL" value={topBar.contactLinkUrl || '#'} onChange={(v) => updateTopBar({ contactLinkUrl: v })} />
                                 <ToggleControl
-                                    label={__('Underline contact link', 'website-footer-block')}
+                                    label={__('Underline contact link', 'adaire-blocks')}
                                     checked={!!topBar.contactLinkUnderline}
                                     onChange={(v) => updateTopBar({ contactLinkUnderline: v })}
                                 />
                                 <div style={{ marginBottom: 8 }}>
-                                    <label>{__('Contact Link Hover Color', 'website-footer-block')}</label>
+                                    <label>{__('Contact Link Hover Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.contactLinkHoverColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 8 }}>
-                                    <label>{__('Contact Link Hover Underline Color', 'website-footer-block')}</label>
+                                    <label>{__('Contact Link Hover Underline Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.contactLinkHoverUnderlineColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverUnderlineColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 8 }}>
-                                    <label>{__('Contact Link Hover Background', 'website-footer-block')}</label>
+                                    <label>{__('Contact Link Hover Background', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.contactLinkHoverBackgroundColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverBackgroundColor: v || '' })} />
                                 </div>
                                 <RangeControl
-                                    label={__('Contact Link Hover Transition (ms)', 'website-footer-block')}
+                                    label={__('Contact Link Hover Transition (ms)', 'adaire-blocks')}
                                     value={topBar.contactLinkTransitionDuration != null && topBar.contactLinkTransitionDuration >= 0 ? topBar.contactLinkTransitionDuration : 300}
                                     min={0} max={1000} step={50}
                                     onChange={(v) => updateTopBar({ contactLinkTransitionDuration: v })}
@@ -629,48 +629,48 @@ export default function Edit({ attributes, setAttributes }) {
                                 <Button className="adaire-qz-add-btn" onClick={addTopBarSocialLink}>+ Add Social Link</Button>
 
                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '12px 0' }} />
-                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Icon Styling', 'website-footer-block')}</strong>
-                                <RangeControl label={__('Icon Size (px)', 'website-footer-block')} value={topBar.iconSize || 24} min={12} max={60}
+                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Icon Styling', 'adaire-blocks')}</strong>
+                                <RangeControl label={__('Icon Size (px)', 'adaire-blocks')} value={topBar.iconSize || 24} min={12} max={60}
                                     onChange={(v) => updateTopBar({ iconSize: v })} />
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.iconColor || ''} onChange={(v) => updateTopBar({ iconColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Background Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Background Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.iconBgColor || ''} onChange={(v) => updateTopBar({ iconBgColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Hover Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Hover Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.hoverColor || ''} onChange={(v) => updateTopBar({ hoverColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Hover Background', 'website-footer-block')}</label>
+                                    <label>{__('Icon Hover Background', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.hoverBackgroundColor || ''} onChange={(v) => updateTopBar({ hoverBackgroundColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Border Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Border Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.borderColor || ''} onChange={(v) => updateTopBar({ borderColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Hover Border Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Hover Border Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.hoverBorderColor || ''} onChange={(v) => updateTopBar({ hoverBorderColor: v || '' })} />
                                 </div>
                                 <RangeControl
-                                    label={__('Icon Border Radius (%)', 'website-footer-block')}
+                                    label={__('Icon Border Radius (%)', 'adaire-blocks')}
                                     value={topBar.borderRadius != null && topBar.borderRadius >= 0 ? topBar.borderRadius : 50}
                                     min={0} max={50}
                                     onChange={(v) => updateTopBar({ borderRadius: v })}
-                                    help={__('50% = circle, 0% = square', 'website-footer-block')}
+                                    help={__('50% = circle, 0% = square', 'adaire-blocks')}
                                 />
                                 <RangeControl
-                                    label={__('Icon Spacing (px)', 'website-footer-block')}
+                                    label={__('Icon Spacing (px)', 'adaire-blocks')}
                                     value={topBar.iconSpacing != null && topBar.iconSpacing >= 0 ? topBar.iconSpacing : 12}
                                     min={0} max={40}
                                     onChange={(v) => updateTopBar({ iconSpacing: v })}
                                 />
                                 <RangeControl
-                                    label={__('Hover Transition (ms)', 'website-footer-block')}
+                                    label={__('Hover Transition (ms)', 'adaire-blocks')}
                                     value={topBar.transitionDuration != null && topBar.transitionDuration >= 0 ? topBar.transitionDuration : 300}
                                     min={0} max={1000} step={50}
                                     onChange={(v) => updateTopBar({ transitionDuration: v })}
@@ -703,7 +703,7 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Columns Section Settings ────────────────────────── */}
                 {showColumnsSection && (
-                    <PanelBody title={__('Columns Section Settings', 'website-footer-block')} initialOpen={false}>
+                    <PanelBody title={__('Columns Section Settings', 'adaire-blocks')} initialOpen={false}>
                         <RangeControl label="Column Gap (px)" value={columnsSection.columnGap} min={0} max={80} onChange={(v) => updateColumnsSection({ columnGap: v })} />
                         <SelectControl label="Vertical Alignment" value={columnsSection.verticalAlignment}
                             options={[
@@ -717,7 +717,7 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Brand Logo Upload ───────────────────────────────── */}
                 {showColumnsSection && columnsSection.columns.filter(col => col.type === 'brand').map((column) => (
-                    <PanelBody key={column.id} title={__('Brand Logo', 'website-footer-block')} initialOpen={false}>
+                    <PanelBody key={column.id} title={__('Brand Logo', 'adaire-blocks')} initialOpen={false}>
                         <MediaUploadCheck>
                             <MediaUpload
                                 onSelect={(media) => updateColumn(column.id, { brandLogo: media.url })}
@@ -748,21 +748,21 @@ export default function Edit({ attributes, setAttributes }) {
                     here under an explicit "Tagline" label/panel plus its own
                     typography + color controls, none of which existed before. */}
                 {showColumnsSection && columnsSection.columns.filter(col => col.type === 'brand').map((column) => (
-                    <PanelBody key={column.id} title={__('Tagline', 'website-footer-block')} initialOpen={false}>
+                    <PanelBody key={column.id} title={__('Tagline', 'adaire-blocks')} initialOpen={false}>
                         <TextControl
-                            label={__('Tagline text', 'website-footer-block')}
+                            label={__('Tagline text', 'adaire-blocks')}
                             value={column.description || ''}
                             onChange={(v) => updateColumn(column.id, { description: v })}
-                            help={__('Shown under the brand name/logo. Also editable directly on canvas.', 'website-footer-block')}
+                            help={__('Shown under the brand name/logo. Also editable directly on canvas.', 'adaire-blocks')}
                         />
                         <RangeControl
-                            label={__('Font Size (px)', 'website-footer-block')}
+                            label={__('Font Size (px)', 'adaire-blocks')}
                             value={column.taglineFontSize != null && column.taglineFontSize >= 0 ? column.taglineFontSize : 14}
                             min={10} max={32}
                             onChange={(v) => updateColumn(column.id, { taglineFontSize: v })}
                         />
                         <SelectControl
-                            label={__('Font Weight', 'website-footer-block')}
+                            label={__('Font Weight', 'adaire-blocks')}
                             value={column.taglineFontWeight || '400'}
                             options={[
                                 { label: 'Light (300)',    value: '300' },
@@ -774,19 +774,19 @@ export default function Edit({ attributes, setAttributes }) {
                             onChange={(v) => updateColumn(column.id, { taglineFontWeight: v })}
                         />
                         <RangeControl
-                            label={__('Line Height', 'website-footer-block')}
+                            label={__('Line Height', 'adaire-blocks')}
                             value={column.taglineLineHeight != null && column.taglineLineHeight >= 0 ? column.taglineLineHeight : 1.6}
                             min={1} max={2.5} step={0.1}
                             onChange={(v) => updateColumn(column.id, { taglineLineHeight: v })}
                         />
                         <RangeControl
-                            label={__('Letter Spacing (px)', 'website-footer-block')}
+                            label={__('Letter Spacing (px)', 'adaire-blocks')}
                             value={column.taglineLetterSpacing != null && column.taglineLetterSpacing >= 0 ? column.taglineLetterSpacing : 0}
                             min={0} max={5} step={0.5}
                             onChange={(v) => updateColumn(column.id, { taglineLetterSpacing: v })}
                         />
                         <div style={{ marginBottom: 4 }}>
-                            <label>{__('Tagline Color', 'website-footer-block')}</label>
+                            <label>{__('Tagline Color', 'adaire-blocks')}</label>
                             <BoundColorPalette value={column.taglineColor || ''} onChange={(v) => updateColumn(column.id, { taglineColor: v || '' })} />
                         </div>
                     </PanelBody>
@@ -799,22 +799,22 @@ export default function Edit({ attributes, setAttributes }) {
                 {showColumnsSection && columnsSection.columns.filter(col => col.type === 'nav').map((column) => (
                     <PanelBody
                         key={column.id}
-                        title={column.headingText ? `${__('Navigation Source', 'website-footer-block')}: ${column.headingText}` : __('Navigation Source', 'website-footer-block')}
+                        title={column.headingText ? `${__('Navigation Source', 'adaire-blocks')}: ${column.headingText}` : __('Navigation Source', 'adaire-blocks')}
                         initialOpen={false}
                     >
                         <SelectControl
-                            label={__('Navigation Source', 'website-footer-block')}
+                            label={__('Navigation Source', 'adaire-blocks')}
                             value={column.navigationSource || 'legacy'}
                             options={navigationSourceOptions}
                             onChange={(v) => updateColumn(column.id, { navigationSource: v })}
-                            help={__('Pull items live from a WordPress menu, or manage them manually on canvas.', 'website-footer-block')}
+                            help={__('Pull items live from a WordPress menu, or manage them manually on canvas.', 'adaire-blocks')}
                         />
                         {column.navigationSource === 'menu' && (
                             <SelectControl
-                                label={__('Menu', 'website-footer-block')}
+                                label={__('Menu', 'adaire-blocks')}
                                 value={column.selectedMenuId || 0}
                                 options={[
-                                    { label: __('Select a menu…', 'website-footer-block'), value: 0 },
+                                    { label: __('Select a menu…', 'adaire-blocks'), value: 0 },
                                     ...(wpMenus || []).map((menu) => ({ label: menu.name, value: menu.id })),
                                 ]}
                                 onChange={(v) => updateColumn(column.id, { selectedMenuId: Number(v) })}
@@ -822,7 +822,7 @@ export default function Edit({ attributes, setAttributes }) {
                         )}
                         {(column.navigationSource === 'primary' || column.navigationSource === 'footer') && (
                             <p style={{ fontSize: 12, opacity: 0.75 }}>
-                                {__('Assign a menu to this location under Appearance → Menus.', 'website-footer-block')}
+                                {__('Assign a menu to this location under Appearance → Menus.', 'adaire-blocks')}
                             </p>
                         )}
                     </PanelBody>
@@ -830,7 +830,7 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Bottom Bar Settings ─────────────────────────────── */}
                 {showBottomBar && (
-                    <PanelBody title={__('Bottom Bar Settings', 'website-footer-block')} initialOpen={false}>
+                    <PanelBody title={__('Bottom Bar Settings', 'adaire-blocks')} initialOpen={false}>
                         <ToggleControl label="Show Copyright"         checked={bottomBar.showCopyright}    onChange={(v) => updateBottomBar({ showCopyright: v })} />
                         <ToggleControl label="Show Privacy Links"     checked={bottomBar.showPrivacyPolicy} onChange={(v) => updateBottomBar({ showPrivacyPolicy: v })} />
                         {bottomBar.showPrivacyPolicy && (
@@ -862,48 +862,48 @@ export default function Edit({ attributes, setAttributes }) {
                                 <Button className="adaire-qz-add-btn" onClick={addBottomBarSocialIcon}>+ Add Social Icon</Button>
 
                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '12px 0' }} />
-                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Icon Styling', 'website-footer-block')}</strong>
-                                <RangeControl label={__('Icon Size (px)', 'website-footer-block')} value={bottomBar.iconSize || 24} min={12} max={60}
+                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Icon Styling', 'adaire-blocks')}</strong>
+                                <RangeControl label={__('Icon Size (px)', 'adaire-blocks')} value={bottomBar.iconSize || 24} min={12} max={60}
                                     onChange={(v) => updateBottomBar({ iconSize: v })} />
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={bottomBar.iconColor || ''} onChange={(v) => updateBottomBar({ iconColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Background Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Background Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={bottomBar.iconBgColor || ''} onChange={(v) => updateBottomBar({ iconBgColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Hover Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Hover Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={bottomBar.hoverColor || ''} onChange={(v) => updateBottomBar({ hoverColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Hover Background', 'website-footer-block')}</label>
+                                    <label>{__('Icon Hover Background', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={bottomBar.hoverBackgroundColor || ''} onChange={(v) => updateBottomBar({ hoverBackgroundColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Border Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Border Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={bottomBar.borderColor || ''} onChange={(v) => updateBottomBar({ borderColor: v || '' })} />
                                 </div>
                                 <div style={{ marginBottom: 4 }}>
-                                    <label>{__('Icon Hover Border Color', 'website-footer-block')}</label>
+                                    <label>{__('Icon Hover Border Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={bottomBar.hoverBorderColor || ''} onChange={(v) => updateBottomBar({ hoverBorderColor: v || '' })} />
                                 </div>
                                 <RangeControl
-                                    label={__('Icon Border Radius (%)', 'website-footer-block')}
+                                    label={__('Icon Border Radius (%)', 'adaire-blocks')}
                                     value={bottomBar.borderRadius != null && bottomBar.borderRadius >= 0 ? bottomBar.borderRadius : 50}
                                     min={0} max={50}
                                     onChange={(v) => updateBottomBar({ borderRadius: v })}
-                                    help={__('50% = circle, 0% = square', 'website-footer-block')}
+                                    help={__('50% = circle, 0% = square', 'adaire-blocks')}
                                 />
                                 <RangeControl
-                                    label={__('Icon Spacing (px)', 'website-footer-block')}
+                                    label={__('Icon Spacing (px)', 'adaire-blocks')}
                                     value={bottomBar.iconSpacing != null && bottomBar.iconSpacing >= 0 ? bottomBar.iconSpacing : 12}
                                     min={0} max={40}
                                     onChange={(v) => updateBottomBar({ iconSpacing: v })}
                                 />
                                 <RangeControl
-                                    label={__('Hover Transition (ms)', 'website-footer-block')}
+                                    label={__('Hover Transition (ms)', 'adaire-blocks')}
                                     value={bottomBar.transitionDuration != null && bottomBar.transitionDuration >= 0 ? bottomBar.transitionDuration : 300}
                                     min={0} max={1000} step={50}
                                     onChange={(v) => updateBottomBar({ transitionDuration: v })}
@@ -929,24 +929,24 @@ export default function Edit({ attributes, setAttributes }) {
                             <BoundColorPalette value={bottomBar.legalLinkColor || ''} onChange={(v) => updateBottomBar({ legalLinkColor: v || '' })} />
                         </div>
                         <ToggleControl
-                            label={__('Underline legal links', 'website-footer-block')}
+                            label={__('Underline legal links', 'adaire-blocks')}
                             checked={!!bottomBar.legalLinkUnderline}
                             onChange={(v) => updateBottomBar({ legalLinkUnderline: v })}
                         />
                         <div style={{ marginBottom: 8 }}>
-                            <label>{__('Legal Links Hover Color', 'website-footer-block')}</label>
+                            <label>{__('Legal Links Hover Color', 'adaire-blocks')}</label>
                             <BoundColorPalette value={bottomBar.legalLinkHoverColor || ''} onChange={(v) => updateBottomBar({ legalLinkHoverColor: v || '' })} />
                         </div>
                         <div style={{ marginBottom: 8 }}>
-                            <label>{__('Legal Links Hover Underline Color', 'website-footer-block')}</label>
+                            <label>{__('Legal Links Hover Underline Color', 'adaire-blocks')}</label>
                             <BoundColorPalette value={bottomBar.legalLinkHoverUnderlineColor || ''} onChange={(v) => updateBottomBar({ legalLinkHoverUnderlineColor: v || '' })} />
                         </div>
                         <div style={{ marginBottom: 8 }}>
-                            <label>{__('Legal Links Hover Background', 'website-footer-block')}</label>
+                            <label>{__('Legal Links Hover Background', 'adaire-blocks')}</label>
                             <BoundColorPalette value={bottomBar.legalLinkHoverBackgroundColor || ''} onChange={(v) => updateBottomBar({ legalLinkHoverBackgroundColor: v || '' })} />
                         </div>
                         <RangeControl
-                            label={__('Legal Links Hover Transition (ms)', 'website-footer-block')}
+                            label={__('Legal Links Hover Transition (ms)', 'adaire-blocks')}
                             value={bottomBar.legalLinkTransitionDuration != null && bottomBar.legalLinkTransitionDuration >= 0 ? bottomBar.legalLinkTransitionDuration : 300}
                             min={0} max={1000} step={50}
                             onChange={(v) => updateBottomBar({ legalLinkTransitionDuration: v })}
@@ -964,7 +964,7 @@ export default function Edit({ attributes, setAttributes }) {
             <div {...blockProps}>
                 <QuickZone
                     id="footer-background"
-                    label={__('Background', 'website-footer-block')}
+                    label={__('Background', 'adaire-blocks')}
                     activeZone={activeZone}
                     setActiveZone={setActiveZone}
                     content={backgroundControls}
@@ -1016,17 +1016,17 @@ export default function Edit({ attributes, setAttributes }) {
                                             <QuickZone
                                                 key={link.id}
                                                 id={`footer-topbar-social-${link.id}`}
-                                                label={link.label || link.platform || __('Social link', 'website-footer-block')}
+                                                label={link.label || link.platform || __('Social link', 'adaire-blocks')}
                                                 activeZone={activeZone}
                                                 setActiveZone={setActiveZone}
                                                 content={
                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 220 }}>
-                                                        <SelectControl label={__('Platform (icon)', 'website-footer-block')} value={link.platform || 'twitter'}
+                                                        <SelectControl label={__('Platform (icon)', 'adaire-blocks')} value={link.platform || 'twitter'}
                                                             options={['twitter','facebook','instagram','linkedin','youtube'].map(p => ({ label: p.charAt(0).toUpperCase() + p.slice(1), value: p }))}
                                                             onChange={(v) => updateTopBarSocialLink(link.id, 'platform', v)} />
-                                                        <TextControl label={__('Label', 'website-footer-block')} value={link.label || ''} onChange={(v) => updateTopBarSocialLink(link.id, 'label', v)} />
-                                                        <TextControl label={__('URL', 'website-footer-block')} value={link.url || ''} onChange={(v) => updateTopBarSocialLink(link.id, 'url', v)} placeholder="https://…" />
-                                                        <Button variant="link" isDestructive onClick={() => removeTopBarSocialLink(link.id)}>{__('Remove', 'website-footer-block')}</Button>
+                                                        <TextControl label={__('Label', 'adaire-blocks')} value={link.label || ''} onChange={(v) => updateTopBarSocialLink(link.id, 'label', v)} />
+                                                        <TextControl label={__('URL', 'adaire-blocks')} value={link.url || ''} onChange={(v) => updateTopBarSocialLink(link.id, 'url', v)} placeholder="https://…" />
+                                                        <Button variant="link" isDestructive onClick={() => removeTopBarSocialLink(link.id)}>{__('Remove', 'adaire-blocks')}</Button>
                                                     </div>
                                                 }
                                             >
@@ -1095,21 +1095,21 @@ export default function Edit({ attributes, setAttributes }) {
                                                     background: '#D52940', color: '#fff', padding: '1px 6px',
                                                     borderRadius: 3, zIndex: 2,
                                                 }}>
-                                                    {__('Hidden', 'website-footer-block')}
+                                                    {__('Hidden', 'adaire-blocks')}
                                                 </span>
                                             )}
 
                                             {/* ── Single QuickZone wrapping all column content ── */}
                                             <QuickZone
                                                 id={`footer-col-${column.id}`}
-                                                label={column.headingText || __('Column', 'website-footer-block')}
+                                                label={column.headingText || __('Column', 'adaire-blocks')}
                                                 activeZone={activeZone}
                                                 setActiveZone={setActiveZone}
                                                 content={
                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minWidth: 260 }}>
                                                         {/* Column type */}
                                                         <SelectControl
-                                                            label={__('Column Type', 'website-footer-block')}
+                                                            label={__('Column Type', 'adaire-blocks')}
                                                             value={column.type}
                                                             options={columnTypeOptions}
                                                             onChange={(v) => updateColumn(column.id, { type: v })}
@@ -1121,10 +1121,10 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
                                                                 <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>Logo</strong>
                                                                 <ToggleControl
-                                                                    label={__('Show logo image', 'website-footer-block')}
+                                                                    label={__('Show logo image', 'adaire-blocks')}
                                                                     checked={column.showLogo !== false}
                                                                     onChange={(v) => updateColumn(column.id, { showLogo: v })}
-                                                                    help={__('On by default — matches existing footers that already have a logo set.', 'website-footer-block')}
+                                                                    help={__('On by default — matches existing footers that already have a logo set.', 'adaire-blocks')}
                                                                 />
                                                                 {column.showLogo !== false && (
                                                                     <>
@@ -1135,13 +1135,13 @@ export default function Edit({ attributes, setAttributes }) {
                                                                                 value={column.brandLogo}
                                                                                 render={({ open }) => (
                                                                                     <Button variant="secondary" onClick={() => { markMediaOpening(); open(); }} style={{ width: '100%' }}>
-                                                                                        {column.brandLogo ? __('Replace Logo', 'website-footer-block') : __('Upload Logo', 'website-footer-block')}
+                                                                                        {column.brandLogo ? __('Replace Logo', 'adaire-blocks') : __('Upload Logo', 'adaire-blocks')}
                                                                                     </Button>
                                                                                 )}
                                                                             />
                                                                         </MediaUploadCheck>
                                                                         {column.brandLogo && (
-                                                                            <RangeControl label={__('Logo width (px)', 'website-footer-block')} value={column.brandLogoWidth || 120} min={20} max={400}
+                                                                            <RangeControl label={__('Logo width (px)', 'adaire-blocks')} value={column.brandLogoWidth || 120} min={20} max={400}
                                                                                 onChange={(v) => updateColumn(column.id, { brandLogoWidth: v })} />
                                                                         )}
                                                                     </>
@@ -1149,48 +1149,48 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
                                                                 <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>Brand Name</strong>
                                                                 <ToggleControl
-                                                                    label={__('Show brand name text', 'website-footer-block')}
+                                                                    label={__('Show brand name text', 'adaire-blocks')}
                                                                     checked={effectiveShowBrandName(column)}
                                                                     onChange={(v) => updateColumn(column.id, { showBrandName: v })}
-                                                                    help={__('Off by default — turn on to type a brand name under the logo.', 'website-footer-block')}
+                                                                    help={__('Off by default — turn on to type a brand name under the logo.', 'adaire-blocks')}
                                                                 />
                                                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
                                                                 <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>Call to Action</strong>
-                                                                <ToggleControl label={__('Show CTA button', 'website-footer-block')} checked={!!column.showCta}
+                                                                <ToggleControl label={__('Show CTA button', 'adaire-blocks')} checked={!!column.showCta}
                                                                     onChange={(v) => updateColumn(column.id, { showCta: v })} />
                                                                 {!!column.showCta && (
                                                                     <>
-                                                                        <TextControl label={__('CTA Link URL', 'website-footer-block')} value={column.ctaUrl || ''}
+                                                                        <TextControl label={__('CTA Link URL', 'adaire-blocks')} value={column.ctaUrl || ''}
                                                                             onChange={(v) => updateColumn(column.id, { ctaUrl: v })} placeholder="https://…" />
                                                                         <div>
-                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Background Color', 'website-footer-block')}</label>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Background Color', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={column.ctaBackgroundColor || ''} onChange={(v) => updateColumn(column.id, { ctaBackgroundColor: v || '' })} />
                                                                         </div>
                                                                         <div>
-                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Text Color', 'website-footer-block')}</label>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Text Color', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={column.ctaTextColor || ''} onChange={(v) => updateColumn(column.id, { ctaTextColor: v || '' })} />
                                                                         </div>
-                                                                        <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('CTA Hover State', 'website-footer-block')}</strong>
+                                                                        <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('CTA Hover State', 'adaire-blocks')}</strong>
                                                                         <div>
-                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Background Color', 'website-footer-block')}</label>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Background Color', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={column.ctaHoverBackgroundColor || ''} onChange={(v) => updateColumn(column.id, { ctaHoverBackgroundColor: v || '' })} />
                                                                         </div>
                                                                         <div>
-                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Text Color', 'website-footer-block')}</label>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Text Color', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={column.ctaHoverColor || ''} onChange={(v) => updateColumn(column.id, { ctaHoverColor: v || '' })} />
                                                                         </div>
                                                                         <div>
-                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Border Color', 'website-footer-block')}</label>
+                                                                            <label style={{ display: 'block', fontSize: 12, marginBottom: 4 }}>{__('Hover Border Color', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={column.ctaHoverBorderColor || ''} onChange={(v) => updateColumn(column.id, { ctaHoverBorderColor: v || '' })} />
                                                                         </div>
                                                                         <RangeControl
-                                                                            label={__('Border Radius (px)', 'website-footer-block')}
+                                                                            label={__('Border Radius (px)', 'adaire-blocks')}
                                                                             value={column.ctaBorderRadius != null && column.ctaBorderRadius >= 0 ? column.ctaBorderRadius : 4}
                                                                             min={0} max={40}
                                                                             onChange={(v) => updateColumn(column.id, { ctaBorderRadius: v })}
                                                                         />
                                                                         <RangeControl
-                                                                            label={__('Hover Transition (ms)', 'website-footer-block')}
+                                                                            label={__('Hover Transition (ms)', 'adaire-blocks')}
                                                                             value={column.ctaTransitionDuration != null && column.ctaTransitionDuration >= 0 ? column.ctaTransitionDuration : 300}
                                                                             min={0} max={1000} step={50}
                                                                             onChange={(v) => updateColumn(column.id, { ctaTransitionDuration: v })}
@@ -1205,7 +1205,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                             <>
                                                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
                                                                 <SelectControl
-                                                                    label={__('Widget Area', 'website-footer-block')}
+                                                                    label={__('Widget Area', 'adaire-blocks')}
                                                                     value={column.widgetAreaId || ''}
                                                                     options={widgetAreaOptions}
                                                                     onChange={(v) => updateColumn(column.id, { widgetAreaId: v })}
@@ -1217,20 +1217,20 @@ export default function Edit({ attributes, setAttributes }) {
                                                         {column.type === 'nav' && (
                                                             <>
                                                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
-                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Navigation', 'website-footer-block')}</strong>
+                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Navigation', 'adaire-blocks')}</strong>
                                                                 <SelectControl
-                                                                    label={__('Navigation Source', 'website-footer-block')}
+                                                                    label={__('Navigation Source', 'adaire-blocks')}
                                                                     value={column.navigationSource || 'legacy'}
                                                                     options={navigationSourceOptions}
                                                                     onChange={(v) => updateColumn(column.id, { navigationSource: v })}
-                                                                    help={__('Pull items live from a WordPress menu, or manage them manually below on canvas.', 'website-footer-block')}
+                                                                    help={__('Pull items live from a WordPress menu, or manage them manually below on canvas.', 'adaire-blocks')}
                                                                 />
                                                                 {column.navigationSource === 'menu' && (
                                                                     <SelectControl
-                                                                        label={__('Menu', 'website-footer-block')}
+                                                                        label={__('Menu', 'adaire-blocks')}
                                                                         value={column.selectedMenuId || 0}
                                                                         options={[
-                                                                            { label: __('Select a menu…', 'website-footer-block'), value: 0 },
+                                                                            { label: __('Select a menu…', 'adaire-blocks'), value: 0 },
                                                                             ...(wpMenus || []).map((menu) => ({ label: menu.name, value: menu.id })),
                                                                         ]}
                                                                         onChange={(v) => updateColumn(column.id, { selectedMenuId: Number(v) })}
@@ -1238,10 +1238,10 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 )}
                                                                 {(column.navigationSource === 'primary' || column.navigationSource === 'footer') && (
                                                                     <p style={{ fontSize: 12, opacity: 0.75 }}>
-                                                                        {__('Assign a menu to this location under Appearance → Menus.', 'website-footer-block')}
+                                                                        {__('Assign a menu to this location under Appearance → Menus.', 'adaire-blocks')}
                                                                     </p>
                                                                 )}
-                                                                <SelectControl label={__('List Style', 'website-footer-block')} value={column.listStyle}
+                                                                <SelectControl label={__('List Style', 'adaire-blocks')} value={column.listStyle}
                                                                     options={[
                                                                         { label: 'Plain',    value: 'plain' },
                                                                         { label: 'Bulleted', value: 'bulleted' },
@@ -1250,33 +1250,33 @@ export default function Edit({ attributes, setAttributes }) {
                                                                         { label: 'Dotted',   value: 'dotted' },
                                                                     ]}
                                                                     onChange={(v) => updateColumn(column.id, { listStyle: v })} />
-                                                                <RangeControl label={__('Item Spacing (px)', 'website-footer-block')} value={column.itemSpacing} min={0} max={40}
+                                                                <RangeControl label={__('Item Spacing (px)', 'adaire-blocks')} value={column.itemSpacing} min={0} max={40}
                                                                     onChange={(v) => updateColumn(column.id, { itemSpacing: v })} />
                                                                 <ToggleControl
-                                                                    label={__('Underline links', 'website-footer-block')}
+                                                                    label={__('Underline links', 'adaire-blocks')}
                                                                     checked={!!column.linkUnderline}
                                                                     onChange={(v) => updateColumn(column.id, { linkUnderline: v })}
-                                                                    help={__('Off by default — combine with List Style above for bullets, underlines, both, or neither.', 'website-footer-block')}
+                                                                    help={__('Off by default — combine with List Style above for bullets, underlines, both, or neither.', 'adaire-blocks')}
                                                                 />
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Link Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Link Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.linkColor || ''} onChange={(v) => updateColumn(column.id, { linkColor: v || '' })} />
                                                                 </div>
-                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Link Hover State', 'website-footer-block')}</strong>
+                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Link Hover State', 'adaire-blocks')}</strong>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Hover Text Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Hover Text Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.linkHoverColor || ''} onChange={(v) => updateColumn(column.id, { linkHoverColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Hover Underline Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Hover Underline Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.linkHoverUnderlineColor || ''} onChange={(v) => updateColumn(column.id, { linkHoverUnderlineColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Hover Background Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Hover Background Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.linkHoverBackgroundColor || ''} onChange={(v) => updateColumn(column.id, { linkHoverBackgroundColor: v || '' })} />
                                                                 </div>
                                                                 <RangeControl
-                                                                    label={__('Hover Transition (ms)', 'website-footer-block')}
+                                                                    label={__('Hover Transition (ms)', 'adaire-blocks')}
                                                                     value={column.linkTransitionDuration != null && column.linkTransitionDuration >= 0 ? column.linkTransitionDuration : 300}
                                                                     min={0} max={1000} step={50}
                                                                     onChange={(v) => updateColumn(column.id, { linkTransitionDuration: v })}
@@ -1284,9 +1284,9 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 {(column.navigationSource || 'legacy') === 'legacy' && (
                                                                     <>
                                                                         <p style={{ fontSize: 12, opacity: 0.75, marginTop: 4 }}>
-                                                                            {__('Click a link on canvas to edit its label, URL, or remove it.', 'website-footer-block')}
+                                                                            {__('Click a link on canvas to edit its label, URL, or remove it.', 'adaire-blocks')}
                                                                         </p>
-                                                                        <Button className="adaire-qz-add-btn" onClick={() => addNavItem(column.id)}>{__('+ Add Link', 'website-footer-block')}</Button>
+                                                                        <Button className="adaire-qz-add-btn" onClick={() => addNavItem(column.id)}>{__('+ Add Link', 'adaire-blocks')}</Button>
                                                                     </>
                                                                 )}
                                                             </>
@@ -1296,62 +1296,62 @@ export default function Edit({ attributes, setAttributes }) {
                                                         {column.type === 'social' && (
                                                             <>
                                                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
-                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Social', 'website-footer-block')}</strong>
-                                                                <SelectControl label={__('Display Style', 'website-footer-block')} value={column.displayStyle || 'vertical'}
+                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Social', 'adaire-blocks')}</strong>
+                                                                <SelectControl label={__('Display Style', 'adaire-blocks')} value={column.displayStyle || 'vertical'}
                                                                     options={[
                                                                         { label: 'Vertical (text)', value: 'vertical' },
                                                                         { label: 'Icons',           value: 'icons' },
                                                                     ]}
                                                                     onChange={(v) => updateColumn(column.id, { displayStyle: v })} />
-                                                                <RangeControl label={__('Icon Size (px)', 'website-footer-block')} value={column.iconSize || 24} min={12} max={60}
+                                                                <RangeControl label={__('Icon Size (px)', 'adaire-blocks')} value={column.iconSize || 24} min={12} max={60}
                                                                     onChange={(v) => updateColumn(column.id, { iconSize: v })} />
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Icon Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Icon Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.iconColor || ''} onChange={(v) => updateColumn(column.id, { iconColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Icon Background Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Icon Background Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.iconBgColor || ''} onChange={(v) => updateColumn(column.id, { iconBgColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Icon Hover Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Icon Hover Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.socialHoverColor || ''} onChange={(v) => updateColumn(column.id, { socialHoverColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Icon Hover Background', 'website-footer-block')}</label>
+                                                                    <label>{__('Icon Hover Background', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.socialHoverBackgroundColor || ''} onChange={(v) => updateColumn(column.id, { socialHoverBackgroundColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Icon Border Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Icon Border Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.socialBorderColor || ''} onChange={(v) => updateColumn(column.id, { socialBorderColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Icon Hover Border Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Icon Hover Border Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.socialHoverBorderColor || ''} onChange={(v) => updateColumn(column.id, { socialHoverBorderColor: v || '' })} />
                                                                 </div>
                                                                 <RangeControl
-                                                                    label={__('Icon Border Radius (%)', 'website-footer-block')}
+                                                                    label={__('Icon Border Radius (%)', 'adaire-blocks')}
                                                                     value={column.socialBorderRadius != null && column.socialBorderRadius >= 0 ? column.socialBorderRadius : 50}
                                                                     min={0} max={50}
                                                                     onChange={(v) => updateColumn(column.id, { socialBorderRadius: v })}
-                                                                    help={__('50% = circle, 0% = square', 'website-footer-block')}
+                                                                    help={__('50% = circle, 0% = square', 'adaire-blocks')}
                                                                 />
                                                                 <RangeControl
-                                                                    label={__('Icon Spacing (px)', 'website-footer-block')}
+                                                                    label={__('Icon Spacing (px)', 'adaire-blocks')}
                                                                     value={column.socialIconSpacing != null && column.socialIconSpacing >= 0 ? column.socialIconSpacing : 12}
                                                                     min={0} max={40}
                                                                     onChange={(v) => updateColumn(column.id, { socialIconSpacing: v })}
                                                                 />
                                                                 <RangeControl
-                                                                    label={__('Hover Transition (ms)', 'website-footer-block')}
+                                                                    label={__('Hover Transition (ms)', 'adaire-blocks')}
                                                                     value={column.socialTransitionDuration != null && column.socialTransitionDuration >= 0 ? column.socialTransitionDuration : 300}
                                                                     min={0} max={1000} step={50}
                                                                     onChange={(v) => updateColumn(column.id, { socialTransitionDuration: v })}
                                                                 />
                                                                 <p style={{ fontSize: 12, opacity: 0.75, marginTop: 4 }}>
-                                                                    {__('Click an icon on canvas to edit its platform, label, URL, or remove it.', 'website-footer-block')}
+                                                                    {__('Click an icon on canvas to edit its platform, label, URL, or remove it.', 'adaire-blocks')}
                                                                 </p>
-                                                                <Button className="adaire-qz-add-btn" onClick={() => addSocialItem(column.id)}>{__('+ Add Social Link', 'website-footer-block')}</Button>
+                                                                <Button className="adaire-qz-add-btn" onClick={() => addSocialItem(column.id)}>{__('+ Add Social Link', 'adaire-blocks')}</Button>
                                                             </>
                                                         )}
 
@@ -1359,26 +1359,26 @@ export default function Edit({ attributes, setAttributes }) {
                                                         {column.type === 'newsletter' && (
                                                             <>
                                                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
-                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Newsletter', 'website-footer-block')}</strong>
-                                                                <TextControl label={__('Email Field Name', 'website-footer-block')} value={column.newsletterFieldName || 'email'}
+                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Newsletter', 'adaire-blocks')}</strong>
+                                                                <TextControl label={__('Email Field Name', 'adaire-blocks')} value={column.newsletterFieldName || 'email'}
                                                                     onChange={(v) => updateColumn(column.id, { newsletterFieldName: v })}
-                                                                    help={__('The form field name your email provider expects.', 'website-footer-block')} />
-                                                                <TextControl label={__('Form Action URL', 'website-footer-block')} value={column.newsletterAction || ''}
+                                                                    help={__('The form field name your email provider expects.', 'adaire-blocks')} />
+                                                                <TextControl label={__('Form Action URL', 'adaire-blocks')} value={column.newsletterAction || ''}
                                                                     onChange={(v) => updateColumn(column.id, { newsletterAction: v })}
                                                                     placeholder="https://example.com/subscribe" />
-                                                                <TextControl label={__('Input Placeholder', 'website-footer-block')} value={column.newsletterPlaceholder || ''}
+                                                                <TextControl label={__('Input Placeholder', 'adaire-blocks')} value={column.newsletterPlaceholder || ''}
                                                                     onChange={(v) => updateColumn(column.id, { newsletterPlaceholder: v })}
-                                                                    placeholder={__('Enter your email', 'website-footer-block')} />
+                                                                    placeholder={__('Enter your email', 'adaire-blocks')} />
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Button Background', 'website-footer-block')}</label>
+                                                                    <label>{__('Button Background', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.newsletterButtonColor || ''} onChange={(v) => updateColumn(column.id, { newsletterButtonColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Button Text Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Button Text Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.newsletterButtonTextColor || ''} onChange={(v) => updateColumn(column.id, { newsletterButtonTextColor: v || '' })} />
                                                                 </div>
                                                                 <div style={{ marginBottom: 4 }}>
-                                                                    <label>{__('Input Border Color', 'website-footer-block')}</label>
+                                                                    <label>{__('Input Border Color', 'adaire-blocks')}</label>
                                                                     <BoundColorPalette value={column.newsletterInputBorderColor || ''} onChange={(v) => updateColumn(column.id, { newsletterInputBorderColor: v || '' })} />
                                                                 </div>
                                                             </>
@@ -1388,29 +1388,29 @@ export default function Edit({ attributes, setAttributes }) {
                                                         {column.type === 'buttons' && (
                                                             <>
                                                                 <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
-                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Buttons', 'website-footer-block')}</strong>
-                                                                <SelectControl label={__('Layout', 'website-footer-block')} value={column.buttonsLayout || 'horizontal'}
+                                                                <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Buttons', 'adaire-blocks')}</strong>
+                                                                <SelectControl label={__('Layout', 'adaire-blocks')} value={column.buttonsLayout || 'horizontal'}
                                                                     options={[{ label: 'Horizontal', value: 'horizontal' }, { label: 'Vertical', value: 'vertical' }]}
                                                                     onChange={(v) => updateColumn(column.id, { buttonsLayout: v })} />
                                                                 <p style={{ fontSize: 12, opacity: 0.75, marginTop: 4 }}>
-                                                                    {__('Click a button on canvas to edit its label, URL, style, or remove it.', 'website-footer-block')}
+                                                                    {__('Click a button on canvas to edit its label, URL, style, or remove it.', 'adaire-blocks')}
                                                                 </p>
-                                                                <Button className="adaire-qz-add-btn" onClick={() => addButtonsItem(column.id)}>{__('+ Add Button', 'website-footer-block')}</Button>
+                                                                <Button className="adaire-qz-add-btn" onClick={() => addButtonsItem(column.id)}>{__('+ Add Button', 'adaire-blocks')}</Button>
                                                             </>
                                                         )}
 
                                                         {/* Common settings */}
                                                         <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
-                                                        <ToggleControl label={__('Show heading', 'website-footer-block')} checked={column.showHeading}
+                                                        <ToggleControl label={__('Show heading', 'adaire-blocks')} checked={column.showHeading}
                                                             onChange={(v) => updateColumn(column.id, { showHeading: v })} />
-                                                        <SelectControl label={__('Text align', 'website-footer-block')} value={column.textAlign}
+                                                        <SelectControl label={__('Text align', 'adaire-blocks')} value={column.textAlign}
                                                             options={[{ label: 'Left', value: 'left' }, { label: 'Center', value: 'center' }, { label: 'Right', value: 'right' }]}
                                                             onChange={(v) => updateColumn(column.id, { textAlign: v })} />
                                                         <ToggleControl
-                                                            label={__('Show on front end', 'website-footer-block')}
+                                                            label={__('Show on front end', 'adaire-blocks')}
                                                             checked={column.visible !== false}
                                                             onChange={(v) => updateColumn(column.id, { visible: v })}
-                                                            help={__('Hide this column from visitors without deleting it.', 'website-footer-block')}
+                                                            help={__('Hide this column from visitors without deleting it.', 'adaire-blocks')}
                                                         />
 
                                                         {/* Column order */}
@@ -1438,7 +1438,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                         {column.navigationSource && column.navigationSource !== 'legacy' ? (
                                                             isMenuLoadingForColumn(column) ? (
                                                                 <p style={{ fontSize: 12, opacity: 0.6, fontStyle: 'italic' }}>
-                                                                    {__('Loading menu…', 'website-footer-block')}
+                                                                    {__('Loading menu…', 'adaire-blocks')}
                                                                 </p>
                                                             ) : (menuTreeByColumn[column.id] || []).length > 0 ? (
                                                                 <ul className={`website-footer-block__nav-list website-footer-block__nav-list--${column.listStyle}`}
@@ -1450,8 +1450,8 @@ export default function Edit({ attributes, setAttributes }) {
                                                             ) : (
                                                                 <p style={{ fontSize: 12, opacity: 0.6, fontStyle: 'italic' }}>
                                                                     {column.navigationSource === 'menu'
-                                                                        ? __('No menu selected yet — choose one in the settings panel.', 'website-footer-block')
-                                                                        : __('No menu assigned to this location yet — assign one under Appearance → Menus.', 'website-footer-block')}
+                                                                        ? __('No menu selected yet — choose one in the settings panel.', 'adaire-blocks')
+                                                                        : __('No menu assigned to this location yet — assign one under Appearance → Menus.', 'adaire-blocks')}
                                                                 </p>
                                                             )
                                                         ) : (
@@ -1461,16 +1461,16 @@ export default function Edit({ attributes, setAttributes }) {
                                                                     <li key={item.id} style={{ listStyle: 'none' }}>
                                                                         <QuickZone
                                                                             id={`footer-navitem-${column.id}-${item.id}`}
-                                                                            label={item.label || __('Link', 'website-footer-block')}
+                                                                            label={item.label || __('Link', 'adaire-blocks')}
                                                                             activeZone={activeZone}
                                                                             setActiveZone={setActiveZone}
                                                                             content={
                                                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 220 }}>
-                                                                                    <TextControl label={__('Label', 'website-footer-block')} value={item.label || ''}
+                                                                                    <TextControl label={__('Label', 'adaire-blocks')} value={item.label || ''}
                                                                                         onChange={(v) => updateNavItem(column.id, itemIndex, 'label', v)} />
-                                                                                    <TextControl label={__('URL', 'website-footer-block')} value={item.url || ''}
+                                                                                    <TextControl label={__('URL', 'adaire-blocks')} value={item.url || ''}
                                                                                         onChange={(v) => updateNavItem(column.id, itemIndex, 'url', v)} placeholder="https://…" />
-                                                                                    <Button variant="link" isDestructive onClick={() => removeNavItem(column.id, itemIndex)}>{__('Remove link', 'website-footer-block')}</Button>
+                                                                                    <Button variant="link" isDestructive onClick={() => removeNavItem(column.id, itemIndex)}>{__('Remove link', 'adaire-blocks')}</Button>
                                                                                 </div>
                                                                             }
                                                                         >
@@ -1489,14 +1489,14 @@ export default function Edit({ attributes, setAttributes }) {
                                                                                     '--link-transition-duration': (column.linkTransitionDuration != null && column.linkTransitionDuration >= 0) ? `${column.linkTransitionDuration}ms` : undefined,
                                                                                 }}
                                                                             >
-                                                                                {item.label || __('Link', 'website-footer-block')}
+                                                                                {item.label || __('Link', 'adaire-blocks')}
                                                                             </span>
                                                                         </QuickZone>
                                                                     </li>
                                                                 ))}
                                                                 {!(column.navItems || []).length && (
                                                                     <li style={{ listStyle: 'none', fontSize: 12, opacity: 0.6, fontStyle: 'italic' }}>
-                                                                        {__('Add links via the settings panel →', 'website-footer-block')}
+                                                                        {__('Add links via the settings panel →', 'adaire-blocks')}
                                                                     </li>
                                                                 )}
                                                             </ul>
@@ -1569,23 +1569,23 @@ export default function Edit({ attributes, setAttributes }) {
                                                             <QuickZone
                                                                 key={item.id}
                                                                 id={`footer-socialitem-${column.id}-${item.id}`}
-                                                                label={item.label || item.platform || __('Social link', 'website-footer-block')}
+                                                                label={item.label || item.platform || __('Social link', 'adaire-blocks')}
                                                                 activeZone={activeZone}
                                                                 setActiveZone={setActiveZone}
                                                                 content={
                                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 220 }}>
-                                                                        <SelectControl label={__('Platform (icon)', 'website-footer-block')} value={item.platform || 'twitter'}
+                                                                        <SelectControl label={__('Platform (icon)', 'adaire-blocks')} value={item.platform || 'twitter'}
                                                                             options={['twitter','facebook','instagram','linkedin','youtube'].map(p => ({ label: p.charAt(0).toUpperCase() + p.slice(1), value: p }))}
                                                                             onChange={(v) => updateSocialPlatform(column.id, item.id, v)} />
-                                                                        <TextControl label={__('Label', 'website-footer-block')} value={item.label || ''} onChange={(v) => updateSocialItem(column.id, item.id, 'label', v)} />
-                                                                        <TextControl label={__('URL', 'website-footer-block')} value={item.url || ''} onChange={(v) => updateSocialItem(column.id, item.id, 'url', v)} placeholder="https://…" />
-                                                                        <Button variant="link" isDestructive onClick={() => removeSocialItem(column.id, item.id)}>{__('Remove', 'website-footer-block')}</Button>
+                                                                        <TextControl label={__('Label', 'adaire-blocks')} value={item.label || ''} onChange={(v) => updateSocialItem(column.id, item.id, 'label', v)} />
+                                                                        <TextControl label={__('URL', 'adaire-blocks')} value={item.url || ''} onChange={(v) => updateSocialItem(column.id, item.id, 'url', v)} placeholder="https://…" />
+                                                                        <Button variant="link" isDestructive onClick={() => removeSocialItem(column.id, item.id)}>{__('Remove', 'adaire-blocks')}</Button>
                                                                     </div>
                                                                 }
                                                             >
                                                                 {(column.displayStyle || 'vertical') === 'vertical' ? (
                                                                     <span style={{ color: column.iconColor || 'inherit', display: 'inline-block' }}>
-                                                                        {item.label || __('Social Link', 'website-footer-block')}
+                                                                        {item.label || __('Social Link', 'adaire-blocks')}
                                                                     </span>
                                                                 ) : (
                                                                     <span
@@ -1614,7 +1614,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                         ))}
                                                         {!(column.socialItems || []).length && (
                                                             <span style={{ fontSize: 12, opacity: 0.6, fontStyle: 'italic' }}>
-                                                                {__('Add links via the settings panel →', 'website-footer-block')}
+                                                                {__('Add links via the settings panel →', 'adaire-blocks')}
                                                             </span>
                                                         )}
                                                     </div>
@@ -1625,16 +1625,16 @@ export default function Edit({ attributes, setAttributes }) {
                                                     <div className="website-footer-block__newsletter">
                                                         <RichText tagName="p" className="website-footer-block__newsletter-description"
                                                             value={column.newsletterDescription} onChange={(v) => updateColumn(column.id, { newsletterDescription: v })}
-                                                            placeholder={__('Newsletter description…', 'website-footer-block')} />
+                                                            placeholder={__('Newsletter description…', 'adaire-blocks')} />
                                                         <div className="website-footer-block__newsletter-field-row">
                                                             <input type="email" disabled
                                                                 className="website-footer-block__newsletter-input"
-                                                                placeholder={column.newsletterPlaceholder || __('Enter your email', 'website-footer-block')}
+                                                                placeholder={column.newsletterPlaceholder || __('Enter your email', 'adaire-blocks')}
                                                                 style={column.newsletterInputBorderColor ? { borderColor: column.newsletterInputBorderColor } : undefined}
                                                                 onClick={(e) => e.stopPropagation()} />
                                                             <RichText tagName="span" className="website-footer-block__newsletter-button"
                                                                 value={column.newsletterButtonText} onChange={(v) => updateColumn(column.id, { newsletterButtonText: v })}
-                                                                placeholder={__('Subscribe', 'website-footer-block')} withoutInteractiveFormatting
+                                                                placeholder={__('Subscribe', 'adaire-blocks')} withoutInteractiveFormatting
                                                                 style={{
                                                                     backgroundColor: column.newsletterButtonColor || 'var(--footer-accent-color, #503AA8)',
                                                                     color: column.newsletterButtonTextColor || '#ffffff',
@@ -1650,53 +1650,53 @@ export default function Edit({ attributes, setAttributes }) {
                                                             <QuickZone
                                                                 key={item.id}
                                                                 id={`footer-btnitem-${column.id}-${item.id}`}
-                                                                label={item.label || __('Button', 'website-footer-block')}
+                                                                label={item.label || __('Button', 'adaire-blocks')}
                                                                 activeZone={activeZone}
                                                                 setActiveZone={setActiveZone}
                                                                 content={
                                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 220 }}>
-                                                                        <TextControl label={__('Label', 'website-footer-block')} value={item.label || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'label', v)} />
-                                                                        <TextControl label={__('URL', 'website-footer-block')} value={item.url || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'url', v)} placeholder="https://…" />
-                                                                        <SelectControl label={__('Style', 'website-footer-block')} value={item.style || 'solid'}
+                                                                        <TextControl label={__('Label', 'adaire-blocks')} value={item.label || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'label', v)} />
+                                                                        <TextControl label={__('URL', 'adaire-blocks')} value={item.url || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'url', v)} placeholder="https://…" />
+                                                                        <SelectControl label={__('Style', 'adaire-blocks')} value={item.style || 'solid'}
                                                                             options={[{ label: 'Solid', value: 'solid' }, { label: 'Outline', value: 'outline' }]}
                                                                             onChange={(v) => updateButtonsItem(column.id, item.id, 'style', v)} />
                                                                         <div style={{ marginBottom: 4 }}>
-                                                                            <label>{__('Background', 'website-footer-block')}</label>
+                                                                            <label>{__('Background', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={item.backgroundColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'backgroundColor', v || '')} />
                                                                         </div>
                                                                         <div style={{ marginBottom: 4 }}>
-                                                                            <label>{__('Text Color', 'website-footer-block')}</label>
+                                                                            <label>{__('Text Color', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={item.textColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'textColor', v || '')} />
                                                                         </div>
                                                                         <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
-                                                                        <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Hover State', 'website-footer-block')}</strong>
+                                                                        <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Hover State', 'adaire-blocks')}</strong>
                                                                         <div style={{ marginBottom: 4 }}>
-                                                                            <label>{__('Hover Background', 'website-footer-block')}</label>
+                                                                            <label>{__('Hover Background', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={item.hoverBackgroundColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'hoverBackgroundColor', v || '')} />
                                                                         </div>
                                                                         <div style={{ marginBottom: 4 }}>
-                                                                            <label>{__('Hover Text Color', 'website-footer-block')}</label>
+                                                                            <label>{__('Hover Text Color', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={item.hoverTextColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'hoverTextColor', v || '')} />
                                                                         </div>
                                                                         <div style={{ marginBottom: 4 }}>
-                                                                            <label>{__('Hover Border Color', 'website-footer-block')}</label>
+                                                                            <label>{__('Hover Border Color', 'adaire-blocks')}</label>
                                                                             <BoundColorPalette value={item.hoverBorderColor || ''} onChange={(v) => updateButtonsItem(column.id, item.id, 'hoverBorderColor', v || '')} />
                                                                         </div>
                                                                         <RangeControl
-                                                                            label={__('Border Radius (px)', 'website-footer-block')}
+                                                                            label={__('Border Radius (px)', 'adaire-blocks')}
                                                                             value={item.borderRadius != null && item.borderRadius >= 0 ? item.borderRadius : 4}
                                                                             min={0} max={50}
                                                                             onChange={(v) => updateButtonsItem(column.id, item.id, 'borderRadius', v)}
                                                                         />
                                                                         <RangeControl
-                                                                            label={__('Hover Transition (ms)', 'website-footer-block')}
+                                                                            label={__('Hover Transition (ms)', 'adaire-blocks')}
                                                                             value={item.transitionDuration != null && item.transitionDuration >= 0 ? item.transitionDuration : 300}
                                                                             min={0} max={1000} step={50}
                                                                             onChange={(v) => updateButtonsItem(column.id, item.id, 'transitionDuration', v)}
                                                                         />
                                                                         <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '2px 0' }} />
-                                                                        <ToggleControl label={__('Open in new tab', 'website-footer-block')} checked={!!item.newTab} onChange={(v) => updateButtonsItem(column.id, item.id, 'newTab', v)} />
-                                                                        <Button variant="link" isDestructive onClick={() => removeButtonsItem(column.id, item.id)}>{__('Remove', 'website-footer-block')}</Button>
+                                                                        <ToggleControl label={__('Open in new tab', 'adaire-blocks')} checked={!!item.newTab} onChange={(v) => updateButtonsItem(column.id, item.id, 'newTab', v)} />
+                                                                        <Button variant="link" isDestructive onClick={() => removeButtonsItem(column.id, item.id)}>{__('Remove', 'adaire-blocks')}</Button>
                                                                     </div>
                                                                 }
                                                             >
@@ -1712,13 +1712,13 @@ export default function Edit({ attributes, setAttributes }) {
                                                                         '--buttons-hover-color': item.hoverTextColor || undefined,
                                                                         '--buttons-hover-border-color': item.hoverBorderColor || undefined,
                                                                     }}>
-                                                                    {item.label || __('Button', 'website-footer-block')}
+                                                                    {item.label || __('Button', 'adaire-blocks')}
                                                                 </span>
                                                             </QuickZone>
                                                         ))}
                                                         {!(column.buttonsItems || []).length && (
                                                             <span style={{ fontSize: 12, opacity: 0.6, fontStyle: 'italic' }}>
-                                                                {__('Add buttons via the settings panel →', 'website-footer-block')}
+                                                                {__('Add buttons via the settings panel →', 'adaire-blocks')}
                                                             </span>
                                                         )}
                                                     </div>
@@ -1729,7 +1729,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                     <div className="website-footer-block__copyright-block">
                                                         <RichText tagName="p" value={column.copyrightText}
                                                             onChange={(v) => updateColumn(column.id, { copyrightText: v })}
-                                                            placeholder={__('© {year} Your Company. All rights reserved.', 'website-footer-block')}
+                                                            placeholder={__('© {year} Your Company. All rights reserved.', 'adaire-blocks')}
                                                             withoutInteractiveFormatting />
                                                     </div>
                                                 )}
@@ -1740,8 +1740,8 @@ export default function Edit({ attributes, setAttributes }) {
                                                         style={{ padding: '16px', border: '2px dashed rgba(255,255,255,0.2)', borderRadius: 6, textAlign: 'center', fontSize: 12, opacity: 0.7 }}>
                                                         {column.widgetAreaId
                                                             ? (widgetAreaOptions.find((o) => o.value === column.widgetAreaId) || {}).label
-                                                                + ' — ' + __('widgets render on the live site', 'website-footer-block')
-                                                            : __('Choose a widget area in the settings panel →', 'website-footer-block')}
+                                                                + ' — ' + __('widgets render on the live site', 'adaire-blocks')
+                                                            : __('Choose a widget area in the settings panel →', 'adaire-blocks')}
                                                     </div>
                                                 )}
 
@@ -1749,7 +1749,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                 {column.type === 'custom' && (
                                                     <RichText tagName="div" className="website-footer-block__custom-content"
                                                         value={column.customContent} onChange={(v) => updateColumn(column.id, { customContent: v })}
-                                                        placeholder={__('Custom content…', 'website-footer-block')} multiline />
+                                                        placeholder={__('Custom content…', 'adaire-blocks')} multiline />
                                                 )}
                                             </QuickZone>
                                         </div>
@@ -1759,7 +1759,7 @@ export default function Edit({ attributes, setAttributes }) {
 
                             <div style={{ textAlign: 'center', marginTop: 20 }}>
                                 <Button className="website-footer-block__add-column" onClick={addColumn}>
-                                    {__('+ Add Column', 'website-footer-block')}
+                                    {__('+ Add Column', 'adaire-blocks')}
                                 </Button>
                             </div>
                         </div>
@@ -1814,17 +1814,17 @@ export default function Edit({ attributes, setAttributes }) {
                                             <QuickZone
                                                 key={link.id}
                                                 id={`footer-bottombar-social-${link.id}`}
-                                                label={link.label || link.platform || __('Social icon', 'website-footer-block')}
+                                                label={link.label || link.platform || __('Social icon', 'adaire-blocks')}
                                                 activeZone={activeZone}
                                                 setActiveZone={setActiveZone}
                                                 content={
                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 220 }}>
-                                                        <SelectControl label={__('Platform (icon)', 'website-footer-block')} value={link.platform || 'twitter'}
+                                                        <SelectControl label={__('Platform (icon)', 'adaire-blocks')} value={link.platform || 'twitter'}
                                                             options={['twitter','facebook','instagram','linkedin','youtube'].map(p => ({ label: p.charAt(0).toUpperCase() + p.slice(1), value: p }))}
                                                             onChange={(v) => updateBottomBarSocialPlatform(link.id, v)} />
-                                                        <TextControl label={__('Label', 'website-footer-block')} value={link.label || ''} onChange={(v) => updateBottomBarSocialIcon(link.id, 'label', v)} />
-                                                        <TextControl label={__('URL', 'website-footer-block')} value={link.url || ''} onChange={(v) => updateBottomBarSocialIcon(link.id, 'url', v)} placeholder="https://…" />
-                                                        <Button variant="link" isDestructive onClick={() => removeBottomBarSocialIcon(link.id)}>{__('Remove', 'website-footer-block')}</Button>
+                                                        <TextControl label={__('Label', 'adaire-blocks')} value={link.label || ''} onChange={(v) => updateBottomBarSocialIcon(link.id, 'label', v)} />
+                                                        <TextControl label={__('URL', 'adaire-blocks')} value={link.url || ''} onChange={(v) => updateBottomBarSocialIcon(link.id, 'url', v)} placeholder="https://…" />
+                                                        <Button variant="link" isDestructive onClick={() => removeBottomBarSocialIcon(link.id)}>{__('Remove', 'adaire-blocks')}</Button>
                                                     </div>
                                                 }
                                             >
@@ -1853,7 +1853,7 @@ export default function Edit({ attributes, setAttributes }) {
                                         ))}
                                         {!(bottomBar.socialIcons || []).length && (
                                             <span style={{ fontSize: 12, opacity: 0.6, fontStyle: 'italic' }}>
-                                                {__('Add icons via the settings panel →', 'website-footer-block')}
+                                                {__('Add icons via the settings panel →', 'adaire-blocks')}
                                             </span>
                                         )}
                                     </div>

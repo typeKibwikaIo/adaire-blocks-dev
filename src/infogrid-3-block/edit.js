@@ -86,11 +86,11 @@ const bigDesktopIcon = createElement('svg', {
 );
 
 const BREAKPOINTS = [
-    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks-dev2') },
-    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks-dev2') },
-    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks-dev2') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks-dev2') },
-    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks-dev2') }
+    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
+    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
+    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks') },
+    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
+    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks') }
 ];
 
 // Helper components moved outside Edit to prevent focus loss
@@ -98,13 +98,13 @@ const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, 
     <div className="adaire-typography-section" style={{ borderBottom: '1px solid #eee', paddingBottom: '16px', marginBottom: '16px' }}>
         <p className="adaire-typography-section-name" style={{ fontWeight: 600, marginBottom: '12px' }}>{label}</p>
         <UnitControl
-            label={__('Font Size', 'adaire-blocks-dev2')}
+            label={__('Font Size', 'adaire-blocks')}
             value={attributes[fontSizeAttr][deviceType]}
             onChange={(val) => updateResponsiveAttribute(fontSizeAttr, deviceType, val)}
         />
         {fontWeightAttr && (
             <SelectControl
-                label={__('Font Weight', 'adaire-blocks-dev2')}
+                label={__('Font Weight', 'adaire-blocks')}
                 value={attributes[fontWeightAttr][deviceType]}
                 options={[
                     { label: '100', value: '100' }, { label: '200', value: '200' },
@@ -118,19 +118,19 @@ const TypographySection = ({ attributes, updateResponsiveAttribute, deviceType, 
         )}
         {lineHeightAttr && (
             <UnitControl
-                label={__('Line Height', 'adaire-blocks-dev2')}
+                label={__('Line Height', 'adaire-blocks')}
                 value={attributes[lineHeightAttr][deviceType]}
                 onChange={(val) => updateResponsiveAttribute(lineHeightAttr, deviceType, val)}
             />
         )}
         <PanelColorSettings
-            title={__('Color', 'adaire-blocks-dev2')}
+            title={__('Color', 'adaire-blocks')}
             initialOpen={false}
             colorSettings={[
                 {
                     value: attributes[colorAttr][deviceType],
                     onChange: (val) => updateResponsiveAttribute(colorAttr, deviceType, val),
-                    label: __('Text Color', 'adaire-blocks-dev2'),
+                    label: __('Text Color', 'adaire-blocks'),
                 }
             ]}
         />
@@ -175,8 +175,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     const [deviceType, setDeviceType] = useState('desktop');
 
     const CONTAINER_MODES = [
-        { label: __('Full Width', 'adaire-blocks-dev2'), value: 'full' },
-        { label: __('Constrained', 'adaire-blocks-dev2'), value: 'constrained' },
+        { label: __('Full Width', 'adaire-blocks'), value: 'full' },
+        { label: __('Constrained', 'adaire-blocks'), value: 'constrained' },
     ];
 
     const UNIT_OPTIONS = ['px', '%', 'rem', 'vw'];
@@ -282,7 +282,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         <>
             <InspectorControls>
                 <div className="adaire-device-toggle">
-                    <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks-dev2')}</p>
+                    <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks')}</p>
                     <div className="adaire-device-toggle-group">
                         {BREAKPOINTS.map((bp) => (
                             <Button
@@ -296,12 +296,12 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         ))}
                     </div>
                     <p className="adaire-device-toggle-status">
-                        {__('Configuring:', 'adaire-blocks-dev2')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
+                        {__('Configuring:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
                     </p>
                 </div>
 
-                <PanelBody title={__('Layout Settings', 'adaire-blocks-dev2')}>
-                    <p>{__('Container Width', 'adaire-blocks-dev2')}</p>
+                <PanelBody title={__('Layout Settings', 'adaire-blocks')}>
+                    <p>{__('Container Width', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {CONTAINER_MODES.map((mode) => (
                             <Button
@@ -315,7 +315,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     </ButtonGroup>
 
                     <UnitControl
-                        label={__('Block Width', 'adaire-blocks-dev2')}
+                        label={__('Block Width', 'adaire-blocks')}
                         value={responsiveWidth[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveWidth', deviceType, val)}
                     />
@@ -323,7 +323,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     {/* Max Width Controls using RangeControl + Unit Selection similar to content-toggle */}
                     <div className="adaire-infogrid-3__dimension-control" style={{ marginBottom: '16px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                            <strong>{__('Max Width', 'adaire-blocks-dev2')}</strong>
+                            <strong>{__('Max Width', 'adaire-blocks')}</strong>
                         </div>
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                             <div style={{ flex: 1 }}>
@@ -364,15 +364,15 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     </div>
 
                     <BoxControl
-                        label={__('Block Padding', 'adaire-blocks-dev2')}
+                        label={__('Block Padding', 'adaire-blocks')}
                         values={responsivePadding[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, val)}
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Background & Overlay', 'adaire-blocks-dev2')}>
+                <PanelBody title={__('Background & Overlay', 'adaire-blocks')}>
                     <ToggleControl
-                        label={__('Show Background Image', 'adaire-blocks-dev2')}
+                        label={__('Show Background Image', 'adaire-blocks')}
                         checked={showBackgroundImage}
                         onChange={(val) => setAttributes({ showBackgroundImage: val })}
                     />
@@ -384,7 +384,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 value={backgroundImageId}
                                 render={({ open }) => (
                                     <Button onClick={open} variant="secondary" style={{ width: '100%', marginBottom: '12px' }}>
-                                        {backgroundImageUrl ? __('Replace Image', 'adaire-blocks-dev2') : __('Select Image', 'adaire-blocks-dev2')}
+                                        {backgroundImageUrl ? __('Replace Image', 'adaire-blocks') : __('Select Image', 'adaire-blocks')}
                                     </Button>
                                 )}
                             />
@@ -392,12 +392,12 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
 
                     <SelectControl
-                        label={__('Overlay Type', 'adaire-blocks-dev2')}
+                        label={__('Overlay Type', 'adaire-blocks')}
                         value={overlayType}
                         options={[
-                            { label: __('None', 'adaire-blocks-dev2'), value: 'none' },
-                            { label: __('Solid', 'adaire-blocks-dev2'), value: 'solid' },
-                            { label: __('Gradient', 'adaire-blocks-dev2'), value: 'gradient' }
+                            { label: __('None', 'adaire-blocks'), value: 'none' },
+                            { label: __('Solid', 'adaire-blocks'), value: 'solid' },
+                            { label: __('Gradient', 'adaire-blocks'), value: 'gradient' }
                         ]}
                         onChange={(val) => setAttributes({ overlayType: val })}
                     />
@@ -405,18 +405,18 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     {overlayType === 'solid' && (
                         <>
                             <PanelColorSettings
-                                title={__('Overlay Color', 'adaire-blocks-dev2')}
+                                title={__('Overlay Color', 'adaire-blocks')}
                                 initialOpen={true}
                                 colorSettings={[
                                     {
                                         value: overlayColor,
                                         onChange: (val) => setAttributes({ overlayColor: val }),
-                                        label: __('Color', 'adaire-blocks-dev2'),
+                                        label: __('Color', 'adaire-blocks'),
                                     }
                                 ]}
                             />
                             <RangeControl
-                                label={__('Overlay Opacity', 'adaire-blocks-dev2')}
+                                label={__('Overlay Opacity', 'adaire-blocks')}
                                 value={overlayOpacity}
                                 onChange={(val) => setAttributes({ overlayOpacity: val })}
                                 min={0}
@@ -427,7 +427,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
 
                     {overlayType === 'gradient' && (
-                        <BaseControl label={__('Overlay Gradient', 'adaire-blocks-dev2')}>
+                        <BaseControl label={__('Overlay Gradient', 'adaire-blocks')}>
                             <GradientPicker
                                 value={overlayGradient}
                                 onChange={(val) => setAttributes({ overlayGradient: val })}
@@ -436,31 +436,31 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
                 </PanelBody>
 
-                <PanelBody title={__('Grid Styles', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Grid Styles', 'adaire-blocks')} initialOpen={false}>
                     <UnitControl
-                        label={__('Grid Border Width', 'adaire-blocks-dev2')}
+                        label={__('Grid Border Width', 'adaire-blocks')}
                         value={responsiveGridThickness[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveGridThickness', deviceType, val)}
                     />
                     <PanelColorSettings
-                        title={__('Grid Border Color', 'adaire-blocks-dev2')}
+                        title={__('Grid Border Color', 'adaire-blocks')}
                         initialOpen={false}
                         colorSettings={[
                             {
                                 value: responsiveGridBorderColor[deviceType],
                                 onChange: (val) => updateResponsiveAttribute('responsiveGridBorderColor', deviceType, val),
-                                label: __('Border Color', 'adaire-blocks-dev2'),
+                                label: __('Border Color', 'adaire-blocks'),
                             }
                         ]}
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Typography Settings', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Typography Settings', 'adaire-blocks')} initialOpen={false}>
                     <TypographySection
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Main Heading', 'adaire-blocks-dev2')}
+                        label={__('Main Heading', 'adaire-blocks')}
                         fontSizeAttr="responsiveMainHeadingFontSize"
                         fontWeightAttr="responsiveMainHeadingFontWeight"
                         lineHeightAttr="responsiveMainHeadingLineHeight"
@@ -470,7 +470,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Main Description', 'adaire-blocks-dev2')}
+                        label={__('Main Description', 'adaire-blocks')}
                         fontSizeAttr="responsiveMainDescriptionFontSize"
                         lineHeightAttr="responsiveMainDescriptionLineHeight"
                         colorAttr="responsiveMainDescriptionColor"
@@ -479,7 +479,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Cell Label', 'adaire-blocks-dev2')}
+                        label={__('Cell Label', 'adaire-blocks')}
                         fontSizeAttr="responsiveCellLabelFontSize"
                         colorAttr="responsiveCellLabelColor"
                     />
@@ -487,7 +487,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Cell Text', 'adaire-blocks-dev2')}
+                        label={__('Cell Text', 'adaire-blocks')}
                         fontSizeAttr="responsiveCellTextFontSize"
                         colorAttr="responsiveCellTextColor"
                     />
@@ -495,7 +495,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Sub-Column Label', 'adaire-blocks-dev2')}
+                        label={__('Sub-Column Label', 'adaire-blocks')}
                         fontSizeAttr="responsiveSubLabelFontSize"
                         colorAttr="responsiveSubLabelColor"
                     />
@@ -503,7 +503,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         attributes={attributes}
                         updateResponsiveAttribute={updateResponsiveAttribute}
                         deviceType={deviceType}
-                        label={__('Sub-Column Text', 'adaire-blocks-dev2')}
+                        label={__('Sub-Column Text', 'adaire-blocks')}
                         fontSizeAttr="responsiveSubTextFontSize"
                         colorAttr="responsiveSubTextColor"
                     />
@@ -521,14 +521,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             className="adaire-infogrid-3__main-heading"
                             value={mainHeading}
                             onChange={(val) => setAttributes({ mainHeading: val })}
-                            placeholder={__('Enter heading...', 'adaire-blocks-dev2')}
+                            placeholder={__('Enter heading...', 'adaire-blocks')}
                         />
                         <RichText
                             tagName="p"
                             className="adaire-infogrid-3__main-description"
                             value={mainDescription}
                             onChange={(val) => setAttributes({ mainDescription: val })}
-                            placeholder={__('Enter description...', 'adaire-blocks-dev2')}
+                            placeholder={__('Enter description...', 'adaire-blocks')}
                         />
                     </div>
 
@@ -539,14 +539,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 className="adaire-infogrid-3__cell-label"
                                 value={cell1Title}
                                 onChange={(val) => setAttributes({ cell1Title: val })}
-                                placeholder={__('Label...', 'adaire-blocks-dev2')}
+                                placeholder={__('Label...', 'adaire-blocks')}
                             />
                             <RichText
                                 tagName="div"
                                 className="adaire-infogrid-3__cell-text"
                                 value={cell1Content}
                                 onChange={(val) => setAttributes({ cell1Content: val })}
-                                placeholder={__('Content...', 'adaire-blocks-dev2')}
+                                placeholder={__('Content...', 'adaire-blocks')}
                             />
                         </div>
                         <div className="adaire-infogrid-3__cell adaire-infogrid-3__cell-2">
@@ -555,14 +555,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 className="adaire-infogrid-3__cell-label"
                                 value={cell2Title}
                                 onChange={(val) => setAttributes({ cell2Title: val })}
-                                placeholder={__('Label...', 'adaire-blocks-dev2')}
+                                placeholder={__('Label...', 'adaire-blocks')}
                             />
                             <RichText
                                 tagName="div"
                                 className="adaire-infogrid-3__cell-text"
                                 value={cell2Content}
                                 onChange={(val) => setAttributes({ cell2Content: val })}
-                                placeholder={__('Content...', 'adaire-blocks-dev2')}
+                                placeholder={__('Content...', 'adaire-blocks')}
                             />
                         </div>
                         <div className="adaire-infogrid-3__cell adaire-infogrid-3__cell-3">
@@ -571,14 +571,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                 className="adaire-infogrid-3__cell-label"
                                 value={cell3Title}
                                 onChange={(val) => setAttributes({ cell3Title: val })}
-                                placeholder={__('Label...', 'adaire-blocks-dev2')}
+                                placeholder={__('Label...', 'adaire-blocks')}
                             />
                             <RichText
                                 tagName="div"
                                 className="adaire-infogrid-3__cell-text"
                                 value={cell3Content}
                                 onChange={(val) => setAttributes({ cell3Content: val })}
-                                placeholder={__('Content...', 'adaire-blocks-dev2')}
+                                placeholder={__('Content...', 'adaire-blocks')}
                             />
                         </div>
                         <div className="adaire-infogrid-3__cell adaire-infogrid-3__cell-4">
@@ -589,14 +589,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                         className="adaire-infogrid-3__sub-label"
                                         value={sub1Title}
                                         onChange={(val) => setAttributes({ sub1Title: val })}
-                                        placeholder={__('Label...', 'adaire-blocks-dev2')}
+                                        placeholder={__('Label...', 'adaire-blocks')}
                                     />
                                     <RichText
                                         tagName="div"
                                         className="adaire-infogrid-3__sub-text"
                                         value={sub1Content}
                                         onChange={(val) => setAttributes({ sub1Content: val })}
-                                        placeholder={__('Content...', 'adaire-blocks-dev2')}
+                                        placeholder={__('Content...', 'adaire-blocks')}
                                     />
                                 </div>
                                 <div className="adaire-infogrid-3__sub-column adaire-infogrid-3__sub-column-2">
@@ -605,14 +605,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                         className="adaire-infogrid-3__sub-label"
                                         value={sub2Title}
                                         onChange={(val) => setAttributes({ sub2Title: val })}
-                                        placeholder={__('Label...', 'adaire-blocks-dev2')}
+                                        placeholder={__('Label...', 'adaire-blocks')}
                                     />
                                     <RichText
                                         tagName="div"
                                         className="adaire-infogrid-3__sub-text"
                                         value={sub2Content}
                                         onChange={(val) => setAttributes({ sub2Content: val })}
-                                        placeholder={__('Content...', 'adaire-blocks-dev2')}
+                                        placeholder={__('Content...', 'adaire-blocks')}
                                     />
                                 </div>
                                 <div className="adaire-infogrid-3__sub-column adaire-infogrid-3__sub-column-3">
@@ -621,14 +621,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                         className="adaire-infogrid-3__sub-label"
                                         value={sub3Title}
                                         onChange={(val) => setAttributes({ sub3Title: val })}
-                                        placeholder={__('Label...', 'adaire-blocks-dev2')}
+                                        placeholder={__('Label...', 'adaire-blocks')}
                                     />
                                     <RichText
                                         tagName="div"
                                         className="adaire-infogrid-3__sub-text"
                                         value={sub3Content}
                                         onChange={(val) => setAttributes({ sub3Content: val })}
-                                        placeholder={__('Content...', 'adaire-blocks-dev2')}
+                                        placeholder={__('Content...', 'adaire-blocks')}
                                     />
                                 </div>
                             </div>

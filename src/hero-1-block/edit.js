@@ -69,11 +69,11 @@ const ALLOWED_BLOCKS = ["create-block/button-block"];
 // switcher (in the "Responsive Settings" panel) rather than one per panel.
 const BREAKPOINTS = ["mobile", "tablet", "smallLaptop", "desktop", "bigDesktop"];
 const BREAKPOINT_LABELS = {
-	mobile: __("Mobile", "hero-1-block"),
-	tablet: __("Tablet", "hero-1-block"),
-	smallLaptop: __("Small Laptop", "hero-1-block"),
-	desktop: __("Desktop", "hero-1-block"),
-	bigDesktop: __("Big Desktop", "hero-1-block"),
+	mobile: __("Mobile", "adaire-blocks"),
+	tablet: __("Tablet", "adaire-blocks"),
+	smallLaptop: __("Small Laptop", "adaire-blocks"),
+	desktop: __("Desktop", "adaire-blocks"),
+	bigDesktop: __("Big Desktop", "adaire-blocks"),
 };
 const FIVE_TIERS = [
 	{ key: "mobile", label: BREAKPOINT_LABELS.mobile, icon: mobile },
@@ -945,13 +945,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody
 					section="layout"
-					title={__("Responsive Settings", "hero-1-block")}
+					title={__("Responsive Settings", "adaire-blocks")}
 					initialOpen={true}
 				>
 					<DeviceSwitcher
 						deviceType={deviceType}
 						setDeviceType={setDeviceType}
-						label={__("Breakpoint", "hero-1-block")}
+						label={__("Breakpoint", "adaire-blocks")}
 						tiers={FIVE_TIERS}
 						onReset={resetResponsiveDefaults}
 					/>
@@ -963,20 +963,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         </p>
 				</PanelBody>
 
-				<PanelBody section="content" title={__("Content", "hero-1-block")} initialOpen={true}>
+				<PanelBody section="content" title={__("Content", "adaire-blocks")} initialOpen={true}>
                     <ToggleControl
-						label={__("Show Breadcrumbs", "hero-1-block")}
+						label={__("Show Breadcrumbs", "adaire-blocks")}
                         checked={showBreadcrumbs}
                         onChange={(value) => setAttributes({ showBreadcrumbs: value })}
                     />
                     <ToggleControl
-						label={__("Show Preheader", "hero-1-block")}
+						label={__("Show Preheader", "adaire-blocks")}
                         checked={showPreheader}
                         onChange={(value) => setAttributes({ showPreheader: value })}
                     />
                     {showPreheader && (
                         <TextControl
-							label={__("Preheader Text", "hero-1-block")}
+							label={__("Preheader Text", "adaire-blocks")}
                             value={preheaderText}
                             onChange={(value) => setAttributes({ preheaderText: value })}
                         />
@@ -984,7 +984,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     {showBreadcrumbs && (
                         <>
 							<BaseControl
-								label={__("Breadcrumbs", "hero-1-block")}
+								label={__("Breadcrumbs", "adaire-blocks")}
 								help={__(
 									"Configure breadcrumb items with text and URLs. Leave URL empty for the current page.",
 									"hero-1-block",
@@ -1008,7 +1008,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 											}}
 										>
                                             <TextControl
-												label={__("Text", "hero-1-block")}
+												label={__("Text", "adaire-blocks")}
 												value={item.text || ""}
                                                 onChange={(value) => {
                                                     const updated = [...(breadcrumbsItems || [])];
@@ -1025,13 +1025,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                     updated.splice(index, 1);
                                                     setAttributes({ breadcrumbsItems: updated });
                                                 }}
-												label={__("Remove", "hero-1-block")}
+												label={__("Remove", "adaire-blocks")}
                                             >
-												{__("Remove", "hero-1-block")}
+												{__("Remove", "adaire-blocks")}
                                             </Button>
                                         </div>
                                         <TextControl
-											label={__("URL", "hero-1-block")}
+											label={__("URL", "adaire-blocks")}
 											value={item.url || ""}
                                             onChange={(value) => {
                                                 const updated = [...(breadcrumbsItems || [])];
@@ -1057,18 +1057,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     }}
 									style={{ marginTop: "8px" }}
                                 >
-									{__("Add Breadcrumb Item", "hero-1-block")}
+									{__("Add Breadcrumb Item", "adaire-blocks")}
                                 </Button>
                             </BaseControl>
                         </>
                     )}
                     <TextareaControl
-						label={__("Heading", "hero-1-block")}
+						label={__("Heading", "adaire-blocks")}
                         value={headingText}
                         onChange={(value) => setAttributes({ headingText: value })}
                     />
                     <TextControl
-						label={__("Text Content", "hero-1-block")}
+						label={__("Text Content", "adaire-blocks")}
                         value={textContent}
                         onChange={(value) => setAttributes({ textContent: value })}
                         multiline
@@ -1078,11 +1078,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 				<PanelBody
 					section="content"
-					title={__("Icon", "hero-1-block")}
+					title={__("Icon", "adaire-blocks")}
 					initialOpen={false}
 				>
                     <ToggleControl
-						label={__("Show Icon", "hero-1-block")}
+						label={__("Show Icon", "adaire-blocks")}
                         checked={showIcon}
                         onChange={(value) => setAttributes({ showIcon: value })}
                     />
@@ -1101,8 +1101,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     render={({ open }) => (
                                         <Button onClick={open} isSecondary>
 											{iconImageUrl
-												? __("Replace Icon Image", "hero-1-block")
-												: __("Select Icon Image", "hero-1-block")}
+												? __("Replace Icon Image", "adaire-blocks")
+												: __("Select Icon Image", "adaire-blocks")}
                                         </Button>
                                     )}
                                 />
@@ -1122,7 +1122,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         isSmall
 										style={{ marginTop: "10px" }}
                                     >
-										{__("Remove Image", "hero-1-block")}
+										{__("Remove Image", "adaire-blocks")}
                                     </Button>
                                 </div>
                             )}
@@ -1132,26 +1132,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 				<PanelBody
 					section="layout"
-					title={__("Icon Position", "hero-1-block")}
+					title={__("Icon Position", "adaire-blocks")}
 					initialOpen={false}
 				>
                     {showIcon && (
                         <>
                             <SelectControl
-								label={__("Horizontal Position", "hero-1-block")}
+								label={__("Horizontal Position", "adaire-blocks")}
                                 value={iconPosition}
                                 options={[
-									{ label: __("Left", "hero-1-block"), value: "left" },
-									{ label: __("Right", "hero-1-block"), value: "right" },
+									{ label: __("Left", "adaire-blocks"), value: "left" },
+									{ label: __("Right", "adaire-blocks"), value: "right" },
                                 ]}
                                 onChange={(value) => setAttributes({ iconPosition: value })}
                             />
                             <SelectControl
-								label={__("Vertical Position", "hero-1-block")}
+								label={__("Vertical Position", "adaire-blocks")}
                                 value={iconVerticalPosition}
                                 options={[
-									{ label: __("Top", "hero-1-block"), value: "top" },
-									{ label: __("Bottom", "hero-1-block"), value: "bottom" },
+									{ label: __("Top", "adaire-blocks"), value: "top" },
+									{ label: __("Bottom", "adaire-blocks"), value: "bottom" },
                                 ]}
 								onChange={(value) =>
 									setAttributes({ iconVerticalPosition: value })
@@ -1164,7 +1164,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									fontWeight: 600,
 								}}
 							>
-								{__("Icon Settings (Responsive)", "hero-1-block")}
+								{__("Icon Settings (Responsive)", "adaire-blocks")}
                             </p>
 							<p
 								style={{
@@ -1173,11 +1173,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									color: "#757575",
 								}}
 							>
-								{__("Current Breakpoint:", "hero-1-block")}{" "}
+								{__("Current Breakpoint:", "adaire-blocks")}{" "}
 								{BREAKPOINT_LABELS[deviceType]}
                             </p>
                             <UnitControl
-								label={__("Icon Width", "hero-1-block")}
+								label={__("Icon Width", "adaire-blocks")}
                                 value={currentIconWidth}
 								onChange={(value) =>
 									setResponsiveValue(
@@ -1193,24 +1193,24 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 ]}
                             />
                             <SelectControl
-								label={__("Transform", "hero-1-block")}
+								label={__("Transform", "adaire-blocks")}
                                 value={currentIconTransform}
                                 options={[
-									{ label: __("None", "hero-1-block"), value: "none" },
+									{ label: __("None", "adaire-blocks"), value: "none" },
 									{
-										label: __("Translate Y -50%", "hero-1-block"),
+										label: __("Translate Y -50%", "adaire-blocks"),
 										value: "translateY(-50%)",
 									},
 									{
-										label: __("Translate Y 50%", "hero-1-block"),
+										label: __("Translate Y 50%", "adaire-blocks"),
 										value: "translateY(50%)",
 									},
 									{
-										label: __("Translate X -50%", "hero-1-block"),
+										label: __("Translate X -50%", "adaire-blocks"),
 										value: "translateX(-50%)",
 									},
 									{
-										label: __("Translate X 50%", "hero-1-block"),
+										label: __("Translate X 50%", "adaire-blocks"),
 										value: "translateX(50%)",
 									},
                                 ]}
@@ -1225,8 +1225,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             <UnitControl
 								label={
 									iconVerticalPosition === "top"
-										? __("Top Offset", "hero-1-block")
-										: __("Bottom Offset", "hero-1-block")
+										? __("Top Offset", "adaire-blocks")
+										: __("Bottom Offset", "adaire-blocks")
 								}
                                 value={currentIconVerticalOffset}
 								onChange={(value) =>
@@ -1246,8 +1246,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             <UnitControl
 								label={
 									iconPosition === "left"
-										? __("Left Offset", "hero-1-block")
-										: __("Right Offset", "hero-1-block")
+										? __("Left Offset", "adaire-blocks")
+										: __("Right Offset", "adaire-blocks")
 								}
                                 value={currentIconHorizontalOffset}
 								onChange={(value) =>
@@ -1272,14 +1272,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<PanelBody
 					section="style"
 					priority="high"
-					title={__("Background Gradient", "hero-1-block")}
+					title={__("Background Gradient", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Current Breakpoint:", "hero-1-block")}{" "}
+						{__("Current Breakpoint:", "adaire-blocks")}{" "}
 						{BREAKPOINT_LABELS[deviceType]}
                     </p>
-					<BaseControl label={__("Background Gradient", "hero-1-block")}>
+					<BaseControl label={__("Background Gradient", "adaire-blocks")}>
                         <GradientPicker
                             value={currentBackgroundGradient || backgroundGradient}
 							onChange={(value) =>
@@ -1299,7 +1299,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					{isRadialGradient(currentBackgroundGradient) && (
 						<>
 							<RangeControl
-								label={__("Radial center X (%)", "hero-1-block")}
+								label={__("Radial center X (%)", "adaire-blocks")}
 								value={Number(currentRadialCenterX ?? 50)}
 								onChange={(value) => {
 									setResponsiveValue(
@@ -1321,7 +1321,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								max={100}
 							/>
 							<RangeControl
-								label={__("Radial center Y (%)", "hero-1-block")}
+								label={__("Radial center Y (%)", "adaire-blocks")}
 								value={Number(currentRadialCenterY ?? 50)}
 								onChange={(value) => {
 									setResponsiveValue(
@@ -1349,15 +1349,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{/* Responsive Container Layout */}
 				<PanelBody
 					section="layout"
-					title={__("Container Layout", "hero-1-block")}
+					title={__("Container Layout", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Current Breakpoint:", "hero-1-block")}{" "}
+						{__("Current Breakpoint:", "adaire-blocks")}{" "}
 						{BREAKPOINT_LABELS[deviceType]}
                     </p>
                     <UnitControl
-						label={__("Width", "hero-1-block")}
+						label={__("Width", "adaire-blocks")}
                         value={currentWidth}
 						onChange={(value) =>
 							setResponsiveValue("responsiveWidth", deviceType, value || "100%")
@@ -1370,7 +1370,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ]}
                     />
                     <UnitControl
-						label={__("Min Height", "hero-1-block")}
+						label={__("Min Height", "adaire-blocks")}
                         value={currentMinHeight}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -1387,33 +1387,33 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ]}
                     />
                     <SelectControl
-						label={__("Flex Direction", "hero-1-block")}
+						label={__("Flex Direction", "adaire-blocks")}
                         value={currentFlexDirection}
                         options={[
-							{ label: __("Row", "hero-1-block"), value: "row" },
-							{ label: __("Column", "hero-1-block"), value: "column" },
+							{ label: __("Row", "adaire-blocks"), value: "row" },
+							{ label: __("Column", "adaire-blocks"), value: "column" },
                         ]}
 						onChange={(value) =>
 							setResponsiveValue("responsiveFlexDirection", deviceType, value)
 						}
                     />
                     <SelectControl
-						label={__("Justify Content", "hero-1-block")}
+						label={__("Justify Content", "adaire-blocks")}
                         value={currentJustifyContent}
                         options={[
-							{ label: __("Flex Start", "hero-1-block"), value: "flex-start" },
-							{ label: __("Flex End", "hero-1-block"), value: "flex-end" },
-							{ label: __("Center", "hero-1-block"), value: "center" },
+							{ label: __("Flex Start", "adaire-blocks"), value: "flex-start" },
+							{ label: __("Flex End", "adaire-blocks"), value: "flex-end" },
+							{ label: __("Center", "adaire-blocks"), value: "center" },
 							{
-								label: __("Space Between", "hero-1-block"),
+								label: __("Space Between", "adaire-blocks"),
 								value: "space-between",
 							},
 							{
-								label: __("Space Around", "hero-1-block"),
+								label: __("Space Around", "adaire-blocks"),
 								value: "space-around",
 							},
 							{
-								label: __("Space Evenly", "hero-1-block"),
+								label: __("Space Evenly", "adaire-blocks"),
 								value: "space-evenly",
 							},
                         ]}
@@ -1422,21 +1422,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						}
                     />
                     <SelectControl
-						label={__("Align Items", "hero-1-block")}
+						label={__("Align Items", "adaire-blocks")}
                         value={currentAlignItems}
                         options={[
-							{ label: __("Flex Start", "hero-1-block"), value: "flex-start" },
-							{ label: __("Flex End", "hero-1-block"), value: "flex-end" },
-							{ label: __("Center", "hero-1-block"), value: "center" },
-							{ label: __("Stretch", "hero-1-block"), value: "stretch" },
-							{ label: __("Baseline", "hero-1-block"), value: "baseline" },
+							{ label: __("Flex Start", "adaire-blocks"), value: "flex-start" },
+							{ label: __("Flex End", "adaire-blocks"), value: "flex-end" },
+							{ label: __("Center", "adaire-blocks"), value: "center" },
+							{ label: __("Stretch", "adaire-blocks"), value: "stretch" },
+							{ label: __("Baseline", "adaire-blocks"), value: "baseline" },
                         ]}
 						onChange={(value) =>
 							setResponsiveValue("responsiveAlignItems", deviceType, value)
 						}
                     />
 					<BaseControl
-						label={__("Text Alignment", "hero-1-block")}
+						label={__("Text Alignment", "adaire-blocks")}
 						style={{ marginTop: "16px" }}
 					>
                         <ButtonGroup>
@@ -1450,7 +1450,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									)
 								}
                             >
-								{__("Left", "hero-1-block")}
+								{__("Left", "adaire-blocks")}
                             </Button>
                             <Button
 								isPrimary={currentTextAlignment === "center"}
@@ -1462,7 +1462,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									)
 								}
                             >
-								{__("Center", "hero-1-block")}
+								{__("Center", "adaire-blocks")}
                             </Button>
                             <Button
 								isPrimary={currentTextAlignment === "right"}
@@ -1474,12 +1474,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									)
 								}
                             >
-								{__("Right", "hero-1-block")}
+								{__("Right", "adaire-blocks")}
                             </Button>
                         </ButtonGroup>
                     </BaseControl>
 					<BaseControl
-						label={__("Button Alignment", "hero-1-block")}
+						label={__("Button Alignment", "adaire-blocks")}
 						style={{ marginTop: "16px" }}
 					>
                         <ButtonGroup>
@@ -1493,7 +1493,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									)
 								}
                             >
-								{__("Left", "hero-1-block")}
+								{__("Left", "adaire-blocks")}
                             </Button>
                             <Button
 								isPrimary={currentButtonAlignment === "center"}
@@ -1505,7 +1505,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									)
 								}
                             >
-								{__("Center", "hero-1-block")}
+								{__("Center", "adaire-blocks")}
                             </Button>
                             <Button
 								isPrimary={currentButtonAlignment === "right"}
@@ -1517,12 +1517,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									)
 								}
                             >
-								{__("Right", "hero-1-block")}
+								{__("Right", "adaire-blocks")}
                             </Button>
                         </ButtonGroup>
                     </BaseControl>
                     <UnitControl
-						label={__("CTA Container Width", "hero-1-block")}
+						label={__("CTA Container Width", "adaire-blocks")}
                         value={currentCtaWidth}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -1543,15 +1543,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<PanelBody
 					section="style"
 					priority="medium"
-					title={__("Container Spacing", "hero-1-block")}
+					title={__("Container Spacing", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Current Breakpoint:", "hero-1-block")}{" "}
+						{__("Current Breakpoint:", "adaire-blocks")}{" "}
 						{BREAKPOINT_LABELS[deviceType]}
                     </p>
                     <BoxControl
-						label={__("Padding", "hero-1-block")}
+						label={__("Padding", "adaire-blocks")}
                         values={currentPadding}
 						onChange={(value) =>
 							setResponsiveValue("responsivePadding", deviceType, value)
@@ -1564,7 +1564,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ]}
                     />
 					<BoxControl
-						label={__("CTA Container Margin", "hero-1-block")}
+						label={__("CTA Container Margin", "adaire-blocks")}
 						values={currentCtaMargin}
 						onChange={(value) =>
 							setResponsiveValue("responsiveCtaMargin", deviceType, value)
@@ -1582,17 +1582,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<PanelBody
 					section="style"
 					priority="high"
-					title={__("Background & Overlay", "hero-1-block")}
+					title={__("Background & Overlay", "adaire-blocks")}
 					initialOpen={false}
 				>
                     <ToggleControl
-						label={__("Show Background Image", "hero-1-block")}
+						label={__("Show Background Image", "adaire-blocks")}
                         checked={showBackgroundImage}
                         onChange={(value) => setAttributes({ showBackgroundImage: value })}
                     />
                     {showBackgroundImage && (
                         <>
-							<BaseControl label={__("Background Image", "hero-1-block")}>
+							<BaseControl label={__("Background Image", "adaire-blocks")}>
                                 <MediaUploadCheck>
                                     <MediaUpload
 										onSelect={(media) =>
@@ -1631,12 +1631,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 																right: "5px",
 															}}
                                                         >
-															{__("Remove", "hero-1-block")}
+															{__("Remove", "adaire-blocks")}
                                                         </Button>
                                                     </div>
                                                 ) : (
                                                     <Button isSecondary onClick={open}>
-														{__("Select Image", "hero-1-block")}
+														{__("Select Image", "adaire-blocks")}
                                                     </Button>
                                                 )}
                                             </div>
@@ -1645,51 +1645,51 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 </MediaUploadCheck>
                             </BaseControl>
                             <SelectControl
-								label={__("Background Size", "hero-1-block")}
+								label={__("Background Size", "adaire-blocks")}
                                 value={backgroundSize}
                                 options={[
-									{ label: __("Cover", "hero-1-block"), value: "cover" },
-									{ label: __("Contain", "hero-1-block"), value: "contain" },
-									{ label: __("Fixed", "hero-1-block"), value: "fixed" },
-									{ label: __("Original", "hero-1-block"), value: "auto" },
+									{ label: __("Cover", "adaire-blocks"), value: "cover" },
+									{ label: __("Contain", "adaire-blocks"), value: "contain" },
+									{ label: __("Fixed", "adaire-blocks"), value: "fixed" },
+									{ label: __("Original", "adaire-blocks"), value: "auto" },
                                 ]}
                                 onChange={(value) => setAttributes({ backgroundSize: value })}
                             />
                             <SelectControl
-								label={__("Background Position", "hero-1-block")}
+								label={__("Background Position", "adaire-blocks")}
                                 value={backgroundPosition}
                                 options={[
-									{ label: __("Top Left", "hero-1-block"), value: "top left" },
+									{ label: __("Top Left", "adaire-blocks"), value: "top left" },
 									{
-										label: __("Top Center", "hero-1-block"),
+										label: __("Top Center", "adaire-blocks"),
 										value: "top center",
 									},
 									{
-										label: __("Top Right", "hero-1-block"),
+										label: __("Top Right", "adaire-blocks"),
 										value: "top right",
 									},
 									{
-										label: __("Center Left", "hero-1-block"),
+										label: __("Center Left", "adaire-blocks"),
 										value: "center left",
 									},
 									{
-										label: __("Center Center", "hero-1-block"),
+										label: __("Center Center", "adaire-blocks"),
 										value: "center center",
 									},
 									{
-										label: __("Center Right", "hero-1-block"),
+										label: __("Center Right", "adaire-blocks"),
 										value: "center right",
 									},
 									{
-										label: __("Bottom Left", "hero-1-block"),
+										label: __("Bottom Left", "adaire-blocks"),
 										value: "bottom left",
 									},
 									{
-										label: __("Bottom Center", "hero-1-block"),
+										label: __("Bottom Center", "adaire-blocks"),
 										value: "bottom center",
 									},
 									{
-										label: __("Bottom Right", "hero-1-block"),
+										label: __("Bottom Right", "adaire-blocks"),
 										value: "bottom right",
 									},
                                 ]}
@@ -1698,16 +1698,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								}
                             />
                             <SelectControl
-								label={__("Background Repeat", "hero-1-block")}
+								label={__("Background Repeat", "adaire-blocks")}
                                 value={backgroundRepeat}
                                 options={[
 									{
-										label: __("No Repeat", "hero-1-block"),
+										label: __("No Repeat", "adaire-blocks"),
 										value: "no-repeat",
 									},
-									{ label: __("Repeat", "hero-1-block"), value: "repeat" },
-									{ label: __("Repeat X", "hero-1-block"), value: "repeat-x" },
-									{ label: __("Repeat Y", "hero-1-block"), value: "repeat-y" },
+									{ label: __("Repeat", "adaire-blocks"), value: "repeat" },
+									{ label: __("Repeat X", "adaire-blocks"), value: "repeat-x" },
+									{ label: __("Repeat Y", "adaire-blocks"), value: "repeat-y" },
                                 ]}
                                 onChange={(value) => setAttributes({ backgroundRepeat: value })}
                             />
@@ -1715,12 +1715,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
 
                     <SelectControl
-						label={__("Overlay Type", "hero-1-block")}
+						label={__("Overlay Type", "adaire-blocks")}
                         value={overlayType}
                         options={[
-							{ label: __("None", "hero-1-block"), value: "none" },
-							{ label: __("Solid", "hero-1-block"), value: "solid" },
-							{ label: __("Gradient", "hero-1-block"), value: "gradient" },
+							{ label: __("None", "adaire-blocks"), value: "none" },
+							{ label: __("Solid", "adaire-blocks"), value: "solid" },
+							{ label: __("Gradient", "adaire-blocks"), value: "gradient" },
                         ]}
                         onChange={(value) => setAttributes({ overlayType: value })}
                     />
@@ -1728,18 +1728,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					{overlayType === "solid" && (
                         <>
                             <PanelColorSettings
-								title={__("Overlay Color", "hero-1-block")}
+								title={__("Overlay Color", "adaire-blocks")}
                                 initialOpen={true}
                                 colorSettings={[
                                     {
                                         value: overlayColor,
                                         onChange: (value) => setAttributes({ overlayColor: value }),
-										label: __("Solid Color", "hero-1-block"),
+										label: __("Solid Color", "adaire-blocks"),
                                     },
                                 ]}
                             />
                             <RangeControl
-								label={__("Overlay Opacity", "hero-1-block")}
+								label={__("Overlay Opacity", "adaire-blocks")}
                                 value={overlayOpacity}
                                 onChange={(value) => setAttributes({ overlayOpacity: value })}
                                 min={0}
@@ -1750,7 +1750,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
 
 					{overlayType === "gradient" && (
-						<BaseControl label={__("Overlay Gradient", "hero-1-block")}>
+						<BaseControl label={__("Overlay Gradient", "adaire-blocks")}>
                             <GradientPicker
                                 value={overlayGradient}
                                 onChange={(value) => setAttributes({ overlayGradient: value })}
@@ -1762,17 +1762,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 {/* Breadcrumb Position (Responsive) */}
 				<PanelBody
 					section="layout"
-					title={__("Breadcrumb Position (Responsive)", "hero-1-block")}
+					title={__("Breadcrumb Position (Responsive)", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p
 						style={{ marginBottom: "8px", fontSize: "12px", color: "#757575" }}
 					>
-						{__("Current Breakpoint:", "hero-1-block")}{" "}
+						{__("Current Breakpoint:", "adaire-blocks")}{" "}
 						{BREAKPOINT_LABELS[deviceType]}
                     </p>
                     <UnitControl
-						label={__("Top Offset", "hero-1-block")}
+						label={__("Top Offset", "adaire-blocks")}
                         value={currentBreadcrumbTopOffset}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -1789,7 +1789,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ]}
                     />
                     <UnitControl
-						label={__("Left Offset", "hero-1-block")}
+						label={__("Left Offset", "adaire-blocks")}
                         value={currentBreadcrumbLeftOffset}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -1812,7 +1812,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<PanelBody
 						section="style"
 						priority="high"
-						title={__("Preheader Typography (Responsive)", "hero-1-block")}
+						title={__("Preheader Typography (Responsive)", "adaire-blocks")}
 						initialOpen={false}
 					>
 						<p
@@ -1822,11 +1822,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								color: "#757575",
 							}}
 						>
-							{__("Current Breakpoint:", "hero-1-block")}{" "}
+							{__("Current Breakpoint:", "adaire-blocks")}{" "}
 							{BREAKPOINT_LABELS[deviceType]}
                         </p>
                         <UnitControl
-							label={__("Font Size", "hero-1-block")}
+							label={__("Font Size", "adaire-blocks")}
                             value={currentPreheaderFontSize}
 							onChange={(value) =>
 								setResponsiveValue(
@@ -1842,7 +1842,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             ]}
                         />
                         <UnitControl
-							label={__("Line Height", "hero-1-block")}
+							label={__("Line Height", "adaire-blocks")}
                             value={currentPreheaderLineHeight}
 							onChange={(value) =>
 								setResponsiveValue(
@@ -1858,7 +1858,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             ]}
                         />
                         <UnitControl
-							label={__("Margin Bottom", "hero-1-block")}
+							label={__("Margin Bottom", "adaire-blocks")}
                             value={currentPreheaderMarginBottom}
 							onChange={(value) =>
 								setResponsiveValue(
@@ -1877,15 +1877,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 )}
 
                 {/* Typography Settings */}
-				<PanelBody section="style" priority="high" title={__("Typography", "hero-1-block")} initialOpen={false}>
+				<PanelBody section="style" priority="high" title={__("Typography", "adaire-blocks")} initialOpen={false}>
 					<p
 						style={{ marginBottom: "12px", fontWeight: 600, fontSize: "13px" }}
 					>
-						{__("Colors & Font Weights", "hero-1-block")}
+						{__("Colors & Font Weights", "adaire-blocks")}
                     </p>
                     {showPreheader && (
                         <>
-							<BaseControl label={__("Preheader Color", "hero-1-block")}>
+							<BaseControl label={__("Preheader Color", "adaire-blocks")}>
                                 <ColorPicker
                                     color={preheaderColor}
 									onChangeComplete={(color) =>
@@ -1895,27 +1895,27 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 />
                             </BaseControl>
                             <SelectControl
-								label={__("Preheader Font Weight", "hero-1-block")}
+								label={__("Preheader Font Weight", "adaire-blocks")}
                                 value={preheaderFontWeight}
                                 options={[
-									{ label: __("Thin (100)", "hero-1-block"), value: "100" },
+									{ label: __("Thin (100)", "adaire-blocks"), value: "100" },
 									{
-										label: __("Extra Light (200)", "hero-1-block"),
+										label: __("Extra Light (200)", "adaire-blocks"),
 										value: "200",
 									},
-									{ label: __("Light (300)", "hero-1-block"), value: "300" },
-									{ label: __("Normal (400)", "hero-1-block"), value: "400" },
-									{ label: __("Medium (500)", "hero-1-block"), value: "500" },
+									{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+									{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+									{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
 									{
-										label: __("Semi Bold (600)", "hero-1-block"),
+										label: __("Semi Bold (600)", "adaire-blocks"),
 										value: "600",
 									},
-									{ label: __("Bold (700)", "hero-1-block"), value: "700" },
+									{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
 									{
-										label: __("Extra Bold (800)", "hero-1-block"),
+										label: __("Extra Bold (800)", "adaire-blocks"),
 										value: "800",
 									},
-									{ label: __("Black (900)", "hero-1-block"), value: "900" },
+									{ label: __("Black (900)", "adaire-blocks"), value: "900" },
                                 ]}
 								onChange={(value) =>
 									setAttributes({ preheaderFontWeight: value })
@@ -1923,7 +1923,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             />
                         </>
                     )}
-					<BaseControl label={__("Breadcrumbs Color", "hero-1-block")}>
+					<BaseControl label={__("Breadcrumbs Color", "adaire-blocks")}>
                         <ColorPicker
                             color={breadcrumbsColor}
 							onChangeComplete={(color) =>
@@ -1932,7 +1932,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             disableAlpha
                         />
                     </BaseControl>
-					<BaseControl label={__("Heading Color", "hero-1-block")}>
+					<BaseControl label={__("Heading Color", "adaire-blocks")}>
                         <ColorPicker
                             color={headingColor}
 							onChangeComplete={(color) =>
@@ -1941,7 +1941,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             disableAlpha
                         />
                     </BaseControl>
-					<BaseControl label={__("Text Color", "hero-1-block")}>
+					<BaseControl label={__("Text Color", "adaire-blocks")}>
                         <ColorPicker
                             color={textColor}
 							onChangeComplete={(color) =>
@@ -1951,34 +1951,34 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
                     </BaseControl>
                     <SelectControl
-						label={__("Heading Font Weight", "hero-1-block")}
+						label={__("Heading Font Weight", "adaire-blocks")}
                         value={headingFontWeight}
                         options={[
-							{ label: __("Thin (100)", "hero-1-block"), value: "100" },
-							{ label: __("Extra Light (200)", "hero-1-block"), value: "200" },
-							{ label: __("Light (300)", "hero-1-block"), value: "300" },
-							{ label: __("Normal (400)", "hero-1-block"), value: "400" },
-							{ label: __("Medium (500)", "hero-1-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "hero-1-block"), value: "600" },
-							{ label: __("Bold (700)", "hero-1-block"), value: "700" },
-							{ label: __("Extra Bold (800)", "hero-1-block"), value: "800" },
-							{ label: __("Black (900)", "hero-1-block"), value: "900" },
+							{ label: __("Thin (100)", "adaire-blocks"), value: "100" },
+							{ label: __("Extra Light (200)", "adaire-blocks"), value: "200" },
+							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
+							{ label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
+							{ label: __("Black (900)", "adaire-blocks"), value: "900" },
                         ]}
                         onChange={(value) => setAttributes({ headingFontWeight: value })}
                     />
                     <SelectControl
-						label={__("Text Font Weight", "hero-1-block")}
+						label={__("Text Font Weight", "adaire-blocks")}
                         value={textFontWeight}
                         options={[
-							{ label: __("Thin (100)", "hero-1-block"), value: "100" },
-							{ label: __("Extra Light (200)", "hero-1-block"), value: "200" },
-							{ label: __("Light (300)", "hero-1-block"), value: "300" },
-							{ label: __("Normal (400)", "hero-1-block"), value: "400" },
-							{ label: __("Medium (500)", "hero-1-block"), value: "500" },
-							{ label: __("Semi Bold (600)", "hero-1-block"), value: "600" },
-							{ label: __("Bold (700)", "hero-1-block"), value: "700" },
-							{ label: __("Extra Bold (800)", "hero-1-block"), value: "800" },
-							{ label: __("Black (900)", "hero-1-block"), value: "900" },
+							{ label: __("Thin (100)", "adaire-blocks"), value: "100" },
+							{ label: __("Extra Light (200)", "adaire-blocks"), value: "200" },
+							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
+							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
+							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
+							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
+							{ label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
+							{ label: __("Black (900)", "adaire-blocks"), value: "900" },
                         ]}
                         onChange={(value) => setAttributes({ textFontWeight: value })}
                     />
@@ -1991,16 +1991,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							fontSize: "13px",
 						}}
 					>
-						{__("Responsive Typography Settings", "hero-1-block")}
+						{__("Responsive Typography Settings", "adaire-blocks")}
                     </p>
 					<p
 						style={{ marginBottom: "8px", fontSize: "12px", color: "#757575" }}
 					>
-						{__("Current Breakpoint:", "hero-1-block")}{" "}
+						{__("Current Breakpoint:", "adaire-blocks")}{" "}
 						{BREAKPOINT_LABELS[deviceType]}
                     </p>
                     <UnitControl
-						label={__("Heading Font Size", "hero-1-block")}
+						label={__("Heading Font Size", "adaire-blocks")}
                         value={currentHeadingFontSize}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2016,7 +2016,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ]}
                     />
                     <UnitControl
-						label={__("Heading Line Height", "hero-1-block")}
+						label={__("Heading Line Height", "adaire-blocks")}
                         value={currentHeadingLineHeight}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2033,7 +2033,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <UnitControl
-						label={__("Heading Margin Top", "hero-1-block")}
+						label={__("Heading Margin Top", "adaire-blocks")}
 						value={currentHeadingMarginTop}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2049,7 +2049,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						]}
 					/>
 					<UnitControl
-						label={__("Heading Margin Bottom", "hero-1-block")}
+						label={__("Heading Margin Bottom", "adaire-blocks")}
                         value={currentHeadingMarginBottom}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2065,7 +2065,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ]}
                     />
                     <UnitControl
-						label={__("Text Font Size", "hero-1-block")}
+						label={__("Text Font Size", "adaire-blocks")}
                         value={currentTextFontSize}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2082,7 +2082,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <UnitControl
-						label={__("Text Margin Top", "hero-1-block")}
+						label={__("Text Margin Top", "adaire-blocks")}
 						value={currentTextMarginTop}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2098,7 +2098,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						]}
 					/>
 					<UnitControl
-						label={__("Text Margin Bottom", "hero-1-block")}
+						label={__("Text Margin Bottom", "adaire-blocks")}
                         value={currentTextMarginBottom}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2118,19 +2118,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 {/* Responsive Button Container Settings */}
 				<PanelBody
 					section="layout"
-					title={__("Button Container (Responsive)", "hero-1-block")}
+					title={__("Button Container (Responsive)", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Current Breakpoint:", "hero-1-block")}{" "}
+						{__("Current Breakpoint:", "adaire-blocks")}{" "}
 						{BREAKPOINT_LABELS[deviceType]}
                     </p>
                     <SelectControl
-						label={__("Flex Direction", "hero-1-block")}
+						label={__("Flex Direction", "adaire-blocks")}
                         value={currentButtonContainerFlexDirection}
                         options={[
-							{ label: __("Row", "hero-1-block"), value: "row" },
-							{ label: __("Column", "hero-1-block"), value: "column" },
+							{ label: __("Row", "adaire-blocks"), value: "row" },
+							{ label: __("Column", "adaire-blocks"), value: "column" },
                         ]}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2141,7 +2141,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						}
                     />
                     <UnitControl
-						label={__("Gap", "hero-1-block")}
+						label={__("Gap", "adaire-blocks")}
                         value={currentButtonContainerGap}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2157,7 +2157,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						]}
 					/>
 					<UnitControl
-						label={__("Margin Top", "hero-1-block")}
+						label={__("Margin Top", "adaire-blocks")}
 						value={currentButtonContainerMarginTop}
 						onChange={(value) =>
 							setResponsiveValue(
@@ -2177,21 +2177,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{/* Media Settings */}
 				<PanelBody
 					section="content"
-					title={__("Media (Image/Video)", "hero-1-block")}
+					title={__("Media (Image/Video)", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<SelectControl
-						label={__("Media Type", "hero-1-block")}
+						label={__("Media Type", "adaire-blocks")}
 						value={mediaType}
 						options={[
-							{ label: __("None", "hero-1-block"), value: "none" },
-							{ label: __("Image", "hero-1-block"), value: "image" },
-							{ label: __("Video", "hero-1-block"), value: "video" },
+							{ label: __("None", "adaire-blocks"), value: "none" },
+							{ label: __("Image", "adaire-blocks"), value: "image" },
+							{ label: __("Video", "adaire-blocks"), value: "video" },
 						]}
 						onChange={(value) => setAttributes({ mediaType: value })}
 					/>
 					{mediaType === "image" && (
-						<BaseControl label={__("Media Image", "hero-1-block")}>
+						<BaseControl label={__("Media Image", "adaire-blocks")}>
 							<MediaUploadCheck>
 								<MediaUpload
 									onSelect={(media) => {
@@ -2230,12 +2230,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 															right: "5px",
 														}}
 													>
-														{__("Remove", "hero-1-block")}
+														{__("Remove", "adaire-blocks")}
 													</Button>
 												</div>
 											) : (
 												<Button isSecondary onClick={open}>
-													{__("Select Image", "hero-1-block")}
+													{__("Select Image", "adaire-blocks")}
 												</Button>
 											)}
 										</div>
@@ -2247,18 +2247,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					{mediaType === "video" && (
                         <>
                             <SelectControl
-								label={__("Video Type", "hero-1-block")}
+								label={__("Video Type", "adaire-blocks")}
                                 value={videoType}
                                 options={[
-									{ label: __("YouTube", "hero-1-block"), value: "youtube" },
-									{ label: __("Vimeo", "hero-1-block"), value: "vimeo" },
-									{ label: __("WordPress Video", "hero-1-block"), value: "wp" },
+									{ label: __("YouTube", "adaire-blocks"), value: "youtube" },
+									{ label: __("Vimeo", "adaire-blocks"), value: "vimeo" },
+									{ label: __("WordPress Video", "adaire-blocks"), value: "wp" },
                                 ]}
                                 onChange={(value) => setAttributes({ videoType: value })}
                             />
 							{videoType === "wp" ? (
                                 <>
-									<BaseControl label={__("WordPress Video", "hero-1-block")}>
+									<BaseControl label={__("WordPress Video", "adaire-blocks")}>
                                         <MediaUploadCheck>
                                             <MediaUpload
                                                 onSelect={(media) => {
@@ -2293,12 +2293,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                                     isSmall
 																	style={{ marginTop: "10px" }}
                                                                 >
-																	{__("Remove Video", "hero-1-block")}
+																	{__("Remove Video", "adaire-blocks")}
                                                                 </Button>
                                                             </div>
                                                         ) : (
                                                             <Button isSecondary onClick={open}>
-																{__("Select Video", "hero-1-block")}
+																{__("Select Video", "adaire-blocks")}
                                                             </Button>
                                                         )}
                                                     </div>
@@ -2311,8 +2311,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 <TextControl
 									label={
 										videoType === "youtube"
-											? __("YouTube URL", "hero-1-block")
-											: __("Vimeo URL", "hero-1-block")
+											? __("YouTube URL", "adaire-blocks")
+											: __("Vimeo URL", "adaire-blocks")
 									}
                                     value={videoUrl}
                                     onChange={(value) => setAttributes({ videoUrl: value })}
@@ -2323,8 +2323,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									}
 									help={
 										videoType === "youtube"
-											? __("Enter a YouTube video URL", "hero-1-block")
-											: __("Enter a Vimeo video URL", "hero-1-block")
+											? __("Enter a YouTube video URL", "adaire-blocks")
+											: __("Enter a Vimeo video URL", "adaire-blocks")
 									}
                                 />
                             )}
@@ -2332,7 +2332,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
 
                     <TextControl
-						label={__("Block ID", "hero-1-block")}
+						label={__("Block ID", "adaire-blocks")}
                         value={blockId}
                         onChange={(value) => setAttributes({ blockId: value })}
 						help={__(
@@ -2346,7 +2346,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<PanelBody
 						section="style"
 						priority="medium"
-						title={__("Media Dimensions (Responsive)", "hero-1-block")}
+						title={__("Media Dimensions (Responsive)", "adaire-blocks")}
 						initialOpen={false}
 					>
 						<p
@@ -2356,14 +2356,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								color: "#757575",
 							}}
 						>
-							{__("Current Breakpoint:", "hero-1-block")}{" "}
+							{__("Current Breakpoint:", "adaire-blocks")}{" "}
 							{BREAKPOINT_LABELS[deviceType]}
 						</p>
 						<UnitControl
 							label={
 								mediaType === "image"
-									? __("Image Width", "hero-1-block")
-									: __("Video Width", "hero-1-block")
+									? __("Image Width", "adaire-blocks")
+									: __("Video Width", "adaire-blocks")
 							}
 							value={currentVideoWidth}
 							onChange={(value) =>
@@ -2382,8 +2382,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						<UnitControl
 							label={
 								mediaType === "image"
-									? __("Image Height", "hero-1-block")
-									: __("Video Height", "hero-1-block")
+									? __("Image Height", "adaire-blocks")
+									: __("Video Height", "adaire-blocks")
 							}
 							value={currentVideoHeight}
 							onChange={(value) =>
@@ -2400,7 +2400,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							]}
 						/>
 						<UnitControl
-							label={__("Border Radius", "hero-1-block")}
+							label={__("Border Radius", "adaire-blocks")}
 							value={currentVideoBorderRadius}
 							onChange={(value) =>
 								setResponsiveValue(
@@ -2425,7 +2425,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 {showBreadcrumbs && (
 					<nav
 						className="adaire-hero-1__breadcrumbs"
-						aria-label={__("Breadcrumb", "hero-1-block")}
+						aria-label={__("Breadcrumb", "adaire-blocks")}
 						style={{
                         top: editorBreadcrumbTopOffset,
                         left: editorBreadcrumbLeftOffset,
@@ -2454,18 +2454,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     <div className="adaire-hero-1__content-video-wrapper">
                 <QuickZone
                     id="content"
-                    label={__("Content", "hero-1-block")}
+                    label={__("Content", "adaire-blocks")}
                     activeZone={activeZone}
                     setActiveZone={setActiveZone}
                     content={
                         <>
                             <TextareaControl
-                                label={__("Heading", "hero-1-block")}
+                                label={__("Heading", "adaire-blocks")}
                                 value={headingText}
                                 onChange={(value) => setAttributes({ headingText: value })}
                             />
                             <TextControl
-                                label={__("Text Content", "hero-1-block")}
+                                label={__("Text Content", "adaire-blocks")}
                                 value={textContent}
                                 onChange={(value) => setAttributes({ textContent: value })}
                             />
@@ -2503,7 +2503,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 											color: "#fff",
 										}}
 									>
-										{__("Please select an image", "hero-1-block")}
+										{__("Please select an image", "adaire-blocks")}
                         </div>
                     )}
                 </div>
@@ -2547,7 +2547,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 											color: "#fff",
 										}}
 									>
-										{__("Please configure your video", "hero-1-block")}
+										{__("Please configure your video", "adaire-blocks")}
                             </div>
                         )}
                         </div>
@@ -2556,18 +2556,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 ) : (
                     <QuickZone
                         id="content"
-                        label={__("Content", "hero-1-block")}
+                        label={__("Content", "adaire-blocks")}
                         activeZone={activeZone}
                         setActiveZone={setActiveZone}
                         content={
                             <>
                                 <TextareaControl
-                                    label={__("Heading", "hero-1-block")}
+                                    label={__("Heading", "adaire-blocks")}
                                     value={headingText}
                                     onChange={(value) => setAttributes({ headingText: value })}
                                 />
                                 <TextControl
-                                    label={__("Text Content", "hero-1-block")}
+                                    label={__("Text Content", "adaire-blocks")}
                                     value={textContent}
                                     onChange={(value) => setAttributes({ textContent: value })}
                                 />

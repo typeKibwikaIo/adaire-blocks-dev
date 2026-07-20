@@ -20,7 +20,7 @@
             "padding": true
         }
     },
-    "textdomain": "adaire-blocks-dev2",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./editor.css",
     "style": "file:./style-index.css",
@@ -31,11 +31,26 @@
         },
         "fontFamily": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+                "",
+                "Arial, Helvetica, sans-serif",
+                "Helvetica, Arial, sans-serif",
+                "Georgia, serif",
+                "'Times New Roman', Times, serif",
+                "Verdana, Geneva, sans-serif",
+                "'Trebuchet MS', sans-serif",
+                "'Courier New', Courier, monospace",
+                "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+            ]
         },
         "containerMode": {
             "type": "string",
-            "default": "constrained"
+            "default": "constrained",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "items": {
             "type": "array",
@@ -79,7 +94,12 @@
         },
         "overlayType": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "solid",
+                "gradient"
+            ]
         },
         "overlayColor": {
             "type": "string",
@@ -587,15 +607,37 @@
         },
         "backgroundSize": {
             "type": "string",
-            "default": "cover"
+            "default": "cover",
+            "enum": [
+                "cover",
+                "contain",
+                "auto"
+            ]
         },
         "backgroundPosition": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "top left",
+                "top center",
+                "top right",
+                "center left",
+                "center",
+                "center right",
+                "bottom left",
+                "bottom center",
+                "bottom right"
+            ]
         },
         "backgroundRepeat": {
             "type": "string",
-            "default": "no-repeat"
+            "default": "no-repeat",
+            "enum": [
+                "no-repeat",
+                "repeat",
+                "repeat-x",
+                "repeat-y"
+            ]
         }
     }
 }

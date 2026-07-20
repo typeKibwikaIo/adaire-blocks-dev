@@ -18,37 +18,37 @@ import QuickZone from "../components/QuickZone";
 import "./editor.scss";
 
 const THREE_TIERS = [
-	{ key: "desktop", label: __("Desktop", "animation-scroll-block"), icon: desktop },
-	{ key: "tablet", label: __("Tablet", "animation-scroll-block"), icon: tablet },
-	{ key: "mobile", label: __("Mobile", "animation-scroll-block"), icon: mobile },
+	{ key: "desktop", label: __("Desktop", "adaire-blocks"), icon: desktop },
+	{ key: "tablet", label: __("Tablet", "adaire-blocks"), icon: tablet },
+	{ key: "mobile", label: __("Mobile", "adaire-blocks"), icon: mobile },
 ];
 
 const ANIMATION_TYPES = [
-	{ label: __("Fade In", "animation-scroll-block"), value: "fade-in" },
-	{ label: __("Fade Out", "animation-scroll-block"), value: "fade-out" },
-	{ label: __("Fade Left", "animation-scroll-block"), value: "fade-left" },
-	{ label: __("Fade Right", "animation-scroll-block"), value: "fade-right" },
-	{ label: __("Fly Up", "animation-scroll-block"), value: "fly-up" },
-	{ label: __("Fly Down", "animation-scroll-block"), value: "fly-down" },
-	{ label: __("Fly Left", "animation-scroll-block"), value: "fly-left" },
-	{ label: __("Fly Right", "animation-scroll-block"), value: "fly-right" },
-	{ label: __("Grow", "animation-scroll-block"), value: "grow" },
-	{ label: __("Shrink", "animation-scroll-block"), value: "shrink" },
-	{ label: __("Bounce", "animation-scroll-block"), value: "bounce" },
-	{ label: __("Flip", "animation-scroll-block"), value: "flip" },
-	{ label: __("Rotate", "animation-scroll-block"), value: "rotate" },
-	{ label: __("Blur In", "animation-scroll-block"), value: "blur-in" },
-	{ label: __("Blur Out", "animation-scroll-block"), value: "blur-out" },
+	{ label: __("Fade In", "adaire-blocks"), value: "fade-in" },
+	{ label: __("Fade Out", "adaire-blocks"), value: "fade-out" },
+	{ label: __("Fade Left", "adaire-blocks"), value: "fade-left" },
+	{ label: __("Fade Right", "adaire-blocks"), value: "fade-right" },
+	{ label: __("Fly Up", "adaire-blocks"), value: "fly-up" },
+	{ label: __("Fly Down", "adaire-blocks"), value: "fly-down" },
+	{ label: __("Fly Left", "adaire-blocks"), value: "fly-left" },
+	{ label: __("Fly Right", "adaire-blocks"), value: "fly-right" },
+	{ label: __("Grow", "adaire-blocks"), value: "grow" },
+	{ label: __("Shrink", "adaire-blocks"), value: "shrink" },
+	{ label: __("Bounce", "adaire-blocks"), value: "bounce" },
+	{ label: __("Flip", "adaire-blocks"), value: "flip" },
+	{ label: __("Rotate", "adaire-blocks"), value: "rotate" },
+	{ label: __("Blur In", "adaire-blocks"), value: "blur-in" },
+	{ label: __("Blur Out", "adaire-blocks"), value: "blur-out" },
 ];
 
 const EASING_OPTIONS = [
-	{ label: __("Ease Out", "animation-scroll-block"), value: "ease-out" },
-	{ label: __("Ease In", "animation-scroll-block"), value: "ease-in" },
-	{ label: __("Ease In Out", "animation-scroll-block"), value: "ease-in-out" },
-	{ label: __("Linear", "animation-scroll-block"), value: "linear" },
-	{ label: __("Ease Out Back", "animation-scroll-block"), value: "cubic-bezier(0.34, 1.56, 0.64, 1)" },
-	{ label: __("Ease Out Quart", "animation-scroll-block"), value: "cubic-bezier(0.25, 1, 0.5, 1)" },
-	{ label: __("Spring", "animation-scroll-block"), value: "cubic-bezier(0.68, -0.55, 0.265, 1.55)" },
+	{ label: __("Ease Out", "adaire-blocks"), value: "ease-out" },
+	{ label: __("Ease In", "adaire-blocks"), value: "ease-in" },
+	{ label: __("Ease In Out", "adaire-blocks"), value: "ease-in-out" },
+	{ label: __("Linear", "adaire-blocks"), value: "linear" },
+	{ label: __("Ease Out Back", "adaire-blocks"), value: "cubic-bezier(0.34, 1.56, 0.64, 1)" },
+	{ label: __("Ease Out Quart", "adaire-blocks"), value: "cubic-bezier(0.25, 1, 0.5, 1)" },
+	{ label: __("Spring", "adaire-blocks"), value: "cubic-bezier(0.68, -0.55, 0.265, 1.55)" },
 ];
 
 export default function Edit({ attributes, setAttributes, clientId }) {
@@ -276,7 +276,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							"core/heading",
 							{
 								level: 3,
-								content: __("This content animates into view", "animation-scroll-block"),
+								content: __("This content animates into view", "adaire-blocks"),
 							},
 						],
 						[
@@ -284,7 +284,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							{
 								content: __(
 									"Everything you place inside this block scrolls into the viewport using the animation style you pick in the sidebar — text, images, even a video player, like the example above. Replace any of this with your own content; the animation applies automatically.",
-									"animation-scroll-block"
+									"adaire-blocks"
 								),
 							},
 						],
@@ -298,16 +298,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody section="style" priority="medium" title={__("Animation Settings", "animation-scroll-block")} initialOpen={true}>
+				<PanelBody section="style" priority="medium" title={__("Animation Settings", "adaire-blocks")} initialOpen={true}>
 					<SelectControl
-						label={__("Animation Type", "animation-scroll-block")}
+						label={__("Animation Type", "adaire-blocks")}
 						value={animationType}
 						options={ANIMATION_TYPES}
 						onChange={(value) => setAttributes({ animationType: value })}
 					/>
 
 					<RangeControl
-						label={__("Duration (ms)", "animation-scroll-block")}
+						label={__("Duration (ms)", "adaire-blocks")}
 						value={animationDuration}
 						onChange={(value) => setAttributes({ animationDuration: value })}
 						min={100}
@@ -320,33 +320,33 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					 animationType !== 'fade-in' &&
 					 animationType !== 'fade-out' && (
 						<RangeControl
-							label={__("Distance (px)", "animation-scroll-block")}
+							label={__("Distance (px)", "adaire-blocks")}
 							value={animationDistance}
 							onChange={(value) => setAttributes({ animationDistance: value })}
 							min={0}
 							max={300}
 							step={10}
-							help={__("How far the element moves during animation", "animation-scroll-block")}
+							help={__("How far the element moves during animation", "adaire-blocks")}
 						/>
 					)}
 
 					{animationType === 'flip' && (
 						<>
 							<SelectControl
-								label={__("Flip Axis", "animation-scroll-block")}
+								label={__("Flip Axis", "adaire-blocks")}
 								value={flipAxis}
 								options={[
-									{ label: __("Horizontal", "animation-scroll-block"), value: "horizontal" },
-									{ label: __("Vertical", "animation-scroll-block"), value: "vertical" },
+									{ label: __("Horizontal", "adaire-blocks"), value: "horizontal" },
+									{ label: __("Vertical", "adaire-blocks"), value: "vertical" },
 								]}
 								onChange={(value) => setAttributes({ flipAxis: value })}
 							/>
 							<SelectControl
-								label={__("Flip Direction", "animation-scroll-block")}
+								label={__("Flip Direction", "adaire-blocks")}
 								value={flipDirection}
 								options={[
-									{ label: __("Clockwise", "animation-scroll-block"), value: "clockwise" },
-									{ label: __("Anti-Clockwise", "animation-scroll-block"), value: "anticlockwise" },
+									{ label: __("Clockwise", "adaire-blocks"), value: "clockwise" },
+									{ label: __("Anti-Clockwise", "adaire-blocks"), value: "anticlockwise" },
 								]}
 								onChange={(value) => setAttributes({ flipDirection: value })}
 							/>
@@ -354,7 +354,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					)}
 
 					<RangeControl
-						label={__("Delay (ms)", "animation-scroll-block")}
+						label={__("Delay (ms)", "adaire-blocks")}
 						value={animationDelay}
 						onChange={(value) => setAttributes({ animationDelay: value })}
 						min={0}
@@ -363,49 +363,49 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					/>
 
 					<SelectControl
-						label={__("Easing", "animation-scroll-block")}
+						label={__("Easing", "adaire-blocks")}
 						value={animationEasing}
 						options={EASING_OPTIONS}
 						onChange={(value) => setAttributes({ animationEasing: value })}
 					/>
 
 					<RangeControl
-						label={__("Threshold (0-1)", "animation-scroll-block")}
+						label={__("Threshold (0-1)", "adaire-blocks")}
 						value={threshold}
 						onChange={(value) => setAttributes({ threshold: value })}
 						min={0}
 						max={1}
 						step={0.1}
-						help={__("How much of the element must be visible to trigger", "animation-scroll-block")}
+						help={__("How much of the element must be visible to trigger", "adaire-blocks")}
 					/>
 
 					<ToggleControl
-						label={__("Reverse on Scroll Out", "animation-scroll-block")}
+						label={__("Reverse on Scroll Out", "adaire-blocks")}
 						checked={reverseOnScrollOut}
 						onChange={(value) => setAttributes({ reverseOnScrollOut: value })}
 					/>
 
 					<ToggleControl
-						label={__("Animate Once", "animation-scroll-block")}
+						label={__("Animate Once", "adaire-blocks")}
 						checked={once}
 						onChange={(value) => setAttributes({ once: value })}
-						help={__("Only animate when first scrolling into view", "animation-scroll-block")}
+						help={__("Only animate when first scrolling into view", "adaire-blocks")}
 					/>
 				</PanelBody>
 
 				<PanelBody
 					section="layout"
-					title={__("Container Settings", "animation-scroll-block")}
+					title={__("Container Settings", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Container Mode", "animation-scroll-block")}
+						{__("Container Mode", "adaire-blocks")}
 					</p>
 					<ButtonGroup>
 						{[
-							{ label: __("Full Width", "animation-scroll-block"), value: "full" },
+							{ label: __("Full Width", "adaire-blocks"), value: "full" },
 							{
-								label: __("Constrained", "animation-scroll-block"),
+								label: __("Constrained", "adaire-blocks"),
 								value: "constrained",
 							},
 						].map((opt) => (
@@ -423,7 +423,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					{containerMode === "constrained" && (
 						<>
 							<p style={{ marginTop: "16px", marginBottom: "8px", fontWeight: 600 }}>
-								{__("Max Width", "animation-scroll-block")}
+								{__("Max Width", "adaire-blocks")}
 							</p>
 							<DeviceSwitcher
 								deviceType={deviceType}
@@ -433,7 +433,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							/>
 							<div style={{ display: "flex", gap: "8px" }}>
 								<RangeControl
-									label={__("Max Width Value", "animation-scroll-block")}
+									label={__("Max Width Value", "adaire-blocks")}
 									value={
 										containerMaxWidth?.[deviceType]?.value ??
 										(deviceType === "desktop" ? 1200 : 100)
@@ -489,18 +489,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<PanelBody
 					section="style"
 					priority="medium"
-					title={__("Margins", "animation-scroll-block")}
+					title={__("Margins", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<DeviceSwitcher
 						deviceType={deviceType}
 						setDeviceType={setDeviceType}
-						label={__("Device", "animation-scroll-block")}
+						label={__("Device", "adaire-blocks")}
 						tiers={THREE_TIERS}
 						onReset={() => resetToDefaults(["marginTop", "marginRight", "marginBottom", "marginLeft"])}
 					/>
 					<BoxControl
-						label={__("Margin", "animation-scroll-block")}
+						label={__("Margin", "adaire-blocks")}
 						values={{
 							top: `${marginTop?.[deviceType] ?? 0}px`,
 							right: `${marginRight?.[deviceType] ?? 0}px`,
@@ -533,18 +533,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<PanelBody
 					section="style"
 					priority="medium"
-					title={__("Padding", "animation-scroll-block")}
+					title={__("Padding", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<DeviceSwitcher
 						deviceType={deviceType}
 						setDeviceType={setDeviceType}
-						label={__("Device", "animation-scroll-block")}
+						label={__("Device", "adaire-blocks")}
 						tiers={THREE_TIERS}
 						onReset={() => resetToDefaults(["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"])}
 					/>
 					<BoxControl
-						label={__("Padding", "animation-scroll-block")}
+						label={__("Padding", "adaire-blocks")}
 						values={{
 							top: `${paddingTop?.[deviceType] ?? 0}px`,
 							right: `${paddingRight?.[deviceType] ?? 0}px`,
@@ -578,19 +578,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<div {...blockProps} data-block-id={blockId}>
 				<QuickZone
 					id="animation"
-					label={__("Animation", "animation-scroll-block")}
+					label={__("Animation", "adaire-blocks")}
 					activeZone={activeZone}
 					setActiveZone={setActiveZone}
 					content={
 						<>
 							<SelectControl
-								label={__("Animation Type", "animation-scroll-block")}
+								label={__("Animation Type", "adaire-blocks")}
 								value={animationType}
 								options={ANIMATION_TYPES}
 								onChange={(value) => setAttributes({ animationType: value })}
 							/>
 							<RangeControl
-								label={__("Duration (ms)", "animation-scroll-block")}
+								label={__("Duration (ms)", "adaire-blocks")}
 								value={animationDuration}
 								onChange={(value) => setAttributes({ animationDuration: value })}
 								min={100}

@@ -16,7 +16,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "testimonial2-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -28,7 +28,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "constrained"
+            "default": "constrained",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

@@ -120,8 +120,14 @@ class FreeVersionGenerator {
     async copyScaffoldFiles() {
         console.log('Copying scaffold files...');
 
-        // Skip the developer-facing README — it is not part of the plugin itself
-        const skipFiles = ['SCAFFOLD-README.md'];
+        // Skip files that are dev-only / not meant to ship in the distributed
+        // plugin. feedback-handler.php is a standalone script deployed
+        // separately to the developer's own server (see its own header
+        // comment) — it must never end up inside the WordPress.org package.
+        // (scripts/ is still copied — it's needed for this generated folder's
+        // own prebuild/build steps — but is excluded from the final zip by
+        // scripts/zip-generated-folder.js, which is the actual submitted artifact.)
+        const skipFiles = ['SCAFFOLD-README.md', 'feedback-handler.php'];
 
         this.copyDirectoryRecursive(this.scaffoldDir, this.freeVersionDir, skipFiles);
         console.log('   ✓ Scaffold files copied');
@@ -334,6 +340,8 @@ class FreeVersionGenerator {
         }
 
         // --- scripts ---
+        // Copied so this generated folder can run its own prebuild/build steps.
+        // Excluded from the final distributed zip by zip-generated-folder.js.
         const scriptsSrc = path.join(this.sourceDir, 'scripts');
         const scriptsDest = path.join(this.freeVersionDir, 'scripts');
         if (fs.existsSync(scriptsSrc)) {
@@ -551,6 +559,13 @@ class FreeVersionGenerator {
             }
 
             console.log(`   ✓ Build completed successfully`);
+
+            // wp-scripts doesn't add an ABSPATH guard to the generated
+            // blocks-manifest.php; patch it in (see patch-blocks-manifest-guard.js).
+            execSync(
+                `node "${path.join(this.sourceDir, 'scripts', 'patch-blocks-manifest-guard.js')}"`,
+                { stdio: 'inherit', cwd: this.freeVersionDir, shell: true }
+            );
 
         } catch (error) {
             process.chdir(originalDir);

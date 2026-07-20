@@ -15,7 +15,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "case-studies-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./editor.css",
     "style": "file:./style-index.css",
@@ -27,7 +27,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",
@@ -182,11 +186,25 @@
         },
         "cardShadow": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "0 2px 8px rgba(0, 0, 0, 0.1)",
+                "0 4px 16px rgba(0, 0, 0, 0.12)",
+                "0 8px 32px rgba(0, 0, 0, 0.15)",
+                "0 16px 48px rgba(0, 0, 0, 0.2)"
+            ]
         },
         "cardHoverShadow": {
             "type": "string",
-            "default": "0 10px 40px rgba(0, 0, 0, 0.15)"
+            "default": "0 10px 40px rgba(0, 0, 0, 0.15)",
+            "enum": [
+                "none",
+                "0 4px 12px rgba(0, 0, 0, 0.1)",
+                "0 10px 40px rgba(0, 0, 0, 0.15)",
+                "0 16px 48px rgba(0, 0, 0, 0.2)",
+                "0 24px 64px rgba(0, 0, 0, 0.25)"
+            ]
         },
         "overlayColor": {
             "type": "string",
@@ -227,7 +245,8 @@
         },
         "titleFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [ "300", "400", "500", "600", "700" ]
         },
         "titleLineHeight": {
             "type": "number",
@@ -268,7 +287,8 @@
         },
         "descriptionFontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [ "300", "400", "500", "600", "700" ]
         },
         "descriptionLineHeight": {
             "type": "number",
@@ -320,7 +340,8 @@
         },
         "loadMoreFontWeight": {
             "type": "string",
-            "default": "500"
+            "default": "500",
+            "enum": [ "300", "400", "500", "600", "700" ]
         },
         "animationDuration": {
             "type": "number",
@@ -328,7 +349,15 @@
         },
         "animationEase": {
             "type": "string",
-            "default": "power2.inOut"
+            "default": "power2.inOut",
+            "enum": [
+                "power2.inOut",
+                "power2.out",
+                "power3.inOut",
+                "back.out(1.7)",
+                "elastic.out(1, 0.3)",
+                "circ.inOut"
+            ]
         },
         "hoverScale": {
             "type": "number",
@@ -389,7 +418,8 @@
         },
         "dragCursorFontWeight": {
             "type": "string",
-            "default": "500"
+            "default": "500",
+            "enum": [ "300", "400", "500", "600", "700" ]
         },
         "dragCursorColor": {
             "type": "string",
@@ -401,7 +431,13 @@
         },
         "dragCursorTextTransform": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "uppercase",
+                "lowercase",
+                "capitalize"
+            ]
         },
         "dragCursorBgColor": {
             "type": "string",

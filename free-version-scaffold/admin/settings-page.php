@@ -563,9 +563,17 @@ class AdaireBlocksSettings {
         }
         
         wp_register_style(
+            'adaire-admin-theme',
+            plugin_dir_url(__FILE__) . 'css/adaire-admin-theme.css',
+            array(),
+            $plugin_version
+        );
+        wp_enqueue_style('adaire-admin-theme');
+
+        wp_register_style(
             'adaire-blocks-admin',
             plugin_dir_url(__FILE__) . 'css/admin-settings.css',
-            array(),
+            array('adaire-admin-theme'),
             $plugin_version
         );
         wp_enqueue_style('adaire-blocks-admin');
@@ -654,78 +662,79 @@ class AdaireBlocksSettings {
         }
         ?>
         <div class="wrap">
-            <h1>
-                <svg width="24" height="24" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px; vertical-align: middle;">
-                    <path d="M408.523 321.353H163.388V393.981H401.889V483.583H195.142C156 483.583 125 516.017 125 556.18V645.814C125 685.978 156 718.411 195.142 718.411H401.889V645.814H201.776V556.18H401.889V645.814H477.941V393.981C477.941 353.818 446.941 321.353 408.523 321.353Z" fill="currentColor"/>
-                    <path d="M603.247 267.692V357.441H801.292C842.251 357.441 875 389.932 875 429.647V643.346C875 686.658 838.511 718.412 793.842 718.412H592.057C553.348 718.412 522.059 688.102 522.059 650.569V189C566.728 189 603.217 224.381 603.217 267.692H603.247ZM603.247 650.569H793.842V429.647H603.247V650.569Z" fill="currentColor"/>
-                </svg>
-                <?php echo esc_html(get_admin_page_title()); ?>
-            </h1>
-            
+        <div class="aa-page">
+            <div class="aa-header">
+                <div class="aa-header-text">
+                    <div class="aa-eyebrow">Dashboard</div>
+                    <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+                    <p>Manage which blocks are available in the Gutenberg editor. Toggle blocks on/off to customize your editing experience.</p>
+                </div>
+            </div>
+
             <div class="adaire-blocks-settings-container">
                 <div class="adaire-blocks-header">
                     <div class="adaire-blocks-logo">
-                        <h2>Block Management</h2>
-                        <p class="description">Manage which blocks are available in the Gutenberg editor. Toggle blocks on/off to customize your editing experience.</p>
-                        <p class="description" style="font-size: 12px; color: #666; margin-top: 10px;">
-                            <strong>Available Blocks:</strong> 
-                            <?php 
-                            // Only count non-auxiliary blocks in the summary to match what is shown below.
-                            $total_blocks = 0;
-                            $free_blocks = 0;
-                            $premium_blocks = 0;
-                            
-                            foreach ($available_blocks as $block_key => $block_data) {
+                        <?php
+                        // Only count non-auxiliary blocks in the summary to match what is shown below.
+                        $total_blocks = 0;
+                        $free_blocks = 0;
+                        $premium_blocks = 0;
+
+                        foreach ($available_blocks as $block_key => $block_data) {
+                            if (!empty($block_data['is_auxiliary'])) {
+                                continue;
+                            }
+
+                            $total_blocks++;
+
+                            if ($block_data['is_premium']) {
+                                $premium_blocks++;
+                            } else {
+                                $free_blocks++;
+                            }
+                        }
+
+                        $enabled_count = 0;
+                        $total_free = 0;
+                        foreach ($settings as $key => $value) {
+                            // Only count settings for free, non-auxiliary blocks.
+                            if (isset($available_blocks[$key])) {
+                                $block_data = $available_blocks[$key];
+
                                 if (!empty($block_data['is_auxiliary'])) {
                                     continue;
                                 }
 
-                                $total_blocks++;
-
-                                if ($block_data['is_premium']) {
-                                    $premium_blocks++;
-                                } else {
-                                    $free_blocks++;
-                                }
-                            }
-                            
-                            echo esc_html( $total_blocks ) . ' blocks available';
-                            if ($config && !$config->is_premium()) {
-                                echo ' (' . esc_html( $free_blocks ) . ' free, ' . esc_html( $premium_blocks ) . ' pro)';
-                            }
-                            ?>
-                        </p>
-                        <p class="description" style="font-size: 12px; color: #666; margin-top: 5px;">
-                            <strong>Current Settings:</strong> 
-                            <?php 
-                            $enabled_count = 0;
-                            $total_free = 0;
-                            foreach ($settings as $key => $value) {
-                                // Only count settings for free, non-auxiliary blocks.
-                                if (isset($available_blocks[$key])) {
-                                    $block_data = $available_blocks[$key];
-
-                                    if (!empty($block_data['is_auxiliary'])) {
-                                        continue;
-                                    }
-
-                                    if (!$block_data['is_premium']) {
-                                        $total_free++;
-                                        if ($value) {
-                                            $enabled_count++;
-                                        }
+                                if (!$block_data['is_premium']) {
+                                    $total_free++;
+                                    if ($value) {
+                                        $enabled_count++;
                                     }
                                 }
                             }
-                            echo esc_html( $enabled_count ) . ' enabled, ' . esc_html( $total_free - $enabled_count ) . ' disabled';
-                            if ($config && !$config->is_premium() && $premium_blocks > 0) {
-                                echo ' (' . esc_html( $premium_blocks ) . ' pro blocks require upgrade)';
-                            }
-                            ?>
-                        </p>
+                        }
+                        ?>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <span class="aa-pill aa-pill-accent">
+                                <?php
+                                echo esc_html( $total_blocks ) . ' blocks available';
+                                if ($config && !$config->is_premium()) {
+                                    echo ' (' . esc_html( $free_blocks ) . ' free, ' . esc_html( $premium_blocks ) . ' pro)';
+                                }
+                                ?>
+                            </span>
+                            <span class="aa-pill aa-pill-success">
+                                <?php
+                                echo esc_html( $enabled_count ) . ' enabled, ' . esc_html( $total_free - $enabled_count ) . ' disabled';
+                                ?>
+                            </span>
+                            <?php if ($config && !$config->is_premium() && $premium_blocks > 0): ?>
+                                <span class="aa-pill aa-pill-muted"><?php echo esc_html( $premium_blocks ); ?> pro blocks require upgrade</span>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-                
+
                 <form method="post" action="options.php" class="adaire-blocks-form" data-option-name="<?php echo esc_attr($this->option_name); ?>">
                     <input type="hidden" name="redirect_to" value="<?php echo esc_url(admin_url('admin.php?page=adaire-blocks-settings&settings-updated=1')); ?>" />
                     <?php
@@ -879,6 +888,7 @@ class AdaireBlocksSettings {
                     </div>
                 </form>
             </div>
+        </div>
         </div>
         <?php
     }

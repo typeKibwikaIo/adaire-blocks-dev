@@ -52,7 +52,7 @@ export default function Edit({ attributes, setAttributes }) {
 		setAttributes({
 			items: [
 				...items,
-				{ label: __("New item", "progress-block"), value: 50, color: "" },
+				{ label: __("New item", "adaire-blocks"), value: 50, color: "" },
 			],
 		});
 	};
@@ -104,23 +104,23 @@ export default function Edit({ attributes, setAttributes }) {
 	return (
 		<>
 			<InspectorTabs attributes={attributes} setAttributes={setAttributes}>
-				<PanelBody title={__("Layout", "progress-block")} initialOpen={true}>
+				<PanelBody title={__("Layout", "adaire-blocks")} initialOpen={true}>
 					<SelectControl
-						label={__("Layout Style", "progress-block")}
+						label={__("Layout Style", "adaire-blocks")}
 						value={layout}
 						options={[
-							{ label: __("Bar", "progress-block"), value: "bar" },
-							{ label: __("Circle", "progress-block"), value: "circle" },
+							{ label: __("Bar", "adaire-blocks"), value: "bar" },
+							{ label: __("Circle", "adaire-blocks"), value: "circle" },
 						]}
 						onChange={set("layout")}
 						help={__(
 							"Switch between a stacked list of bars or a grid of progress rings.",
-							"progress-block"
+							"adaire-blocks"
 						)}
 					/>
 					{layout === "circle" && (
 						<RangeControl
-							label={__("Columns", "progress-block")}
+							label={__("Columns", "adaire-blocks")}
 							value={columns}
 							min={1}
 							max={6}
@@ -128,28 +128,28 @@ export default function Edit({ attributes, setAttributes }) {
 						/>
 					)}
 					<ToggleControl
-						label={__("Show Heading", "progress-block")}
+						label={__("Show Heading", "adaire-blocks")}
 						checked={showHeading}
 						onChange={set("showHeading")}
 					/>
 					{showHeading && (
 						<SelectControl
-							label={__("Heading Alignment", "progress-block")}
+							label={__("Heading Alignment", "adaire-blocks")}
 							value={headingAlign}
 							options={[
-								{ label: __("Left", "progress-block"), value: "left" },
-								{ label: __("Center", "progress-block"), value: "center" },
+								{ label: __("Left", "adaire-blocks"), value: "left" },
+								{ label: __("Center", "adaire-blocks"), value: "center" },
 							]}
 							onChange={set("headingAlign")}
 						/>
 					)}
 					<ToggleControl
-						label={__("Show Percentage Value", "progress-block")}
+						label={__("Show Percentage Value", "adaire-blocks")}
 						checked={showValue}
 						onChange={set("showValue")}
 					/>
 					<RangeControl
-						label={__("Animation Duration (ms)", "progress-block")}
+						label={__("Animation Duration (ms)", "adaire-blocks")}
 						value={animationDuration}
 						min={200}
 						max={3000}
@@ -157,41 +157,41 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={set("animationDuration")}
 						help={__(
 							"How long the bar/ring takes to fill when it scrolls into view.",
-							"progress-block"
+							"adaire-blocks"
 						)}
 					/>
 				</PanelBody>
 
-				<PanelBody title={__("Items", "progress-block")} initialOpen={true}>
+				<PanelBody title={__("Items", "adaire-blocks")} initialOpen={true}>
 					{items.map((item, index) => (
 						<div className="adaire-progress-bar__item-control" key={index}>
 							<TextControl
-								label={__("Label", "progress-block") + ` #${index + 1}`}
+								label={__("Label", "adaire-blocks") + ` #${index + 1}`}
 								value={item.label}
 								onChange={(value) => updateItem(index, "label", value)}
 							/>
 							<RangeControl
-								label={__("Value (%)", "progress-block")}
+								label={__("Value (%)", "adaire-blocks")}
 								value={item.value}
 								min={0}
 								max={100}
 								onChange={(value) => updateItem(index, "value", value)}
 							/>
 							<AdaireColorControl
-								label={__("Color override (optional)", "progress-block")}
+								label={__("Color override (optional)", "adaire-blocks")}
 								value={item.color}
 								onChange={(value) => updateItem(index, "color", value)}
 							/>
 							<div className="adaire-progress-bar__item-actions">
 								<Button
 									icon="arrow-up-alt2"
-									label={__("Move up", "progress-block")}
+									label={__("Move up", "adaire-blocks")}
 									onClick={() => moveItem(index, -1)}
 									disabled={index === 0}
 								/>
 								<Button
 									icon="arrow-down-alt2"
-									label={__("Move down", "progress-block")}
+									label={__("Move down", "adaire-blocks")}
 									onClick={() => moveItem(index, 1)}
 									disabled={index === items.length - 1}
 								/>
@@ -200,21 +200,21 @@ export default function Edit({ attributes, setAttributes }) {
 									variant="secondary"
 									onClick={() => removeItem(index)}
 								>
-									{__("Remove", "progress-block")}
+									{__("Remove", "adaire-blocks")}
 								</Button>
 							</div>
 						</div>
 					))}
 					<Button variant="primary" onClick={addItem}>
-						{__("Add Item", "progress-block")}
+						{__("Add Item", "adaire-blocks")}
 					</Button>
 				</PanelBody>
 
-				<PanelBody title={__("Colors", "progress-block")} initialOpen={false}>
+				<PanelBody title={__("Colors", "adaire-blocks")} initialOpen={false}>
 					<AdaireColorControl
 						label={__(
 							layout === "circle" ? "Ring Fill Color" : "Bar Fill Color",
-							"progress-block"
+							"adaire-blocks"
 						)}
 						value={fillColor}
 						onChange={set("fillColor")}
@@ -222,13 +222,13 @@ export default function Edit({ attributes, setAttributes }) {
 					{layout === "bar" && (
 						<>
 							<ToggleControl
-								label={__("Use Gradient Fill", "progress-block")}
+								label={__("Use Gradient Fill", "adaire-blocks")}
 								checked={useGradient}
 								onChange={set("useGradient")}
 							/>
 							{useGradient && (
 								<AdaireColorControl
-									label={__("Gradient End Color", "progress-block")}
+									label={__("Gradient End Color", "adaire-blocks")}
 									value={fillColorEnd}
 									onChange={set("fillColorEnd")}
 								/>
@@ -238,53 +238,53 @@ export default function Edit({ attributes, setAttributes }) {
 					<AdaireColorControl
 						label={__(
 							layout === "circle" ? "Ring Track Color" : "Track Color",
-							"progress-block"
+							"adaire-blocks"
 						)}
 						value={layout === "circle" ? ringTrackColor : trackColor}
 						onChange={set(layout === "circle" ? "ringTrackColor" : "trackColor")}
 					/>
 					<AdaireColorControl
-						label={__("Label Color", "progress-block")}
+						label={__("Label Color", "adaire-blocks")}
 						value={layout === "circle" ? ringLabelColor : labelColor}
 						onChange={set(layout === "circle" ? "ringLabelColor" : "labelColor")}
 					/>
 					<AdaireColorControl
-						label={__("Value Color", "progress-block")}
+						label={__("Value Color", "adaire-blocks")}
 						value={layout === "circle" ? ringTextColor : valueColor}
 						onChange={set(layout === "circle" ? "ringTextColor" : "valueColor")}
 					/>
 					{showHeading && (
 						<>
 							<AdaireColorControl
-								label={__("Heading Color", "progress-block")}
+								label={__("Heading Color", "adaire-blocks")}
 								value={headingColor}
 								onChange={set("headingColor")}
 							/>
 							<AdaireColorControl
-								label={__("Subheading Color", "progress-block")}
+								label={__("Subheading Color", "adaire-blocks")}
 								value={subheadingColor}
 								onChange={set("subheadingColor")}
 							/>
 						</>
 					)}
 					<AdaireColorControl
-						label={__("Background Color", "progress-block")}
+						label={__("Background Color", "adaire-blocks")}
 						value={backgroundColor}
 						onChange={set("backgroundColor")}
 					/>
 				</PanelBody>
 
 				{layout === "bar" && (
-					<PanelBody title={__("Bar Styling", "progress-block")} initialOpen={false}>
+					<PanelBody title={__("Bar Styling", "adaire-blocks")} initialOpen={false}>
 						<RangeControl
-							label={__("Bar Height", "progress-block")}
+							label={__("Bar Height", "adaire-blocks")}
 							value={barHeight}
 							min={2}
 							max={40}
 							onChange={set("barHeight")}
 						/>
 						<RangeControl
-							label={__("Bar Radius", "progress-block")}
+							label={__("Bar Radius", "adaire-blocks")}
 							value={barRadius}
 							min={0}
 							max={999}
@@ -294,16 +294,16 @@ export default function Edit({ attributes, setAttributes }) {
 				)}
 
 				{layout === "circle" && (
-					<PanelBody title={__("Ring Styling", "progress-block")} initialOpen={false}>
+					<PanelBody title={__("Ring Styling", "adaire-blocks")} initialOpen={false}>
 						<RangeControl
-							label={__("Ring Size", "progress-block")}
+							label={__("Ring Size", "adaire-blocks")}
 							value={ringSize}
 							min={60}
 							max={280}
 							onChange={set("ringSize")}
 						/>
 						<RangeControl
-							label={__("Ring Stroke Width", "progress-block")}
+							label={__("Ring Stroke Width", "adaire-blocks")}
 							value={ringStrokeWidth}
 							min={2}
 							max={30}
@@ -312,16 +312,16 @@ export default function Edit({ attributes, setAttributes }) {
 					</PanelBody>
 				)}
 
-				<PanelBody title={__("Spacing", "progress-block")} initialOpen={false}>
+				<PanelBody title={__("Spacing", "adaire-blocks")} initialOpen={false}>
 					<RangeControl
-						label={__("Top Padding", "progress-block")}
+						label={__("Top Padding", "adaire-blocks")}
 						value={paddingTop}
 						min={0}
 						max={160}
 						onChange={set("paddingTop")}
 					/>
 					<RangeControl
-						label={__("Bottom Padding", "progress-block")}
+						label={__("Bottom Padding", "adaire-blocks")}
 						value={paddingBottom}
 						min={0}
 						max={160}
@@ -338,7 +338,7 @@ export default function Edit({ attributes, setAttributes }) {
 							className="adaire-progress-bar__heading"
 							value={heading}
 							onChange={set("heading")}
-							placeholder={__("Heading…", "progress-block")}
+							placeholder={__("Heading…", "adaire-blocks")}
 							allowedFormats={[]}
 						/>
 						<RichText
@@ -346,7 +346,7 @@ export default function Edit({ attributes, setAttributes }) {
 							className="adaire-progress-bar__subheading"
 							value={subheading}
 							onChange={set("subheading")}
-							placeholder={__("Subheading…", "progress-block")}
+							placeholder={__("Subheading…", "adaire-blocks")}
 							allowedFormats={[]}
 						/>
 					</div>

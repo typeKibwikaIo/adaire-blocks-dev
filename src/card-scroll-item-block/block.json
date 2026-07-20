@@ -15,7 +15,7 @@
         "inserter": true,
         "anchor": true
     },
-    "textdomain": "card-scroll-item-block",
+    "textdomain": "adaire-blocks",
     "attributes": {
         "title": {
             "type": "string",
@@ -27,7 +27,11 @@
         },
         "mediaType": {
             "type": "string",
-            "default": "image"
+            "default": "image",
+            "enum": [
+                "image",
+                "video"
+            ]
         },
         "mediaId": {
             "type": "number",
@@ -73,7 +77,11 @@
         },
         "videoType": {
             "type": "string",
-            "default": "local"
+            "default": "local",
+            "enum": [
+                "local",
+                "external"
+            ]
         },
         "externalVideoUrl": {
             "type": "string",
@@ -94,11 +102,29 @@
         },
         "imageBackgroundSize": {
             "type": "string",
-            "default": "cover"
+            "default": "cover",
+            "enum": [
+                "cover",
+                "contain",
+                "auto",
+                "100%",
+                "100% 100%"
+            ]
         },
         "imageBackgroundPosition": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "center",
+                "top",
+                "bottom",
+                "left",
+                "right",
+                "top left",
+                "top right",
+                "bottom left",
+                "bottom right"
+            ]
         },
         "titleFontSize": {
             "type": "string",
@@ -106,7 +132,8 @@
         },
         "titleFontWeight": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [ "", "300", "400", "500", "600", "700", "800" ]
         },
         "titleLineHeight": {
             "type": "string",
@@ -118,7 +145,8 @@
         },
         "titleTextTransform": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [ "none", "uppercase", "lowercase", "capitalize" ]
         },
         "descriptionFontSize": {
             "type": "string",
@@ -126,7 +154,8 @@
         },
         "descriptionFontWeight": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [ "", "300", "400", "500", "600", "700", "800" ]
         },
         "descriptionLineHeight": {
             "type": "string",
@@ -138,11 +167,23 @@
         },
         "descriptionTextTransform": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [ "none", "uppercase", "lowercase", "capitalize" ]
         },
         "fontFamily": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+                "",
+                "Arial, Helvetica, sans-serif",
+                "Helvetica, Arial, sans-serif",
+                "Georgia, serif",
+                "'Times New Roman', Times, serif",
+                "Verdana, Geneva, sans-serif",
+                "'Trebuchet MS', sans-serif",
+                "'Courier New', Courier, monospace",
+                "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+            ]
         }
     },
     "editorScript": "file:./index.js",

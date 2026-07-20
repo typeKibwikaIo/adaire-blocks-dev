@@ -15,8 +15,8 @@ const ALLOWED_BLOCKS = [
 
 const TEMPLATE = [
     ['core/group', {}, [
-        ['core/heading', { level: 3, placeholder: __('Back Card Title', 'flipcard-back-block') }],
-        ['core/paragraph', { placeholder: __('Add content for the back of the card...', 'flipcard-back-block') }]
+        ['core/heading', { level: 3, placeholder: __('Back Card Title', 'adaire-blocks') }],
+        ['core/paragraph', { placeholder: __('Add content for the back of the card...', 'adaire-blocks') }]
     ]]
 ];
 

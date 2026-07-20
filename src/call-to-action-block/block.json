@@ -15,7 +15,7 @@
         "customClassName": true,
         "reusable": true
     },
-    "textdomain": "call-to-action-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -23,7 +23,18 @@
     "attributes": {
         "layout": {
             "type": "string",
-            "default": "split-left"
+            "default": "split-left",
+            "enum": [
+                "split-left",
+                "split-right",
+                "stacked-top",
+                "stacked-bottom",
+                "overlay-bottom-left",
+                "overlay-bottom-right",
+                "overlay-top-left",
+                "overlay-top-right",
+                "overlay-center"
+            ]
         },
         "minHeight": {
             "type": "number",
@@ -35,11 +46,28 @@
         },
         "backgroundSize": {
             "type": "string",
-            "default": "cover"
+            "default": "cover",
+            "enum": [
+                "cover",
+                "contain",
+                "auto",
+                "100%"
+            ]
         },
         "backgroundPosition": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "center",
+                "top",
+                "bottom",
+                "left",
+                "right",
+                "top left",
+                "top right",
+                "bottom left",
+                "bottom right"
+            ]
         },
         "imageWidth": {
             "type": "number",
@@ -47,11 +75,24 @@
         },
         "contentJustify": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "center",
+                "flex-start",
+                "flex-end",
+                "space-between",
+                "space-around"
+            ]
         },
         "contentAlign": {
             "type": "string",
-            "default": "flex-start"
+            "default": "flex-start",
+            "enum": [
+                "flex-start",
+                "center",
+                "flex-end",
+                "stretch"
+            ]
         },
         "contentPadding": {
             "type": "object",
@@ -92,11 +133,23 @@
         },
         "headerTextAlign": {
             "type": "string",
-            "default": "left"
+            "default": "left",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "headerFontWeight": {
             "type": "string",
-            "default": "300"
+            "default": "300",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "bodyText": {
             "type": "string",
@@ -124,11 +177,23 @@
         },
         "bodyTextAlign": {
             "type": "string",
-            "default": "left"
+            "default": "left",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "bodyFontWeight": {
             "type": "string",
-            "default": "300"
+            "default": "300",
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "stackedImageHeight": {
             "type": "object",
@@ -237,7 +302,12 @@
         },
         "contentGradientType": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "linear",
+                "radial"
+            ]
         },
         "contentGradientColor1": {
             "type": "string",
@@ -249,7 +319,17 @@
         },
         "contentGradientDirection": {
             "type": "string",
-            "default": "135deg"
+            "default": "135deg",
+            "enum": [
+                "0deg",
+                "45deg",
+                "90deg",
+                "135deg",
+                "180deg",
+                "225deg",
+                "270deg",
+                "315deg"
+            ]
         },
         "contentGradientOpacity": {
             "type": "number",
@@ -257,11 +337,27 @@
         },
         "contentGradientOrigin": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "center",
+                "top left",
+                "top",
+                "top right",
+                "left",
+                "right",
+                "bottom left",
+                "bottom",
+                "bottom right"
+            ]
         },
         "overlayGradientType": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "linear",
+                "radial"
+            ]
         },
         "overlayGradientColor1": {
             "type": "string",
@@ -273,7 +369,17 @@
         },
         "overlayGradientDirection": {
             "type": "string",
-            "default": "135deg"
+            "default": "135deg",
+            "enum": [
+                "0deg",
+                "45deg",
+                "90deg",
+                "135deg",
+                "180deg",
+                "225deg",
+                "270deg",
+                "315deg"
+            ]
         },
         "overlayGradientOpacity": {
             "type": "number",
@@ -281,11 +387,26 @@
         },
         "overlayGradientOrigin": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "center",
+                "top left",
+                "top",
+                "top right",
+                "left",
+                "right",
+                "bottom left",
+                "bottom",
+                "bottom right"
+            ]
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

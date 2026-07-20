@@ -24,16 +24,16 @@ import { arrowUp, arrowDown } from '@wordpress/icons';
 import './editor.scss';
 
 const CONTAINER_MODES = [
-    { label: __('Full Width', 'case-studies-block'), value: 'full' },
-    { label: __('Constrained', 'case-studies-block'), value: 'constrained' }
+    { label: __('Full Width', 'adaire-blocks'), value: 'full' },
+    { label: __('Constrained', 'adaire-blocks'), value: 'constrained' }
 ];
 
 const DEVICE_TYPES = [
-    { key: 'bigDesktop', label: __('Big Desktop', 'case-studies-block') },
-    { key: 'desktop', label: __('Desktop', 'case-studies-block') },
-    { key: 'smallLaptop', label: __('Small Laptop', 'case-studies-block') },
-    { key: 'tablet', label: __('Tablet', 'case-studies-block') },
-    { key: 'mobile', label: __('Mobile', 'case-studies-block') }
+    { key: 'bigDesktop', label: __('Big Desktop', 'adaire-blocks') },
+    { key: 'desktop', label: __('Desktop', 'adaire-blocks') },
+    { key: 'smallLaptop', label: __('Small Laptop', 'adaire-blocks') },
+    { key: 'tablet', label: __('Tablet', 'adaire-blocks') },
+    { key: 'mobile', label: __('Mobile', 'adaire-blocks') }
 ];
 
 const UNIT_OPTIONS = ['px', '%', 'rem', 'vw'];
@@ -371,8 +371,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         <>
             <InspectorControls>
                 {/* Layout Settings */}
-                <PanelBody title={__('Layout Settings', 'case-studies-block')} initialOpen={true}>
-                    <p style={{ marginBottom: '8px' }}>{__('Container Width', 'case-studies-block')}</p>
+                <PanelBody title={__('Layout Settings', 'adaire-blocks')} initialOpen={true}>
+                    <p style={{ marginBottom: '8px' }}>{__('Container Width', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {CONTAINER_MODES.map((mode) => (
                             <Button
@@ -410,7 +410,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                                             return (
                                                 <RangeControl
-                                                    label={__('Max Width', 'case-studies-block')}
+                                                    label={__('Max Width', 'adaire-blocks')}
                                                     value={value}
                                                     onChange={(rangeValue) => updateContainerDimension(device.key, 'value', rangeValue)}
                                                     min={min}
@@ -438,42 +438,42 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
 
                     <RangeControl
-                        label={__('Desktop Columns', 'case-studies-block')}
+                        label={__('Desktop Columns', 'adaire-blocks')}
                         value={columns}
                         onChange={(value) => setAttributes({ columns: value })}
                         min={1}
                         max={6}
                     />
                     <RangeControl
-                        label={__('Big Desktop Columns', 'case-studies-block')}
+                        label={__('Big Desktop Columns', 'adaire-blocks')}
                         value={columnsBigDesktop}
                         onChange={(value) => setAttributes({ columnsBigDesktop: value })}
                         min={1}
                         max={8}
                     />
                     <RangeControl
-                        label={__('Small Laptop Columns', 'case-studies-block')}
+                        label={__('Small Laptop Columns', 'adaire-blocks')}
                         value={columnsSmallLaptop}
                         onChange={(value) => setAttributes({ columnsSmallLaptop: value })}
                         min={1}
                         max={6}
                     />
                     <RangeControl
-                        label={__('Tablet Columns', 'case-studies-block')}
+                        label={__('Tablet Columns', 'adaire-blocks')}
                         value={columnsTablet}
                         onChange={(value) => setAttributes({ columnsTablet: value })}
                         min={1}
                         max={4}
                     />
                     <RangeControl
-                        label={__('Mobile Columns', 'case-studies-block')}
+                        label={__('Mobile Columns', 'adaire-blocks')}
                         value={columnsMobile}
                         onChange={(value) => setAttributes({ columnsMobile: value })}
                         min={1}
                         max={2}
                     />
                     <RangeControl
-                        label={__('Gap (px)', 'case-studies-block')}
+                        label={__('Gap (px)', 'adaire-blocks')}
                         value={gap}
                         onChange={(value) => setAttributes({ gap: value })}
                         min={0}
@@ -482,18 +482,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Carousel Settings */}
-                <PanelBody title={__('Carousel Settings', 'case-studies-block')} initialOpen={false}>
+                <PanelBody title={__('Carousel Settings', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Enable Draggable Carousel', 'case-studies-block')}
+                        label={__('Enable Draggable Carousel', 'adaire-blocks')}
                         checked={enableCarousel}
                         onChange={(value) => setAttributes({ enableCarousel: value })}
-                        help={enableCarousel ? __('Cards will be displayed in a horizontal draggable carousel.', 'case-studies-block') : __('Cards will be displayed in a grid layout.', 'case-studies-block')}
+                        help={enableCarousel ? __('Cards will be displayed in a horizontal draggable carousel.', 'adaire-blocks') : __('Cards will be displayed in a grid layout.', 'adaire-blocks')}
                     />
 
                     {enableCarousel && (
                         <>
                             <div style={{ marginTop: '20px', marginBottom: '20px' }}>
-                                <strong style={{ display: 'block', marginBottom: '12px' }}>{__('Card Width', 'case-studies-block')}</strong>
+                                <strong style={{ display: 'block', marginBottom: '12px' }}>{__('Card Width', 'adaire-blocks')}</strong>
                                 {DEVICE_TYPES.map((device) => (
                                     <div key={device.key} style={{ marginBottom: '16px' }}>
                                         <span style={{ fontSize: '12px', color: '#666' }}>{device.label}</span>
@@ -530,16 +530,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             </div>
 
                             <div style={{ borderTop: '1px solid #ddd', paddingTop: '20px', marginTop: '20px' }}>
-                                <strong style={{ display: 'block', marginBottom: '16px', fontSize: '13px' }}>{__('Drag Cursor Indicator', 'case-studies-block')}</strong>
+                                <strong style={{ display: 'block', marginBottom: '16px', fontSize: '13px' }}>{__('Drag Cursor Indicator', 'adaire-blocks')}</strong>
                                 
                                 <TextControl
-                                    label={__('Text', 'case-studies-block')}
+                                    label={__('Text', 'adaire-blocks')}
                                     value={dragCursorText}
                                     onChange={(value) => setAttributes({ dragCursorText: value })}
                                 />
 
                                 <RangeControl
-                                    label={__('Circle Size (px)', 'case-studies-block')}
+                                    label={__('Circle Size (px)', 'adaire-blocks')}
                                     value={dragCursorSize}
                                     onChange={(value) => setAttributes({ dragCursorSize: value })}
                                     min={40}
@@ -547,7 +547,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 />
 
                                 <RangeControl
-                                    label={__('Font Size (px)', 'case-studies-block')}
+                                    label={__('Font Size (px)', 'adaire-blocks')}
                                     value={dragCursorFontSize}
                                     onChange={(value) => setAttributes({ dragCursorFontSize: value })}
                                     min={10}
@@ -555,20 +555,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 />
 
                                 <SelectControl
-                                    label={__('Font Weight', 'case-studies-block')}
+                                    label={__('Font Weight', 'adaire-blocks')}
                                     value={dragCursorFontWeight}
                                     options={fontWeightOptions}
                                     onChange={(value) => setAttributes({ dragCursorFontWeight: value })}
                                 />
 
                                 <SelectControl
-                                    label={__('Text Case', 'case-studies-block')}
+                                    label={__('Text Case', 'adaire-blocks')}
                                     value={dragCursorTextTransform}
                                     options={[
-                                        { label: __('None (Sentence case)', 'case-studies-block'), value: 'none' },
-                                        { label: __('Uppercase', 'case-studies-block'), value: 'uppercase' },
-                                        { label: __('Lowercase', 'case-studies-block'), value: 'lowercase' },
-                                        { label: __('Capitalize', 'case-studies-block'), value: 'capitalize' }
+                                        { label: __('None (Sentence case)', 'adaire-blocks'), value: 'none' },
+                                        { label: __('Uppercase', 'adaire-blocks'), value: 'uppercase' },
+                                        { label: __('Lowercase', 'adaire-blocks'), value: 'lowercase' },
+                                        { label: __('Capitalize', 'adaire-blocks'), value: 'capitalize' }
                                     ]}
                                     onChange={(value) => setAttributes({ dragCursorTextTransform: value })}
                                 />
@@ -578,9 +578,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Card Settings */}
-                <PanelBody title={__('Card Settings', 'case-studies-block')} initialOpen={false}>
+                <PanelBody title={__('Card Settings', 'adaire-blocks')} initialOpen={false}>
                     <div style={{ marginBottom: '20px' }}>
-                        <strong style={{ display: 'block', marginBottom: '12px' }}>{__('Card Height', 'case-studies-block')}</strong>
+                        <strong style={{ display: 'block', marginBottom: '12px' }}>{__('Card Height', 'adaire-blocks')}</strong>
                         {DEVICE_TYPES.map((device) => (
                             <div key={device.key} style={{ marginBottom: '16px' }}>
                                 <span style={{ fontSize: '12px', color: '#666' }}>{device.label}</span>
@@ -619,7 +619,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </div>
 
                     <RangeControl
-                        label={__('Border Radius (px)', 'case-studies-block')}
+                        label={__('Border Radius (px)', 'adaire-blocks')}
                         value={cardBorderRadius}
                         onChange={(value) => setAttributes({ cardBorderRadius: value })}
                         min={0}
@@ -627,7 +627,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <RangeControl
-                        label={__('Content Padding (px)', 'case-studies-block')}
+                        label={__('Content Padding (px)', 'adaire-blocks')}
                         value={contentPadding}
                         onChange={(value) => setAttributes({ contentPadding: value })}
                         min={8}
@@ -635,60 +635,60 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
 
                     <SelectControl
-                        label={__('Card Shadow', 'case-studies-block')}
+                        label={__('Card Shadow', 'adaire-blocks')}
                         value={cardShadow}
                         options={[
-                            { label: __('None', 'case-studies-block'), value: 'none' },
-                            { label: __('Small', 'case-studies-block'), value: '0 2px 8px rgba(0, 0, 0, 0.1)' },
-                            { label: __('Medium', 'case-studies-block'), value: '0 4px 16px rgba(0, 0, 0, 0.12)' },
-                            { label: __('Large', 'case-studies-block'), value: '0 8px 32px rgba(0, 0, 0, 0.15)' },
-                            { label: __('Extra Large', 'case-studies-block'), value: '0 16px 48px rgba(0, 0, 0, 0.2)' }
+                            { label: __('None', 'adaire-blocks'), value: 'none' },
+                            { label: __('Small', 'adaire-blocks'), value: '0 2px 8px rgba(0, 0, 0, 0.1)' },
+                            { label: __('Medium', 'adaire-blocks'), value: '0 4px 16px rgba(0, 0, 0, 0.12)' },
+                            { label: __('Large', 'adaire-blocks'), value: '0 8px 32px rgba(0, 0, 0, 0.15)' },
+                            { label: __('Extra Large', 'adaire-blocks'), value: '0 16px 48px rgba(0, 0, 0, 0.2)' }
                         ]}
                         onChange={(value) => setAttributes({ cardShadow: value })}
                     />
 
                     <SelectControl
-                        label={__('Card Hover Shadow', 'case-studies-block')}
+                        label={__('Card Hover Shadow', 'adaire-blocks')}
                         value={cardHoverShadow}
                         options={[
-                            { label: __('None', 'case-studies-block'), value: 'none' },
-                            { label: __('Small', 'case-studies-block'), value: '0 4px 12px rgba(0, 0, 0, 0.1)' },
-                            { label: __('Medium', 'case-studies-block'), value: '0 10px 40px rgba(0, 0, 0, 0.15)' },
-                            { label: __('Large', 'case-studies-block'), value: '0 16px 48px rgba(0, 0, 0, 0.2)' },
-                            { label: __('Extra Large', 'case-studies-block'), value: '0 24px 64px rgba(0, 0, 0, 0.25)' }
+                            { label: __('None', 'adaire-blocks'), value: 'none' },
+                            { label: __('Small', 'adaire-blocks'), value: '0 4px 12px rgba(0, 0, 0, 0.1)' },
+                            { label: __('Medium', 'adaire-blocks'), value: '0 10px 40px rgba(0, 0, 0, 0.15)' },
+                            { label: __('Large', 'adaire-blocks'), value: '0 16px 48px rgba(0, 0, 0, 0.2)' },
+                            { label: __('Extra Large', 'adaire-blocks'), value: '0 24px 64px rgba(0, 0, 0, 0.25)' }
                         ]}
                         onChange={(value) => setAttributes({ cardHoverShadow: value })}
                     />
                 </PanelBody>
 
                 {/* Filter Settings */}
-                <PanelBody title={__('Filter Settings', 'case-studies-block')} initialOpen={false}>
+                <PanelBody title={__('Filter Settings', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Show Filters', 'case-studies-block')}
+                        label={__('Show Filters', 'adaire-blocks')}
                         checked={showFilters}
                         onChange={(value) => setAttributes({ showFilters: value })}
                     />
                     {showFilters && (
                         <>
                             <TextControl
-                                label={__('Industry Filter Label', 'case-studies-block')}
+                                label={__('Industry Filter Label', 'adaire-blocks')}
                                 value={industryFilterLabel}
                                 onChange={(value) => setAttributes({ industryFilterLabel: value })}
                             />
                             <TextControl
-                                label={__('Capability Filter Label', 'case-studies-block')}
+                                label={__('Capability Filter Label', 'adaire-blocks')}
                                 value={capabilityFilterLabel}
                                 onChange={(value) => setAttributes({ capabilityFilterLabel: value })}
                             />
                             <RangeControl
-                                label={__('Filter Label Font Size', 'case-studies-block')}
+                                label={__('Filter Label Font Size', 'adaire-blocks')}
                                 value={filterLabelFontSize}
                                 onChange={(value) => setAttributes({ filterLabelFontSize: value })}
                                 min={10}
                                 max={24}
                             />
                             <RangeControl
-                                label={__('Filter Border Radius', 'case-studies-block')}
+                                label={__('Filter Border Radius', 'adaire-blocks')}
                                 value={filterBorderRadius}
                                 onChange={(value) => setAttributes({ filterBorderRadius: value })}
                                 min={0}
@@ -699,42 +699,42 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Load More Settings */}
-                <PanelBody title={__('Load More Settings', 'case-studies-block')} initialOpen={false}>
+                <PanelBody title={__('Load More Settings', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Show Load More Button', 'case-studies-block')}
+                        label={__('Show Load More Button', 'adaire-blocks')}
                         checked={showLoadMore}
                         onChange={(value) => setAttributes({ showLoadMore: value })}
                     />
                     {showLoadMore && (
                         <>
                             <TextControl
-                                label={__('Button Text', 'case-studies-block')}
+                                label={__('Button Text', 'adaire-blocks')}
                                 value={loadMoreText}
                                 onChange={(value) => setAttributes({ loadMoreText: value })}
                             />
                             <RangeControl
-                                label={__('Initial Items to Show', 'case-studies-block')}
+                                label={__('Initial Items to Show', 'adaire-blocks')}
                                 value={initialCount}
                                 onChange={(value) => setAttributes({ initialCount: value })}
                                 min={1}
                                 max={24}
                             />
                             <RangeControl
-                                label={__('Items to Load Per Click', 'case-studies-block')}
+                                label={__('Items to Load Per Click', 'adaire-blocks')}
                                 value={loadMoreCount}
                                 onChange={(value) => setAttributes({ loadMoreCount: value })}
                                 min={1}
                                 max={12}
                             />
                             <RangeControl
-                                label={__('Button Font Size', 'case-studies-block')}
+                                label={__('Button Font Size', 'adaire-blocks')}
                                 value={loadMoreFontSize}
                                 onChange={(value) => setAttributes({ loadMoreFontSize: value })}
                                 min={12}
                                 max={24}
                             />
                             <SelectControl
-                                label={__('Button Font Weight', 'case-studies-block')}
+                                label={__('Button Font Weight', 'adaire-blocks')}
                                 value={loadMoreFontWeight}
                                 options={fontWeightOptions}
                                 onChange={(value) => setAttributes({ loadMoreFontWeight: value })}
@@ -744,12 +744,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Card Typography */}
-                <PanelBody title={__('Card Typography', 'case-studies-block')} initialOpen={false}>
+                <PanelBody title={__('Card Typography', 'adaire-blocks')} initialOpen={false}>
                     {/* Title Typography */}
                     <div style={{ marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid #ddd' }}>
-                        <strong style={{ display: 'block', marginBottom: '16px', fontSize: '13px' }}>{__('Title', 'case-studies-block')}</strong>
+                        <strong style={{ display: 'block', marginBottom: '16px', fontSize: '13px' }}>{__('Title', 'adaire-blocks')}</strong>
                         
-                        <p style={{ fontSize: '12px', marginBottom: '8px', color: '#666' }}>{__('Font Size', 'case-studies-block')}</p>
+                        <p style={{ fontSize: '12px', marginBottom: '8px', color: '#666' }}>{__('Font Size', 'adaire-blocks')}</p>
                         {DEVICE_TYPES.map((device) => (
                             <div key={device.key} style={{ marginBottom: '12px' }}>
                                 <span style={{ fontSize: '11px', color: '#888' }}>{device.label}</span>
@@ -779,14 +779,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ))}
 
                         <SelectControl
-                            label={__('Font Weight', 'case-studies-block')}
+                            label={__('Font Weight', 'adaire-blocks')}
                             value={titleFontWeight}
                             options={fontWeightOptions}
                             onChange={(value) => setAttributes({ titleFontWeight: value })}
                         />
 
                         <RangeControl
-                            label={__('Line Height', 'case-studies-block')}
+                            label={__('Line Height', 'adaire-blocks')}
                             value={titleLineHeight}
                             onChange={(value) => setAttributes({ titleLineHeight: value })}
                             min={1}
@@ -795,7 +795,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
 
                         <RangeControl
-                            label={__('Letter Spacing (px)', 'case-studies-block')}
+                            label={__('Letter Spacing (px)', 'adaire-blocks')}
                             value={titleLetterSpacing}
                             onChange={(value) => setAttributes({ titleLetterSpacing: value })}
                             min={-2}
@@ -806,9 +806,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                     {/* Description Typography */}
                     <div>
-                        <strong style={{ display: 'block', marginBottom: '16px', fontSize: '13px' }}>{__('Description', 'case-studies-block')}</strong>
+                        <strong style={{ display: 'block', marginBottom: '16px', fontSize: '13px' }}>{__('Description', 'adaire-blocks')}</strong>
                         
-                        <p style={{ fontSize: '12px', marginBottom: '8px', color: '#666' }}>{__('Font Size', 'case-studies-block')}</p>
+                        <p style={{ fontSize: '12px', marginBottom: '8px', color: '#666' }}>{__('Font Size', 'adaire-blocks')}</p>
                         {DEVICE_TYPES.map((device) => (
                             <div key={device.key} style={{ marginBottom: '12px' }}>
                                 <span style={{ fontSize: '11px', color: '#888' }}>{device.label}</span>
@@ -838,14 +838,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         ))}
 
                         <SelectControl
-                            label={__('Font Weight', 'case-studies-block')}
+                            label={__('Font Weight', 'adaire-blocks')}
                             value={descriptionFontWeight}
                             options={fontWeightOptions}
                             onChange={(value) => setAttributes({ descriptionFontWeight: value })}
                         />
 
                         <RangeControl
-                            label={__('Line Height', 'case-studies-block')}
+                            label={__('Line Height', 'adaire-blocks')}
                             value={descriptionLineHeight}
                             onChange={(value) => setAttributes({ descriptionLineHeight: value })}
                             min={1}
@@ -854,7 +854,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
 
                         <RangeControl
-                            label={__('Letter Spacing (px)', 'case-studies-block')}
+                            label={__('Letter Spacing (px)', 'adaire-blocks')}
                             value={descriptionLetterSpacing}
                             onChange={(value) => setAttributes({ descriptionLetterSpacing: value })}
                             min={-1}
@@ -863,79 +863,79 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
 
                         <RangeControl
-                            label={__('Max Lines', 'case-studies-block')}
+                            label={__('Max Lines', 'adaire-blocks')}
                             value={descriptionMaxLines}
                             onChange={(value) => setAttributes({ descriptionMaxLines: value })}
                             min={1}
                             max={10}
-                            help={__('Number of lines before text is truncated', 'case-studies-block')}
+                            help={__('Number of lines before text is truncated', 'adaire-blocks')}
                         />
                     </div>
                 </PanelBody>
 
                 {/* Color Settings */}
                 <PanelColorSettings
-                    title={__('Color Settings', 'case-studies-block')}
+                    title={__('Color Settings', 'adaire-blocks')}
                     initialOpen={false}
                     colorSettings={[
                         {
-                            label: __('Card Background (fallback)', 'case-studies-block'),
+                            label: __('Card Background (fallback)', 'adaire-blocks'),
                             value: cardBackgroundColor,
                             onChange: (value) => setAttributes({ cardBackgroundColor: value })
                         },
                         {
-                            label: __('Card Overlay Color', 'case-studies-block'),
+                            label: __('Card Overlay Color', 'adaire-blocks'),
                             value: overlayColor,
                             onChange: (value) => setAttributes({ overlayColor: value })
                         },
                         {
-                            label: __('Card Overlay Hover Color', 'case-studies-block'),
+                            label: __('Card Overlay Hover Color', 'adaire-blocks'),
                             value: overlayHoverColor,
                             onChange: (value) => setAttributes({ overlayHoverColor: value })
                         },
                         {
-                            label: __('Title Color', 'case-studies-block'),
+                            label: __('Title Color', 'adaire-blocks'),
                             value: titleColor,
                             onChange: (value) => setAttributes({ titleColor: value })
                         },
                         {
-                            label: __('Description Color', 'case-studies-block'),
+                            label: __('Description Color', 'adaire-blocks'),
                             value: descriptionColor,
                             onChange: (value) => setAttributes({ descriptionColor: value })
                         },
                         {
-                            label: __('Filter Label Color', 'case-studies-block'),
+                            label: __('Filter Label Color', 'adaire-blocks'),
                             value: filterLabelColor,
                             onChange: (value) => setAttributes({ filterLabelColor: value })
                         },
                         {
-                            label: __('Filter Border Color', 'case-studies-block'),
+                            label: __('Filter Border Color', 'adaire-blocks'),
                             value: filterBorderColor,
                             onChange: (value) => setAttributes({ filterBorderColor: value })
                         },
                         {
-                            label: __('Filter Background Color', 'case-studies-block'),
+                            label: __('Filter Background Color', 'adaire-blocks'),
                             value: filterBackgroundColor,
                             onChange: (value) => setAttributes({ filterBackgroundColor: value })
                         },
                         {
-                            label: __('Load More Button Color', 'case-studies-block'),
+                            label: __('Load More Button Color', 'adaire-blocks'),
                             value: loadMoreButtonColor,
                             onChange: (value) => setAttributes({ loadMoreButtonColor: value })
                         },
                         {
-                            label: __('Load More Hover Color', 'case-studies-block'),
+                            label: __('Load More Hover Color', 'adaire-blocks'),
                             value: loadMoreButtonHoverColor,
                             onChange: (value) => setAttributes({ loadMoreButtonHoverColor: value })
                         },
                         ...(enableCarousel ? [
                             {
-                                label: __('Drag Cursor Background', 'case-studies-block'),
+                                label: __('Drag Cursor Background', 'adaire-blocks'),
                                 value: dragCursorBgColor,
                                 onChange: (value) => setAttributes({ dragCursorBgColor: value })
                             },
                             {
-                                label: __('Drag Cursor Text Color', 'case-studies-block'),
+                                label: __('Drag Cursor Text Color', 'adaire-blocks'),
                                 value: dragCursorColor,
                                 onChange: (value) => setAttributes({ dragCursorColor: value })
                             }
@@ -944,9 +944,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 />
 
                 {/* Animation Settings */}
-                <PanelBody title={__('Animation Settings', 'case-studies-block')} initialOpen={false}>
+                <PanelBody title={__('Animation Settings', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('FLIP Animation Duration (s)', 'case-studies-block')}
+                        label={__('FLIP Animation Duration (s)', 'adaire-blocks')}
                         value={animationDuration}
                         onChange={(value) => setAttributes({ animationDuration: value })}
                         min={0.2}
@@ -954,13 +954,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         step={0.1}
                     />
                     <SelectControl
-                        label={__('Animation Ease', 'case-studies-block')}
+                        label={__('Animation Ease', 'adaire-blocks')}
                         value={animationEase}
                         options={easeOptions}
                         onChange={(value) => setAttributes({ animationEase: value })}
                     />
                     <RangeControl
-                        label={__('Hover Scale', 'case-studies-block')}
+                        label={__('Hover Scale', 'adaire-blocks')}
                         value={hoverScale}
                         onChange={(value) => setAttributes({ hoverScale: value })}
                         min={1}
@@ -968,7 +968,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         step={0.01}
                     />
                     <RangeControl
-                        label={__('Hover Transition Duration (s)', 'case-studies-block')}
+                        label={__('Hover Transition Duration (s)', 'adaire-blocks')}
                         value={hoverTransitionDuration}
                         onChange={(value) => setAttributes({ hoverTransitionDuration: value })}
                         min={0.1}
@@ -978,14 +978,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Case Studies Management */}
-                <PanelBody title={__('Case Studies', 'case-studies-block')} initialOpen={false}>
+                <PanelBody title={__('Case Studies', 'adaire-blocks')} initialOpen={false}>
                     <div style={{ marginBottom: '15px' }}>
                         <Button variant="primary" onClick={addCaseStudy}>
-                            {__('+ Add Case Study', 'case-studies-block')}
+                            {__('+ Add Case Study', 'adaire-blocks')}
                         </Button>
                     </div>
                     <div style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>
-                        {__('Total:', 'case-studies-block')} {caseStudies.length} {__('case studies', 'case-studies-block')}
+                        {__('Total:', 'adaire-blocks')} {caseStudies.length} {__('case studies', 'adaire-blocks')}
                     </div>
 
                     {caseStudies.map((study, index) => (
@@ -1031,7 +1031,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         }}
                                         isSmall
                                         disabled={index === 0}
-                                        label={__('Move Up', 'case-studies-block')}
+                                        label={__('Move Up', 'adaire-blocks')}
                                     />
                                     <Button
                                         icon={arrowDown}
@@ -1041,7 +1041,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         }}
                                         isSmall
                                         disabled={index === caseStudies.length - 1}
-                                        label={__('Move Down', 'case-studies-block')}
+                                        label={__('Move Down', 'adaire-blocks')}
                                     />
                                     <span
                                         style={{
@@ -1060,7 +1060,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             {expandedStudy === index && (
                                 <div style={{ padding: '15px' }}>
                                     {/* Background Image */}
-                                    <BaseControl label={__('Background Image', 'case-studies-block')}>
+                                    <BaseControl label={__('Background Image', 'adaire-blocks')}>
                                         <MediaUploadCheck>
                                             <MediaUpload
                                                 onSelect={(media) => onSelectImage(index, media)}
@@ -1082,16 +1082,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                                 />
                                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                                                                     <Button variant="secondary" onClick={open}>
-                                                                        {__('Change', 'case-studies-block')}
+                                                                        {__('Change', 'adaire-blocks')}
                                                                     </Button>
                                                                     <Button variant="secondary" isDestructive onClick={() => removeImage(index)}>
-                                                                        {__('Remove', 'case-studies-block')}
+                                                                        {__('Remove', 'adaire-blocks')}
                                                                     </Button>
                                                                 </div>
                                                             </>
                                                         ) : (
                                                             <Button variant="secondary" onClick={open}>
-                                                                {__('Select Image', 'case-studies-block')}
+                                                                {__('Select Image', 'adaire-blocks')}
                                                             </Button>
                                                         )}
                                                     </div>
@@ -1101,33 +1101,33 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     </BaseControl>
 
                                     <TextControl
-                                        label={__('Title', 'case-studies-block')}
+                                        label={__('Title', 'adaire-blocks')}
                                         value={study.title}
                                         onChange={(value) => updateCaseStudy(index, 'title', value)}
                                     />
 
                                     <TextareaControl
-                                        label={__('Description', 'case-studies-block')}
+                                        label={__('Description', 'adaire-blocks')}
                                         value={study.description}
                                         onChange={(value) => updateCaseStudy(index, 'description', value)}
                                         rows={3}
                                     />
 
                                     <TextControl
-                                        label={__('Link URL', 'case-studies-block')}
+                                        label={__('Link URL', 'adaire-blocks')}
                                         value={study.linkUrl}
                                         onChange={(value) => updateCaseStudy(index, 'linkUrl', value)}
                                         placeholder="https://..."
                                     />
 
                                     <ToggleControl
-                                        label={__('Open in New Tab', 'case-studies-block')}
+                                        label={__('Open in New Tab', 'adaire-blocks')}
                                         checked={study.openInNewTab}
                                         onChange={(value) => updateCaseStudy(index, 'openInNewTab', value)}
                                     />
 
                                     {/* Industry Selection */}
-                                    <BaseControl label={__('Industry', 'case-studies-block')}>
+                                    <BaseControl label={__('Industry', 'adaire-blocks')}>
                                         {/* Current industry display */}
                                         {study.industry && (
                                             <div style={{ marginBottom: '10px' }}>
@@ -1156,7 +1156,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                             padding: 0,
                                                             lineHeight: 1
                                                         }}
-                                                        title={__('Remove industry', 'case-studies-block')}
+                                                        title={__('Remove industry', 'adaire-blocks')}
                                                     >
                                                         Ã—
                                                     </button>
@@ -1166,7 +1166,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         
                                         {/* Industry input */}
                                         <TextControl
-                                            placeholder={__('Type industry name...', 'case-studies-block')}
+                                            placeholder={__('Type industry name...', 'adaire-blocks')}
                                             value={study.industry || ''}
                                             onChange={(value) => updateCaseStudy(index, 'industry', value)}
                                         />
@@ -1175,7 +1175,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         {getIndustrySuggestions(index).length > 0 && (
                                             <div style={{ marginTop: '8px' }}>
                                                 <p style={{ fontSize: '11px', color: '#666', marginBottom: '6px', marginTop: 0 }}>
-                                                    {__('Use existing:', 'case-studies-block')}
+                                                    {__('Use existing:', 'adaire-blocks')}
                                                 </p>
                                                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                                                     {getIndustrySuggestions(index).map(ind => (
@@ -1194,7 +1194,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     </BaseControl>
 
                                     {/* Capabilities */}
-                                    <BaseControl label={__('Capabilities', 'case-studies-block')}>
+                                    <BaseControl label={__('Capabilities', 'adaire-blocks')}>
                                         {/* Current capabilities display */}
                                         {(study.capabilities || []).length > 0 && (
                                             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
@@ -1225,7 +1225,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                                 padding: 0,
                                                                 lineHeight: 1
                                                             }}
-                                                            title={__('Remove capability', 'case-studies-block')}
+                                                            title={__('Remove capability', 'adaire-blocks')}
                                                         >
                                                             Ã—
                                                         </button>
@@ -1237,7 +1237,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         {/* Add new capability input */}
                                         <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
                                             <TextControl
-                                                placeholder={__('Type capability name...', 'case-studies-block')}
+                                                placeholder={__('Type capability name...', 'adaire-blocks')}
                                                 value={getCapabilityInput(index)}
                                                 onChange={(value) => setCapabilityInput(index, value)}
                                                 onKeyDown={(e) => {
@@ -1253,7 +1253,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                 onClick={() => handleAddCapability(index)}
                                                 disabled={!getCapabilityInput(index)?.trim()}
                                             >
-                                                {__('Add', 'case-studies-block')}
+                                                {__('Add', 'adaire-blocks')}
                                             </Button>
                                         </div>
                                         
@@ -1261,7 +1261,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         {getCapabilitySuggestions(index).length > 0 && (
                                             <div>
                                                 <p style={{ fontSize: '11px', color: '#666', marginBottom: '6px', marginTop: 0 }}>
-                                                    {__('Use existing:', 'case-studies-block')}
+                                                    {__('Use existing:', 'adaire-blocks')}
                                                 </p>
                                                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                                                     {getCapabilitySuggestions(index).map(cap => (
@@ -1281,10 +1281,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                                     <div style={{ display: 'flex', gap: '10px', marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #eee' }}>
                                         <Button variant="secondary" onClick={() => duplicateCaseStudy(index)}>
-                                            {__('Duplicate', 'case-studies-block')}
+                                            {__('Duplicate', 'adaire-blocks')}
                                         </Button>
                                         <Button variant="secondary" isDestructive onClick={() => removeCaseStudy(index)}>
-                                            {__('Delete', 'case-studies-block')}
+                                            {__('Delete', 'adaire-blocks')}
                                         </Button>
                                     </div>
                                 </div>
@@ -1302,7 +1302,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             <div className="ad-case-studies__filter-group">
                                 <select className="ad-case-studies__filter-select" disabled>
                                     <option value="">{industryFilterLabel}</option>
-                                    <option value="">{__('All Industries', 'case-studies-block')}</option>
+                                    <option value="">{__('All Industries', 'adaire-blocks')}</option>
                                     {industries.map(ind => (
                                         <option key={ind} value={ind}>{ind}</option>
                                     ))}
@@ -1314,7 +1314,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             <div className="ad-case-studies__filter-group">
                                 <select className="ad-case-studies__filter-select" disabled>
                                     <option value="">{capabilityFilterLabel}</option>
-                                    <option value="">{__('All Capabilities', 'case-studies-block')}</option>
+                                    <option value="">{__('All Capabilities', 'adaire-blocks')}</option>
                                     {capabilities.map(cap => (
                                         <option key={cap} value={cap}>{cap}</option>
                                     ))}
@@ -1345,7 +1345,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 </div>
                                 {!study.backgroundImage && (
                                     <div className="ad-case-studies__card-placeholder">
-                                        <span>{__('Click to add image', 'case-studies-block')}</span>
+                                        <span>{__('Click to add image', 'adaire-blocks')}</span>
                                     </div>
                                 )}
                             </div>
@@ -1364,9 +1364,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     {/* Helper text */}
                     {caseStudies.length === 0 && (
                         <div className="ad-case-studies__empty">
-                            <p>{__('No case studies yet. Add one from the sidebar.', 'case-studies-block')}</p>
+                            <p>{__('No case studies yet. Add one from the sidebar.', 'adaire-blocks')}</p>
                             <Button variant="primary" onClick={addCaseStudy}>
-                                {__('+ Add Case Study', 'case-studies-block')}
+                                {__('+ Add Case Study', 'adaire-blocks')}
                             </Button>
                         </div>
                     )}

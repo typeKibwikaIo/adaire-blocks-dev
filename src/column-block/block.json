@@ -20,11 +20,13 @@
     },
     "horizontalAlign": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "enum": [ "", "left", "center", "right" ]
     },
     "verticalAlign": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "enum": [ "", "center", "bottom" ]
     },
     "borderEnabled": {
       "type": "boolean",
@@ -36,7 +38,8 @@
     },
     "borderStyle": {
       "type": "string",
-      "default": "solid"
+      "default": "solid",
+      "enum": [ "solid", "dashed", "dotted", "double", "groove" ]
     },
     "borderColor": {
       "type": "string",

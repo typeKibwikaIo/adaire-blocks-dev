@@ -17,7 +17,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "constrained"
+            "default": "constrained",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "mainHeading": {
             "type": "string",
@@ -128,7 +132,12 @@
         },
         "overlayType": {
             "type": "string",
-            "default": "solid"
+            "default": "solid",
+            "enum": [
+                "none",
+                "solid",
+                "gradient"
+            ]
         },
         "overlayColor": {
             "type": "string",
@@ -383,7 +392,7 @@
             }
         }
     },
-    "textdomain": "adaire-blocks-dev2",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css"

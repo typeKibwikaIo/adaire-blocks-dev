@@ -24,30 +24,30 @@ import "./editor.scss";
 
 const DEFAULT_COLORS = [
 	{
-		name: __("Dark Navy", "our-process-block"),
+		name: __("Dark Navy", "adaire-blocks"),
 		slug: "dark-navy",
 		color: "#0a0e27",
 	},
 	{
-		name: __("Dark Blue", "our-process-block"),
+		name: __("Dark Blue", "adaire-blocks"),
 		slug: "dark-blue",
 		color: "#1a1f3a",
 	},
 	{
-		name: __("White", "our-process-block"),
+		name: __("White", "adaire-blocks"),
 		slug: "white",
 		color: "#ffffff",
 	},
 	{
-		name: __("Slate", "our-process-block"),
+		name: __("Slate", "adaire-blocks"),
 		slug: "slate",
 		color: "#94a3b8",
 	},
 ];
 
 const CONTAINER_MODES = [
-	{ label: __("Full Width", "our-process-block"), value: "full" },
-	{ label: __("Constrained", "our-process-block"), value: "constrained" },
+	{ label: __("Full Width", "adaire-blocks"), value: "full" },
+	{ label: __("Constrained", "adaire-blocks"), value: "constrained" },
 ];
 
 // Custom icons for small laptop and big desktop
@@ -106,17 +106,17 @@ const bigDesktopIcon = createElement('svg', {
 );
 
 const BREAKPOINTS = [
-	{ name: 'mobile', icon: mobile, label: __("Mobile", "our-process-block") },
-	{ name: 'tablet', icon: tablet, label: __("Tablet", "our-process-block") },
-	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __("Small Laptop", "our-process-block") },
-	{ name: 'desktop', icon: desktop, label: __("Desktop", "our-process-block") },
-	{ name: 'bigDesktop', icon: bigDesktopIcon, label: __("Big Desktop", "our-process-block") }
+	{ name: 'mobile', icon: mobile, label: __("Mobile", "adaire-blocks") },
+	{ name: 'tablet', icon: tablet, label: __("Tablet", "adaire-blocks") },
+	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __("Small Laptop", "adaire-blocks") },
+	{ name: 'desktop', icon: desktop, label: __("Desktop", "adaire-blocks") },
+	{ name: 'bigDesktop', icon: bigDesktopIcon, label: __("Big Desktop", "adaire-blocks") }
 ];
 
 const DEVICE_TYPES = [
-	{ key: "desktop", label: __("Desktop", "our-process-block") },
-	{ key: "tablet", label: __("Tablet", "our-process-block") },
-	{ key: "mobile", label: __("Mobile", "our-process-block") },
+	{ key: "desktop", label: __("Desktop", "adaire-blocks") },
+	{ key: "tablet", label: __("Tablet", "adaire-blocks") },
+	{ key: "mobile", label: __("Mobile", "adaire-blocks") },
 ];
 
 const UNIT_OPTIONS = ["px", "%", "rem", "vw"];
@@ -203,7 +203,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 		const newStep = {
 			id: `step-${Date.now()}`,
 			icon: "bi bi-star",
-			title: __("New Step", "our-process-block"),
+			title: __("New Step", "adaire-blocks"),
 			description: "",
 			linkUrl: "",
 			openInNewTab: false,
@@ -384,8 +384,8 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody title={__("Layout", "our-process-block")} initialOpen={true}>
-					<p>{__("Container Width", "our-process-block")}</p>
+				<PanelBody title={__("Layout", "adaire-blocks")} initialOpen={true}>
+					<p>{__("Container Width", "adaire-blocks")}</p>
 					<ButtonGroup>
 						{CONTAINER_MODES.map((mode) => (
 							<Button
@@ -430,7 +430,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 
 										return (
 											<RangeControl
-												label={__("Max Width", "our-process-block")}
+												label={__("Max Width", "adaire-blocks")}
 												value={value}
 												onChange={(rangeValue) =>
 													updateContainerDimension(
@@ -468,7 +468,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 					</div>
 
 					<RangeControl
-						label={__("Grid Columns (Desktop)", "our-process-block")}
+						label={__("Grid Columns (Desktop)", "adaire-blocks")}
 						value={gridColumns?.desktop || 3}
 						onChange={(value) =>
 							setAttributes({
@@ -480,7 +480,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 					/>
 
 					<RangeControl
-						label={__("Grid Columns (Tablet)", "our-process-block")}
+						label={__("Grid Columns (Tablet)", "adaire-blocks")}
 						value={gridColumns?.tablet || 2}
 						onChange={(value) =>
 							setAttributes({
@@ -492,7 +492,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 					/>
 
 					<RangeControl
-						label={__("Grid Columns (Mobile)", "our-process-block")}
+						label={__("Grid Columns (Mobile)", "adaire-blocks")}
 						value={gridColumns?.mobile || 1}
 						onChange={(value) =>
 							setAttributes({
@@ -503,7 +503,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 						max={2}
 					/>
 
-					<p style={{ marginTop: "16px" }}><strong>{__("Grid Gap", "our-process-block")}</strong></p>
+					<p style={{ marginTop: "16px" }}><strong>{__("Grid Gap", "adaire-blocks")}</strong></p>
 					{DEVICE_TYPES.map((device) => (
 						<div key={device.key}>
 							<RangeControl
@@ -523,21 +523,21 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 					))}
 				</PanelBody>
 
-				<PanelBody title={__("Content", "our-process-block")} initialOpen={false}>
+				<PanelBody title={__("Content", "adaire-blocks")} initialOpen={false}>
 					<TextControl
-						label={__("Heading", "our-process-block")}
+						label={__("Heading", "adaire-blocks")}
 						value={heading}
 						onChange={(value) => setAttributes({ heading: value })}
 					/>
 					<TextControl
-						label={__("Subheading", "our-process-block")}
+						label={__("Subheading", "adaire-blocks")}
 						value={subheading}
 						onChange={(value) => setAttributes({ subheading: value })}
 					/>
 				</PanelBody>
 
 				<PanelBody
-					title={__("Process Steps", "our-process-block")}
+					title={__("Process Steps", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p className="adaire-our-process__panel-help">
@@ -560,7 +560,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 								}}
 							>
 								<strong>
-									{sprintf(__("Step %d", "our-process-block"), index + 1)}
+									{sprintf(__("Step %d", "adaire-blocks"), index + 1)}
 								</strong>
 								<div style={{ display: "flex", gap: "4px" }}>
 									<Button
@@ -568,14 +568,14 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 										onClick={() => moveStepUp(index)}
 										isSmall
 										disabled={index === 0}
-										label={__("Move Up", "our-process-block")}
+										label={__("Move Up", "adaire-blocks")}
 									/>
 									<Button
 										icon={arrowDown}
 										onClick={() => moveStepDown(index)}
 										isSmall
 										disabled={index === processSteps.length - 1}
-										label={__("Move Down", "our-process-block")}
+										label={__("Move Down", "adaire-blocks")}
 									/>
 									{processSteps.length > 1 && (
 										<Button
@@ -583,12 +583,12 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 											onClick={() => removeProcessStep(index)}
 											isSmall
 											isDestructive
-											label={__("Remove", "our-process-block")}
+											label={__("Remove", "adaire-blocks")}
 										/>
 									)}
 								</div>
 							</div>
-							<BaseControl label={__("Icon", "our-process-block")}>
+							<BaseControl label={__("Icon", "adaire-blocks")}>
 								<Button
 									onClick={() => setIconPickerOpenFor(index)}
 									variant="secondary"
@@ -603,7 +603,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 											{item.icon}
 										</>
 									) : (
-										__("Choose Bootstrap Icon", "our-process-block")
+										__("Choose Bootstrap Icon", "adaire-blocks")
 									)}
 								</Button>
 								{item.icon && (
@@ -617,12 +617,12 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 										isDestructive
 										style={{ width: "100%" }}
 									>
-										{__("Remove Icon", "our-process-block")}
+										{__("Remove Icon", "adaire-blocks")}
 									</Button>
 								)}
 							</BaseControl>
 							<TextControl
-								label={__("Title", "our-process-block")}
+								label={__("Title", "adaire-blocks")}
 								value={item.title}
 								onChange={(value) => {
 									const nextSteps = [...processSteps];
@@ -631,7 +631,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 								}}
 							/>
 							<TextControl
-								label={__("Link URL", "our-process-block")}
+								label={__("Link URL", "adaire-blocks")}
 								help={__(
 									"Supports full URLs or site-relative paths like /contact.",
 									"our-process-block",
@@ -645,7 +645,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 								placeholder="https://example.com"
 							/>
 							<ToggleControl
-								label={__("Open link in new tab", "our-process-block")}
+								label={__("Open link in new tab", "adaire-blocks")}
 								checked={!!item.openInNewTab}
 								disabled={!item.linkUrl}
 								onChange={(value) => {
@@ -665,97 +665,97 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 						variant="secondary"
 						style={{ marginTop: "12px" }}
 					>
-						{__("Add Process Step", "our-process-block")}
+						{__("Add Process Step", "adaire-blocks")}
 					</Button>
 				</PanelBody>
 
 				<PanelColorSettings
-					title={__("Colors", "our-process-block")}
+					title={__("Colors", "adaire-blocks")}
 					initialOpen={false}
 					colorSettings={[
 						{
 							value: backgroundColor,
 							onChange: (value) => setAttributes({ backgroundColor: value }),
-							label: __("Background Color", "our-process-block"),
+							label: __("Background Color", "adaire-blocks"),
 							colors: DEFAULT_COLORS,
 						},
 						{
 							value: headingColor,
 							onChange: (value) => setAttributes({ headingColor: value }),
-							label: __("Heading Color", "our-process-block"),
+							label: __("Heading Color", "adaire-blocks"),
 							colors: DEFAULT_COLORS,
 						},
 						{
 							value: subheadingColor,
 							onChange: (value) => setAttributes({ subheadingColor: value }),
-							label: __("Subheading Color", "our-process-block"),
+							label: __("Subheading Color", "adaire-blocks"),
 							colors: DEFAULT_COLORS,
 						},
 						{
 							value: boxBackgroundColor,
 							onChange: (value) => setAttributes({ boxBackgroundColor: value }),
-							label: __("Box Background", "our-process-block"),
+							label: __("Box Background", "adaire-blocks"),
 							colors: DEFAULT_COLORS,
 						},
 						{
 							value: boxBorderColor,
 							onChange: (value) => setAttributes({ boxBorderColor: value }),
-							label: __("Box Border", "our-process-block"),
+							label: __("Box Border", "adaire-blocks"),
 							colors: DEFAULT_COLORS,
 						},
 						{
 							value: boxHoverBackgroundColor,
 							onChange: (value) =>
 								setAttributes({ boxHoverBackgroundColor: value }),
-							label: __("Box Hover Background", "our-process-block"),
+							label: __("Box Hover Background", "adaire-blocks"),
 							colors: DEFAULT_COLORS,
 						},
 						{
 							value: boxHoverBorderColor,
 							onChange: (value) =>
 								setAttributes({ boxHoverBorderColor: value }),
-							label: __("Box Hover Border", "our-process-block"),
+							label: __("Box Hover Border", "adaire-blocks"),
 							colors: DEFAULT_COLORS,
 						},
 						{
 							value: iconColor,
 							onChange: (value) => setAttributes({ iconColor: value }),
-							label: __("Icon Color", "our-process-block"),
+							label: __("Icon Color", "adaire-blocks"),
 							colors: DEFAULT_COLORS,
 						},
 						{
 							value: titleColor,
 							onChange: (value) => setAttributes({ titleColor: value }),
-							label: __("Title Color", "our-process-block"),
+							label: __("Title Color", "adaire-blocks"),
 							colors: DEFAULT_COLORS,
 						},
 					]}
 				/>
 
-				<PanelBody title={__("Box Styling", "our-process-block")} initialOpen={false}>
+				<PanelBody title={__("Box Styling", "adaire-blocks")} initialOpen={false}>
 					<RangeControl
-						label={__("Box Padding", "our-process-block")}
+						label={__("Box Padding", "adaire-blocks")}
 						value={boxPadding}
 						onChange={(value) => setAttributes({ boxPadding: value })}
 						min={0}
 						max={64}
 					/>
 					<RangeControl
-						label={__("Box Border Radius", "our-process-block")}
+						label={__("Box Border Radius", "adaire-blocks")}
 						value={boxBorderRadius}
 						onChange={(value) => setAttributes({ boxBorderRadius: value })}
 						min={0}
 						max={32}
 					/>
 					<RangeControl
-						label={__("Box Border Width", "our-process-block")}
+						label={__("Box Border Width", "adaire-blocks")}
 						value={boxBorderWidth}
 						onChange={(value) => setAttributes({ boxBorderWidth: value })}
 						min={0}
 						max={8}
 					/>
 					<RangeControl
-						label={__("Icon Size", "our-process-block")}
+						label={__("Icon Size", "adaire-blocks")}
 						value={iconSize}
 						onChange={(value) => setAttributes({ iconSize: value })}
 						min={16}
@@ -764,34 +764,34 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 				</PanelBody>
 
 				<PanelBody
-					title={__("Padding", "our-process-block")}
+					title={__("Padding", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Device", "our-process-block")}
+						{__("Device", "adaire-blocks")}
 					</p>
 					<ButtonGroup style={{ marginBottom: "12px", flexWrap: "wrap" }}>
 						<Button
 							icon={mobile}
 							isPrimary={deviceType === "mobile"}
 							onClick={() => setDeviceType("mobile")}
-							label={__("Mobile", "our-process-block")}
+							label={__("Mobile", "adaire-blocks")}
 						/>
 						<Button
 							icon={tablet}
 							isPrimary={deviceType === "tablet"}
 							onClick={() => setDeviceType("tablet")}
-							label={__("Tablet", "our-process-block")}
+							label={__("Tablet", "adaire-blocks")}
 						/>
 						<Button
 							icon={desktop}
 							isPrimary={deviceType === "desktop"}
 							onClick={() => setDeviceType("desktop")}
-							label={__("Desktop", "our-process-block")}
+							label={__("Desktop", "adaire-blocks")}
 						/>
 					</ButtonGroup>
 					<BoxControl
-						label={__("Padding", "our-process-block")}
+						label={__("Padding", "adaire-blocks")}
 						values={{
 							top: `${paddingTop?.[deviceType] ?? (deviceType === "desktop" ? 80 : deviceType === "tablet" ? 60 : 40)}px`,
 							right: `${paddingRight?.[deviceType] ?? 20}px`,
@@ -822,10 +822,10 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 				</PanelBody>
 
 				<PanelBody
-					title={__("Typography", "our-process-block")}
+					title={__("Typography", "adaire-blocks")}
 					initialOpen={false}
 				>
-					<p><strong>{__("Heading Font Size", "our-process-block")}</strong></p>
+					<p><strong>{__("Heading Font Size", "adaire-blocks")}</strong></p>
 					{DEVICE_TYPES.map((device) => (
 						<div key={device.key}>
 							<RangeControl
@@ -840,7 +840,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 						</div>
 					))}
 
-					<p style={{ marginTop: "16px" }}><strong>{__("Subheading Font Size", "our-process-block")}</strong></p>
+					<p style={{ marginTop: "16px" }}><strong>{__("Subheading Font Size", "adaire-blocks")}</strong></p>
 					{DEVICE_TYPES.map((device) => (
 						<div key={device.key}>
 							<RangeControl
@@ -855,7 +855,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 						</div>
 					))}
 
-					<p style={{ marginTop: "16px" }}><strong>{__("Title Font Size", "our-process-block")}</strong></p>
+					<p style={{ marginTop: "16px" }}><strong>{__("Title Font Size", "adaire-blocks")}</strong></p>
 					{DEVICE_TYPES.map((device) => (
 						<div key={device.key}>
 							<RangeControl
@@ -899,27 +899,27 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 							tagName="h2"
 							value={heading}
 							onChange={(value) => setAttributes({ heading: value })}
-							placeholder={__("Enter heading...", "our-process-block")}
+							placeholder={__("Enter heading...", "adaire-blocks")}
 							className="adaire-our-process__heading"
 						/>
 						<RichText
 							tagName="p"
 							value={subheading}
 							onChange={(value) => setAttributes({ subheading: value })}
-							placeholder={__("Enter subheading...", "our-process-block")}
+							placeholder={__("Enter subheading...", "adaire-blocks")}
 							className="adaire-our-process__subheading"
 						/>
 					</div>
 
 					<QuickZone
 						id="layout"
-						label={__("Layout", "our-process-block")}
+						label={__("Layout", "adaire-blocks")}
 						activeZone={activeZone}
 						setActiveZone={setActiveZone}
 						content={
 							<>
 								<RangeControl
-									label={__("Grid Columns (Desktop)", "our-process-block")}
+									label={__("Grid Columns (Desktop)", "adaire-blocks")}
 									value={gridColumns?.desktop || 3}
 									onChange={(value) =>
 										setAttributes({
@@ -930,7 +930,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 									max={6}
 								/>
 								<RangeControl
-									label={__("Grid Gap", "our-process-block")}
+									label={__("Grid Gap", "adaire-blocks")}
 									value={gridGap?.desktop ?? 16}
 									onChange={(value) =>
 										setAttributes({
@@ -976,7 +976,7 @@ const OurProcessEdit = ({ attributes, setAttributes, clientId }) => {
 										nextSteps[index] = { ...nextSteps[index], title: value };
 										setAttributes({ processSteps: nextSteps });
 									}}
-									placeholder={__("Step title...", "our-process-block")}
+									placeholder={__("Step title...", "adaire-blocks")}
 									className="adaire-our-process__step-title"
 									allowedFormats={[]}
 								/>

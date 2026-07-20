@@ -16,7 +16,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "content-toggle-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -28,7 +28,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "constrained"
+            "default": "constrained",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",
@@ -70,7 +74,13 @@
         },
         "pillStyle": {
             "type": "string",
-            "default": "default"
+            "default": "default",
+            "enum": [
+                "default",
+                "rounded",
+                "outlined",
+                "filled"
+            ]
         },
         "pillBackgroundColor": {
             "type": "string",
@@ -119,11 +129,23 @@
         },
         "pillFontWeight": {
             "type": "string",
-            "default": "500"
+            "default": "500",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "pillActiveFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "pillLineHeight": {
             "type": "string",
@@ -135,11 +157,23 @@
         },
         "pillTextTransform": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [ "none", "uppercase", "lowercase", "capitalize" ]
         },
         "fontFamily": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+                "",
+                "Arial, Helvetica, sans-serif",
+                "Helvetica, Arial, sans-serif",
+                "Georgia, serif",
+                "'Times New Roman', Times, serif",
+                "Verdana, Geneva, sans-serif",
+                "'Trebuchet MS', sans-serif",
+                "'Courier New', Courier, monospace",
+                "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+            ]
         },
         "contentBackgroundColor": {
             "type": "string",
@@ -177,7 +211,11 @@
         },
         "togglePosition": {
             "type": "string",
-            "default": "top"
+            "default": "top",
+            "enum": [
+                "top",
+                "bottom"
+            ]
         },
         "wrapperBackgroundColor": {
             "type": "string",
@@ -208,7 +246,12 @@
         },
         "pillAlign": {
             "type": "string",
-            "default": "flex-start"
+            "default": "flex-start",
+            "enum": [
+                "flex-start",
+                "center",
+                "flex-end"
+            ]
         },
         "animationDuration": {
             "type": "number",
@@ -216,7 +259,11 @@
         },
         "animationEase": {
             "type": "string",
-            "default": "power2.out"
+            "default": "power2.out",
+            "enum": [
+                "power2.out",
+                "power2.in"
+            ]
         }
     }
 }

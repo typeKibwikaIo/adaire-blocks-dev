@@ -1,19 +1,30 @@
 /**
  * License Page Styles for Adaire Blocks
+ * Retheme of the Adaire Blocks admin design system (see adaire-admin-theme.css)
+ * — same class names/structure as before, just restyled.
  *
  * @package AdaireBlocks
  */
 
 .adaire-license-container {
-    max-width: 800px;
+    max-width: 900px;
+    font-family: var(--aa-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
 }
 
 .adaire-license-header {
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
 .adaire-license-header h2 {
-    margin-bottom: 10px;
+    margin: 0 0 6px;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.005em;
+    color: var(--aa-ink, #14181f);
+}
+
+.adaire-license-header .description {
+    color: var(--aa-muted, #6b7280);
 }
 
 .adaire-license-content {
@@ -22,14 +33,14 @@
 }
 
 .adaire-license-card {
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    background: var(--aa-panel, #fff);
+    border: 1px solid var(--aa-line, rgba(20,24,31,0.1));
+    border-radius: var(--aa-radius-lg, 16px);
+    box-shadow: var(--aa-shadow-sm, 0 1px 2px rgba(20,24,31,0.05));
 }
 
 .adaire-license-card-header {
-    padding: 20px 20px 0;
+    padding: 20px 24px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -37,52 +48,56 @@
 
 .adaire-license-card-header h3 {
     margin: 0;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--aa-ink, #14181f);
 }
 
 .adaire-license-card-content {
-    padding: 20px;
+    padding: 20px 24px 24px;
 }
 
 .adaire-license-status-badge {
     padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
 }
 
 .adaire-license-status-badge.status-active {
-    background: #d4edda;
-    color: #155724;
+    background: var(--aa-success-soft, rgba(22,163,74,0.1));
+    color: var(--aa-success, #16a34a);
 }
 
 .adaire-license-status-badge.status-inactive {
-    background: #f8d7da;
-    color: #721c24;
+    background: var(--aa-danger-soft, rgba(220,38,38,0.08));
+    color: var(--aa-danger, #dc2626);
 }
 
 .adaire-license-info p {
     margin: 8px 0;
+    font-size: 13.5px;
 }
 
 .status-active {
-    color: #155724;
+    color: var(--aa-success, #16a34a);
     font-weight: 600;
 }
 
 .status-inactive {
-    color: #721c24;
+    color: var(--aa-danger, #dc2626);
     font-weight: 600;
 }
 
 .adaire-license-message {
-    color: #666;
+    color: var(--aa-muted, #6b7280);
     font-style: italic;
 }
 
 .adaire-license-form {
-    margin-top: 15px;
+    margin-top: 4px;
 }
 
 .adaire-license-input-group {
@@ -91,23 +106,34 @@
 
 .adaire-license-input-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    font-size: 12.5px;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--aa-muted, #6b7280);
 }
 
 .adaire-license-input-group input {
     width: 100%;
-    max-width: 400px;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    max-width: 420px;
+    padding: 10px 14px;
+    border: 1.4px solid var(--aa-line, rgba(20,24,31,0.1));
+    border-radius: var(--aa-radius-sm, 8px);
     font-size: 14px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .adaire-license-input-group input:focus {
-    border-color: #0073aa;
-    box-shadow: 0 0 0 1px #0073aa;
+    border-color: var(--aa-accent, #6366f1);
+    box-shadow: 0 0 0 3px var(--aa-accent-soft, rgba(99,102,241,0.1));
     outline: none;
+}
+
+.adaire-license-input-group .description {
+    color: var(--aa-muted, #6b7280);
+    font-size: 12.5px;
+    margin-top: 6px;
 }
 
 .adaire-license-actions {
@@ -116,10 +142,43 @@
     flex-wrap: wrap;
 }
 
+/* Buttons keep the native `.button` class for JS/accessibility compatibility,
+   restyled to match the pill-button language used across the plugin. */
 .adaire-license-actions .button {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 9px 18px;
+    border-radius: 100px;
+    border: 1.4px solid var(--aa-line, rgba(20,24,31,0.1));
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.adaire-license-actions .button-primary {
+    background: var(--aa-accent, #6366f1);
+    border-color: var(--aa-accent, #6366f1);
+    color: #fff;
+}
+
+.adaire-license-actions .button-primary:hover,
+.adaire-license-actions .button-primary:focus {
+    background: var(--aa-accent-dark, #4f46e5);
+    border-color: var(--aa-accent-dark, #4f46e5);
+    color: #fff;
+}
+
+.adaire-license-actions .button-secondary {
+    background: #fff;
+    color: var(--aa-ink, #14181f);
+}
+
+.adaire-license-actions .button-secondary:hover,
+.adaire-license-actions .button-secondary:focus {
+    border-color: rgba(20,24,31,0.28);
+    color: var(--aa-ink, #14181f);
 }
 
 .adaire-license-actions .dashicons {
@@ -130,7 +189,10 @@
 
 .adaire-license-info-text h4 {
     margin-top: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--aa-ink, #14181f);
 }
 
 .adaire-license-info-text h4:first-child {
@@ -142,7 +204,14 @@
 }
 
 .adaire-license-info-text li {
-    margin: 5px 0;
+    margin: 6px 0;
+    font-size: 13.5px;
+    color: var(--aa-muted, #6b7280);
+}
+
+.adaire-license-info-text p {
+    font-size: 13.5px;
+    color: var(--aa-muted, #6b7280);
 }
 
 .adaire-license-messages {
@@ -150,25 +219,26 @@
 }
 
 .adaire-license-message-item {
-    padding: 12px 16px;
-    border-radius: 4px;
+    padding: 14px 16px;
+    border-radius: var(--aa-radius-md, 12px);
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 13.5px;
     animation: slideIn 0.3s ease-out;
 }
 
 .adaire-license-message-item.success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: var(--aa-success-soft, rgba(22,163,74,0.1));
+    color: #15803d;
+    border: 1px solid rgba(22,163,74,0.2);
 }
 
 .adaire-license-message-item.error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: var(--aa-danger-soft, rgba(220,38,38,0.08));
+    color: #b91c1c;
+    border: 1px solid rgba(220,38,38,0.2);
 }
 
 .adaire-license-message-item .dashicons {
@@ -221,24 +291,23 @@
     .adaire-license-container {
         max-width: 100%;
     }
-    
+
     .adaire-license-card-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
-    
+
     .adaire-license-actions {
         flex-direction: column;
     }
-    
+
     .adaire-license-actions .button {
         width: 100%;
         justify-content: center;
     }
-    
+
     .adaire-license-input-group input {
         max-width: 100%;
     }
 }
-

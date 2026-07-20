@@ -1,168 +1,189 @@
 {
-  "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 3,
-  "name": "create-block/live-streamer-block",
-  "version": "0.1.0",
-  "title": "Live Streamer",
-  "category": "adaire-media-videos",
-  "description": "Live Streamer block for Adaire Blocks.",
-  "supports": {
-    "html": false,
-    "anchor": true
-  },
-  "textdomain": "live-streamer-block",
-  "editorScript": "file:./index.js",
-  "viewScript": "file:./view.js",
-  "editorStyle": "file:./index.css",
-  "style": "file:./style-index.css",
-  "attributes": {
-    "eyebrow": {
-      "type": "string",
-      "default": "Live"
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "create-block/live-streamer-block",
+    "version": "0.1.0",
+    "title": "Live Streamer",
+    "category": "adaire-media-videos",
+    "description": "Live Streamer block for Adaire Blocks.",
+    "supports": {
+        "html": false,
+        "anchor": true
     },
-    "heading": {
-      "type": "string",
-      "default": "Watch the live stream"
-    },
-    "text": {
-      "type": "string",
-      "default": "Embed or link to streams from YouTube, Facebook, Instagram, TikTok, Snapchat, and more."
-    },
-    "buttonText": {
-      "type": "string",
-      "default": "Watch live"
-    },
-    "buttonUrl": {
-      "type": "string",
-      "default": "#"
-    },
-    "accentColor": {
-      "type": "string",
-      "default": "#d52940"
-    },
-    "backgroundColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "textColor": {
-      "type": "string",
-      "default": "#ffffff"
-    },
-    "streamUrl": {
-      "type": "string",
-      "default": ""
-    },
-    "embedCode": {
-      "type": "string",
-      "default": ""
-    },
-    "platform": {
-      "type": "string",
-      "default": "youtube"
-    },
-    "isLive": {
-      "type": "boolean",
-      "default": true
-    },
-    "offlineMessage": {
-      "type": "string",
-      "default": "We are offline. Check back for the next stream."
-    },
-    "offlineImage": {
-      "type": "string",
-      "default": ""
-    },
-    "chatEmbedUrl": {
-      "type": "string",
-      "default": ""
-    },
-    "showChat": {
-      "type": "boolean",
-      "default": true
-    },
-    "viewerCount": {
-      "type": "string",
-      "default": "1.2k watching"
-    },
-    "nextStreamDate": {
-      "type": "string",
-      "default": ""
-    },
-    "autoRefresh": {
-      "type": "boolean",
-      "default": false
-    },
-    "notifyText": {
-      "type": "string",
-      "default": "Notify me"
-    },
-    "vodUrl": {
-      "type": "string",
-      "default": ""
-    },
-    "pictureInPicture": {
-      "type": "boolean",
-      "default": true
-    },
-    "aspectRatio": {
-      "type": "string",
-      "default": "16 / 9"
-    },
-    "playerWidth": {
-      "type": "string",
-      "default": "full"
-    },
-    "chatPlacement": {
-      "type": "string",
-      "default": "right"
-    },
-    "chatWidth": {
-      "type": "number",
-      "default": 34
-    },
-    "liveColor": {
-      "type": "string",
-      "default": "#ef4444"
-    },
-    "pulse": {
-      "type": "boolean",
-      "default": true
-    },
-    "buttonWidth": {
-      "type": "string",
-      "default": "auto"
-    },
-    "buttonHeight": {
-      "type": "string",
-      "default": "auto"
-    },
-    "buttonHoverColor": {
-      "type": "string",
-      "default": "#ffffff"
-    },
-    "buttonHoverBackgroundColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "buttonHoverBorderColor": {
-      "type": "string",
-      "default": "#111827"
-    },
-    "buttonHoverEffect": {
-      "type": "string",
-      "default": "lift"
-    },
-    "backgroundType": {
-      "type": "string",
-      "default": "solid"
-    },
-    "backgroundImage": {
-      "type": "string",
-      "default": ""
-    },
-    "backgroundGradient": {
-      "type": "string",
-      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    "textdomain": "adaire-blocks",
+    "editorScript": "file:./index.js",
+    "viewScript": "file:./view.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style-index.css",
+    "attributes": {
+        "eyebrow": {
+            "type": "string",
+            "default": "Live"
+        },
+        "heading": {
+            "type": "string",
+            "default": "Watch the live stream"
+        },
+        "text": {
+            "type": "string",
+            "default": "Embed or link to streams from YouTube, Facebook, Instagram, TikTok, Snapchat, and more."
+        },
+        "buttonText": {
+            "type": "string",
+            "default": "Watch live"
+        },
+        "buttonUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "accentColor": {
+            "type": "string",
+            "default": "#d52940"
+        },
+        "backgroundColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "textColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "streamUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "embedCode": {
+            "type": "string",
+            "default": ""
+        },
+        "platform": {
+            "type": "string",
+            "default": "youtube",
+            "enum": [
+                "youtube",
+                "twitch",
+                "vimeo",
+                "facebook",
+                "instagram",
+                "tiktok",
+                "snapchat",
+                "custom"
+            ]
+        },
+        "isLive": {
+            "type": "boolean",
+            "default": true
+        },
+        "offlineMessage": {
+            "type": "string",
+            "default": "We are offline. Check back for the next stream."
+        },
+        "offlineImage": {
+            "type": "string",
+            "default": ""
+        },
+        "chatEmbedUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "showChat": {
+            "type": "boolean",
+            "default": true
+        },
+        "viewerCount": {
+            "type": "string",
+            "default": "1.2k watching"
+        },
+        "nextStreamDate": {
+            "type": "string",
+            "default": ""
+        },
+        "autoRefresh": {
+            "type": "boolean",
+            "default": false
+        },
+        "notifyText": {
+            "type": "string",
+            "default": "Notify me"
+        },
+        "vodUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "pictureInPicture": {
+            "type": "boolean",
+            "default": true
+        },
+        "aspectRatio": {
+            "type": "string",
+            "default": "16 / 9"
+        },
+        "playerWidth": {
+            "type": "string",
+            "default": "full"
+        },
+        "chatPlacement": {
+            "type": "string",
+            "default": "right"
+        },
+        "chatWidth": {
+            "type": "number",
+            "default": 34
+        },
+        "liveColor": {
+            "type": "string",
+            "default": "#ef4444"
+        },
+        "pulse": {
+            "type": "boolean",
+            "default": true
+        },
+        "buttonWidth": {
+            "type": "string",
+            "default": "auto"
+        },
+        "buttonHeight": {
+            "type": "string",
+            "default": "auto"
+        },
+        "buttonHoverColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "buttonHoverBackgroundColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "buttonHoverBorderColor": {
+            "type": "string",
+            "default": "#111827"
+        },
+        "buttonHoverEffect": {
+            "type": "string",
+            "default": "lift",
+            "enum": [
+                "lift",
+                "glow",
+                "darken",
+                "none"
+            ]
+        },
+        "backgroundType": {
+            "type": "string",
+            "default": "solid",
+            "enum": [
+                "solid",
+                "gradient",
+                "image"
+            ]
+        },
+        "backgroundImage": {
+            "type": "string",
+            "default": ""
+        },
+        "backgroundGradient": {
+            "type": "string",
+            "default": "linear-gradient(135deg,#111827,#3b0764)"
+        }
     }
-  }
 }

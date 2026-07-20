@@ -1,11 +1,14 @@
 import { __ } from '@wordpress/i18n';
-import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
-import { PanelBody, RangeControl, BaseControl, ToggleControl, SelectControl } from '@wordpress/components';
+import { useBlockProps, useInnerBlocksProps, RichText } from '@wordpress/block-editor';
+import { PanelBody, RangeControl, BaseControl, ToggleControl, SelectControl, TextControl, Button } from '@wordpress/components';
 import { desktop, tablet, mobile } from '@wordpress/icons';
 import { useEffect, useMemo, useState, createElement } from '@wordpress/element';
+import { useDispatch } from '@wordpress/data';
+import { createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import InspectorTabs from '../components/InspectorTabs';
 import DeviceSwitcher from '../components/DeviceSwitcher';
 import AdaireColorControl from '../components/AdaireColorControl';
+import { MODAL_LAYOUTS, getModalLayout } from './modal-layouts';
 
 // ── Icon helpers ───────────────────────────────────────────────────────────────
 
@@ -26,9 +29,6 @@ const MODAL_TIERS = [
     { key: 'desktop',     label: 'Desktop',       icon: desktop },
     { key: 'bigDesktop',  label: 'Big Desktop',   icon: bigDesktopIcon },
 ];
-
-const TEMPLATE      = [['create-block/modal-trigger-block'], ['create-block/modal-content-block']];
-const ALLOWED_BLOCKS = ['create-block/modal-trigger-block', 'create-block/modal-content-block'];
 
 // ── VisualPicker ─────────────────────────────────────────────────────────────
 // Renders a row/grid of icon+label buttons; selected item gets a highlighted ring.
@@ -75,6 +75,72 @@ function VisualPicker({ options, value, onChange, columns = 0 }) {
         </div>
     );
 }
+
+// ── Trigger type / floating position icons ─────────────────────────────────────
+
+const TRIGGER_TYPE_OPTIONS = [
+    {
+        value: 'button', label: 'Inline',
+        icon: (
+            <svg width="40" height="28" viewBox="0 0 40 28" fill="none">
+                <rect x="1" y="1" width="38" height="26" rx="4" stroke="currentColor" strokeWidth="1" strokeOpacity="0.25"/>
+                <rect x="8" y="8" width="24" height="12" rx="6" fill="currentColor" opacity="0.9"/>
+                <path d="M14 14 H26" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+        ),
+    },
+    {
+        value: 'floating', label: 'Floating',
+        icon: (
+            <svg width="40" height="28" viewBox="0 0 40 28" fill="none">
+                <rect x="1" y="1" width="38" height="26" rx="4" stroke="currentColor" strokeWidth="1" strokeOpacity="0.25"/>
+                <circle cx="31" cy="20" r="6" fill="currentColor" opacity="0.9"/>
+                <path d="M28 20 H34 M31 17 V23" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+        ),
+    },
+    {
+        value: 'link', label: 'Text Link',
+        icon: (
+            <svg width="40" height="28" viewBox="0 0 40 28" fill="none">
+                <rect x="1" y="1" width="38" height="26" rx="4" stroke="currentColor" strokeWidth="1" strokeOpacity="0.25"/>
+                <path d="M10 17 H30" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.9"/>
+                <path d="M10 20 H24" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
+            </svg>
+        ),
+    },
+];
+
+const FREQUENCY_OPTIONS = [
+    { label: __('Every page load', 'adaire-blocks'), value: 'always' },
+    { label: __('Once per browser session', 'adaire-blocks'), value: 'once-per-session' },
+    { label: __('Once per day', 'adaire-blocks'), value: 'once-per-day' },
+    { label: __('Once ever (this browser)', 'adaire-blocks'), value: 'once-ever' },
+];
+
+const FloatIcon = ({ corner }) => {
+    const positions = {
+        'bottom-right': { cx: 31, cy: 21 },
+        'bottom-left':  { cx: 9,  cy: 21 },
+        'top-right':    { cx: 31, cy: 7 },
+        'top-left':     { cx: 9,  cy: 7 },
+    };
+    const { cx, cy } = positions[corner] || positions['bottom-right'];
+    return (
+        <svg width="40" height="28" viewBox="0 0 40 28" fill="none">
+            <rect x="1" y="1" width="38" height="26" rx="3" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3"/>
+            <circle cx={cx} cy={cy} r="5" fill="currentColor" opacity="0.9"/>
+            <path d={`M${cx-2} ${cy} H${cx+2} M${cx} ${cy-2} V${cy+2}`} stroke="#fff" strokeWidth="1.3" strokeLinecap="round"/>
+        </svg>
+    );
+};
+
+const FLOATING_POSITION_OPTIONS = [
+    { value: 'bottom-right', label: 'Bot. right', icon: <FloatIcon corner="bottom-right"/> },
+    { value: 'bottom-left',  label: 'Bot. left',  icon: <FloatIcon corner="bottom-left"/> },
+    { value: 'top-right',    label: 'Top right',  icon: <FloatIcon corner="top-right"/> },
+    { value: 'top-left',     label: 'Top left',   icon: <FloatIcon corner="top-left"/> },
+];
 
 // ── Position icons ─────────────────────────────────────────────────────────────
 
@@ -215,6 +281,15 @@ const formatSize = (size, fallbackValue, fallbackUnit) => {
     return `${typeof value === 'number' ? value : fallbackValue}${unit || fallbackUnit}`;
 };
 
+// Static editor-time preview only — view.js runs the real live countdown.
+const formatCountdown = (totalSeconds) => {
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = Math.floor(totalSeconds % 60);
+    const pad = (n) => String(n).padStart(2, '0');
+    return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+};
+
 const normalizeDimension = (dimension, defaults) => {
     if (typeof dimension === 'object' && dimension !== null) {
         return {
@@ -244,14 +319,31 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         backdropBlurEnabled, backdropBlurAmount,
         autoOpen, autoOpenDelay,
         overlayClickClose,
+        contentPadding,
+        triggerText, triggerType, floatingPosition, floatingOffsetX, floatingOffsetY,
+        triggerTextColor, triggerBackgroundColor, triggerBorderRadius,
+        triggerPaddingX, triggerPaddingY, triggerFontSize, triggerFontWeight,
+        modalLayout,
+        autoOpenScrollPercent, autoOpenInactivitySeconds, autoOpenEventName, autoOpenElementSelector,
+        showFrequency,
+        countdownEnabled, countdownMinutes,
+        glassmorphismEnabled,
+        overlayGradientEnabled, overlayGradientColor2,
     } = attributes;
 
     const [deviceType, setDeviceType] = useState('desktop');
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
+    const { replaceInnerBlocks } = useDispatch('core/block-editor');
+
     useEffect(() => {
         if (!blockId) setAttributes({ blockId: clientId });
     }, [blockId, clientId, setAttributes]);
+
+    const applyModalLayout = (layout) => {
+        setAttributes({ modalLayout: layout.id, ...(layout.defaultAttrs || {}) });
+        replaceInnerBlocks(clientId, createBlocksFromInnerBlocksTemplate(layout.template), false);
+    };
 
     const defaults = useMemo(() => ({
         width: {
@@ -286,8 +378,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     const currentWidthUnit  = normalizedWidth?.[deviceType]?.unit  ?? (deviceType === 'mobile' || deviceType === 'tablet' ? 'vw' : 'px');
     const currentHeightUnit = normalizedHeight?.[deviceType]?.unit ?? 'px';
 
+    const pad = {
+        top:    contentPadding?.top    ?? 24,
+        right:  contentPadding?.right  ?? 24,
+        bottom: contentPadding?.bottom ?? 24,
+        left:   contentPadding?.left   ?? 24,
+    };
+    const setPad = (side, value) => setAttributes({ contentPadding: { ...pad, [side]: value } });
+
+    const isFloating = triggerType === 'floating';
+
     const blockProps = useBlockProps({
-        className: `adaire-modal-block${isPreviewOpen ? ' is-preview-open' : ''}`,
         style: {
             '--modal-width-mobile':        formatSize(normalizedWidth.mobile,      90,  'vw'),
             '--modal-width-tablet':        formatSize(normalizedWidth.tablet,      90,  'vw'),
@@ -312,7 +413,25 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--modal-animation-easing':    animationEasing          || 'ease-out',
             '--modal-backdrop-blur':       backdropBlurEnabled       ? `${backdropBlurAmount ?? 8}px` : '0px',
             '--modal-box-shadow':          boxShadowEnabled !== false ? '0 32px 80px rgba(15, 23, 42, 0.35)' : 'none',
+            '--content-padding-top':      `${pad.top}px`,
+            '--content-padding-right':    `${pad.right}px`,
+            '--content-padding-bottom':   `${pad.bottom}px`,
+            '--content-padding-left':     `${pad.left}px`,
+            '--trigger-color':             triggerTextColor         || '#ffffff',
+            '--trigger-bg':                triggerBackgroundColor   || '#111827',
+            '--trigger-radius':           `${triggerBorderRadius    ?? 8}px`,
+            '--trigger-padding-x':        `${triggerPaddingX        ?? 20}px`,
+            '--trigger-padding-y':        `${triggerPaddingY        ?? 12}px`,
+            '--trigger-font-size':        `${triggerFontSize        ?? 16}px`,
+            '--trigger-font-weight':       triggerFontWeight        || '600',
+            '--modal-overlay-gradient-2':  overlayGradientColor2    || '#7c3aed',
         },
+        className: [
+            'adaire-popup-modal-block',
+            isPreviewOpen ? 'is-preview-open' : '',
+            glassmorphismEnabled ? 'has-glassmorphism' : '',
+            overlayGradientEnabled ? 'has-overlay-gradient' : '',
+        ].filter(Boolean).join(' '),
         'data-modal-block':     true,
         'data-preview-open':    isPreviewOpen,
         'data-modal-anim':      animationType       || 'fade',
@@ -321,13 +440,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         'data-close-shape':     closeButtonShape    || 'circle',
         'data-auto-open':       autoOpen            || 'none',
         'data-auto-open-delay': autoOpenDelay       ?? 3,
+        'data-scroll-percent':  autoOpenScrollPercent ?? 50,
+        'data-inactivity-seconds': autoOpenInactivitySeconds ?? 30,
+        'data-event-name':      autoOpenEventName   || 'adaire-modal-open',
+        'data-element-selector': autoOpenElementSelector || '',
+        'data-show-frequency':  showFrequency       || 'always',
         'data-overlay-close':   overlayClickClose   !== false ? 'true' : 'false',
         'data-show-close':      showCloseButton     !== false ? 'true' : 'false',
+        'data-countdown-enabled': countdownEnabled ? 'true' : 'false',
+        'data-countdown-minutes': countdownMinutes ?? 15,
     });
 
     const innerBlocksProps = useInnerBlocksProps(
-        { className: 'adaire-modal-block__inner-blocks' },
-        { allowedBlocks: ALLOWED_BLOCKS, template: TEMPLATE, templateLock: 'insert', orientation: 'vertical' }
+        { className: 'adaire-popup-modal-block__body' },
+        { template: getModalLayout(modalLayout).template, templateLock: false }
     );
 
     return (
@@ -335,52 +461,201 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
 
                 {/* ─── CONTENT TAB ─── */}
-                <PanelBody section="content" title={__('Auto-Open', 'modal-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Modal Layout', 'adaire-blocks')} initialOpen={true}>
+                    <p style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '8px', lineHeight: 1.4 }}>
+                        {__('Pick a starting layout for the modal body. You can still add, remove, or edit blocks afterward.', 'adaire-blocks')}
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {MODAL_LAYOUTS.map((layout) => (
+                            <Button
+                                key={layout.id}
+                                isPrimary={modalLayout === layout.id}
+                                onClick={() => applyModalLayout(layout)}
+                                style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', height: 'auto', padding: '8px 10px' }}
+                            >
+                                <span style={{ fontWeight: 600 }}>{layout.label}</span>
+                                <span style={{ fontSize: '11px', opacity: 0.75, fontWeight: 400 }}>{layout.bestFor}</span>
+                            </Button>
+                        ))}
+                    </div>
+                </PanelBody>
+
+                <PanelBody section="content" title={__('Trigger', 'adaire-blocks')} initialOpen={false}>
+                    <BaseControl label={__('How does this trigger appear?', 'adaire-blocks')}>
+                        <VisualPicker
+                            options={TRIGGER_TYPE_OPTIONS}
+                            value={triggerType || 'button'}
+                            onChange={(value) => setAttributes({ triggerType: value })}
+                            columns={3}
+                        />
+                    </BaseControl>
+                    <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '8px', lineHeight: 1.4 }}>
+                        {isFloating
+                            ? __('Fixed to a corner of the screen — great for chat or support widgets.', 'adaire-blocks')
+                            : __('Appears inline in the page layout where this block is placed.', 'adaire-blocks')
+                        }
+                    </p>
+                    {isFloating && (
+                        <>
+                            <BaseControl label={__('Anchor corner', 'adaire-blocks')} style={{ marginTop: '16px' }}>
+                                <VisualPicker
+                                    options={FLOATING_POSITION_OPTIONS}
+                                    value={floatingPosition || 'bottom-right'}
+                                    onChange={(value) => setAttributes({ floatingPosition: value })}
+                                    columns={2}
+                                />
+                            </BaseControl>
+                            <RangeControl
+                                label={__('Horizontal offset (px)', 'adaire-blocks')}
+                                value={floatingOffsetX ?? 24}
+                                onChange={(value) => setAttributes({ floatingOffsetX: value })}
+                                min={8} max={80} step={4}
+                                style={{ marginTop: '12px' }}
+                            />
+                            <RangeControl
+                                label={__('Vertical offset (px)', 'adaire-blocks')}
+                                value={floatingOffsetY ?? 24}
+                                onChange={(value) => setAttributes({ floatingOffsetY: value })}
+                                min={8} max={80} step={4}
+                            />
+                        </>
+                    )}
+                </PanelBody>
+
+                <PanelBody section="content" title={__('Content Padding', 'adaire-blocks')} initialOpen={false}>
+                    <RangeControl
+                        label={__('Top (px)', 'adaire-blocks')}
+                        value={pad.top}
+                        onChange={(v) => setPad('top', v)}
+                        min={0} max={80} step={2}
+                    />
+                    <RangeControl
+                        label={__('Right (px)', 'adaire-blocks')}
+                        value={pad.right}
+                        onChange={(v) => setPad('right', v)}
+                        min={0} max={80} step={2}
+                    />
+                    <RangeControl
+                        label={__('Bottom (px)', 'adaire-blocks')}
+                        value={pad.bottom}
+                        onChange={(v) => setPad('bottom', v)}
+                        min={0} max={80} step={2}
+                    />
+                    <RangeControl
+                        label={__('Left (px)', 'adaire-blocks')}
+                        value={pad.left}
+                        onChange={(v) => setPad('left', v)}
+                        min={0} max={80} step={2}
+                    />
+                </PanelBody>
+
+                <PanelBody section="content" title={__('Auto-Open', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
-                        label={__('Open trigger', 'modal-block')}
+                        label={__('Open trigger', 'adaire-blocks')}
                         value={autoOpen || 'none'}
                         options={[
-                            { label: __('Manual — button click only', 'modal-block'), value: 'none' },
-                            { label: __('Page load — opens after a delay', 'modal-block'), value: 'delay' },
-                            { label: __('Exit intent — cursor leaves viewport', 'modal-block'), value: 'exit-intent' },
+                            { label: __('Manual — button click only', 'adaire-blocks'), value: 'none' },
+                            { label: __('Page load — opens after a delay', 'adaire-blocks'), value: 'delay' },
+                            { label: __('Exit intent — cursor leaves viewport', 'adaire-blocks'), value: 'exit-intent' },
+                            { label: __('Scroll depth — opens after scrolling X%', 'adaire-blocks'), value: 'scroll-depth' },
+                            { label: __('Element visible — opens when an element scrolls into view', 'adaire-blocks'), value: 'element-visible' },
+                            { label: __('Inactivity — opens after the visitor stops interacting', 'adaire-blocks'), value: 'inactivity' },
+                            { label: __('Custom JS event — opens when your own script fires an event', 'adaire-blocks'), value: 'custom-event' },
                         ]}
                         onChange={(value) => setAttributes({ autoOpen: value })}
                     />
                     {autoOpen === 'delay' && (
                         <RangeControl
-                            label={__('Delay (seconds)', 'modal-block')}
+                            label={__('Delay (seconds)', 'adaire-blocks')}
                             value={autoOpenDelay ?? 3}
                             onChange={(value) => setAttributes({ autoOpenDelay: value })}
                             min={0} max={30} step={0.5}
                         />
                     )}
+                    {autoOpen === 'scroll-depth' && (
+                        <RangeControl
+                            label={__('Scroll depth (%)', 'adaire-blocks')}
+                            value={autoOpenScrollPercent ?? 50}
+                            onChange={(value) => setAttributes({ autoOpenScrollPercent: value })}
+                            min={1} max={100} step={1}
+                        />
+                    )}
+                    {autoOpen === 'element-visible' && (
+                        <TextControl
+                            label={__('CSS selector of the element to watch', 'adaire-blocks')}
+                            help={__('e.g. #pricing-table or .my-section. Opens once that element scrolls into the viewport.', 'adaire-blocks')}
+                            value={autoOpenElementSelector || ''}
+                            onChange={(value) => setAttributes({ autoOpenElementSelector: value })}
+                        />
+                    )}
+                    {autoOpen === 'inactivity' && (
+                        <RangeControl
+                            label={__('Idle time before opening (seconds)', 'adaire-blocks')}
+                            value={autoOpenInactivitySeconds ?? 30}
+                            onChange={(value) => setAttributes({ autoOpenInactivitySeconds: value })}
+                            min={5} max={300} step={5}
+                        />
+                    )}
+                    {autoOpen === 'custom-event' && (
+                        <TextControl
+                            label={__('Event name', 'adaire-blocks')}
+                            help={__('Dispatch this event name from your own JS, e.g. document.dispatchEvent(new Event(\"adaire-modal-open\")).', 'adaire-blocks')}
+                            value={autoOpenEventName || 'adaire-modal-open'}
+                            onChange={(value) => setAttributes({ autoOpenEventName: value })}
+                        />
+                    )}
                 </PanelBody>
 
-                <PanelBody section="content" title={__('Behavior', 'modal-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Behavior', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Close on overlay click', 'modal-block')}
+                        label={__('Close on overlay click', 'adaire-blocks')}
                         checked={overlayClickClose !== false}
                         onChange={(value) => setAttributes({ overlayClickClose: value })}
                     />
                     <ToggleControl
-                        label={__('Show close button', 'modal-block')}
+                        label={__('Show close button', 'adaire-blocks')}
                         checked={showCloseButton !== false}
                         onChange={(value) => setAttributes({ showCloseButton: value })}
                     />
+                    <SelectControl
+                        label={__('How often to auto-open', 'adaire-blocks')}
+                        help={__('Limits automatic opening (delay, exit-intent, scroll, etc.) per visitor. Manual button clicks always work.', 'adaire-blocks')}
+                        value={showFrequency || 'always'}
+                        options={FREQUENCY_OPTIONS}
+                        onChange={(value) => setAttributes({ showFrequency: value })}
+                    />
                 </PanelBody>
 
-                <PanelBody section="content" title={__('Preview', 'modal-block')} initialOpen={false}>
+                <PanelBody section="content" title={__('Countdown Timer', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Preview modal overlay', 'modal-block')}
+                        label={__('Show countdown timer', 'adaire-blocks')}
+                        checked={!!countdownEnabled}
+                        onChange={(value) => setAttributes({ countdownEnabled: value })}
+                        help={__('Adds an urgency countdown above the modal content, e.g. for limited-time offers.', 'adaire-blocks')}
+                    />
+                    {countdownEnabled && (
+                        <RangeControl
+                            label={__('Countdown length (minutes)', 'adaire-blocks')}
+                            value={countdownMinutes ?? 15}
+                            onChange={(value) => setAttributes({ countdownMinutes: value })}
+                            min={1} max={1440} step={1}
+                            help={__('Starts counting down from page load and persists across the visit.', 'adaire-blocks')}
+                        />
+                    )}
+                </PanelBody>
+
+                <PanelBody section="content" title={__('Preview', 'adaire-blocks')} initialOpen={false}>
+                    <ToggleControl
+                        label={__('Preview modal overlay', 'adaire-blocks')}
                         checked={isPreviewOpen}
                         onChange={(value) => setIsPreviewOpen(value)}
-                        help={__('See how the modal looks while editing.', 'modal-block')}
+                        help={__('See how the modal looks while editing.', 'adaire-blocks')}
                     />
                 </PanelBody>
 
                 {/* ─── LAYOUT TAB ─── */}
-                <PanelBody section="layout" title={__('Position', 'modal-block')} initialOpen={true}>
-                    <BaseControl label={__('Where does the modal appear?', 'modal-block')}>
+                <PanelBody section="layout" title={__('Position', 'adaire-blocks')} initialOpen={true}>
+                    <BaseControl label={__('Where does the modal appear?', 'adaire-blocks')}>
                         <VisualPicker
                             options={POSITION_OPTIONS}
                             value={modalPosition || 'center'}
@@ -389,22 +664,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
                     </BaseControl>
                     <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '8px', lineHeight: 1.4 }}>
-                        {__('Bottom sheet and drawers always slide in from their edge.', 'modal-block')}
+                        {__('Bottom sheet and drawers always slide in from their edge.', 'adaire-blocks')}
                     </p>
                 </PanelBody>
 
-                <PanelBody section="layout" title={__('Dimensions', 'modal-block')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Dimensions', 'adaire-blocks')} initialOpen={false}>
                     <DeviceSwitcher
                         deviceType={deviceType}
                         setDeviceType={setDeviceType}
                         tiers={MODAL_TIERS}
                     />
 
-                    <BaseControl label={__('Width', 'modal-block')} style={{ marginTop: '12px' }}>
+                    <BaseControl label={__('Width', 'adaire-blocks')} style={{ marginTop: '12px' }}>
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                             <input
                                 type="number"
-                                className="adaire-modal-block__dimension-input"
+                                className="adaire-popup-modal-block__dimension-input"
                                 value={normalizedWidth?.[deviceType]?.value ?? ''}
                                 onChange={(e) => handleDimensionChange('width', deviceType, 'value', Number(e.target.value))}
                                 min={0}
@@ -432,11 +707,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         </div>
                     </BaseControl>
 
-                    <BaseControl label={__('Height', 'modal-block')} style={{ marginTop: '12px' }}>
+                    <BaseControl label={__('Height', 'adaire-blocks')} style={{ marginTop: '12px' }}>
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                             <input
                                 type="number"
-                                className="adaire-modal-block__dimension-input"
+                                className="adaire-popup-modal-block__dimension-input"
                                 value={normalizedHeight?.[deviceType]?.value ?? ''}
                                 onChange={(e) => handleDimensionChange('height', deviceType, 'value', Number(e.target.value))}
                                 min={0}
@@ -465,8 +740,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </BaseControl>
                 </PanelBody>
 
-                <PanelBody section="layout" title={__('Close Button', 'modal-block')} initialOpen={false}>
-                    <BaseControl label={__('Position', 'modal-block')}>
+                <PanelBody section="layout" title={__('Close Button', 'adaire-blocks')} initialOpen={false}>
+                    <BaseControl label={__('Position', 'adaire-blocks')}>
                         <VisualPicker
                             options={CLOSE_POSITION_OPTIONS}
                             value={closeButtonPosition || 'top-right'}
@@ -474,7 +749,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             columns={4}
                         />
                     </BaseControl>
-                    <BaseControl label={__('Shape', 'modal-block')} style={{ marginTop: '16px' }}>
+                    <BaseControl label={__('Shape', 'adaire-blocks')} style={{ marginTop: '16px' }}>
                         <VisualPicker
                             options={CLOSE_SHAPE_OPTIONS}
                             value={closeButtonShape || 'circle'}
@@ -485,59 +760,120 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* ─── STYLE TAB — HIGH PRIORITY ─── */}
-                <PanelBody section="style" priority="high" title={__('Colors', 'modal-block')} initialOpen={true}>
+                <PanelBody section="style" priority="high" title={__('Trigger Style', 'adaire-blocks')} initialOpen={true}>
                     <AdaireColorControl
-                        label={__('Modal background', 'modal-block')}
+                        label={__('Text color', 'adaire-blocks')}
+                        value={triggerTextColor || '#ffffff'}
+                        onChange={(value) => setAttributes({ triggerTextColor: value })}
+                    />
+                    <div style={{ marginTop: '16px' }}>
+                        <AdaireColorControl
+                            label={__('Background color', 'adaire-blocks')}
+                            value={triggerBackgroundColor || '#111827'}
+                            onChange={(value) => setAttributes({ triggerBackgroundColor: value })}
+                        />
+                    </div>
+                    <RangeControl
+                        label={__('Border radius (px)', 'adaire-blocks')}
+                        value={triggerBorderRadius ?? 8}
+                        onChange={(value) => setAttributes({ triggerBorderRadius: value })}
+                        min={0} max={40} step={1}
+                        style={{ marginTop: '12px' }}
+                    />
+                    <RangeControl
+                        label={__('Horizontal padding (px)', 'adaire-blocks')}
+                        value={triggerPaddingX ?? 20}
+                        onChange={(value) => setAttributes({ triggerPaddingX: value })}
+                        min={0} max={60} step={2}
+                    />
+                    <RangeControl
+                        label={__('Vertical padding (px)', 'adaire-blocks')}
+                        value={triggerPaddingY ?? 12}
+                        onChange={(value) => setAttributes({ triggerPaddingY: value })}
+                        min={0} max={40} step={2}
+                    />
+                    <RangeControl
+                        label={__('Font size (px)', 'adaire-blocks')}
+                        value={triggerFontSize ?? 16}
+                        onChange={(value) => setAttributes({ triggerFontSize: value })}
+                        min={10} max={32} step={1}
+                    />
+                    <SelectControl
+                        label={__('Font weight', 'adaire-blocks')}
+                        value={triggerFontWeight || '600'}
+                        options={['400', '500', '600', '700', '800'].map((w) => ({ label: w, value: w }))}
+                        onChange={(value) => setAttributes({ triggerFontWeight: value })}
+                    />
+                </PanelBody>
+
+                <PanelBody section="style" priority="high" title={__('Colors', 'adaire-blocks')} initialOpen={false}>
+                    <AdaireColorControl
+                        label={__('Modal background', 'adaire-blocks')}
                         value={backgroundColor || '#ffffff'}
                         onChange={(value) => setAttributes({ backgroundColor: value })}
                     />
                     <div style={{ marginTop: '16px' }}>
                         <AdaireColorControl
-                            label={__('Overlay', 'modal-block')}
+                            label={__('Overlay', 'adaire-blocks')}
                             value={overlayColor || 'rgba(0,0,0,0.6)'}
                             onChange={(value) => setAttributes({ overlayColor: value })}
                             enableAlpha
                         />
                     </div>
+                    <ToggleControl
+                        label={__('Gradient overlay', 'adaire-blocks')}
+                        checked={!!overlayGradientEnabled}
+                        onChange={(value) => setAttributes({ overlayGradientEnabled: value })}
+                        help={__('Blends the overlay color into a second color diagonally instead of a flat tint.', 'adaire-blocks')}
+                        style={{ marginTop: '16px' }}
+                    />
+                    {overlayGradientEnabled && (
+                        <AdaireColorControl
+                            label={__('Gradient second color', 'adaire-blocks')}
+                            value={overlayGradientColor2 || '#7c3aed'}
+                            onChange={(value) => setAttributes({ overlayGradientColor2: value })}
+                            enableAlpha
+                        />
+                    )}
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Border', 'modal-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Border', 'adaire-blocks')} initialOpen={false}>
                     <AdaireColorControl
-                        label={__('Border color', 'modal-block')}
+                        label={__('Border color', 'adaire-blocks')}
                         value={borderColor || '#e0e0e0'}
                         onChange={(value) => setAttributes({ borderColor: value })}
                     />
                     <RangeControl
-                        label={__('Width (px)', 'modal-block')}
+                        label={__('Width (px)', 'adaire-blocks')}
                         value={borderWidth ?? 1}
                         onChange={(value) => setAttributes({ borderWidth: value })}
                         min={0} max={12} step={1}
                         style={{ marginTop: '12px' }}
                     />
                     <RangeControl
-                        label={__('Radius (px)', 'modal-block')}
+                        label={__('Radius (px)', 'adaire-blocks')}
                         value={borderRadius ?? 16}
                         onChange={(value) => setAttributes({ borderRadius: value })}
                         min={0} max={64} step={1}
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Close Button Style', 'modal-block')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Close Button Style', 'adaire-blocks')} initialOpen={false}>
                     <AdaireColorControl
-                        label={__('Icon color', 'modal-block')}
+                        label={__('Icon color', 'adaire-blocks')}
                         value={closeButtonColor || '#111111'}
                         onChange={(value) => setAttributes({ closeButtonColor: value })}
                     />
                     <div style={{ marginTop: '16px' }}>
                         <AdaireColorControl
-                            label={__('Button background', 'modal-block')}
+                            label={__('Button background', 'adaire-blocks')}
                             value={closeButtonBackground || 'rgba(255,255,255,0.9)'}
                             onChange={(value) => setAttributes({ closeButtonBackground: value })}
                             enableAlpha
                         />
                     </div>
                     <RangeControl
-                        label={__('Size (px)', 'modal-block')}
+                        label={__('Size (px)', 'adaire-blocks')}
                         value={closeButtonSize ?? 36}
                         onChange={(value) => setAttributes({ closeButtonSize: value })}
                         min={24} max={64} step={2}
@@ -546,8 +882,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* ─── STYLE TAB — MEDIUM PRIORITY ─── */}
-                <PanelBody section="style" priority="medium" title={__('Animation', 'modal-block')} initialOpen={false}>
-                    <BaseControl label={__('Entry animation', 'modal-block')}>
+                <PanelBody section="style" priority="medium" title={__('Animation', 'adaire-blocks')} initialOpen={false}>
+                    <BaseControl label={__('Entry animation', 'adaire-blocks')}>
                         <VisualPicker
                             options={ANIMATION_OPTIONS}
                             value={animationType || 'fade'}
@@ -555,62 +891,95 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
                     </BaseControl>
                     <RangeControl
-                        label={__('Duration (ms)', 'modal-block')}
+                        label={__('Duration (ms)', 'adaire-blocks')}
                         value={animationDuration ?? 300}
                         onChange={(value) => setAttributes({ animationDuration: value })}
                         min={100} max={1000} step={50}
                         style={{ marginTop: '16px' }}
                     />
                     <SelectControl
-                        label={__('Easing', 'modal-block')}
+                        label={__('Easing', 'adaire-blocks')}
                         value={animationEasing || 'ease-out'}
                         options={[
-                            { label: __('Ease out — smooth decelerate', 'modal-block'), value: 'ease-out' },
-                            { label: __('Ease in-out — symmetric curve', 'modal-block'), value: 'ease-in-out' },
-                            { label: __('Spring — overshoot bounce',     'modal-block'), value: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
-                            { label: __('Linear — constant speed',       'modal-block'), value: 'linear' },
+                            { label: __('Ease out — smooth decelerate', 'adaire-blocks'), value: 'ease-out' },
+                            { label: __('Ease in-out — symmetric curve', 'adaire-blocks'), value: 'ease-in-out' },
+                            { label: __('Spring — overshoot bounce',     'adaire-blocks'), value: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
+                            { label: __('Linear — constant speed',       'adaire-blocks'), value: 'linear' },
                         ]}
                         onChange={(value) => setAttributes({ animationEasing: value })}
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Shadow & Blur', 'modal-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Shadow & Blur', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Depth shadow', 'modal-block')}
+                        label={__('Depth shadow', 'adaire-blocks')}
                         checked={boxShadowEnabled !== false}
                         onChange={(value) => setAttributes({ boxShadowEnabled: value })}
-                        help={__('Adds a large soft drop-shadow behind the modal for depth.', 'modal-block')}
+                        help={__('Adds a large soft drop-shadow behind the modal for depth.', 'adaire-blocks')}
                     />
                     <ToggleControl
-                        label={__('Backdrop blur', 'modal-block')}
+                        label={__('Backdrop blur', 'adaire-blocks')}
                         checked={!!backdropBlurEnabled}
                         onChange={(value) => setAttributes({ backdropBlurEnabled: value })}
-                        help={__('Frosted-glass effect — blurs page content behind the overlay.', 'modal-block')}
+                        help={__('Frosted-glass effect — blurs page content behind the overlay.', 'adaire-blocks')}
                         style={{ marginTop: '8px' }}
                     />
                     {backdropBlurEnabled && (
                         <RangeControl
-                            label={__('Blur amount (px)', 'modal-block')}
+                            label={__('Blur amount (px)', 'adaire-blocks')}
                             value={backdropBlurAmount ?? 8}
                             onChange={(value) => setAttributes({ backdropBlurAmount: value })}
                             min={2} max={32} step={1}
                         />
                     )}
+                    <ToggleControl
+                        label={__('Glassmorphism', 'adaire-blocks')}
+                        checked={!!glassmorphismEnabled}
+                        onChange={(value) => setAttributes({ glassmorphismEnabled: value })}
+                        help={__('Makes the modal itself translucent with a frosted-glass blur, instead of a solid background.', 'adaire-blocks')}
+                        style={{ marginTop: '8px' }}
+                    />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Padding', 'modal-block')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Padding', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Content padding (px)', 'modal-block')}
+                        label={__('Content padding (px)', 'adaire-blocks')}
                         value={padding ?? 24}
                         onChange={(value) => setAttributes({ padding: value })}
                         min={0} max={80} step={2}
-                        help={__('Space between the modal edge and inner content.', 'modal-block')}
+                        help={__('Space between the modal edge and inner content.', 'adaire-blocks')}
                     />
                 </PanelBody>
 
             </InspectorTabs>
 
             <div {...blockProps}>
+                <button
+                    type="button"
+                    className="adaire-popup-modal-block__trigger"
+                    data-modal-role="trigger"
+                    data-trigger-type={triggerType || 'button'}
+                    data-floating-position={isFloating ? (floatingPosition || 'bottom-right') : undefined}
+                    aria-haspopup="dialog"
+                    onClick={(event) => event.preventDefault()}
+                    style={isFloating ? {
+                        '--floating-offset-x': `${floatingOffsetX ?? 24}px`,
+                        '--floating-offset-y': `${floatingOffsetY ?? 24}px`,
+                    } : undefined}
+                >
+                    <RichText
+                        tagName="span"
+                        value={triggerText}
+                        onChange={(value) => setAttributes({ triggerText: value })}
+                        placeholder={__('Open Modal', 'adaire-blocks')}
+                        allowedFormats={[]}
+                    />
+                </button>
+                {countdownEnabled && (
+                    <div className="adaire-popup-modal-block__countdown">
+                        {formatCountdown((countdownMinutes ?? 15) * 60)}
+                    </div>
+                )}
                 <div {...innerBlocksProps} />
             </div>
         </>

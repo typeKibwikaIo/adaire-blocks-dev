@@ -136,6 +136,16 @@
 		overflow: hidden;
 	}
 
+	// The unconditional `display: flex` above beats the browser's default
+	// `[hidden] { display: none }` UA rule (an author stylesheet always wins
+	// over the UA stylesheet, regardless of specificity), so `__prefs` was
+	// showing every category on first load instead of staying hidden until
+	// "Manage Preferences" is clicked. This re-adds the higher-specificity
+	// override view.js's hidden-attribute toggling actually relies on.
+	&__prefs[hidden] {
+		display: none;
+	}
+
 	&__cat-row,
 	&__pref-row {
 		display: flex;
@@ -258,8 +268,7 @@
 		margin-left: auto;
 	}
 
-	&__btn,
-	&__reopen {
+	&__btn {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -301,8 +310,7 @@
 		}
 	}
 
-	&__btn:hover,
-	&__reopen:hover {
+	&__btn:hover {
 		transform: translateY(-1px);
 	}
 
@@ -335,18 +343,40 @@
 		}
 	}
 
-	// Reopen tab
+	// Reopen tab — round icon-only button, matching the free Cookie Notice
+	// block's __reopen (see cookie-notice-block/style.scss) so the two blocks
+	// present the same "quiet tab" once a visitor has made a choice.
 	&__reopen {
 		position: fixed;
 		z-index: var(--ccb-z-index, 999999);
 		bottom: 16px;
-		background: var(--ccb-bg, #ffffff);
-		color: var(--ccb-text, #5f6368);
-		border: 1px solid var(--ccb-border-color, #e5e7eb);
-		border-radius: 999px;
-		padding: .6rem 1rem;
-		font-size: .85rem;
-		box-shadow: 0 6px 24px rgba(32, 33, 36, 0.16);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 48px;
+		height: 48px;
+		padding: 0;
+		border: none;
+		border-radius: 50%;
+		background: var(--ccb-accent, #6366f1);
+		color: var(--ccb-btn-text, #ffffff);
+		cursor: pointer;
+		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.15);
+		transition: transform .18s ease, box-shadow .18s ease;
+
+		svg {
+			width: 1.2em;
+			height: 1.2em;
+		}
+
+		&:hover {
+			transform: scale(1.06);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--ccb-accent, #6366f1);
+			outline-offset: 2px;
+		}
 	}
 
 	&__reopen[data-reopen-position="bottom-left"] { left: 16px; }
@@ -411,6 +441,30 @@
 .adaire-cookie-banner[data-layout="slide-in-bottom"] .adaire-cookie-banner__panel { left: 20px; bottom: 20px; width: var(--ccb-max-width, 480px); }
 .adaire-cookie-banner[data-layout="slide-in-right"] .adaire-cookie-banner__panel { right: 20px; top: 50%; transform: translateY(-50%); width: var(--ccb-max-width, 480px); }
 .adaire-cookie-banner[data-layout="slide-in-right"].is-visible .adaire-cookie-banner__panel { transform: translateY(-50%) !important; }
+
+// While the preferences list is open, recenter and widen the panel
+// regardless of the banner's normal corner/edge position — a floating
+// bottom-right card that's fine for the short intro message can end up much
+// taller once every category is expanded, overlapping page content instead
+// of just sitting in its corner. !important because this needs to beat
+// every data-layout rule above it, which share the same specificity.
+.adaire-cookie-banner.is-prefs-open .adaire-cookie-banner__panel {
+	left: 50% !important;
+	right: auto !important;
+	top: 50% !important;
+	bottom: auto !important;
+	transform: translate(-50%, -50%) !important;
+	width: min(92vw, 640px) !important;
+	max-width: min(92vw, 640px) !important;
+	max-height: 85vh;
+	overflow-y: auto;
+	// The bar-top/bar-bottom layouts switch these to a square, horizontal
+	// strip (border-radius: 0, flex-direction: row) — reset back to the
+	// normal card look so a centered "preferences" view reads the same way
+	// no matter which base layout the compact banner uses.
+	border-radius: var(--ccb-radius, 14px) !important;
+	flex-direction: column !important;
+}
 
 // Content alignment for floating / modal layouts
 .adaire-cookie-banner[data-align="left"] .adaire-cookie-banner__actions { justify-content: flex-start; }

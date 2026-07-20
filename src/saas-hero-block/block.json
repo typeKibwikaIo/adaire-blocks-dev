@@ -14,7 +14,7 @@
             "padding": true
         }
     },
-    "textdomain": "saas-hero-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -57,7 +57,12 @@
         },
         "backgroundType": {
             "type": "string",
-            "default": "solid"
+            "default": "solid",
+            "enum": [
+                "solid",
+                "gradient",
+                "image"
+            ]
         },
         "backgroundImage": {
             "type": "string",
@@ -69,11 +74,23 @@
         },
         "backgroundImageSize": {
             "type": "string",
-            "default": "cover"
+            "default": "cover",
+            "enum": [
+                "cover",
+                "contain",
+                "auto"
+            ]
         },
         "backgroundImagePosition": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "center",
+                "top",
+                "bottom",
+                "left",
+                "right"
+            ]
         },
         "backgroundImageRepeat": {
             "type": "string",
@@ -81,7 +98,12 @@
         },
         "layoutStyle": {
             "type": "string",
-            "default": "centered"
+            "default": "centered",
+            "enum": [
+                "centered",
+                "split-left",
+                "split-right"
+            ]
         },
         "showPill": {
             "type": "boolean",
@@ -113,7 +135,12 @@
         },
         "ctaType": {
             "type": "string",
-            "default": "dual-buttons"
+            "default": "dual-buttons",
+            "enum": [
+                "dual-buttons",
+                "email-form",
+                "single-button"
+            ]
         },
         "primaryButtonText": {
             "type": "string",
@@ -185,7 +212,12 @@
         },
         "ctaAlignment": {
             "type": "string",
-            "default": "center"
+            "default": "center",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
         },
         "ctaGap": {
             "type": "number",
@@ -209,7 +241,11 @@
         },
         "imagePosition": {
             "type": "string",
-            "default": "below"
+            "default": "below",
+            "enum": [
+                "below",
+                "above"
+            ]
         },
         "mediaShadow": {
             "type": "boolean",
@@ -225,7 +261,17 @@
         },
         "effectsPreset": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [
+                "none",
+                "sports",
+                "gym",
+                "ecommerce",
+                "business",
+                "medical",
+                "gaming",
+                "custom"
+            ]
         },
         "effectDotPattern": {
             "type": "boolean",

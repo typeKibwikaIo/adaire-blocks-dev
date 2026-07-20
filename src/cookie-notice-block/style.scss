@@ -145,25 +145,40 @@
 	position: fixed;
 	z-index: 999999;
 	margin: 0;
+	// The consent panel (.adaire-cookie-notice-panel-wrap) stays in normal
+	// flow even while hidden - it's only faded/slid out via opacity/transform
+	// so it can transition back in smoothly - so this shrink-to-fit fixed box
+	// is always as wide as the panel, never just the 48px reopen button, even
+	// after a choice has been made and only the reopen button is shown.
+	// display:flex + align-items lets each child (the wide panel, or the
+	// small reopen button once a choice is recorded) align itself to the
+	// correct edge of that box independently of the box's own width, instead
+	// of both relying on the box being sized to match whichever is visible.
+	display: flex;
+	flex-direction: column;
 
 	&[data-position="floating-bottom-right"] {
 		right: 20px;
 		bottom: 20px;
+		align-items: flex-end;
 	}
 
 	&[data-position="floating-bottom-left"] {
 		left: 20px;
 		bottom: 20px;
+		align-items: flex-start;
 	}
 
 	&[data-position="floating-top-right"] {
 		right: 20px;
 		top: 20px;
+		align-items: flex-end;
 	}
 
 	&[data-position="floating-top-left"] {
 		left: 20px;
 		top: 20px;
+		align-items: flex-start;
 	}
 
 	// "Center" positions are a flat, full-width bar flush with the viewport
@@ -178,6 +193,10 @@
 		right: 0;
 		width: auto;
 		transform: none;
+		// Horizontally centers whichever child is visible (the full-width
+		// panel below, or the small reopen button once a choice is made) -
+		// same reasoning as align-items on the corner variants above.
+		align-items: center;
 
 		.adaire-cookie-notice {
 			width: 100%;
@@ -215,6 +234,16 @@
 
 	&[data-position="floating-bottom-center"] {
 		bottom: 0;
+		// Left-align the reopen button once a choice has been made, instead of
+		// centering it like the full-width panel above it.
+		align-items: flex-start;
+
+		.adaire-cookie-notice__reopen {
+			// The center variant's bar is flush with the viewport edges (no 20px
+			// inset like the corner variants), so without this the button would
+			// sit with zero margin against the left/bottom edges.
+			margin: 0 0 20px 20px;
+		}
 	}
 
 	&[data-position="floating-top-center"] {

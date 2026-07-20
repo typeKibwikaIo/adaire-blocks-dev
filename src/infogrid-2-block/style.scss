@@ -1,18 +1,9 @@
-// Self-contained Bootstrap Icons font import.
-//
-// Why: the plugin also enqueues Bootstrap Icons via PHP (admin_enqueue_scripts /
-// enqueue_block_editor_assets in adaire-blocks.php), but the block editor canvas
-// renders inside an <iframe>, which is a separate document. WordPress's iframe
-// only picks up stylesheets that are present in the parent admin document's
-// <head> *at the moment the iframe initializes* — so depending on enqueue/hook
-// timing, the icon font's CSS (and therefore the `::before` glyph rules Bootstrap
-// Icons relies on) can silently fail to reach the canvas even though the same
-// markup renders fine elsewhere (e.g. the Inspector sidebar, which lives outside
-// the iframe). A plain CSS `@import` here is resolved by the browser inside
-// *whatever* document this compiled stylesheet ends up in, so it loads correctly
-// on canvas, in the Inspector, and on the front end alike — independent of any
-// PHP enqueue timing.
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+// Bootstrap Icons are loaded via PHP (admin_enqueue_scripts / enqueue_block_editor_assets
+// in adaire-blocks.php, both pointing at the plugin's bundled assets/vendor/bootstrap-icons/)
+// and, for the editor canvas iframe specifically, via a direct <link> injection in
+// edit.js (see the useEffect there) — a build-time Sass @import of the third-party CSS
+// isn't usable here because css-loader tries to resolve bootstrap-icons.min.css's own
+// internal @font-face url()s as webpack modules and fails.
 
 // Match InfoGrid 3 / base InfoGrid behavior: prevent WP core from adding default borders
 // when it detects border-width/borderStyle/borderColor in inline styles.

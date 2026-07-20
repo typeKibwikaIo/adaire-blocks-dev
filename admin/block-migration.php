@@ -37,9 +37,16 @@ function adaire_blocks_enqueue_migration_assets($hook) {
     $version = defined('ADAIRE_BLOCKS_VERSION') ? ADAIRE_BLOCKS_VERSION : '1.0.0';
 
     wp_enqueue_style(
+        'adaire-admin-theme',
+        plugin_dir_url(__FILE__) . 'css/adaire-admin-theme.css',
+        [],
+        $version
+    );
+
+    wp_enqueue_style(
         'adaire-blocks-migration',
         plugin_dir_url(__FILE__) . 'css/block-migration.css',
-        [],
+        ['adaire-admin-theme'],
         $version
     );
 
@@ -94,76 +101,104 @@ function adaire_blocks_migration_page() {
     }
     ?>
     <div class="wrap">
-        <h1>Adaire Blocks Migration Tool</h1>
+    <div class="aa-page">
+        <div class="aa-header">
+            <div class="aa-header-text">
+                <div class="aa-eyebrow">Maintenance</div>
+                <h1>Block Migration</h1>
+                <p>Find every post, page, custom post type, and reusable pattern containing Adaire Blocks and re-save it with the current block structure. Use this after updating the plugin to fix block validation errors.</p>
+            </div>
+        </div>
 
-        <div class="card" style="max-width: 800px; margin-top: 20px;">
-            <h2>Update All Blocks (Queue-Based Migration)</h2>
-            <p>
-                This tool uses a queue-based system to find all posts, pages, custom post types,
-                and reusable block patterns that contain Adaire Blocks and re-save them
-                with the current block structure. Use this after updating the plugin to fix
-                block validation errors.
-            </p>
+        <div class="aa-card" style="max-width: 800px;">
+            <div class="aa-card-title">Update All Blocks (Queue-Based Migration)</div>
+            <p class="aa-card-subtitle" style="margin-bottom: 20px;">A queue-based tool that finds every post, page, custom post type, and reusable pattern containing Adaire Blocks, then re-saves each one with the current block structure — run this after updating the plugin to clear up block validation errors.</p>
 
-            <p><strong>What this does:</strong></p>
-            <ul>
-                <li>Finds all content with Adaire Blocks across all post types</li>
-                <li>Loads each item in the block editor and saves it with the current block structure</li>
-                <li>Processes items one at a time to avoid server timeouts</li>
-                <li>Preserves all block settings, content, and post status</li>
-            </ul>
+            <div class="adaire-migration-info-grid">
+                <div class="adaire-migration-info-card">
+                    <div class="adaire-migration-info-title">
+                        <span class="dashicons dashicons-yes-alt" style="color: var(--aa-success, #16a34a);"></span>
+                        What this does
+                    </div>
+                    <ul>
+                        <li>Finds all content with Adaire Blocks across all post types</li>
+                        <li>Loads each item in the block editor and saves it with the current block structure</li>
+                        <li>Processes items one at a time to avoid server timeouts</li>
+                        <li>Preserves all block settings, content, and post status</li>
+                    </ul>
+                </div>
 
-            <p><strong>⚠️ Important:</strong></p>
-            <ul>
-                <li>Back up your database before running this on a live site</li>
-                <li>Do not close this page while migration is running</li>
-                <li>You can cancel at any time — already-processed items remain migrated</li>
-            </ul>
+                <div class="adaire-migration-info-card is-warning">
+                    <div class="adaire-migration-info-title">
+                        <span class="dashicons dashicons-warning" style="color: var(--aa-danger, #dc2626);"></span>
+                        Important
+                    </div>
+                    <ul>
+                        <li>Back up your database before running this on a live site</li>
+                        <li>Do not close this page while migration is running</li>
+                        <li>You can cancel at any time — already-processed items remain migrated</li>
+                    </ul>
+                </div>
+            </div>
 
-            <div id="migration-status" style="margin: 20px 0; padding: 15px; background: #f0f0f1; border-radius: 4px; display: none;">
+            <div id="migration-status" class="adaire-migration-status" style="display: none;">
                 <div id="migration-progress">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <div>
                             <p style="margin: 0;"><strong>Status:</strong> <span id="status-text">Preparing...</span></p>
-                            <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">
+                            <p style="margin: 5px 0 0 0; font-size: 12px; color: var(--aa-muted, #6b7280);">
                                 <span id="queue-status">Queue: Initializing...</span>
                             </p>
                         </div>
                         <div style="text-align: right;">
                             <p style="margin: 0;"><strong>Progress:</strong> <span id="progress-text">0/0</span></p>
-                            <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">
+                            <p style="margin: 5px 0 0 0; font-size: 12px; color: var(--aa-muted, #6b7280);">
                                 <span id="stats-text">✅ 0 | ❌ 0</span>
                             </p>
                         </div>
                     </div>
-                    <div style="background: #fff; border-radius: 4px; height: 30px; margin: 10px 0; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">
-                        <div id="progress-bar" style="background: linear-gradient(90deg, #2271b1, #135e96); height: 100%; width: 0%; transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold;">
-                            <span id="progress-percent" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);"></span>
+                    <div class="aa-progress-track" style="height: 10px; margin: 12px 0;">
+                        <div id="progress-bar" class="aa-progress-fill" style="width: 0%; display: flex; align-items: center; justify-content: flex-end;">
+                            <span id="progress-percent" style="font-size: 10px; font-weight: 700; color: #fff; padding-right: 6px;"></span>
                         </div>
                     </div>
-                    <div id="migration-log" style="max-height: 300px; overflow-y: auto; background: #fff; padding: 10px; margin-top: 10px; border-radius: 4px; font-family: monospace; font-size: 12px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);"></div>
+                    <div id="migration-log" class="adaire-migration-log"></div>
                 </div>
                 <div id="migration-complete" style="display: none;">
-                    <p style="color: #00a32a; font-weight: bold; font-size: 16px;">✅ Migration completed!</p>
+                    <p style="color: var(--aa-success, #16a34a); font-weight: bold; font-size: 16px;">✅ Migration completed!</p>
                     <p id="completion-summary"></p>
                 </div>
             </div>
 
-            <p>
-                <button id="start-migration" class="button button-primary button-large" onclick="startMigration()">
+            <p style="display: flex; gap: 10px;">
+                <button id="start-migration" class="aa-btn aa-btn-primary" onclick="startMigration()">
                     Start Migration
                 </button>
-                <button id="cancel-migration" class="button button-large" onclick="cancelMigration()" style="display: none;">
+                <button id="cancel-migration" class="aa-btn aa-btn-secondary" onclick="cancelMigration()" style="display: none;">
                     Cancel
                 </button>
             </p>
 
-            <p style="margin-top: 20px; font-size: 13px; color: #666;">
+            <p class="aa-card-subtitle" style="margin-top: 20px; margin-bottom: 0;">
                 <strong>Note:</strong> Scans all public post types that support the block editor,
                 plus reusable block patterns (wp_block).
             </p>
         </div>
     </div>
+    </div>
+
+    <style>
+        .adaire-migration-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 4px; }
+        @media (max-width: 782px) { .adaire-migration-info-grid { grid-template-columns: 1fr; } }
+        .adaire-migration-info-card { background: var(--aa-bg, #f6f7fb); border-radius: var(--aa-radius-md, 12px); padding: 16px 18px; }
+        .adaire-migration-info-card.is-warning { background: var(--aa-danger-soft, rgba(220,38,38,0.08)); }
+        .adaire-migration-info-title { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13.5px; color: var(--aa-ink, #14181f); margin-bottom: 10px; }
+        .adaire-migration-info-card ul { margin: 0; padding-left: 18px; }
+        .adaire-migration-info-card li { font-size: 13px; color: var(--aa-muted, #6b7280); margin-bottom: 6px; }
+        .adaire-migration-info-card li:last-child { margin-bottom: 0; }
+        .adaire-migration-status { margin: 20px 0; padding: 18px; background: var(--aa-bg, #f6f7fb); border-radius: var(--aa-radius-md, 12px); }
+        .adaire-migration-log { max-height: 300px; overflow-y: auto; background: #fff; padding: 12px; margin-top: 10px; border-radius: var(--aa-radius-sm, 8px); border: 1px solid var(--aa-line, rgba(20,24,31,0.1)); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+    </style>
     <?php
 }
 

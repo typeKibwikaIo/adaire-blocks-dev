@@ -57,28 +57,28 @@ function TypographyControls( { attributes, setAttributes, prefix } ) {
 	return (
 		<>
 			<TextControl
-				label={ __( "Font size", "pricing-comparison-block" ) }
+				label={ __( "Font size", "adaire-blocks" ) }
 				value={ a[ `${ prefix }FontSize` ] }
 				onChange={ set( `${ prefix }FontSize` ) }
 			/>
 			<SelectControl
-				label={ __( "Font weight", "pricing-comparison-block" ) }
+				label={ __( "Font weight", "adaire-blocks" ) }
 				value={ a[ `${ prefix }FontWeight` ] }
 				options={ FONT_WEIGHT_OPTIONS }
 				onChange={ set( `${ prefix }FontWeight` ) }
 			/>
 			<UnitControl
-				label={ __( "Line height", "pricing-comparison-block" ) }
+				label={ __( "Line height", "adaire-blocks" ) }
 				value={ a[ `${ prefix }LineHeight` ] }
 				onChange={ set( `${ prefix }LineHeight` ) }
 			/>
 			<UnitControl
-				label={ __( "Letter spacing", "pricing-comparison-block" ) }
+				label={ __( "Letter spacing", "adaire-blocks" ) }
 				value={ a[ `${ prefix }LetterSpacing` ] }
 				onChange={ set( `${ prefix }LetterSpacing` ) }
 			/>
 			<SelectControl
-				label={ __( "Text transform", "pricing-comparison-block" ) }
+				label={ __( "Text transform", "adaire-blocks" ) }
 				value={ a[ `${ prefix }TextTransform` ] }
 				options={ TEXT_TRANSFORM_OPTIONS }
 				onChange={ set( `${ prefix }TextTransform` ) }
@@ -276,12 +276,12 @@ export default function Edit({ attributes, setAttributes }) {
 			...(newGroups[groupIndex].featureSections || []),
 			{
 				id: sectionId,
-				title: __("New Section", "pricing-comparison-block"),
+				title: __("New Section", "adaire-blocks"),
 				open: true,
 				rows: [
 					{
 						id: `row-${Date.now()}`,
-						label: __("New Feature", "pricing-comparison-block"),
+						label: __("New Feature", "adaire-blocks"),
 						values: Array(newGroups[groupIndex].plans.length).fill({
 							type: "check",
 							text: "",
@@ -305,7 +305,7 @@ export default function Edit({ attributes, setAttributes }) {
 								...s.rows,
 								{
 									id: `row-${Date.now()}`,
-									label: __("New Feature", "pricing-comparison-block"),
+									label: __("New Feature", "adaire-blocks"),
 									values: Array(newGroups[groupIndex].plans.length).fill({
 										type: "check",
 										text: "",
@@ -321,14 +321,14 @@ export default function Edit({ attributes, setAttributes }) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={__("Audience Tabs", "pricing-comparison-block")}>
-					<p className="description">{__("Manage the main audience segments (tabs) for your pricing table.", "pricing-comparison-block")}</p>
+				<PanelBody title={__("Audience Tabs", "adaire-blocks")}>
+					<p className="description">{__("Manage the main audience segments (tabs) for your pricing table.", "adaire-blocks")}</p>
 					{planGroups.map((group, index) => (
 						<div key={group.id} className="pc-editor-sidebar-item">
 							<div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end', marginBottom: '8px' }}>
 								<div style={{ flex: 1 }}>
 									<TextControl
-										label={__("Tab Label", "pricing-comparison-block")}
+										label={__("Tab Label", "adaire-blocks")}
 										value={group.label}
 										onChange={(label) => {
 											const newGroups = [...planGroups];
@@ -341,7 +341,7 @@ export default function Edit({ attributes, setAttributes }) {
 									isDestructive
 									icon="trash"
 									onClick={() => {
-										if (window.confirm(__("Are you sure you want to remove this audience tab?", "pricing-comparison-block"))) {
+										if (window.confirm(__("Are you sure you want to remove this audience tab?", "adaire-blocks"))) {
 											const newGroups = planGroups.filter((_, i) => i !== index);
 											setAttributes({ planGroups: newGroups });
 										}
@@ -359,16 +359,16 @@ export default function Edit({ attributes, setAttributes }) {
 								...planGroups,
 								{
 									id: newGroupId,
-									label: __("New Audience", "pricing-comparison-block"),
+									label: __("New Audience", "adaire-blocks"),
 									plans: [
 										{
 											id: `plan-${Date.now()}`,
-											name: __("New Plan", "pricing-comparison-block"),
+											name: __("New Plan", "adaire-blocks"),
 											price: "$10",
 											pricePeriod: "/mo",
-											ctaText: __("Buy Now", "pricing-comparison-block"),
+											ctaText: __("Buy Now", "adaire-blocks"),
 											highlight: false,
-											metaItems: [__("Feature 1", "pricing-comparison-block")]
+											metaItems: [__("Feature 1", "adaire-blocks")]
 										}
 									],
 									featureSections: []
@@ -377,23 +377,23 @@ export default function Edit({ attributes, setAttributes }) {
 							setAttributes({ planGroups: newGroups });
 						}}
 					>
-						{__("Add Audience Tab", "pricing-comparison-block")}
+						{__("Add Audience Tab", "adaire-blocks")}
 					</Button>
 				</PanelBody>
 
-				<PanelBody title={__("Plan Management", "pricing-comparison-block")} initialOpen={false}>
-					<p className="description">{__("Manage plans for the currently active tab.", "pricing-comparison-block")}</p>
+				<PanelBody title={__("Plan Management", "adaire-blocks")} initialOpen={false}>
+					<p className="description">{__("Manage plans for the currently active tab.", "adaire-blocks")}</p>
 					{activePlans.map((plan, index) => (
 						<div key={plan.id} className="pc-editor-sidebar-item">
 							<div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end', marginBottom: '12px', borderBottom: '1px solid #eee', paddingBottom: '12px' }}>
 								<div style={{ flex: 1 }}>
 									<TextControl
-										label={__("Plan Name", "pricing-comparison-block")}
+										label={__("Plan Name", "adaire-blocks")}
 										value={plan.name}
 										onChange={(name) => updatePlan(planGroups.findIndex(g => g.id === activeTab), plan.id, { name })}
 									/>
 									<ToggleControl
-										label={__("Highlight Plan", "pricing-comparison-block")}
+										label={__("Highlight Plan", "adaire-blocks")}
 										checked={plan.highlight}
 										onChange={(highlight) => updatePlan(planGroups.findIndex(g => g.id === activeTab), plan.id, { highlight })}
 									/>
@@ -402,7 +402,7 @@ export default function Edit({ attributes, setAttributes }) {
 									isDestructive
 									icon="trash"
 									onClick={() => {
-										if (window.confirm(__("Remove this plan?", "pricing-comparison-block"))) {
+										if (window.confirm(__("Remove this plan?", "adaire-blocks"))) {
 											const groupIndex = planGroups.findIndex(g => g.id === activeTab);
 											const newGroups = [...planGroups];
 											newGroups[groupIndex].plans = newGroups[groupIndex].plans.filter(p => p.id !== plan.id);
@@ -420,10 +420,10 @@ export default function Edit({ attributes, setAttributes }) {
 							const groupIndex = planGroups.findIndex(g => g.id === activeTab);
 							const newPlan = {
 								id: `plan-${Date.now()}`,
-								name: __("New Plan", "pricing-comparison-block"),
+								name: __("New Plan", "adaire-blocks"),
 								price: "$20",
 								pricePeriod: "/mo",
-								ctaText: __("Buy Now", "pricing-comparison-block"),
+								ctaText: __("Buy Now", "adaire-blocks"),
 								highlight: false,
 								metaItems: []
 							};
@@ -432,13 +432,13 @@ export default function Edit({ attributes, setAttributes }) {
 							setAttributes({ planGroups: newGroups });
 						}}
 					>
-						{__("Add New Plan", "pricing-comparison-block")}
+						{__("Add New Plan", "adaire-blocks")}
 					</Button>
 				</PanelBody>
 
-				<PanelBody title={__("Layout Settings", "pricing-comparison-block")} initialOpen={false}>
+				<PanelBody title={__("Layout Settings", "adaire-blocks")} initialOpen={false}>
 					<SelectControl
-						label={__("Container Mode", "pricing-comparison-block")}
+						label={__("Container Mode", "adaire-blocks")}
 						value={containerMode}
 						options={[
 							{ label: "Full Width", value: "full" },
@@ -447,7 +447,7 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={(value) => setAttributes({ containerMode: value })}
 					/>
 					{containerMode === "constrained" && (
-						<BaseControl label={__("Max Width (Desktop)", "pricing-comparison-block")}>
+						<BaseControl label={__("Max Width (Desktop)", "adaire-blocks")}>
 							<RangeControl
 								value={containerMaxWidth?.desktop?.value || 1200}
 								onChange={(value) =>
@@ -464,7 +464,7 @@ export default function Edit({ attributes, setAttributes }) {
 						</BaseControl>
 					)}
 					<SelectControl
-						label={__("Display Mode", "pricing-comparison-block")}
+						label={__("Display Mode", "adaire-blocks")}
 						value={displayMode}
 						options={[
 							{ label: "Cards + Comparison", value: "comparison" },
@@ -474,60 +474,60 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={__("Typography", "pricing-comparison-block")} initialOpen={false}>
+				<PanelBody title={__("Typography", "adaire-blocks")} initialOpen={false}>
 					<SelectControl
-						label={__("Font Family", "pricing-comparison-block")}
+						label={__("Font Family", "adaire-blocks")}
 						value={fontFamily || ''}
 						options={FONT_FAMILY_OPTIONS}
 						onChange={(value) => setAttributes({ fontFamily: value })}
-						help={__("Applies to all text in this block.", "pricing-comparison-block")}
+						help={__("Applies to all text in this block.", "adaire-blocks")}
 					/>
 
-					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Heading", "pricing-comparison-block")}</p>
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Heading", "adaire-blocks")}</p>
 					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="heading" />
 
-					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Subheading", "pricing-comparison-block")}</p>
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Subheading", "adaire-blocks")}</p>
 					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="subheading" />
 
-					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Plan Name", "pricing-comparison-block")}</p>
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Plan Name", "adaire-blocks")}</p>
 					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="cardTitle" />
 
-					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Plan Description", "pricing-comparison-block")}</p>
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Plan Description", "adaire-blocks")}</p>
 					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="cardDescription" />
 
-					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Price", "pricing-comparison-block")}</p>
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Price", "adaire-blocks")}</p>
 					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="price" />
 
-					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("CTA / Button Text", "pricing-comparison-block")}</p>
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("CTA / Button Text", "adaire-blocks")}</p>
 					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="cta" />
 
-					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Feature List Label", "pricing-comparison-block")}</p>
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Feature List Label", "adaire-blocks")}</p>
 					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="featureLabel" />
 
-					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Feature Section Title", "pricing-comparison-block")}</p>
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Feature Section Title", "adaire-blocks")}</p>
 					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="featureSectionTitle" />
 
-					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Guarantee Text", "pricing-comparison-block")}</p>
+					<p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '8px' }}>{__("Guarantee Text", "adaire-blocks")}</p>
 					<TypographyControls attributes={attributes} setAttributes={setAttributes} prefix="guarantee" />
 				</PanelBody>
 
-				<PanelBody title={__("Spacing & Style", "pricing-comparison-block")} initialOpen={false}>
+				<PanelBody title={__("Spacing & Style", "adaire-blocks")} initialOpen={false}>
 					<RangeControl
-						label={__("Padding Top", "pricing-comparison-block")}
+						label={__("Padding Top", "adaire-blocks")}
 						value={paddingTop}
 						onChange={(value) => setAttributes({ paddingTop: value })}
 						min={0}
 						max={200}
 					/>
 					<RangeControl
-						label={__("Padding Bottom", "pricing-comparison-block")}
+						label={__("Padding Bottom", "adaire-blocks")}
 						value={paddingBottom}
 						onChange={(value) => setAttributes({ paddingBottom: value })}
 						min={0}
 						max={200}
 					/>
 					<RangeControl
-						label={__("Card Corner Radius", "pricing-comparison-block")}
+						label={__("Card Corner Radius", "adaire-blocks")}
 						value={cardRadius}
 						onChange={(value) => setAttributes({ cardRadius: value })}
 						min={0}
@@ -535,32 +535,32 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 
-				<PanelBody title={__("Color Settings", "pricing-comparison-block")} initialOpen={false}>
-					<BaseControl label={__("Background Color", "pricing-comparison-block")}>
+				<PanelBody title={__("Color Settings", "adaire-blocks")} initialOpen={false}>
+					<BaseControl label={__("Background Color", "adaire-blocks")}>
 						<BoundColorPalette
 							value={backgroundColor}
 							onChange={(value) => setAttributes({ backgroundColor: value })}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Text Color", "pricing-comparison-block")}>
+					<BaseControl label={__("Text Color", "adaire-blocks")}>
 						<BoundColorPalette
 							value={textColor}
 							onChange={(value) => setAttributes({ textColor: value })}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Accent Color", "pricing-comparison-block")}>
+					<BaseControl label={__("Accent Color", "adaire-blocks")}>
 						<BoundColorPalette
 							value={accentColor}
 							onChange={(value) => setAttributes({ accentColor: value })}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Muted Text Color", "pricing-comparison-block")}>
+					<BaseControl label={__("Muted Text Color", "adaire-blocks")}>
 						<BoundColorPalette
 							value={mutedTextColor}
 							onChange={(value) => setAttributes({ mutedTextColor: value })}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Border Color", "pricing-comparison-block")}>
+					<BaseControl label={__("Border Color", "adaire-blocks")}>
 						<BoundColorPalette
 							value={borderColor}
 							onChange={(value) => setAttributes({ borderColor: value })}
@@ -568,14 +568,14 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 
 					<hr />
-					<p><strong>{__("Cards", "pricing-comparison-block")}</strong></p>
-					<BaseControl label={__("Card Background", "pricing-comparison-block")}>
+					<p><strong>{__("Cards", "adaire-blocks")}</strong></p>
+					<BaseControl label={__("Card Background", "adaire-blocks")}>
 						<BoundColorPalette
 							value={cardBackground}
 							onChange={(value) => setAttributes({ cardBackground: value })}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Highlighted Card Background", "pricing-comparison-block")}>
+					<BaseControl label={__("Highlighted Card Background", "adaire-blocks")}>
 						<BoundColorPalette
 							value={highlightBackground}
 							onChange={(value) => setAttributes({ highlightBackground: value })}
@@ -583,20 +583,20 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 
 					<hr />
-					<p><strong>{__("Buttons", "pricing-comparison-block")}</strong></p>
-					<BaseControl label={__("Button Background", "pricing-comparison-block")}>
+					<p><strong>{__("Buttons", "adaire-blocks")}</strong></p>
+					<BaseControl label={__("Button Background", "adaire-blocks")}>
 						<BoundColorPalette
 							value={buttonBackground}
 							onChange={(value) => setAttributes({ buttonBackground: value })}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Button Text Color", "pricing-comparison-block")}>
+					<BaseControl label={__("Button Text Color", "adaire-blocks")}>
 						<BoundColorPalette
 							value={buttonTextColor}
 							onChange={(value) => setAttributes({ buttonTextColor: value })}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Button Outline Color", "pricing-comparison-block")}>
+					<BaseControl label={__("Button Outline Color", "adaire-blocks")}>
 						<BoundColorPalette
 							value={buttonOutlineColor}
 							onChange={(value) => setAttributes({ buttonOutlineColor: value })}
@@ -604,20 +604,20 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 
 					<hr />
-					<p><strong>{__("Table & Sticky", "pricing-comparison-block")}</strong></p>
-					<BaseControl label={__("Table Striped Color", "pricing-comparison-block")}>
+					<p><strong>{__("Table & Sticky", "adaire-blocks")}</strong></p>
+					<BaseControl label={__("Table Striped Color", "adaire-blocks")}>
 						<BoundColorPalette
 							value={tableStripedColor}
 							onChange={(value) => setAttributes({ tableStripedColor: value })}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Sticky Background", "pricing-comparison-block")}>
+					<BaseControl label={__("Sticky Background", "adaire-blocks")}>
 						<BoundColorPalette
 							value={stickyBackground}
 							onChange={(value) => setAttributes({ stickyBackground: value })}
 						/>
 					</BaseControl>
-					<BaseControl label={__("Sticky Border", "pricing-comparison-block")}>
+					<BaseControl label={__("Sticky Border", "adaire-blocks")}>
 						<BoundColorPalette
 							value={stickyBorderColor}
 							onChange={(value) => setAttributes({ stickyBorderColor: value })}
@@ -625,15 +625,15 @@ export default function Edit({ attributes, setAttributes }) {
 					</BaseControl>
 				</PanelBody>
 
-				<PanelBody title={__("Sticky Settings", "pricing-comparison-block")} initialOpen={false}>
+				<PanelBody title={__("Sticky Settings", "adaire-blocks")} initialOpen={false}>
 					<ToggleControl
-						label={__("Show Sticky Bar", "pricing-comparison-block")}
+						label={__("Show Sticky Bar", "adaire-blocks")}
 						checked={showSticky}
 						onChange={(value) => setAttributes({ showSticky: value })}
 					/>
 					{showSticky && (
 						<TextControl
-							label={__("Sticky Label", "pricing-comparison-block")}
+							label={__("Sticky Label", "adaire-blocks")}
 							value={stickyLabel}
 							onChange={(value) => setAttributes({ stickyLabel: value })}
 						/>
@@ -649,14 +649,14 @@ export default function Edit({ attributes, setAttributes }) {
 							className="pc-subheading"
 							value={subheadingText}
 							onChange={(value) => setAttributes({ subheadingText: value })}
-							placeholder={__("Subheading", "pricing-comparison-block")}
+							placeholder={__("Subheading", "adaire-blocks")}
 						/>
 						<RichText
 							tagName="h2"
 							className="pc-heading"
 							value={headingText}
 							onChange={(value) => setAttributes({ headingText: value })}
-							placeholder={__("Pricing Heading", "pricing-comparison-block")}
+							placeholder={__("Pricing Heading", "adaire-blocks")}
 						/>
 						{planGroups.length > 1 && (
 							<div className="pc-tabs" data-active-tab={activeGroup?.id || ""}>
@@ -669,7 +669,7 @@ export default function Edit({ attributes, setAttributes }) {
 										setActiveZone={setActiveZone}
 										content={
 											<TextControl
-												label={__("Tab Label", "pricing-comparison-block")}
+												label={__("Tab Label", "adaire-blocks")}
 												value={group.label}
 												onChange={(label) => {
 													const newGroups = [...planGroups];
@@ -698,7 +698,7 @@ export default function Edit({ attributes, setAttributes }) {
 								className="pc-guarantee"
 								value={guaranteeText}
 								onChange={(value) => setAttributes({ guaranteeText: value })}
-								placeholder={__("Guarantee Text", "pricing-comparison-block")}
+								placeholder={__("Guarantee Text", "adaire-blocks")}
 							/>
 						)}
 					</div>
@@ -727,7 +727,7 @@ export default function Edit({ attributes, setAttributes }) {
 											className="pc-card__description"
 											value={plan.description}
 											onChange={(val) => updatePlan(planGroups.indexOf(activeGroup), plan.id, { description: val })}
-											placeholder={__("Plan description", "pricing-comparison-block")}
+											placeholder={__("Plan description", "adaire-blocks")}
 										/>
 										<div className="pc-card__pricing-area">
 											<div className="pc-card__price">
@@ -814,7 +814,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 							<div className="pc-comparison-toggle-wrapper">
 								<button className="pc-comparison-toggle" type="button">
-									<span>{__("Compare features", "pricing-comparison-block")}</span>
+									<span>{__("Compare features", "adaire-blocks")}</span>
 									<span className="pc-toggle-icon">
 										<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
 											<polyline points="6 9 12 15 18 9"></polyline>
@@ -867,7 +867,7 @@ export default function Edit({ attributes, setAttributes }) {
 											tagName="span"
 											value={stickyLabel}
 											onChange={(value) => setAttributes({ stickyLabel: value })}
-											placeholder={__("Choose your plan", "pricing-comparison-block")}
+											placeholder={__("Choose your plan", "adaire-blocks")}
 										/>
 									</div>
 									{activePlans.map((plan) => (

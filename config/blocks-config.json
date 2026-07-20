@@ -540,32 +540,6 @@
         "advanced-styling"
       ]
     },
-    "modal-block": {
-      "enabled": true,
-      "limits": {},
-      "features": [
-        "nested-trigger-and-content-blocks",
-        "device-specific-dimensions",
-        "custom-overlay-and-close-button",
-        "accessibility-controls"
-      ]
-    },
-    "modal-trigger-block": {
-      "enabled": true,
-      "limits": {},
-      "features": [
-        "custom-triggers",
-        "advanced-styling"
-      ]
-    },
-    "modal-content-block": {
-      "enabled": true,
-      "limits": {},
-      "features": [
-        "custom-content",
-        "advanced-styling"
-      ]
-    },
     "card-scroll-item-block": {
       "enabled": true,
       "limits": {},
@@ -596,6 +570,18 @@
         "reopen-preferences-tab"
       ],
       "upgradeMessage": "Upgrade to Pro for unlimited custom consent categories and advanced consent analytics."
+    },
+    "popup-modal-block": {
+      "enabled": true,
+      "limits": {},
+      "features": [
+        "custom-triggers",
+        "flexible-modal-content",
+        "device-specific-dimensions",
+        "custom-overlay-and-close-button",
+        "accessibility-controls",
+        "advanced-styling"
+      ]
     }
   }
 }

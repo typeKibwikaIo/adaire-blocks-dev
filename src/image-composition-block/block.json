@@ -15,7 +15,7 @@
         ],
         "customClassName": true
     },
-    "textdomain": "image-composition-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "style": "file:./style-index.css",
     "attributes": {
@@ -37,7 +37,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "constrained"
+            "default": "constrained",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

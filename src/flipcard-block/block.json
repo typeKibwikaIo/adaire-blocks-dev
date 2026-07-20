@@ -17,7 +17,7 @@
             "full"
         ]
     },
-    "textdomain": "flipcard-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
@@ -63,7 +63,11 @@
         },
         "flipDirection": {
             "type": "string",
-            "default": "horizontal"
+            "default": "horizontal",
+            "enum": [
+                "horizontal",
+                "vertical"
+            ]
         },
         "animationDuration": {
             "type": "number",
@@ -71,7 +75,13 @@
         },
         "animationEasing": {
             "type": "string",
-            "default": "ease-in-out"
+            "default": "ease-in-out",
+            "enum": [
+                "ease-in-out",
+                "ease-in",
+                "ease-out",
+                "linear"
+            ]
         },
         "frontBackgroundColor": {
             "type": "string",

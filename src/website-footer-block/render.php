@@ -285,7 +285,7 @@ if ( ! function_exists( 'adaire_footer_render_nav_column_content' ) ) {
 				'--link-transition-duration'    => $transition,
 			)
 		);
-		$nav_label              = ! empty( $column['headingText'] ) ? $column['headingText'] : __( 'Footer navigation', 'website-footer-block' );
+		$nav_label              = ! empty( $column['headingText'] ) ? $column['headingText'] : __( 'Footer navigation', 'adaire-blocks' );
 
 		$inner = '';
 		if ( $resolved['dynamic'] ) {
@@ -479,8 +479,8 @@ if ( ! function_exists( 'adaire_footer_render_newsletter_column_content' ) ) {
 	 */
 	function adaire_footer_render_newsletter_column_content( $column ) {
 		$description  = isset( $column['newsletterDescription'] ) ? $column['newsletterDescription'] : '';
-		$placeholder  = isset( $column['newsletterPlaceholder'] ) ? $column['newsletterPlaceholder'] : __( 'Enter your email', 'website-footer-block' );
-		$button_text  = isset( $column['newsletterButtonText'] ) ? $column['newsletterButtonText'] : __( 'Subscribe', 'website-footer-block' );
+		$placeholder  = isset( $column['newsletterPlaceholder'] ) ? $column['newsletterPlaceholder'] : __( 'Enter your email', 'adaire-blocks' );
+		$button_text  = isset( $column['newsletterButtonText'] ) ? $column['newsletterButtonText'] : __( 'Subscribe', 'adaire-blocks' );
 		$action       = isset( $column['newsletterAction'] ) ? $column['newsletterAction'] : '';
 		$field_name   = isset( $column['newsletterFieldName'] ) && $column['newsletterFieldName'] ? $column['newsletterFieldName'] : 'email';
 		$button_color = isset( $column['newsletterButtonColor'] ) ? $column['newsletterButtonColor'] : '';

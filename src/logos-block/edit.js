@@ -105,13 +105,13 @@ export default function Edit({ attributes, setAttributes }) {
 				
 				{/* Container Settings */}
 				<PanelBody
-					title={__("Container Settings", "logos-block")}
+					title={__("Container Settings", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<ButtonGroup>
 						{[
-							{ label: __("Full Width", "logos-block"), value: "full" },
-							{ label: __("Constrained", "logos-block"), value: "constrained" },
+							{ label: __("Full Width", "adaire-blocks"), value: "full" },
+							{ label: __("Constrained", "adaire-blocks"), value: "constrained" },
 						].map((opt) => (
 							<Button
 								key={opt.value}
@@ -126,26 +126,26 @@ export default function Edit({ attributes, setAttributes }) {
 					{containerMode === "constrained" && (
 						<>
 							<p style={{ marginTop: "16px", marginBottom: "8px", fontWeight: 600 }}>
-								{__("Max Width", "logos-block")}
+								{__("Max Width", "adaire-blocks")}
 							</p>
 							<ButtonGroup style={{ marginBottom: "12px" }}>
 								<Button
 									icon={desktop}
 									isPrimary={deviceType === "desktop"}
 									onClick={() => setDeviceType("desktop")}
-									label={__("Desktop", "logos-block")}
+									label={__("Desktop", "adaire-blocks")}
 								/>
 								<Button
 									icon={tablet}
 									isPrimary={deviceType === "tablet"}
 									onClick={() => setDeviceType("tablet")}
-									label={__("Tablet", "logos-block")}
+									label={__("Tablet", "adaire-blocks")}
 								/>
 								<Button
 									icon={mobile}
 									isPrimary={deviceType === "mobile"}
 									onClick={() => setDeviceType("mobile")}
-									label={__("Mobile", "logos-block")}
+									label={__("Mobile", "adaire-blocks")}
 								/>
 							</ButtonGroup>
 							<div style={{ display: "flex", gap: "8px" }}>
@@ -200,18 +200,18 @@ export default function Edit({ attributes, setAttributes }) {
 					)}
 				</PanelBody>
 				<PanelBody
-					title={__("Title Settings", "logos-block")}
+					title={__("Title Settings", "adaire-blocks")}
 					initialOpen={true}
 				>
 					<TextControl
-						label={__("Title Text", "logos-block")}
+						label={__("Title Text", "adaire-blocks")}
 						value={titleText}
 						onChange={(value) => setAttributes({ titleText: value })}
 						placeholder="Enter title text..."
 					/>
 
 					<RangeControl
-						label={__("Font Size (px)", "logos-block")}
+						label={__("Font Size (px)", "adaire-blocks")}
 						value={titleFontSize}
 						onChange={(value) => setAttributes({ titleFontSize: value })}
 						min={12}
@@ -220,7 +220,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<SelectControl
-						label={__("Font Weight", "logos-block")}
+						label={__("Font Weight", "adaire-blocks")}
 						value={titleFontWeight}
 						onChange={(value) => setAttributes({ titleFontWeight: value })}
 						options={[
@@ -234,7 +234,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<ColorPicker
-						label={__("Text Color", "logos-block")}
+						label={__("Text Color", "adaire-blocks")}
 						color={titleColor}
 						onChangeComplete={(color) =>
 							setAttributes({ titleColor: color.hex })
@@ -243,7 +243,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<RangeControl
-						label={__("Padding Top (px)", "logos-block")}
+						label={__("Padding Top (px)", "adaire-blocks")}
 						value={titlePaddingTop}
 						onChange={(value) => setAttributes({ titlePaddingTop: value })}
 						min={0}
@@ -252,7 +252,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<RangeControl
-						label={__("Padding Bottom (px)", "logos-block")}
+						label={__("Padding Bottom (px)", "adaire-blocks")}
 						value={titlePaddingBottom}
 						onChange={(value) => setAttributes({ titlePaddingBottom: value })}
 						min={0}
@@ -262,36 +262,36 @@ export default function Edit({ attributes, setAttributes }) {
 				</PanelBody>
 
 				<PanelBody
-					title={__("Block Spacing", "logos-block")}
+					title={__("Block Spacing", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<RangeControl
-						label={__("Block Padding Top (px)", "logos-block")}
+						label={__("Block Padding Top (px)", "adaire-blocks")}
 						value={blockPaddingTop}
 						onChange={(value) => setAttributes({ blockPaddingTop: value })}
 						min={0}
 						max={200}
 						step={10}
-						help={__("Space above the entire block", "logos-block")}
+						help={__("Space above the entire block", "adaire-blocks")}
 					/>
 
 					<RangeControl
-						label={__("Block Padding Bottom (px)", "logos-block")}
+						label={__("Block Padding Bottom (px)", "adaire-blocks")}
 						value={blockPaddingBottom}
 						onChange={(value) => setAttributes({ blockPaddingBottom: value })}
 						min={0}
 						max={200}
 						step={10}
-						help={__("Space below the entire block", "logos-block")}
+						help={__("Space below the entire block", "adaire-blocks")}
 					/>
 				</PanelBody>
 
 				<PanelBody
-					title={__("Slider Settings", "logos-block")}
+					title={__("Slider Settings", "adaire-blocks")}
 					initialOpen={false}
 				>
 					<RangeControl
-						label={__("Slider Speed", "logos-block")}
+						label={__("Slider Speed", "adaire-blocks")}
 						value={sliderSpeed}
 						onChange={(value) => setAttributes({ sliderSpeed: value })}
 						min={0.1}
@@ -304,24 +304,24 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<RangeControl
-						label={__("Slides Per View", "logos-block")}
+						label={__("Slides Per View", "adaire-blocks")}
 						value={slidesPerView}
 						onChange={(value) => setAttributes({ slidesPerView: value })}
 						min={1}
 						max={8}
 						step={1}
-						help={__("Number of logos visible at once", "logos-block")}
+						help={__("Number of logos visible at once", "adaire-blocks")}
 					/>
 
 					<TextControl
-						label={__("Gap Between Slides", "logos-block")}
+						label={__("Gap Between Slides", "adaire-blocks")}
 						value={gap}
 						onChange={(value) => setAttributes({ gap: value })}
-						help={__("CSS gap value (e.g., 1rem, 20px)", "logos-block")}
+						help={__("CSS gap value (e.g., 1rem, 20px)", "adaire-blocks")}
 					/>
 
 					<ToggleControl
-						label={__("Pause on Hover", "logos-block")}
+						label={__("Pause on Hover", "adaire-blocks")}
 						checked={pauseOnHover}
 						onChange={(value) => setAttributes({ pauseOnHover: value })}
 						help={__(
@@ -331,17 +331,17 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 
 					<RangeControl
-						label={__("Logo Height (px)", "logos-block")}
+						label={__("Logo Height (px)", "adaire-blocks")}
 						value={logoHeight}
 						onChange={(value) => setAttributes({ logoHeight: value })}
 						min={30}
 						max={150}
 						step={5}
-						help={__("Height of logos in pixels", "logos-block")}
+						help={__("Height of logos in pixels", "adaire-blocks")}
 					/>
 
 					<ColorPicker
-						label={__("Background Color", "logos-block")}
+						label={__("Background Color", "adaire-blocks")}
 						color={backgroundColor}
 						onChangeComplete={(color) =>
 							setAttributes({ backgroundColor: color.hex })
@@ -509,8 +509,8 @@ export default function Edit({ attributes, setAttributes }) {
 								fontSize: "14px",
 							}}
 						>
-							{__("Partner Logos Slider Preview", "logos-block")} â€¢{" "}
-							{__("Edit in sidebar â†’", "logos-block")}
+							{__("Partner Logos Slider Preview", "adaire-blocks")} â€¢{" "}
+							{__("Edit in sidebar â†’", "adaire-blocks")}
 						</div>
 
 						{/* Slider Preview */}

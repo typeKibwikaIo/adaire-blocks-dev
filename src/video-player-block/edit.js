@@ -75,13 +75,13 @@ const VideoChoosePlaceholder = () => (
 <div className="ad-video-player__choose-placeholder">
 <span className="ad-video-player__choose-badge">
 <span className="ad-video-player__choose-badge-dot" aria-hidden="true" />
-{ __( 'Video Placeholder', 'video-player-block' ) }
+{ __( 'Video Placeholder', 'adaire-blocks' ) }
 </span>
 <div className="ad-video-player__choose-center">
 <span className="ad-video-player__choose-play" aria-hidden="true">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="#111827"><path d="M8 5v14l11-7z" /></svg>
 </span>
-<p className="ad-video-player__choose-text">{ __( 'Choose your video', 'video-player-block' ) }</p>
+<p className="ad-video-player__choose-text">{ __( 'Choose your video', 'adaire-blocks' ) }</p>
 </div>
 </div>
 );
@@ -136,7 +136,7 @@ alt=""
 <svg width="20" height="20" viewBox="0 0 24 24" fill="#111827"><path d="M8 5v14l11-7z" /></svg>
 </span>
 <p className="ad-video-player__choose-text">
-{ __( 'Preview unavailable in the editor — plays normally once published', 'video-player-block' ) }
+{ __( 'Preview unavailable in the editor — plays normally once published', 'adaire-blocks' ) }
 </p>
 </div>
 </div>
@@ -268,15 +268,15 @@ left: attributes[ names.left ],
 };
 
 return (
-<PanelBody section="style" priority="medium" title={ __( label, 'video-player-block' ) } initialOpen={ false }>
+<PanelBody section="style" priority="medium" title={ __( label, 'adaire-blocks' ) } initialOpen={ false }>
 <DeviceSwitcher
-label={ __( 'Device', 'video-player-block' ) }
+label={ __( 'Device', 'adaire-blocks' ) }
 deviceType={ deviceType }
 setDeviceType={ setDeviceType }
 tiers={ THREE_TIERS }
 />
 <BoxControl
-label={ __( label, 'video-player-block' ) }
+label={ __( label, 'adaire-blocks' ) }
 values={ getBoxValues( currentValues, deviceType ) }
 onChange={ ( value ) =>
 setAttributes(
@@ -297,18 +297,18 @@ return (
 className={ `ad-video-player__container ad-video-player__setup-container ${ containerMode === 'constrained' ? 'is-constrained' : '' }` }
 >
 <Placeholder
-label={ __( 'Video Player', 'video-player-block' ) }
+label={ __( 'Video Player', 'adaire-blocks' ) }
 instructions={ __(
 'Set the initial width and height for your video. You can change these anytime from the Container Settings panel.',
-'video-player-block'
+'adaire-blocks'
 ) }
 >
 <div className="ad-video-player__setup">
-<BaseControl label={ __( 'Width', 'video-player-block' ) } __nextHasNoMarginBottom>
+<BaseControl label={ __( 'Width', 'adaire-blocks' ) } __nextHasNoMarginBottom>
 <ButtonGroup>
 { [
-{ label: __( 'Full Width', 'video-player-block' ), value: 'full' },
-{ label: __( 'Constrained', 'video-player-block' ), value: 'constrained' },
+{ label: __( 'Full Width', 'adaire-blocks' ), value: 'full' },
+{ label: __( 'Constrained', 'adaire-blocks' ), value: 'constrained' },
 ].map( ( option ) => (
 <Button
 key={ option.value }
@@ -348,7 +348,7 @@ desktop: { ...desktopMaxWidth, unit },
 </div>
 ) }
 </BaseControl>
-<BaseControl label={ __( 'Height', 'video-player-block' ) } __nextHasNoMarginBottom>
+<BaseControl label={ __( 'Height', 'adaire-blocks' ) } __nextHasNoMarginBottom>
 <div className="ad-video-player__control-row">
 <TextControl
 type="number"
@@ -380,7 +380,7 @@ desktop: { ...currentHeight, unit },
 variant="primary"
 onClick={ () => setAttributes( { dimensionsConfigured: true } ) }
 >
-{ __( 'Continue', 'video-player-block' ) }
+{ __( 'Continue', 'adaire-blocks' ) }
 </Button>
 </div>
 </Placeholder>
@@ -392,42 +392,42 @@ onClick={ () => setAttributes( { dimensionsConfigured: true } ) }
 return (
 <>
 <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-<PanelBody section="layout" title={ __( 'Container Settings', 'video-player-block' ) } initialOpen>
+<PanelBody section="layout" title={ __( 'Container Settings', 'adaire-blocks' ) } initialOpen>
 <RangeControl
-label={ __( 'Border Radius (px)', 'video-player-block' ) }
+label={ __( 'Border Radius (px)', 'adaire-blocks' ) }
 value={ containerBorderRadius }
 onChange={ ( value ) => setAttributes( { containerBorderRadius: Number( value ) } ) }
 min={ 0 }
 max={ 100 }
 />
-<BaseControl label={ __( 'Background Color', 'video-player-block' ) } __nextHasNoMarginBottom>
+<BaseControl label={ __( 'Background Color', 'adaire-blocks' ) } __nextHasNoMarginBottom>
 <BoundColorPalette
 value={containerBackgroundColor || ""}
 onChange={ ( v ) => setAttributes( { containerBackgroundColor: v || '' } ) }
 />
 <Button onClick={ () => setAttributes( { containerBackgroundColor: '' } ) } isSmall style={ { marginTop: '8px' } }>
-{ __( 'Reset (transparent)', 'video-player-block' ) }
+{ __( 'Reset (transparent)', 'adaire-blocks' ) }
 </Button>
 </BaseControl>
 <ToggleControl
-label={ __( 'Show Border', 'video-player-block' ) }
+label={ __( 'Show Border', 'adaire-blocks' ) }
 checked={ !! containerBorderEnabled }
 onChange={ ( value ) => setAttributes( { containerBorderEnabled: value } ) }
-help={ __( 'Off by default so an old Border Width/Color value never shows unexpectedly.', 'video-player-block' ) }
+help={ __( 'Off by default so an old Border Width/Color value never shows unexpectedly.', 'adaire-blocks' ) }
 />
 { containerBorderEnabled && (
 <>
-<BaseControl label={ __( 'Border Color', 'video-player-block' ) } __nextHasNoMarginBottom>
+<BaseControl label={ __( 'Border Color', 'adaire-blocks' ) } __nextHasNoMarginBottom>
 <BoundColorPalette
 value={containerBorderColor || ""}
 onChange={ ( v ) => setAttributes( { containerBorderColor: v || '' } ) }
 />
 <Button onClick={ () => setAttributes( { containerBorderColor: '' } ) } isSmall style={ { marginTop: '8px' } }>
-{ __( 'Reset (none)', 'video-player-block' ) }
+{ __( 'Reset (none)', 'adaire-blocks' ) }
 </Button>
 </BaseControl>
 <RangeControl
-label={ __( 'Border Width (px)', 'video-player-block' ) }
+label={ __( 'Border Width (px)', 'adaire-blocks' ) }
 value={ containerBorderWidth ?? 0 }
 onChange={ ( value ) => setAttributes( { containerBorderWidth: Number( value ) } ) }
 min={ 0 }
@@ -436,7 +436,7 @@ max={ 20 }
 </>
 ) }
 <RangeControl
-label={ __( 'Shadow Intensity', 'video-player-block' ) }
+label={ __( 'Shadow Intensity', 'adaire-blocks' ) }
 value={ containerShadowIntensity ?? 0 }
 onChange={ ( value ) => setAttributes( { containerShadowIntensity: value } ) }
 min={ 0 }
@@ -445,7 +445,7 @@ step={ 0.05 }
 />
 <div className="ad-video-player__control-group">
 <DeviceSwitcher
-label={ __( 'Container Height', 'video-player-block' ) }
+label={ __( 'Container Height', 'adaire-blocks' ) }
 deviceType={ deviceType }
 setDeviceType={ setDeviceType }
 tiers={ THREE_TIERS }
@@ -477,8 +477,8 @@ containerHeight: {
 </div>
 <ButtonGroup>
 { [
-{ label: __( 'Full Width', 'video-player-block' ), value: 'full' },
-{ label: __( 'Constrained', 'video-player-block' ), value: 'constrained' },
+{ label: __( 'Full Width', 'adaire-blocks' ), value: 'full' },
+{ label: __( 'Constrained', 'adaire-blocks' ), value: 'constrained' },
 ].map( ( option ) => (
 <Button
 key={ option.value }
@@ -493,7 +493,7 @@ onClick={ () => setAttributes( { containerMode: option.value } ) }
 { containerMode === 'constrained' && (
 <div className="ad-video-player__control-group">
 <DeviceSwitcher
-label={ __( 'Max Width', 'video-player-block' ) }
+label={ __( 'Max Width', 'adaire-blocks' ) }
 deviceType={ deviceType }
 setDeviceType={ setDeviceType }
 tiers={ THREE_TIERS }
@@ -524,15 +524,15 @@ containerMaxWidth: {
 </div>
 ) }
 </PanelBody>
-<PanelBody section="content" title={ __( 'Video Settings', 'video-player-block' ) } initialOpen={ false }>
+<PanelBody section="content" title={ __( 'Video Settings', 'adaire-blocks' ) } initialOpen={ false }>
 <SelectControl
-label={ __( 'Insert As', 'video-player-block' ) }
+label={ __( 'Insert As', 'adaire-blocks' ) }
 value={ mediaKind || 'video' }
 options={ [ { label: 'Video', value: 'video' }, { label: 'Image', value: 'image' } ] }
 onChange={ ( value ) => setAttributes( { mediaKind: value } ) }
 />
 <SelectControl
-label={ __( 'Video Type', 'video-player-block' ) }
+label={ __( 'Video Type', 'adaire-blocks' ) }
 value={ videoType }
 options={ [
 { label: 'YouTube', value: 'youtube' },
@@ -543,14 +543,14 @@ onChange={ ( value ) => setAttributes( { videoType: value } ) }
 />
 { videoType === 'youtube' && (
 <TextControl
-label={ __( 'Youtube Video URL (or ID)', 'video-player-block' ) }
+label={ __( 'Youtube Video URL (or ID)', 'adaire-blocks' ) }
 value={ ytVideoUrl }
 onChange={ ( value ) => setAttributes( { ytVideoId: getYouTubeId( value ), ytVideoUrl: value } ) }
 />
 ) }
 { videoType === 'vimeo' && (
 <TextControl
-label={ __( 'Vimeo Video URL (or ID)', 'video-player-block' ) }
+label={ __( 'Vimeo Video URL (or ID)', 'adaire-blocks' ) }
 value={ vimeoVideoUrl }
 onChange={ ( value ) => setAttributes( { vimeoVideoId: getVimeoId( value ), vimeoVideoUrl: value } ) }
 />
@@ -558,7 +558,7 @@ onChange={ ( value ) => setAttributes( { vimeoVideoId: getVimeoId( value ), vime
 { videoType === 'upload' && (
 <>
 <TextControl
-label={ __( 'Remote URL', 'video-player-block' ) }
+label={ __( 'Remote URL', 'adaire-blocks' ) }
 value={ mediaRemoteUrl || '' }
 onChange={ ( value ) => setAttributes( { mediaRemoteUrl: value } ) }
 placeholder={ mediaKind === 'image' ? 'https://example.com/image.jpg' : 'https://example.com/video.mp4' }
@@ -575,13 +575,13 @@ videoFileUrl: media?.url || '',
 } ) }
 render={ ( { open } ) => (
 <Button isSecondary onClick={ open }>
-{ attributes.mediaFileUrl ? __( 'Replace file', 'video-player-block' ) : __( 'Upload/select file', 'video-player-block' ) }
+{ attributes.mediaFileUrl ? __( 'Replace file', 'adaire-blocks' ) : __( 'Upload/select file', 'adaire-blocks' ) }
 </Button>
 ) }
 />
 </MediaUploadCheck>
 <Button isSecondary onClick={ sideloadMedia }>
-{ __( 'Download locally', 'video-player-block' ) }
+{ __( 'Download locally', 'adaire-blocks' ) }
 </Button>
 </div>
 </>
@@ -594,7 +594,7 @@ render={ ( { open } ) => (
 ].map( ( [ key, label, checked ] ) => (
 <ToggleControl
 key={ key }
-label={ __( label, 'video-player-block' ) }
+label={ __( label, 'adaire-blocks' ) }
 checked={ checked }
 onChange={ ( value ) => setAttributes( { [ key ]: value } ) }
 />
@@ -613,7 +613,7 @@ setActiveZone={ setActiveZone }
 content={
 <>
 <SelectControl
-label={ __( 'Video Type', 'video-player-block' ) }
+label={ __( 'Video Type', 'adaire-blocks' ) }
 value={ videoType }
 options={ [
 { label: 'YouTube', value: 'youtube' },
@@ -624,14 +624,14 @@ onChange={ ( value ) => setAttributes( { videoType: value } ) }
 />
 { videoType === 'youtube' && (
 <TextControl
-label={ __( 'Youtube Video URL (or ID)', 'video-player-block' ) }
+label={ __( 'Youtube Video URL (or ID)', 'adaire-blocks' ) }
 value={ ytVideoUrl }
 onChange={ ( value ) => setAttributes( { ytVideoId: getYouTubeId( value ), ytVideoUrl: value } ) }
 />
 ) }
 { videoType === 'vimeo' && (
 <TextControl
-label={ __( 'Vimeo Video URL (or ID)', 'video-player-block' ) }
+label={ __( 'Vimeo Video URL (or ID)', 'adaire-blocks' ) }
 value={ vimeoVideoUrl }
 onChange={ ( value ) => setAttributes( { vimeoVideoId: getVimeoId( value ), vimeoVideoUrl: value } ) }
 />
@@ -648,7 +648,7 @@ videoFileUrl: media?.url || '',
 } ) }
 render={ ( { open } ) => (
 <Button isSecondary onClick={ open }>
-{ attributes.mediaFileUrl ? __( 'Replace file', 'video-player-block' ) : __( 'Upload/select file', 'video-player-block' ) }
+{ attributes.mediaFileUrl ? __( 'Replace file', 'adaire-blocks' ) : __( 'Upload/select file', 'adaire-blocks' ) }
 </Button>
 ) }
 />

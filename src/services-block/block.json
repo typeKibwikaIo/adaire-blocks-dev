@@ -15,7 +15,7 @@
         "customClassName": true,
         "reusable": true
     },
-    "textdomain": "services-block",
+    "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
     "editorStyle": "file:./index.css",
     "style": "file:./style-index.css",
