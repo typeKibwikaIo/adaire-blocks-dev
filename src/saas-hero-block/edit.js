@@ -1,8 +1,7 @@
 import { MediaUpload, MediaUploadCheck, RichText, URLInput, useBlockProps } from '@wordpress/block-editor';
 import { BaseControl, Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
-import { useDispatch } from '@wordpress/data';
+import { useState } from '@wordpress/element';
 import AdaireColorControl from '../components/AdaireColorControl';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
@@ -131,29 +130,10 @@ function RepeaterField({ items, onChange, renderItem, addLabel, newItem }) {
   );
 }
 
-export default function Edit({ attributes, setAttributes, isSelected, clientId }) {
+export default function Edit({ attributes, setAttributes, isSelected }) {
   const [activeZone, setActiveZone] = useState(null);
   const [ratingIconPickerIndex, setRatingIconPickerIndex] = useState(null);
   const a = attributes;
-
-  // ── Block Interaction: selecting the block should also surface its
-  // Inspector settings automatically, in whichever editor shell is hosting
-  // it (post editor vs. site editor both expose their own sidebar store).
-  const editPost = useDispatch('core/edit-post');
-  const editSite = useDispatch('core/edit-site');
-  useEffect(() => {
-    if (!isSelected) return;
-    try {
-      if (editPost && typeof editPost.openGeneralSidebar === 'function') {
-        editPost.openGeneralSidebar('edit-post/block');
-      } else if (editSite && typeof editSite.openGeneralSidebar === 'function') {
-        editSite.openGeneralSidebar('edit-site/block-inspector');
-      }
-    } catch (e) {
-      // Sidebar store isn't available in this editor shell (e.g. widgets
-      // screen) — selection still works natively, just without auto-open.
-    }
-  }, [isSelected, clientId]);
 
   const blockProps = useBlockProps({
     className: [

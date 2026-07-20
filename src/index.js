@@ -73,6 +73,5 @@ import "./column-block"
 import "./row-block"
 import "./timeline-block"
 import "./about-us-block"
-import "./editor-panel"
 
 
