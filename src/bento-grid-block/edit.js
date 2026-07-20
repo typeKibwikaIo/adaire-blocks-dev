@@ -259,7 +259,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             '--infogrid4-bg-color': backgroundColor,
             '--infogrid4-card-bg': cardBackgroundColor,
             '--infogrid4-card-radius': `${cardBorderRadius}px`,
-            '--infogrid4-grid-border-color': gridBorderColor,
+            // Renamed from --infogrid4-grid-border-color: WordPress core's
+            // global styles add a blanket `[style*=border-color] { border-style:
+            // solid }` rule that does a plain substring match on the whole
+            // style attribute text — it was matching this custom property's
+            // NAME (not a real border-color declaration) and forcing an
+            // unwanted solid border onto the block wrapper itself.
+            '--infogrid4-grid-line-color': gridBorderColor,
             '--infogrid4-grid-border-thickness': `${gridBorderWidth}px`,
             '--infogrid4-grid-gap': `${gridGap}px`,
             // Title typography

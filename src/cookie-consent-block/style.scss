@@ -268,8 +268,7 @@
 		margin-left: auto;
 	}
 
-	&__btn,
-	&__reopen {
+	&__btn {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -311,8 +310,7 @@
 		}
 	}
 
-	&__btn:hover,
-	&__reopen:hover {
+	&__btn:hover {
 		transform: translateY(-1px);
 	}
 
@@ -345,18 +343,40 @@
 		}
 	}
 
-	// Reopen tab
+	// Reopen tab — round icon-only button, matching the free Cookie Notice
+	// block's __reopen (see cookie-notice-block/style.scss) so the two blocks
+	// present the same "quiet tab" once a visitor has made a choice.
 	&__reopen {
 		position: fixed;
 		z-index: var(--ccb-z-index, 999999);
 		bottom: 16px;
-		background: var(--ccb-bg, #ffffff);
-		color: var(--ccb-text, #5f6368);
-		border: 1px solid var(--ccb-border-color, #e5e7eb);
-		border-radius: 999px;
-		padding: .6rem 1rem;
-		font-size: .85rem;
-		box-shadow: 0 6px 24px rgba(32, 33, 36, 0.16);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 48px;
+		height: 48px;
+		padding: 0;
+		border: none;
+		border-radius: 50%;
+		background: var(--ccb-accent, #6366f1);
+		color: var(--ccb-btn-text, #ffffff);
+		cursor: pointer;
+		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.15);
+		transition: transform .18s ease, box-shadow .18s ease;
+
+		svg {
+			width: 1.2em;
+			height: 1.2em;
+		}
+
+		&:hover {
+			transform: scale(1.06);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--ccb-accent, #6366f1);
+			outline-offset: 2px;
+		}
 	}
 
 	&__reopen[data-reopen-position="bottom-left"] { left: 16px; }

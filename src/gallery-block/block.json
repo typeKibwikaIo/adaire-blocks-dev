@@ -35,7 +35,11 @@
         },
         "layoutMode": {
             "type": "string",
-            "default": "grid"
+            "default": "grid",
+            "enum": [
+                "grid",
+                "masonry"
+            ]
         },
         "columns": {
             "type": "object",
@@ -85,7 +89,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

@@ -22,7 +22,14 @@
     "attributes": {
         "layout": {
             "type": "string",
-            "default": "horizontal"
+            "default": "horizontal",
+            "enum": [
+                "horizontal",
+                "centered",
+                "stacked",
+                "split",
+                "minimal"
+            ]
         },
         "showTopBar": {
             "type": "boolean",
@@ -141,7 +148,13 @@
         },
         "navigationSource": {
             "type": "string",
-            "default": "legacy"
+            "default": "legacy",
+            "enum": [
+                "legacy",
+                "primary",
+                "footer",
+                "menu"
+            ]
         },
         "selectedMenuId": {
             "type": "number",
@@ -157,7 +170,12 @@
         },
         "mobileMenuStyle": {
             "type": "string",
-            "default": "dropdown"
+            "default": "dropdown",
+            "enum": [
+                "dropdown",
+                "slide-in",
+                "overlay"
+            ]
         },
         "mobileSlideDirection": {
             "type": "string",
@@ -197,7 +215,12 @@
         },
         "ctaStyle": {
             "type": "string",
-            "default": "filled"
+            "default": "filled",
+            "enum": [
+                "filled",
+                "outlined",
+                "ghost"
+            ]
         },
         "ctaIcon": {
             "type": "string",
@@ -225,7 +248,12 @@
         },
         "signInStyle": {
             "type": "string",
-            "default": "outlined"
+            "default": "outlined",
+            "enum": [
+                "filled",
+                "outlined",
+                "ghost"
+            ]
         },
         "signInIcon": {
             "type": "string",
@@ -249,7 +277,12 @@
         },
         "signUpStyle": {
             "type": "string",
-            "default": "filled"
+            "default": "filled",
+            "enum": [
+                "filled",
+                "outlined",
+                "ghost"
+            ]
         },
         "signUpIcon": {
             "type": "string",
@@ -257,7 +290,13 @@
         },
         "stickyBehavior": {
             "type": "string",
-            "default": "static"
+            "default": "static",
+            "enum": [
+                "static",
+                "sticky",
+                "scroll-up",
+                "hide-down"
+            ]
         },
         "showSearch": {
             "type": "boolean",
@@ -332,7 +371,13 @@
         },
         "backgroundType": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+                "",
+                "color",
+                "gradient",
+                "image"
+            ]
         },
         "backgroundColor": {
             "type": "string",
@@ -360,7 +405,12 @@
         },
         "buttonShape": {
             "type": "string",
-            "default": "pill"
+            "default": "pill",
+            "enum": [
+                "pill",
+                "rounded",
+                "square"
+            ]
         },
         "borderBottom": {
             "type": "boolean",
@@ -447,7 +497,11 @@
         },
         "hamburgerPosition": {
             "type": "string",
-            "default": "left"
+            "default": "left",
+            "enum": [
+                "left",
+                "right"
+            ]
         },
         "hamburgerSize": {
             "type": "number",
@@ -526,7 +580,12 @@
         },
         "bgPosition": {
             "type": "string",
-            "default": "center center"
+            "default": "center center",
+            "enum": [
+                "top left", "top center", "top right",
+                "center left", "center center", "center right",
+                "bottom left", "bottom center", "bottom right"
+            ]
         },
         "bgRepeat": {
             "type": "string",

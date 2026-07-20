@@ -60,7 +60,12 @@
         },
         "position": {
             "type": "string",
-            "default": "floating-bottom-right"
+            "default": "floating-bottom-right",
+            "enum": [
+                "floating-bottom-right",
+                "floating-bottom-left",
+                "floating-bottom-center"
+            ]
         },
         "expirationDays": {
             "type": "number",

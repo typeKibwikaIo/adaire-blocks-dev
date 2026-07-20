@@ -417,8 +417,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				</div>
 
 				{ a.reopenButtonEnabled && (
-					<div className="adaire-cookie-banner__reopen">
-						<SlidersIcon /> { a.reopenButtonText }
+					<div className="adaire-cookie-banner__reopen" aria-label={ a.reopenButtonText }>
+						<SlidersIcon />
 					</div>
 				) }
 			</div>

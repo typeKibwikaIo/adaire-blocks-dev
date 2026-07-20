@@ -609,7 +609,18 @@
         },
         "fontFamily": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+                "",
+                "Arial, Helvetica, sans-serif",
+                "Helvetica, Arial, sans-serif",
+                "Georgia, serif",
+                "'Times New Roman', Times, serif",
+                "Verdana, Geneva, sans-serif",
+                "'Trebuchet MS', sans-serif",
+                "'Courier New', Courier, monospace",
+                "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+            ]
         },
         "headingFontSize": {
             "type": "string",

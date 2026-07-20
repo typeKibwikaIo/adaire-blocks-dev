@@ -83,7 +83,11 @@
         },
         "layoutType": {
             "type": "string",
-            "default": "normal"
+            "default": "normal",
+            "enum": [
+                "normal",
+                "list"
+            ]
         },
         "columns": {
             "type": "number",
@@ -111,7 +115,11 @@
         },
         "filterPosition": {
             "type": "string",
-            "default": "top"
+            "default": "top",
+            "enum": [
+                "top",
+                "bottom"
+            ]
         },
         "filterStyle": {
             "type": "string",
@@ -222,7 +230,15 @@
         },
         "animationType": {
             "type": "string",
-            "default": "fadeUp"
+            "default": "fadeUp",
+            "enum": [
+                "fadeUp",
+                "fadeIn",
+                "scaleUp",
+                "slideUp",
+                "rotateIn",
+                "bounceIn"
+            ]
         },
         "transitionAnimation": {
             "type": "string",
@@ -248,7 +264,15 @@
         },
         "animationEase": {
             "type": "string",
-            "default": "power2.out"
+            "default": "power2.out",
+            "enum": [
+                "power2.out",
+                "power3.out",
+                "back.out",
+                "elastic.out",
+                "bounce.out",
+                "circ.out"
+            ]
         },
         "enableHoverEffects": {
             "type": "boolean",
@@ -281,7 +305,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

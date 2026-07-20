@@ -248,8 +248,10 @@ $html .= '</div>'; // .adaire-cookie-banner__actions
 $html .= '</div>'; // .adaire-cookie-banner__panel
 
 if ( $a['reopenButtonEnabled'] ) {
+	// Icon-only round tab, matching the free Cookie Notice block's
+	// __reopen button — text stays as the aria-label only.
 	$html .= '<button type="button" class="adaire-cookie-banner__reopen" data-cookie-action="reopen" data-reopen-position="' . esc_attr( $a['reopenButtonPosition'] ) . '" aria-label="' . esc_attr( $a['reopenButtonText'] ) . '">';
-	$html .= adaire_cookie_banner_sliders_svg() . ' ' . esc_html( $a['reopenButtonText'] );
+	$html .= adaire_cookie_banner_sliders_svg();
 	$html .= '</button>';
 }
 

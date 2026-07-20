@@ -151,7 +151,14 @@
         },
         "animationEasing": {
             "type": "string",
-            "default": "ease"
+            "default": "ease",
+            "enum": [
+                "ease",
+                "linear",
+                "ease-in",
+                "ease-out",
+                "ease-in-out"
+            ]
         },
         "allowMultipleOpen": {
             "type": "boolean",
@@ -236,7 +243,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

@@ -28,7 +28,13 @@
         },
         "navigationSource": {
             "type": "string",
-            "default": "legacy"
+            "default": "legacy",
+            "enum": [
+                "legacy",
+                "primary",
+                "footer",
+                "menu"
+            ]
         },
         "selectedMenuId": {
             "type": "number",
@@ -644,7 +650,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

@@ -58,7 +58,7 @@ export default function save({ attributes }) {
             '--infogrid4-bg-color': backgroundColor,
             '--infogrid4-card-bg': cardBackgroundColor,
             '--infogrid4-card-radius': `${cardBorderRadius}px`,
-            '--infogrid4-grid-border-color': gridBorderColor,
+            '--infogrid4-grid-line-color': gridBorderColor,
             '--infogrid4-grid-border-thickness': `${gridBorderWidth}px`,
             '--infogrid4-grid-gap': `${gridGap}px`,
             '--infogrid4-title-color': titleColor,

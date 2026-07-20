@@ -25,14 +25,18 @@
 }
 
 // ── Canvas shift ───────────────────────────────────────────────────────────
+// `.interface-interface-skeleton` is the single outermost layout wrapper
+// shared by both the Post editor and the Site editor (from @wordpress/
+// interface) — everything else in this list (`.edit-post-layout`,
+// `.editor-editor-layout`, `.editor-visual-editor`, ...) is a DESCENDANT of
+// it in the live DOM. Applying the same `margin-right` to an ancestor AND
+// its own descendant stacked the shift twice (e.g. 300px + 300px), which is
+// what was leaving a huge blank gutter next to the sidebar instead of the
+// intended single 300px reservation. Shifting only the outermost wrapper
+// reserves the space exactly once.
 body.adaire-ep-active {
-	.edit-post-layout,
-	.edit-site-layout,
-	.editor-editor-layout,
 	.interface-interface-skeleton,
-	.editor-visual-editor,
-	[class*="edit-post-layout"],
-	[class*="editor-editor-layout"] {
+	[class*="interface-interface-skeleton"]:not([class*="__"]) {
 		margin-right: var( --ep-width ) !important;
 		transition: margin-right var( --ep-transition );
 	}
@@ -45,13 +49,8 @@ body.adaire-ep-active {
 }
 
 body.adaire-ep-active.adaire-ep-collapsed {
-	.edit-post-layout,
-	.edit-site-layout,
-	.editor-editor-layout,
 	.interface-interface-skeleton,
-	.editor-visual-editor,
-	[class*="edit-post-layout"],
-	[class*="editor-editor-layout"] {
+	[class*="interface-interface-skeleton"]:not([class*="__"]) {
 		margin-right: var( --ep-width-collapse ) !important;
 	}
 }

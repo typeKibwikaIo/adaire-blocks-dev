@@ -134,7 +134,18 @@
         },
         "fontFamily": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+                "",
+                "Arial, Helvetica, sans-serif",
+                "Helvetica, Arial, sans-serif",
+                "Georgia, serif",
+                "'Times New Roman', Times, serif",
+                "Verdana, Geneva, sans-serif",
+                "'Trebuchet MS', sans-serif",
+                "'Courier New', Courier, monospace",
+                "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+            ]
         },
         "postsPerPage": {
             "type": "number",
@@ -195,7 +206,11 @@
         },
         "layoutType": {
             "type": "string",
-            "default": "normal"
+            "default": "normal",
+            "enum": [
+                "normal",
+                "list"
+            ]
         },
         "columns": {
             "type": "number",
@@ -207,7 +222,11 @@
         },
         "filterPosition": {
             "type": "string",
-            "default": "top"
+            "default": "top",
+            "enum": [
+                "top",
+                "bottom"
+            ]
         },
         "filterStyle": {
             "type": "string",
@@ -318,7 +337,15 @@
         },
         "animationType": {
             "type": "string",
-            "default": "fadeUp"
+            "default": "fadeUp",
+            "enum": [
+                "fadeUp",
+                "fadeIn",
+                "scaleUp",
+                "slideUp",
+                "rotateIn",
+                "bounceIn"
+            ]
         },
         "transitionAnimation": {
             "type": "string",
@@ -344,7 +371,15 @@
         },
         "animationEase": {
             "type": "string",
-            "default": "power2.out"
+            "default": "power2.out",
+            "enum": [
+                "power2.out",
+                "power3.out",
+                "back.out",
+                "elastic.out",
+                "bounce.out",
+                "circ.out"
+            ]
         },
         "enableHoverEffects": {
             "type": "boolean",
@@ -377,7 +412,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",

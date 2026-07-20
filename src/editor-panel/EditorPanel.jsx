@@ -41,8 +41,12 @@ const KNOWN_GROUPS = [
 	                                    'columns', 'rows', 'grid', 'flex' ].some( k => n.toLowerCase().includes( k.toLowerCase() ) ) },
 ];
 
-// Attrs always managed in the Advanced tab built-ins — skip from General
-const BUILTIN_ADVANCED = new Set( [ 'anchor', 'className', 'AdaireBlocksMargin', 'AdaireBlocksPadding', 'AdaireBlocksZIndex' ] );
+// Attrs always managed in the Advanced tab built-ins — skip from General.
+// `blockId` is an internal auto-generated unique-ID attribute (used by many
+// blocks to scope their own CSS custom properties) — it has no dedicated
+// control on either tab, so listing it here hides it entirely rather than
+// letting it fall through to the generic auto-grouped text-input fallback.
+const BUILTIN_ADVANCED = new Set( [ 'anchor', 'className', 'blockId', 'AdaireBlocksMargin', 'AdaireBlocksPadding', 'AdaireBlocksZIndex' ] );
 
 function autoGroupAttrs( schema ) {
 	const entries = Object.entries( schema ).filter( ( [ name, s ] ) =>
@@ -406,8 +410,19 @@ function SpacingCtrl( { label, value = {}, onChange } ) {
 
 function AdvancedBuiltins( { attrs, setAttr, blockType } ) {
 	const schema    = blockType?.attributes ?? {};
-	const hasMargin  = 'AdaireBlocksMargin'  in schema;
-	const hasPadding = 'AdaireBlocksPadding' in schema;
+	const hasCustomMargin  = 'AdaireBlocksMargin'  in schema;
+	const hasCustomPadding = 'AdaireBlocksPadding' in schema;
+	// Many blocks opt into WP core's own `supports.spacing` instead of the
+	// custom AdaireBlocksMargin/Padding attribute — core auto-registers a
+	// `style.spacing.margin`/`.padding` attribute for those and applies it to
+	// the block wrapper automatically, but this panel only ever looked for
+	// the custom attribute name, so those blocks (row-block and others) showed
+	// a permanently-disabled "Register ... to enable" hint despite spacing
+	// actually being fully wired up under the hood — just with no UI for it.
+	const hasNativeMargin  = blockType?.supports?.spacing?.margin  === true;
+	const hasNativePadding = blockType?.supports?.spacing?.padding === true;
+	const hasMargin  = hasCustomMargin  || hasNativeMargin;
+	const hasPadding = hasCustomPadding || hasNativePadding;
 	const hasZIndex  = 'AdaireBlocksZIndex'  in schema || 'zIndex' in schema;
 	const zKey       = 'AdaireBlocksZIndex'  in schema ? 'AdaireBlocksZIndex' : ( 'zIndex' in schema ? 'zIndex' : null );
 	const hasAnchor  = 'anchor'        in schema;
@@ -419,6 +434,49 @@ function AdvancedBuiltins( { attrs, setAttr, blockType } ) {
 		try { return JSON.parse( raw ); } catch { return {}; }
 	};
 
+	// WP core's native `style.spacing.margin/padding` stores each side as a
+	// combined value+unit string (e.g. "24px"), while SpacingCtrl's inputs are
+	// bare numbers with one shared unit dropdown — these convert between the
+	// two shapes so a block using core's `supports.spacing` reads/writes
+	// correctly instead of showing "24px" in a number input (which renders
+	// blank) or losing its unit on save.
+	const nativeToCtrl = box => {
+		const sides = [ 'top', 'right', 'bottom', 'left' ];
+		let unit = 'px';
+		const values = {};
+		sides.forEach( side => {
+			const raw = box?.[ side ];
+			if ( raw === undefined || raw === null || raw === '' ) {
+				values[ side ] = '';
+				return;
+			}
+			const match = String( raw ).match( /^(-?[\d.]+)(px|em|%|rem)?$/ );
+			if ( match ) {
+				values[ side ] = match[ 1 ];
+				if ( match[ 2 ] ) unit = match[ 2 ];
+			} else {
+				values[ side ] = '';
+			}
+		} );
+		return { ...values, unit };
+	};
+
+	const ctrlToNative = ctrl => {
+		const sides = [ 'top', 'right', 'bottom', 'left' ];
+		const unit = ctrl.unit || 'px';
+		const box = {};
+		sides.forEach( side => {
+			const v = ctrl[ side ];
+			if ( v !== undefined && v !== '' ) box[ side ] = `${ v }${ unit }`;
+		} );
+		return box;
+	};
+
+	const setNativeSpacing = ( key, v ) => setAttr( 'style', {
+		...attrs.style,
+		spacing: { ...( attrs.style?.spacing || {} ), [ key ]: ctrlToNative( v ) },
+	} );
+
 	return (
 		<>
 			<div className="adaire-ep__adv-label">{ __( 'ADVANCED STYLES' ) }</div>
@@ -426,11 +484,17 @@ function AdvancedBuiltins( { attrs, setAttr, blockType } ) {
 			<Accordion title={ __( 'Layout' ) } defaultOpen>
 
 				{ /* Margin */ }
-				{ hasMargin ? (
+				{ hasCustomMargin ? (
 					<SpacingCtrl
 						label={ __( 'Margin' ) }
 						value={ parseSpacing( attrs.AdaireBlocksMargin ) }
 						onChange={ v => setAttr( 'AdaireBlocksMargin', JSON.stringify( v ) ) }
+					/>
+				) : hasNativeMargin ? (
+					<SpacingCtrl
+						label={ __( 'Margin' ) }
+						value={ nativeToCtrl( attrs.style?.spacing?.margin ) }
+						onChange={ v => setNativeSpacing( 'margin', v ) }
 					/>
 				) : (
 					<div className="adaire-ep__spacing">
@@ -446,11 +510,17 @@ function AdvancedBuiltins( { attrs, setAttr, blockType } ) {
 				<div className="adaire-ep__spacing-gap" />
 
 				{ /* Padding */ }
-				{ hasPadding ? (
+				{ hasCustomPadding ? (
 					<SpacingCtrl
 						label={ __( 'Padding' ) }
 						value={ parseSpacing( attrs.AdaireBlocksPadding ) }
 						onChange={ v => setAttr( 'AdaireBlocksPadding', JSON.stringify( v ) ) }
+					/>
+				) : hasNativePadding ? (
+					<SpacingCtrl
+						label={ __( 'Padding' ) }
+						value={ nativeToCtrl( attrs.style?.spacing?.padding ) }
+						onChange={ v => setNativeSpacing( 'padding', v ) }
 					/>
 				) : (
 					<div className="adaire-ep__spacing">
@@ -522,6 +592,14 @@ function NavigatorPanel( { onClose } ) {
 		selectedClientId: select( blockEditorStore ).getSelectedBlockClientId(),
 	} ), [] );
 	const { selectBlock } = useDispatch( blockEditorStore );
+
+	// There's nothing to navigate on an empty canvas (e.g. a brand-new page,
+	// or mid-way through a block/pattern insertion flow) — staying open just
+	// leaves a dead "No blocks on this page" overlay sitting over the editor,
+	// which reads as the panel getting stuck open rather than a real state.
+	useEffect( () => {
+		if ( blocks.length === 0 ) onClose();
+	}, [ blocks.length, onClose ] );
 
 	function renderBlock( block, depth = 0 ) {
 		const type  = getBlockType( block.name );

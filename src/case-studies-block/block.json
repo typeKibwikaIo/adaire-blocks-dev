@@ -27,7 +27,11 @@
         },
         "containerMode": {
             "type": "string",
-            "default": "full"
+            "default": "full",
+            "enum": [
+                "constrained",
+                "full"
+            ]
         },
         "containerMaxWidth": {
             "type": "object",
@@ -241,7 +245,8 @@
         },
         "titleFontWeight": {
             "type": "string",
-            "default": "600"
+            "default": "600",
+            "enum": [ "300", "400", "500", "600", "700" ]
         },
         "titleLineHeight": {
             "type": "number",
@@ -282,7 +287,8 @@
         },
         "descriptionFontWeight": {
             "type": "string",
-            "default": "400"
+            "default": "400",
+            "enum": [ "300", "400", "500", "600", "700" ]
         },
         "descriptionLineHeight": {
             "type": "number",
@@ -334,7 +340,8 @@
         },
         "loadMoreFontWeight": {
             "type": "string",
-            "default": "500"
+            "default": "500",
+            "enum": [ "300", "400", "500", "600", "700" ]
         },
         "animationDuration": {
             "type": "number",
@@ -342,7 +349,15 @@
         },
         "animationEase": {
             "type": "string",
-            "default": "power2.inOut"
+            "default": "power2.inOut",
+            "enum": [
+                "power2.inOut",
+                "power2.out",
+                "power3.inOut",
+                "back.out(1.7)",
+                "elastic.out(1, 0.3)",
+                "circ.inOut"
+            ]
         },
         "hoverScale": {
             "type": "number",
@@ -403,7 +418,8 @@
         },
         "dragCursorFontWeight": {
             "type": "string",
-            "default": "500"
+            "default": "500",
+            "enum": [ "300", "400", "500", "600", "700" ]
         },
         "dragCursorColor": {
             "type": "string",

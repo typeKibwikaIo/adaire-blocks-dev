@@ -222,7 +222,7 @@
 .adaire-infogrid-4__item {
     padding: var(--infogrid4-card-padding-top-desktop, 60px) var(--infogrid4-card-padding-right-desktop, 50px) var(--infogrid4-card-padding-bottom-desktop, 60px) var(--infogrid4-card-padding-left-desktop, 50px);
     border-radius: var(--infogrid4-card-radius, 16px);
-    border: var(--infogrid4-grid-border-thickness, 1px) solid var(--infogrid4-grid-border-color, #e5e7eb);
+    border: var(--infogrid4-grid-border-thickness, 1px) solid var(--infogrid4-grid-line-color, #e5e7eb);
     background-color: var(--infogrid4-card-bg, #ffffff);
 
     .has-card-shadow & {

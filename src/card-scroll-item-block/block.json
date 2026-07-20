@@ -132,7 +132,8 @@
         },
         "titleFontWeight": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [ "", "300", "400", "500", "600", "700", "800" ]
         },
         "titleLineHeight": {
             "type": "string",
@@ -144,7 +145,8 @@
         },
         "titleTextTransform": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [ "none", "uppercase", "lowercase", "capitalize" ]
         },
         "descriptionFontSize": {
             "type": "string",
@@ -152,7 +154,8 @@
         },
         "descriptionFontWeight": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [ "", "300", "400", "500", "600", "700", "800" ]
         },
         "descriptionLineHeight": {
             "type": "string",
@@ -164,11 +167,23 @@
         },
         "descriptionTextTransform": {
             "type": "string",
-            "default": "none"
+            "default": "none",
+            "enum": [ "none", "uppercase", "lowercase", "capitalize" ]
         },
         "fontFamily": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+                "",
+                "Arial, Helvetica, sans-serif",
+                "Helvetica, Arial, sans-serif",
+                "Georgia, serif",
+                "'Times New Roman', Times, serif",
+                "Verdana, Geneva, sans-serif",
+                "'Trebuchet MS', sans-serif",
+                "'Courier New', Courier, monospace",
+                "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+            ]
         }
     },
     "editorScript": "file:./index.js",

@@ -37,6 +37,26 @@
     [data-modal-role="content"] { display: none; }
     [data-modal-role="trigger"] { display: inline-block; visibility: visible; opacity: 1; }
 
+    // ── Block alignment ────────────────────────────────────────────────────────
+    // The wrapper's own `display: inline-block` doesn't respond to the core
+    // `align` support's classes on its own — float/center it explicitly so
+    // "Left"/"Center"/"Right" actually move the trigger within its container.
+    &.alignleft {
+        float: left;
+        margin: 0 20px 20px 0;
+    }
+    &.alignright {
+        float: right;
+        margin: 0 0 20px 20px;
+    }
+    &.aligncenter {
+        display: flex;
+        justify-content: center;
+        float: none;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     // ── Trigger button ─────────────────────────────────────────────────────────
 
     &__trigger {
@@ -346,6 +366,16 @@
     &[data-close-pos="top-left"] &__close     { right: auto; left: 12px; }
     &[data-close-pos="outside-right"] &__close { top: -16px; right: -16px; }
     &[data-close-pos="outside-left"] &__close  { top: -16px; right: auto; left: -16px; }
+
+    // &__modal clips its children to the rounded corners (overflow: hidden),
+    // which also clipped the close button whenever it's pushed outside the
+    // modal's own bounds — the "Out — TR"/"Out — TL" positions above were
+    // rendering half-cut-off or fully invisible. Content still scrolls inside
+    // &__content's own overflow, so relaxing this doesn't affect anything else.
+    &[data-close-pos="outside-right"] &__modal,
+    &[data-close-pos="outside-left"] &__modal {
+        overflow: visible;
+    }
 
     &[data-close-shape="rounded"] &__close { border-radius: 8px; }
     &[data-close-shape="square"]  &__close { border-radius: 2px; }

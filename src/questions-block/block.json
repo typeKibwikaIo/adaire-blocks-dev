@@ -59,7 +59,12 @@
         },
         "activeSection": {
             "type": "string",
-            "default": "what"
+            "default": "what",
+            "enum": [
+                "what",
+                "why",
+                "who"
+            ]
         },
         "blockId": {
             "type": "string",
