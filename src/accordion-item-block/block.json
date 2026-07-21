@@ -42,7 +42,15 @@
         "fontWeight": {
             "type": "string",
             "default": "",
-            "enum": [ "", "300", "400", "500", "600", "700", "800" ]
+            "enum": [
+                "",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "lineHeight": {
             "type": "string",
@@ -55,7 +63,12 @@
         "textTransform": {
             "type": "string",
             "default": "none",
-            "enum": [ "none", "uppercase", "lowercase", "capitalize" ]
+            "enum": [
+                "none",
+                "uppercase",
+                "lowercase",
+                "capitalize"
+            ]
         },
         "fontFamily": {
             "type": "string",

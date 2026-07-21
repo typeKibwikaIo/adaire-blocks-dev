@@ -133,7 +133,15 @@
         "titleFontWeight": {
             "type": "string",
             "default": "",
-            "enum": [ "", "300", "400", "500", "600", "700", "800" ]
+            "enum": [
+                "",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "titleLineHeight": {
             "type": "string",
@@ -146,7 +154,12 @@
         "titleTextTransform": {
             "type": "string",
             "default": "none",
-            "enum": [ "none", "uppercase", "lowercase", "capitalize" ]
+            "enum": [
+                "none",
+                "uppercase",
+                "lowercase",
+                "capitalize"
+            ]
         },
         "descriptionFontSize": {
             "type": "string",
@@ -155,7 +168,15 @@
         "descriptionFontWeight": {
             "type": "string",
             "default": "",
-            "enum": [ "", "300", "400", "500", "600", "700", "800" ]
+            "enum": [
+                "",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800"
+            ]
         },
         "descriptionLineHeight": {
             "type": "string",
@@ -168,7 +189,12 @@
         "descriptionTextTransform": {
             "type": "string",
             "default": "none",
-            "enum": [ "none", "uppercase", "lowercase", "capitalize" ]
+            "enum": [
+                "none",
+                "uppercase",
+                "lowercase",
+                "capitalize"
+            ]
         },
         "fontFamily": {
             "type": "string",

@@ -263,7 +263,16 @@
         "titleFontFamily": {
             "type": "string",
             "default": "inherit",
-            "enum": [ "inherit", "serif", "sans-serif", "monospace", "cursive", "fantasy", "system-ui", "custom" ]
+            "enum": [
+                "inherit",
+                "serif",
+                "sans-serif",
+                "monospace",
+                "cursive",
+                "fantasy",
+                "system-ui",
+                "custom"
+            ]
         },
         "textFontSize": {
             "type": "number",
@@ -272,7 +281,16 @@
         "textFontFamily": {
             "type": "string",
             "default": "inherit",
-            "enum": [ "inherit", "serif", "sans-serif", "monospace", "cursive", "fantasy", "system-ui", "custom" ]
+            "enum": [
+                "inherit",
+                "serif",
+                "sans-serif",
+                "monospace",
+                "cursive",
+                "fantasy",
+                "system-ui",
+                "custom"
+            ]
         },
         "titleFontWeight": {
             "type": "string",

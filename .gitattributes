@@ -1,0 +1,10 @@
+# Normalize line endings so builds don't churn files on Windows checkouts.
+# All text files are stored and checked out with LF.
+* text=auto eol=lf
+
+# Generated / build-touched source files: force LF explicitly.
+*.json text eol=lf
+*.js   text eol=lf
+*.css  text eol=lf
+*.svg  text eol=lf
+*.php  text eol=lf

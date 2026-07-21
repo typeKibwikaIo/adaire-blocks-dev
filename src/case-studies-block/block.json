@@ -246,7 +246,13 @@
         "titleFontWeight": {
             "type": "string",
             "default": "600",
-            "enum": [ "300", "400", "500", "600", "700" ]
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "titleLineHeight": {
             "type": "number",
@@ -288,7 +294,13 @@
         "descriptionFontWeight": {
             "type": "string",
             "default": "400",
-            "enum": [ "300", "400", "500", "600", "700" ]
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "descriptionLineHeight": {
             "type": "number",
@@ -341,7 +353,13 @@
         "loadMoreFontWeight": {
             "type": "string",
             "default": "500",
-            "enum": [ "300", "400", "500", "600", "700" ]
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "animationDuration": {
             "type": "number",
@@ -419,7 +437,13 @@
         "dragCursorFontWeight": {
             "type": "string",
             "default": "500",
-            "enum": [ "300", "400", "500", "600", "700" ]
+            "enum": [
+                "300",
+                "400",
+                "500",
+                "600",
+                "700"
+            ]
         },
         "dragCursorColor": {
             "type": "string",

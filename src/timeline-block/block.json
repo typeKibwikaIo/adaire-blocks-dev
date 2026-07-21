@@ -226,5 +226,5 @@
             "default": "none"
         }
     },
-    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#F0F0F1\"/>\r\n<rect x=\"11.1\" y=\"4\" width=\"1.8\" height=\"16\" rx=\"0.9\" fill=\"#D52940\"/>\r\n<circle cx=\"12\" cy=\"6.5\" r=\"2.3\" fill=\"#D52940\"/>\r\n<circle cx=\"12\" cy=\"12\" r=\"2.3\" fill=\"#D52940\"/>\r\n<circle cx=\"12\" cy=\"17.5\" r=\"2.3\" fill=\"#D52940\"/>\r\n<circle cx=\"12\" cy=\"6.5\" r=\"1\" fill=\"#F0F0F1\"/>\r\n<circle cx=\"12\" cy=\"12\" r=\"1\" fill=\"#F0F0F1\"/>\r\n<circle cx=\"12\" cy=\"17.5\" r=\"1\" fill=\"#F0F0F1\"/>\r\n</svg>"
+    "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#F0F0F1\"/>\n<rect x=\"11.1\" y=\"4\" width=\"1.8\" height=\"16\" rx=\"0.9\" fill=\"#D52940\"/>\n<circle cx=\"12\" cy=\"6.5\" r=\"2.3\" fill=\"#D52940\"/>\n<circle cx=\"12\" cy=\"12\" r=\"2.3\" fill=\"#D52940\"/>\n<circle cx=\"12\" cy=\"17.5\" r=\"2.3\" fill=\"#D52940\"/>\n<circle cx=\"12\" cy=\"6.5\" r=\"1\" fill=\"#F0F0F1\"/>\n<circle cx=\"12\" cy=\"12\" r=\"1\" fill=\"#F0F0F1\"/>\n<circle cx=\"12\" cy=\"17.5\" r=\"1\" fill=\"#F0F0F1\"/>\n</svg>"
 }

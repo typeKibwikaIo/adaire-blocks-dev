@@ -79,8 +79,10 @@ function updateBlockIcons() {
             const svgContent = getSvgContent(iconName);
             
             if (svgContent) {
-                // Update the icon property with the actual SVG
-                blockJson.icon = svgContent;
+                // Update the icon property with the actual SVG.
+                // Normalise CRLF/CR to LF so Windows checkouts don't bake
+                // literal \r escapes into block.json and churn every build.
+                blockJson.icon = svgContent.replace(/\r\n?/g, '\n');
                 
                 // Write updated block.json
                 fs.writeFileSync(blockJsonPath, JSON.stringify(blockJson, null, 4));

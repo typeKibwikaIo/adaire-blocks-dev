@@ -158,7 +158,12 @@
         "pillTextTransform": {
             "type": "string",
             "default": "none",
-            "enum": [ "none", "uppercase", "lowercase", "capitalize" ]
+            "enum": [
+                "none",
+                "uppercase",
+                "lowercase",
+                "capitalize"
+            ]
         },
         "fontFamily": {
             "type": "string",
