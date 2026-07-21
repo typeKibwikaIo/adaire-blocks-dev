@@ -143,6 +143,86 @@ const FLOATING_POSITION_OPTIONS = [
     { value: 'top-left',     label: 'Top left',   icon: <FloatIcon corner="top-left"/> },
 ];
 
+// ── Modal layout preview thumbnails ────────────────────────────────────────────
+// Small schematic previews of each MODAL_LAYOUTS preset, keyed by layout id.
+// currentColor is inherited so they tint with the button's selected state.
+
+const LayoutThumb = ({ children }) => (
+    <svg width="46" height="34" viewBox="0 0 46 34" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+        <rect x="1" y="1" width="44" height="32" rx="4" stroke="currentColor" strokeWidth="1.2" strokeOpacity="0.35"/>
+        {children}
+    </svg>
+);
+
+const bar = (x, y, w, h, o = 0.4, rx = 1.5) => (
+    <rect x={x} y={y} width={w} height={h} rx={rx} fill="currentColor" opacity={o}/>
+);
+const btn = (x, y, w, o = 0.9) => (
+    <rect x={x} y={y} width={w} height="5" rx="2.5" fill="currentColor" opacity={o}/>
+);
+
+const LAYOUT_ICONS = {
+    basic: (
+        <LayoutThumb>
+            {bar(8, 7, 18, 3.5, 0.9)}
+            {bar(8, 14, 30, 2, 0.4)}
+            {bar(8, 18, 26, 2, 0.4)}
+            {btn(8, 24, 15)}
+        </LayoutThumb>
+    ),
+    'image-content-split': (
+        <LayoutThumb>
+            <rect x="6" y="7" width="14" height="20" rx="2" fill="currentColor" opacity="0.3"/>
+            <path d="M9 22 l3 -4 2 2 3 -4 v6 z" fill="currentColor" opacity="0.6"/>
+            {bar(24, 8, 15, 3.5, 0.9)}
+            {bar(24, 15, 15, 2, 0.4)}
+            {bar(24, 19, 11, 2, 0.4)}
+            {btn(24, 24, 12)}
+        </LayoutThumb>
+    ),
+    'newsletter-signup': (
+        <LayoutThumb>
+            {bar(13, 6, 20, 3.5, 0.9)}
+            {bar(9, 12, 28, 2, 0.4)}
+            <rect x="8" y="17" width="30" height="6" rx="2" stroke="currentColor" strokeWidth="1.2" opacity="0.5"/>
+            {btn(15, 26, 16)}
+        </LayoutThumb>
+    ),
+    'promotional-offer': (
+        <LayoutThumb>
+            {bar(16, 5, 14, 2, 0.5, 1)}
+            <text x="23" y="19" textAnchor="middle" fontSize="12" fontWeight="800" fill="currentColor" opacity="0.9">%</text>
+            {btn(14, 24, 18)}
+        </LayoutThumb>
+    ),
+    'video-modal': (
+        <LayoutThumb>
+            <rect x="7" y="6" width="32" height="15" rx="2" fill="currentColor" opacity="0.28"/>
+            <path d="M20 10 v7 l6 -3.5 z" fill="currentColor" opacity="0.9"/>
+            {bar(7, 25, 18, 2.5, 0.9)}
+            {bar(7, 30, 26, 1.6, 0.4)}
+        </LayoutThumb>
+    ),
+    announcement: (
+        <LayoutThumb>
+            {bar(13, 6, 20, 3.5, 0.9)}
+            {bar(9, 13, 28, 2, 0.4)}
+            {bar(12, 17, 22, 2, 0.4)}
+            {btn(7, 24, 14)}
+            <rect x="25" y="24" width="14" height="5" rx="2.5" stroke="currentColor" strokeWidth="1.2" opacity="0.55"/>
+        </LayoutThumb>
+    ),
+    'exit-intent-lead-capture': (
+        <LayoutThumb>
+            <path d="M36 5 l4 -4 m0 0 h-3 m3 0 v3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.6"/>
+            {bar(11, 6, 22, 3.5, 0.9)}
+            {bar(9, 13, 28, 2, 0.4)}
+            <rect x="8" y="17" width="30" height="6" rx="2" stroke="currentColor" strokeWidth="1.2" opacity="0.5"/>
+            {btn(14, 26, 18)}
+        </LayoutThumb>
+    ),
+};
+
 // ── Position icons ─────────────────────────────────────────────────────────────
 
 const PosIcon = ({ children }) => (
@@ -478,10 +558,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 key={layout.id}
                                 isPrimary={modalLayout === layout.id}
                                 onClick={() => applyModalLayout(layout)}
-                                style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', height: 'auto', padding: '8px 10px' }}
+                                style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px', height: 'auto', padding: '8px 10px', textAlign: 'left' }}
                             >
-                                <span style={{ fontWeight: 600 }}>{layout.label}</span>
-                                <span style={{ fontSize: '11px', opacity: 0.75, fontWeight: 400 }}>{layout.bestFor}</span>
+                                <span style={{ display: 'flex', color: modalLayout === layout.id ? '#ffffff' : '#64748b' }}>
+                                    {LAYOUT_ICONS[layout.id]}
+                                </span>
+                                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                                    <span style={{ fontWeight: 600 }}>{layout.label}</span>
+                                    <span style={{ fontSize: '11px', opacity: 0.75, fontWeight: 400 }}>{layout.bestFor}</span>
+                                </span>
                             </Button>
                         ))}
                     </div>
