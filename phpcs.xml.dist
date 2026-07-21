@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ruleset name="Adaire Blocks">
+	<description>WPCS ruleset for the manually maintained PHP source of Adaire Blocks.</description>
+
+	<!-- Scan the whole project; excludes below carve out generated and vendored code. -->
+	<file>.</file>
+
+	<!-- Only PHP is linted — this also keeps generated/compiled JS and CSS out of scope. -->
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<!-- Dependencies -->
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/plugin-update-checker/*</exclude-pattern>
+
+	<!-- Generated build output (compiled JS/CSS, webpack asset manifests, copied render.php). -->
+	<exclude-pattern>*/build/*</exclude-pattern>
+	<exclude-pattern>*/build/*.asset.php</exclude-pattern>
+	<exclude-pattern>*/build/*/*.asset.php</exclude-pattern>
+
+	<!-- Duplicated/generated plugin packages left behind by zip-generation scripts. -->
+	<exclude-pattern>*/\.temp-zip-content/*</exclude-pattern>
+	<exclude-pattern>*/tmp-sanity-check-dir/*</exclude-pattern>
+
+	<!-- Third-party minified libraries vendored into the source tree. -->
+	<exclude-pattern>*/assets/vendor/*</exclude-pattern>
+	<exclude-pattern>*/admin/js/*.min.js</exclude-pattern>
+
+	<rule ref="WordPress"/>
+</ruleset>

@@ -42,9 +42,9 @@ if ( ! function_exists( 'adaire_cookie_banner_responsive_vars' ) ) {
 		$m_unit  = isset( $m['unit'] ) ? $m['unit'] : $t_unit;
 
 		return array(
-			"--ccb-{$name}"         => $d_value . $d_unit,
-			"--ccb-{$name}-tablet"  => $t_value . $t_unit,
-			"--ccb-{$name}-mobile"  => $m_value . $m_unit,
+			"--ccb-{$name}"        => $d_value . $d_unit,
+			"--ccb-{$name}-tablet" => $t_value . $t_unit,
+			"--ccb-{$name}-mobile" => $m_value . $m_unit,
 		);
 	}
 }
@@ -146,23 +146,23 @@ $categories = adaire_get_cookie_categories();
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class'                     => 'adaire-cookie-banner',
-		'style'                     => adaire_cookie_banner_style_vars( $a ),
-		'data-layout'               => $a['layoutType'],
-		'data-density'              => $a['displayDensity'],
-		'data-align'                => $a['alignment'],
-		'data-shadow'               => $a['showShadow'] ? $a['shadowIntensity'] : 'none',
-		'data-shape'                => $a['buttonShape'],
-		'data-btn-size'             => $a['buttonSize'],
-		'data-anim'                 => $a['entranceAnimation'],
-		'data-width'                => $a['bannerWidth'],
-		'data-consent-version'      => $a['consentVersion'],
-		'data-consent-days'         => $a['consentExpirationDays'],
-		'data-auto-hide'            => $a['autoHide'] ? '1' : '0',
-		'data-auto-hide-delay'      => $a['autoHideDelay'],
-		'data-google-consent-mode'  => $a['googleConsentMode'] ? '1' : '0',
-		'data-block-scripts'        => $a['blockScriptsUntilConsent'] ? '1' : '0',
-		'data-categories'           => wp_json_encode(
+		'class'                    => 'adaire-cookie-banner',
+		'style'                    => adaire_cookie_banner_style_vars( $a ),
+		'data-layout'              => $a['layoutType'],
+		'data-density'             => $a['displayDensity'],
+		'data-align'               => $a['alignment'],
+		'data-shadow'              => $a['showShadow'] ? $a['shadowIntensity'] : 'none',
+		'data-shape'               => $a['buttonShape'],
+		'data-btn-size'            => $a['buttonSize'],
+		'data-anim'                => $a['entranceAnimation'],
+		'data-width'               => $a['bannerWidth'],
+		'data-consent-version'     => $a['consentVersion'],
+		'data-consent-days'        => $a['consentExpirationDays'],
+		'data-auto-hide'           => $a['autoHide'] ? '1' : '0',
+		'data-auto-hide-delay'     => $a['autoHideDelay'],
+		'data-google-consent-mode' => $a['googleConsentMode'] ? '1' : '0',
+		'data-block-scripts'       => $a['blockScriptsUntilConsent'] ? '1' : '0',
+		'data-categories'          => wp_json_encode(
 			array_map(
 				static function ( $cat ) {
 					return array(

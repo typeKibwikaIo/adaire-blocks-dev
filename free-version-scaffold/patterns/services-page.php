@@ -1,17 +1,19 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly.
+	exit; // Exit if accessed directly.
 }
 
-register_block_pattern( 'adaire-blocks/services-page', array(
-    'title'         => __( 'Services Page', 'adaire-blocks' ),
-    'description'   => __( 'Hero, info grid, pricing table, and call-to-action.', 'adaire-blocks' ),
-    'categories'    => array( 'adaire-blocks-templates' ),
-    'keywords'      => array( 'services', 'pricing', 'features', 'grid' ),
-    'blockTypes'    => array( 'core/post-content' ),
-    'templateTypes' => array( 'page' ),
-    'viewportWidth' => 1400,
-    'content'       => '<!-- wp:create-block/saas-hero-block -->
+register_block_pattern(
+	'adaire-blocks/services-page',
+	array(
+		'title'         => __( 'Services Page', 'adaire-blocks' ),
+		'description'   => __( 'Hero, info grid, pricing table, and call-to-action.', 'adaire-blocks' ),
+		'categories'    => array( 'adaire-blocks-templates' ),
+		'keywords'      => array( 'services', 'pricing', 'features', 'grid' ),
+		'blockTypes'    => array( 'core/post-content' ),
+		'templateTypes' => array( 'page' ),
+		'viewportWidth' => 1400,
+		'content'       => '<!-- wp:create-block/saas-hero-block -->
 <section class="wp-block-create-block-saas-hero-block adaire-saas-hero layout-centered bg-type-solid" style="--ad-accent:#6366f1;--ad-color:#111827;--ad-bg-color:#ffffff;--ad-bg-gradient:linear-gradient(135deg, #6366f1, #8b5cf6);--ad-bg-image:none;--ad-bg-image-size:cover;--ad-bg-image-position:center;--ad-bg-image-repeat:no-repeat;--ad-button-primary-color:#ffffff;--ad-button-primary-bg:#6366f1;--ad-button-secondary-color:#111827;--ad-button-secondary-bg:#ffffff;--ad-button-hover-color:#ffffff;--ad-button-hover-bg:#111827;--ad-button-hover-border:#111827;--ad-radius:12px;--ad-padding:80px;--ad-font-size:16px;--ad-pill-bg:#dbeafe;--ad-pill-color:#1e40af;--ad-gradient-start:#6366f1;--ad-gradient-end:#8b5cf6;--ad-cta-gap:16px;--ad-cta-padding-v:14px;--ad-cta-padding-h:32px;--ad-cta-radius:12px;--ad-cta-align:center;--ad-media-radius:12px;--ad-media-spacing:48px;--ad-media-shadow:0 20px 60px rgba(0, 0, 0, 0.15);--ad-effect-gradient-overlay:linear-gradient(135deg, #6366f1, #8b5cf6);--ad-effect-gradient-overlay-opacity:0.3;--ad-effect-glow-color:#6366f1;--ad-rating-align:center;--ad-font-family:inherit;--ad-eyebrow-font-size:14px;--ad-eyebrow-font-weight:600;--ad-eyebrow-line-height:normal;--ad-eyebrow-letter-spacing:1px;--ad-eyebrow-text-transform:uppercase;--ad-heading-font-size:clamp(36px, 5vw, 64px);--ad-heading-font-weight:800;--ad-heading-line-height:1.2;--ad-heading-letter-spacing:normal;--ad-heading-text-transform:none;--ad-body-text-font-weight:400;--ad-body-text-line-height:1.6;--ad-body-text-letter-spacing:normal;--ad-body-text-text-transform:none;--ad-pill-font-size:14px;--ad-pill-font-weight:600;--ad-pill-line-height:normal;--ad-pill-letter-spacing:normal;--ad-pill-text-transform:none;--ad-button-font-size:16px;--ad-button-font-weight:600;--ad-button-line-height:normal;--ad-button-letter-spacing:normal;--ad-button-text-transform:none;--ad-micro-copy-font-size:14px;--ad-micro-copy-font-weight:400;--ad-micro-copy-line-height:normal;--ad-micro-copy-letter-spacing:normal;--ad-micro-copy-text-transform:none"><div class="adaire-saas-hero__container"><div class="adaire-saas-hero__pill"><span>New: v2.0 Release</span></div><div class="adaire-saas-hero__content"><div class="adaire-saas-hero__text"><p class="adaire-saas-hero__eyebrow">Scale faster</p><h1 class="adaire-saas-hero__heading has-gradient">Launch your SaaS faster</h1><p class="adaire-saas-hero__text">A modern hero section for software products, startups, and landing pages.</p><div class="adaire-saas-hero__cta"><a href="#" class="adaire-saas-hero__button adaire-saas-hero__button--primary">Get Started</a><a href="#" class="adaire-saas-hero__button adaire-saas-hero__button--secondary">Book a Demo</a></div></div></div></div></section>
 <!-- /wp:create-block/saas-hero-block -->
 <!-- wp:create-block/infogrid-2-block -->
@@ -23,4 +25,5 @@ register_block_pattern( 'adaire-blocks/services-page', array(
 <!-- wp:create-block/button-block -->
 <div class="wp-block-create-block-button-block adaire-button-block" style="--button-color:#000000;--button-bg-color:transparent;--button-hover-color:#ffffff;--button-hover-bg-color:transparent;--button-underline-color:#ff4242;--button-blur:0px;--button-font-size:18px;--button-font-size-tablet:16px;--button-font-size-mobile:14px;--button-padding-top:10px;--button-padding-right:20px;--button-padding-bottom:10px;--button-padding-left:20px;--button-padding-top-tablet:8px;--button-padding-right-tablet:16px;--button-padding-bottom-tablet:8px;--button-padding-left-tablet:16px;--button-padding-top-mobile:6px;--button-padding-right-mobile:12px;--button-padding-bottom-mobile:6px;--button-padding-left-mobile:12px;--button-margin-top:20px;--button-margin-right:0px;--button-margin-bottom:20px;--button-margin-left:0px;--button-margin-top-tablet:16px;--button-margin-right-tablet:0px;--button-margin-bottom-tablet:16px;--button-margin-left-tablet:0px;--button-margin-top-mobile:12px;--button-margin-right-mobile:0px;--button-margin-bottom-mobile:12px;--button-margin-left-mobile:0px;--button-z-index:1;--button-border-radius:0px;--button-font-weight:500;--button-border-width:2px;--button-border-color:#ff4242;--button-border-style:solid;--button-hover-border-color:#ff4242;--button-line-height:normal;--button-line-height-tablet:normal;--button-line-height-mobile:normal;--button-letter-spacing:normal;--button-letter-spacing-tablet:normal;--button-letter-spacing-mobile:normal;--button-text-transform:none"><a href="#" class="adaire-button-block__link adaire-button-block__link--underline adaire-button-block__link--slide-underline adaire-button-block__link--icon-right">Click Here<span class="adaire-button-block__icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></a></div>
 <!-- /wp:create-block/button-block -->',
-) );
+	)
+);

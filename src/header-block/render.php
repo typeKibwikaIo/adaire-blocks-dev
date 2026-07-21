@@ -122,47 +122,47 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 			'center'        => 'center',
 			'right'         => 'flex-end',
 		);
-		$topbar_justify = isset( $topbar_justify_map[ $attributes['topBarLayout'] ] )
+		$topbar_justify     = isset( $topbar_justify_map[ $attributes['topBarLayout'] ] )
 			? $topbar_justify_map[ $attributes['topBarLayout'] ]
 			: 'space-between';
 
 		$styles = array(
-			'--adaire-header-font-family'              => ! empty( $attributes['fontFamily'] ) ? $attributes['fontFamily'] : 'inherit',
+			'--adaire-header-font-family'             => ! empty( $attributes['fontFamily'] ) ? $attributes['fontFamily'] : 'inherit',
 			'--adaire-header-background'              => $background,
-			'--adaire-header-text-color'               => $attributes['textColor'],
-			'--adaire-header-hover-color'               => $attributes['hoverColor'],
-			'--adaire-header-border-color'              => $attributes['borderColor'],
-			'--adaire-header-border-width'              => ! empty( $attributes['borderBottom'] ) ? $attributes['borderThickness'] . 'px' : '0px',
-			'--adaire-header-padding-top'                => $attributes['paddingTop'] . 'px',
-			'--adaire-header-padding-bottom'             => $attributes['paddingBottom'] . 'px',
-			'--adaire-header-max-width'                  => ( 'contained' === $attributes['maxWidthMode'] ) ? $attributes['maxWidth'] . 'px' : '100%',
-			'--adaire-header-nav-gap'                    => $attributes['navSpacing'] . 'px',
-			'--adaire-header-nav-font-size'              => $attributes['navFontSize'] . 'px',
-			'--adaire-header-nav-font-weight'            => $attributes['navFontWeight'],
-			'--adaire-header-letter-spacing'             => $attributes['letterSpacing'] . 'px',
-			'--adaire-header-text-transform'             => $attributes['textTransform'],
-			'--adaire-header-logo-width'                 => $attributes['logoWidth'] . 'px',
-			'--adaire-header-mobile-logo-width'          => $attributes['mobileLogoWidth'] . 'px',
-			'--adaire-header-topbar-bg'                  => $attributes['topBarBackgroundColor'],
-			'--adaire-header-topbar-color'               => $attributes['topBarTextColor'],
-			'--adaire-header-topbar-font-size'           => ( ! empty( $attributes['topBarFontSize'] ) ? $attributes['topBarFontSize'] : 13 ) . 'px',
-			'--adaire-header-topbar-justify'             => $topbar_justify,
-			'--adaire-header-topbar-gap'                 => ( 'space-between' === $attributes['topBarLayout'] ) ? '24px' : '12px',
-			'--adaire-header-social-size'                => $attributes['socialIconSize'] . 'px',
-			'--adaire-header-social-color'                => $attributes['socialIconColor'],
-			'--adaire-header-cart-size'                  => ( ! empty( $attributes['cartIconSize'] ) ? $attributes['cartIconSize'] : 18 ) . 'px',
-			'--adaire-header-payment-size'                => ( ! empty( $attributes['paymentIconSize'] ) ? $attributes['paymentIconSize'] : 22 ) . 'px',
-			'--adaire-header-nav-icon-color'             => $attributes['navIconColor'],
-			'--adaire-header-z-index'                    => $attributes['zIndex'],
-			'--adaire-header-action-radius'              => ( isset( $attributes['buttonBorderRadius'] ) && (int) $attributes['buttonBorderRadius'] >= 0 )
+			'--adaire-header-text-color'              => $attributes['textColor'],
+			'--adaire-header-hover-color'             => $attributes['hoverColor'],
+			'--adaire-header-border-color'            => $attributes['borderColor'],
+			'--adaire-header-border-width'            => ! empty( $attributes['borderBottom'] ) ? $attributes['borderThickness'] . 'px' : '0px',
+			'--adaire-header-padding-top'             => $attributes['paddingTop'] . 'px',
+			'--adaire-header-padding-bottom'          => $attributes['paddingBottom'] . 'px',
+			'--adaire-header-max-width'               => ( 'contained' === $attributes['maxWidthMode'] ) ? $attributes['maxWidth'] . 'px' : '100%',
+			'--adaire-header-nav-gap'                 => $attributes['navSpacing'] . 'px',
+			'--adaire-header-nav-font-size'           => $attributes['navFontSize'] . 'px',
+			'--adaire-header-nav-font-weight'         => $attributes['navFontWeight'],
+			'--adaire-header-letter-spacing'          => $attributes['letterSpacing'] . 'px',
+			'--adaire-header-text-transform'          => $attributes['textTransform'],
+			'--adaire-header-logo-width'              => $attributes['logoWidth'] . 'px',
+			'--adaire-header-mobile-logo-width'       => $attributes['mobileLogoWidth'] . 'px',
+			'--adaire-header-topbar-bg'               => $attributes['topBarBackgroundColor'],
+			'--adaire-header-topbar-color'            => $attributes['topBarTextColor'],
+			'--adaire-header-topbar-font-size'        => ( ! empty( $attributes['topBarFontSize'] ) ? $attributes['topBarFontSize'] : 13 ) . 'px',
+			'--adaire-header-topbar-justify'          => $topbar_justify,
+			'--adaire-header-topbar-gap'              => ( 'space-between' === $attributes['topBarLayout'] ) ? '24px' : '12px',
+			'--adaire-header-social-size'             => $attributes['socialIconSize'] . 'px',
+			'--adaire-header-social-color'            => $attributes['socialIconColor'],
+			'--adaire-header-cart-size'               => ( ! empty( $attributes['cartIconSize'] ) ? $attributes['cartIconSize'] : 18 ) . 'px',
+			'--adaire-header-payment-size'            => ( ! empty( $attributes['paymentIconSize'] ) ? $attributes['paymentIconSize'] : 22 ) . 'px',
+			'--adaire-header-nav-icon-color'          => $attributes['navIconColor'],
+			'--adaire-header-z-index'                 => $attributes['zIndex'],
+			'--adaire-header-action-radius'           => ( isset( $attributes['buttonBorderRadius'] ) && (int) $attributes['buttonBorderRadius'] >= 0 )
 				? (int) $attributes['buttonBorderRadius'] . 'px'
 				: adaire_header_get_action_radius( $attributes['buttonShape'] ),
-			'--adaire-header-hamburger-border'           => ! empty( $attributes['hamburgerBorder'] ) ? ( '1px solid ' . $attributes['hamburgerBorderColor'] ) : 'none',
-			'--adaire-header-hamburger-border-radius'    => $attributes['hamburgerBorderRadius'] . 'px',
-			'--adaire-header-hamburger-size'             => ( ! empty( $attributes['hamburgerSize'] ) ? (int) $attributes['hamburgerSize'] : 42 ) . 'px',
-			'--adaire-header-hamburger-order'            => ( isset( $attributes['hamburgerPosition'] ) && 'right' === $attributes['hamburgerPosition'] ) ? '1' : '0',
-			'--adaire-header-search-icon-size'           => ( ! empty( $attributes['searchIconSize'] ) ? $attributes['searchIconSize'] : 18 ) . 'px',
-			'--adaire-header-search-btn-size'            => ( ! empty( $attributes['searchButtonSize'] ) ? $attributes['searchButtonSize'] : 38 ) . 'px',
+			'--adaire-header-hamburger-border'        => ! empty( $attributes['hamburgerBorder'] ) ? ( '1px solid ' . $attributes['hamburgerBorderColor'] ) : 'none',
+			'--adaire-header-hamburger-border-radius' => $attributes['hamburgerBorderRadius'] . 'px',
+			'--adaire-header-hamburger-size'          => ( ! empty( $attributes['hamburgerSize'] ) ? (int) $attributes['hamburgerSize'] : 42 ) . 'px',
+			'--adaire-header-hamburger-order'         => ( isset( $attributes['hamburgerPosition'] ) && 'right' === $attributes['hamburgerPosition'] ) ? '1' : '0',
+			'--adaire-header-search-icon-size'        => ( ! empty( $attributes['searchIconSize'] ) ? $attributes['searchIconSize'] : 18 ) . 'px',
+			'--adaire-header-search-btn-size'         => ( ! empty( $attributes['searchButtonSize'] ) ? $attributes['searchButtonSize'] : 38 ) . 'px',
 		);
 
 		if ( ! empty( $attributes['searchIconColor'] ) ) {
@@ -255,11 +255,11 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 		}
 
 		if ( 'image' === $bg_type && empty( $attributes['transparentHeader'] ) && ! empty( $attributes['bgImageUrl'] ) ) {
-			$styles['--adaire-header-bg-image']       = 'url(' . esc_url( $attributes['bgImageUrl'] ) . ')';
-			$styles['--adaire-header-bg-size']        = ! empty( $attributes['bgSize'] ) ? $attributes['bgSize'] : 'cover';
-			$styles['--adaire-header-bg-position']    = ! empty( $attributes['bgPosition'] ) ? $attributes['bgPosition'] : 'center center';
-			$styles['--adaire-header-bg-repeat']      = ! empty( $attributes['bgRepeat'] ) ? $attributes['bgRepeat'] : 'no-repeat';
-			$styles['--adaire-header-bg-attachment']  = ! empty( $attributes['bgAttachment'] ) ? $attributes['bgAttachment'] : 'scroll';
+			$styles['--adaire-header-bg-image']      = 'url(' . esc_url( $attributes['bgImageUrl'] ) . ')';
+			$styles['--adaire-header-bg-size']       = ! empty( $attributes['bgSize'] ) ? $attributes['bgSize'] : 'cover';
+			$styles['--adaire-header-bg-position']   = ! empty( $attributes['bgPosition'] ) ? $attributes['bgPosition'] : 'center center';
+			$styles['--adaire-header-bg-repeat']     = ! empty( $attributes['bgRepeat'] ) ? $attributes['bgRepeat'] : 'no-repeat';
+			$styles['--adaire-header-bg-attachment'] = ! empty( $attributes['bgAttachment'] ) ? $attributes['bgAttachment'] : 'scroll';
 		}
 
 		$margin_css  = adaire_header_box_to_css( isset( $attributes['AdaireBlocksMargin'] ) ? $attributes['AdaireBlocksMargin'] : null );
@@ -668,10 +668,10 @@ if ( ! function_exists( 'adaire_header_render_menu_node' ) ) {
 	 * submenu. Supports unlimited depth via recursion.
 	 */
 	function adaire_header_render_menu_node( $item, $depth, $attributes = array() ) {
-		$label      = isset( $item['label'] ) ? $item['label'] : '';
-		$url        = ! empty( $item['url'] ) ? $item['url'] : '#';
-		$children   = ( isset( $item['children'] ) && is_array( $item['children'] ) ) ? $item['children'] : array();
-		$has_kids   = ! empty( $children );
+		$label        = isset( $item['label'] ) ? $item['label'] : '';
+		$url          = ! empty( $item['url'] ) ? $item['url'] : '#';
+		$children     = ( isset( $item['children'] ) && is_array( $item['children'] ) ) ? $item['children'] : array();
+		$has_kids     = ! empty( $children );
 		$dot_position = ( isset( $attributes['navDotPosition'] ) && 'before' === $attributes['navDotPosition'] ) ? 'before' : 'after';
 		$dot          = adaire_header_render_nav_dot( $attributes );
 		$label_html   = '<span>' . esc_html( $label ) . '</span>';
@@ -742,10 +742,10 @@ if ( ! function_exists( 'adaire_header_render_nav' ) ) {
 			$dot_position   = ( isset( $attributes['navDotPosition'] ) && 'before' === $attributes['navDotPosition'] ) ? 'before' : 'after';
 			$inner          = '';
 			foreach ( $items as $item ) {
-				$label     = isset( $item['label'] ) ? $item['label'] : '';
-				$url       = ! empty( $item['url'] ) ? $item['url'] : '#';
-				$icon      = isset( $item['icon'] ) ? $item['icon'] : '';
-				$icon_html = $show_nav_icons ? adaire_header_icon_svg( $icon ) : '';
+				$label      = isset( $item['label'] ) ? $item['label'] : '';
+				$url        = ! empty( $item['url'] ) ? $item['url'] : '#';
+				$icon       = isset( $item['icon'] ) ? $item['icon'] : '';
+				$icon_html  = $show_nav_icons ? adaire_header_icon_svg( $icon ) : '';
 				$label_html = '<span>' . esc_html( $label ) . '</span>';
 				$dot        = adaire_header_render_nav_dot( $attributes );
 				$content    = ( 'before' === $dot_position ) ? ( $dot . $icon_html . $label_html ) : ( $icon_html . $label_html . $dot );
@@ -775,8 +775,8 @@ if ( ! function_exists( 'adaire_header_render_nav' ) ) {
 		$mobile_cta = '';
 		if ( $nav_id && ! empty( $attributes['showCta'] ) ) {
 			$show_icon_cta_mobile = ! isset( $attributes['showCtaIcon'] ) || $attributes['showCtaIcon'];
-			$cta_html              = adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'adaire-blocks' ), $attributes['ctaIconPosition'], 'cta', $show_icon_cta_mobile );
-			$mobile_cta             = '<div class="adaire-header-nav-mobile-cta">' . $cta_html . '</div>';
+			$cta_html             = adaire_header_render_action( $attributes['showCta'], $attributes['ctaText'], $attributes['ctaUrl'], $attributes['ctaNewTab'], $attributes['ctaStyle'], $attributes['ctaIcon'], __( 'Get started', 'adaire-blocks' ), $attributes['ctaIconPosition'], 'cta', $show_icon_cta_mobile );
+			$mobile_cta           = '<div class="adaire-header-nav-mobile-cta">' . $cta_html . '</div>';
 		}
 
 		return '<nav' . $id_attr . ' class="adaire-header-nav is-' . esc_attr( $attributes['navOrientation'] ) . '" aria-label="' . esc_attr__( 'Header navigation', 'adaire-blocks' ) . '">' . $close_btn . $inner . $mobile_cta . '</nav>';
@@ -989,15 +989,15 @@ if ( ! function_exists( 'adaire_header_render_mobile_toggle' ) ) {
 // Render.
 // ---------------------------------------------------------------------
 
-$style_string = adaire_header_style_vars_to_string( adaire_header_get_style_vars( $attributes ) );
+$style_string     = adaire_header_style_vars_to_string( adaire_header_get_style_vars( $attributes ) );
 $box_shadow_class = ! empty( $attributes['boxShadow'] ) ? ' has-shadow' : '';
-$slide_class = '';
+$slide_class      = '';
 if ( 'slide-in' === $attributes['mobileMenuStyle'] && isset( $attributes['mobileSlideDirection'] ) && 'left' === $attributes['mobileSlideDirection'] ) {
 	$slide_class = ' mobile-slide-left';
 }
 $classes = trim( 'adaire-header-block is-' . $attributes['stickyBehavior'] . ' mobile-' . $attributes['mobileMenuStyle'] . $slide_class . $box_shadow_class );
 
-$resolved  = adaire_header_resolve_nav( $attributes );
+$resolved   = adaire_header_resolve_nav( $attributes );
 $nav_dom_id = wp_unique_id( 'adaire-header-nav-' );
 
 $wrapper_attributes = get_block_wrapper_attributes(
@@ -1056,7 +1056,7 @@ $search_html     = adaire_header_render_search( $attributes );
 $html = '<header ' . $wrapper_attributes . '>';
 
 if ( ! empty( $attributes['showTopBar'] ) ) {
-	$follow_enabled = ! empty( $attributes['topBarFollowEnabled'] );
+	$follow_enabled    = ! empty( $attributes['topBarFollowEnabled'] );
 	$topbar_left_text  = adaire_header_suppress_redundant_follow_text( $attributes['topBarLeft'], $follow_enabled );
 	$topbar_right_text = adaire_header_suppress_redundant_follow_text( $attributes['topBarRight'], $follow_enabled );
 
@@ -1109,8 +1109,8 @@ if ( 'before-nav' === $cart_placement ) {
 }
 
 if ( 'split' === $attributes['layout'] ) {
-	$total      = count( $resolved['items'] );
-	$half       = (int) ceil( $total / 2 );
+	$total       = count( $resolved['items'] );
+	$half        = (int) ceil( $total / 2 );
 	$left_items  = array_slice( $resolved['items'], 0, $half );
 	$right_items = array_slice( $resolved['items'], $half );
 
@@ -1156,4 +1156,3 @@ if ( 'floating' === $search_position ) {
 $html .= '</header>';
 
 echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- every dynamic value above is escaped at the point of interpolation.
-

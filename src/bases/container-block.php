@@ -75,11 +75,11 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			$this->enqueue_script( 'kadence-blocks-splide-init' );
 		}
 
-		$is_background_video = isset( $attributes['backgroundSettingTab'] ) && 'video' === $attributes['backgroundSettingTab'];
+		$is_background_video          = isset( $attributes['backgroundSettingTab'] ) && 'video' === $attributes['backgroundSettingTab'];
 		$has_background_video_content = $is_background_video && isset( $attributes['backgroundVideo'] ) && isset( $attributes['backgroundVideo'][0] );
-		$show_play_pause = $has_background_video_content && isset( $attributes['backgroundVideo'][0]['btns'] ) && true === $attributes['backgroundVideo'][0]['btns'];
-		$show_audio_is_default = ( $has_background_video_content && ( ! isset( $attributes['backgroundVideo'][0]['btnsMute'] ) ) );
-		$show_audio = $has_background_video_content && ( ( $show_audio_is_default && $show_play_pause && isset( $attributes['backgroundVideo'][0]['mute'] ) && false === $attributes['backgroundVideo'][0]['mute'] ) || ( isset( $attributes['backgroundVideo'][0]['btnsMute'] ) && $attributes['backgroundVideo'][0]['btnsMute'] ) );
+		$show_play_pause              = $has_background_video_content && isset( $attributes['backgroundVideo'][0]['btns'] ) && true === $attributes['backgroundVideo'][0]['btns'];
+		$show_audio_is_default        = ( $has_background_video_content && ( ! isset( $attributes['backgroundVideo'][0]['btnsMute'] ) ) );
+		$show_audio                   = $has_background_video_content && ( ( $show_audio_is_default && $show_play_pause && isset( $attributes['backgroundVideo'][0]['mute'] ) && false === $attributes['backgroundVideo'][0]['mute'] ) || ( isset( $attributes['backgroundVideo'][0]['btnsMute'] ) && $attributes['backgroundVideo'][0]['btnsMute'] ) );
 		if ( $show_play_pause || $show_audio ) {
 			$this->enqueue_script( 'kadence-blocks-video-bg' );
 		}
@@ -101,18 +101,18 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 	public function get_custom_layout( $css, $columns, $gap = '', $column1 = null, $column2 = null, $column3 = null, $column4 = null, $column5 = null, $column6 = null ) {
 		$grid_layout_string = '';
 		if ( $columns > 1 ) {
-			$gap_string = ! empty( $gap ) ? $gap : 'var(--kb-default-row-gutter, var(--global-row-gutter-md, 2rem))';
-			$column_widths = array( $column1, $column2, $column3, $column4, $column5, $column6 );
+			$gap_string       = ! empty( $gap ) ? $gap : 'var(--kb-default-row-gutter, var(--global-row-gutter-md, 2rem))';
+			$column_widths    = array( $column1, $column2, $column3, $column4, $column5, $column6 );
 			$column_width_sum = 0;
 
 			foreach ( range( 0, $columns - 1 ) as $column ) {
 				$column_width = $column_widths[ $column ];
 				if ( $column == $columns - 1 ) {
-					//assume the last column width to make 100
+					// assume the last column width to make 100
 					$column_width = abs( $column_width_sum - 100 );
 				}
-				$grid_layout_string .= 'minmax(0, calc(' . $column_width . '% - ((' . $gap_string . ' * ' . ($columns - 1) . ' )/' . $columns . ')))';
-				$column_width_sum += $column_width;
+				$grid_layout_string .= 'minmax(0, calc(' . $column_width . '% - ((' . $gap_string . ' * ' . ( $columns - 1 ) . ' )/' . $columns . ')))';
+				$column_width_sum   += $column_width;
 			}
 		}
 		return $grid_layout_string;
@@ -167,9 +167,9 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 				if ( ! empty( $column1 ) && ! empty( $column2 ) ) {
 					if ( abs( $column1 ) === 50 && abs( $column2 ) === 25 ) {
 						$grid_layout = 'minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr)';
-					} else if ( abs( $column1 ) === 25 && abs( $column2 ) === 50 ) {
+					} elseif ( abs( $column1 ) === 25 && abs( $column2 ) === 50 ) {
 						$grid_layout = 'minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr)';
-					} else if ( abs( $column1 ) === 25 && abs( $column2 ) === 25 ) {
+					} elseif ( abs( $column1 ) === 25 && abs( $column2 ) === 25 ) {
 						$grid_layout = 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr)';
 					} else {
 						$grid_layout = $this->get_custom_layout( $css, $columns, $gap, $column1, $column2, $column3, $column4, $column5, $column6 );
@@ -333,12 +333,12 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 		$updated_version = ! empty( $attributes['kbVersion'] ) && $attributes['kbVersion'] > 1 ? true : false;
 		if ( ! empty( $attributes['kbVersion'] ) && $attributes['kbVersion'] > 1 ) {
 			$margin_selector = '.kb-row-layout-wrap.wp-block-kadence-rowlayout.kb-row-layout-id' . $unique_id;
-			$base_selector = '.kb-row-layout-id' . $unique_id;
-			$inner_selector = '.kb-row-layout-id' . $unique_id . ' > .kt-row-column-wrap';
+			$base_selector   = '.kb-row-layout-id' . $unique_id;
+			$inner_selector  = '.kb-row-layout-id' . $unique_id . ' > .kt-row-column-wrap';
 		} else {
 			$margin_selector = '#kt-layout-id' . $unique_id;
-			$base_selector = '#kt-layout-id' . $unique_id;
-			$inner_selector = '#kt-layout-id' . $unique_id . ' > .kt-row-column-wrap';
+			$base_selector   = '#kt-layout-id' . $unique_id;
+			$inner_selector  = '#kt-layout-id' . $unique_id . ' > .kt-row-column-wrap';
 		}
 		// Margin, check for old attributes and use if present.
 		$css->set_selector( $margin_selector );
@@ -493,7 +493,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			// If no padding is set, use the default.
 			if ( ! isset( $attributes['padding'] ) ) {
 				// $attributes['padding'] = [
-				// 	'sm', '', 'sm', ''
+				// 'sm', '', 'sm', ''
 				// ];
 				$css->add_property( 'padding-top', 'var( --global-kb-row-default-top, var(--global-kb-spacing-sm, 1.5rem) )' );
 				$css->add_property( 'padding-bottom', 'var( --global-kb-row-default-bottom, var(--global-kb-spacing-sm, 1.5rem) )' );
@@ -516,36 +516,36 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 		}
 
 		// Layout.
-		$columns = ( ! empty( $attributes['columns'] ) ? $attributes['columns'] : 2 );
-		$layout  = ( ! empty( $attributes['colLayout'] ) ? $attributes['colLayout'] : 'equal' );
-		$column1  = ( ! empty( $attributes['firstColumnWidth'] ) ? $attributes['firstColumnWidth'] : '' );
-		$column2  = ( ! empty( $attributes['secondColumnWidth'] ) ? $attributes['secondColumnWidth'] : '' );
-		$column3  = ( ! empty( $attributes['thirdColumnWidth'] ) ? $attributes['thirdColumnWidth'] : '' );
-		$column4  = ( ! empty( $attributes['fourthColumnWidth'] ) ? $attributes['fourthColumnWidth'] : '' );
-		$column5  = ( ! empty( $attributes['fifthColumnWidth'] ) ? $attributes['fifthColumnWidth'] : '' );
-		$column6  = ( ! empty( $attributes['sixthColumnWidth'] ) ? $attributes['sixthColumnWidth'] : '' );
-		$column1_tablet  = ( ! empty( $attributes['firstColumnWidthTablet'] ) ? $attributes['firstColumnWidthTablet'] : '' );
-		$column2_tablet  = ( ! empty( $attributes['secondColumnWidthTablet'] ) ? $attributes['secondColumnWidthTablet'] : '' );
-		$column3_tablet  = ( ! empty( $attributes['thirdColumnWidthTablet'] ) ? $attributes['thirdColumnWidthTablet'] : '' );
-		$column4_tablet  = ( ! empty( $attributes['fourthColumnWidthTablet'] ) ? $attributes['fourthColumnWidthTablet'] : '' );
-		$column5_tablet  = ( ! empty( $attributes['fifthColumnWidthTablet'] ) ? $attributes['fifthColumnWidthTablet'] : '' );
-		$column6_tablet  = ( ! empty( $attributes['sixthColumnWidthTablet'] ) ? $attributes['sixthColumnWidthTablet'] : '' );
-		$column1_mobile  = ( ! empty( $attributes['firstColumnWidthMobile'] ) ? $attributes['firstColumnWidthMobile'] : '' );
-		$column2_mobile  = ( ! empty( $attributes['secondColumnWidthMobile'] ) ? $attributes['secondColumnWidthMobile'] : '' );
-		$column3_mobile  = ( ! empty( $attributes['thirdColumnWidthMobile'] ) ? $attributes['thirdColumnWidthMobile'] : '' );
-		$column4_mobile  = ( ! empty( $attributes['fourthColumnWidthMobile'] ) ? $attributes['fourthColumnWidthMobile'] : '' );
-		$column5_mobile  = ( ! empty( $attributes['fifthColumnWidthMobile'] ) ? $attributes['fifthColumnWidthMobile'] : '' );
-		$column6_mobile  = ( ! empty( $attributes['sixthColumnWidthMobile'] ) ? $attributes['sixthColumnWidthMobile'] : '' );
-		$collapse_layouts = array( 'row', 'two-grid', 'three-grid', 'last-row', 'first-row' );
-		$has_custom_widths = $this->has_custom_widths( $columns, $column1, $column2, $column3, $column4, $column5, $column6 );
+		$columns                  = ( ! empty( $attributes['columns'] ) ? $attributes['columns'] : 2 );
+		$layout                   = ( ! empty( $attributes['colLayout'] ) ? $attributes['colLayout'] : 'equal' );
+		$column1                  = ( ! empty( $attributes['firstColumnWidth'] ) ? $attributes['firstColumnWidth'] : '' );
+		$column2                  = ( ! empty( $attributes['secondColumnWidth'] ) ? $attributes['secondColumnWidth'] : '' );
+		$column3                  = ( ! empty( $attributes['thirdColumnWidth'] ) ? $attributes['thirdColumnWidth'] : '' );
+		$column4                  = ( ! empty( $attributes['fourthColumnWidth'] ) ? $attributes['fourthColumnWidth'] : '' );
+		$column5                  = ( ! empty( $attributes['fifthColumnWidth'] ) ? $attributes['fifthColumnWidth'] : '' );
+		$column6                  = ( ! empty( $attributes['sixthColumnWidth'] ) ? $attributes['sixthColumnWidth'] : '' );
+		$column1_tablet           = ( ! empty( $attributes['firstColumnWidthTablet'] ) ? $attributes['firstColumnWidthTablet'] : '' );
+		$column2_tablet           = ( ! empty( $attributes['secondColumnWidthTablet'] ) ? $attributes['secondColumnWidthTablet'] : '' );
+		$column3_tablet           = ( ! empty( $attributes['thirdColumnWidthTablet'] ) ? $attributes['thirdColumnWidthTablet'] : '' );
+		$column4_tablet           = ( ! empty( $attributes['fourthColumnWidthTablet'] ) ? $attributes['fourthColumnWidthTablet'] : '' );
+		$column5_tablet           = ( ! empty( $attributes['fifthColumnWidthTablet'] ) ? $attributes['fifthColumnWidthTablet'] : '' );
+		$column6_tablet           = ( ! empty( $attributes['sixthColumnWidthTablet'] ) ? $attributes['sixthColumnWidthTablet'] : '' );
+		$column1_mobile           = ( ! empty( $attributes['firstColumnWidthMobile'] ) ? $attributes['firstColumnWidthMobile'] : '' );
+		$column2_mobile           = ( ! empty( $attributes['secondColumnWidthMobile'] ) ? $attributes['secondColumnWidthMobile'] : '' );
+		$column3_mobile           = ( ! empty( $attributes['thirdColumnWidthMobile'] ) ? $attributes['thirdColumnWidthMobile'] : '' );
+		$column4_mobile           = ( ! empty( $attributes['fourthColumnWidthMobile'] ) ? $attributes['fourthColumnWidthMobile'] : '' );
+		$column5_mobile           = ( ! empty( $attributes['fifthColumnWidthMobile'] ) ? $attributes['fifthColumnWidthMobile'] : '' );
+		$column6_mobile           = ( ! empty( $attributes['sixthColumnWidthMobile'] ) ? $attributes['sixthColumnWidthMobile'] : '' );
+		$collapse_layouts         = array( 'row', 'two-grid', 'three-grid', 'last-row', 'first-row' );
+		$has_custom_widths        = $this->has_custom_widths( $columns, $column1, $column2, $column3, $column4, $column5, $column6 );
 		$has_custom_widths_tablet = $this->has_custom_widths( $columns, $column1_tablet, $column2_tablet, $column3_tablet, $column4_tablet, $column5_tablet, $column6_tablet );
 		$has_custom_widths_mobile = $this->has_custom_widths( $columns, $column1_mobile, $column2_mobile, $column3_mobile, $column4_mobile, $column5_mobile, $column6_mobile );
 
-		//base desktop layout.
+		// base desktop layout.
 		$grid_layout = $this->get_template_columns( $css, $columns, $layout, $inner_selector, $css->render_row_gap_property( $attributes, array( 'columnGutter', 'tabletGutter', 'mobileGutter' ), 'desktop', 'customGutter', 'gutterType' ), $column1, $column2, $column3, $column4, $column5, $column6 );
 		$css->add_property( 'grid-template-columns', $grid_layout );
 
-		//Desktop ordering
+		// Desktop ordering
 		if ( ! empty( $attributes['collapseOrder'] ) && 'left-to-right' !== $attributes['collapseOrder'] && in_array( $layout, $collapse_layouts ) ) {
 			$css->set_media_state( 'tablet' );
 			foreach ( range( 1, $columns ) as $item_count ) {
@@ -570,13 +570,13 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			$css->set_media_state( 'desktop' );
 		}
 
-		//Tablet layout
+		// Tablet layout
 		if ( empty( $attributes['tabletLayout'] ) && ! empty( $css->render_row_gap_property( $attributes, array( 'columnGutter', 'tabletGutter', 'mobileGutter' ), 'tablet', 'customGutter', 'gutterType' ) ) ) {
-			//no tablet layout, but we have a tablet guttter width, so render the inherited column layout from desktop, potentially with custom widths.
+			// no tablet layout, but we have a tablet guttter width, so render the inherited column layout from desktop, potentially with custom widths.
 			$css->set_media_state( 'tablet' );
 			$css->set_selector( $inner_selector );
 
-			//if no custom widths, need to use desktop widths
+			// if no custom widths, need to use desktop widths
 			if ( $has_custom_widths_tablet ) {
 				$grid_layout = $this->get_template_columns( $css, $columns, $layout, $inner_selector, $css->render_row_gap_property( $attributes, array( 'columnGutter', 'tabletGutter', 'mobileGutter' ), 'tablet', 'customGutter', 'gutterType' ), $column1_tablet, $column2_tablet, $column3_tablet, $column4_tablet, $column5_tablet, $column6_tablet );
 			} else {
@@ -585,14 +585,14 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			$css->add_property( 'grid-template-columns', $grid_layout );
 		}
 		if ( ! empty( $attributes['tabletLayout'] ) || $column1_tablet ) {
-			//use tablet layout. Potentially with custom widths
-			$layout  = ( ! empty( $attributes['colLayout'] ) ? $attributes['colLayout'] : 'equal' );
-			$tabletLayout  = ( ! empty( $attributes['tabletLayout'] ) && $attributes['tabletLayout'] !== 'inherit' ? $attributes['tabletLayout'] : $layout );
+			// use tablet layout. Potentially with custom widths
+			$layout       = ( ! empty( $attributes['colLayout'] ) ? $attributes['colLayout'] : 'equal' );
+			$tabletLayout = ( ! empty( $attributes['tabletLayout'] ) && $attributes['tabletLayout'] !== 'inherit' ? $attributes['tabletLayout'] : $layout );
 			$css->set_media_state( 'tablet' );
 			$css->set_selector( $inner_selector );
 			$grid_layout = $this->get_template_columns( $css, $columns, $tabletLayout, $inner_selector, $css->render_row_gap_property( $attributes, array( 'columnGutter', 'tabletGutter', 'mobileGutter' ), 'tablet', 'customGutter', 'gutterType' ), $column1_tablet, $column2_tablet, $column3_tablet, $column4_tablet, $column5_tablet, $column6_tablet );
 			$css->add_property( 'grid-template-columns', $grid_layout );
-			//tablet ordering
+			// tablet ordering
 			if ( ! empty( $attributes['collapseOrder'] ) && 'left-to-right' !== $attributes['collapseOrder'] && in_array( $tabletLayout, $collapse_layouts ) ) {
 				foreach ( range( 1, $columns ) as $item_count ) {
 					$css->set_selector( $inner_selector . ' > .wp-block-kadence-column:nth-child(' . $item_count . ' of *:not(style))' );
@@ -616,13 +616,13 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			}
 			$css->set_media_state( 'desktop' );
 		} elseif ( $columns > 4 ) {
-			//If no tablet layout and more than 4 columns use mobile layout. (this does not match editor behavior)
-			$collapse_tab_layout  = ( ! empty( $attributes['mobileLayout'] ) ? $attributes['mobileLayout'] : 'row' );
+			// If no tablet layout and more than 4 columns use mobile layout. (this does not match editor behavior)
+			$collapse_tab_layout = ( ! empty( $attributes['mobileLayout'] ) ? $attributes['mobileLayout'] : 'row' );
 			$css->set_media_state( 'tablet' );
 			$css->set_selector( $inner_selector );
 			$grid_layout = $this->get_template_columns( $css, $columns, $collapse_tab_layout, $inner_selector, $css->render_row_gap_property( $attributes, array( 'columnGutter', 'tabletGutter', 'mobileGutter' ), 'tablet', 'customGutter', 'gutterType' ), $column1_mobile, $column2_mobile, $column3_mobile, $column4_mobile, $column5_mobile, $column6_mobile );
 			$css->add_property( 'grid-template-columns', $grid_layout );
-			//tablet collapse ordering
+			// tablet collapse ordering
 			if ( ! empty( $attributes['collapseOrder'] ) && 'left-to-right' !== $attributes['collapseOrder'] && in_array( $collapse_tab_layout, $collapse_layouts ) ) {
 				foreach ( range( 1, $columns ) as $item_count ) {
 					$css->set_selector( $inner_selector . ' > .wp-block-kadence-column:nth-child(' . $item_count . ' of *:not(style))' );
@@ -647,13 +647,13 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			$css->set_media_state( 'desktop' );
 		}
 
-		//mobile layout
-		$mobile_layout  = ( ! empty( $attributes['mobileLayout'] ) ? $attributes['mobileLayout'] : 'row' );
+		// mobile layout
+		$mobile_layout = ( ! empty( $attributes['mobileLayout'] ) ? $attributes['mobileLayout'] : 'row' );
 		$css->set_media_state( 'mobile' );
 		$css->set_selector( $inner_selector );
 		$grid_layout = $this->get_template_columns( $css, $columns, $mobile_layout, $inner_selector, $css->render_row_gap_property( $attributes, array( 'columnGutter', 'tabletGutter', 'mobileGutter' ), 'mobile', 'customGutter', 'gutterType' ), $column1_mobile, $column2_mobile, $column3_mobile, $column4_mobile, $column5_mobile, $column6_mobile );
 		$css->add_property( 'grid-template-columns', $grid_layout );
-		//mobile ordering
+		// mobile ordering
 		if ( ! empty( $attributes['collapseOrder'] ) && 'left-to-right' !== $attributes['collapseOrder'] && in_array( $mobile_layout, $collapse_layouts ) ) {
 			foreach ( range( 1, $columns ) as $item_count ) {
 				$css->set_selector( $inner_selector . ' > .wp-block-kadence-column:nth-child(' . $item_count . ' of *:not(style))' );
@@ -688,21 +688,21 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			} else {
 				$inherit_content_width = 'var(--wp--style--global--content-size)';
 			}
-			
-			$padding_left = '0px';
+
+			$padding_left  = '0px';
 			$padding_right = '0px';
 			if ( class_exists( 'Kadence\Theme' ) ) {
-				$padding_left = 'var(--global-content-edge-padding)';
+				$padding_left  = 'var(--global-content-edge-padding)';
 				$padding_right = 'var(--global-content-edge-padding)';
 			}
 			if ( isset( $attributes['padding'][1] ) && $css->is_number( $attributes['padding'][1] ) ) {
 				$padding_right = $attributes['padding'][1] . ( ! empty( $attributes['paddingUnit'] ) ? $attributes['paddingUnit'] : 'px' );
-			} else if ( isset( $attributes['padding'][1] ) && $css->is_variable_value( $attributes['padding'][1] ) ) {
+			} elseif ( isset( $attributes['padding'][1] ) && $css->is_variable_value( $attributes['padding'][1] ) ) {
 				$padding_right = $css->get_variable_value( $attributes['padding'][1] );
 			}
 			if ( isset( $attributes['padding'][3] ) && $css->is_number( $attributes['padding'][3] ) ) {
 				$padding_left = $attributes['padding'][3] . ( ! empty( $attributes['paddingUnit'] ) ? $attributes['paddingUnit'] : 'px' );
-			} else if ( isset( $attributes['padding'][3] ) && $css->is_variable_value( $attributes['padding'][3] ) ) {
+			} elseif ( isset( $attributes['padding'][3] ) && $css->is_variable_value( $attributes['padding'][3] ) ) {
 				$padding_left = $css->get_variable_value( $attributes['padding'][3] );
 			}
 			$css->set_selector( $base_selector );
@@ -828,9 +828,9 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 						if ( empty( $attributes['bgColorClass'] ) ) {
 							$css->render_color_output( $attributes, 'bgColor', 'background-color' );
 						}
-					} else if ( strpos( $attributes['bgColor'], 'palette' ) === 0 ) {
+					} elseif ( strpos( $attributes['bgColor'], 'palette' ) === 0 ) {
 						$css->render_color_output( $attributes, 'bgColor', 'background-color' );
-					} else if ( empty( $attributes['bgColorClass'] ) ) {
+					} elseif ( empty( $attributes['bgColorClass'] ) ) {
 						$css->render_color_output( $attributes, 'bgColor', 'background-color' );
 					}
 				}
@@ -897,14 +897,14 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 						$css->add_property( 'background-position', ( ! empty( $tablet_background['bgImgPosition'] ) ? $tablet_background['bgImgPosition'] : 'center center' ) );
 						$css->add_property( 'background-attachment', $bg_attach );
 						$css->add_property( 'background-repeat', ( ! empty( $tablet_background['bgImgRepeat'] ) ? $tablet_background['bgImgRepeat'] : 'no-repeat' ) );
-					} else if ( isset( $tablet_background['forceOverDesk'] ) && $tablet_background['forceOverDesk'] ) {
+					} elseif ( isset( $tablet_background['forceOverDesk'] ) && $tablet_background['forceOverDesk'] ) {
 						// Force No image for tablet.
-						//$css->set_media_state( 'tabletOnly' );
+						// $css->set_media_state( 'tabletOnly' );
 						$css->set_selector( $base_selector );
 						$css->add_property( 'background-image', 'none !important' );
-						$css->set_selector( $base_selector  . ' [id*="jarallax-container-"]' );
+						$css->set_selector( $base_selector . ' [id*="jarallax-container-"]' );
 						$css->add_property( 'display', 'none !important' );
-						//$css->set_media_state( 'tablet' );
+						// $css->set_media_state( 'tablet' );
 					}
 					if ( 'normal' === $background_type && ! empty( $attributes['bgImg'] ) && ! empty( $attributes['bgImgAttachment'] ) && 'parallax' === $attributes['bgImgAttachment'] && ! empty( $tablet_background['bgImg'] ) && ! empty( $tablet_background['bgImgAttachment'] ) && 'parallax' !== $tablet_background['bgImgAttachment'] ) {
 						$css->set_selector( $base_selector . ' [id*="jarallax-container-"]' );
@@ -969,7 +969,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 						$css->add_property( 'background-position', ( ! empty( $mobile_background['bgImgPosition'] ) ? $mobile_background['bgImgPosition'] : 'center center' ) );
 						$css->add_property( 'background-attachment', $bg_attach );
 						$css->add_property( 'background-repeat', ( ! empty( $mobile_background['bgImgRepeat'] ) ? $mobile_background['bgImgRepeat'] : 'no-repeat' ) );
-					} else if ( isset( $mobile_background['forceOverDesk'] ) && $mobile_background['forceOverDesk'] ) {
+					} elseif ( isset( $mobile_background['forceOverDesk'] ) && $mobile_background['forceOverDesk'] ) {
 						$css->add_property( 'background-image', 'none !important' );
 						$css->set_selector( $base_selector . ' [id*="jarallax-container-"]' );
 						$css->add_property( 'display', 'none !important' );
@@ -1059,7 +1059,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 				$css->add_property( 'mix-blend-mode', $attributes['overlayBlendMode'] );
 			}
 		}
-		$tablet_overlay    = ( isset( $attributes['tabletOverlay'] ) && is_array( $attributes['tabletOverlay'] ) && isset( $attributes['tabletOverlay'][0] ) && is_array( $attributes['tabletOverlay'][0] ) ? $attributes['tabletOverlay'][0] : array() );
+		$tablet_overlay = ( isset( $attributes['tabletOverlay'] ) && is_array( $attributes['tabletOverlay'] ) && isset( $attributes['tabletOverlay'][0] ) && is_array( $attributes['tabletOverlay'][0] ) ? $attributes['tabletOverlay'][0] : array() );
 		if ( isset( $tablet_overlay['enable'] ) && $tablet_overlay['enable'] ) {
 			$css->set_media_state( 'tablet' );
 			$css->set_selector( $base_selector . ' > .kt-row-layout-overlay' );
@@ -1115,7 +1115,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			}
 			$css->set_media_state( 'desktop' );
 		}
-		$mobile_overlay    = ( isset( $attributes['mobileOverlay'] ) && is_array( $attributes['mobileOverlay'] ) && isset( $attributes['mobileOverlay'][0] ) && is_array( $attributes['mobileOverlay'][0] ) ? $attributes['mobileOverlay'][0] : array() );
+		$mobile_overlay = ( isset( $attributes['mobileOverlay'] ) && is_array( $attributes['mobileOverlay'] ) && isset( $attributes['mobileOverlay'][0] ) && is_array( $attributes['mobileOverlay'][0] ) ? $attributes['mobileOverlay'][0] : array() );
 		if ( isset( $mobile_overlay['enable'] ) && $mobile_overlay['enable'] ) {
 			$css->set_media_state( 'mobile' );
 			$css->set_selector( $base_selector . ' > .kt-row-layout-overlay' );
@@ -1200,10 +1200,10 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			$css->set_selector( $base_selector . ' .kt-row-layout-bottom-sep' );
 			$css->add_property( 'height', $bottomSepHeight . $bottomSepUnit );
 
-				if ( isset( $attributes['bottomSepWidth'] ) ) {
-					$css->set_selector( $base_selector . ' .kt-row-layout-bottom-sep svg' );
-					$css->add_property( 'width', $attributes['bottomSepWidth'] . '%' );
-				}
+			if ( isset( $attributes['bottomSepWidth'] ) ) {
+				$css->set_selector( $base_selector . ' .kt-row-layout-bottom-sep svg' );
+				$css->add_property( 'width', $attributes['bottomSepWidth'] . '%' );
+			}
 			if ( ! empty( $attributes['bottomSepColor'] ) ) {
 				$css->set_selector( $base_selector . ' .kt-row-layout-bottom-sep svg' );
 				$css->add_property( 'fill', $css->render_color( $attributes['bottomSepColor'] ) . '!important' );
@@ -1235,8 +1235,8 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 		}
 		// Top Sep.
 		if ( isset( $attributes['topSep'] ) && 'none' != $attributes['topSep'] ) {
-			$topSepUnit = !empty( $attributes['topSepHeightUnit']) ? $attributes['topSepHeightUnit'] : 'px';
-			$topSepHeight = !empty ($attributes['topSepHeight']) ? $attributes['topSepHeight'] : '100';
+			$topSepUnit   = ! empty( $attributes['topSepHeightUnit'] ) ? $attributes['topSepHeightUnit'] : 'px';
+			$topSepHeight = ! empty( $attributes['topSepHeight'] ) ? $attributes['topSepHeight'] : '100';
 				$css->set_selector( $base_selector . ' .kt-row-layout-top-sep' );
 				$css->add_property( 'height', $topSepHeight . $topSepUnit );
 			if ( $css->is_number( $attributes['topSepWidth'] ) ) {
@@ -1244,7 +1244,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 				$css->add_property( 'width', $attributes['topSepWidth'] . '%' );
 			}
 			if ( ! empty( $attributes['topSepColor'] ) ) {
-				$css->set_selector( $base_selector . ' .kt-row-layout-top-sep svg'  );
+				$css->set_selector( $base_selector . ' .kt-row-layout-top-sep svg' );
 				$css->add_property( 'fill', $css->render_color( $attributes['topSepColor'] ) . '!important' );
 			}
 			$css->set_media_state( 'tablet' );
@@ -1283,15 +1283,15 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			$css->add_property( 'display', 'none !important' );
 		}
 		$css->set_media_state( 'desktop' );
-		
+
 		// Background Slider Pause Button Styles.
 		if ( isset( $attributes['backgroundSettingTab'] ) && 'slider' === $attributes['backgroundSettingTab'] ) {
-			$arrow_style = ! empty( $attributes['backgroundSliderSettings'][0]['arrowStyle'] ) ? $attributes['backgroundSliderSettings'][0]['arrowStyle'] : 'none';
+			$arrow_style       = ! empty( $attributes['backgroundSliderSettings'][0]['arrowStyle'] ) ? $attributes['backgroundSliderSettings'][0]['arrowStyle'] : 'none';
 			$show_pause_button = isset( $attributes['backgroundSliderSettings'][0]['showPauseButton'] ) ? $attributes['backgroundSliderSettings'][0]['showPauseButton'] : false;
-			
+
 			if ( $show_pause_button ) {
 				$css->set_selector( $base_selector . ' .kb-blocks-bg-slider .kb-gallery-pause-button' );
-				
+
 				// Set styles based on arrow style.
 				switch ( $arrow_style ) {
 					case 'blackonlight':
@@ -1318,7 +1318,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 				}
 			}
 		}
-		
+
 		if ( isset( $attributes['kadenceBlockCSS'] ) && ! empty( $attributes['kadenceBlockCSS'] ) ) {
 			$css->add_css_string( str_replace( 'selector', $base_selector, $attributes['kadenceBlockCSS'] ) );
 		}
@@ -1331,32 +1331,32 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 	 * @param string $location - top or bottom.
 	 */
 	public function get_divider_render( $divider, $location ) {
-		$paths = array();
-		$paths['ct'] = '<path d="M1000,0l-500,98l-500,-98l0,100l1000,0l0,-100Z" />';
-		$paths['cti'] = '<path d="M500,2l500,98l-1000,0l500,-98Z" />';
-		$paths['ctd'] = '<path d="M1000,0l-500,98l-500,-98l0,100l1000,0l0,-100Z" style="opacity: 0.4" /><path d="M1000,20l-500,78l-500,-78l0,80l1000,0l0,-80Z" />';
-		$paths['ctdi'] = '<path d="M500,2l500,78l0,20l-1000,0l0,-20l500,-78Z" style="opacity: 0.4" /><path d="M500,2l500,98l-1000,0l500,-98Z" />';
-		$paths['sltl'] = '<path d="M1000,0l-1000,100l1000,0l0,-100Z" />';
-		$paths['sltli'] = '<path d="M0,100l1000,-100l-1000,0l0,100Z" />';
-		$paths['sltr'] = '<path d="M0,0l1000,100l-1000,0l0,-100Z" />';
-		$paths['sltri'] = '<path d="M1000,100l-1000,-100l1000,0l0,100Z" />';
-		$paths['crv'] = '<path d="M1000,100c0,0 -270.987,-98 -500,-98c-229.013,0 -500,98 -500,98l1000,0Z" />';
-		$paths['crvi'] = '<path d="M1000,0c0,0 -270.987,98 -500,98c-229.013,0 -500,-98 -500,-98l0,100l1000,0l0,-100Z" />';
-		$paths['crvl'] = '<path d="M1000,100c0,0 -420.987,-98 -650,-98c-229.013,0 -350,98 -350,98l1000,0Z" />';
-		$paths['crvli'] = '<path d="M1000,0c0,0 -420.987,98 -650,98c-229.013,0 -350,-98 -350,-98l0,100l1000,0l0,-100Z" />';
-		$paths['crvr'] = '<path d="M1000,100c0,0 -120.987,-98 -350,-98c-229.013,0 -650,98 -650,98l1000,0Z" />';
-		$paths['crvri'] = '<path d="M1000,0c0,0 -120.987,98 -350,98c-229.013,0 -650,-98 -650,-98l0,100l1000,0l0,-100Z" />';
-		$paths['wave'] = '<path d="M1000,40c0,0 -120.077,-38.076 -250,-38c-129.923,0.076 -345.105,78 -500,78c-154.895,0 -250,-30 -250,-30l0,50l1000,0l0,-60Z" />';
-		$paths['wavei'] = '<path d="M0,40c0,0 120.077,-38.076 250,-38c129.923,0.076 345.105,78 500,78c154.895,0 250,-30 250,-30l0,50l-1000,0l0,-60Z" />';
-		$paths['waves'] = '<path d="M1000,40c0,0 -120.077,-38.076 -250,-38c-129.923,0.076 -345.105,78 -500,78c-154.895,0 -250,-30 -250,-30l0,50l1000,0l0,-60Z" /><path d="M1000,40c0,0 -120.077,-38.076 -250,-38c-129.923,0.076 -345.105,73 -500,73c-154.895,0 -250,-45 -250,-45l0,70l1000,0l0,-60Z" style="opacity: 0.4" /><path d="M1000,40c0,0 -120.077,-38.076 -250,-38c-129.923,0.076 -345.105,68 -500,68c-154.895,0 -250,-65 -250,-65l0,95l1000,0l0,-60Z" style="opacity: 0.4" />';
-		$paths['wavesi'] = '<path d="M0,40c0,0 120.077,-38.076 250,-38c129.923,0.076 345.105,78 500,78c154.895,0 250,-30 250,-30l0,50l-1000,0l0,-60Z" /><path d="M0,40c0,0 120.077,-38.076 250,-38c129.923,0.076 345.105,73 500,73c154.895,0 250,-45 250,-45l0,70l-1000,0l0,-60Z" style="opacity: 0.4" /><path d="M0,40c0,0 120.077,-38.076 250,-38c129.923,0.076 345.105,68 500,68c154.895,0 250,-65 250,-65l0,95l-1000,0l0,-60Z" style="opacity: 0.4" />';
-		$paths['mtns'] = '<path d="M1000,50l-182.69,-45.286l-292.031,61.197l-190.875,-41.075l-143.748,28.794l-190.656,-23.63l0,70l1000,0l0,-50Z" style="opacity: 0.4" /><path d="M1000,57l-152.781,-22.589l-214.383,19.81l-159.318,-21.471l-177.44,25.875l-192.722,5.627l-103.356,-27.275l0,63.023l1000,0l0,-43Z" />';
-		$paths['littri'] = '<path d="M500,2l25,98l-50,0l25,-98Z" />';
-		$paths['littrii'] = '<path d="M1000,100l-1000,0l0,-100l475,0l25,98l25,-98l475,0l0,100Z" />';
-		$paths['threelevels'] = '<path style="opacity: 0.33" d="M0 95L1000 0v100H0v-5z"></path><path style="opacity: 0.66" d="M0 95l1000-67.944V100H0v-5z"></path><path d="M0 95l1000-40.887V100H0v-5z"></path>';
+		$paths                 = array();
+		$paths['ct']           = '<path d="M1000,0l-500,98l-500,-98l0,100l1000,0l0,-100Z" />';
+		$paths['cti']          = '<path d="M500,2l500,98l-1000,0l500,-98Z" />';
+		$paths['ctd']          = '<path d="M1000,0l-500,98l-500,-98l0,100l1000,0l0,-100Z" style="opacity: 0.4" /><path d="M1000,20l-500,78l-500,-78l0,80l1000,0l0,-80Z" />';
+		$paths['ctdi']         = '<path d="M500,2l500,78l0,20l-1000,0l0,-20l500,-78Z" style="opacity: 0.4" /><path d="M500,2l500,98l-1000,0l500,-98Z" />';
+		$paths['sltl']         = '<path d="M1000,0l-1000,100l1000,0l0,-100Z" />';
+		$paths['sltli']        = '<path d="M0,100l1000,-100l-1000,0l0,100Z" />';
+		$paths['sltr']         = '<path d="M0,0l1000,100l-1000,0l0,-100Z" />';
+		$paths['sltri']        = '<path d="M1000,100l-1000,-100l1000,0l0,100Z" />';
+		$paths['crv']          = '<path d="M1000,100c0,0 -270.987,-98 -500,-98c-229.013,0 -500,98 -500,98l1000,0Z" />';
+		$paths['crvi']         = '<path d="M1000,0c0,0 -270.987,98 -500,98c-229.013,0 -500,-98 -500,-98l0,100l1000,0l0,-100Z" />';
+		$paths['crvl']         = '<path d="M1000,100c0,0 -420.987,-98 -650,-98c-229.013,0 -350,98 -350,98l1000,0Z" />';
+		$paths['crvli']        = '<path d="M1000,0c0,0 -420.987,98 -650,98c-229.013,0 -350,-98 -350,-98l0,100l1000,0l0,-100Z" />';
+		$paths['crvr']         = '<path d="M1000,100c0,0 -120.987,-98 -350,-98c-229.013,0 -650,98 -650,98l1000,0Z" />';
+		$paths['crvri']        = '<path d="M1000,0c0,0 -120.987,98 -350,98c-229.013,0 -650,-98 -650,-98l0,100l1000,0l0,-100Z" />';
+		$paths['wave']         = '<path d="M1000,40c0,0 -120.077,-38.076 -250,-38c-129.923,0.076 -345.105,78 -500,78c-154.895,0 -250,-30 -250,-30l0,50l1000,0l0,-60Z" />';
+		$paths['wavei']        = '<path d="M0,40c0,0 120.077,-38.076 250,-38c129.923,0.076 345.105,78 500,78c154.895,0 250,-30 250,-30l0,50l-1000,0l0,-60Z" />';
+		$paths['waves']        = '<path d="M1000,40c0,0 -120.077,-38.076 -250,-38c-129.923,0.076 -345.105,78 -500,78c-154.895,0 -250,-30 -250,-30l0,50l1000,0l0,-60Z" /><path d="M1000,40c0,0 -120.077,-38.076 -250,-38c-129.923,0.076 -345.105,73 -500,73c-154.895,0 -250,-45 -250,-45l0,70l1000,0l0,-60Z" style="opacity: 0.4" /><path d="M1000,40c0,0 -120.077,-38.076 -250,-38c-129.923,0.076 -345.105,68 -500,68c-154.895,0 -250,-65 -250,-65l0,95l1000,0l0,-60Z" style="opacity: 0.4" />';
+		$paths['wavesi']       = '<path d="M0,40c0,0 120.077,-38.076 250,-38c129.923,0.076 345.105,78 500,78c154.895,0 250,-30 250,-30l0,50l-1000,0l0,-60Z" /><path d="M0,40c0,0 120.077,-38.076 250,-38c129.923,0.076 345.105,73 500,73c154.895,0 250,-45 250,-45l0,70l-1000,0l0,-60Z" style="opacity: 0.4" /><path d="M0,40c0,0 120.077,-38.076 250,-38c129.923,0.076 345.105,68 500,68c154.895,0 250,-65 250,-65l0,95l-1000,0l0,-60Z" style="opacity: 0.4" />';
+		$paths['mtns']         = '<path d="M1000,50l-182.69,-45.286l-292.031,61.197l-190.875,-41.075l-143.748,28.794l-190.656,-23.63l0,70l1000,0l0,-50Z" style="opacity: 0.4" /><path d="M1000,57l-152.781,-22.589l-214.383,19.81l-159.318,-21.471l-177.44,25.875l-192.722,5.627l-103.356,-27.275l0,63.023l1000,0l0,-43Z" />';
+		$paths['littri']       = '<path d="M500,2l25,98l-50,0l25,-98Z" />';
+		$paths['littrii']      = '<path d="M1000,100l-1000,0l0,-100l475,0l25,98l25,-98l475,0l0,100Z" />';
+		$paths['threelevels']  = '<path style="opacity: 0.33" d="M0 95L1000 0v100H0v-5z"></path><path style="opacity: 0.66" d="M0 95l1000-67.944V100H0v-5z"></path><path d="M0 95l1000-40.887V100H0v-5z"></path>';
 		$paths['threelevelsi'] = '<path style="opacity: 0.33" d="M1000 95L0 0v100h1000v-5z"></path><path style="opacity: 0.66" d="M1000 95L0 27.056V100h1000v-5z"></path><path d="M1000 95L0 54.113V100h1000v-5z"></path>';
-		$paths = apply_filters( 'kadence_blocks_row_divider_paths', $paths, $location );
-		$output = '';
+		$paths                 = apply_filters( 'kadence_blocks_row_divider_paths', $paths, $location );
+		$output                = '';
 		if ( isset( $paths[ $divider ] ) ) {
 			$output .= '<div class="kt-row-layout-' . esc_attr( $location ) . '-sep kt-row-sep-type-' . esc_attr( $divider ) . '">';
 			$output .= '<svg viewBox="0 0 1000 100" preserveAspectRatio="none">';
@@ -1372,7 +1372,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 	 * @param array $attributes for the block.
 	 */
 	public function has_overlay( $attributes ) {
-		$has_overlay = false;
+		$has_overlay  = false;
 		$overlay_type = ( ! empty( $attributes['currentOverlayTab'] ) ? $attributes['currentOverlayTab'] : 'normal' );
 		switch ( $overlay_type ) {
 			case 'normal':
@@ -1386,7 +1386,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 				break;
 		}
 		if ( ! $has_overlay ) {
-			$tablet_overlay    = ( isset( $attributes['tabletOverlay'] ) && is_array( $attributes['tabletOverlay'] ) && isset( $attributes['tabletOverlay'][0] ) && is_array( $attributes['tabletOverlay'][0] ) ? $attributes['tabletOverlay'][0] : array() );
+			$tablet_overlay = ( isset( $attributes['tabletOverlay'] ) && is_array( $attributes['tabletOverlay'] ) && isset( $attributes['tabletOverlay'][0] ) && is_array( $attributes['tabletOverlay'][0] ) ? $attributes['tabletOverlay'][0] : array() );
 			if ( isset( $tablet_overlay['enable'] ) && $tablet_overlay['enable'] ) {
 				$tablet_overlay_type = ( ! empty( $tablet_overlay['currentOverlayTab'] ) ? $tablet_overlay['currentOverlayTab'] : 'normal' );
 				switch ( $tablet_overlay_type ) {
@@ -1403,7 +1403,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			}
 		}
 		if ( ! $has_overlay ) {
-			$mobile_overlay    = ( isset( $attributes['mobileOverlay'] ) && is_array( $attributes['mobileOverlay'] ) && isset( $attributes['mobileOverlay'][0] ) && is_array( $attributes['mobileOverlay'][0] ) ? $attributes['mobileOverlay'][0] : array() );
+			$mobile_overlay = ( isset( $attributes['mobileOverlay'] ) && is_array( $attributes['mobileOverlay'] ) && isset( $attributes['mobileOverlay'][0] ) && is_array( $attributes['mobileOverlay'][0] ) ? $attributes['mobileOverlay'][0] : array() );
 			if ( isset( $mobile_overlay['enable'] ) && $mobile_overlay['enable'] ) {
 				$mobile_overlay_type = ( ! empty( $mobile_overlay['currentOverlayTab'] ) ? $mobile_overlay['currentOverlayTab'] : 'normal' );
 				switch ( $mobile_overlay_type ) {
@@ -1476,20 +1476,20 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 		if ( empty( $attributes['backgroundSliderCount'] ) || empty( $attributes['backgroundSlider'] ) ) {
 			return '';
 		}
-		$output = '';
-		$dot_style = ! empty( $attributes['backgroundSliderSettings'][0]['dotStyle'] ) ? $attributes['backgroundSliderSettings'][0]['dotStyle'] : 'dark';
-		$arrow_style = ! empty( $attributes['backgroundSliderSettings'][0]['arrowStyle'] ) ? $attributes['backgroundSliderSettings'][0]['arrowStyle'] : 'none';
-		$tran_speed = ! empty( $attributes['backgroundSliderSettings'][0]['tranSpeed'] ) ? $attributes['backgroundSliderSettings'][0]['tranSpeed'] : 400;
-		$speed = ! empty( $attributes['backgroundSliderSettings'][0]['speed'] ) ? $attributes['backgroundSliderSettings'][0]['speed'] : 7000;
-		$fade = isset( $attributes['backgroundSliderSettings'][0]['fade'] ) ? $attributes['backgroundSliderSettings'][0]['fade'] : true;
-		$auto = isset( $attributes['backgroundSliderSettings'][0]['autoPlay'] ) ? $attributes['backgroundSliderSettings'][0]['autoPlay'] : true;
+		$output            = '';
+		$dot_style         = ! empty( $attributes['backgroundSliderSettings'][0]['dotStyle'] ) ? $attributes['backgroundSliderSettings'][0]['dotStyle'] : 'dark';
+		$arrow_style       = ! empty( $attributes['backgroundSliderSettings'][0]['arrowStyle'] ) ? $attributes['backgroundSliderSettings'][0]['arrowStyle'] : 'none';
+		$tran_speed        = ! empty( $attributes['backgroundSliderSettings'][0]['tranSpeed'] ) ? $attributes['backgroundSliderSettings'][0]['tranSpeed'] : 400;
+		$speed             = ! empty( $attributes['backgroundSliderSettings'][0]['speed'] ) ? $attributes['backgroundSliderSettings'][0]['speed'] : 7000;
+		$fade              = isset( $attributes['backgroundSliderSettings'][0]['fade'] ) ? $attributes['backgroundSliderSettings'][0]['fade'] : true;
+		$auto              = isset( $attributes['backgroundSliderSettings'][0]['autoPlay'] ) ? $attributes['backgroundSliderSettings'][0]['autoPlay'] : true;
 		$show_pause_button = isset( $attributes['backgroundSliderSettings'][0]['showPauseButton'] ) ? $attributes['backgroundSliderSettings'][0]['showPauseButton'] : false;
-		$output .= '<div class="kt-blocks-carousel kb-blocks-bg-slider kt-carousel-container-dotstyle-' . esc_attr( $dot_style ) . '">';
+		$output           .= '<div class="kt-blocks-carousel kb-blocks-bg-slider kt-carousel-container-dotstyle-' . esc_attr( $dot_style ) . '">';
 		// Output proper Splide.js structure: splide > splide__track > splide__list > splide__slide
 		$output .= '<div class="kt-blocks-carousel-init splide kb-blocks-bg-slider-init kt-carousel-arrowstyle-' . esc_attr( $arrow_style ) . ' kt-carousel-dotstyle-' . esc_attr( $dot_style ) . '" data-slider-anim-speed="' . esc_attr( $tran_speed ) . '" data-slider-type="slider" data-slider-scroll="1" data-slider-arrows="' . ( 'none' === $arrow_style ? 'false' : 'true' ) . '" data-slider-fade="' . ( $fade ? 'true' : 'false' ) . '" data-slider-dots="' . ( 'none' === $dot_style ? 'false' : 'true' ) . '" data-slider-hover-pause="false" data-slider-auto="' . ( $auto ? 'true' : 'false' ) . '" data-slider-speed="' . esc_attr( $speed ) . '" data-show-pause-button="' . esc_attr( $show_pause_button ? 'true' : 'false' ) . '">';
 		$output .= '<div class="splide__track">';
 		$output .= '<ul class="splide__list">';
-		$item = 1;
+		$item    = 1;
 		foreach ( $attributes['backgroundSlider'] as $key => $slide ) {
 			$style_args = array();
 			if ( ! empty( $slide['bgColor'] ) ) {
@@ -1518,7 +1518,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			if ( $attributes['backgroundSliderCount'] == $item ) {
 				break;
 			}
-			$item ++;
+			++$item;
 		}
 		$output .= '</ul>';
 		$output .= '</div>';
@@ -1552,19 +1552,19 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 		if ( empty( $attributes['backgroundVideo'][0]['local'] ) && empty( $attributes['backgroundVideo'][0]['vimeo'] ) && empty( $attributes['backgroundVideo'][0]['youTube'] ) ) {
 			return '';
 		}
-		$output = '';
-		$video_attributes = $attributes['backgroundVideo'][0];
+		$output                = '';
+		$video_attributes      = $attributes['backgroundVideo'][0];
 		$background_video_type = isset( $attributes['backgroundVideoType'] ) && $attributes['backgroundVideoType'] ? $attributes['backgroundVideoType'] : 'local';
-		$prevent_preload = $this->prevent_preload_when_hidden( $attributes );
+		$prevent_preload       = $this->prevent_preload_when_hidden( $attributes );
 
 		if ( 'local' == $background_video_type ) {
 			$video_args = array(
-				'class' => 'kb-blocks-bg-video',
-				'id' => 'bg-row-video-' . esc_attr( $attributes['uniqueID'] ),
+				'class'       => 'kb-blocks-bg-video',
+				'id'          => 'bg-row-video-' . esc_attr( $attributes['uniqueID'] ),
 				'playsinline' => '',
-				'muted' => ( isset( $video_attributes['mute'] ) && false === $video_attributes['mute'] ? 'false' : '' ),
-				'loop' => ( isset( $video_attributes['loop'] ) && false === $video_attributes['loop'] ? 'false' : '' ),
-				'src' => $video_attributes['local'],
+				'muted'       => ( isset( $video_attributes['mute'] ) && false === $video_attributes['mute'] ? 'false' : '' ),
+				'loop'        => ( isset( $video_attributes['loop'] ) && false === $video_attributes['loop'] ? 'false' : '' ),
+				'src'         => $video_attributes['local'],
 			);
 		} else {
 			$src_base = 'youtube' == $background_video_type ? 'https://www.youtube.com/embed/' : 'https://player.vimeo.com/video/';
@@ -1573,24 +1573,24 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			// Vimeo and youtube share a bunch of params, that's convienent.
 			$src_query_string = '?' . http_build_query(
 				array(
-					'autoplay' => 1,
-					'controls' => 0,
-					'mute' => ( isset( $video_attributes['mute'] ) && false === $video_attributes['mute'] ? 0 : 1 ),
-					'muted' => ( isset( $video_attributes['mute'] ) && false === $video_attributes['mute'] ? 0 : 1 ),
-					'loop' => ( isset( $video_attributes['loop'] ) && false === $video_attributes['loop'] ? 0 : 1 ),
-					'playlist' => $video_id,
-					'disablekb' => 1,
+					'autoplay'       => 1,
+					'controls'       => 0,
+					'mute'           => ( isset( $video_attributes['mute'] ) && false === $video_attributes['mute'] ? 0 : 1 ),
+					'muted'          => ( isset( $video_attributes['mute'] ) && false === $video_attributes['mute'] ? 0 : 1 ),
+					'loop'           => ( isset( $video_attributes['loop'] ) && false === $video_attributes['loop'] ? 0 : 1 ),
+					'playlist'       => $video_id,
+					'disablekb'      => 1,
 					'modestbranding' => 1,
-					'playsinline' => 1,
-					'rel' => 0,
-					'background' => 1,
+					'playsinline'    => 1,
+					'rel'            => 0,
+					'background'     => 1,
 				)
 			);
 
 			$video_args = array(
 				'class' => 'kb-blocks-bg-video ' . $background_video_type,
-				'id' => 'bg-row-video-' . esc_attr( $attributes['uniqueID'] ),
-				'src' => $src_base . $video_id . $src_query_string,
+				'id'    => 'bg-row-video-' . esc_attr( $attributes['uniqueID'] ),
+				'src'   => $src_base . $video_id . $src_query_string,
 			);
 		}
 		if ( ! empty( $attributes['bgImg'] ) && 'local' === $background_video_type ) {
@@ -1621,11 +1621,11 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			$ratio = str_replace( '/', '-', $video_attributes['ratio'] );
 		}
 
-		$btns_output = '';
-		$show_play_pause = ( isset( $video_attributes['btns'] ) && $video_attributes['btns'] );
+		$btns_output           = '';
+		$show_play_pause       = ( isset( $video_attributes['btns'] ) && $video_attributes['btns'] );
 		$show_audio_is_default = ( ! isset( $video_attributes['btnsMute'] ) );
-		$is_unmuted = ( isset( $video_attributes['mute'] ) && false === $video_attributes['mute'] );
-		$show_audio = ( $show_audio_is_default && $show_play_pause && $is_unmuted ) || ( isset( $video_attributes['btnsMute'] ) && $video_attributes['btnsMute'] );
+		$is_unmuted            = ( isset( $video_attributes['mute'] ) && false === $video_attributes['mute'] );
+		$show_audio            = ( $show_audio_is_default && $show_play_pause && $is_unmuted ) || ( isset( $video_attributes['btnsMute'] ) && $video_attributes['btnsMute'] );
 		if ( $show_play_pause || $show_audio ) {
 			$btns_output .= '<div class="kb-background-video-buttons-wrapper kb-background-video-buttons-html5">';
 			if ( $show_play_pause ) {
@@ -1633,10 +1633,10 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 				$btns_output .= '<button class="kb-background-video-pause kb-toggle-video-btn" aria-label="' . __( 'Pause', 'kadence-blocks' ) . '" aria-hidden="false"><svg viewBox="0 0 448 512" height="16" width="16" fill="currentColor" xmlns="https://www.w3.org/2000/svg"><path d="M144 479H48c-26.5 0-48-21.5-48-48V79c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v352c0 26.5-21.5 48-48 48zm304-48V79c0-26.5-21.5-48-48-48h-96c-26.5 0-48 21.5-48 48v352c0 26.5 21.5 48 48 48h96c26.5 0 48-21.5 48-48z"></path></svg></button>';
 			}
 			if ( $show_audio ) {
-				$hidden_attrs = 'aria-hidden="true" style="display: none;"';
+				$hidden_attrs   = 'aria-hidden="true" style="display: none;"';
 				$unhidden_attrs = 'aria-hidden="false"';
-				$btns_output .= '<button class="kb-background-video-unmute kb-toggle-video-btn" aria-label="' . __( 'Unmute', 'kadence-blocks' ) . '" ' . ( $is_unmuted ? $hidden_attrs : $unhidden_attrs ) . '><svg viewBox="0 0 256 512" height="16" width="16" fill="currentColor" xmlns="https://www.w3.org/2000/svg"><path d="M256 88.017v335.964c0 21.438-25.943 31.998-40.971 16.971L126.059 352H24c-13.255 0-24-10.745-24-24V184c0-13.255 10.745-24 24-24h102.059l88.971-88.954c15.01-15.01 40.97-4.49 40.97 16.971z"></path></svg></button>';
-				$btns_output .= '<button class="kb-background-video-mute kb-toggle-video-btn" aria-label="' . __( 'Mute', 'kadence-blocks' ) . '" ' . ( $is_unmuted ? $unhidden_attrs : $hidden_attrs ) . '><svg viewBox="0 0 576 512" height="16" width="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M256 88.017v335.964c0 21.438-25.943 31.998-40.971 16.971L126.059 352H24c-13.255 0-24-10.745-24-24V184c0-13.255 10.745-24 24-24h102.059l88.971-88.954c15.01-15.01 40.97-4.49 40.97 16.971zm182.056-77.876C422.982.92 403.283 5.668 394.061 20.745c-9.221 15.077-4.473 34.774 10.604 43.995C468.967 104.063 512 174.983 512 256c0 73.431-36.077 142.292-96.507 184.206-14.522 10.072-18.129 30.01-8.057 44.532 10.076 14.528 30.016 18.126 44.531 8.057C529.633 438.927 576 350.406 576 256c0-103.244-54.579-194.877-137.944-245.859zM480 256c0-68.547-36.15-129.777-91.957-163.901-15.076-9.22-34.774-4.471-43.994 10.607-9.22 15.078-4.471 34.774 10.607 43.994C393.067 170.188 416 211.048 416 256c0 41.964-20.62 81.319-55.158 105.276-14.521 10.073-18.128 30.01-8.056 44.532 6.216 8.96 16.185 13.765 26.322 13.765a31.862 31.862 0 0 0 18.21-5.709C449.091 377.953 480 318.938 480 256zm-96 0c0-33.717-17.186-64.35-45.972-81.944-15.079-9.214-34.775-4.463-43.992 10.616s-4.464 34.775 10.615 43.992C314.263 234.538 320 244.757 320 256a32.056 32.056 0 0 1-13.802 26.332c-14.524 10.069-18.136 30.006-8.067 44.53 10.07 14.525 30.008 18.136 44.53 8.067C368.546 316.983 384 287.478 384 256z"></path></svg></button>';
+				$btns_output   .= '<button class="kb-background-video-unmute kb-toggle-video-btn" aria-label="' . __( 'Unmute', 'kadence-blocks' ) . '" ' . ( $is_unmuted ? $hidden_attrs : $unhidden_attrs ) . '><svg viewBox="0 0 256 512" height="16" width="16" fill="currentColor" xmlns="https://www.w3.org/2000/svg"><path d="M256 88.017v335.964c0 21.438-25.943 31.998-40.971 16.971L126.059 352H24c-13.255 0-24-10.745-24-24V184c0-13.255 10.745-24 24-24h102.059l88.971-88.954c15.01-15.01 40.97-4.49 40.97 16.971z"></path></svg></button>';
+				$btns_output   .= '<button class="kb-background-video-mute kb-toggle-video-btn" aria-label="' . __( 'Mute', 'kadence-blocks' ) . '" ' . ( $is_unmuted ? $unhidden_attrs : $hidden_attrs ) . '><svg viewBox="0 0 576 512" height="16" width="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M256 88.017v335.964c0 21.438-25.943 31.998-40.971 16.971L126.059 352H24c-13.255 0-24-10.745-24-24V184c0-13.255 10.745-24 24-24h102.059l88.971-88.954c15.01-15.01 40.97-4.49 40.97 16.971zm182.056-77.876C422.982.92 403.283 5.668 394.061 20.745c-9.221 15.077-4.473 34.774 10.604 43.995C468.967 104.063 512 174.983 512 256c0 73.431-36.077 142.292-96.507 184.206-14.522 10.072-18.129 30.01-8.057 44.532 10.076 14.528 30.016 18.126 44.531 8.057C529.633 438.927 576 350.406 576 256c0-103.244-54.579-194.877-137.944-245.859zM480 256c0-68.547-36.15-129.777-91.957-163.901-15.076-9.22-34.774-4.471-43.994 10.607-9.22 15.078-4.471 34.774 10.607 43.994C393.067 170.188 416 211.048 416 256c0 41.964-20.62 81.319-55.158 105.276-14.521 10.073-18.128 30.01-8.056 44.532 6.216 8.96 16.185 13.765 26.322 13.765a31.862 31.862 0 0 0 18.21-5.709C449.091 377.953 480 318.938 480 256zm-96 0c0-33.717-17.186-64.35-45.972-81.944-15.079-9.214-34.775-4.463-43.992 10.616s-4.464 34.775 10.615 43.992C314.263 234.538 320 244.757 320 256a32.056 32.056 0 0 1-13.802 26.332c-14.524 10.069-18.136 30.006-8.067 44.53 10.07 14.525 30.008 18.136 44.53 8.067C368.546 316.983 384 287.478 384 256z"></path></svg></button>';
 			}
 			$btns_output .= '</div>';
 		}
@@ -1662,19 +1662,19 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 	 * @param mixed $column6 The sixth column width.
 	 */
 	public function has_custom_widths( $columns, $column1, $column2, $column3, $column4, $column5, $column6 ) {
-		switch( $columns ) {
+		switch ( $columns ) {
 			case 1:
-				return !empty($column1);
+				return ! empty( $column1 );
 			case 2:
-				return !empty($column1) || !empty($column2);
+				return ! empty( $column1 ) || ! empty( $column2 );
 			case 3:
-				return !empty($column1) || !empty($column2) || !empty($column3);
+				return ! empty( $column1 ) || ! empty( $column2 ) || ! empty( $column3 );
 			case 4:
-				return !empty($column1) || !empty($column2) || !empty($column3) || !empty($column4);
+				return ! empty( $column1 ) || ! empty( $column2 ) || ! empty( $column3 ) || ! empty( $column4 );
 			case 5:
-				return !empty($column1) || !empty($column2) || !empty($column3) || !empty($column4) || !empty($column5);
+				return ! empty( $column1 ) || ! empty( $column2 ) || ! empty( $column3 ) || ! empty( $column4 ) || ! empty( $column5 );
 			case 6:
-				return !empty($column1) || !empty($column2) || !empty($column3) || !empty($column4) || !empty($column5) || !empty($column6);
+				return ! empty( $column1 ) || ! empty( $column2 ) || ! empty( $column3 ) || ! empty( $column4 ) || ! empty( $column5 ) || ! empty( $column6 );
 		}
 	}
 
@@ -1690,8 +1690,8 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 	 */
 	public function build_html( $attributes, $unique_id, $content, $block_instance ) {
 		if ( ! empty( $attributes['kbVersion'] ) && $attributes['kbVersion'] > 1 ) {
-			$html_tag = $this->get_html_tag( $attributes, 'htmlTag', 'div', $this->allowed_html_tags );
-			$outer_classes = array( 'kb-row-layout-wrap', 'kb-row-layout-id' . $unique_id );
+			$html_tag        = $this->get_html_tag( $attributes, 'htmlTag', 'div', $this->allowed_html_tags );
+			$outer_classes   = array( 'kb-row-layout-wrap', 'kb-row-layout-id' . $unique_id );
 			$outer_classes[] = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : 'alignnone';
 			if ( isset( $attributes['vsdesk'] ) && $attributes['vsdesk'] ) {
 				$outer_classes[] = 'kb-v-lg-hidden';
@@ -1711,7 +1711,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			if ( ! empty( $attributes['bgImg'] ) && ! empty( $attributes['bgImgAttachment'] ) && 'parallax' === $attributes['bgImgAttachment'] ) {
 				$outer_classes[] = 'kt-jarallax';
 			}
-			$inner_classes = array( 'kt-row-column-wrap' );
+			$inner_classes   = array( 'kt-row-column-wrap' );
 			$inner_classes[] = ! empty( $attributes['columns'] ) ? 'kt-has-' . $attributes['columns'] . '-columns' : 'kt-has-2-columns';
 			$inner_classes[] = ! empty( $attributes['colLayout'] ) ? 'kt-row-layout-' . $attributes['colLayout'] : 'kt-row-layout-equal';
 			$inner_classes[] = ! empty( $attributes['tabletLayout'] ) ? 'kt-tab-layout-' . $attributes['tabletLayout'] : 'kt-tab-layout-inherit';
@@ -1726,7 +1726,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			if ( isset( $attributes['inheritMaxWidth'] ) && $attributes['inheritMaxWidth'] ) {
 				$inner_classes[] = 'kb-theme-content-width';
 			}
-			$wrapper_args = array(
+			$wrapper_args    = array(
 				'class' => implode( ' ', $outer_classes ),
 			);
 			$background_type = ! empty( $attributes['backgroundSettingTab'] ) ? $attributes['backgroundSettingTab'] : 'normal';
@@ -1736,7 +1736,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			if ( ! empty( $attributes['anchor'] ) ) {
 				$wrapper_args['id'] = $attributes['anchor'];
 			}
-			$inner_args = array(
+			$inner_args            = array(
 				'class' => implode( ' ', $inner_classes ),
 			);
 			$inner_wrap_attributes = array();
@@ -1751,7 +1751,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 				$extra_content .= $this->get_video_render( $attributes );
 			}
 			if ( $this->has_overlay( $attributes ) ) {
-				$overlay_type = ( ! empty( $attributes['currentOverlayTab'] ) ? $attributes['currentOverlayTab'] : 'normal' );
+				$overlay_type   = ( ! empty( $attributes['currentOverlayTab'] ) ? $attributes['currentOverlayTab'] : 'normal' );
 				$extra_content .= '<div class="kt-row-layout-overlay kt-row-overlay-' . esc_attr( $overlay_type ) . '' . ( 'normal' === $overlay_type && ! empty( $attributes['overlayBgImg'] ) && ! empty( $attributes['overlayBgImgAttachment'] ) && 'parallax' === $attributes['overlayBgImgAttachment'] ? ' kt-jarallax' : '' ) . '"></div>';
 			}
 			if ( ! empty( $attributes['topSep'] ) && 'none' !== $attributes['topSep'] ) {
@@ -1760,7 +1760,7 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			if ( ! empty( $attributes['bottomSep'] ) && 'none' !== $attributes['bottomSep'] ) {
 				$extra_content .= $this->get_divider_render( $attributes['bottomSep'], 'bottom' );
 			}
-			if ( ! empty( $attributes['bgImg'] ) && !empty($attributes['bgImgAttachment']) && $attributes['bgImgAttachment'] == 'parallax' ) {
+			if ( ! empty( $attributes['bgImg'] ) && ! empty( $attributes['bgImgAttachment'] ) && $attributes['bgImgAttachment'] == 'parallax' ) {
 				if ( ! empty( $attributes['bgImgPosition'] ) ) {
 					$wrapper_args['data-img-position'] = $attributes['bgImgPosition'];
 				}
@@ -1771,9 +1771,9 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 					}
 				}
 			}
-			$wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
+			$wrapper_attributes       = get_block_wrapper_attributes( $wrapper_args );
 			$inner_wrapper_attributes = implode( ' ', $inner_wrap_attributes );
-			$content = sprintf( '<%1$s %2$s>%3$s<div %4$s>%5$s</div></%1$s>', $html_tag, $wrapper_attributes, $extra_content, $inner_wrapper_attributes, $content );
+			$content                  = sprintf( '<%1$s %2$s>%3$s<div %4$s>%5$s</div></%1$s>', $html_tag, $wrapper_attributes, $extra_content, $inner_wrapper_attributes, $content );
 			// Disable preloading if no video on mobile or tablet.
 			if ( ! empty( $attributes['backgroundSettingTab'] ) && 'video' === $attributes['backgroundSettingTab'] && ! empty( $attributes['backgroundVideo'][0]['local'] ) && $this->prevent_preload_when_hidden( $attributes ) ) {
 				if ( ! empty( $attributes['tabletBackground'][0]['enable'] ) && 'true' == $attributes['tabletBackground'][0]['enable'] ) {
@@ -1783,20 +1783,18 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 				}
 				$content = $content . '<script>if( window.innerWidth > ' . $size . ' ){document.getElementById("bg-row-video-' . esc_attr( $attributes['uniqueID'] ) . '").removeAttribute("preload");document.getElementById("bg-row-video-' . esc_attr( $attributes['uniqueID'] ) . '").setAttribute("autoplay","");}</script>';
 			}
-		} else {
-			if ( ! empty( $attributes['backgroundSettingTab'] ) && 'video' === $attributes['backgroundSettingTab'] && ! empty( $attributes['backgroundVideo'][0]['local'] ) && ( ( ! empty( $attributes['tabletBackground'][0]['enable'] ) && true == $attributes['tabletBackground'][0]['enable'] ) || ( ! empty( $attributes['mobileBackground'][0]['enable'] ) && true == $attributes['mobileBackground'][0]['enable'] ) ) && apply_filters( 'kadence_blocks_rowlayout_prevent_preload_for_mobile', true ) ) {
-				if ( ! empty( $attributes['tabletBackground'][0]['enable'] ) && 'true' == $attributes['tabletBackground'][0]['enable'] ) {
-					$size = 1024;
-				} else {
-					$size = 767;
-				}
-				if ( ! empty( $attributes['bgImg'] ) ) {
-					$content = str_replace( 'kt-layout-id' . esc_attr( $attributes['uniqueID'] ). '"><div class="kb-blocks-bg-video-container"><video class="kb-blocks-bg-video" poster="' . $attributes['bgImg'] . '" playsinline autoplay', 'kt-layout-id' . esc_attr( $attributes['uniqueID'] ) . '"><div class="kb-blocks-bg-video-container"><video id="bg-row-video-' . esc_attr( $attributes['uniqueID'] ) . '" class="kb-blocks-bg-video" poster=" ' . $attributes['bgImg'] . '" playsinline preload="none"', $content );
-				} else {
-					$content = str_replace( 'kt-layout-id' . esc_attr( $attributes['uniqueID'] ) . '"><div class="kb-blocks-bg-video-container"><video class="kb-blocks-bg-video" playsinline autoplay', 'kt-layout-id' . esc_attr( $attributes['uniqueID'] ) . '"><div class="kb-blocks-bg-video-container"><video id="bg-row-video-' . esc_attr( $attributes['uniqueID'] ) . '" class="kb-blocks-bg-video" playsinline preload="none"', $content );
-				}
-				$content = $content . '<script>if( window.innerWidth > ' . $size . ' ){document.getElementById("bg-row-video-' . esc_attr( $attributes['uniqueID'] ) . '").removeAttribute("preload");document.getElementById("bg-row-video-' . esc_attr( $attributes['uniqueID'] ). '").setAttribute("autoplay","");}</script>';
+		} elseif ( ! empty( $attributes['backgroundSettingTab'] ) && 'video' === $attributes['backgroundSettingTab'] && ! empty( $attributes['backgroundVideo'][0]['local'] ) && ( ( ! empty( $attributes['tabletBackground'][0]['enable'] ) && true == $attributes['tabletBackground'][0]['enable'] ) || ( ! empty( $attributes['mobileBackground'][0]['enable'] ) && true == $attributes['mobileBackground'][0]['enable'] ) ) && apply_filters( 'kadence_blocks_rowlayout_prevent_preload_for_mobile', true ) ) {
+			if ( ! empty( $attributes['tabletBackground'][0]['enable'] ) && 'true' == $attributes['tabletBackground'][0]['enable'] ) {
+				$size = 1024;
+			} else {
+				$size = 767;
 			}
+			if ( ! empty( $attributes['bgImg'] ) ) {
+				$content = str_replace( 'kt-layout-id' . esc_attr( $attributes['uniqueID'] ) . '"><div class="kb-blocks-bg-video-container"><video class="kb-blocks-bg-video" poster="' . $attributes['bgImg'] . '" playsinline autoplay', 'kt-layout-id' . esc_attr( $attributes['uniqueID'] ) . '"><div class="kb-blocks-bg-video-container"><video id="bg-row-video-' . esc_attr( $attributes['uniqueID'] ) . '" class="kb-blocks-bg-video" poster=" ' . $attributes['bgImg'] . '" playsinline preload="none"', $content );
+			} else {
+				$content = str_replace( 'kt-layout-id' . esc_attr( $attributes['uniqueID'] ) . '"><div class="kb-blocks-bg-video-container"><video class="kb-blocks-bg-video" playsinline autoplay', 'kt-layout-id' . esc_attr( $attributes['uniqueID'] ) . '"><div class="kb-blocks-bg-video-container"><video id="bg-row-video-' . esc_attr( $attributes['uniqueID'] ) . '" class="kb-blocks-bg-video" playsinline preload="none"', $content );
+			}
+				$content = $content . '<script>if( window.innerWidth > ' . $size . ' ){document.getElementById("bg-row-video-' . esc_attr( $attributes['uniqueID'] ) . '").removeAttribute("preload");document.getElementById("bg-row-video-' . esc_attr( $attributes['uniqueID'] ) . '").setAttribute("autoplay","");}</script>';
 		}
 		return $content;
 	}
@@ -1831,18 +1829,18 @@ class Kadence_Blocks_Rowlayout_Block extends Kadence_Blocks_Abstract_Block {
 			'kb_splide',
 			array(
 				'i18n' => array(
-					'prev' => __( 'Previous slide', 'kadence-blocks' ),
-					'next' => __( 'Next slide', 'kadence-blocks' ),
-					'first' => __( 'Go to first slide', 'kadence-blocks' ),
-					'last' => __( 'Go to last slide', 'kadence-blocks' ),
-					'slideX' => __( 'Go to slide %s', 'kadence-blocks' ),
-					'pageX' => __( 'Go to page %s', 'kadence-blocks' ),
-					'play' => __( 'Start autoplay', 'kadence-blocks' ),
-					'pause' => __( 'Pause autoplay', 'kadence-blocks' ),
-					'carousel' => __( 'carousel', 'kadence-blocks' ),
-					'slide' => __( 'slide', 'kadence-blocks' ),
-					'select' => __( 'Select a slide to show', 'kadence-blocks' ),
-					'slideLabel' => __( '%s of %s', 'kadence-blocks' ),
+					'prev'       => __( 'Previous slide', 'kadence-blocks' ),
+					'next'       => __( 'Next slide', 'kadence-blocks' ),
+					'first'      => __( 'Go to first slide', 'kadence-blocks' ),
+					'last'       => __( 'Go to last slide', 'kadence-blocks' ),
+					'slideX'     => __( 'Go to slide %s', 'kadence-blocks' ),
+					'pageX'      => __( 'Go to page %s', 'kadence-blocks' ),
+					'play'       => __( 'Start autoplay', 'kadence-blocks' ),
+					'pause'      => __( 'Pause autoplay', 'kadence-blocks' ),
+					'carousel'   => __( 'carousel', 'kadence-blocks' ),
+					'slide'      => __( 'slide', 'kadence-blocks' ),
+					'select'     => __( 'Select a slide to show', 'kadence-blocks' ),
+					'slideLabel' => __( '%1$s of %2$s', 'kadence-blocks' ),
 				),
 			)
 		);

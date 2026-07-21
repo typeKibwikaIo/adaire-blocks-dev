@@ -204,7 +204,7 @@ if ( ! function_exists( 'adaire_cookie_categories_sanitize_submission' ) ) {
 	 * @return array[]
 	 */
 	function adaire_cookie_categories_sanitize_submission( $rows ) {
-		$clean = array();
+		$clean     = array();
 		$seen_keys = array();
 
 		foreach ( $rows as $row ) {
@@ -237,24 +237,24 @@ if ( ! function_exists( 'adaire_cookie_categories_page' ) ) {
 			wp_die( 'Unauthorized access' );
 		}
 
-		$notice = '';
+		$notice      = '';
 		$notice_type = '';
 
 		if ( isset( $_POST['adaire_cookie_categories_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['adaire_cookie_categories_nonce'] ) ), 'adaire_cookie_categories_save' ) ) {
-			$rows = isset( $_POST['category'] ) && is_array( $_POST['category'] ) ? wp_unslash( $_POST['category'] ) : array();
+			$rows       = isset( $_POST['category'] ) && is_array( $_POST['category'] ) ? wp_unslash( $_POST['category'] ) : array();
 			$categories = adaire_cookie_categories_sanitize_submission( $rows );
 
 			if ( empty( $categories ) ) {
-				$notice = 'At least one category is required — changes were not saved.';
+				$notice      = 'At least one category is required — changes were not saved.';
 				$notice_type = 'error';
 			} else {
 				update_option( ADAIRE_COOKIE_CATEGORIES_OPTION, $categories, false );
-				$notice = 'Cookie categories saved. Every Cookie Banner block on the site now reflects this list.';
+				$notice      = 'Cookie categories saved. Every Cookie Banner block on the site now reflects this list.';
 				$notice_type = 'success';
 			}
 		} elseif ( isset( $_POST['adaire_cookie_categories_reset'] ) && isset( $_POST['adaire_cookie_categories_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['adaire_cookie_categories_nonce'] ) ), 'adaire_cookie_categories_save' ) ) {
 			delete_option( ADAIRE_COOKIE_CATEGORIES_OPTION );
-			$notice = 'Reset to the default category list.';
+			$notice      = 'Reset to the default category list.';
 			$notice_type = 'success';
 		}
 
@@ -266,11 +266,11 @@ if ( ! function_exists( 'adaire_cookie_categories_page' ) ) {
 		$on_by_default   = 0;
 		foreach ( $categories as $cat ) {
 			if ( ! empty( $cat['required'] ) ) {
-				$required_count++;
+				++$required_count;
 			} else {
-				$optional_count++;
+				++$optional_count;
 				if ( ! empty( $cat['defaultChecked'] ) ) {
-					$on_by_default++;
+					++$on_by_default;
 				}
 			}
 		}
@@ -433,12 +433,12 @@ if ( ! function_exists( 'adaire_cookie_categories_render_row' ) ) {
 	 * @param bool       $is_template Whether this is the hidden template row.
 	 */
 	function adaire_cookie_categories_render_row( $index, $cat = array(), $is_template = false ) {
-		$key            = $cat['key'] ?? '';
-		$label          = $cat['label'] ?? '';
-		$description    = $cat['description'] ?? '';
-		$required       = ! empty( $cat['required'] );
+		$key             = $cat['key'] ?? '';
+		$label           = $cat['label'] ?? '';
+		$description     = $cat['description'] ?? '';
+		$required        = ! empty( $cat['required'] );
 		$default_checked = ! empty( $cat['defaultChecked'] );
-		$name           = 'category[' . $index . ']';
+		$name            = 'category[' . $index . ']';
 		?>
 		<tr<?php echo $is_template ? ' class="adaire-cookie-categories__template-row"' : ''; ?>>
 			<td><input type="text" name="<?php echo esc_attr( $name ); ?>[key]" value="<?php echo esc_attr( $key ); ?>" placeholder="e.g. analytics" /></td>

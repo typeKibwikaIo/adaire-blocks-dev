@@ -1,22 +1,22 @@
 <?php
 /**
  * Premium Features Marker File
- * 
+ *
  * This file serves as a marker to identify the premium version of Adaire Blocks.
  * The presence of this file tells the plugin configuration system that this is
  * the premium/pro version with all features unlocked.
- * 
+ *
  * @package AdaireBlocks
  * @since 1.1.0
  */
 
 // Prevent direct access
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 // Premium version marker constant
-define('ADAIRE_BLOCKS_PREMIUM_MARKER', true);
+define( 'ADAIRE_BLOCKS_PREMIUM_MARKER', true );
 
 /**
  * This file enables:
@@ -30,7 +30,6 @@ define('ADAIRE_BLOCKS_PREMIUM_MARKER', true);
  */
 
 // Log premium status for debugging
-if (defined('WP_DEBUG') && WP_DEBUG) {
-    error_log('[Adaire Blocks] Premium features marker loaded - Premium version detected');
+if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+	error_log( '[Adaire Blocks] Premium features marker loaded - Premium version detected' );
 }
-

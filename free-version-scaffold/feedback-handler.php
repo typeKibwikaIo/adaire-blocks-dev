@@ -12,66 +12,77 @@
  */
 
 define( 'ADAIRE_SENDGRID_API_KEY', 'YOUR_SENDGRID_API_KEY_HERE' );
-define( 'ADAIRE_FEEDBACK_TOKEN',   'gb-feedback-k7x2m9p4' );
-define( 'ADAIRE_FEEDBACK_TO',      'support@adaire.com' );
-define( 'ADAIRE_FEEDBACK_FROM',    'noreply@adaire.com' );
+define( 'ADAIRE_FEEDBACK_TOKEN', 'gb-feedback-k7x2m9p4' );
+define( 'ADAIRE_FEEDBACK_TO', 'support@adaire.com' );
+define( 'ADAIRE_FEEDBACK_FROM', 'noreply@adaire.com' );
 
 // -------------------------------------------------------------------------
 
 if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
-    http_response_code( 405 );
-    exit( 'Method Not Allowed' );
+	http_response_code( 405 );
+	exit( 'Method Not Allowed' );
 }
 
 $token = trim( $_POST['token'] ?? '' );
 if ( ! hash_equals( ADAIRE_FEEDBACK_TOKEN, $token ) ) {
-    http_response_code( 403 );
-    exit( 'Forbidden' );
+	http_response_code( 403 );
+	exit( 'Forbidden' );
 }
 
-$reason  = sanitize( $_POST['reason']  ?? 'Not provided' );
+$reason  = sanitize( $_POST['reason'] ?? 'Not provided' );
 $details = sanitize( $_POST['details'] ?? '' );
-$email   = sanitize( $_POST['email']   ?? '' );
-$site    = sanitize( $_POST['site']    ?? 'Not provided' );
+$email   = sanitize( $_POST['email'] ?? '' );
+$site    = sanitize( $_POST['site'] ?? 'Not provided' );
 
-$lines = [
-    'A AdaireBlocks user has deactivated the free plugin.',
-    '',
-    'Site:    ' . $site,
-    'Reason:  ' . ( $reason  ?: 'Not provided' ),
-    'Details: ' . ( $details ?: 'Not provided' ),
-    'Email:   ' . ( $email   ?: 'Not provided' ),
-    '',
-    'Sent: ' . gmdate( 'Y-m-d H:i:s' ) . ' UTC',
-];
-$body = implode( "\n", $lines );
+$lines = array(
+	'A AdaireBlocks user has deactivated the free plugin.',
+	'',
+	'Site:    ' . $site,
+	'Reason:  ' . ( $reason ?: 'Not provided' ),
+	'Details: ' . ( $details ?: 'Not provided' ),
+	'Email:   ' . ( $email ?: 'Not provided' ),
+	'',
+	'Sent: ' . gmdate( 'Y-m-d H:i:s' ) . ' UTC',
+);
+$body  = implode( "\n", $lines );
 
-$payload = [
-    'personalizations' => [
-        [
-            'to'      => [ [ 'email' => ADAIRE_FEEDBACK_TO ] ],
-            'subject' => 'AdaireBlocks Deactivation Feedback',
-        ],
-    ],
-    'from'    => [ 'email' => ADAIRE_FEEDBACK_FROM, 'name' => 'AdaireBlocks' ],
-    'content' => [ [ 'type' => 'text/plain', 'value' => $body ] ],
-];
+$payload = array(
+	'personalizations' => array(
+		array(
+			'to'      => array( array( 'email' => ADAIRE_FEEDBACK_TO ) ),
+			'subject' => 'AdaireBlocks Deactivation Feedback',
+		),
+	),
+	'from'             => array(
+		'email' => ADAIRE_FEEDBACK_FROM,
+		'name'  => 'AdaireBlocks',
+	),
+	'content'          => array(
+		array(
+			'type'  => 'text/plain',
+			'value' => $body,
+		),
+	),
+);
 
 if ( filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
-    $payload['reply_to'] = [ 'email' => $email ];
+	$payload['reply_to'] = array( 'email' => $email );
 }
 
 $ch = curl_init( 'https://api.sendgrid.com/v3/mail/send' );
-curl_setopt_array( $ch, [
-    CURLOPT_POST           => true,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_TIMEOUT        => 15,
-    CURLOPT_HTTPHEADER     => [
-        'Authorization: Bearer ' . ADAIRE_SENDGRID_API_KEY,
-        'Content-Type: application/json',
-    ],
-    CURLOPT_POSTFIELDS => json_encode( $payload ),
-] );
+curl_setopt_array(
+	$ch,
+	array(
+		CURLOPT_POST           => true,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_TIMEOUT        => 15,
+		CURLOPT_HTTPHEADER     => array(
+			'Authorization: Bearer ' . ADAIRE_SENDGRID_API_KEY,
+			'Content-Type: application/json',
+		),
+		CURLOPT_POSTFIELDS     => json_encode( $payload ),
+	)
+);
 
 $response = curl_exec( $ch );
 $status   = (int) curl_getinfo( $ch, CURLINFO_HTTP_CODE );
@@ -79,16 +90,21 @@ $curl_err = curl_error( $ch );
 curl_close( $ch );
 
 if ( $status >= 200 && $status < 300 ) {
-    http_response_code( 200 );
-    echo json_encode( [ 'ok' => true ] );
+	http_response_code( 200 );
+	echo json_encode( array( 'ok' => true ) );
 } else {
-    http_response_code( 500 );
-    echo json_encode( [ 'ok' => false, 'status' => $status, 'error' => $curl_err ?: substr( $response, 0, 200 ) ] );
+	http_response_code( 500 );
+	echo json_encode(
+		array(
+			'ok'     => false,
+			'status' => $status,
+			'error'  => $curl_err ?: substr( $response, 0, 200 ),
+		)
+	);
 }
 
 // -------------------------------------------------------------------------
 
 function sanitize( $value ) {
-    return htmlspecialchars( strip_tags( trim( (string) $value ) ), ENT_QUOTES, 'UTF-8' );
+	return htmlspecialchars( strip_tags( trim( (string) $value ) ), ENT_QUOTES, 'UTF-8' );
 }
-

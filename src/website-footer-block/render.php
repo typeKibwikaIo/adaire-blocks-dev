@@ -258,34 +258,34 @@ if ( ! function_exists( 'adaire_footer_render_nav_column_content' ) ) {
 	 * see the file-level comment above).
 	 */
 	function adaire_footer_render_nav_column_content( $column ) {
-		$resolved               = adaire_footer_resolve_nav_items( $column );
-		$list_style             = isset( $column['listStyle'] ) ? $column['listStyle'] : 'plain';
-		$item_gap               = isset( $column['itemSpacing'] ) ? $column['itemSpacing'] : 12;
+		$resolved   = adaire_footer_resolve_nav_items( $column );
+		$list_style = isset( $column['listStyle'] ) ? $column['listStyle'] : 'plain';
+		$item_gap   = isset( $column['itemSpacing'] ) ? $column['itemSpacing'] : 12;
 		// Base link color goes through --link-color (consumed by style.scss's
 		// nav-link rule, which falls back to --footer-accent-color), not a
 		// literal `color` declaration — an inline `color` here would
 		// out-specificity the :hover rule below and hover color would never
 		// visibly apply on the frontend, same bug already fixed for the
 		// social icons elsewhere in this file.
-		$link_color             = ! empty( $column['linkColor'] ) ? $column['linkColor'] : '';
-		$hover_color            = ! empty( $column['linkHoverColor'] ) ? $column['linkHoverColor'] : '#ffffff';
-		$hover_bg               = ! empty( $column['linkHoverBackgroundColor'] ) ? $column['linkHoverBackgroundColor'] : '';
-		$underline              = ! empty( $column['linkUnderline'] );
-		$hover_underline_color  = ! empty( $column['linkHoverUnderlineColor'] ) ? $column['linkHoverUnderlineColor'] : '';
-		$wants_hover_underline  = $underline || ! empty( $hover_underline_color );
-		$transition             = ( isset( $column['linkTransitionDuration'] ) && is_numeric( $column['linkTransitionDuration'] ) && $column['linkTransitionDuration'] >= 0 ) ? $column['linkTransitionDuration'] . 'ms' : '';
-		$link_style             = adaire_footer_style_vars_to_string(
+		$link_color            = ! empty( $column['linkColor'] ) ? $column['linkColor'] : '';
+		$hover_color           = ! empty( $column['linkHoverColor'] ) ? $column['linkHoverColor'] : '#ffffff';
+		$hover_bg              = ! empty( $column['linkHoverBackgroundColor'] ) ? $column['linkHoverBackgroundColor'] : '';
+		$underline             = ! empty( $column['linkUnderline'] );
+		$hover_underline_color = ! empty( $column['linkHoverUnderlineColor'] ) ? $column['linkHoverUnderlineColor'] : '';
+		$wants_hover_underline = $underline || ! empty( $hover_underline_color );
+		$transition            = ( isset( $column['linkTransitionDuration'] ) && is_numeric( $column['linkTransitionDuration'] ) && $column['linkTransitionDuration'] >= 0 ) ? $column['linkTransitionDuration'] . 'ms' : '';
+		$link_style            = adaire_footer_style_vars_to_string(
 			array(
 				'--link-color'                 => $link_color,
 				'--link-hover-color'           => $hover_color,
-				'--link-hover-bg'               => $hover_bg,
+				'--link-hover-bg'              => $hover_bg,
 				'--link-hover-underline-color' => $hover_underline_color,
-				'--link-underline-mode'         => $underline ? 'underline' : '',
-				'--link-hover-underline-mode'   => $wants_hover_underline ? 'underline' : '',
-				'--link-transition-duration'    => $transition,
+				'--link-underline-mode'        => $underline ? 'underline' : '',
+				'--link-hover-underline-mode'  => $wants_hover_underline ? 'underline' : '',
+				'--link-transition-duration'   => $transition,
 			)
 		);
-		$nav_label              = ! empty( $column['headingText'] ) ? $column['headingText'] : __( 'Footer navigation', 'adaire-blocks' );
+		$nav_label             = ! empty( $column['headingText'] ) ? $column['headingText'] : __( 'Footer navigation', 'adaire-blocks' );
 
 		$inner = '';
 		if ( $resolved['dynamic'] ) {
@@ -294,9 +294,9 @@ if ( ! function_exists( 'adaire_footer_render_nav_column_content' ) ) {
 			}
 		} else {
 			foreach ( $resolved['items'] as $item ) {
-				$label      = isset( $item['label'] ) ? $item['label'] : '';
-				$url        = ! empty( $item['url'] ) ? $item['url'] : '#';
-				$inner     .= '<li><a class="website-footer-block__nav-link" href="' . esc_url( $url ) . '" style="' . esc_attr( $link_style ) . '">' . wp_kses_post( $label ) . '</a></li>';
+				$label  = isset( $item['label'] ) ? $item['label'] : '';
+				$url    = ! empty( $item['url'] ) ? $item['url'] : '#';
+				$inner .= '<li><a class="website-footer-block__nav-link" href="' . esc_url( $url ) . '" style="' . esc_attr( $link_style ) . '">' . wp_kses_post( $label ) . '</a></li>';
 			}
 		}
 
@@ -355,8 +355,8 @@ if ( ! function_exists( 'adaire_footer_render_brand_column_content' ) ) {
 		$tagline_color          = ! empty( $column['taglineColor'] ) ? $column['taglineColor'] : '';
 		// Only override the legacy 0.9 opacity dimming once a tagline color is
 		// explicitly chosen — see the matching style.scss comment for why.
-		$tagline_opacity        = $tagline_color ? '1' : '';
-		$tagline_style          = adaire_footer_style_vars_to_string(
+		$tagline_opacity = $tagline_color ? '1' : '';
+		$tagline_style   = adaire_footer_style_vars_to_string(
 			array(
 				'--tagline-font-size'      => $tagline_font_size,
 				'--tagline-font-weight'    => $tagline_font_weight,
@@ -366,7 +366,7 @@ if ( ! function_exists( 'adaire_footer_render_brand_column_content' ) ) {
 				'--tagline-opacity'        => $tagline_opacity,
 			)
 		);
-		$out .= '<p class="website-footer-block__brand-description"' . ( $tagline_style ? ' style="' . esc_attr( $tagline_style ) . '"' : '' ) . '>' . wp_kses_post( isset( $column['description'] ) ? $column['description'] : '' ) . '</p>';
+		$out            .= '<p class="website-footer-block__brand-description"' . ( $tagline_style ? ' style="' . esc_attr( $tagline_style ) . '"' : '' ) . '>' . wp_kses_post( isset( $column['description'] ) ? $column['description'] : '' ) . '</p>';
 
 		if ( ! empty( $column['showCta'] ) ) {
 			$cta_style     = isset( $column['ctaStyle'] ) ? $column['ctaStyle'] : 'button';
@@ -380,13 +380,13 @@ if ( ! function_exists( 'adaire_footer_render_brand_column_content' ) ) {
 			$transition    = ( isset( $column['ctaTransitionDuration'] ) && is_numeric( $column['ctaTransitionDuration'] ) && $column['ctaTransitionDuration'] >= 0 ) ? $column['ctaTransitionDuration'] . 'ms' : '';
 			$style_string  = adaire_footer_style_vars_to_string(
 				array(
-					'background-color'           => $bg,
-					'color'                       => $color,
-					'--cta-hover-bg'              => $hover_bg,
-					'--cta-hover-color'           => $hover_color,
-					'--cta-hover-border-color'    => $hover_border,
-					'--cta-border-radius'         => $border_radius,
-					'--cta-transition-duration'   => $transition,
+					'background-color'          => $bg,
+					'color'                     => $color,
+					'--cta-hover-bg'            => $hover_bg,
+					'--cta-hover-color'         => $hover_color,
+					'--cta-hover-border-color'  => $hover_border,
+					'--cta-border-radius'       => $border_radius,
+					'--cta-transition-duration' => $transition,
 				)
 			);
 
@@ -428,8 +428,8 @@ if ( ! function_exists( 'adaire_footer_render_social_column_content' ) ) {
 				// declaration, so the :hover rule's color can still win on hover.
 				$style = adaire_footer_style_vars_to_string(
 					array(
-						'--social-icon-color'   => $icon_color,
-						'--social-hover-color'  => $hover_color,
+						'--social-icon-color'  => $icon_color,
+						'--social-hover-color' => $hover_color,
 					)
 				);
 				$out  .= '<a href="' . esc_url( $url ) . '"' . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>' . wp_kses_post( $label ) . '</a>';
@@ -440,16 +440,16 @@ if ( ! function_exists( 'adaire_footer_render_social_column_content' ) ) {
 				// border declarations — a literal inline declaration would beat
 				// style.scss's &__social-icon:hover rule on specificity alone and
 				// the hover colors below would never actually show up on hover.
-				$style   = adaire_footer_style_vars_to_string(
+				$style    = adaire_footer_style_vars_to_string(
 					array(
-						'display'         => 'inline-flex',
-						'align-items'     => 'center',
-						'justify-content' => 'center',
-						'width'           => ( $icon_size + 12 ) . 'px',
-						'height'          => ( $icon_size + 12 ) . 'px',
-						'border-radius'   => $border_radius,
-						'font-size'       => $icon_size . 'px',
-						'transition'      => 'all ' . $transition_dur . 'ms ease',
+						'display'                     => 'inline-flex',
+						'align-items'                 => 'center',
+						'justify-content'             => 'center',
+						'width'                       => ( $icon_size + 12 ) . 'px',
+						'height'                      => ( $icon_size + 12 ) . 'px',
+						'border-radius'               => $border_radius,
+						'font-size'                   => $icon_size . 'px',
+						'transition'                  => 'all ' . $transition_dur . 'ms ease',
 						'--social-icon-color'         => $icon_color,
 						'--social-icon-bg'            => $icon_bg,
 						'--social-border-color'       => $border_color,
@@ -478,19 +478,19 @@ if ( ! function_exists( 'adaire_footer_render_newsletter_column_content' ) ) {
 	 * used by every other link/button field in this block.
 	 */
 	function adaire_footer_render_newsletter_column_content( $column ) {
-		$description  = isset( $column['newsletterDescription'] ) ? $column['newsletterDescription'] : '';
-		$placeholder  = isset( $column['newsletterPlaceholder'] ) ? $column['newsletterPlaceholder'] : __( 'Enter your email', 'adaire-blocks' );
-		$button_text  = isset( $column['newsletterButtonText'] ) ? $column['newsletterButtonText'] : __( 'Subscribe', 'adaire-blocks' );
-		$action       = isset( $column['newsletterAction'] ) ? $column['newsletterAction'] : '';
-		$field_name   = isset( $column['newsletterFieldName'] ) && $column['newsletterFieldName'] ? $column['newsletterFieldName'] : 'email';
-		$button_color = isset( $column['newsletterButtonColor'] ) ? $column['newsletterButtonColor'] : '';
-		$button_text_color = isset( $column['newsletterButtonTextColor'] ) ? $column['newsletterButtonTextColor'] : '';
+		$description        = isset( $column['newsletterDescription'] ) ? $column['newsletterDescription'] : '';
+		$placeholder        = isset( $column['newsletterPlaceholder'] ) ? $column['newsletterPlaceholder'] : __( 'Enter your email', 'adaire-blocks' );
+		$button_text        = isset( $column['newsletterButtonText'] ) ? $column['newsletterButtonText'] : __( 'Subscribe', 'adaire-blocks' );
+		$action             = isset( $column['newsletterAction'] ) ? $column['newsletterAction'] : '';
+		$field_name         = isset( $column['newsletterFieldName'] ) && $column['newsletterFieldName'] ? $column['newsletterFieldName'] : 'email';
+		$button_color       = isset( $column['newsletterButtonColor'] ) ? $column['newsletterButtonColor'] : '';
+		$button_text_color  = isset( $column['newsletterButtonTextColor'] ) ? $column['newsletterButtonTextColor'] : '';
 		$input_border_color = isset( $column['newsletterInputBorderColor'] ) ? $column['newsletterInputBorderColor'] : '';
 
 		$button_style = adaire_footer_style_vars_to_string(
 			array(
 				'background-color' => $button_color ? $button_color : 'var(--footer-accent-color, #503AA8)',
-				'color'             => $button_text_color ? $button_text_color : '#ffffff',
+				'color'            => $button_text_color ? $button_text_color : '#ffffff',
 			)
 		);
 
@@ -533,17 +533,17 @@ if ( ! function_exists( 'adaire_footer_render_buttons_column_content' ) ) {
 			$transition_dur = ( isset( $item['transitionDuration'] ) && is_numeric( $item['transitionDuration'] ) && $item['transitionDuration'] >= 0 ) ? $item['transitionDuration'] : 300;
 			$style_attr     = adaire_footer_style_vars_to_string(
 				array(
-					'background-color' => 'solid' === $style ? ( $bg ? $bg : 'var(--footer-accent-color, #503AA8)' ) : 'transparent',
-					'color'             => $text_color ? $text_color : ( 'solid' === $style ? '#ffffff' : 'inherit' ),
-					'border-color'      => $bg ? $bg : 'var(--footer-accent-color, #503AA8)',
-					'border-radius'     => $border_radius,
-					'transition'        => 'all ' . $transition_dur . 'ms ease',
+					'background-color'             => 'solid' === $style ? ( $bg ? $bg : 'var(--footer-accent-color, #503AA8)' ) : 'transparent',
+					'color'                        => $text_color ? $text_color : ( 'solid' === $style ? '#ffffff' : 'inherit' ),
+					'border-color'                 => $bg ? $bg : 'var(--footer-accent-color, #503AA8)',
+					'border-radius'                => $border_radius,
+					'transition'                   => 'all ' . $transition_dur . 'ms ease',
 					'--buttons-hover-bg'           => $hover_bg,
 					'--buttons-hover-color'        => $hover_color,
 					'--buttons-hover-border-color' => $hover_border,
 				)
 			);
-			$new_tab_attr = ! empty( $item['newTab'] ) ? ' target="_blank" rel="noopener noreferrer"' : '';
+			$new_tab_attr   = ! empty( $item['newTab'] ) ? ' target="_blank" rel="noopener noreferrer"' : '';
 
 			$out .= '<a href="' . esc_url( ! empty( $item['url'] ) ? $item['url'] : '#' ) . '" class="website-footer-block__buttons-item website-footer-block__buttons-item--' . esc_attr( $style ) . '" style="' . esc_attr( $style_attr ) . '"' . $new_tab_attr . '>' . wp_kses_post( isset( $item['label'] ) ? $item['label'] : '' ) . '</a>';
 		}
@@ -601,19 +601,19 @@ if ( ! function_exists( 'adaire_footer_render_column' ) ) {
 			return '';
 		}
 
-		$type          = isset( $column['type'] ) ? $column['type'] : 'nav';
-		$text_align    = isset( $column['textAlign'] ) ? $column['textAlign'] : 'left';
-		$width         = isset( $column['width'] ) ? $column['width'] : 'auto';
-		$flex_basis    = ( 'auto' !== $width ) ? $width : 'auto';
-		$mobile_prio   = isset( $column['mobilePriority'] ) ? $column['mobilePriority'] : 999;
-		$text_color    = isset( $column['textColor'] ) ? $column['textColor'] : '';
+		$type        = isset( $column['type'] ) ? $column['type'] : 'nav';
+		$text_align  = isset( $column['textAlign'] ) ? $column['textAlign'] : 'left';
+		$width       = isset( $column['width'] ) ? $column['width'] : 'auto';
+		$flex_basis  = ( 'auto' !== $width ) ? $width : 'auto';
+		$mobile_prio = isset( $column['mobilePriority'] ) ? $column['mobilePriority'] : 999;
+		$text_color  = isset( $column['textColor'] ) ? $column['textColor'] : '';
 
 		$wrapper_style = adaire_footer_style_vars_to_string(
 			array(
-				'text-align'         => $text_align,
-				'flex-basis'         => $flex_basis,
-				'--mobile-priority'  => $mobile_prio,
-				'color'              => $text_color,
+				'text-align'        => $text_align,
+				'flex-basis'        => $flex_basis,
+				'--mobile-priority' => $mobile_prio,
+				'color'             => $text_color,
 			)
 		);
 
@@ -703,8 +703,8 @@ if ( ! function_exists( 'adaire_footer_render_top_bar' ) ) {
 					'--contact-transition-duration'   => $contact_transition,
 				)
 			);
-			$out .= '<span class="website-footer-block__separator"> | </span>';
-			$out .= '<a class="website-footer-block__contact-link" href="' . esc_url( isset( $top_bar['contactLinkUrl'] ) ? $top_bar['contactLinkUrl'] : '#' ) . '"' . ( $contact_style ? ' style="' . esc_attr( $contact_style ) . '"' : '' ) . '>' . wp_kses_post( isset( $top_bar['contactLinkText'] ) ? $top_bar['contactLinkText'] : '' ) . '</a>';
+			$out                    .= '<span class="website-footer-block__separator"> | </span>';
+			$out                    .= '<a class="website-footer-block__contact-link" href="' . esc_url( isset( $top_bar['contactLinkUrl'] ) ? $top_bar['contactLinkUrl'] : '#' ) . '"' . ( $contact_style ? ' style="' . esc_attr( $contact_style ) . '"' : '' ) . '>' . wp_kses_post( isset( $top_bar['contactLinkText'] ) ? $top_bar['contactLinkText'] : '' ) . '</a>';
 		}
 
 		$out .= '</div>'; // .top-bar-copyright
@@ -723,7 +723,7 @@ if ( ! function_exists( 'adaire_footer_render_top_bar' ) ) {
 			$transition_dur = ( isset( $top_bar['transitionDuration'] ) && is_numeric( $top_bar['transitionDuration'] ) && $top_bar['transitionDuration'] >= 0 ) ? $top_bar['transitionDuration'] : 300;
 
 			$social_wrap_style = adaire_footer_style_vars_to_string( array( 'gap' => $icon_spacing ) );
-			$out  .= '<div class="website-footer-block__top-bar-social"' . ( $social_wrap_style ? ' style="' . esc_attr( $social_wrap_style ) . '"' : '' ) . '>';
+			$out              .= '<div class="website-footer-block__top-bar-social"' . ( $social_wrap_style ? ' style="' . esc_attr( $social_wrap_style ) . '"' : '' ) . '>';
 			foreach ( $links as $link ) {
 				$label = isset( $link['label'] ) ? $link['label'] : '';
 				$url   = ! empty( $link['url'] ) ? $link['url'] : '#';
@@ -735,22 +735,22 @@ if ( ! function_exists( 'adaire_footer_render_top_bar' ) ) {
 					$icon_style = adaire_footer_style_vars_to_string(
 						array(
 							'display'                     => 'inline-flex',
-							'align-items'                  => 'center',
-							'justify-content'              => 'center',
-							'width'                        => ( $icon_size + 12 ) . 'px',
-							'height'                       => ( $icon_size + 12 ) . 'px',
-							'border-radius'                => $border_radius,
-							'font-size'                    => $icon_size . 'px',
-							'transition'                   => 'all ' . $transition_dur . 'ms ease',
-							'--social-icon-color'          => $icon_color,
-							'--social-icon-bg'             => $icon_bg,
-							'--social-border-color'        => $border_color,
-							'--social-hover-color'         => $hover_color,
-							'--social-hover-bg'            => $hover_bg,
-							'--social-hover-border-color'  => $hover_border,
+							'align-items'                 => 'center',
+							'justify-content'             => 'center',
+							'width'                       => ( $icon_size + 12 ) . 'px',
+							'height'                      => ( $icon_size + 12 ) . 'px',
+							'border-radius'               => $border_radius,
+							'font-size'                   => $icon_size . 'px',
+							'transition'                  => 'all ' . $transition_dur . 'ms ease',
+							'--social-icon-color'         => $icon_color,
+							'--social-icon-bg'            => $icon_bg,
+							'--social-border-color'       => $border_color,
+							'--social-hover-color'        => $hover_color,
+							'--social-hover-bg'           => $hover_bg,
+							'--social-hover-border-color' => $hover_border,
 						)
 					);
-					$out .= '<a href="' . esc_url( $url ) . '" class="website-footer-block__social-icon" aria-label="' . esc_attr( wp_strip_all_tags( $label ) ) . '" target="_blank" rel="noopener noreferrer" style="' . esc_attr( $icon_style ) . '">' . adaire_footer_icon_svg( isset( $link['platform'] ) ? $link['platform'] : '' ) . '</a>';
+					$out       .= '<a href="' . esc_url( $url ) . '" class="website-footer-block__social-icon" aria-label="' . esc_attr( wp_strip_all_tags( $label ) ) . '" target="_blank" rel="noopener noreferrer" style="' . esc_attr( $icon_style ) . '">' . adaire_footer_icon_svg( isset( $link['platform'] ) ? $link['platform'] : '' ) . '</a>';
 				} else {
 					$out .= '<a href="' . esc_url( $url ) . '">' . wp_kses_post( $label ) . '</a>';
 				}
@@ -829,34 +829,34 @@ if ( ! function_exists( 'adaire_footer_render_bottom_bar' ) ) {
 		$out .= '<div class="website-footer-block__bottom-bar-content">';
 
 		$copyright_style = adaire_footer_style_vars_to_string( array( 'color' => isset( $bottom_bar['textColor'] ) ? $bottom_bar['textColor'] : '' ) );
-		$out             .= '<div class="website-footer-block__bottom-bar-copyright"' . ( $copyright_style ? ' style="' . esc_attr( $copyright_style ) . '"' : '' ) . '>';
+		$out            .= '<div class="website-footer-block__bottom-bar-copyright"' . ( $copyright_style ? ' style="' . esc_attr( $copyright_style ) . '"' : '' ) . '>';
 		if ( ! empty( $bottom_bar['showCopyright'] ) ) {
 			$out .= '<p>' . wp_kses_post( isset( $bottom_bar['copyrightText'] ) ? $bottom_bar['copyrightText'] : '' ) . '</p>';
 		}
 		$out .= '</div>'; // .bottom-bar-copyright
 
 		if ( ! empty( $bottom_bar['showPrivacyPolicy'] ) ) {
-			$legal_links            = ( isset( $bottom_bar['legalLinks'] ) && is_array( $bottom_bar['legalLinks'] ) ) ? $bottom_bar['legalLinks'] : array();
-			$separator              = isset( $bottom_bar['separator'] ) ? $bottom_bar['separator'] : '·';
-			$legal_underline        = ! empty( $bottom_bar['legalLinkUnderline'] );
-			$legal_hover_color      = ! empty( $bottom_bar['legalLinkHoverColor'] ) ? $bottom_bar['legalLinkHoverColor'] : '';
-			$legal_hover_bg         = ! empty( $bottom_bar['legalLinkHoverBackgroundColor'] ) ? $bottom_bar['legalLinkHoverBackgroundColor'] : '';
-			$legal_hover_underline  = ! empty( $bottom_bar['legalLinkHoverUnderlineColor'] ) ? $bottom_bar['legalLinkHoverUnderlineColor'] : '';
-			$legal_wants_hover_ul   = $legal_underline || ! empty( $legal_hover_underline );
-			$legal_transition       = ( isset( $bottom_bar['legalLinkTransitionDuration'] ) && is_numeric( $bottom_bar['legalLinkTransitionDuration'] ) && $bottom_bar['legalLinkTransitionDuration'] >= 0 ) ? $bottom_bar['legalLinkTransitionDuration'] . 'ms' : '';
-			$legal_color            = adaire_footer_style_vars_to_string(
+			$legal_links           = ( isset( $bottom_bar['legalLinks'] ) && is_array( $bottom_bar['legalLinks'] ) ) ? $bottom_bar['legalLinks'] : array();
+			$separator             = isset( $bottom_bar['separator'] ) ? $bottom_bar['separator'] : '·';
+			$legal_underline       = ! empty( $bottom_bar['legalLinkUnderline'] );
+			$legal_hover_color     = ! empty( $bottom_bar['legalLinkHoverColor'] ) ? $bottom_bar['legalLinkHoverColor'] : '';
+			$legal_hover_bg        = ! empty( $bottom_bar['legalLinkHoverBackgroundColor'] ) ? $bottom_bar['legalLinkHoverBackgroundColor'] : '';
+			$legal_hover_underline = ! empty( $bottom_bar['legalLinkHoverUnderlineColor'] ) ? $bottom_bar['legalLinkHoverUnderlineColor'] : '';
+			$legal_wants_hover_ul  = $legal_underline || ! empty( $legal_hover_underline );
+			$legal_transition      = ( isset( $bottom_bar['legalLinkTransitionDuration'] ) && is_numeric( $bottom_bar['legalLinkTransitionDuration'] ) && $bottom_bar['legalLinkTransitionDuration'] >= 0 ) ? $bottom_bar['legalLinkTransitionDuration'] . 'ms' : '';
+			$legal_color           = adaire_footer_style_vars_to_string(
 				array(
-					'color'                          => isset( $bottom_bar['legalLinkColor'] ) ? $bottom_bar['legalLinkColor'] : '',
-					'--legal-underline-mode'         => $legal_underline ? 'underline' : '',
-					'--legal-hover-color'            => $legal_hover_color,
-					'--legal-hover-bg'               => $legal_hover_bg,
-					'--legal-hover-underline-color'  => $legal_hover_underline,
-					'--legal-hover-underline-mode'   => $legal_wants_hover_ul ? 'underline' : '',
-					'--legal-transition-duration'    => $legal_transition,
+					'color'                         => isset( $bottom_bar['legalLinkColor'] ) ? $bottom_bar['legalLinkColor'] : '',
+					'--legal-underline-mode'        => $legal_underline ? 'underline' : '',
+					'--legal-hover-color'           => $legal_hover_color,
+					'--legal-hover-bg'              => $legal_hover_bg,
+					'--legal-hover-underline-color' => $legal_hover_underline,
+					'--legal-hover-underline-mode'  => $legal_wants_hover_ul ? 'underline' : '',
+					'--legal-transition-duration'   => $legal_transition,
 				)
 			);
-			$out          .= '<div class="website-footer-block__bottom-bar-legal">';
-			$index = 0;
+			$out                  .= '<div class="website-footer-block__bottom-bar-legal">';
+			$index                 = 0;
 			foreach ( $legal_links as $link ) {
 				$out .= '<span class="website-footer-block__legal-link-wrapper">';
 				if ( $index > 0 ) {
@@ -894,32 +894,32 @@ if ( ! function_exists( 'adaire_footer_render_bottom_bar' ) ) {
 			$transition_dur = ( isset( $bottom_bar['transitionDuration'] ) && is_numeric( $bottom_bar['transitionDuration'] ) && $bottom_bar['transitionDuration'] >= 0 ) ? $bottom_bar['transitionDuration'] : 300;
 
 			$social_wrap_style = adaire_footer_style_vars_to_string( array( 'gap' => $icon_spacing ) );
-			$out         .= '<div class="website-footer-block__bottom-bar-social"' . ( $social_wrap_style ? ' style="' . esc_attr( $social_wrap_style ) . '"' : '' ) . '>';
+			$out              .= '<div class="website-footer-block__bottom-bar-social"' . ( $social_wrap_style ? ' style="' . esc_attr( $social_wrap_style ) . '"' : '' ) . '>';
 			foreach ( $social_icons as $link ) {
-				$label      = isset( $link['label'] ) ? $link['label'] : '';
-				$url        = ! empty( $link['url'] ) ? $link['url'] : '#';
+				$label = isset( $link['label'] ) ? $link['label'] : '';
+				$url   = ! empty( $link['url'] ) ? $link['url'] : '#';
 				// Base color/background/border-color go through CSS custom props
 				// (--social-icon-*), not literal declarations — see the social
 				// column's identical comment above for why.
 				$icon_style = adaire_footer_style_vars_to_string(
 					array(
 						'display'                     => 'inline-flex',
-						'align-items'                  => 'center',
-						'justify-content'              => 'center',
-						'width'                        => ( $icon_size + 12 ) . 'px',
-						'height'                       => ( $icon_size + 12 ) . 'px',
-						'border-radius'                => $border_radius,
-						'font-size'                    => $icon_size . 'px',
-						'transition'                   => 'all ' . $transition_dur . 'ms ease',
-						'--social-icon-color'          => $icon_color,
-						'--social-icon-bg'             => $icon_bg,
-						'--social-border-color'        => $border_color,
-						'--social-hover-color'         => $hover_color,
-						'--social-hover-bg'            => $hover_bg,
-						'--social-hover-border-color'  => $hover_border,
+						'align-items'                 => 'center',
+						'justify-content'             => 'center',
+						'width'                       => ( $icon_size + 12 ) . 'px',
+						'height'                      => ( $icon_size + 12 ) . 'px',
+						'border-radius'               => $border_radius,
+						'font-size'                   => $icon_size . 'px',
+						'transition'                  => 'all ' . $transition_dur . 'ms ease',
+						'--social-icon-color'         => $icon_color,
+						'--social-icon-bg'            => $icon_bg,
+						'--social-border-color'       => $border_color,
+						'--social-hover-color'        => $hover_color,
+						'--social-hover-bg'           => $hover_bg,
+						'--social-hover-border-color' => $hover_border,
 					)
 				);
-				$out .= '<a href="' . esc_url( $url ) . '" class="website-footer-block__social-icon" aria-label="' . esc_attr( wp_strip_all_tags( $label ) ) . '" target="_blank" rel="noopener noreferrer" style="' . esc_attr( $icon_style ) . '">' . adaire_footer_icon_svg( isset( $link['icon'] ) ? $link['icon'] : '' ) . '</a>';
+				$out       .= '<a href="' . esc_url( $url ) . '" class="website-footer-block__social-icon" aria-label="' . esc_attr( wp_strip_all_tags( $label ) ) . '" target="_blank" rel="noopener noreferrer" style="' . esc_attr( $icon_style ) . '">' . adaire_footer_icon_svg( isset( $link['icon'] ) ? $link['icon'] : '' ) . '</a>';
 			}
 			$out .= '</div>'; // .bottom-bar-social
 		}
@@ -937,26 +937,26 @@ if ( ! function_exists( 'adaire_footer_render_bottom_bar' ) ) {
 
 $typography = array_merge(
 	array(
-		'fontFamily'         => 'inherit',
-		'baseFontSize'       => 14,
-		'headingFontSize'    => 16,
-		'headingFontWeight'  => '600',
-		'navFontWeight'      => '400',
-		'linkFontWeight'     => '400',
-		'ctaFontWeight'      => '500',
+		'fontFamily'        => 'inherit',
+		'baseFontSize'      => 14,
+		'headingFontSize'   => 16,
+		'headingFontWeight' => '600',
+		'navFontWeight'     => '400',
+		'linkFontWeight'    => '400',
+		'ctaFontWeight'     => '500',
 	),
 	( isset( $attributes['typography'] ) && is_array( $attributes['typography'] ) ) ? $attributes['typography'] : array()
 );
 
-$background_type = isset( $attributes['backgroundType'] ) ? $attributes['backgroundType'] : 'solid';
+$background_type  = isset( $attributes['backgroundType'] ) ? $attributes['backgroundType'] : 'solid';
 $background_value = 'solid' === $background_type
 	? ( ! empty( $attributes['backgroundColor'] ) ? $attributes['backgroundColor'] : '#1a1a1a' )
 	: ( 'gradient' === $background_type ? ( isset( $attributes['backgroundGradient'] ) ? $attributes['backgroundGradient'] : '' ) : 'transparent' );
 
 $style_string = adaire_footer_style_vars_to_string(
 	array(
-		'background-color'            => $background_value,
-		'background-image'            => ( 'image' === $background_type ) ? ( 'url(' . ( isset( $attributes['backgroundImage'] ) ? $attributes['backgroundImage'] : '' ) . ')' ) : 'none',
+		'background-color'             => $background_value,
+		'background-image'             => ( 'image' === $background_type ) ? ( 'url(' . ( isset( $attributes['backgroundImage'] ) ? $attributes['backgroundImage'] : '' ) . ')' ) : 'none',
 		'background-size'              => ( 'image' === $background_type ) ? 'cover' : 'auto',
 		'background-position'          => ( 'image' === $background_type ) ? 'center' : 'auto',
 		'background-repeat'            => ( 'image' === $background_type ) ? 'no-repeat' : 'repeat',
