@@ -380,12 +380,16 @@ class FreeVersionGenerator {
         }
 
         let content = fs.readFileSync(settingsPath, 'utf8');
-        if (content.includes('$category_titles = array(') && content.includes('foreach ($grouped_blocks as $category_slug => $blocks_for_category)')) {
+        // Whitespace-tolerant: WPCS/PHPCBF adds spaces inside control-structure
+        // parens (e.g. "foreach ( ... )"), which a literal-space match would miss.
+        const alreadyPatchedPattern = /\$category_titles\s*=\s*array\s*\(/;
+        const alreadyPatchedForeach = /foreach\s*\(\s*\$grouped_blocks\s+as\s+\$category_slug\s*=>\s*\$blocks_for_category\s*\)/;
+        if (alreadyPatchedPattern.test(content) && alreadyPatchedForeach.test(content)) {
             console.log('   ✓ Settings page renders all block categories');
             return;
         }
 
-        const oldRenderBlockPattern = /                    \/\/ Render tiers in the desired order: Free, Plus, Premium, then any others\.\r?\n\s+\$render_tier\(\s*'Free Blocks',\s+\$grouped_blocks\['adaire-free'\]\s*\);\r?\n\s+\$render_tier\(\s*'Plus Blocks',\s+\$grouped_blocks\['adaire-plus'\]\s*\);\r?\n\s+\$render_tier\(\s*'Premium Blocks',\s+\$grouped_blocks\['adaire-premium'\]\s*\);\r?\n\r?\n\s+\/\/ Render any non-standard categories under "Other Blocks"\.\r?\n\s+\$other_blocks = \$grouped_blocks\['other'\];\r?\n\s+if \(!empty\(\$other_blocks\)\) \{\r?\n\s+\$render_tier\(\s*'Other Blocks',\s+\$other_blocks\s*\);\r?\n\s+\}/;
+        const oldRenderBlockPattern = /[ \t]*\/\/ Render tiers in the desired order: Free, Plus, Premium, then any others\.\r?\n\s+\$render_tier\(\s*'Free Blocks',\s+\$grouped_blocks\['adaire-free'\]\s*\);\r?\n\s+\$render_tier\(\s*'Plus Blocks',\s+\$grouped_blocks\['adaire-plus'\]\s*\);\r?\n\s+\$render_tier\(\s*'Premium Blocks',\s+\$grouped_blocks\['adaire-premium'\]\s*\);\r?\n\r?\n\s+\/\/ Render any non-standard categories under "Other Blocks"\.\r?\n\s+\$other_blocks = \$grouped_blocks\['other'\];\r?\n\s+if \(!empty\(\$other_blocks\)\) \{\r?\n\s+\$render_tier\(\s*'Other Blocks',\s+\$other_blocks\s*\);\r?\n\s+\}/;
 
         const newRenderBlock = `                    $category_titles = array(
                         'adaire-free' => 'Free Blocks',
