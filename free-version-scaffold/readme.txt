@@ -102,6 +102,23 @@ The plugin includes an optional admin diagnostic tool ("Send test email") for si
 
 The Video Player block lets you embed a Vimeo video by ID. When you select "Vimeo" as the video source in the block editor, the editor fetches the video's public thumbnail from Vimeo's oEmbed endpoint (`https://vimeo.com/api/oembed.json`) so it can be displayed in the editor preview. Only the video ID you provide is sent; no personal or site visitor data is included. This request happens only in the block editor, only when Vimeo is selected as the video source. Vimeo's terms and privacy policy: https://vimeo.com/privacy
 
+== Development Source ==
+
+The human-readable development source for Adaire Blocks is publicly available at:
+
+https://gitlab-onprem01.adaire.dev/adaire-public/Adaire-Blocks-Free
+
+The JavaScript and CSS files included in the plugin's build directory are generated from the source code in that repository.
+
+Build instructions:
+
+1. Install the supported version of Node.js and npm.
+2. Clone the repository.
+3. Run `npm ci`.
+4. Run `npm run build`.
+
+Git tags in the source repository correspond to the matching WordPress.org plugin release versions.
+
 == Screenshots ==
 
 1. A clean, focused editing workspace with Adaire Blocks ready to use.

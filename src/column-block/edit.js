@@ -16,11 +16,11 @@ import BoundColorPalette from '../components/BoundColorPalette';
 const MIN_COLUMN_WIDTH = 5;
 
 const BORDER_STYLE_OPTIONS = [
-	{ label: __( 'Solid', 'adaire-column' ), value: 'solid' },
-	{ label: __( 'Dashed', 'adaire-column' ), value: 'dashed' },
-	{ label: __( 'Dotted', 'adaire-column' ), value: 'dotted' },
-	{ label: __( 'Double', 'adaire-column' ), value: 'double' },
-	{ label: __( 'Groove', 'adaire-column' ), value: 'groove' },
+	{ label: __( 'Solid', 'adaire-blocks' ), value: 'solid' },
+	{ label: __( 'Dashed', 'adaire-blocks' ), value: 'dashed' },
+	{ label: __( 'Dotted', 'adaire-blocks' ), value: 'dotted' },
+	{ label: __( 'Double', 'adaire-blocks' ), value: 'double' },
+	{ label: __( 'Groove', 'adaire-blocks' ), value: 'groove' },
 ];
 
 /**
@@ -157,78 +157,78 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-				<PanelBody title={ __( 'Width', 'adaire-column' ) } initialOpen={ true }>
+				<PanelBody title={ __( 'Width', 'adaire-blocks' ) } initialOpen={ true }>
 					<RangeControl
-						label={ __( 'Column Width (%)', 'adaire-column' ) }
+						label={ __( 'Column Width (%)', 'adaire-blocks' ) }
 						value={ width }
 						onChange={ handleWidthChange }
 						min={ MIN_COLUMN_WIDTH }
 						max={ 100 }
-						help={ __( 'Other columns in this row adjust automatically to fill the remaining space.', 'adaire-column' ) }
+						help={ __( 'Other columns in this row adjust automatically to fill the remaining space.', 'adaire-blocks' ) }
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Alignment', 'adaire-column' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Alignment', 'adaire-blocks' ) } initialOpen={ false }>
 					<ToggleGroupControl
-						label={ __( 'Horizontal Alignment', 'adaire-column' ) }
+						label={ __( 'Horizontal Alignment', 'adaire-blocks' ) }
 						value={ horizontalAlign || 'stretch' }
 						isBlock
 						onChange={ ( value ) => setAttributes( { horizontalAlign: value === 'stretch' ? '' : value } ) }
-						help={ __( 'Aligns this column\'s content. Updates instantly.', 'adaire-column' ) }
+						help={ __( 'Aligns this column\'s content. Updates instantly.', 'adaire-blocks' ) }
 					>
-						<ToggleGroupControlOption value="stretch" label={ __( 'Stretch', 'adaire-column' ) } />
-						<ToggleGroupControlOption value="left" label={ __( 'Left', 'adaire-column' ) } />
-						<ToggleGroupControlOption value="center" label={ __( 'Center', 'adaire-column' ) } />
-						<ToggleGroupControlOption value="right" label={ __( 'Right', 'adaire-column' ) } />
+						<ToggleGroupControlOption value="stretch" label={ __( 'Stretch', 'adaire-blocks' ) } />
+						<ToggleGroupControlOption value="left" label={ __( 'Left', 'adaire-blocks' ) } />
+						<ToggleGroupControlOption value="center" label={ __( 'Center', 'adaire-blocks' ) } />
+						<ToggleGroupControlOption value="right" label={ __( 'Right', 'adaire-blocks' ) } />
 					</ToggleGroupControl>
 					<ToggleGroupControl
-						label={ __( 'Vertical Alignment', 'adaire-column' ) }
+						label={ __( 'Vertical Alignment', 'adaire-blocks' ) }
 						value={ verticalAlign || 'top' }
 						isBlock
 						onChange={ ( value ) => setAttributes( { verticalAlign: value === 'top' ? '' : value } ) }
 					>
-						<ToggleGroupControlOption value="top" label={ __( 'Top', 'adaire-column' ) } />
-						<ToggleGroupControlOption value="center" label={ __( 'Center', 'adaire-column' ) } />
-						<ToggleGroupControlOption value="bottom" label={ __( 'Bottom', 'adaire-column' ) } />
+						<ToggleGroupControlOption value="top" label={ __( 'Top', 'adaire-blocks' ) } />
+						<ToggleGroupControlOption value="center" label={ __( 'Center', 'adaire-blocks' ) } />
+						<ToggleGroupControlOption value="bottom" label={ __( 'Bottom', 'adaire-blocks' ) } />
 					</ToggleGroupControl>
 				</PanelBody>
-				<PanelBody title={ __( 'Background', 'adaire-column' ) } initialOpen={ false }>
-					<BaseControl label={ __( 'Background Color', 'adaire-column' ) } help={ __( 'Same setting as the native "Background" color in the block\'s Styles panel — shown here too for quicker access.', 'adaire-column' ) }>
+				<PanelBody title={ __( 'Background', 'adaire-blocks' ) } initialOpen={ false }>
+					<BaseControl label={ __( 'Background Color', 'adaire-blocks' ) } help={ __( 'Same setting as the native "Background" color in the block\'s Styles panel — shown here too for quicker access.', 'adaire-blocks' ) }>
 						<BoundColorPalette
 							value={ backgroundColor }
 							onChange={ setBackgroundColor }
 						/>
 					</BaseControl>
 				</PanelBody>
-				<PanelBody title={ __( 'Border', 'adaire-column' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Border', 'adaire-blocks' ) } initialOpen={ false }>
 					<ToggleControl
-						label={ __( 'Enable Border', 'adaire-column' ) }
+						label={ __( 'Enable Border', 'adaire-blocks' ) }
 						checked={ borderEnabled }
 						onChange={ ( val ) => setAttributes( { borderEnabled: val } ) }
-						help={ __( 'Adds a border around this column, separate from the other columns in the row.', 'adaire-column' ) }
+						help={ __( 'Adds a border around this column, separate from the other columns in the row.', 'adaire-blocks' ) }
 					/>
 					{ borderEnabled && (
 						<>
 							<RangeControl
-								label={ __( 'Border Width (px)', 'adaire-column' ) }
+								label={ __( 'Border Width (px)', 'adaire-blocks' ) }
 								value={ borderWidth }
 								onChange={ ( val ) => setAttributes( { borderWidth: val } ) }
 								min={ 1 }
 								max={ 20 }
 							/>
 							<SelectControl
-								label={ __( 'Border Type', 'adaire-column' ) }
+								label={ __( 'Border Type', 'adaire-blocks' ) }
 								value={ borderStyle }
 								options={ BORDER_STYLE_OPTIONS }
 								onChange={ ( val ) => setAttributes( { borderStyle: val } ) }
 							/>
-							<BaseControl label={ __( 'Border Color', 'adaire-column' ) }>
+							<BaseControl label={ __( 'Border Color', 'adaire-blocks' ) }>
 								<BoundColorPalette
 									value={ borderColor }
 									onChange={ ( v ) => setAttributes( { borderColor: v || '' } ) }
 								/>
 							</BaseControl>
 							<RangeControl
-								label={ __( 'Border Radius (px)', 'adaire-column' ) }
+								label={ __( 'Border Radius (px)', 'adaire-blocks' ) }
 								value={ borderRadius }
 								onChange={ ( val ) => setAttributes( { borderRadius: val } ) }
 								min={ 0 }

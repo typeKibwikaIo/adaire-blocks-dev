@@ -12,7 +12,7 @@ The Posts Grid Block allows you to showcase your WordPress posts in an elegant g
 - 🎬 Multiple transition animations with FLIP technique
 - 🔍 Category filtering with smooth transitions
 - 📄 Pagination with 3 different styles
-- ⚡ Smooth GSAP-powered animations
+- ⚡ Smooth CSS-powered animations
 - 🎯 Smart positioning - posts stay in place when filtering
 
 ---
@@ -167,7 +167,7 @@ When using "FLIP (Smart Position)" transition:
 ### Performance Optimizations
 - Fetches up to 100 posts for client-side pagination
 - CSS-based hover effects (no JavaScript overhead)
-- GSAP for smooth, GPU-accelerated animations
+- Native CSS transitions for smooth, GPU-accelerated animations
 - Efficient DOM manipulation
 
 ### Font Inheritance
@@ -223,9 +223,9 @@ All buttons and text elements inherit your site's font family automatically.
 
 ## Technical Details
 
-- **Built with**: React, GSAP, WordPress Block Editor
+- **Built with**: React, WordPress Block Editor
 - **Responsive**: Mobile-first with breakpoints at 768px and 1024px
-- **Animations**: GSAP with ScrollTrigger support
+- **Animations**: Native CSS transitions and the Intersection Observer API
 - **API**: WordPress REST API for dynamic content
 - **Compatibility**: WordPress 5.9+
 

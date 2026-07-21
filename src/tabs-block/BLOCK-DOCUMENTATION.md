@@ -1,6 +1,6 @@
 # Tabbed Content Block
 
-Organize content into clickable tabs or pill-style switchers with smooth GSAP transitions, per-device styling, and a live animation preview in the editor.
+Organize content into clickable tabs or pill-style switchers with smooth CSS transitions, per-device styling, and a live animation preview in the editor.
 
 > **Naming:** the block is titled **"Tabbed Content"** in paid (Plus/Pro) builds and **"Tabbed Content Free"** in the free distribution. Same block, same slug (`create-block/tabs-block`) — only the display title differs (see [Distribution differences](#distribution-differences)).
 
@@ -12,7 +12,7 @@ The Tabbed Content block lets visitors switch between panels of content without 
 - 🎨 Two tab designs: classic **Underline** tabs or **Pills** (content-switcher style, 4 variants)
 - ↔️ Horizontal or vertical orientation, tab bar above/below or beside the content
 - 📱 Device-specific settings (Desktop/Tablet/Mobile) for widths, typography fine-tuning, and padding
-- ⚡ GSAP-powered fade/slide transitions with **smooth height animation** — content below the block glides instead of jumping
+- ⚡ CSS-powered fade/slide transitions with **smooth height animation** — content below the block glides instead of jumping
 - 👁️ Live animation preview while editing
 - ⌨️ Full keyboard navigation and ARIA tab semantics on the frontend
 - 🔄 One-click transform from legacy Content Switcher blocks
@@ -98,7 +98,7 @@ The old **Content Switcher** block is hidden from the inserter but existing ones
 | `index.js` | Registers the block with `edit`, `save`, `deprecated`, `transforms`, custom icon. |
 | `edit.js` | Editor UI (InspectorTabs panels), freemium gating, inline animation preview. |
 | `save.js` | Static save: CSS custom properties on the wrapper + tab buttons + `InnerBlocks.Content`. |
-| `view.js` | Frontend runtime: GSAP panel switching, animated wrapper height, underline, keyboard nav. |
+| `view.js` | Frontend runtime: CSS-transition panel switching, animated wrapper height, underline, keyboard nav. |
 | `deprecated.js` | v2 (pre-Content-Switcher-merge save) and v1 (pre-typography save), most recent first. |
 | `transforms.js` | `from` transform: `content-toggle-block` → `tabs-block` (pills mode). |
 | `style.scss` | Frontend + editor styles, including pill variants and responsive rules. |
@@ -130,8 +130,8 @@ Key classes: `.adaire-tabs__container` (+ `is-constrained`, `is-vertical`, `is-b
 
 Per block instance:
 1. Reads duration/ease/initial tab from data attributes; shows the initial panel, hides the rest.
-2. **Switching** (`switchToTab`): toggles `is-active` classes (visibility is class-driven in `tab-panel-block/style.scss` with `!important` rules), crossfades old→new panel with GSAP, staggers the new panel's children.
-3. **Smooth height**: before the crossfade it measures the incoming panel — hidden panels are locked down by `!important` CSS, so measurement temporarily applies inline `!important` overrides (`style.setProperty(prop, value, 'important')`), reads `offsetHeight`, then removes them. The `.adaire-tabs__panels` wrapper is pinned at its current height and tweened to the target over the full switch (`duration × 1.1`, `power2.inOut`), then released to `height: auto`. `killTweensOf` guards against rapid clicking.
+2. **Switching** (`switchToTab`): toggles `is-active` classes (visibility is class-driven in `tab-panel-block/style.scss` with `!important` rules) and crossfades old→new panel with a CSS `transition` on `opacity`/`transform`.
+3. **Smooth height**: before the crossfade it measures the incoming panel — hidden panels are locked down by `!important` CSS, so measurement temporarily applies inline `!important` overrides (`style.setProperty(prop, value, 'important')`), reads `offsetHeight`, then removes them. The `.adaire-tabs__panels` wrapper is pinned at its current height and animated to the target over the full switch (`duration × 1.1`, CSS `cubic-bezier` easing) via a CSS `height` transition, then released to `height: auto`. A tracked `setTimeout` is cleared on rapid clicking to avoid stacked cleanups.
 4. **Underline**: slides to the active tab (horizontal + underline mode only; skipped for `data-tab-style="pills"` and vertical layout); repositioned on window resize.
 5. **Keyboard**: ArrowLeft/ArrowRight/Home/End per WAI-ARIA tabs pattern.
 
@@ -139,7 +139,7 @@ Per block instance:
 
 - Panels are declared through `InspectorTabs`, which auto-sorts them by title keywords into Layout/Style/Advanced sidebar tabs — **panel titles are load-bearing** ("Pill Colors" → Style/Appearance, "Wrapper Spacing" → Style/Effects, "Layout" → Layout tab). Renaming a panel can silently move it to another tab.
 - Pill vs underline panels render conditionally on `tabStyle`.
-- **Inline animation preview**: a `useEffect` watches `activeTab`; on change it plays the frontend's fade/slide on the newly shown `.adaire-tab-panel` inside a container ref, using the configured duration/ease, with `clearProps` so GSAP hands styling back to React afterwards. Skips the initial mount.
+- **Inline animation preview**: a `useEffect` watches `activeTab`; on change it plays the frontend's fade/slide on the newly shown `.adaire-tab-panel` inside a container ref, using the configured duration/ease, clearing the inline styles afterwards so React regains control of styling. Skips the initial mount.
 - Tab management writes to `tabs`/`activeTab`; inner `tab-panel-block`s are regenerated from the template (locked).
 
 ## Freemium Gating
@@ -168,5 +168,5 @@ The free title comes from `FREE_TITLE_OVERRIDES` in `scripts/generate-free-versi
 
 - Edit **only** in `AdaireBlocks/src/tabs-block/` (dev source). `adaire-blocks-free/` is generated by `npm run build:free` and wiped on every regeneration.
 - The free pipeline: copies free blocks per `blocks-config.json`, applies title overrides, runs icon prebuild scripts (these rewrite `block.json` icons — expected), builds with `wp-scripts build --blocks-manifest`, and zips to `plugin-zips/adaire-blocks-free.zip`.
-- Requires GSAP (bundled dependency) in both the frontend `view.js` and, since the inline preview, the editor bundle.
+- Animations use native CSS transitions only — no third-party animation library — in both the frontend `view.js` and the editor's inline preview.
 

@@ -58,8 +58,12 @@ fs.rmSync(zipPath, { force: true });
 // Linux servers. PowerShell's Compress-Archive uses backslashes, causing
 // WordPress to treat backslashes as literal filename characters instead of
 // path separators — so the plugin extracts as a flat pile of misnamed files.
+// Entries are nested under folderName/ so the archive contains a single
+// top-level plugin directory — the structure WordPress's installer expects.
+// A flat archive (prefix '') was previously shipped by mistake and caused
+// "No valid plugins were found" on upload.
 const zip = new AdmZip();
-addDirectory(zip, generatedDir, '');
+addDirectory(zip, generatedDir, folderName);
 zip.writeZip(zipPath);
 
 const sizeMb = (fs.statSync(zipPath).size / 1024 / 1024).toFixed(2);

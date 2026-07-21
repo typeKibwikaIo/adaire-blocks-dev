@@ -464,7 +464,12 @@ class FreeVersionGenerator {
                 'deploy:free': 'npm run build && npm run plugin-zip',
                 test: 'wp-scripts test-unit-js'
             },
-            dependencies: sourcePackage.dependencies || {},
+            // gsap is excluded: it's a non-GPL-compatible dependency the free
+            // version doesn't ship (its blocks use native CSS/JS animations
+            // instead — see the free plugin header and readme changelog).
+            dependencies: Object.fromEntries(
+                Object.entries(sourcePackage.dependencies || {}).filter(([name]) => name !== 'gsap')
+            ),
             devDependencies: sourcePackage.devDependencies || {},
             keywords: sourcePackage.keywords || [],
             author: sourcePackage.author || 'Adaire',

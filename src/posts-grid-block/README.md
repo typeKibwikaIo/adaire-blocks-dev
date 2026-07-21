@@ -15,7 +15,7 @@ A powerful and flexible WordPress Gutenberg block for displaying posts in beauti
 - Mobile-optimized touch interactions
 
 ### 🎭 Advanced Animations
-Powered by GSAP with multiple animation types:
+Powered by native CSS transitions/animations and the Intersection Observer API, with multiple animation types:
 - **Fade Up**: Smooth fade-in with upward motion
 - **Fade In**: Simple opacity transition
 - **Scale Up**: Scale animation from small to full size
@@ -36,7 +36,7 @@ Powered by GSAP with multiple animation types:
 - **Category Filtering**: Filter posts by categories with animated transitions
 - **Filter Positions**: Top or bottom placement
 - **Filter Styles**: Pills, buttons, or dropdown options
-- **Smooth Transitions**: GSAP-powered filter animations
+- **Smooth Transitions**: CSS-powered filter animations
 
 ### 🎨 Customization Options
 - **Typography**: Font sizes, weights, and colors for all text elements
@@ -49,7 +49,7 @@ Powered by GSAP with multiple animation types:
 ### ✨ Interactive Effects
 - **Hover Animations**: Scale, shadow, and color transitions
 - **Image Effects**: Zoom effects on hover
-- **Smooth Transitions**: All interactions use GSAP for buttery-smooth animations
+- **Smooth Transitions**: All interactions use native CSS transitions for buttery-smooth animations
 
 ## Usage
 
@@ -78,7 +78,7 @@ Powered by GSAP with multiple animation types:
 - **Animation Type**: Choose from 6 different animation styles
 - **Duration**: 0.1-2 seconds
 - **Delay**: Stagger delay between items (0-0.5s)
-- **Easing**: 6 different GSAP easing options
+- **Easing**: 6 different CSS easing options
 - **Hover Effects**: Scale and shadow effects on hover
 
 #### Filtering Options
@@ -89,8 +89,6 @@ Powered by GSAP with multiple animation types:
 ## Technical Details
 
 ### Dependencies
-- **GSAP**: For all animations and interactions
-- **ScrollTrigger**: For scroll-based animations
 - **WordPress REST API**: For fetching post data
 - **WordPress Block Editor**: Gutenberg integration
 
@@ -166,7 +164,7 @@ Display products or services with custom post types and filtering.
 
 1. **Posts not loading**: Check if REST API is enabled and posts are published
 2. **Images not showing**: Ensure featured images are set and image URLs are accessible
-3. **Animations not working**: Verify GSAP is loaded and JavaScript errors are resolved
+3. **Animations not working**: Check the browser console for JavaScript errors
 4. **Filtering not working**: Check if categories are assigned to posts
 
 ### Performance Tips

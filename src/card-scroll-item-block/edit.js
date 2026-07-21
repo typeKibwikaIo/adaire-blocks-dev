@@ -24,34 +24,34 @@ import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 
 const BREAKPOINTS = [
-    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks-dev2') },
-    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks-dev2') },
-    { name: 'smallLaptop', icon: desktop, label: __('Small Laptop', 'adaire-blocks-dev2') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks-dev2') },
-    { name: 'bigDesktop', icon: desktop, label: __('Big Desktop', 'adaire-blocks-dev2') },
+    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
+    { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
+    { name: 'smallLaptop', icon: desktop, label: __('Small Laptop', 'adaire-blocks') },
+    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
+    { name: 'bigDesktop', icon: desktop, label: __('Big Desktop', 'adaire-blocks') },
 ];
 
 const TEXT_TRANSFORM_OPTIONS = [
-    { label: __('None', 'adaire-blocks-dev2'), value: 'none' },
-    { label: __('Uppercase', 'adaire-blocks-dev2'), value: 'uppercase' },
-    { label: __('Lowercase', 'adaire-blocks-dev2'), value: 'lowercase' },
-    { label: __('Capitalize', 'adaire-blocks-dev2'), value: 'capitalize' },
+    { label: __('None', 'adaire-blocks'), value: 'none' },
+    { label: __('Uppercase', 'adaire-blocks'), value: 'uppercase' },
+    { label: __('Lowercase', 'adaire-blocks'), value: 'lowercase' },
+    { label: __('Capitalize', 'adaire-blocks'), value: 'capitalize' },
 ];
 
 const FONT_FAMILY_OPTIONS = [
-    { label: __('Default (inherit theme)', 'adaire-blocks-dev2'), value: '' },
-    { label: __('Arial', 'adaire-blocks-dev2'), value: 'Arial, Helvetica, sans-serif' },
-    { label: __('Helvetica', 'adaire-blocks-dev2'), value: 'Helvetica, Arial, sans-serif' },
-    { label: __('Georgia', 'adaire-blocks-dev2'), value: 'Georgia, serif' },
-    { label: __('Times New Roman', 'adaire-blocks-dev2'), value: "'Times New Roman', Times, serif" },
-    { label: __('Verdana', 'adaire-blocks-dev2'), value: 'Verdana, Geneva, sans-serif' },
-    { label: __('Trebuchet MS', 'adaire-blocks-dev2'), value: "'Trebuchet MS', sans-serif" },
-    { label: __('Courier New', 'adaire-blocks-dev2'), value: "'Courier New', Courier, monospace" },
-    { label: __('System UI', 'adaire-blocks-dev2'), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+    { label: __('Default (inherit theme)', 'adaire-blocks'), value: '' },
+    { label: __('Arial', 'adaire-blocks'), value: 'Arial, Helvetica, sans-serif' },
+    { label: __('Helvetica', 'adaire-blocks'), value: 'Helvetica, Arial, sans-serif' },
+    { label: __('Georgia', 'adaire-blocks'), value: 'Georgia, serif' },
+    { label: __('Times New Roman', 'adaire-blocks'), value: "'Times New Roman', Times, serif" },
+    { label: __('Verdana', 'adaire-blocks'), value: 'Verdana, Geneva, sans-serif' },
+    { label: __('Trebuchet MS', 'adaire-blocks'), value: "'Trebuchet MS', sans-serif" },
+    { label: __('Courier New', 'adaire-blocks'), value: "'Courier New', Courier, monospace" },
+    { label: __('System UI', 'adaire-blocks'), value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
 ];
 
 const FONT_WEIGHT_OPTIONS = [
-    { label: __('Default (inherit)', 'adaire-blocks-dev2'), value: '' },
+    { label: __('Default (inherit)', 'adaire-blocks'), value: '' },
     { label: '300', value: '300' },
     { label: '400', value: '400' },
     { label: '500', value: '500' },
@@ -202,7 +202,7 @@ export default function Edit({ attributes, setAttributes }) {
                     </ButtonGroup>
                 </div>
 
-                <PanelBody title={__('Card Content', 'adaire-blocks-dev2')} initialOpen={true}>
+                <PanelBody title={__('Card Content', 'adaire-blocks')} initialOpen={true}>
                     <SelectControl
                         label="Media Type"
                         value={mediaType}
@@ -307,21 +307,21 @@ export default function Edit({ attributes, setAttributes }) {
                     )}
                 </PanelBody>
 
-                <PanelBody title={__('Layout', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Layout', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
-                        label={__('Card Width — drag to resize', 'adaire-blocks-dev2')}
+                        label={__('Card Width — drag to resize', 'adaire-blocks')}
                         value={parsePercent(responsiveCardWidth?.[deviceType])}
                         min={10}
                         max={100}
                         step={1}
                         onChange={(val) => updateResponsive('responsiveCardWidth', deviceType, `${val}%`)}
-                        help={!responsiveCardWidth?.[deviceType] ? __('Inheriting from global Card Slider setting.', 'adaire-blocks-dev2') : __("Overrides the Card Slider's width just for this card.", 'adaire-blocks-dev2')}
+                        help={!responsiveCardWidth?.[deviceType] ? __('Inheriting from global Card Slider setting.', 'adaire-blocks') : __("Overrides the Card Slider's width just for this card.", 'adaire-blocks')}
                     />
                     <UnitControl
                         label={`Card Width (${deviceType})`}
                         value={responsiveCardWidth?.[deviceType] || ''}
                         onChange={(val) => updateResponsive('responsiveCardWidth', deviceType, val)}
-                        help={__('Type an exact value in any unit (%, px, em…) instead of dragging.', 'adaire-blocks-dev2')}
+                        help={__('Type an exact value in any unit (%, px, em…) instead of dragging.', 'adaire-blocks')}
                     />
                     <SelectControl
                         label={`Button Alignment (${deviceType})`}
@@ -335,7 +335,7 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Spacing', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Spacing', 'adaire-blocks')} initialOpen={false}>
                     <UnitControl
                         label={`Title Bottom Margin (${deviceType})`}
                         value={responsiveTitleMarginBottom?.[deviceType] || ''}
@@ -350,101 +350,101 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Typography', 'adaire-blocks-dev2')} initialOpen={false}>
-                    <p style={{ fontWeight: 600, marginBottom: '4px' }}>{__('Title', 'adaire-blocks-dev2')}</p>
+                <PanelBody title={__('Typography', 'adaire-blocks')} initialOpen={false}>
+                    <p style={{ fontWeight: 600, marginBottom: '4px' }}>{__('Title', 'adaire-blocks')}</p>
                     <UnitControl
-                        label={__('Font Size', 'adaire-blocks-dev2')}
+                        label={__('Font Size', 'adaire-blocks')}
                         value={titleFontSize}
                         onChange={(value) => setAttributes({ titleFontSize: value })}
-                        help={__("Leave blank to use the Card Slider's title size.", 'adaire-blocks-dev2')}
+                        help={__("Leave blank to use the Card Slider's title size.", 'adaire-blocks')}
                     />
                     <SelectControl
-                        label={__('Font Weight', 'adaire-blocks-dev2')}
+                        label={__('Font Weight', 'adaire-blocks')}
                         value={titleFontWeight || ''}
                         options={FONT_WEIGHT_OPTIONS}
                         onChange={(value) => setAttributes({ titleFontWeight: value })}
-                        help={__("Leave blank to use the Card Slider's title weight.", 'adaire-blocks-dev2')}
+                        help={__("Leave blank to use the Card Slider's title weight.", 'adaire-blocks')}
                     />
                     <UnitControl
-                        label={__('Line Height', 'adaire-blocks-dev2')}
+                        label={__('Line Height', 'adaire-blocks')}
                         value={titleLineHeight}
                         onChange={(value) => setAttributes({ titleLineHeight: value })}
-                        help={__("Leave blank to use the Card Slider's title line height.", 'adaire-blocks-dev2')}
+                        help={__("Leave blank to use the Card Slider's title line height.", 'adaire-blocks')}
                     />
                     <UnitControl
-                        label={__('Letter Spacing', 'adaire-blocks-dev2')}
+                        label={__('Letter Spacing', 'adaire-blocks')}
                         value={titleLetterSpacing}
                         onChange={(value) => setAttributes({ titleLetterSpacing: value })}
                     />
                     <SelectControl
-                        label={__('Text Transform', 'adaire-blocks-dev2')}
+                        label={__('Text Transform', 'adaire-blocks')}
                         value={titleTextTransform}
                         options={TEXT_TRANSFORM_OPTIONS}
                         onChange={(value) => setAttributes({ titleTextTransform: value })}
                     />
 
-                    <p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '4px' }}>{__('Description', 'adaire-blocks-dev2')}</p>
+                    <p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '4px' }}>{__('Description', 'adaire-blocks')}</p>
                     <UnitControl
-                        label={__('Font Size', 'adaire-blocks-dev2')}
+                        label={__('Font Size', 'adaire-blocks')}
                         value={descriptionFontSize}
                         onChange={(value) => setAttributes({ descriptionFontSize: value })}
-                        help={__("Leave blank to use the Card Slider's description size.", 'adaire-blocks-dev2')}
+                        help={__("Leave blank to use the Card Slider's description size.", 'adaire-blocks')}
                     />
                     <SelectControl
-                        label={__('Font Weight', 'adaire-blocks-dev2')}
+                        label={__('Font Weight', 'adaire-blocks')}
                         value={descriptionFontWeight || ''}
                         options={FONT_WEIGHT_OPTIONS}
                         onChange={(value) => setAttributes({ descriptionFontWeight: value })}
-                        help={__("Leave blank to use the Card Slider's description weight.", 'adaire-blocks-dev2')}
+                        help={__("Leave blank to use the Card Slider's description weight.", 'adaire-blocks')}
                     />
                     <UnitControl
-                        label={__('Line Height', 'adaire-blocks-dev2')}
+                        label={__('Line Height', 'adaire-blocks')}
                         value={descriptionLineHeight}
                         onChange={(value) => setAttributes({ descriptionLineHeight: value })}
-                        help={__("Leave blank to use the Card Slider's description line height.", 'adaire-blocks-dev2')}
+                        help={__("Leave blank to use the Card Slider's description line height.", 'adaire-blocks')}
                     />
                     <UnitControl
-                        label={__('Letter Spacing', 'adaire-blocks-dev2')}
+                        label={__('Letter Spacing', 'adaire-blocks')}
                         value={descriptionLetterSpacing}
                         onChange={(value) => setAttributes({ descriptionLetterSpacing: value })}
                     />
                     <SelectControl
-                        label={__('Text Transform', 'adaire-blocks-dev2')}
+                        label={__('Text Transform', 'adaire-blocks')}
                         value={descriptionTextTransform}
                         options={TEXT_TRANSFORM_OPTIONS}
                         onChange={(value) => setAttributes({ descriptionTextTransform: value })}
                     />
 
-                    <p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '4px' }}>{__('Block', 'adaire-blocks-dev2')}</p>
+                    <p style={{ fontWeight: 600, marginTop: '16px', marginBottom: '4px' }}>{__('Block', 'adaire-blocks')}</p>
                     <SelectControl
-                        label={__('Font Family', 'adaire-blocks-dev2')}
+                        label={__('Font Family', 'adaire-blocks')}
                         value={fontFamily || ''}
                         options={FONT_FAMILY_OPTIONS}
                         onChange={(value) => setAttributes({ fontFamily: value })}
-                        help={__('Applies to this card only (title and description).', 'adaire-blocks-dev2')}
+                        help={__('Applies to this card only (title and description).', 'adaire-blocks')}
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Preview Text', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Preview Text', 'adaire-blocks')} initialOpen={false}>
                     <TextControl
-                        label={__('Preview Text', 'adaire-blocks-dev2')}
+                        label={__('Preview Text', 'adaire-blocks')}
                         value={previewText || ''}
                         onChange={(val) => setAttributes({ previewText: val })}
-                        help={__('Text that appears in the visible space when the next card pins on top. This text is clickable and will scroll to show this card fully.', 'adaire-blocks-dev2')}
+                        help={__('Text that appears in the visible space when the next card pins on top. This text is clickable and will scroll to show this card fully.', 'adaire-blocks')}
                     />
                 </PanelBody>
 
                 <PanelColorSettings
-                    title={__('Colors', 'adaire-blocks-dev2')}
+                    title={__('Colors', 'adaire-blocks')}
                     initialOpen={false}
                     colorSettings={[
-                        { value: resolveColor( backgroundColor ), onChange: (val) => setAttributes({ backgroundColor: bindColor( val ) }), label: __('Background', 'adaire-blocks-dev2') },
-                        { value: resolveColor( headerTextColor ), onChange: (val) => setAttributes({ headerTextColor: bindColor( val ) }), label: __('Title', 'adaire-blocks-dev2') },
-                        { value: resolveColor( textColor ), onChange: (val) => setAttributes({ textColor: bindColor( val ) }), label: __('Description', 'adaire-blocks-dev2') },
-                        { value: resolveColor( shadowColor ), onChange: (val) => setAttributes({ shadowColor: bindColor( val ) }), label: __('Shadow', 'adaire-blocks-dev2') },
+                        { value: resolveColor( backgroundColor ), onChange: (val) => setAttributes({ backgroundColor: bindColor( val ) }), label: __('Background', 'adaire-blocks') },
+                        { value: resolveColor( headerTextColor ), onChange: (val) => setAttributes({ headerTextColor: bindColor( val ) }), label: __('Title', 'adaire-blocks') },
+                        { value: resolveColor( textColor ), onChange: (val) => setAttributes({ textColor: bindColor( val ) }), label: __('Description', 'adaire-blocks') },
+                        { value: resolveColor( shadowColor ), onChange: (val) => setAttributes({ shadowColor: bindColor( val ) }), label: __('Shadow', 'adaire-blocks') },
                     ]}
                 />
-                <PanelBody title={__('Shadow', 'adaire-blocks-dev2')} initialOpen={false}>
+                <PanelBody title={__('Shadow', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl label="Shadow Blur" value={shadowBlur} onChange={(val) => setAttributes({ shadowBlur: val })} min={0} max={50} />
                 </PanelBody>
             </InspectorTabs>
@@ -458,7 +458,7 @@ export default function Edit({ attributes, setAttributes }) {
                                 className="adaire-card-scroll__card-title"
                                 value={title}
                                 onChange={(val) => setAttributes({ title: val })}
-                                placeholder={__('Card Title...', 'adaire-blocks-dev2')}
+                                placeholder={__('Card Title...', 'adaire-blocks')}
                                 style={{ color: headerTextColor }}
                             />
                             <RichText
@@ -466,7 +466,7 @@ export default function Edit({ attributes, setAttributes }) {
                                 className="adaire-card-scroll__card-description"
                                 value={description}
                                 onChange={(val) => setAttributes({ description: val })}
-                                placeholder={__('Card description...', 'adaire-blocks-dev2')}
+                                placeholder={__('Card description...', 'adaire-blocks')}
                                 style={{ color: textColor }}
                             />
                             <div {...innerBlocksProps} />
@@ -558,7 +558,7 @@ export default function Edit({ attributes, setAttributes }) {
                                     )
                                 ) : (
                                     <div className="adaire-card-scroll__card-media-placeholder" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', opacity: 0.5 }}>
-                                        <span>{__('No Media', 'adaire-blocks-dev2')}</span>
+                                        <span>{__('No Media', 'adaire-blocks')}</span>
                                     </div>
                                 )
                             )}

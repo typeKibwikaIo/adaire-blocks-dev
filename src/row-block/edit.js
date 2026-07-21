@@ -84,27 +84,27 @@ function redistributeWidths( targetClientId, newWidth, siblings ) {
 }
 
 const WIDTH_OPTIONS = [
-  { label: __( 'Contained', 'adaire-row' ), value: '' },
-  { label: __( 'Wide', 'adaire-row' ),      value: 'wide' },
-  { label: __( 'Full', 'adaire-row' ),      value: 'full' },
+  { label: __( 'Contained', 'adaire-blocks' ), value: '' },
+  { label: __( 'Wide', 'adaire-blocks' ),      value: 'wide' },
+  { label: __( 'Full', 'adaire-blocks' ),      value: 'full' },
 ];
 
 const BORDER_STYLE_OPTIONS = [
-  { label: __( 'Solid', 'adaire-row' ),  value: 'solid' },
-  { label: __( 'Dashed', 'adaire-row' ), value: 'dashed' },
-  { label: __( 'Dotted', 'adaire-row' ), value: 'dotted' },
-  { label: __( 'Double', 'adaire-row' ), value: 'double' },
-  { label: __( 'Groove', 'adaire-row' ), value: 'groove' },
+  { label: __( 'Solid', 'adaire-blocks' ),  value: 'solid' },
+  { label: __( 'Dashed', 'adaire-blocks' ), value: 'dashed' },
+  { label: __( 'Dotted', 'adaire-blocks' ), value: 'dotted' },
+  { label: __( 'Double', 'adaire-blocks' ), value: 'double' },
+  { label: __( 'Groove', 'adaire-blocks' ), value: 'groove' },
 ];
 
 const PRESETS = [
-  { id: '1-col',           label: __( '1 Column (100)',         'adaire-row' ), widths: [ 100 ] },
-  { id: '2-col-50-50',     label: __( '2 Columns (50/50)',      'adaire-row' ), widths: [ 50, 50 ] },
-  { id: '3-col-33-33-33',  label: __( '3 Columns (33/33/33)',   'adaire-row' ), widths: [ 33, 33, 34 ] },
-  { id: '4-col-25-25-25-25', label: __( '4 Columns (25/25/25/25)', 'adaire-row' ), widths: [ 25, 25, 25, 25 ] },
-  { id: '2-col-66-33',     label: __( '2 Columns (66/33)',      'adaire-row' ), widths: [ 66, 34 ] },
-  { id: '2-col-33-66',     label: __( '2 Columns (33/66)',      'adaire-row' ), widths: [ 34, 66 ] },
-  { id: '3-col-25-50-25',  label: __( '3 Columns (25/50/25)',   'adaire-row' ), widths: [ 25, 50, 25 ] },
+  { id: '1-col',           label: __( '1 Column (100)',         'adaire-blocks' ), widths: [ 100 ] },
+  { id: '2-col-50-50',     label: __( '2 Columns (50/50)',      'adaire-blocks' ), widths: [ 50, 50 ] },
+  { id: '3-col-33-33-33',  label: __( '3 Columns (33/33/33)',   'adaire-blocks' ), widths: [ 33, 33, 34 ] },
+  { id: '4-col-25-25-25-25', label: __( '4 Columns (25/25/25/25)', 'adaire-blocks' ), widths: [ 25, 25, 25, 25 ] },
+  { id: '2-col-66-33',     label: __( '2 Columns (66/33)',      'adaire-blocks' ), widths: [ 66, 34 ] },
+  { id: '2-col-33-66',     label: __( '2 Columns (33/66)',      'adaire-blocks' ), widths: [ 34, 66 ] },
+  { id: '3-col-25-50-25',  label: __( '3 Columns (25/50/25)',   'adaire-blocks' ), widths: [ 25, 50, 25 ] },
 ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
@@ -206,13 +206,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
   // ─── Row Layout (functional / positional — tagged "layout" per the
   // AdaireBlocks free-tier InspectorTabs reorg) ──
   const rowLayoutPanel = (
-    <PanelBody section="layout" title={ __( 'Row Layout', 'adaire-row' ) } initialOpen={ true }>
+    <PanelBody section="layout" title={ __( 'Row Layout', 'adaire-blocks' ) } initialOpen={ true }>
       <ToggleGroupControl
-        label={ __( 'Row Width', 'adaire-row' ) }
+        label={ __( 'Row Width', 'adaire-blocks' ) }
         value={ align || '' }
         isBlock
         onChange={ ( value ) => setAttributes( { align: value || undefined } ) }
-        help={ __( 'Contained keeps the row within the theme content width. Wide and Full expand it using the standard alignment classes.', 'adaire-row' ) }
+        help={ __( 'Contained keeps the row within the theme content width. Wide and Full expand it using the standard alignment classes.', 'adaire-blocks' ) }
       >
         { WIDTH_OPTIONS.map( ( option ) => (
           <ToggleGroupControlOption
@@ -223,28 +223,28 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
         ) ) }
       </ToggleGroupControl>
       <ToggleGroupControl
-        label={ __( 'Vertical Alignment', 'adaire-row' ) }
+        label={ __( 'Vertical Alignment', 'adaire-blocks' ) }
         value={ verticalAlign || 'stretch' }
         isBlock
         onChange={ ( value ) => setAttributes( { verticalAlign: value === 'stretch' ? '' : value } ) }
-        help={ __( 'Controls how columns line up when they have different heights. Updates instantly.', 'adaire-row' ) }
+        help={ __( 'Controls how columns line up when they have different heights. Updates instantly.', 'adaire-blocks' ) }
       >
-        <ToggleGroupControlOption value="stretch" label={ __( 'Stretch', 'adaire-row' ) } />
-        <ToggleGroupControlOption value="top" label={ __( 'Top', 'adaire-row' ) } />
-        <ToggleGroupControlOption value="center" label={ __( 'Center', 'adaire-row' ) } />
-        <ToggleGroupControlOption value="bottom" label={ __( 'Bottom', 'adaire-row' ) } />
+        <ToggleGroupControlOption value="stretch" label={ __( 'Stretch', 'adaire-blocks' ) } />
+        <ToggleGroupControlOption value="top" label={ __( 'Top', 'adaire-blocks' ) } />
+        <ToggleGroupControlOption value="center" label={ __( 'Center', 'adaire-blocks' ) } />
+        <ToggleGroupControlOption value="bottom" label={ __( 'Bottom', 'adaire-blocks' ) } />
       </ToggleGroupControl>
       { columnWidths.length > 1 && (
         <ToggleGroupControl
-          label={ __( 'Mobile Columns', 'adaire-row' ) }
+          label={ __( 'Mobile Columns', 'adaire-blocks' ) }
           value={ mobileColumns || 'auto' }
           isBlock
           onChange={ ( value ) => setAttributes( { mobileColumns: value === 'auto' ? '' : value } ) }
-          help={ __( 'Auto wraps as many columns as fit. 1 stacks columns into a single column on phones. 2 keeps exactly two per row.', 'adaire-row' ) }
+          help={ __( 'Auto wraps as many columns as fit. 1 stacks columns into a single column on phones. 2 keeps exactly two per row.', 'adaire-blocks' ) }
         >
-          <ToggleGroupControlOption value="auto" label={ __( 'Auto', 'adaire-row' ) } />
-          <ToggleGroupControlOption value="1" label={ __( '1 per row', 'adaire-row' ) } />
-          <ToggleGroupControlOption value="2" label={ __( '2 per row', 'adaire-row' ) } />
+          <ToggleGroupControlOption value="auto" label={ __( 'Auto', 'adaire-blocks' ) } />
+          <ToggleGroupControlOption value="1" label={ __( '1 per row', 'adaire-blocks' ) } />
+          <ToggleGroupControlOption value="2" label={ __( '2 per row', 'adaire-blocks' ) } />
         </ToggleGroupControl>
       ) }
     </PanelBody>
@@ -253,38 +253,38 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
   // ─── Spacing (visual — tagged "style"/medium per the AdaireBlocks
   // free-tier InspectorTabs reorg) ──
   const spacingPanel = (
-    <PanelBody section="style" priority="medium" title={ __( 'Spacing', 'adaire-row' ) } initialOpen={ false }>
+    <PanelBody section="style" priority="medium" title={ __( 'Spacing', 'adaire-blocks' ) } initialOpen={ false }>
       <RangeControl
-        label={ __( 'Gap Between Columns (px)', 'adaire-row' ) }
+        label={ __( 'Gap Between Columns (px)', 'adaire-blocks' ) }
         value={ gap }
         onChange={ ( value ) => setAttributes( { gap: value } ) }
         min={ 0 }
         max={ 80 }
-        help={ __( 'Set to 0 to remove the space columns leave on the sides.', 'adaire-row' ) }
+        help={ __( 'Set to 0 to remove the space columns leave on the sides.', 'adaire-blocks' ) }
       />
       <RangeControl
-        label={ __( 'Padding — Top & Bottom (px)', 'adaire-row' ) }
+        label={ __( 'Padding — Top & Bottom (px)', 'adaire-blocks' ) }
         value={ paddingVertical }
         onChange={ ( value ) => updateSpacingAxis( 'padding', 'vertical', value ) }
         min={ 0 }
         max={ 200 }
       />
       <RangeControl
-        label={ __( 'Padding — Left & Right (px)', 'adaire-row' ) }
+        label={ __( 'Padding — Left & Right (px)', 'adaire-blocks' ) }
         value={ paddingHorizontal }
         onChange={ ( value ) => updateSpacingAxis( 'padding', 'horizontal', value ) }
         min={ 0 }
         max={ 200 }
       />
       <RangeControl
-        label={ __( 'Margin — Top & Bottom (px)', 'adaire-row' ) }
+        label={ __( 'Margin — Top & Bottom (px)', 'adaire-blocks' ) }
         value={ marginVertical }
         onChange={ ( value ) => updateSpacingAxis( 'margin', 'vertical', value ) }
         min={ 0 }
         max={ 200 }
       />
       <RangeControl
-        label={ __( 'Margin — Left & Right (px)', 'adaire-row' ) }
+        label={ __( 'Margin — Left & Right (px)', 'adaire-blocks' ) }
         value={ marginHorizontal }
         onChange={ ( value ) => updateSpacingAxis( 'margin', 'horizontal', value ) }
         min={ 0 }
@@ -298,36 +298,36 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
   // Applies to the row container itself (the whole grid, not individual
   // columns — see column-block/edit.js for the equivalent per-column control).
   const borderPanel = (
-    <PanelBody section="style" priority="medium" title={ __( 'Border', 'adaire-row' ) } initialOpen={ false }>
+    <PanelBody section="style" priority="medium" title={ __( 'Border', 'adaire-blocks' ) } initialOpen={ false }>
       <ToggleControl
-        label={ __( 'Enable Border', 'adaire-row' ) }
+        label={ __( 'Enable Border', 'adaire-blocks' ) }
         checked={ borderEnabled }
         onChange={ ( val ) => setAttributes( { borderEnabled: val } ) }
-        help={ __( 'Adds a border around the entire row (outside all columns).', 'adaire-row' ) }
+        help={ __( 'Adds a border around the entire row (outside all columns).', 'adaire-blocks' ) }
       />
       { borderEnabled && (
         <>
           <RangeControl
-            label={ __( 'Border Width (px)', 'adaire-row' ) }
+            label={ __( 'Border Width (px)', 'adaire-blocks' ) }
             value={ borderWidth }
             onChange={ ( val ) => setAttributes( { borderWidth: val } ) }
             min={ 1 }
             max={ 20 }
           />
           <SelectControl
-            label={ __( 'Border Type', 'adaire-row' ) }
+            label={ __( 'Border Type', 'adaire-blocks' ) }
             value={ borderStyle }
             options={ BORDER_STYLE_OPTIONS }
             onChange={ ( val ) => setAttributes( { borderStyle: val } ) }
           />
-          <BaseControl label={ __( 'Border Color', 'adaire-row' ) }>
+          <BaseControl label={ __( 'Border Color', 'adaire-blocks' ) }>
             <BoundColorPalette
               value={ borderColor }
               onChange={ ( v ) => setAttributes( { borderColor: v || '' } ) }
             />
           </BaseControl>
           <RangeControl
-            label={ __( 'Border Radius (px)', 'adaire-row' ) }
+            label={ __( 'Border Radius (px)', 'adaire-blocks' ) }
             value={ borderRadius }
             onChange={ ( val ) => setAttributes( { borderRadius: val } ) }
             min={ 0 }
@@ -439,11 +439,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
   // ─── Columns (functional — tagged "content" per the AdaireBlocks free-tier
   // InspectorTabs reorg) ──────────────────
   const columnsPanel = (
-    <PanelBody section="content" title={ __( 'Columns', 'adaire-row' ) } initialOpen={ true }>
+    <PanelBody section="content" title={ __( 'Columns', 'adaire-blocks' ) } initialOpen={ true }>
       <p className="adaire-row-columns-count">
         { sprintf(
           /* translators: %d: number of columns */
-          __( '%d column(s)', 'adaire-row' ),
+          __( '%d column(s)', 'adaire-blocks' ),
           currentColumnCount
         ) }
       </p>
@@ -452,7 +452,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
           variant="secondary"
           onClick={ addColumn }
         >
-          { __( '+ Add Column', 'adaire-row' ) }
+          { __( '+ Add Column', 'adaire-blocks' ) }
         </Button>
         <Button
           variant="secondary"
@@ -460,13 +460,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
           disabled={ currentColumnCount <= 1 }
           onClick={ removeColumn }
         >
-          { __( '− Remove Column', 'adaire-row' ) }
+          { __( '− Remove Column', 'adaire-blocks' ) }
         </Button>
       </div>
       { currentColumns.length > 1 && (
         <>
           <p className="adaire-row-columns-label">
-            { __( 'Column widths:', 'adaire-row' ) }
+            { __( 'Column widths:', 'adaire-blocks' ) }
           </p>
           <div className="adaire-row-columns-widths">
             { currentColumns.map( ( block, index ) => (
@@ -474,7 +474,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                 key={ block.clientId }
                 label={ sprintf(
                   /* translators: %d: column number */
-                  __( 'Column %d (%%)', 'adaire-row' ),
+                  __( 'Column %d (%%)', 'adaire-blocks' ),
                   index + 1
                 ) }
                 value={ block.attributes.width ?? Math.round( 100 / currentColumns.length ) }
@@ -487,7 +487,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
         </>
       ) }
       <p className="adaire-row-columns-label">
-        { __( 'Or switch to a preset layout (existing content is kept where possible):', 'adaire-row' ) }
+        { __( 'Or switch to a preset layout (existing content is kept where possible):', 'adaire-blocks' ) }
       </p>
       <div className="adaire-row-columns-presets">
         { PRESETS.map( ( preset ) => (
@@ -532,10 +532,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                 <rect x="3"  y="3" width="7" height="18" rx="1" fill="currentColor" opacity="0.5" />
                 <rect x="14" y="3" width="7" height="18" rx="1" fill="currentColor" opacity="0.5" />
               </svg>
-              <span>{ __( 'Row', 'adaire-row' ) }</span>
+              <span>{ __( 'Row', 'adaire-blocks' ) }</span>
             </div>
             <p className="adaire-row-placeholder__label">
-              { __( 'Select a column layout to start.', 'adaire-row' ) }
+              { __( 'Select a column layout to start.', 'adaire-blocks' ) }
             </p>
             <div className="adaire-row-placeholder__grid">
               { PRESETS.map( ( preset ) => (
@@ -550,7 +550,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
               ) ) }
             </div>
             <button className="adaire-row-placeholder__skip" onClick={ skipToManual }>
-              { __( 'Skip and add columns manually', 'adaire-row' ) }
+              { __( 'Skip and add columns manually', 'adaire-blocks' ) }
             </button>
           </div>
         </div>
