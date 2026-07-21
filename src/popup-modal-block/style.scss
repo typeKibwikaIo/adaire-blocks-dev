@@ -443,8 +443,10 @@ body.adaire-modal-open { overflow: hidden; }
 // onto the published page.
 
 .block-editor-block-list__layout .adaire-popup-modal-block {
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 100%;
     gap: 12px;
 
     .adaire-popup-modal-block__trigger {

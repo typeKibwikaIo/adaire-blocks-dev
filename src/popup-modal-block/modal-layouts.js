@@ -15,9 +15,9 @@ export const MODAL_LAYOUTS = [
         label: 'Basic Content Modal',
         bestFor: 'Notices, announcements and simple calls to action',
         template: [
-            ['core/heading', { level: 3, placeholder: 'Modal heading…' }],
-            ['core/paragraph', { placeholder: 'Supporting text, image, video or custom content.' }],
-            ['core/buttons', {}, [['core/button', { text: 'Primary Button' }]]],
+            ['core/heading', { level: 3, content: "We'd Love to Hear From You" }],
+            ['core/paragraph', { content: 'Have a question or want to learn more about what we do? Reach out and our team will get back to you within one business day.' }],
+            ['core/buttons', {}, [['core/button', { text: 'Get in Touch' }]]],
         ],
     },
     {
@@ -26,11 +26,11 @@ export const MODAL_LAYOUTS = [
         bestFor: 'Promotions, product launches and lead generation',
         template: [
             ['core/columns', {}, [
-                ['core/column', { width: '45%' }, [['core/image', {}]]],
+                ['core/column', { width: '45%' }, [['core/image', { alt: 'Featured product' }]]],
                 ['core/column', { width: '55%' }, [
-                    ['core/heading', { level: 3, placeholder: 'Heading' }],
-                    ['core/paragraph', { placeholder: 'Copy' }],
-                    ['core/buttons', {}, [['core/button', { text: 'Get Started' }]]],
+                    ['core/heading', { level: 3, content: 'Introducing Our New Collection' }],
+                    ['core/paragraph', { content: "Thoughtfully designed and built to last. Discover the pieces everyone's talking about — available now for a limited time." }],
+                    ['core/buttons', {}, [['core/button', { text: 'Shop the Collection' }]]],
                 ]],
             ]],
         ],
@@ -40,10 +40,10 @@ export const MODAL_LAYOUTS = [
         label: 'Newsletter Signup',
         bestFor: 'Email capture and content subscriptions',
         template: [
-            ['core/heading', { level: 3, placeholder: 'Join Our Newsletter', textAlign: 'center' }],
-            ['core/paragraph', { placeholder: 'Get updates and offers.', align: 'center' }],
+            ['core/heading', { level: 3, content: 'Join Our Newsletter', textAlign: 'center' }],
+            ['core/paragraph', { content: 'Get the latest updates, exclusive offers and fresh ideas delivered straight to your inbox every week.', align: 'center' }],
             ['core/shortcode', { text: '' }],
-            ['core/paragraph', { placeholder: 'No spam. Unsubscribe anytime.', align: 'center', fontSize: 'small' }],
+            ['core/paragraph', { content: 'No spam, ever. Unsubscribe anytime.', align: 'center', fontSize: 'small' }],
         ],
     },
     {
@@ -51,12 +51,12 @@ export const MODAL_LAYOUTS = [
         label: 'Promotional Offer',
         bestFor: 'E-commerce campaigns and discount codes',
         template: [
-            ['core/paragraph', { placeholder: 'LIMITED OFFER', align: 'center' }],
-            ['core/heading', { level: 2, placeholder: '20% OFF', textAlign: 'center' }],
-            ['core/paragraph', { placeholder: 'Your first purchase', align: 'center' }],
-            ['core/paragraph', { placeholder: 'Use code: WELCOME20', align: 'center' }],
+            ['core/paragraph', { content: 'LIMITED TIME OFFER', align: 'center' }],
+            ['core/heading', { level: 2, content: '20% OFF', textAlign: 'center' }],
+            ['core/paragraph', { content: 'Your first order', align: 'center' }],
+            ['core/paragraph', { content: 'Use code <strong>WELCOME20</strong> at checkout', align: 'center' }],
             ['core/buttons', { layout: { type: 'flex', justifyContent: 'center' } }, [['core/button', { text: 'Shop the Offer' }]]],
-            ['core/paragraph', { placeholder: 'No thanks', align: 'center', fontSize: 'small', className: 'adaire-modal-close-trigger' }],
+            ['core/paragraph', { content: 'No thanks, maybe later', align: 'center', fontSize: 'small', className: 'adaire-modal-close-trigger' }],
         ],
     },
     {
@@ -65,8 +65,8 @@ export const MODAL_LAYOUTS = [
         bestFor: 'Product demos, testimonials and explainer videos',
         template: [
             ['core/embed', {}],
-            ['core/heading', { level: 4, placeholder: 'Heading' }],
-            ['core/paragraph', { placeholder: 'Description' }],
+            ['core/heading', { level: 4, content: 'See It in Action' }],
+            ['core/paragraph', { content: 'Watch a two-minute walkthrough and see how our platform helps teams ship faster.' }],
         ],
     },
     {
@@ -74,8 +74,8 @@ export const MODAL_LAYOUTS = [
         label: 'Announcement Modal',
         bestFor: 'Business notices and urgent updates',
         template: [
-            ['core/heading', { level: 3, placeholder: 'Important Update', textAlign: 'center' }],
-            ['core/paragraph', { placeholder: 'Service changes, opening hours or event details.', align: 'center' }],
+            ['core/heading', { level: 3, content: 'Holiday Hours Update', textAlign: 'center' }],
+            ['core/paragraph', { content: 'Our offices will be closed December 24–26. Orders placed during this time will be processed on the next business day.', align: 'center' }],
             ['core/buttons', { layout: { type: 'flex', justifyContent: 'center' } }, [
                 ['core/button', { text: 'Learn More' }],
                 ['core/button', { text: 'Close', className: 'adaire-modal-close-trigger is-style-outline' }],
@@ -88,10 +88,10 @@ export const MODAL_LAYOUTS = [
         bestFor: 'Recovering abandoning visitors',
         defaultAttrs: { autoOpen: 'exit-intent' },
         template: [
-            ['core/heading', { level: 3, placeholder: 'Before You Leave…', textAlign: 'center' }],
-            ['core/paragraph', { placeholder: 'Download our free guide or claim a special offer.', align: 'center' }],
+            ['core/heading', { level: 3, content: 'Before You Go…', textAlign: 'center' }],
+            ['core/paragraph', { content: 'Grab our free guide — <strong>10 Proven Tips to Boost Your Conversions</strong> — and start seeing results today.', align: 'center' }],
             ['core/shortcode', { text: '' }],
-            ['core/buttons', { layout: { type: 'flex', justifyContent: 'center' } }, [['core/button', { text: 'Get the Free Guide' }]]],
+            ['core/buttons', { layout: { type: 'flex', justifyContent: 'center' } }, [['core/button', { text: 'Send Me the Free Guide' }]]],
         ],
     },
 ];
