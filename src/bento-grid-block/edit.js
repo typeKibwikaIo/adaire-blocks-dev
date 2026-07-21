@@ -5,7 +5,6 @@ import {
     RichText,
     MediaUpload,
     MediaUploadCheck,
-    GradientPicker,
 } from '@wordpress/block-editor';
 import {
     PanelBody,
@@ -17,6 +16,7 @@ import {
     ToggleControl,
     Button,
     ButtonGroup,
+    GradientPicker,
     __experimentalUnitControl as UnitControl,
     __experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
@@ -459,7 +459,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                 {card.overlayType === 'gradient' && (
                                                     <BaseControl label={__('Overlay Gradient', 'adaire-blocks')}>
                                                         <GradientPicker
-                                                            value={card.overlayGradient}
+                                                            value={card.overlayGradient || undefined}
                                                             onChange={(value) => updateCard(index, 'overlayGradient', value || '')}
                                                         />
                                                     </BaseControl>
