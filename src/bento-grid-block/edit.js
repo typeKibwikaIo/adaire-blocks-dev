@@ -457,12 +457,22 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                                     </>
                                                 )}
                                                 {card.overlayType === 'gradient' && (
-                                                    <BaseControl label={__('Overlay Gradient', 'adaire-blocks')}>
-                                                        <GradientPicker
-                                                            value={card.overlayGradient || undefined}
-                                                            onChange={(value) => updateCard(index, 'overlayGradient', value || '')}
+                                                    <>
+                                                        <BaseControl label={__('Overlay Gradient', 'adaire-blocks')}>
+                                                            <GradientPicker
+                                                                value={card.overlayGradient || undefined}
+                                                                onChange={(value) => updateCard(index, 'overlayGradient', value || '')}
+                                                            />
+                                                        </BaseControl>
+                                                        <RangeControl
+                                                            label={__('Overlay Opacity', 'adaire-blocks')}
+                                                            value={card.overlayOpacity ?? 0.5}
+                                                            onChange={(value) => updateCard(index, 'overlayOpacity', value)}
+                                                            min={0}
+                                                            max={1}
+                                                            step={0.1}
                                                         />
-                                                    </BaseControl>
+                                                    </>
                                                 )}
                                             </>
                                         )}
@@ -746,7 +756,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                                         aria-hidden="true"
                                         style={
                                             card.overlayType === 'gradient'
-                                                ? { backgroundImage: card.overlayGradient || undefined }
+                                                ? { backgroundImage: card.overlayGradient || undefined, opacity: card.overlayOpacity ?? 0.5 }
                                                 : { backgroundColor: card.overlayColor || '#000000', opacity: card.overlayOpacity ?? 0.5 }
                                         }
                                     />

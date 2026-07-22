@@ -187,7 +187,7 @@ export default function save({ attributes }) {
                                     aria-hidden="true"
                                     style={
                                         card.overlayType === 'gradient'
-                                            ? { backgroundImage: card.overlayGradient || undefined }
+                                            ? { backgroundImage: card.overlayGradient || undefined, opacity: card.overlayOpacity ?? 0.5 }
                                             : { backgroundColor: card.overlayColor || '#000000', opacity: card.overlayOpacity ?? 0.5 }
                                     }
                                 />
