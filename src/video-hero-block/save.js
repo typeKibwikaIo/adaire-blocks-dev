@@ -45,6 +45,9 @@ export default function save({ attributes }) {
 		overlayGradientDirection,
 		overlayGradientStartOpacity,
 		overlayGradientEndOpacity,
+		cursorColor,
+		cursorBgColor,
+		cursorBgOpacity,
 	} = attributes;
 
 	// Helper function to convert hex color to RGB and apply opacity
@@ -188,14 +191,19 @@ export default function save({ attributes }) {
 			"--title-scrolling-gap-tablet": `${titleScrollingGapTablet || 200}px`,
 			"--title-scrolling-gap-mobile": `${titleScrollingGapMobile || 150}px`,
 			"--title-scrolling-speed": titleScrollingSpeed || 100,
-			"--title-font-size-tablet": `${titleFontSizeTablet || 36}px`,
-			"--title-font-size-mobile": `${titleFontSizeMobile || 28}px`,
-			"--description-font-size-tablet": `${descriptionFontSizeTablet || 16}px`,
-			"--description-font-size-mobile": `${descriptionFontSizeMobile || 14}px`,
+			"--title-font-size-tablet": `${titleFontSizeTablet || 36}${titleFontSizeUnit || "px"}`,
+			"--title-font-size-mobile": `${titleFontSizeMobile || 28}${titleFontSizeUnit || "px"}`,
+			"--description-font-size-tablet": `${descriptionFontSizeTablet || 16}${descriptionFontSizeUnit || "px"}`,
+			"--description-font-size-mobile": `${descriptionFontSizeMobile || 14}${descriptionFontSizeUnit || "px"}`,
 			"--overlay-type": overlayType || "solid",
 			"--overlay-gradient-start": overlayGradientStart || "rgba(0, 0, 0, 0.5)",
 			"--overlay-gradient-end": overlayGradientEnd || "rgba(0, 0, 0, 0.3)",
 			"--overlay-gradient-direction": overlayGradientDirection || "to bottom",
+			"--cursor-color": cursorColor || "#ffffff",
+			"--cursor-bg-color": applyOpacityToColor(
+				cursorBgColor || "#ffffff",
+				cursorBgOpacity ?? 0.1,
+			),
 		},
 		id: blockId || undefined
 	});
@@ -227,16 +235,20 @@ export default function save({ attributes }) {
 						{/* Navigation Arrows */}
 						<div className="ad-video-hero-block__navigation-arrows">
 							<button
+								type="button"
 								className="ad-video-hero-block__nav-arrow ad-video-hero-block__nav-arrow-left"
 								data-direction="prev"
+								aria-label="Previous slide"
 							>
 								<svg viewBox="0 0 24 24">
 									<path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
 								</svg>
 							</button>
 							<button
+								type="button"
 								className="ad-video-hero-block__nav-arrow ad-video-hero-block__nav-arrow-right"
 								data-direction="next"
+								aria-label="Next slide"
 							>
 								<svg viewBox="0 0 24 24">
 									<path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />

@@ -21,6 +21,7 @@ import Edit from './edit';
 import save from './save';
 import metadata from './block.json';
 import VideoHeroIcon from '../icons/video-hero';
+import variations from './variations';
 
 /**
  * Register the portfolio block
@@ -36,7 +37,8 @@ registerBlockType(metadata.name, {
 	 */
 	save,
 	icon: VideoHeroIcon,
-	
+	variations,
+
 	/**
 	 * Provide block data to frontend
 	 */

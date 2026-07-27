@@ -2396,66 +2396,8 @@ add_action(
 	20
 );
 
-// Pass block data to frontend for video-hero-block
-function enqueue_video_hero_block_data() {
-	if ( is_admin() ) {
-		return;
-	}
-	global $post;
-	if ( ! $post ) {
-		return;
-	}
-	if ( has_block( 'create-block/video-hero-block', $post ) ) {
-		// Get all video-hero-block instances on the page
-		$blocks            = parse_blocks( $post->post_content );
-		$video_hero_blocks = array();
-
-		// Debug: log the raw post content
-		error_log( 'Raw post content: ' . substr( $post->post_content, 0, 1000 ) . '...' );
-
-		// Debug: look for video-hero-block in the content
-		if ( strpos( $post->post_content, 'create-block/video-hero-block' ) !== false ) {
-			error_log( 'Found video-hero-block in content' );
-		} else {
-			error_log( 'No video-hero-block found in content' );
-		}
-
-		// Recursive function to find blocks in nested structures
-		function find_video_hero_blocks( $blocks, &$video_hero_blocks ) {
-			foreach ( $blocks as $block ) {
-				if ( $block['blockName'] === 'create-block/video-hero-block' ) {
-					$block_id = $block['attrs']['blockId'] ?? uniqid( 'video-hero-' );
-					// Debug: log the block attributes
-					error_log( 'Video Hero Block Found - ID: ' . $block_id );
-					error_log( 'Block attrs: ' . print_r( $block['attrs'], true ) );
-					error_log( 'Videos specifically: ' . print_r( $block['attrs']['videos'] ?? 'NOT SET', true ) );
-					// Ensure we have the full attributes array
-					$video_hero_blocks[ $block_id ] = $block['attrs'] ?? array();
-				}
-				// Recursively search in inner blocks
-				if ( ! empty( $block['innerBlocks'] ) ) {
-					find_video_hero_blocks( $block['innerBlocks'], $video_hero_blocks );
-				}
-			}
-		}
-
-		find_video_hero_blocks( $blocks, $video_hero_blocks );
-
-		// Debug: log all blocks found
-		error_log( 'All blocks found: ' . print_r( $blocks, true ) );
-
-		// Always add the script, even if empty, for debugging
-		add_action(
-			'wp_footer',
-			function () use ( $video_hero_blocks ) {
-				echo '<script>console.log("PHP Debug - video_hero_blocks:", ' . json_encode( $video_hero_blocks ) . ');</script>';
-				echo '<script>console.log("PHP Debug - videos in first block:", ' . json_encode( $video_hero_blocks[ array_keys( $video_hero_blocks )[0] ]['videos'] ?? 'NOT FOUND' ) . ');</script>';
-				echo '<script>window.videoHeroBlockData = ' . json_encode( $video_hero_blocks ) . ';</script>';
-				echo '<script>window.wpApiSettings = { postId: ' . get_the_ID() . ' };</script>';
-			}
-		);
-	}
-}
+// video-hero-block reads its own config from the block element's data-*
+// attributes (see save.js / view.js); no server-side data injection needed.
 
 // Pass block data to frontend for services-block
 function enqueue_services_block_data() {
@@ -2522,7 +2464,6 @@ function enqueue_services_block_data() {
 		);
 	}
 }
-add_action( 'wp_enqueue_scripts', 'enqueue_video_hero_block_data' );
 add_action( 'wp_enqueue_scripts', 'enqueue_services_block_data' );
 
 // Add REST API endpoint for block data

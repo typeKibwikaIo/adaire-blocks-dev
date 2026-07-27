@@ -13,6 +13,10 @@ class VideoHeroBlock {
 		this.direction = "next";
 		this.cursor = null;
 		this.cursorText = null;
+		this.prefersReducedMotion =
+			typeof window !== "undefined" &&
+			typeof window.matchMedia === "function" &&
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 		this.init();
 	}
@@ -25,39 +29,26 @@ class VideoHeroBlock {
 		}
 	}
 
-	async initializeVideos() {
-		if (!this.blockElement) return;
-
-    try {
-      // Get data from WordPress block attributes passed via wp_add_inline_script
-      if (window.videoHeroBlockData) {
-				const blockId =
-					this.blockElement.id || Object.keys(window.videoHeroBlockData)[0];
-        const blockData = window.videoHeroBlockData[blockId];
-        
-        if (blockData) {
-					this.videos = blockData.videos || [];
-					this.transitionDuration = blockData.transitionDuration || 8000;
-					this.autoPlay = blockData.autoPlay !== false;
-					this.showControls = blockData.showControls !== false;
-        } else {
-					console.warn("No block data found for ID:", blockId);
-					this.videos = [];
-        }
-      } else {
-				console.warn("No videoHeroBlockData found for block");
-				this.videos = [];
-          }
-        } catch (error) {
-			console.error("Error parsing videos data for block:", error);
+	initializeVideos() {
+		if (!this.blockElement) {
 			this.videos = [];
+			return;
 		}
 
-		if (this.videos.length === 0) {
-			console.warn("No videos found for block");
-    return;
-  }
-}
+		// Read config straight from the block element's own data-* attributes
+		// (emitted by save.js). No server-side global needed.
+		const el = this.blockElement;
+		try {
+			this.videos = JSON.parse(el.dataset.videos || "[]");
+			this.transitionDuration =
+				parseInt(el.dataset.transitionDuration, 10) || 8000;
+			this.autoPlay = el.dataset.autoplay !== "false";
+			this.showControls = el.dataset.showControls !== "false";
+		} catch (error) {
+			console.error("Video Hero: failed to parse videos data", error);
+			this.videos = [];
+		}
+	}
 
 // Helper function to get video ID from URL
 	getVideoId(url, type) {
@@ -186,6 +177,8 @@ class VideoHeroBlock {
 }
 
 	startTitleScrolling() {
+		// Respect users who asked for less motion — skip the infinite marquee.
+		if (this.prefersReducedMotion) return;
 		const titleScrollers = this.blockElement.querySelectorAll(
 			".ad-video-hero-block__video-content.active .ad-video-hero-block__video-title-scroller .scrolling-text",
 		);
@@ -433,6 +426,11 @@ class VideoHeroBlock {
     return;
   }
 
+		// Hydrate the incoming slide's media (lazy iframe / native video) and
+		// pause the outgoing native video.
+		this.pauseMedia(previousVideoIndex);
+		this.activateMedia(this.currentVideoIndex);
+
 		this.resetVideoIndicator(previousVideoIndex);
 		this.startProgressAnimation(this.currentVideoIndex);
 
@@ -444,11 +442,42 @@ class VideoHeroBlock {
 			previousVideoIndex,
 		);
 
-		if (this.autoPlay) {
+		if (this.autoPlay && !this.prefersReducedMotion) {
 			clearTimeout(this.videoTimeout);
 			this.videoTimeout = setTimeout(() => {
 				this.changeVideo(true);
 			}, this.transitionDuration);
+		}
+	}
+
+	// Load a slide's deferred iframe and start its native video.
+	activateMedia(index) {
+		const slide = this.blockElement.querySelector(
+			`.ad-video-hero-block__video-slide[data-video-index="${index}"]`,
+		);
+		if (!slide) return;
+		const iframe = slide.querySelector("iframe[data-src]");
+		if (iframe && !iframe.src) {
+			iframe.src = iframe.dataset.src;
+		}
+		const nativeVideo = slide.querySelector("video");
+		if (nativeVideo) {
+			const playPromise = nativeVideo.play();
+			if (playPromise && typeof playPromise.catch === "function") {
+				playPromise.catch(() => {});
+			}
+		}
+	}
+
+	// Pause a slide's native video when it leaves the viewport.
+	pauseMedia(index) {
+		const slide = this.blockElement.querySelector(
+			`.ad-video-hero-block__video-slide[data-video-index="${index}"]`,
+		);
+		if (!slide) return;
+		const nativeVideo = slide.querySelector("video");
+		if (nativeVideo) {
+			nativeVideo.pause();
 		}
 	}
 
@@ -490,10 +519,41 @@ class VideoHeroBlock {
         z-index: 1;
       `;
       videoSlide.appendChild(imageBackground);
+    } else if (video.videoType === "wordpress" && video.videoUrl) {
+      const nativeVideo = document.createElement("video");
+      nativeVideo.src = video.videoUrl;
+      nativeVideo.muted = video.muted !== false;
+      nativeVideo.loop = true;
+      nativeVideo.playsInline = true;
+      nativeVideo.controls = false;
+      nativeVideo.setAttribute("aria-hidden", "true");
+      nativeVideo.preload = index === 0 ? "auto" : "none";
+      if (index === 0 && video.autoplay !== false) {
+        nativeVideo.autoplay = true;
+      }
+      nativeVideo.style.cssText = `
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        pointer-events: none;
+      `;
+      videoSlide.appendChild(nativeVideo);
     } else if (embedUrl) {
 				const iframe = document.createElement("iframe");
-      iframe.src = embedUrl;
       iframe.title = video.title;
+      iframe.loading = "lazy";
+      // Lazy hydrate: first slide loads immediately; others hold the URL in
+      // data-src until activated (see activateMedia).
+      if (index === 0) {
+        iframe.src = embedUrl;
+      } else {
+        iframe.dataset.src = embedUrl;
+      }
 				iframe.frameBorder = "0";
 				iframe.allow = "autoplay; fullscreen; picture-in-picture";
       iframe.allowFullScreen = true;
@@ -527,7 +587,7 @@ class VideoHeroBlock {
         font-size: 24px;
       `;
 				placeholder.textContent = `${
-					video.videoType === "youtube" ? "ðŸ“º" : "ðŸŽ¬"
+					video.videoType === "youtube" ? "📺" : "🎬"
 				} ${video.title}`;
       videoSlide.appendChild(placeholder);
     }
@@ -577,39 +637,38 @@ class VideoHeroBlock {
 	}
 
 	initializeVideoIndicators() {
-		if (window.videoHeroBlockData) {
-			const blockId =
-				this.blockElement.id || Object.keys(window.videoHeroBlockData)[0];
+		const indicatorsContainer = this.blockElement.querySelector(
+			".ad-video-hero-block__video-indicators",
+		);
+		const progressIndicatorsContainer = this.blockElement.querySelector(
+			".ad-video-hero-block__progress-indicators",
+		);
 
-			const indicatorsContainer = this.blockElement.querySelector(
-				".ad-video-hero-block__video-indicators",
+		if (
+			!indicatorsContainer ||
+			!progressIndicatorsContainer ||
+			this.videos.length <= 1
+		)
+			return;
+
+		const existingIndicators = this.blockElement.querySelectorAll(
+			".ad-video-hero-block__video-indicator",
+		);
+		existingIndicators.forEach((indicator) => indicator.remove());
+
+		this.videos.forEach((video, index) => {
+			const indicator = document.createElement("div");
+			indicator.classList.add("ad-video-hero-block__video-indicator");
+			indicator.style.setProperty(
+				"width",
+				`${100 / this.videos.length - 2}vw`,
+				"important",
 			);
-			const progressIndicatorsContainer = this.blockElement.querySelector(
-				".ad-video-hero-block__progress-indicators",
-			);
-
-			if (
-				!indicatorsContainer ||
-				!progressIndicatorsContainer ||
-				this.videos.length <= 1
-			)
-				return;
-
-			const existingIndicators = this.blockElement.querySelectorAll(
-				".ad-video-hero-block__video-indicator",
-			);
-			existingIndicators.forEach((indicator) => indicator.remove());
-
-			this.videos.forEach((video, index) => {
-				const indicator = document.createElement("div");
-				indicator.classList.add("ad-video-hero-block__video-indicator");
-				indicator.style.setProperty(
-					"width",
-					`${100 / window.videoHeroBlockData[blockId].videos.length - 2}vw`,
-					"important",
-				);
+			indicator.setAttribute("role", "button");
+			indicator.setAttribute("tabindex", "0");
+			indicator.setAttribute("aria-label", `Go to slide ${index + 1}`);
     indicator.dataset.videoIndex = index;
-    
+
 				const progressFill = document.createElement("div");
 				progressFill.classList.add("ad-video-hero-block__progress-fill");
 
@@ -640,7 +699,6 @@ class VideoHeroBlock {
     
     progressIndicatorsContainer.appendChild(indicator);
   });
-		}
 	}
 
 	initializeFirstVideo() {
@@ -674,7 +732,7 @@ class VideoHeroBlock {
 		this.initializeVideoIndicators();
 		this.initializeFirstVideo();
 
-		if (this.autoPlay) {
+		if (this.autoPlay && !this.prefersReducedMotion) {
 			this.videoTimeout = setTimeout(
 				() => this.changeVideo(true),
 				this.transitionDuration,
@@ -812,6 +870,36 @@ class VideoHeroBlock {
 				this.changeVideo(false);
         }
       });
+
+		// Keyboard support for the (div-based) progress indicators.
+		this.blockElement.addEventListener("keydown", (event) => {
+			if (event.key !== "Enter" && event.key !== " ") return;
+			const indicator = event.target.closest(
+				".ad-video-hero-block__video-indicator",
+			);
+			if (!indicator) return;
+			event.preventDefault();
+			const videoIndex = parseInt(indicator.dataset.videoIndex, 10);
+			if (videoIndex !== this.currentVideoIndex) {
+				clearTimeout(this.videoTimeout);
+				this.changeVideo(false, videoIndex);
+			}
+		});
+
+		// Pause auto-advance while the user hovers/focuses the block.
+		const pause = () => clearTimeout(this.videoTimeout);
+		const resume = () => {
+			if (!this.autoPlay || this.prefersReducedMotion) return;
+			clearTimeout(this.videoTimeout);
+			this.videoTimeout = setTimeout(
+				() => this.changeVideo(true),
+				this.transitionDuration,
+			);
+		};
+		this.blockElement.addEventListener("mouseenter", pause);
+		this.blockElement.addEventListener("mouseleave", resume);
+		this.blockElement.addEventListener("focusin", pause);
+		this.blockElement.addEventListener("focusout", resume);
     }
   }
 
