@@ -1,25 +1,26 @@
-﻿import { __ } from '@wordpress/i18n';
+﻿import { __, sprintf } from '@wordpress/i18n';
 import {
     useBlockProps,
-    InspectorControls,
+    PanelColorSettings,
     MediaUpload,
-    MediaUploadCheck,
-    PanelColorSettings
+    MediaUploadCheck
 } from '@wordpress/block-editor';
 import {
     PanelBody,
     TextControl,
     TextareaControl,
+    BaseControl,
     Button,
     ButtonGroup,
     RangeControl,
     SelectControl,
-    ToggleControl,
-    BaseControl,
-    __experimentalNumberControl as NumberControl
+    ToggleControl
 } from '@wordpress/components';
-import { useState, useEffect, useMemo, useCallback } from '@wordpress/element';
-import { arrowUp, arrowDown } from '@wordpress/icons';
+import { useState, useEffect } from '@wordpress/element';
+import apiFetch from '@wordpress/api-fetch';
+import InspectorTabs from '../components/InspectorTabs';
+import QuickZone from '../components/QuickZone';
+import BoundColorPalette from '../components/BoundColorPalette';
 
 import './editor.scss';
 
@@ -44,12 +45,50 @@ const formatDimensionValue = (dimension, fallbackValue, fallbackUnit) => {
     return `${value}${unit}`;
 };
 
+// The block editor only ever runs inside /wp-admin/, so deriving the admin
+// root from the current URL is reliable without needing a dedicated
+// adminUrl() global.
+const getCaseStudiesAdminUrl = () => {
+    const [base] = window.location.href.split('/wp-admin/');
+    return `${base}/wp-admin/edit.php?post_type=adaire_case_study`;
+};
+
+const stripTags = (html) => (html || '').replace(/<[^>]*>/g, '').trim();
+
+// Maps a `/wp/v2/adaire-case-studies?_embed` REST post object (see
+// includes/class-adaire-case-studies-cpt.php) into the same "study" shape
+// render.php builds server-side, so the editor preview grid below can reuse
+// the exact same card markup regardless of where the data came from.
+const mapPostToStudy = (post) => {
+    const embedded = post._embedded || {};
+    const media = embedded['wp:featuredmedia']?.[0];
+    const terms = (embedded['wp:term'] || []).flat();
+    const industryTerm = terms.find((t) => t.taxonomy === 'adaire_case_industry');
+    const capabilityTerms = terms.filter((t) => t.taxonomy === 'adaire_case_capability');
+    const meta = post.meta || {};
+
+    return {
+        id: post.id,
+        title: stripTags(post.title?.rendered),
+        description: stripTags(post.excerpt?.rendered),
+        backgroundImage: media?.source_url || '',
+        linkUrl: meta._adaire_case_link_url || '',
+        openInNewTab: !!meta._adaire_case_open_in_new_tab,
+        industry: industryTerm?.name || '',
+        capabilities: capabilityTerms.map((t) => t.name),
+        client: meta._adaire_case_client || '',
+        country: meta._adaire_case_country || '',
+        language: meta._adaire_case_language || '',
+        technology: meta._adaire_case_technology || '',
+        galleryItems: []
+    };
+};
+
 export default function Edit({ attributes, setAttributes, clientId }) {
     const {
         blockId,
         containerMode,
         containerMaxWidth,
-        caseStudies,
         columns,
         columnsBigDesktop,
         columnsSmallLaptop,
@@ -104,12 +143,50 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         dragCursorColor,
         dragCursorSize,
         dragCursorTextTransform,
-        dragCursorBgColor
+        dragCursorBgColor,
+        nextLabel,
+        popupDescription,
+        popupImageId,
+        popupImageUrl,
+        popupImageAlt
     } = attributes;
 
-    const [expandedStudy, setExpandedStudy] = useState(null);
-    const [newIndustryInput, setNewIndustryInput] = useState('');
-    const [newCapabilityInputs, setNewCapabilityInputs] = useState({});
+    const [activeZone, setActiveZone] = useState(null);
+    const [managedCount, setManagedCount] = useState(null);
+    const [previewStudies, setPreviewStudies] = useState([]);
+
+    // Case studies now live exclusively in Case Studies Management (the
+    // adaire_case_study CPT registered in
+    // includes/class-adaire-case-studies-cpt.php) — there is no manual
+    // per-block list anymore. This fetches published case studies straight
+    // from the REST API so the editor canvas shows a real (if momentarily
+    // stale) preview; the frontend always gets fresh data server-side from
+    // render.php on every page load.
+    useEffect(() => {
+        let cancelled = false;
+        apiFetch({ path: '/wp/v2/adaire-case-studies?_embed&per_page=100&orderby=date&order=desc', parse: false })
+            .then((response) => {
+                const total = response.headers.get('X-WP-Total');
+                if (!cancelled) {
+                    setManagedCount(total !== null ? parseInt(total, 10) : null);
+                }
+                return response.json();
+            })
+            .then((posts) => {
+                if (!cancelled && Array.isArray(posts)) {
+                    setPreviewStudies(posts.map(mapPostToStudy));
+                }
+            })
+            .catch(() => {
+                if (!cancelled) {
+                    setManagedCount(null);
+                    setPreviewStudies([]);
+                }
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     // Generate block ID on mount
     useEffect(() => {
@@ -118,31 +195,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         }
     }, [clientId, blockId, setAttributes]);
 
-    // Get unique industries from ALL case studies (for suggestions)
-    const industries = useMemo(() => {
-        const allIndustries = caseStudies
-            .map(study => study.industry)
-            .filter(industry => industry && industry.trim() !== '');
-        return [...new Set(allIndustries)].sort();
-    }, [caseStudies]);
+    // Unique industries / capabilities across the fetched preview, for the
+    // (disabled, display-only) filter dropdowns in the canvas preview.
+    const industries = [...new Set(
+        previewStudies.map((study) => study.industry).filter((industry) => industry && industry.trim() !== '')
+    )].sort();
 
-    // Get unique capabilities from ALL case studies (for suggestions)
-    const capabilities = useMemo(() => {
-        const allCapabilities = caseStudies
-            .flatMap(study => study.capabilities || [])
-            .filter(cap => cap && cap.trim() !== '');
-        return [...new Set(allCapabilities)].sort();
-    }, [caseStudies]);
-
-    // Get capability input value for a specific study
-    const getCapabilityInput = useCallback((index) => {
-        return newCapabilityInputs[index] || '';
-    }, [newCapabilityInputs]);
-
-    // Set capability input value for a specific study
-    const setCapabilityInput = useCallback((index, value) => {
-        setNewCapabilityInputs(prev => ({ ...prev, [index]: value }));
-    }, []);
+    const capabilities = [...new Set(
+        previewStudies.flatMap((study) => study.capabilities || []).filter((cap) => cap && cap.trim() !== '')
+    )].sort();
 
     // Update container max width dimension
     const updateContainerDimension = (device, property, value) => {
@@ -245,83 +306,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         containerMode === 'constrained' ? 'is-constrained' : ''
     ].filter(Boolean).join(' ');
 
-    const updateCaseStudy = (index, field, value) => {
-        const newStudies = [...caseStudies];
-        newStudies[index] = { ...newStudies[index], [field]: value };
-        setAttributes({ caseStudies: newStudies });
-    };
-
-    const addCaseStudy = () => {
-        const maxId = caseStudies.length > 0 
-            ? Math.max(...caseStudies.map(study => study.id)) 
-            : 0;
-        const newStudy = {
-            id: maxId + 1,
-            title: `New Case Study ${maxId + 1}`,
-            description: 'Add your case study description here...',
-            backgroundImage: '',
-            backgroundImageId: 0,
-            linkUrl: '',
-            openInNewTab: true,
-            industry: '',
-            capabilities: []
-        };
-        setAttributes({ caseStudies: [...caseStudies, newStudy] });
-    };
-
-    const removeCaseStudy = (index) => {
-        const newStudies = caseStudies.filter((_, i) => i !== index);
-        setAttributes({ caseStudies: newStudies });
-    };
-
-    const duplicateCaseStudy = (index) => {
-        const maxId = Math.max(...caseStudies.map(study => study.id));
-        const studyToDuplicate = { ...caseStudies[index], id: maxId + 1 };
-        const newStudies = [...caseStudies];
-        newStudies.splice(index + 1, 0, studyToDuplicate);
-        setAttributes({ caseStudies: newStudies });
-    };
-
-    const moveCaseStudyUp = (index) => {
-        if (index === 0) return;
-        const newStudies = [...caseStudies];
-        [newStudies[index - 1], newStudies[index]] = [newStudies[index], newStudies[index - 1]];
-        setAttributes({ caseStudies: newStudies });
-    };
-
-    const moveCaseStudyDown = (index) => {
-        if (index === caseStudies.length - 1) return;
-        const newStudies = [...caseStudies];
-        [newStudies[index], newStudies[index + 1]] = [newStudies[index + 1], newStudies[index]];
-        setAttributes({ caseStudies: newStudies });
-    };
-
-    const onSelectImage = (index, media) => {
-        if (media && media.id) {
-            updateCaseStudy(index, 'backgroundImageId', media.id);
-            if (media.url) {
-                updateCaseStudy(index, 'backgroundImage', media.url);
-            }
-        }
-    };
-
-    const removeImage = (index) => {
-        updateCaseStudy(index, 'backgroundImage', '');
-        updateCaseStudy(index, 'backgroundImageId', 0);
-    };
-
-    const addCapability = (index, capability) => {
-        if (!capability || !capability.trim()) return;
-        const currentCapabilities = caseStudies[index].capabilities || [];
-        if (!currentCapabilities.includes(capability.trim())) {
-            updateCaseStudy(index, 'capabilities', [...currentCapabilities, capability.trim()]);
-        }
-    };
-
-    const removeCapability = (index, capability) => {
-        const currentCapabilities = caseStudies[index].capabilities || [];
-        updateCaseStudy(index, 'capabilities', currentCapabilities.filter(c => c !== capability));
-    };
+    // Case study CRUD, image, capability, and gallery-item handlers used to
+    // live here for the manual per-block repeater. That repeater is gone —
+    // all case studies are now managed exclusively from Case Studies
+    // Management (see the Content tab panel below and
+    // includes/class-adaire-case-studies-cpt.php).
 
     const easeOptions = [
         { label: 'Power2 InOut', value: 'power2.inOut' },
@@ -340,38 +329,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         { label: 'Bold (700)', value: '700' }
     ];
 
-    // Get industries used by OTHER case studies (for suggestions)
-    const getIndustrySuggestions = useCallback((currentIndex) => {
-        return industries.filter(ind => ind !== caseStudies[currentIndex]?.industry);
-    }, [industries, caseStudies]);
-
-    // Get capabilities used by OTHER case studies that aren't already on this one
-    const getCapabilitySuggestions = useCallback((currentIndex) => {
-        const currentCaps = caseStudies[currentIndex]?.capabilities || [];
-        return capabilities.filter(cap => !currentCaps.includes(cap));
-    }, [capabilities, caseStudies]);
-
-    // Add a new industry (from text input)
-    const handleAddIndustry = useCallback((index, value) => {
-        if (value && value.trim()) {
-            updateCaseStudy(index, 'industry', value.trim());
-        }
-    }, []);
-
-    // Add a new capability (from text input)
-    const handleAddCapability = useCallback((index) => {
-        const value = getCapabilityInput(index);
-        if (value && value.trim()) {
-            addCapability(index, value.trim());
-            setCapabilityInput(index, '');
-        }
-    }, [getCapabilityInput, setCapabilityInput]);
-
     return (
         <>
-            <InspectorControls>
+            <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
                 {/* Layout Settings */}
-                <PanelBody title={__('Layout Settings', 'adaire-blocks')} initialOpen={true}>
+                <PanelBody section="layout" title={__('Layout Settings', 'adaire-blocks')} initialOpen={true}>
                     <p style={{ marginBottom: '8px' }}>{__('Container Width', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {CONTAINER_MODES.map((mode) => (
@@ -482,7 +444,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Carousel Settings */}
-                <PanelBody title={__('Carousel Settings', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Carousel Settings', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
                         label={__('Enable Draggable Carousel', 'adaire-blocks')}
                         checked={enableCarousel}
@@ -578,7 +540,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Card Settings */}
-                <PanelBody title={__('Card Settings', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Card Settings', 'adaire-blocks')} initialOpen={false}>
                     <div style={{ marginBottom: '20px' }}>
                         <strong style={{ display: 'block', marginBottom: '12px' }}>{__('Card Height', 'adaire-blocks')}</strong>
                         {DEVICE_TYPES.map((device) => (
@@ -662,7 +624,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Filter Settings */}
-                <PanelBody title={__('Filter Settings', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Filter Settings', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
                         label={__('Show Filters', 'adaire-blocks')}
                         checked={showFilters}
@@ -699,7 +661,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Load More Settings */}
-                <PanelBody title={__('Load More Settings', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Load More Settings', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl
                         label={__('Show Load More Button', 'adaire-blocks')}
                         checked={showLoadMore}
@@ -744,7 +706,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Card Typography */}
-                <PanelBody title={__('Card Typography', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Card Typography', 'adaire-blocks')} initialOpen={false}>
                     {/* Title Typography */}
                     <div style={{ marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid #ddd' }}>
                         <strong style={{ display: 'block', marginBottom: '16px', fontSize: '13px' }}>{__('Title', 'adaire-blocks')}</strong>
@@ -875,6 +837,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 {/* Color Settings */}
                 <PanelColorSettings
+                    section="style"
+                    priority="high"
                     title={__('Color Settings', 'adaire-blocks')}
                     initialOpen={false}
                     colorSettings={[
@@ -944,7 +908,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 />
 
                 {/* Animation Settings */}
-                <PanelBody title={__('Animation Settings', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="style" priority="medium" title={__('Animation Settings', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
                         label={__('FLIP Animation Duration (s)', 'adaire-blocks')}
                         value={animationDuration}
@@ -978,323 +942,100 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 {/* Case Studies Management */}
-                <PanelBody title={__('Case Studies', 'adaire-blocks')} initialOpen={false}>
-                    <div style={{ marginBottom: '15px' }}>
-                        <Button variant="primary" onClick={addCaseStudy}>
-                            {__('+ Add Case Study', 'adaire-blocks')}
+                <PanelBody section="content" title={__('Case Studies', 'adaire-blocks')} initialOpen={false}>
+                    <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '16px', backgroundColor: '#f7f7f7' }}>
+                        <p style={{ marginTop: 0 }}>
+                            {managedCount !== null
+                                ? sprintf(
+                                    managedCount === 1
+                                        ? __('%d published case study found.', 'adaire-blocks')
+                                        : __('%d published case studies found.', 'adaire-blocks'),
+                                    managedCount
+                                  )
+                                : __('Loading published case study count…', 'adaire-blocks')}
+                        </p>
+                        <p style={{ fontSize: '12px', color: '#666' }}>
+                            {__('Case studies are managed from Case Studies Management in the WordPress dashboard, not from this block. Each case study post supports a title, description, card image, industry, capabilities, client, country, language, technology, and website link.', 'adaire-blocks')}
+                        </p>
+                        <Button variant="primary" href={getCaseStudiesAdminUrl()} target="_blank" rel="noopener noreferrer">
+                            {__('Manage Case Studies', 'adaire-blocks')}
                         </Button>
                     </div>
-                    <div style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>
-                        {__('Total:', 'adaire-blocks')} {caseStudies.length} {__('case studies', 'adaire-blocks')}
-                    </div>
 
-                    {caseStudies.map((study, index) => (
-                        <div
-                            key={study.id}
-                            style={{
-                                border: '1px solid #ddd',
-                                borderRadius: '8px',
-                                marginBottom: '15px',
-                                overflow: 'hidden'
-                            }}
-                        >
-                            <div
-                                style={{
-                                    padding: '12px',
-                                    backgroundColor: '#f7f7f7',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    gap: '8px'
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '8px',
-                                        flex: 1
-                                    }}
-                                    onClick={() => setExpandedStudy(expandedStudy === index ? null : index)}
-                                >
-                                    <span style={{ fontWeight: 500 }}>
-                                        {index + 1}. {study.title || 'Untitled'}
-                                    </span>
-                                </div>
-                                <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                                    <Button
-                                        icon={arrowUp}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            moveCaseStudyUp(index);
-                                        }}
-                                        isSmall
-                                        disabled={index === 0}
-                                        label={__('Move Up', 'adaire-blocks')}
-                                    />
-                                    <Button
-                                        icon={arrowDown}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            moveCaseStudyDown(index);
-                                        }}
-                                        isSmall
-                                        disabled={index === caseStudies.length - 1}
-                                        label={__('Move Down', 'adaire-blocks')}
-                                    />
-                                    <span
-                                        style={{
-                                            cursor: 'pointer',
-                                            padding: '4px',
-                                            fontSize: '12px',
-                                            color: '#666'
-                                        }}
-                                        onClick={() => setExpandedStudy(expandedStudy === index ? null : index)}
-                                    >
-                                        {expandedStudy === index ? 'â–¼' : 'â–¶'}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {expandedStudy === index && (
-                                <div style={{ padding: '15px' }}>
-                                    {/* Background Image */}
-                                    <BaseControl label={__('Background Image', 'adaire-blocks')}>
-                                        <MediaUploadCheck>
-                                            <MediaUpload
-                                                onSelect={(media) => onSelectImage(index, media)}
-                                                allowedTypes={['image']}
-                                                value={study.backgroundImageId}
-                                                render={({ open }) => (
-                                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                                                        {study.backgroundImage ? (
-                                                            <>
-                                                                <img
-                                                                    src={study.backgroundImage}
-                                                                    alt=""
-                                                                    style={{
-                                                                        width: '100px',
-                                                                        height: '60px',
-                                                                        objectFit: 'cover',
-                                                                        borderRadius: '4px'
-                                                                    }}
-                                                                />
-                                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                                                    <Button variant="secondary" onClick={open}>
-                                                                        {__('Change', 'adaire-blocks')}
-                                                                    </Button>
-                                                                    <Button variant="secondary" isDestructive onClick={() => removeImage(index)}>
-                                                                        {__('Remove', 'adaire-blocks')}
-                                                                    </Button>
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            <Button variant="secondary" onClick={open}>
-                                                                {__('Select Image', 'adaire-blocks')}
-                                                            </Button>
-                                                        )}
-                                                    </div>
-                                                )}
-                                            />
-                                        </MediaUploadCheck>
-                                    </BaseControl>
-
-                                    <TextControl
-                                        label={__('Title', 'adaire-blocks')}
-                                        value={study.title}
-                                        onChange={(value) => updateCaseStudy(index, 'title', value)}
-                                    />
-
-                                    <TextareaControl
-                                        label={__('Description', 'adaire-blocks')}
-                                        value={study.description}
-                                        onChange={(value) => updateCaseStudy(index, 'description', value)}
-                                        rows={3}
-                                    />
-
-                                    <TextControl
-                                        label={__('Link URL', 'adaire-blocks')}
-                                        value={study.linkUrl}
-                                        onChange={(value) => updateCaseStudy(index, 'linkUrl', value)}
-                                        placeholder="https://..."
-                                    />
-
-                                    <ToggleControl
-                                        label={__('Open in New Tab', 'adaire-blocks')}
-                                        checked={study.openInNewTab}
-                                        onChange={(value) => updateCaseStudy(index, 'openInNewTab', value)}
-                                    />
-
-                                    {/* Industry Selection */}
-                                    <BaseControl label={__('Industry', 'adaire-blocks')}>
-                                        {/* Current industry display */}
-                                        {study.industry && (
-                                            <div style={{ marginBottom: '10px' }}>
-                                                <span
-                                                    style={{
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        gap: '6px',
-                                                        padding: '6px 12px',
-                                                        backgroundColor: '#10b981',
-                                                        color: 'white',
-                                                        borderRadius: '16px',
-                                                        fontSize: '13px',
-                                                        fontWeight: '500'
-                                                    }}
-                                                >
-                                                    {study.industry}
-                                                    <button
-                                                        onClick={() => updateCaseStudy(index, 'industry', '')}
-                                                        style={{
-                                                            background: 'none',
-                                                            border: 'none',
-                                                            color: 'white',
-                                                            cursor: 'pointer',
-                                                            fontSize: '16px',
-                                                            padding: 0,
-                                                            lineHeight: 1
-                                                        }}
-                                                        title={__('Remove industry', 'adaire-blocks')}
-                                                    >
-                                                        Ã—
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        )}
-                                        
-                                        {/* Industry input */}
-                                        <TextControl
-                                            placeholder={__('Type industry name...', 'adaire-blocks')}
-                                            value={study.industry || ''}
-                                            onChange={(value) => updateCaseStudy(index, 'industry', value)}
-                                        />
-                                        
-                                        {/* Suggestions from other case studies */}
-                                        {getIndustrySuggestions(index).length > 0 && (
-                                            <div style={{ marginTop: '8px' }}>
-                                                <p style={{ fontSize: '11px', color: '#666', marginBottom: '6px', marginTop: 0 }}>
-                                                    {__('Use existing:', 'adaire-blocks')}
-                                                </p>
-                                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                                    {getIndustrySuggestions(index).map(ind => (
-                                                        <Button
-                                                            key={ind}
-                                                            variant="secondary"
-                                                            isSmall
-                                                            onClick={() => updateCaseStudy(index, 'industry', ind)}
-                                                        >
-                                                            {ind}
-                                                        </Button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </BaseControl>
-
-                                    {/* Capabilities */}
-                                    <BaseControl label={__('Capabilities', 'adaire-blocks')}>
-                                        {/* Current capabilities display */}
-                                        {(study.capabilities || []).length > 0 && (
-                                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                                                {(study.capabilities || []).map((cap, capIndex) => (
-                                                    <span
-                                                        key={capIndex}
-                                                        style={{
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            gap: '6px',
-                                                            padding: '6px 12px',
-                                                            backgroundColor: '#7c3aed',
-                                                            color: 'white',
-                                                            borderRadius: '16px',
-                                                            fontSize: '13px',
-                                                            fontWeight: '500'
-                                                        }}
-                                                    >
-                                                        {cap}
-                                                        <button
-                                                            onClick={() => removeCapability(index, cap)}
-                                                            style={{
-                                                                background: 'none',
-                                                                border: 'none',
-                                                                color: 'white',
-                                                                cursor: 'pointer',
-                                                                fontSize: '16px',
-                                                                padding: 0,
-                                                                lineHeight: 1
-                                                            }}
-                                                            title={__('Remove capability', 'adaire-blocks')}
-                                                        >
-                                                            Ã—
-                                                        </button>
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
-                                        
-                                        {/* Add new capability input */}
-                                        <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
-                                            <TextControl
-                                                placeholder={__('Type capability name...', 'adaire-blocks')}
-                                                value={getCapabilityInput(index)}
-                                                onChange={(value) => setCapabilityInput(index, value)}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        e.preventDefault();
-                                                        handleAddCapability(index);
-                                                    }
-                                                }}
-                                                style={{ flex: 1 }}
-                                            />
-                                            <Button
-                                                variant="secondary"
-                                                onClick={() => handleAddCapability(index)}
-                                                disabled={!getCapabilityInput(index)?.trim()}
-                                            >
-                                                {__('Add', 'adaire-blocks')}
-                                            </Button>
-                                        </div>
-                                        
-                                        {/* Suggestions from other case studies */}
-                                        {getCapabilitySuggestions(index).length > 0 && (
-                                            <div>
-                                                <p style={{ fontSize: '11px', color: '#666', marginBottom: '6px', marginTop: 0 }}>
-                                                    {__('Use existing:', 'adaire-blocks')}
-                                                </p>
-                                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                                    {getCapabilitySuggestions(index).map(cap => (
-                                                        <Button
-                                                            key={cap}
-                                                            variant="secondary"
-                                                            isSmall
-                                                            onClick={() => addCapability(index, cap)}
-                                                        >
-                                                            + {cap}
-                                                        </Button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </BaseControl>
-
-                                    <div style={{ display: 'flex', gap: '10px', marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #eee' }}>
-                                        <Button variant="secondary" onClick={() => duplicateCaseStudy(index)}>
-                                            {__('Duplicate', 'adaire-blocks')}
-                                        </Button>
-                                        <Button variant="secondary" isDestructive onClick={() => removeCaseStudy(index)}>
-                                            {__('Delete', 'adaire-blocks')}
-                                        </Button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    ))}
                 </PanelBody>
-            </InspectorControls>
+
+                {/* Popup left-side content — same for every card */}
+                <PanelBody section="content" title={__('Popup Content', 'adaire-blocks')} initialOpen={false}>
+                    <p style={{ fontSize: '12px', color: '#666', marginTop: 0 }}>
+                        {__('Clicking any case study card opens a popup. The description and image below appear on the left side of that popup for every card — the right side always shows the specific case study’s own Project Summary, details, and content.', 'adaire-blocks')}
+                    </p>
+                    <TextareaControl
+                        label={__('Popup Description', 'adaire-blocks')}
+                        value={popupDescription}
+                        onChange={(value) => setAttributes({ popupDescription: value })}
+                    />
+                    <BaseControl label={__('Popup Image', 'adaire-blocks')} style={{ marginTop: '8px' }}>
+                        <MediaUploadCheck>
+                            <MediaUpload
+                                onSelect={(media) => setAttributes({
+                                    popupImageId: media.id,
+                                    popupImageUrl: media.url,
+                                    popupImageAlt: media.alt || ''
+                                })}
+                                allowedTypes={['image']}
+                                value={popupImageId}
+                                render={({ open }) => (
+                                    <Button
+                                        onClick={open}
+                                        variant="secondary"
+                                        style={{ width: '100%', height: popupImageUrl ? '120px' : 'auto', padding: popupImageUrl ? 0 : undefined, overflow: 'hidden' }}
+                                    >
+                                        {popupImageUrl ? (
+                                            <img
+                                                src={popupImageUrl}
+                                                alt=""
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                            />
+                                        ) : (
+                                            __('Select Popup Image', 'adaire-blocks')
+                                        )}
+                                    </Button>
+                                )}
+                            />
+                        </MediaUploadCheck>
+                        {popupImageUrl && (
+                            <Button
+                                onClick={() => setAttributes({ popupImageId: 0, popupImageUrl: '', popupImageAlt: '' })}
+                                variant="link"
+                                isDestructive
+                                style={{ marginTop: '4px' }}
+                            >
+                                {__('Remove Image', 'adaire-blocks')}
+                            </Button>
+                        )}
+                    </BaseControl>
+                </PanelBody>
+            </InspectorTabs>
 
             <div {...blockProps}>
+                <QuickZone
+                    id="colors"
+                    label={__('Colors', 'adaire-blocks')}
+                    activeZone={activeZone}
+                    setActiveZone={setActiveZone}
+                    content={
+                        <>
+                            <p>{__('Card Background', 'adaire-blocks')}</p>
+                            <BoundColorPalette value={cardBackgroundColor} onChange={(value) => setAttributes({ cardBackgroundColor: value })} />
+                            <p>{__('Card Overlay', 'adaire-blocks')}</p>
+                            <BoundColorPalette value={overlayColor} onChange={(value) => setAttributes({ overlayColor: value })} />
+                            <p>{__('Title', 'adaire-blocks')}</p>
+                            <BoundColorPalette value={titleColor} onChange={(value) => setAttributes({ titleColor: value })} />
+                            <p>{__('Description', 'adaire-blocks')}</p>
+                            <BoundColorPalette value={descriptionColor} onChange={(value) => setAttributes({ descriptionColor: value })} />
+                        </>
+                    }
+                >
                 <div className={containerClasses}>
                     {/* Filter Section */}
                     {showFilters && (
@@ -1328,7 +1069,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                     {/* Case Studies Grid / Carousel */}
                     <div className={`ad-case-studies__grid${enableCarousel ? ' ad-case-studies__carousel' : ''}`}>
-                        {(enableCarousel ? caseStudies : caseStudies.slice(0, initialCount)).map((study, index) => (
+                        {(enableCarousel ? previewStudies : previewStudies.slice(0, initialCount)).map((study, index) => (
                             <div
                                 key={study.id}
                                 className="ad-case-studies__card"
@@ -1345,7 +1086,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 </div>
                                 {!study.backgroundImage && (
                                     <div className="ad-case-studies__card-placeholder">
-                                        <span>{__('Click to add image', 'adaire-blocks')}</span>
+                                        <span>{__('No card image', 'adaire-blocks')}</span>
                                     </div>
                                 )}
                             </div>
@@ -1353,7 +1094,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </div>
 
                     {/* Load More Button (hidden in carousel mode) */}
-                    {!enableCarousel && showLoadMore && caseStudies.length > initialCount && (
+                    {!enableCarousel && showLoadMore && previewStudies.length > initialCount && (
                         <div className="ad-case-studies__load-more-wrapper">
                             <button className="ad-case-studies__load-more-btn" disabled>
                                 {loadMoreText}
@@ -1362,11 +1103,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     )}
 
                     {/* Helper text */}
-                    {caseStudies.length === 0 && (
+                    {previewStudies.length === 0 && (
                         <div className="ad-case-studies__empty">
-                            <p>{__('No case studies yet. Add one from the sidebar.', 'adaire-blocks')}</p>
-                            <Button variant="primary" onClick={addCaseStudy}>
-                                {__('+ Add Case Study', 'adaire-blocks')}
+                            <p>{__('No published case studies yet.', 'adaire-blocks')}</p>
+                            <Button variant="primary" href={getCaseStudiesAdminUrl()} target="_blank" rel="noopener noreferrer">
+                                {__('Add a Case Study', 'adaire-blocks')}
                             </Button>
                         </div>
                     )}
@@ -1378,6 +1119,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         <span>{dragCursorText}</span>
                     </div>
                 )}
+                </QuickZone>
             </div>
         </>
     );

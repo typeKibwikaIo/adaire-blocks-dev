@@ -18,10 +18,11 @@
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"plugin-zip:free": "node scripts/zip-generated-folder.js free",
-		"plugin-zip:pro": "node scripts/zip-generated-folder.js pro",
+		"plugin-zip:pro": "node scripts/zip-full-plugin.js",
 		"start": "wp-scripts start --blocks-manifest",
 		"generate:free": "npm run build:free",
-		"deploy:free": "npm run build:free && npm run plugin-zip:free"
+		"deploy:free": "npm run build:free && npm run plugin-zip:free",
+		"deploy:pro": "npm run build && npm run plugin-zip:pro"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^30.27.0",

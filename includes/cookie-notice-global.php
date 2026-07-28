@@ -118,10 +118,17 @@ if ( ! function_exists( 'adaire_cookie_notice_get_global_instance' ) ) {
 			return $stored;
 		}
 
+		// Direct query, no caching wrapper: this is the one-time backfill scan
+		// described in the file header — it only runs when the
+		// ADAIRE_COOKIE_NOTICE_OPTION cache (checked just above) has no
+		// 'serialized' value yet, and its result is written straight into
+		// that option below, so it effectively runs at most once per site.
+		// There's also no WP_Query equivalent for "post_content LIKE this
+		// serialized block string", which is why this drops to $wpdb.
 		global $wpdb;
-		$post_id = $wpdb->get_var(
+		$post_id = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				"SELECT ID FROM {$wpdb->posts} WHERE post_status IN ('publish','private') AND post_content LIKE %s LIMIT 1",
+				"SELECT ID FROM {$wpdb->posts} WHERE post_status IN ('publish','private') AND post_content LIKE %s LIMIT 1", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared -- table name is $wpdb->posts, safe; schema-change sniff false-positives on the LIKE '%...%' wildcard syntax here, this is a plain SELECT.
 				'%' . $wpdb->esc_like( 'wp:create-block/cookie-notice-block' ) . '%'
 			)
 		);
