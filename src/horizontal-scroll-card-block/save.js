@@ -26,7 +26,7 @@ const buildCardVars = ( rcp, riw ) => ( {
 	'--hsc-card-pl-big-desktop':  rcp?.bigDesktop?.left   || '60px',
 	// â”€â”€ Image column width â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 	'--hsc-img-w-mobile':         riw?.mobile             || '100%',
-	'--hsc-img-w-tablet':         riw?.tablet             || '50%',
+	'--hsc-img-w-tablet':         riw?.tablet             || '45%',
 	'--hsc-img-w-small-laptop':   riw?.smallLaptop        || '45%',
 	'--hsc-img-w-desktop':        riw?.desktop            || '45%',
 	'--hsc-img-w-big-desktop':    riw?.bigDesktop         || '45%',
@@ -43,7 +43,12 @@ const buildBoxShadow = ( type, blur, spread, color, opacity ) => {
 	return `${ prefix }0 4px ${ blur }px ${ spread }px ${ hexToRgba( color, opacity ) }`;
 };
 
-// â”€â”€â”€ Save â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Deepened variant shown on hover — same shadow, just bigger/darker.
+const buildHoverBoxShadow = ( type, blur, spread, color, opacity ) => {
+	return buildBoxShadow( type, blur + 16, spread + 2, color, Math.min( 1, opacity + 0.15 ) );
+};
+
+// â”€â”€â”€ Save â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function save( { attributes } ) {
 	const {
@@ -83,18 +88,26 @@ export default function save( { attributes } ) {
 		shadowColor,
 		shadowOpacity
 	);
+	const boxShadowHover = buildHoverBoxShadow(
+		shadowType,
+		shadowBlur,
+		shadowSpread,
+		shadowColor,
+		shadowOpacity
+	);
 
 	const border = borderEnabled
 		? `${ borderWidth }px ${ borderStyle } ${ borderColor }`
-		: undefined;
+		: 'none';
 
 	const blockProps = useBlockProps.save( {
 		className: 'adaire-hsc__card',
 		style: {
 			backgroundColor,
 			borderRadius: `${ borderRadius }px`,
-			boxShadow,
-			...( border ? { border } : {} ),
+			'--hsc-card-shadow': boxShadow,
+			'--hsc-card-shadow-hover': boxShadowHover,
+			border,
 			...buildCardVars( responsiveCardPadding, responsiveImageWidth ),
 		},
 	} );

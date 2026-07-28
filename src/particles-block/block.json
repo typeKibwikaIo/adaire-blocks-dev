@@ -9,7 +9,11 @@
     "example": {},
     "supports": {
         "html": false,
-        "anchor": true
+        "anchor": true,
+        "customClassName": true,
+        "align": [
+            "full"
+        ]
     },
     "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",
@@ -17,9 +21,13 @@
     "style": "file:./style-index.css",
     "viewScript": "file:./view.js",
     "attributes": {
-        "sectionHeight": {
+        "align": {
+            "type": "string",
+            "default": "full"
+        },
+        "entryScrollHeight": {
             "type": "number",
-            "default": 950
+            "default": 150
         },
         "backgroundColor": {
             "type": "string",
@@ -29,230 +37,136 @@
             "type": "string",
             "default": "#ffffff"
         },
-        "textContent": {
+        "sectionIntroTitle": {
+            "type": "string",
+            "default": "Meet the Team"
+        },
+        "sectionIntroDescription": {
+            "type": "string",
+            "default": "We’re a passionate team of creatives and technologists dedicated to crafting meaningful digital experiences that drive results."
+        },
+        "entries": {
             "type": "array",
             "default": [
                 {
                     "id": 1,
-                    "title": "Meet the Team",
-                    "description": "We’re a passionate team of creatives and technologists dedicated to crafting meaningful digital experiences that drive results.",
-                    "appearAtPercent": 0,
-                    "disappearAtPercent": 20
-                },
-                {
-                    "id": 1,
                     "title": "Luthando",
                     "description": "Web Dev Lead",
-                    "appearAtPercent": 20,
-                    "disappearAtPercent": 35
+                    "backgroundImage": {
+                        "url": "",
+                        "desktopSize": 160,
+                        "tabletSize": 120,
+                        "mobileSize": 80,
+                        "speed": 0.3,
+                        "animationEnabled": true
+                    },
+                    "foregroundImage": {
+                        "url": "",
+                        "desktopSize": 420,
+                        "tabletSize": 300,
+                        "mobileSize": 180,
+                        "speed": 0
+                    }
                 },
                 {
                     "id": 2,
                     "title": "Reinhold",
                     "description": "Project Manager",
-                    "appearAtPercent": 35,
-                    "disappearAtPercent": 50
+                    "backgroundImage": {
+                        "url": "",
+                        "desktopSize": 185,
+                        "tabletSize": 130,
+                        "mobileSize": 80,
+                        "speed": 2,
+                        "animationEnabled": true
+                    },
+                    "foregroundImage": {
+                        "url": "",
+                        "desktopSize": 420,
+                        "tabletSize": 300,
+                        "mobileSize": 180,
+                        "speed": 0
+                    }
                 },
                 {
                     "id": 3,
                     "title": "Daryn",
                     "description": "Project Manager",
-                    "appearAtPercent": 50,
-                    "disappearAtPercent": 65
+                    "backgroundImage": {
+                        "url": "",
+                        "desktopSize": 175,
+                        "tabletSize": 125,
+                        "mobileSize": 80,
+                        "speed": 1.5,
+                        "animationEnabled": true
+                    },
+                    "foregroundImage": {
+                        "url": "",
+                        "desktopSize": 420,
+                        "tabletSize": 300,
+                        "mobileSize": 180,
+                        "speed": 0
+                    }
                 },
                 {
                     "id": 4,
                     "title": "Hilya",
                     "description": "Web Developer (WordPress, Bubble)",
-                    "appearAtPercent": 65,
-                    "disappearAtPercent": 75
+                    "backgroundImage": {
+                        "url": "",
+                        "desktopSize": 145,
+                        "tabletSize": 110,
+                        "mobileSize": 80,
+                        "speed": 2,
+                        "animationEnabled": true
+                    },
+                    "foregroundImage": {
+                        "url": "",
+                        "desktopSize": 420,
+                        "tabletSize": 300,
+                        "mobileSize": 180,
+                        "speed": 0
+                    }
                 },
                 {
                     "id": 5,
                     "title": "Patrick",
                     "description": "Web Developer (WordPress, Bubble)",
-                    "appearAtPercent": 75,
-                    "disappearAtPercent": 85
+                    "backgroundImage": {
+                        "url": "",
+                        "desktopSize": 150,
+                        "tabletSize": 125,
+                        "mobileSize": 100,
+                        "speed": 1.5,
+                        "animationEnabled": true
+                    },
+                    "foregroundImage": {
+                        "url": "",
+                        "desktopSize": 420,
+                        "tabletSize": 300,
+                        "mobileSize": 180,
+                        "speed": 0
+                    }
                 },
                 {
                     "id": 6,
                     "title": "Douglas",
                     "description": "Web Developer (WordPress, Custom)",
-                    "appearAtPercent": 85,
-                    "disappearAtPercent": 92
-                },
-                {
-                    "id": 7,
-                    "title": "Marvel",
-                    "description": "QA Tester",
-                    "appearAtPercent": 92,
-                    "disappearAtPercent": 100
-                },
-                {
-                    "id": 8,
-                    "title": "Gideon",
-                    "description": "Designer",
-                    "appearAtPercent": 100,
-                    "disappearAtPercent": 110
-                }
-            ]
-        },
-        "particles": {
-            "type": "array",
-            "default": [
-                {
-                    "id": 1,
-                    "imageUrl": "",
-                    "x": 20,
-                    "y": 2,
-                    "size": 200,
-                    "mobileSize": 100,
-                    "speed": 2,
-                    "animationEnabled": true,
-                    "type": "normal"
-                },
-                {
-                    "id": 2,
-                    "imageUrl": "",
-                    "x": 86,
-                    "y": 3,
-                    "size": 160,
-                    "mobileSize": 80,
-                    "speed": 0.3,
-                    "animationEnabled": true,
-                    "type": "normal"
-                },
-                {
-                    "id": 3,
-                    "imageUrl": "",
-                    "x": 76,
-                    "y": 8,
-                    "size": 185,
-                    "mobileSize": 80,
-                    "speed": 2,
-                    "animationEnabled": true,
-                    "type": "normal"
-                },
-                {
-                    "id": 4,
-                    "imageUrl": "",
-                    "x": 14,
-                    "y": 6,
-                    "size": 175,
-                    "mobileSize": 80,
-                    "speed": 1.5,
-                    "animationEnabled": true,
-                    "type": "normal"
-                },
-                {
-                    "id": 5,
-                    "imageUrl": "",
-                    "x": 61,
-                    "y": 2,
-                    "size": 145,
-                    "mobileSize": 80,
-                    "speed": 2,
-                    "animationEnabled": true,
-                    "type": "normal"
-                },
-                {
-                    "id": 6,
-                    "imageUrl": "",
-                    "x": 49,
-                    "y": 6,
-                    "size": 150,
-                    "mobileSize": 100,
-                    "speed": 1.5,
-                    "animationEnabled": true,
-                    "type": "normal"
-                },
-                {
-                    "id": 7,
-                    "imageUrl": "",
-                    "x": 38,
-                    "y": 10,
-                    "size": 160,
-                    "mobileSize": 100,
-                    "speed": 2,
-                    "animationEnabled": true,
-                    "type": "normal"
-                },
-                {
-                    "id": 8,
-                    "imageUrl": "",
-                    "x": 70,
-                    "y": 17,
-                    "size": 420,
-                    "mobileSize": 180,
-                    "speed": 0,
-                    "animationEnabled": false,
-                    "type": "dynamic"
-                },
-                {
-                    "id": 9,
-                    "imageUrl": "",
-                    "x": 70,
-                    "y": 28,
-                    "size": 420,
-                    "mobileSize": 180,
-                    "speed": 0,
-                    "animationEnabled": false,
-                    "type": "dynamic"
-                },
-                {
-                    "id": 10,
-                    "imageUrl": "",
-                    "x": 70,
-                    "y": 39,
-                    "size": 420,
-                    "mobileSize": 180,
-                    "speed": 0,
-                    "animationEnabled": false,
-                    "type": "dynamic"
-                },
-                {
-                    "id": 11,
-                    "imageUrl": "",
-                    "x": 70,
-                    "y": 50,
-                    "size": 420,
-                    "mobileSize": 180,
-                    "speed": 0,
-                    "animationEnabled": false,
-                    "type": "dynamic"
-                },
-                {
-                    "id": 12,
-                    "imageUrl": "",
-                    "x": 70,
-                    "y": 61,
-                    "size": 420,
-                    "mobileSize": 180,
-                    "speed": 0,
-                    "animationEnabled": false,
-                    "type": "dynamic"
-                },
-                {
-                    "id": 13,
-                    "imageUrl": "",
-                    "x": 70,
-                    "y": 83,
-                    "size": 420,
-                    "mobileSize": 180,
-                    "speed": 0,
-                    "animationEnabled": false,
-                    "type": "dynamic"
-                },
-                {
-                    "id": 14,
-                    "imageUrl": "",
-                    "x": 70,
-                    "y": 94,
-                    "size": 420,
-                    "mobileSize": 180,
-                    "speed": 0,
-                    "animationEnabled": false,
-                    "type": "dynamic"
+                    "backgroundImage": {
+                        "url": "",
+                        "desktopSize": 160,
+                        "tabletSize": 130,
+                        "mobileSize": 100,
+                        "speed": 2,
+                        "animationEnabled": true
+                    },
+                    "foregroundImage": {
+                        "url": "",
+                        "desktopSize": 420,
+                        "tabletSize": 300,
+                        "mobileSize": 180,
+                        "speed": 0
+                    }
                 }
             ]
         },
@@ -274,6 +188,10 @@
                 "custom"
             ]
         },
+        "titleFontFamilyCustom": {
+            "type": "string",
+            "default": ""
+        },
         "textFontSize": {
             "type": "number",
             "default": 22
@@ -291,6 +209,10 @@
                 "system-ui",
                 "custom"
             ]
+        },
+        "textFontFamilyCustom": {
+            "type": "string",
+            "default": ""
         },
         "titleFontWeight": {
             "type": "string",
@@ -357,7 +279,19 @@
         },
         "textAnimationDuration": {
             "type": "number",
-            "default": 0.35
+            "default": 0.6
+        },
+        "shapesEnabled": {
+            "type": "boolean",
+            "default": true
+        },
+        "shapeCount": {
+            "type": "number",
+            "default": 3
+        },
+        "shapeColor": {
+            "type": "string",
+            "default": "#ffffff"
         },
         "blockId": {
             "type": "string",

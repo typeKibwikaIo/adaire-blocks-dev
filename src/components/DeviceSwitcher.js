@@ -22,6 +22,34 @@ export const THREE_TIERS = [
 	{ key: "mobile", label: "Mobile", icon: mobile },
 ];
 
+const SmallLaptopIcon = (
+	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path d="M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V15C20 16.1046 19.1046 17 18 17H6C4.89543 17 4 16.1046 4 15V6Z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+		<path d="M2 19H22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+	</svg>
+);
+
+const BigDesktopIcon = (
+	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<rect x="3" y="4" width="18" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+		<path d="M8 20H16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+		<rect x="10" y="20" width="4" height="2" rx="0.5" fill="currentColor" />
+	</svg>
+);
+
+// 5-tier set (adds smallLaptop/bigDesktop) for blocks whose stored attribute
+// shape is already keyed by all five breakpoints (horizontal-scroll-carousel-block,
+// horizontal-scroll-card-block). Tier COUNT here mirrors those blocks' existing
+// data shape as-is — collapsing to 3-tier would be a data migration and is
+// deliberately out of scope; this only standardizes the switcher UI/component.
+export const FIVE_TIERS = [
+	{ key: "mobile", label: "Mobile", icon: mobile },
+	{ key: "tablet", label: "Tablet", icon: tablet },
+	{ key: "smallLaptop", label: "Small Laptop", icon: SmallLaptopIcon },
+	{ key: "desktop", label: "Desktop", icon: desktop },
+	{ key: "bigDesktop", label: "Big Desktop", icon: BigDesktopIcon },
+];
+
 /**
  * DeviceSwitcher Component
  * The one shared responsive device switcher used across every AdaireBlocks block.

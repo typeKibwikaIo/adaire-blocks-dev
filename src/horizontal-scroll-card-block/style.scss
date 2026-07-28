@@ -2,6 +2,26 @@
 // Card inner padding is handled by the parent block's style.scss via CSS variables.
 
 .adaire-hsc__card {
+	// Base shadow — set as a CSS var (not inline box-shadow directly) so the
+	// hover state below can swap it via a stylesheet rule; inline styles
+	// would otherwise always beat a plain :hover rule regardless of specificity.
+	box-shadow: var(--hsc-card-shadow);
+
+	@media (prefers-reduced-motion: no-preference) {
+		transition: box-shadow 0.25s ease-out, transform 0.25s ease-out;
+
+		&:hover {
+			box-shadow: var(--hsc-card-shadow-hover);
+			// !important: the parent carousel's entrance animation
+			// (view.js) leaves its own inline `transform` on each card
+			// after settling, which otherwise always beats a plain
+			// :hover rule regardless of specificity — same class of
+			// conflict as the inline box-shadow above, just written by
+			// GSAP at runtime instead of by this block's own save/edit.
+			transform: translateY(-6px) !important;
+		}
+	}
+
 	// CTA inner block wrappers
 	.adaire-hsc__card-cta {
 		.wp-block-create-block-button-block,

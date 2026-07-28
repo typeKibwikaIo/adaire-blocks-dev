@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import {
 	useBlockProps,
-	InspectorControls,
 	PanelColorSettings,
 	RichText,
 	MediaUpload,
@@ -19,36 +18,14 @@ import {
 	__experimentalBoxControl  as BoxControl,
 	__experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
-import { useState, useCallback, useRef, useEffect, createElement } from '@wordpress/element';
-import { desktop, tablet, mobile } from '@wordpress/icons';
+import { useState } from '@wordpress/element';
 import AdaireColorControl from '../components/AdaireColorControl';
+import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher, { FIVE_TIERS } from '../components/DeviceSwitcher';
+import useResponsiveAttribute from '../components/useResponsiveAttribute';
+import { FONT_WEIGHTS } from '../components/FontWeights';
 
-// â”€â”€â”€ Breakpoints (project standard â€” matches BREAKPOINTS.md) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-const smallLaptopIcon = createElement(
-	'svg',
-	{ width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
-	createElement( 'path', { d: 'M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V15C20 16.1046 19.1046 17 18 17H6C4.89543 17 4 16.1046 4 15V6Z', stroke: 'currentColor', strokeWidth: '1.5', fill: 'none' } ),
-	createElement( 'path', { d: 'M2 19H22', stroke: 'currentColor', strokeWidth: '1.5', strokeLinecap: 'round' } )
-);
-
-const bigDesktopIcon = createElement(
-	'svg',
-	{ width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
-	createElement( 'rect', { x: '3', y: '4', width: '18', height: '12', rx: '1', stroke: 'currentColor', strokeWidth: '1.5', fill: 'none' } ),
-	createElement( 'path', { d: 'M8 20H16', stroke: 'currentColor', strokeWidth: '1.5', strokeLinecap: 'round' } ),
-	createElement( 'rect', { x: '10', y: '20', width: '4', height: '2', rx: '0.5', fill: 'currentColor' } )
-);
-
-const BREAKPOINTS = [
-	{ name: 'mobile',      icon: mobile,          label: __( 'Mobile',       'adaire-blocks' ) },
-	{ name: 'tablet',      icon: tablet,          label: __( 'Tablet',       'adaire-blocks' ) },
-	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __( 'Small Laptop', 'adaire-blocks' ) },
-	{ name: 'desktop',     icon: desktop,         label: __( 'Desktop',      'adaire-blocks' ) },
-	{ name: 'bigDesktop',  icon: bigDesktopIcon,  label: __( 'Big Desktop',  'adaire-blocks' ) },
-];
-
-// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const hexToRgba = ( hex, opacity ) => {
 	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec( hex );
@@ -59,6 +36,11 @@ const hexToRgba = ( hex, opacity ) => {
 const buildBoxShadow = ( type, blur, spread, color, opacity ) => {
 	const prefix = type === 'inset' ? 'inset ' : '';
 	return `${ prefix }0 4px ${ blur }px ${ spread }px ${ hexToRgba( color, opacity ) }`;
+};
+
+// Deepened variant shown on hover — same shadow, just bigger/darker.
+const buildHoverBoxShadow = ( type, blur, spread, color, opacity ) => {
+	return buildBoxShadow( type, blur + 16, spread + 2, color, Math.min( 1, opacity + 0.15 ) );
 };
 
 const buildCardVars = ( rcp, riw ) => ( {
@@ -85,23 +67,11 @@ const buildCardVars = ( rcp, riw ) => ( {
 	'--hsc-card-pl-big-desktop':  rcp?.bigDesktop?.left   || '60px',
 	// â”€â”€ Image column width â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 	'--hsc-img-w-mobile':         riw?.mobile             || '100%',
-	'--hsc-img-w-tablet':         riw?.tablet             || '50%',
+	'--hsc-img-w-tablet':         riw?.tablet             || '45%',
 	'--hsc-img-w-small-laptop':   riw?.smallLaptop        || '45%',
 	'--hsc-img-w-desktop':        riw?.desktop            || '45%',
 	'--hsc-img-w-big-desktop':    riw?.bigDesktop         || '45%',
 } );
-
-const FONT_WEIGHTS = [
-	{ label: __( '100 â€” Thin',        'adaire-blocks' ), value: '100' },
-	{ label: __( '200 â€” Extra Light', 'adaire-blocks' ), value: '200' },
-	{ label: __( '300 â€” Light',       'adaire-blocks' ), value: '300' },
-	{ label: __( '400 â€” Regular',     'adaire-blocks' ), value: '400' },
-	{ label: __( '500 â€” Medium',      'adaire-blocks' ), value: '500' },
-	{ label: __( '600 â€” Semi Bold',   'adaire-blocks' ), value: '600' },
-	{ label: __( '700 â€” Bold',        'adaire-blocks' ), value: '700' },
-	{ label: __( '800 â€” Extra Bold',  'adaire-blocks' ), value: '800' },
-	{ label: __( '900 â€” Black',       'adaire-blocks' ), value: '900' },
-];
 
 // â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -139,19 +109,10 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const [ deviceType, setDeviceType ] = useState( 'desktop' );
 
-	const attributesRef = useRef( attributes );
-	useEffect( () => { attributesRef.current = attributes; }, [ attributes ] );
-
-	const updateResponsive = useCallback( ( attr, bp, value ) => {
-		setAttributes( {
-			[ attr ]: {
-				...( attributesRef.current[ attr ] || {} ),
-				[ bp ]: value,
-			},
-		} );
-	}, [ setAttributes ] );
+	const updateResponsive = useResponsiveAttribute( attributes, setAttributes );
 
 	const boxShadow = buildBoxShadow( shadowType, shadowBlur, shadowSpread, shadowColor, shadowOpacity );
+	const boxShadowHover = buildHoverBoxShadow( shadowType, shadowBlur, shadowSpread, shadowColor, shadowOpacity );
 	const border    = borderEnabled ? `${ borderWidth }px ${ borderStyle } ${ borderColor }` : 'none';
 
 	const blockProps = useBlockProps( {
@@ -159,7 +120,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		style: {
 			backgroundColor,
 			borderRadius: `${ borderRadius }px`,
-			boxShadow,
+			'--hsc-card-shadow': boxShadow,
+			'--hsc-card-shadow-hover': boxShadowHover,
 			border,
 			...buildCardVars( responsiveCardPadding, responsiveImageWidth ),
 		},
@@ -178,36 +140,13 @@ export default function Edit( { attributes, setAttributes } ) {
 		}
 	);
 
-	const activeLabel = BREAKPOINTS.find( ( b ) => b.name === deviceType )?.label;
+	const activeLabel = FIVE_TIERS.find( ( t ) => t.key === deviceType )?.label;
 
 	return (
 		<>
-			<InspectorControls>
-				{ /* â”€â”€ Device toggle â”€â”€ */ }
-				<div className="adaire-device-toggle">
-					<p className="adaire-device-toggle-label">
-						{ __( 'Device View', 'adaire-blocks' ) }
-					</p>
-					<div className="adaire-device-toggle-group">
-						{ BREAKPOINTS.map( ( bp ) => (
-							<Button
-								key={ bp.name }
-								isPrimary={ deviceType === bp.name }
-								onClick={ () => setDeviceType( bp.name ) }
-								icon={ bp.icon }
-							>
-								<span>{ bp.label }</span>
-							</Button>
-						) ) }
-					</div>
-					<p className="adaire-device-toggle-status">
-						{ __( 'Configuring:', 'adaire-blocks' ) }{ ' ' }
-						<strong>{ activeLabel }</strong>
-					</p>
-				</div>
-
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				{ /* â”€â”€ Card Content â”€â”€ */ }
-				<PanelBody title={ __( 'Card Content', 'adaire-blocks' ) } initialOpen={ true }>
+				<PanelBody section="content" title={ __( 'Card Content', 'adaire-blocks' ) } initialOpen={ true }>
 					<TextControl
 						label={ __( 'Title', 'adaire-blocks' ) }
 						value={ cardTitle }
@@ -225,7 +164,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 				{ /* â”€â”€ Typography â”€â”€ */ }
-				<PanelBody title={ __( 'Typography', 'adaire-blocks' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="high" title={ __( 'Typography', 'adaire-blocks' ) } initialOpen={ false }>
 					<p style={ { margin: '0 0 8px', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', color: '#1e1e1e' } }>
 						{ __( 'Card Title', 'adaire-blocks' ) }
 					</p>
@@ -259,7 +198,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 			{ /* â”€â”€ Card Style â”€â”€ */ }
-				<PanelBody title={ __( 'Card Style', 'adaire-blocks' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="medium" title={ __( 'Card Style', 'adaire-blocks' ) } initialOpen={ false }>
 					<RangeControl
 						label={ __( 'Border Radius (px)', 'adaire-blocks' ) }
 						value={ borderRadius }
@@ -267,13 +206,23 @@ export default function Edit( { attributes, setAttributes } ) {
 						min={ 0 }
 						max={ 64 }
 					/>
+					<DeviceSwitcher
+						deviceType={ deviceType }
+						setDeviceType={ setDeviceType }
+						tiers={ FIVE_TIERS }
+						label={ __( 'Configuring', 'adaire-blocks' ) }
+					/>
 					<BoxControl
 						label={ `${ __( 'Card Padding', 'adaire-blocks' ) } (${ activeLabel })` }
 						values={ responsiveCardPadding?.[ deviceType ] || {} }
 						onChange={ ( val ) => updateResponsive( 'responsiveCardPadding', deviceType, val ) }
 					/>
+				</PanelBody>
+
+				{ /* â”€â”€ Left Column Layout â”€â”€ */ }
+				<PanelBody section="layout" title={ __( 'Left Column Layout', 'adaire-blocks' ) } initialOpen={ false }>
 					<SelectControl
-						label={ __( 'Left Column Layout', 'adaire-blocks' ) }
+						label={ __( 'Layout Direction', 'adaire-blocks' ) }
 						value={ cardLeftJustify }
 						options={ [
 							{ label: __( 'Space Between â€” content top, button bottom', 'adaire-blocks' ), value: 'space-between' },
@@ -292,7 +241,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 				{ /* â”€â”€ Row & Image Layout â”€â”€ */ }
-				<PanelBody title={ __( 'Row & Image Layout', 'adaire-blocks' ) } initialOpen={ false }>
+				<PanelBody section="layout" title={ __( 'Row & Image Layout', 'adaire-blocks' ) } initialOpen={ false }>
 					<SelectControl
 						label={ __( 'Row Alignment', 'adaire-blocks' ) }
 						value={ cardInnerJustify }
@@ -314,9 +263,12 @@ export default function Edit( { attributes, setAttributes } ) {
 					<p style={ { margin: '16px 0 8px', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', color: '#1e1e1e' } }>
 						{ __( 'Image Width', 'adaire-blocks' ) }
 					</p>
-					<p style={ { margin: '0 0 8px', fontSize: '11px', color: '#757575' } }>
-						{ __( `Configuring: ${ BREAKPOINTS.find( b => b.name === deviceType )?.label }`, 'adaire-blocks' ) }
-					</p>
+					<DeviceSwitcher
+						deviceType={ deviceType }
+						setDeviceType={ setDeviceType }
+						tiers={ FIVE_TIERS }
+						label={ __( 'Configuring', 'adaire-blocks' ) }
+					/>
 					<UnitControl
 						label={ __( 'Image Column Width', 'adaire-blocks' ) }
 						value={ responsiveImageWidth?.[ deviceType ] || '45%' }
@@ -326,7 +278,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 			{ /* â”€â”€ Shadow â”€â”€ */ }
-				<PanelBody title={ __( 'Shadow', 'adaire-blocks' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="medium" title={ __( 'Shadow', 'adaire-blocks' ) } initialOpen={ false }>
 					<SelectControl
 						label={ __( 'Shadow Type', 'adaire-blocks' ) }
 						value={ shadowType }
@@ -362,7 +314,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 				{ /* â”€â”€ Border â”€â”€ */ }
-				<PanelBody title={ __( 'Border', 'adaire-blocks' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="medium" title={ __( 'Border', 'adaire-blocks' ) } initialOpen={ false }>
 					<ToggleControl
 						label={ __( 'Enable Border', 'adaire-blocks' ) }
 						checked={ borderEnabled }
@@ -398,7 +350,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 				{ /* â”€â”€ Right Image â”€â”€ */ }
-				<PanelBody title={ __( 'Right Image', 'adaire-blocks' ) } initialOpen={ false }>
+				<PanelBody section="style" priority="medium" title={ __( 'Right Image', 'adaire-blocks' ) } initialOpen={ false }>
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( media ) => setAttributes( { imageId: media.id, imageUrl: media.url, imageAlt: media.alt || '' } ) }
@@ -429,6 +381,8 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				{ /* â”€â”€ Colors â”€â”€ */ }
 				<PanelColorSettings
+					section="style"
+					priority="high"
 					title={ __( 'Colors', 'adaire-blocks' ) }
 					initialOpen={ false }
 					colorSettings={ [
@@ -437,7 +391,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						{ value: textColor,        onChange: ( val ) => setAttributes( { textColor: val || '#555555' } ),        label: __( 'Body Text',       'adaire-blocks' ) },
 					] }
 				/>
-			</InspectorControls>
+			</InspectorTabs>
 
 			{ /* â”€â”€ Card canvas â”€â”€ */ }
 			<div { ...blockProps }>

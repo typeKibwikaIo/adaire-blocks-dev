@@ -56,7 +56,7 @@ const initHorizontalScrollCarousel = () => {
 		// onRefreshInit fires BEFORE ScrollTrigger re-measures distances, so
 		// the track is always at x:0 when scrollWidth is read â€” critical for
 		// images that load after the first measurement.
-		const tween = gsap.to( track, {
+		gsap.to( track, {
 			x: () => -getScrollDistance(),
 			ease: 'none',
 			scrollTrigger: {
@@ -114,10 +114,6 @@ const initHorizontalScrollCarousel = () => {
 				}
 			);
 		} );
-
-		return () => {
-			tween.scrollTrigger?.kill();
-		};
 	} );
 };
 

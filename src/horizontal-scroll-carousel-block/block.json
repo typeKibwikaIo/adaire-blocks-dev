@@ -16,10 +16,6 @@
         ]
     },
     "attributes": {
-        "blockId": {
-            "type": "string",
-            "default": ""
-        },
         "sectionBackground": {
             "type": "string",
             "default": "#f8f8f8"

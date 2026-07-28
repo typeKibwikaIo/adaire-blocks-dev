@@ -1,31 +1,79 @@
+// Decorative ambient shapes — continuous, scroll-independent drift. The
+// centering offset (translate(-50%,-50%)) is baked into every keyframe step
+// rather than left as a separate base transform, since a CSS animation
+// replaces the whole `transform` property for its duration — a base
+// transform alone would be wiped out the moment the animation starts.
+//
+// Deliberate exception to this plugin's usual "no bouncy/elastic easing"
+// rule: that convention is about interactive hover/reveal moments staying
+// snappy-but-controlled. This is a purely ambient, non-interactive effect
+// where a touch of overshoot is the intended feel. The bounce comes from
+// the extra keyframe stop (40%/55%) rather than from the timing function,
+// so it stays a single small, precisely-placed wobble at the top of the
+// float rather than a broad springiness across the whole motion.
+@keyframes ad-particles-shape-float {
+  0% {
+    transform: translate(-50%, -50%) translateY(0) rotate(0deg);
+  }
+  40% {
+    // Rises slightly past the eventual settle point...
+    transform: translate(-50%, -50%) translateY(-21px) rotate(11deg);
+  }
+  55% {
+    // ...then relaxes back a little — the "bounce" — before drifting down.
+    transform: translate(-50%, -50%) translateY(-16px) rotate(8deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(0) rotate(0deg);
+  }
+}
+
 .ad-particles-block {
   position: relative;
   overflow: hidden;
-  
-  .ad-particles-block__particles-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    
-    .ad-particles-block__particle {
-      position: absolute;
-      transition: transform 0.3s ease;
-      
-      &:hover {
-        transform: scale(1.1);
+
+  .ad-particles-block__shape {
+    transform: translate(-50%, -50%);
+    opacity: 0.18;
+    border-radius: 4px;
+    background: none;
+    border: 2px solid transparent; // color set inline per-shape (circle/square only)
+    box-sizing: border-box;
+
+    @media (prefers-reduced-motion: no-preference) {
+      // Duration/delay are overridden per-shape via inline style (see
+      // save.js/edit.js) so shapes don't move in lockstep; this shorthand
+      // just supplies the name/easing/infinite-loop every shape shares.
+      animation: ad-particles-shape-float 24s ease-in-out infinite;
+    }
+
+    &--circle {
+      border-radius: 50%;
+    }
+
+    &--triangle {
+      // No box border here — a border follows the box's own rectangular
+      // edges, not a clip-path silhouette, so it can't produce a clean
+      // triangle outline. The outline is instead drawn by an inner SVG
+      // <polygon> with fill:none + stroke, rendered as this element's
+      // child (see save.js/edit.js) — a genuine stroked outline that
+      // works correctly over any background, not a clipped fill.
+      border: none;
+      border-radius: 0;
+
+      svg {
+        display: block;
+        overflow: visible;
       }
     }
   }
 
-  // Dynamic particles styling
-  .ad-particles-block__dynamic-particle {
-    z-index: 6 !important;
-    position: absolute !important;
-    
-    .ad-particles-block__dynamic-particle-overlay {
+  // Foreground (scroll-reveal) image styling — a flex child of its
+  // entry-pair, not independently positioned.
+  .ad-particles-block__foreground-image {
+    position: relative;
+
+    .ad-particles-block__foreground-image-overlay {
       position: absolute;
       top: 0;
       left: 0;
@@ -50,52 +98,107 @@
     z-index: 5;
   }
 
-  .ad-particles-block__text-content-wrapper {
+  // Intro zone — bounds the intro text + background collage to a single
+  // viewport height. overflow:hidden confines both the collage's resting
+  // position and its parallax drift here, so it never bleeds into the
+  // entries below regardless of entry count/scroll height.
+  .ad-particles-block__intro-zone {
     position: relative;
-    z-index: 100;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  // Section intro — renders once, in normal flow, ahead of the entries.
+  .ad-particles-block__section-intro {
+    max-width: 600px;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 10vh;
+    text-align: left;
+
+    h2 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      line-height: 1.6;
+    }
+  }
+
+  // Entry slice — one per entry, in normal document flow, given a fixed
+  // scroll distance (inline min-height). Centers its entry-pair within
+  // that space; nothing inside is individually positioned.
+  .ad-particles-block__entry-slice {
+    position: relative;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
-    
-    .ad-particles-block__text-content-overlay {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1000;
+    // Contains this slice's own decorative shapes so their drift can never
+    // bleed into an adjacent sibling slice — same principle as the intro
+    // zone's own overflow:hidden containment.
+    overflow: hidden;
+  }
+
+  // Entry pair — a foreground image and its text as one flex unit,
+  // centered within its entry-slice. Text has no independent position;
+  // it's a flow sibling of its own image.
+  .ad-particles-block__entry-pair {
+    // position+z-index (not just display:flex) so it actually stacks above
+    // the entry-slice's decorative shapes (position:absolute, z-index 0) —
+    // a non-positioned element paints above positioned siblings by default
+    // regardless of z-index, so without this the shapes would incorrectly
+    // render on top of the image/text instead of behind them.
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    max-width: 90vw;
+
+    .ad-particles-block__entry-text {
       text-align: left;
-      max-width: 80%;
-      visibility: hidden;
-      opacity: 0;
-      
-      &.active {
-        visibility: visible !important;
-        opacity: 1 !important;
+      max-width: 480px;
+
+      h2 {
+        font-size: clamp(2rem, 5vw, 4rem);
+        margin-bottom: 1rem;
+        font-weight: bold;
       }
-      
-      .ad-particles-block__text-section {
-        h2 {
-          font-size: clamp(2rem, 5vw, 4rem);
-          margin-bottom: 1rem;
-          font-weight: bold;
-        }
-        
-        p {
-          font-size: clamp(1rem, 2vw, 1.5rem);
-          line-height: 1.6;
-        }
+
+      p {
+        font-size: clamp(1rem, 2vw, 1.5rem);
+        line-height: 1.6;
       }
     }
   }
 }
 
-
 @media (max-width: 900px) {
-  .ad-particles-block .ad-particles-block__text-content-wrapper .ad-particles-block__text-content-overlay{
-		width: 80vw;
-	}
+  .ad-particles-block .ad-particles-block__entry-pair {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .ad-particles-block__entry-text {
+      max-width: 80vw;
+    }
+  }
+}
+
+// Tablet-tier particle sizing (601px-1024px). Mobile's max-width:600px rule
+// below wins at narrower widths since it's !important and more specific to
+// that range.
+@media (max-width: 1024px) and (min-width: 601px) {
+  .ad-particles-block {
+    .ad-particles-block__particle-item {
+      width: var(--tablet-size, 80px) !important;
+      height: var(--tablet-size, 80px) !important;
+    }
+  }
 }
 
 // Responsive adjustments
@@ -108,13 +211,14 @@
     }
   }
 
-  .ad-particles-block__text-section {
+  .ad-particles-block__entry-text,
+  .ad-particles-block__section-intro {
     h2 {
       font-size: 40px !important;
       margin-bottom: 1rem;
       font-weight: bold;
     }
-    
+
     p {
       font-size: 16px !important;
       line-height: 1.6;

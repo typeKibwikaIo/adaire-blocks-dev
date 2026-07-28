@@ -46,7 +46,6 @@ const buildCssVars = ( attrs ) => {
 
 export default function save( { attributes } ) {
 	const {
-		blockId,
 		scrubSpeed,
 		headingText,
 		headingFontSize,
@@ -56,7 +55,6 @@ export default function save( { attributes } ) {
 
 	const blockProps = useBlockProps.save( {
 		className: 'adaire-hsc',
-		'data-block-id': blockId,
 		'data-scrub': scrubSpeed,
 		style: buildCssVars( attributes ),
 	} );

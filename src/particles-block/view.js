@@ -1,4 +1,4 @@
-﻿import gsap from "gsap";
+import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -23,242 +23,269 @@ document.addEventListener("DOMContentLoaded", () => {
     ScrollTrigger.refresh();
   }
 
-  const particlesSection = document.querySelector('.ad-particles-block');
-  if (!particlesSection) return;
+  const prefersReducedMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const textSections = particlesSection.querySelectorAll('.ad-particles-block__text-section');
-  const textOverlay = particlesSection.querySelector('.ad-particles-block__text-content-overlay');
-  const particles = particlesSection.querySelectorAll('.ad-particles-block__particle');
+  const particlesSections = document.querySelectorAll('.ad-particles-block');
+  if (!particlesSections.length) return;
 
-  // Read configurable text animation duration (seconds)
-  const textAnimDuration = parseFloat(particlesSection.dataset.textAnimDuration || '0.35') || 0.35;
+  particlesSections.forEach((particlesSection) => {
+    const introZone = particlesSection.querySelector('.ad-particles-block__intro-zone') || particlesSection;
+    const entrySlices = particlesSection.querySelectorAll('.ad-particles-block__entry-slice');
+    const backgroundImages = particlesSection.querySelectorAll('.ad-particles-block__background-image');
+    const foregroundImages = particlesSection.querySelectorAll('.ad-particles-block__foreground-image');
+    const allImages = [...backgroundImages, ...foregroundImages];
 
-  // Set mobile sizes for particles
-  particles.forEach((particle) => {
-    const mobileSize = particle.dataset.mobileSize;
-    if (mobileSize) {
-      particle.style.setProperty('--mobile-size', `${mobileSize}px`);
-    }
-  });
+    // Read configurable text animation duration (seconds)
+    const textAnimDuration = parseFloat(particlesSection.dataset.textAnimDuration || '0.6') || 0.6;
 
-
-
-  // Text content animations - use individual ScrollTriggers for each text section
-  if (textSections.length > 0 && textOverlay) {
-    // Set initial state
-    textSections.forEach((section, index) => {
-      const title = section.querySelector('h2');
-      const desc = section.querySelector('p');
-             if (index === 0) {
-         gsap.set(section, { opacity: 1, display: 'block' });
-         gsap.set([title, desc], { opacity: 0, x: 100 });
-       } else {
-        gsap.set(section, { opacity: 0, display: 'none' });
-        gsap.set([title, desc], { opacity: 0, x: 100 });
+    // Set tablet/mobile sizes for images (sizing only, not motion — applies
+    // regardless of the reduced-motion preference)
+    allImages.forEach((image) => {
+      const tabletSize = image.dataset.tabletSize;
+      if (tabletSize) {
+        image.style.setProperty('--tablet-size', `${tabletSize}px`);
+      }
+      const mobileSize = image.dataset.mobileSize;
+      if (mobileSize) {
+        image.style.setProperty('--mobile-size', `${mobileSize}px`);
       }
     });
 
-    // Hide all text sections except the first
-    let lastActive = 0;
+    if (prefersReducedMotion) {
+      // Respect prefers-reduced-motion: every entry gets its own dedicated
+      // slice now, so there's no "only one can be shown at a time" overlap
+      // problem — just settle all of them visible, no scroll-scrub at all.
+      entrySlices.forEach((slice) => {
+        const text = slice.querySelector('.ad-particles-block__entry-text');
+        if (!text) return;
+        const title = text.querySelector('h2');
+        const desc = text.querySelector('p');
+        gsap.set(text, { opacity: 1, display: 'block' });
+        gsap.set([title, desc], { opacity: 1, x: 0 });
+      });
+      // Leave images at their natural (untransformed) position — no
+      // scroll-scrubbed movement for this instance.
+      return;
+    }
 
-    textSections.forEach((section, index) => {
-      const title = section.querySelector('h2');
-      const desc = section.querySelector('p');
-      // Read per-section appear/disappear percentages; fallback to evenly spaced if missing
-      const appearAttr = section.getAttribute('data-appear');
-      const disappearAttr = section.getAttribute('data-disappear');
-      const totalSections = textSections.length;
-      const defaultStartPct = (index / totalSections) * 100;
-      const defaultEndPct = ((index + 0.8) / totalSections) * 100;
-      const appearPct = appearAttr !== null && appearAttr !== '' ? parseFloat(appearAttr) : defaultStartPct;
-      const disappearPct = disappearAttr !== null && disappearAttr !== '' ? parseFloat(disappearAttr) : defaultEndPct;
-      const startPct = Math.min(appearPct, disappearPct);
-      const endPct = Math.max(appearPct, disappearPct);
-      const sectionStart = `top+=${startPct}% center`;
-      const sectionEnd = `top+=${endPct}% center`;
+    // Text reveal — one ScrollTrigger per entry slice, anchored directly to
+    // that slice's own DOM element rather than a percentage of the whole
+    // section's height. This is what actually prevents position/timing
+    // drift: there's nothing to keep in sync, the trigger IS the entry.
+    entrySlices.forEach((slice) => {
+      const text = slice.querySelector('.ad-particles-block__entry-text');
+      if (!text) return;
+      const title = text.querySelector('h2');
+      const desc = text.querySelector('p');
+
+      // Set initial (pre-reveal) state for every entry uniformly — GSAP
+      // evaluates each ScrollTrigger's start/end against the current scroll
+      // position on creation, so an entry already in view at page load
+      // fires onEnter immediately and animates in on its own.
+      gsap.set(text, { opacity: 0, display: 'none' });
+      gsap.set([title, desc], { opacity: 0, x: 100 });
+
       ScrollTrigger.create({
-        trigger: particlesSection,
-        start: sectionStart,
-        end: sectionEnd,
+        trigger: slice,
+        start: 'top 60%',
+        end: 'bottom 40%',
         scrub: false,
         ...(locoInstance ? { scroller: document.body } : {}),
-                 onEnter: () => {
-           // Prevent animation if modal is closing
-           if (window.isModalClosing) return;
-           
-           // Hide all other sections immediately
-           textSections.forEach((other, i) => {
-             if (i !== index) {
-               gsap.set(other, { display: 'none', opacity: 0 });
-               const oTitle = other.querySelector('h2');
-               const oDesc = other.querySelector('p');
-               gsap.set([oTitle, oDesc], { x: 100, opacity: 0 });
-             }
-           });
-           // Animate in this section
-           gsap.set(section, { display: 'block', opacity: 1 });
-           gsap.to([title, desc], { x: 0, opacity: 1, duration: textAnimDuration, stagger: 0.15, ease: 'power2.out' });
-           lastActive = index;
-         },
-                 onEnterBack: function() {
-           // Prevent animation if modal is closing
-           if (window.isModalClosing) return;
-           
-           // Hide all other sections immediately
-           textSections.forEach((other, i) => {
-             if (i !== index) {
-               gsap.set(other, { display: 'none', opacity: 0 });
-               const oTitle = other.querySelector('h2');
-               const oDesc = other.querySelector('p');
-               gsap.set([oTitle, oDesc], { x: 100, opacity: 0 });
-             }
-           });
-           // Animate in this section
-           gsap.set(section, { display: 'block', opacity: 1 });
-           gsap.to([title, desc], { x: 0, opacity: 1, duration: textAnimDuration, stagger: 0.15, ease: 'power2.out' });
-           lastActive = index;
-         },
+        onEnter: () => {
+          // Prevent animation if modal is closing
+          if (window.isModalClosing) return;
+          gsap.set(text, { display: 'block', opacity: 1 });
+          gsap.to([title, desc], { x: 0, opacity: 1, duration: textAnimDuration, stagger: 0.15, ease: 'power3.out' });
+        },
+        onEnterBack: () => {
+          // Prevent animation if modal is closing
+          if (window.isModalClosing) return;
+          gsap.set(text, { display: 'block', opacity: 1 });
+          gsap.to([title, desc], { x: 0, opacity: 1, duration: textAnimDuration, stagger: 0.15, ease: 'power3.out' });
+        },
         onLeave: () => {
-          // Animate out this section (down)
-          gsap.to([title, desc], { x: -100, opacity: 0, duration: textAnimDuration, stagger: 0.15, ease: 'power2.in', onComplete: () => {
-            gsap.set(section, { display: 'none', opacity: 0 });
+          gsap.to([title, desc], { x: -100, opacity: 0, duration: textAnimDuration, stagger: 0.15, ease: 'power3.in', onComplete: () => {
+            gsap.set(text, { display: 'none', opacity: 0 });
             gsap.set([title, desc], { x: 100, opacity: 0 });
           }});
         },
         onLeaveBack: () => {
-          // Animate out this section (up)
-          gsap.to([title, desc], { x: 100, opacity: 0, duration: textAnimDuration, stagger: 0.15, ease: 'power2.in', onComplete: () => {
-            gsap.set(section, { display: 'none', opacity: 0 });
+          gsap.to([title, desc], { x: 100, opacity: 0, duration: textAnimDuration, stagger: 0.15, ease: 'power3.in', onComplete: () => {
+            gsap.set(text, { display: 'none', opacity: 0 });
             gsap.set([title, desc], { x: 100, opacity: 0 });
           }});
         }
       });
     });
 
-    // Show/hide overlay based on section visibility
-    ScrollTrigger.create({
-      trigger: particlesSection,
-      start: 'top 60%',
-      end: 'bottom center',
-      scrub: 1,
-      ...(locoInstance ? { scroller: document.body } : {}),
-             onEnter: () => {
-         // Prevent animation if modal is closing
-         if (window.isModalClosing) return;
-         textOverlay.classList.add('active');
-       },
-      onLeave: () => {
-        // Animate out the currently visible text section
-        const visibleSection = Array.from(textSections).find(sec => sec.style.display === 'block');
-        if (visibleSection) {
-          const title = visibleSection.querySelector('h2');
-          const desc = visibleSection.querySelector('p');
-          gsap.to([title, desc], {
-            x: -100,
-            opacity: 0,
-            duration: textAnimDuration,
-            stagger: 0.15,
-            ease: 'power2.in',
-            onComplete: () => {
-              gsap.set(visibleSection, { display: 'none', opacity: 0 });
-              gsap.set([title, desc], { x: 100, opacity: 0 });
-              textOverlay.classList.remove('active');
+    // Background images: parallax variety, one of 6 movement patterns per
+    // entry (cycled by that image's own position among the backgrounds).
+    backgroundImages.forEach((image, index) => {
+      const speed = parseFloat(image.dataset.speed) || 1;
+      const animationEnabled = image.dataset.animationEnabled !== 'false';
+      if (!animationEnabled) return;
+
+      const movementType = index % 6;
+      switch (movementType) {
+        case 0:
+          // Strong vertical movement (up) - opposite to scroll direction
+          gsap.fromTo(image,
+            { y: 0 },
+            {
+              y: `${200 * speed}px`,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: introZone,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.2,
+                ...(locoInstance ? { scroller: document.body } : {}),
+              }
             }
-          });
-        } else {
-          textOverlay.classList.remove('active');
-        }
-      },
-             onEnterBack: () => {
-         // Prevent animation if modal is closing
-         if (window.isModalClosing) return;
-         textOverlay.classList.add('active');
-       },
-      onLeaveBack: () => {
-        // Animate out the currently visible text section
-        const visibleSection = Array.from(textSections).find(sec => sec.style.display === 'block');
-        if (visibleSection) {
-          const title = visibleSection.querySelector('h2');
-          const desc = visibleSection.querySelector('p');
-          gsap.to([title, desc], {
-            x: -100,
-            opacity: 0,
-            duration: textAnimDuration,
-            stagger: 0.15,
-            ease: 'power2.in',
-            onComplete: () => {
-              gsap.set(visibleSection, { display: 'none', opacity: 0 });
-              gsap.set([title, desc], { x: 100, opacity: 0 });
-              textOverlay.classList.remove('active');
+          );
+          break;
+        case 1:
+          // Enhanced horizontal movement (left to right)
+          gsap.fromTo(image,
+            { x: 0 },
+            {
+              x: `${120 * speed}px`,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: introZone,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.2,
+                ...(locoInstance ? { scroller: document.body } : {}),
+              }
             }
-          });
-        } else {
-          textOverlay.classList.remove('active');
-        }
+          );
+          break;
+        case 2:
+          // Strong vertical movement (down) - same as scroll direction
+          gsap.fromTo(image,
+            { y: 0 },
+            {
+              y: `${-200 * speed}px`,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: introZone,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.2,
+                ...(locoInstance ? { scroller: document.body } : {}),
+              }
+            }
+          );
+          break;
+        case 3:
+          // Enhanced horizontal movement (right to left)
+          gsap.fromTo(image,
+            { x: 0 },
+            {
+              x: `${-120 * speed}px`,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: introZone,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.2,
+                ...(locoInstance ? { scroller: document.body } : {}),
+              }
+            }
+          );
+          break;
+        case 4:
+          // Diagonal movement (top-left to bottom-right)
+          gsap.fromTo(image,
+            { x: 0, y: 0 },
+            {
+              x: `${80 * speed}px`,
+              y: `${-80 * speed}px`,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: introZone,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.2,
+                ...(locoInstance ? { scroller: document.body } : {}),
+              }
+            }
+          );
+          break;
+        case 5:
+          // Diagonal movement (top-right to bottom-left)
+          gsap.fromTo(image,
+            { x: 0, y: 0 },
+            {
+              x: `${-60 * speed}px`,
+              y: `${150 * speed}px`,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: introZone,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.2,
+                ...(locoInstance ? { scroller: document.body } : {}),
+              }
+            }
+          );
+          break;
       }
     });
-  }
 
-  // Particle animations with enhanced parallax effect - X and Y movements only
-  // Apply animations on all screen sizes for consistent behavior
-  particles.forEach((particle, index) => {
-    const particleType = particle.dataset.particleType || 'normal';
-    const speed = parseFloat(particle.dataset.speed) || 1;
-    
-    // Handle dynamic particles with special behavior (always animate regardless of animationEnabled)
-    if (particleType === 'dynamic') {
-      const overlay = particle.querySelector('.dynamic-particle-overlay');
-      
-      // Set initial scale for dynamic particles
-      gsap.set(particle, { scale: 0.8 });
-      
-      // Dynamic particle size and overlay animation based on screen position
+    // Foreground images: always animate (no animationEnabled toggle — it
+    // never applied here) with the center-scale/overlay-fade effect plus a
+    // speed-driven vertical drift.
+    foregroundImages.forEach((image) => {
+      const speed = parseFloat(image.dataset.speed) || 0;
+      const overlay = image.querySelector('.ad-particles-block__foreground-image-overlay');
+
+      // Set initial scale
+      gsap.set(image, { scale: 0.8 });
+
+      // Size and overlay animation based on screen position
       ScrollTrigger.create({
         trigger: particlesSection,
         start: 'top bottom',
         end: 'bottom top',
-        scrub: 1,
+        scrub: 1.2,
         ...(locoInstance ? { scroller: document.body } : {}),
         onUpdate: (self) => {
-          // Calculate particle's position relative to viewport center
-          const rect = particle.getBoundingClientRect();
+          // Calculate image's position relative to viewport center
+          const rect = image.getBoundingClientRect();
           const viewportCenter = window.innerHeight / 2;
-          const particleCenter = rect.top + rect.height / 2;
-          const distanceFromCenter = Math.abs(particleCenter - viewportCenter);
+          const imageCenter = rect.top + rect.height / 2;
+          const distanceFromCenter = Math.abs(imageCenter - viewportCenter);
           const maxDistance = window.innerHeight / 2;
           const centerProgress = 1 - (distanceFromCenter / maxDistance);
-          
+
           // Scale based on center proximity (biggest at center)
           const scale = 0.8 + (centerProgress * 0.4); // 0.8 to 1.2
-          gsap.set(particle, { scale: scale });
-          
+          gsap.set(image, { scale: scale });
+
           // Overlay opacity based on screen position - more sophisticated
           if (overlay) {
-            // Calculate how far the particle is from the center of the viewport
-            const viewportCenter = window.innerHeight / 2;
-            const particleCenter = rect.top + rect.height / 2;
-            const distanceFromCenter = Math.abs(particleCenter - viewportCenter);
-            const maxDistance = window.innerHeight / 2;
-            
+            const centerProgressForOverlay = distanceFromCenter / maxDistance;
             // Create a smooth opacity curve: 0 at center (fully visible), 1 at edges (overlay visible)
-            const centerProgress = distanceFromCenter / maxDistance;
-            const overlayOpacity = Math.max(0, Math.min(1, centerProgress));
-            
-            // Also adjust particle brightness/opacity - more visible when closer to center
-            const particleOpacity = 1 - (centerProgress * 0.3); // 1.0 at center, 0.7 at edges
-            const particleBrightness = 1 + (1 - centerProgress) * 0.2; // 1.2 at center, 1.0 at edges
-            
+            const overlayOpacity = Math.max(0, Math.min(1, centerProgressForOverlay));
+
+            // Also adjust image brightness/opacity - more visible when closer to center
+            const imageOpacity = 1 - (centerProgressForOverlay * 0.3); // 1.0 at center, 0.7 at edges
+            const imageBrightness = 1 + (1 - centerProgressForOverlay) * 0.2; // 1.2 at center, 1.0 at edges
+
             gsap.set(overlay, { opacity: overlayOpacity });
-            gsap.set(particle, { 
-              opacity: particleOpacity,
-              filter: `brightness(${particleBrightness})`
+            gsap.set(image, {
+              opacity: imageOpacity,
+              filter: `brightness(${imageBrightness})`
             });
           }
         }
       });
-      
-      // Basic movement for dynamic particles
-      gsap.fromTo(particle, 
+
+      // Basic vertical drift
+      gsap.fromTo(image,
         { y: 0 },
         {
           y: `${-100 * speed}px`,
@@ -267,126 +294,11 @@ document.addEventListener("DOMContentLoaded", () => {
             trigger: particlesSection,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1,
+            scrub: 1.2,
             ...(locoInstance ? { scroller: document.body } : {}),
           }
         }
       );
-    } else {
-      // Regular particle animations - only if animation is enabled
-      const animationEnabled = particle.dataset.animationEnabled !== 'false';
-      if (!animationEnabled) return; // Skip animation for normal particles
-      
-      const movementType = index % 6; // 6 different movement types for more variety
-      switch (movementType) {
-        case 0:
-          // Strong vertical movement (up) - opposite to scroll direction
-          gsap.fromTo(particle, 
-            { y: 0 },
-            {
-              y: `${200 * speed}px`,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: particlesSection,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
-                ...(locoInstance ? { scroller: document.body } : {}),
-              }
-            }
-          );
-          break;
-        case 1:
-          // Enhanced horizontal movement (left to right)
-          gsap.fromTo(particle,
-            { x: 0 },
-            {
-              x: `${120 * speed}px`,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: particlesSection,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
-                ...(locoInstance ? { scroller: document.body } : {}),
-              }
-            }
-          );
-          break;
-        case 2:
-          // Strong vertical movement (down) - same as scroll direction
-          gsap.fromTo(particle,
-            { y: 0 },
-            {
-              y: `${-200 * speed}px`,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: particlesSection,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
-                ...(locoInstance ? { scroller: document.body } : {}),
-              }
-            }
-          );
-          break;
-        case 3:
-          // Enhanced horizontal movement (right to left)
-          gsap.fromTo(particle,
-            { x: 0 },
-            {
-              x: `${-120 * speed}px`,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: particlesSection,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
-                ...(locoInstance ? { scroller: document.body } : {}),
-              }
-            }
-          );
-          break;
-        case 4:
-          // Diagonal movement (top-left to bottom-right)
-          gsap.fromTo(particle,
-            { x: 0, y: 0 },
-            {
-              x: `${80 * speed}px`,
-              y: `${-80 * speed}px`,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: particlesSection,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
-                ...(locoInstance ? { scroller: document.body } : {}),
-              }
-            }
-          );
-          break;
-        case 5:
-          // Diagonal movement (top-right to bottom-left)
-          gsap.fromTo(particle,
-            { x: 0, y: 0 },
-            {
-              x: `${-60 * speed}px`,
-              y: `${150 * speed}px`,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: particlesSection,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
-                ...(locoInstance ? { scroller: document.body } : {}),
-              }
-            }
-          );
-          break;
-      }
-    }
+    });
   });
 });
-
-
-

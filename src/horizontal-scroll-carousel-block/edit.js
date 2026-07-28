@@ -1,7 +1,6 @@
 ﻿import { __ } from '@wordpress/i18n';
 import {
 	useBlockProps,
-	InspectorControls,
 	PanelColorSettings,
 	useInnerBlocksProps,
 	RichText,
@@ -10,40 +9,17 @@ import {
 	PanelBody,
 	RangeControl,
 	SelectControl,
-	Button,
 	__experimentalUnitControl as UnitControl,
 	__experimentalBoxControl as BoxControl,
 	Notice,
 } from '@wordpress/components';
-import { useState, useEffect, useCallback, useRef, createElement } from '@wordpress/element';
-import { desktop, tablet, mobile } from '@wordpress/icons';
+import { useState } from '@wordpress/element';
+import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher, { FIVE_TIERS } from '../components/DeviceSwitcher';
+import useResponsiveAttribute from '../components/useResponsiveAttribute';
+import { FONT_WEIGHTS } from '../components/FontWeights';
 
-// â”€â”€â”€ Breakpoint icons (matching infogrid-4 / project standard) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-const smallLaptopIcon = createElement(
-	'svg',
-	{ width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
-	createElement( 'path', { d: 'M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V15C20 16.1046 19.1046 17 18 17H6C4.89543 17 4 16.1046 4 15V6Z', stroke: 'currentColor', strokeWidth: '1.5', fill: 'none' } ),
-	createElement( 'path', { d: 'M2 19H22', stroke: 'currentColor', strokeWidth: '1.5', strokeLinecap: 'round' } )
-);
-
-const bigDesktopIcon = createElement(
-	'svg',
-	{ width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
-	createElement( 'rect', { x: '3', y: '4', width: '18', height: '12', rx: '1', stroke: 'currentColor', strokeWidth: '1.5', fill: 'none' } ),
-	createElement( 'path', { d: 'M8 20H16', stroke: 'currentColor', strokeWidth: '1.5', strokeLinecap: 'round' } ),
-	createElement( 'rect', { x: '10', y: '20', width: '4', height: '2', rx: '0.5', fill: 'currentColor' } )
-);
-
-const BREAKPOINTS = [
-	{ name: 'mobile',      icon: mobile,          label: __( 'Mobile',       'adaire-blocks' ) },
-	{ name: 'tablet',      icon: tablet,          label: __( 'Tablet',       'adaire-blocks' ) },
-	{ name: 'smallLaptop', icon: smallLaptopIcon, label: __( 'Small Laptop', 'adaire-blocks' ) },
-	{ name: 'desktop',     icon: desktop,         label: __( 'Desktop',      'adaire-blocks' ) },
-	{ name: 'bigDesktop',  icon: bigDesktopIcon,  label: __( 'Big Desktop',  'adaire-blocks' ) },
-];
-
-// â”€â”€â”€ Inner-blocks template â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ ”€ Inner-blocks template  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const ALLOWED_BLOCKS = [ 'create-block/horizontal-scroll-card-block' ];
 
@@ -104,21 +80,16 @@ const buildCssVars = ( attrs ) => {
 
 // â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-const FONT_WEIGHTS = [
-	{ label: __( '100 â€” Thin',        'adaire-blocks' ), value: '100' },
-	{ label: __( '200 â€” Extra Light', 'adaire-blocks' ), value: '200' },
-	{ label: __( '300 â€” Light',       'adaire-blocks' ), value: '300' },
-	{ label: __( '400 â€” Regular',     'adaire-blocks' ), value: '400' },
-	{ label: __( '500 â€” Medium',      'adaire-blocks' ), value: '500' },
-	{ label: __( '600 â€” Semi Bold',   'adaire-blocks' ), value: '600' },
-	{ label: __( '700 â€” Bold',        'adaire-blocks' ), value: '700' },
-	{ label: __( '800 â€” Extra Bold',  'adaire-blocks' ), value: '800' },
-	{ label: __( '900 â€” Black',       'adaire-blocks' ), value: '900' },
-];
+// Per-tier fallbacks for the Inspector's UnitControls below — kept in sync
+// with block.json's schema defaults (and with buildCssVars' own fallbacks)
+// so switching device tiers always displays that tier's real default
+// instead of silently falling back to a single (desktop) value.
+const CARD_WIDTH_DEFAULTS = { mobile: '85vw', tablet: '60vw', smallLaptop: '480px', desktop: '560px', bigDesktop: '600px' };
+const CARD_GAP_DEFAULTS = { mobile: '16px', tablet: '20px', smallLaptop: '24px', desktop: '24px', bigDesktop: '32px' };
+const TRACK_PADDING_DEFAULTS = { mobile: '16px', tablet: '30px', smallLaptop: '60px', desktop: '80px', bigDesktop: '80px' };
 
-export default function Edit( { attributes, setAttributes, clientId } ) {
+export default function Edit( { attributes, setAttributes } ) {
 	const {
-		blockId,
 		sectionBackground,
 		scrubSpeed,
 		responsivePadding,
@@ -133,24 +104,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const [ deviceType, setDeviceType ] = useState( 'desktop' );
 
-	// Keep a ref so updateResponsive never captures stale attrs
-	const attributesRef = useRef( attributes );
-	useEffect( () => { attributesRef.current = attributes; }, [ attributes ] );
-
-	useEffect( () => {
-		if ( ! blockId ) {
-			setAttributes( { blockId: `hsc-${ clientId.slice( 0, 8 ) }` } );
-		}
-	}, [] );
-
-	const updateResponsive = useCallback( ( attr, bp, value ) => {
-		setAttributes( {
-			[ attr ]: {
-				...( attributesRef.current[ attr ] || {} ),
-				[ bp ]: value,
-			},
-		} );
-	}, [ setAttributes ] );
+	const updateResponsive = useResponsiveAttribute( attributes, setAttributes );
 
 	const blockProps = useBlockProps( {
 		className: 'adaire-hsc',
@@ -170,61 +124,48 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 	);
 
-	const activeLabel = BREAKPOINTS.find( ( b ) => b.name === deviceType )?.label;
+	const activeLabel = FIVE_TIERS.find( ( t ) => t.key === deviceType )?.label;
 
 	return (
 		<>
-			<InspectorControls>
-				{ /* â”€â”€ Device toggle (project standard) â”€â”€ */ }
-				<div className="adaire-device-toggle">
-					<p className="adaire-device-toggle-label">
-						{ __( 'Device View', 'adaire-blocks' ) }
-					</p>
-					<div className="adaire-device-toggle-group">
-						{ BREAKPOINTS.map( ( bp ) => (
-							<Button
-								key={ bp.name }
-								isPrimary={ deviceType === bp.name }
-								onClick={ () => setDeviceType( bp.name ) }
-								icon={ bp.icon }
-							>
-								<span>{ bp.label }</span>
-							</Button>
-						) ) }
-					</div>
-					<p className="adaire-device-toggle-status">
-						{ __( 'Configuring:', 'adaire-blocks' ) }{ ' ' }
-						<strong>{ activeLabel }</strong>
-					</p>
-				</div>
-
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				{ /* â”€â”€ Layout Settings â”€â”€ */ }
 				<PanelBody
+					section="layout"
 					title={ __( 'Layout Settings', 'adaire-blocks' ) }
 					initialOpen={ true }
 				>
+					<DeviceSwitcher
+						deviceType={ deviceType }
+						setDeviceType={ setDeviceType }
+						tiers={ FIVE_TIERS }
+						label={ __( 'Configuring', 'adaire-blocks' ) }
+					/>
+
 					<BoxControl
 						label={ `${ __( 'Section Padding', 'adaire-blocks' ) } (${ activeLabel })` }
+						sides={ [ 'top', 'bottom' ] }
 						values={ responsivePadding?.[ deviceType ] || {} }
 						onChange={ ( val ) => updateResponsive( 'responsivePadding', deviceType, val ) }
+						help={ __( 'Left/right spacing is controlled separately by Track Side Padding, below.', 'adaire-blocks' ) }
 					/>
 
 					<UnitControl
 						label={ `${ __( 'Card Width', 'adaire-blocks' ) } (${ activeLabel })` }
-						value={ responsiveCardWidth?.[ deviceType ] || '560px' }
+						value={ responsiveCardWidth?.[ deviceType ] || CARD_WIDTH_DEFAULTS[ deviceType ] }
 						onChange={ ( val ) => updateResponsive( 'responsiveCardWidth', deviceType, val ) }
 						help={ __( 'Width of each card. Supports px, vw, %', 'adaire-blocks' ) }
 					/>
 
 					<UnitControl
 						label={ `${ __( 'Card Gap', 'adaire-blocks' ) } (${ activeLabel })` }
-						value={ responsiveCardGap?.[ deviceType ] || '24px' }
+						value={ responsiveCardGap?.[ deviceType ] || CARD_GAP_DEFAULTS[ deviceType ] }
 						onChange={ ( val ) => updateResponsive( 'responsiveCardGap', deviceType, val ) }
 					/>
 
 					<UnitControl
 						label={ `${ __( 'Track Side Padding', 'adaire-blocks' ) } (${ activeLabel })` }
-						value={ responsiveTrackPaddingX?.[ deviceType ] || '80px' }
+						value={ responsiveTrackPaddingX?.[ deviceType ] || TRACK_PADDING_DEFAULTS[ deviceType ] }
 						onChange={ ( val ) => updateResponsive( 'responsiveTrackPaddingX', deviceType, val ) }
 						help={ __( 'Left/right breathing room before first and after last card.', 'adaire-blocks' ) }
 					/>
@@ -232,6 +173,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 				{ /* â”€â”€ Animation â”€â”€ */ }
 				<PanelBody
+					section="style"
+					priority="medium"
 					title={ __( 'Animation', 'adaire-blocks' ) }
 					initialOpen={ false }
 				>
@@ -248,6 +191,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 				{ /* â”€â”€ Heading Typography â”€â”€ */ }
 				<PanelBody
+					section="style"
+					priority="high"
 					title={ __( 'Heading Typography', 'adaire-blocks' ) }
 					initialOpen={ false }
 				>
@@ -265,8 +210,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					/>
 				</PanelBody>
 
-			{ /* â”€â”€ Colors â”€â”€ */ }
+			{ /* â”€ ”€ Colors  ”€ ”€ */ }
 				<PanelColorSettings
+					section="style"
+					priority="high"
 					title={ __( 'Colors', 'adaire-blocks' ) }
 					initialOpen={ false }
 					colorSettings={ [
@@ -282,7 +229,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						},
 					] }
 				/>
-			</InspectorControls>
+			</InspectorTabs>
 
 		<div { ...blockProps }>
 			<Notice
@@ -290,14 +237,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				isDismissible={ false }
 				className="adaire-hsc__editor-notice"
 			>
-				{ __( 'Horizontal Scroll Carousel â€” scroll the cards below to preview. Scroll animation only runs on the frontend.', 'adaire-blocks' ) }
+				{ __( 'Horizontal Scroll Carousel scroll the cards below to preview. Scroll animation only runs on the frontend.', 'adaire-blocks' ) }
 			</Notice>
 			<RichText
 				tagName="h2"
 				className="adaire-hsc__heading"
 				value={ headingText }
 				onChange={ ( val ) => setAttributes( { headingText: val } ) }
-				placeholder={ __( 'Section headingâ€¦', 'adaire-blocks' ) }
+				placeholder={ __( 'Section heading...', 'adaire-blocks' ) }
 				style={ {
 					fontSize:   headingFontSize,
 					color:      headingColor,
