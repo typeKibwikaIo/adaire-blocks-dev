@@ -149,6 +149,12 @@
         margin-right: auto;
     }
 
+    // Centre the card name/title on both faces regardless of saved alignment.
+    .adaire-flipcard-front__content .wp-block-heading,
+    .adaire-flipcard-back__content .wp-block-heading {
+        text-align: center;
+    }
+
     // Centre an Adaire Button (Free) used as a card CTA — it's inline-block,
     // so in the flex-column face it would otherwise hug the left edge.
     .adaire-flipcard-front__content > .adaire-button-block,
