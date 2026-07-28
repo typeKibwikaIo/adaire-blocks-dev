@@ -1,8 +1,9 @@
-import { useBlockProps, PanelColorSettings } from '@wordpress/block-editor';
+import { useBlockProps, PanelColorSettings, MediaUploadCheck } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, Button, TextControl, SelectControl, ToggleControl } from '@wordpress/components';
 import { MediaUpload } from '@wordpress/media-utils';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { arrowUp, arrowDown } from '@wordpress/icons';
 import InspectorTabs from '../components/InspectorTabs';
 import DeviceSwitcher, { THREE_TIERS } from '../components/DeviceSwitcher';
 import AdaireColorControl from '../components/AdaireColorControl';
@@ -243,21 +244,21 @@ export default function Edit({ attributes, setAttributes }) {
                 <div style={{ display: 'flex', gap: '5px' }}>
                   {index > 0 && (
                     <Button
+                      icon={arrowUp}
                       onClick={() => reorderEntry(index, index - 1)}
                       isSmall
                       variant="secondary"
-                    >
-                      â†‘
-                    </Button>
+                      label={__('Move Up', 'adaire-blocks')}
+                    />
                   )}
                   {index < safeEntries.length - 1 && (
                     <Button
+                      icon={arrowDown}
                       onClick={() => reorderEntry(index, index + 1)}
                       isSmall
                       variant="secondary"
-                    >
-                      â†“
-                    </Button>
+                      label={__('Move Down', 'adaire-blocks')}
+                    />
                   )}
                 </div>
               </div>
@@ -406,46 +407,70 @@ export default function Edit({ attributes, setAttributes }) {
                 <h4 style={{ margin: '0 0 10px' }}>Entry {index + 1}</h4>
 
                 <p style={{ fontWeight: 600, margin: '0 0 6px' }}>{__('Background Image', 'adaire-blocks')}</p>
-                <MediaUpload
-                  onSelect={(media) => updateEntryImage(index, 'backgroundImage', 'url', media.url)}
-                  allowedTypes={['image']}
-                  value={bg.url}
-                  render={({ open }) => (
-                    <div>
-                      <Button onClick={open} isSecondary>
-                        {bg.url ? 'Change Image' : 'Select Image'}
-                      </Button>
-                      {bg.url && (
-                        <img
-                          src={bg.url}
-                          alt="Background"
-                          style={{ width: '50px', height: '50px', objectFit: 'cover', margin: '5px 0' }}
-                        />
-                      )}
-                    </div>
-                  )}
-                />
+                <MediaUploadCheck>
+                  <MediaUpload
+                    onSelect={(media) => updateEntryImage(index, 'backgroundImage', 'url', media.url)}
+                    allowedTypes={['image']}
+                    value={bg.url}
+                    render={({ open }) => (
+                      <div>
+                        {bg.url && (
+                          <img
+                            src={bg.url}
+                            alt="Background"
+                            style={{ width: '50px', height: '50px', objectFit: 'cover', margin: '5px 0', display: 'block' }}
+                          />
+                        )}
+                        <Button onClick={open} isSecondary>
+                          {bg.url ? 'Change Image' : 'Select Image'}
+                        </Button>
+                        {bg.url && (
+                          <Button
+                            variant="tertiary"
+                            isDestructive
+                            onClick={() => updateEntryImage(index, 'backgroundImage', 'url', '')}
+                            style={{ marginLeft: '5px' }}
+                          >
+                            {__('Remove Image', 'adaire-blocks')}
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  />
+                </MediaUploadCheck>
 
                 <p style={{ fontWeight: 600, margin: '16px 0 6px' }}>{__('Foreground Image', 'adaire-blocks')}</p>
-                <MediaUpload
-                  onSelect={(media) => updateEntryImage(index, 'foregroundImage', 'url', media.url)}
-                  allowedTypes={['image']}
-                  value={fg.url}
-                  render={({ open }) => (
-                    <div>
-                      <Button onClick={open} isSecondary>
-                        {fg.url ? 'Change Image' : 'Select Image'}
-                      </Button>
-                      {fg.url && (
-                        <img
-                          src={fg.url}
-                          alt="Foreground"
-                          style={{ width: '50px', height: '50px', objectFit: 'cover', margin: '5px 0' }}
-                        />
-                      )}
-                    </div>
-                  )}
-                />
+                <MediaUploadCheck>
+                  <MediaUpload
+                    onSelect={(media) => updateEntryImage(index, 'foregroundImage', 'url', media.url)}
+                    allowedTypes={['image']}
+                    value={fg.url}
+                    render={({ open }) => (
+                      <div>
+                        {fg.url && (
+                          <img
+                            src={fg.url}
+                            alt="Foreground"
+                            style={{ width: '50px', height: '50px', objectFit: 'cover', margin: '5px 0', display: 'block' }}
+                          />
+                        )}
+                        <Button onClick={open} isSecondary>
+                          {fg.url ? 'Change Image' : 'Select Image'}
+                        </Button>
+                        {fg.url && (
+                          <Button
+                            variant="tertiary"
+                            isDestructive
+                            onClick={() => updateEntryImage(index, 'foregroundImage', 'url', '')}
+                            style={{ marginLeft: '5px' }}
+                          >
+                            {__('Remove Image', 'adaire-blocks')}
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  />
+                </MediaUploadCheck>
               </div>
             );
           })}
