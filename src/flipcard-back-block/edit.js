@@ -6,6 +6,7 @@ const ALLOWED_BLOCKS = [
     'core/heading',
     'core/image',
     'core/button',
+    'create-block/button-block',
     'core/list',
     'core/quote',
     'core/group',

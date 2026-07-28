@@ -109,12 +109,51 @@
         left: 0;
         width: 100%;
         height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: var(--flipcard-padding, 20px);
+        box-sizing: border-box;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
         border-radius: var(--flipcard-border-radius, 8px);
         overflow: hidden;
         box-shadow: 0 4px 6px rgba(0, 0, 0, calc(var(--flipcard-shadow-intensity, 0.1) * 0.3)),
                     0 2px 4px rgba(0, 0, 0, calc(var(--flipcard-shadow-intensity, 0.1) * 0.2));
+    }
+
+    // Face content wrapper: fill the face and vertically centre content
+    // so presets (and user content) read as balanced, polished cards.
+    .adaire-flipcard-front__content,
+    .adaire-flipcard-back__content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    // Media inside a face shouldn't overflow the rounded corners.
+    .adaire-flipcard-front img,
+    .adaire-flipcard-back img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    // Centre images (e.g. team avatars) in the flex-column face — otherwise
+    // align-items:stretch widens the figure and margin-auto centring is lost.
+    .adaire-flipcard-front__content .wp-block-image,
+    .adaire-flipcard-back__content .wp-block-image {
+        align-self: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    // Centre an Adaire Button (Free) used as a card CTA — it's inline-block,
+    // so in the flex-column face it would otherwise hug the left edge.
+    .adaire-flipcard-front__content > .adaire-button-block,
+    .adaire-flipcard-back__content > .adaire-button-block {
+        align-self: center;
     }
 
     // Front side specific styles

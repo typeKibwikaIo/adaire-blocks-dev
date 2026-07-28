@@ -3,8 +3,11 @@ import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, SelectControl, ButtonGroup, Button, TextControl, BaseControl, ColorPicker } from '@wordpress/components';
 import { desktop, tablet, mobile } from '@wordpress/icons';
 import { useEffect, useState } from '@wordpress/element';
+import { useDispatch, useSelect } from '@wordpress/data';
+import { createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
+import { FLIPCARD_PRESETS } from './flipcard-presets';
 import './editor.scss';
 
 const ALLOWED_BLOCKS = ['create-block/flipcard-front-block', 'create-block/flipcard-back-block'];
@@ -32,7 +35,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         frontBorderColor,
         frontBorderWidth,
         backBorderColor,
-        backBorderWidth
+        backBorderWidth,
+        contentPreset
     } = attributes;
 
     // Ensure blockId is set
@@ -41,6 +45,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             setAttributes({ blockId: clientId });
         }
     }, [blockId, clientId, setAttributes]);
+
+    // Locate the front/back child blocks so a preset can seed each face's content.
+    const { replaceInnerBlocks } = useDispatch('core/block-editor');
+    const { frontClientId, backClientId } = useSelect((select) => {
+        const children = select('core/block-editor').getBlock(clientId)?.innerBlocks || [];
+        return {
+            frontClientId: children.find((b) => b.name === 'create-block/flipcard-front-block')?.clientId,
+            backClientId: children.find((b) => b.name === 'create-block/flipcard-back-block')?.clientId,
+        };
+    }, [clientId]);
+
+    const applyPreset = (preset) => {
+        setAttributes({ contentPreset: preset.id, ...(preset.defaultAttrs || {}) });
+        if (frontClientId) {
+            replaceInnerBlocks(frontClientId, createBlocksFromInnerBlocksTemplate(preset.front), false);
+        }
+        if (backClientId) {
+            replaceInnerBlocks(backClientId, createBlocksFromInnerBlocksTemplate(preset.back), false);
+        }
+    };
 
     // Handle legacy width/height (number) and convert to object format
     const normalizedWidth = typeof width === 'object' ? width : {
@@ -91,7 +115,50 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody title={__('Card Dimensions', 'adaire-blocks')} initialOpen={true}>
+                <PanelBody section="content" title={__('Starter Templates', 'adaire-blocks')} initialOpen={true}>
+                    <p className="adaire-flipcard-presets__intro">
+                        {__('Pick a starting point to fill both faces. You can freely edit, add or remove blocks on each face afterward.', 'adaire-blocks')}
+                    </p>
+                    <div className="adaire-flipcard-presets" role="listbox" aria-label={__('Starter templates', 'adaire-blocks')}>
+                        {FLIPCARD_PRESETS.map((preset) => {
+                            const isActive = contentPreset === preset.id;
+                            return (
+                                <button
+                                    key={preset.id}
+                                    type="button"
+                                    role="option"
+                                    aria-selected={isActive}
+                                    className={`adaire-flipcard-presets__card${isActive ? ' is-active' : ''}`}
+                                    onClick={() => applyPreset(preset)}
+                                >
+                                    <span className="adaire-flipcard-presets__swatches" aria-hidden="true">
+                                        <span
+                                            className="adaire-flipcard-presets__swatch adaire-flipcard-presets__swatch--front"
+                                            style={{ background: preset.defaultAttrs?.frontBackgroundColor || '#ffffff' }}
+                                        />
+                                        <span
+                                            className="adaire-flipcard-presets__swatch adaire-flipcard-presets__swatch--back"
+                                            style={{ background: preset.defaultAttrs?.backBackgroundColor || '#f5f5f5' }}
+                                        />
+                                    </span>
+                                    <span className="adaire-flipcard-presets__text">
+                                        <span className="adaire-flipcard-presets__label">{preset.label}</span>
+                                        <span className="adaire-flipcard-presets__hint">{preset.bestFor}</span>
+                                    </span>
+                                    {isActive && (
+                                        <span className="adaire-flipcard-presets__check" aria-hidden="true">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </span>
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </PanelBody>
+
+                <PanelBody section="layout" title={__('Card Dimensions', 'adaire-blocks')} initialOpen={true}>
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>
                         {__('Device', 'adaire-blocks')}
                     </p>
@@ -211,7 +278,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     </div>
                 </PanelBody>
 
-                <PanelBody title={__('Card Styling', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="style" priority="high" title={__('Card Styling', 'adaire-blocks')} initialOpen={false}>
                     <BaseControl label={__('Front Background Color', 'adaire-blocks')}>
                         <ColorPicker
                             color={frontBackgroundColor || '#ffffff'}
@@ -348,7 +415,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Flip Animation', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Flip Animation', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
                         label={__('Flip Direction', 'adaire-blocks')}
                         value={flipDirection}
