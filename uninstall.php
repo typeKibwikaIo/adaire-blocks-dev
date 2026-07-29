@@ -42,7 +42,8 @@ function adaire_blocks_uninstall_cleanup_site() {
 
 	// Custom table created by AdaireBlocksLicense::create_license_table().
 	$table_name = $wpdb->prefix . 'adaire_blocks_licenses';
-	$wpdb->query( "DROP TABLE IF EXISTS `{$table_name}`" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- table name is built from $wpdb->prefix, not user input.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Uninstall cleanup; dropping the plugin's own table is the intended schema change and table name is built from $wpdb->prefix, not user input.
+	$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table_name ) );
 }
 
 if ( is_multisite() ) {

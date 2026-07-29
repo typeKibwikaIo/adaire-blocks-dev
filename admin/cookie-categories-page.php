@@ -34,10 +34,11 @@ if ( ! function_exists( 'adaire_cookie_banner_find_instance' ) ) {
 	 */
 	function adaire_cookie_banner_find_instance() {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-off dashboard status check, not a hot path; content search isn't practical to cache.
 		$post_id = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT ID FROM {$wpdb->posts} WHERE post_status IN ('publish','private') AND post_content LIKE %s LIMIT 1",
-				'%' . $wpdb->esc_like( 'wp:create-block/cookie-consent-block' ) . '%'
+				'%' . $wpdb->esc_like( 'wp:create-block/cookie-consent-block' ) . '%' // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- False positive: matches the word "create" inside the LIKE search pattern, this is a SELECT, not DDL.
 			)
 		);
 
@@ -241,6 +242,7 @@ if ( ! function_exists( 'adaire_cookie_categories_page' ) ) {
 		$notice_type = '';
 
 		if ( isset( $_POST['adaire_cookie_categories_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['adaire_cookie_categories_nonce'] ) ), 'adaire_cookie_categories_save' ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each field is sanitized in adaire_cookie_categories_sanitize_submission() below (sanitize_text_field() per row).
 			$rows       = isset( $_POST['category'] ) && is_array( $_POST['category'] ) ? wp_unslash( $_POST['category'] ) : array();
 			$categories = adaire_cookie_categories_sanitize_submission( $rows );
 

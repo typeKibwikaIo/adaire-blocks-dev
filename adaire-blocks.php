@@ -176,7 +176,7 @@ add_action(
 			wp_die( 'Unauthorized' );
 		}
 
-		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'my_plugin_rollback' ) ) {
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'my_plugin_rollback' ) ) {
 			error_log( '[Adaire Blocks Rollback] Nonce verification failed' );
 			wp_die( 'Security check failed.' );
 		}
@@ -229,12 +229,17 @@ add_action(
 add_action(
 	'admin_notices',
 	function () {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only status flag for a UI notice; the actual rollback action is nonce-verified above.
 		if ( ! isset( $_GET['rollback'] ) ) {
 			return;
 		}
-		if ( $_GET['rollback'] === 'success' ) {
+
+		$rollback_status = sanitize_text_field( wp_unslash( $_GET['rollback'] ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		if ( 'success' === $rollback_status ) {
 			echo '<div class="notice notice-success is-dismissible"><p>Plugin rolled back successfully and activated.</p></div>';
-		} elseif ( $_GET['rollback'] === 'failed' ) {
+		} elseif ( 'failed' === $rollback_status ) {
 			echo '<div class="notice notice-error is-dismissible"><p>Rollback failed. Check debug.log for details.</p></div>';
 		}
 	}
@@ -424,6 +429,10 @@ require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/cookie-notice-global.php';
 function adaire_sideload_media_ajax() {
 	if ( ! current_user_can( 'upload_files' ) ) {
 		wp_send_json_error( array( 'message' => 'Unauthorized' ), 403 );
+	}
+
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'adaire_sideload_media' ) ) {
+		wp_send_json_error( array( 'message' => 'Security check failed.' ), 403 );
 	}
 
 	if ( empty( $_POST['url'] ) ) {
@@ -2451,7 +2460,7 @@ function enqueue_video_hero_block_data() {
 				echo '<script>console.log("PHP Debug - video_hero_blocks:", ' . json_encode( $video_hero_blocks ) . ');</script>';
 				echo '<script>console.log("PHP Debug - videos in first block:", ' . json_encode( $video_hero_blocks[ array_keys( $video_hero_blocks )[0] ]['videos'] ?? 'NOT FOUND' ) . ');</script>';
 				echo '<script>window.videoHeroBlockData = ' . json_encode( $video_hero_blocks ) . ';</script>';
-				echo '<script>window.wpApiSettings = { postId: ' . get_the_ID() . ' };</script>';
+				echo '<script>window.wpApiSettings = { postId: ' . absint( get_the_ID() ) . ' };</script>';
 			}
 		);
 	}
@@ -2671,6 +2680,7 @@ function adaire_blocks_localize_editor_config() {
 		'isPremium'     => $is_premium,
 		'pluginVersion' => $plugin_version,
 		'blocks'        => $blocks_config,
+		'sideloadNonce' => wp_create_nonce( 'adaire_sideload_media' ),
 	);
 
 	// Localize script with configuration

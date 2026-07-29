@@ -1006,6 +1006,7 @@ class AdaireBlocksSettings {
 			wp_die( 'Insufficient permissions' );
 		}
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Parsed below via parse_str() then reduced to known-safe booleans by sanitize_settings(); no raw value is ever stored or echoed.
 		$form_data = isset( $_POST['formData'] ) ? wp_unslash( $_POST['formData'] ) : '';
 		if ( empty( $form_data ) ) {
 			wp_send_json_error( esc_html__( 'No settings data received.', 'adaire-blocks' ) );

@@ -24,6 +24,7 @@ class Adaire_Welcome_Screen {
 		if (
 			wp_doing_ajax() ||
 			( is_multisite() && is_network_admin() ) ||
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check for WP core's own bulk-activation query flag, not form data.
 			isset( $_GET['activate-multi'] ) ||
 			! current_user_can( 'manage_options' )
 		) {
@@ -536,7 +537,7 @@ class Adaire_Welcome_Screen {
 
 			<nav class="abw-top">
 				<div class="abw-brand">
-					<span class="abw-brand-icon"><?php echo $brand_svg; ?></span>
+					<span class="abw-brand-icon"><?php echo $brand_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded static SVG markup literal, not user input. ?></span>
 					<span class="abw-brand-name">AdaireBlocks</span>
 				</div>
 				<div class="abw-top-right">
@@ -606,7 +607,7 @@ class Adaire_Welcome_Screen {
 		var DOCS       = <?php echo wp_json_encode( $docs_url ); ?>;
 		var SUPPORT    = <?php echo wp_json_encode( $support_url ); ?>;
 		var NEW_PAGE   = <?php echo wp_json_encode( $new_page_url ); ?>;
-		var TEMPLATES    = <?php echo $templates_json; ?>;
+		var TEMPLATES    = <?php echo $templates_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already produced by wp_json_encode() above. ?>;
 		var LOTTIE_MAP   = <?php echo wp_json_encode( $lottie_map ); ?>;
 		var IMG_HERO     = <?php echo wp_json_encode( $img_hero ); ?>;
 		var IMG_SHOWCASE = <?php echo wp_json_encode( $img_showcase ); ?>;

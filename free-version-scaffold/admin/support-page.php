@@ -47,7 +47,7 @@ function adaire_blocks_support_page() {
 			printf(
 				/* translators: %s: support email address link */
 				esc_html__( 'This is the place to start. Reach out to our support team directly at %s and we\'ll get back to you as soon as we can.', 'adaire-blocks' ),
-				'<a href="mailto:support@adaire.com">support@adaire.com</a>'
+				'<a href="mailto:support@gutenblocks.com">support@gutenblocks.com</a>'
 			);
 			?>
 		</p>
