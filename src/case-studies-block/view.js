@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initCaseStudiesBlocks() {
     const blocks = document.querySelectorAll('.ad-case-studies-block');
-    
+
     blocks.forEach(block => {
         const isCarouselMode = block.dataset.enableCarousel === 'true';
         if (isCarouselMode) {
@@ -19,6 +19,98 @@ function initCaseStudiesBlocks() {
             new CaseStudiesBlock(block);
         }
     });
+}
+
+/* =====================================================================
+ * Case study popup
+ * ---------------------------------------------------------------------
+ * Cards are real <a href> links to each case study's own page (good for
+ * SEO, crawling, and users without JS). On a normal left-click, we
+ * intercept that navigation and open a popup instead: the left column
+ * shows the block-wide description/image (same for every card, set once
+ * in the block's inspector), the right column shows the specific study's
+ * own Project Summary, Client/Country/Industry/Language/Technology, and
+ * full write-up. Ctrl/Cmd/Shift/middle-click still navigate normally.
+ * ===================================================================== */
+let activeCaseStudyPopup = null;
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+}
+
+function popupInfoRow(label, value) {
+    if (!value) return '';
+    return `<div class="ad-case-studies__popup-info-item"><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`;
+}
+
+function handleCaseStudyPopupKeydown(e) {
+    if (e.key === 'Escape') {
+        closeCaseStudyPopup();
+    }
+}
+
+function closeCaseStudyPopup() {
+    if (!activeCaseStudyPopup) return;
+    document.removeEventListener('keydown', handleCaseStudyPopupKeydown);
+    const overlay = activeCaseStudyPopup;
+    activeCaseStudyPopup = null;
+    document.body.classList.remove('ad-case-studies__popup-open');
+    overlay.classList.remove('is-open');
+    setTimeout(() => overlay.remove(), 250);
+}
+
+function openCaseStudyPopup(study, popupDescription, popupImageUrl, popupImageAlt) {
+    if (!study) return;
+    closeCaseStudyPopup();
+
+    const infoRows = [
+        popupInfoRow('Client', study.client),
+        popupInfoRow('Country', study.country),
+        popupInfoRow('Industry', study.industry),
+        popupInfoRow('Language', study.language),
+        popupInfoRow('Technology', study.technology)
+    ].join('');
+
+    const overlay = document.createElement('div');
+    overlay.className = 'ad-case-studies__popup';
+    overlay.innerHTML = `
+        <div class="ad-case-studies__popup-backdrop"></div>
+        <div class="ad-case-studies__popup-dialog" role="dialog" aria-modal="true" aria-label="${escapeHtml(study.title)}">
+            <button type="button" class="ad-case-studies__popup-close" aria-label="Close">&times;</button>
+            <div class="ad-case-studies__popup-left">
+                ${popupImageUrl ? `<img class="ad-case-studies__popup-left-image" src="${escapeHtml(popupImageUrl)}" alt="${escapeHtml(popupImageAlt || '')}" />` : ''}
+                ${popupDescription ? `<p class="ad-case-studies__popup-left-description">${escapeHtml(popupDescription)}</p>` : ''}
+            </div>
+            <div class="ad-case-studies__popup-right">
+                <span class="ad-case-studies__popup-eyebrow">Case Study</span>
+                <h2 class="ad-case-studies__popup-title">${escapeHtml(study.title)}</h2>
+                ${study.summary ? `<div class="ad-case-studies__popup-summary"><h3>${escapeHtml('Project Summary')}</h3><p>${escapeHtml(study.summary)}</p></div>` : ''}
+                ${infoRows ? `<dl class="ad-case-studies__popup-info-grid">${infoRows}</dl>` : ''}
+                <div class="ad-case-studies__popup-content">${study.content || ''}</div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    document.body.classList.add('ad-case-studies__popup-open');
+    activeCaseStudyPopup = overlay;
+
+    overlay.querySelector('.ad-case-studies__popup-close').addEventListener('click', closeCaseStudyPopup);
+    overlay.querySelector('.ad-case-studies__popup-backdrop').addEventListener('click', closeCaseStudyPopup);
+    document.addEventListener('keydown', handleCaseStudyPopupKeydown);
+
+    requestAnimationFrame(() => overlay.classList.add('is-open'));
+}
+
+/**
+ * Shared by both the grid and carousel classes: opens the popup for a
+ * plain left-click, but lets Ctrl/Cmd/Shift/middle-click through to the
+ * browser's normal "open the real page" behavior.
+ */
+function shouldOpenPopupInstead(e) {
+    return !(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey);
 }
 
 class CaseStudiesBlock {
@@ -30,35 +122,51 @@ class CaseStudiesBlock {
         this.loadingSpinner = container.querySelector('.ad-case-studies__loading-spinner');
         this.industryFilter = container.querySelector('[data-filter-type="industry"]');
         this.capabilityFilter = container.querySelector('[data-filter-type="capability"]');
-        
+
         // Get configuration from data attributes
         this.caseStudies = JSON.parse(container.dataset.caseStudies || '[]');
         this.initialCount = parseInt(container.dataset.initialCount) || 8;
         this.loadMoreCount = parseInt(container.dataset.loadMoreCount) || 4;
         this.animationDuration = parseFloat(container.dataset.animationDuration) || 0.5;
         this.animationEase = container.dataset.animationEase || 'power2.inOut';
-        
+        this.popupDescription = container.dataset.popupDescription || '';
+        this.popupImageUrl = container.dataset.popupImage || '';
+        this.popupImageAlt = container.dataset.popupImageAlt || '';
+
         // State
         this.visibleCount = this.initialCount;
         this.currentIndustry = '';
         this.currentCapability = '';
         this.isAnimating = false;
-        
+
         this.init();
     }
-    
+
     init() {
         this.setupInitialState();
         this.bindEvents();
+        this.bindCardClicks();
         this.updateLoadMoreVisibility();
         this.initHoverAnimations();
-        
+
         // Assign unique flip IDs to each card for FLIP tracking
         this.cards.forEach((card, index) => {
             card.dataset.flipId = `card-${index}`;
         });
     }
-    
+
+    bindCardClicks() {
+        this.cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (!shouldOpenPopupInstead(e)) return;
+                e.preventDefault();
+                const index = parseInt(card.dataset.index, 10);
+                const study = this.caseStudies[index];
+                openCaseStudyPopup(study, this.popupDescription, this.popupImageUrl, this.popupImageAlt);
+            });
+        });
+    }
+
     setupInitialState() {
         // Set initial visibility based on initialCount
         this.cards.forEach((card, index) => {
@@ -481,7 +589,10 @@ class CaseStudiesCarousel {
         // Get configuration
         this.dragCursorText = container.dataset.dragCursorText || 'Drag';
         this.caseStudies = JSON.parse(container.dataset.caseStudies || '[]');
-        
+        this.popupDescription = container.dataset.popupDescription || '';
+        this.popupImageUrl = container.dataset.popupImage || '';
+        this.popupImageAlt = container.dataset.popupImageAlt || '';
+
         // State
         this.isDragging = false;
         this.isHovering = false;
@@ -502,11 +613,32 @@ class CaseStudiesCarousel {
     
     init() {
         if (!this.carousel) return;
-        
+
         this.setupCarousel();
         this.setupDragCursor();
         this.initDragScroll();
         this.bindFilterEvents();
+        this.bindCardClicks();
+    }
+
+    // Cards are plain <a href> links to the case study's own page (see
+    // render.php). A drag gesture must not trigger navigation or the
+    // popup; a genuine plain left-click opens the popup instead.
+    bindCardClicks() {
+        this.cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (this.isDragging || this.dragDistance > 3) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                if (!shouldOpenPopupInstead(e)) return;
+                e.preventDefault();
+                const index = parseInt(card.dataset.index, 10);
+                const study = this.caseStudies[index];
+                openCaseStudyPopup(study, this.popupDescription, this.popupImageUrl, this.popupImageAlt);
+            });
+        });
     }
     
     setupCarousel() {
@@ -822,19 +954,7 @@ class CaseStudiesCarousel {
         
         // Prevent default drag behavior on images
         this.carousel.addEventListener('dragstart', (e) => e.preventDefault());
-        
-        // Prevent link clicks during/after drag
-        this.cards.forEach(card => {
-            if (card.tagName === 'A') {
-                card.addEventListener('click', (e) => {
-                    if (this.isDragging || this.dragDistance > 3) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                }, true);
-            }
-        });
-        
+
         // Store cleanup references
         this.dragCleanup = () => {
             this.carousel.removeEventListener('mousedown', onPointerDown);

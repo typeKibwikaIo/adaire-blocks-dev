@@ -20,7 +20,12 @@
     "editorStyle": "file:./editor.css",
     "style": "file:./style-index.css",
     "viewScript": "file:./view.js",
+    "render": "file:./render.php",
     "attributes": {
+        "useCaseStudiesManager": {
+            "type": "boolean",
+            "default": false
+        },
         "blockId": {
             "type": "string",
             "default": ""
@@ -70,7 +75,12 @@
                     "linkUrl": "",
                     "openInNewTab": true,
                     "industry": "",
-                    "capabilities": []
+                    "capabilities": [],
+                    "client": "",
+                    "country": "",
+                    "language": "",
+                    "technology": "",
+                    "galleryItems": []
                 },
                 {
                     "id": 2,
@@ -81,7 +91,12 @@
                     "linkUrl": "",
                     "openInNewTab": true,
                     "industry": "",
-                    "capabilities": []
+                    "capabilities": [],
+                    "client": "",
+                    "country": "",
+                    "language": "",
+                    "technology": "",
+                    "galleryItems": []
                 },
                 {
                     "id": 3,
@@ -92,7 +107,12 @@
                     "linkUrl": "",
                     "openInNewTab": true,
                     "industry": "",
-                    "capabilities": []
+                    "capabilities": [],
+                    "client": "",
+                    "country": "",
+                    "language": "",
+                    "technology": "",
+                    "galleryItems": []
                 },
                 {
                     "id": 4,
@@ -103,9 +123,34 @@
                     "linkUrl": "",
                     "openInNewTab": true,
                     "industry": "",
-                    "capabilities": []
+                    "capabilities": [],
+                    "client": "",
+                    "country": "",
+                    "language": "",
+                    "technology": "",
+                    "galleryItems": []
                 }
             ]
+        },
+        "nextLabel": {
+            "type": "string",
+            "default": "Next"
+        },
+        "popupDescription": {
+            "type": "string",
+            "default": ""
+        },
+        "popupImageId": {
+            "type": "number",
+            "default": 0
+        },
+        "popupImageUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "popupImageAlt": {
+            "type": "string",
+            "default": ""
         },
         "columns": {
             "type": "number",

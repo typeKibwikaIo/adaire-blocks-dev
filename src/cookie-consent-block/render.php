@@ -42,9 +42,9 @@ if ( ! function_exists( 'adaire_cookie_banner_responsive_vars' ) ) {
 		$m_unit  = isset( $m['unit'] ) ? $m['unit'] : $t_unit;
 
 		return array(
-			"--ccb-{$name}"        => $d_value . $d_unit,
-			"--ccb-{$name}-tablet" => $t_value . $t_unit,
-			"--ccb-{$name}-mobile" => $m_value . $m_unit,
+			"--ccb-{$name}"         => $d_value . $d_unit,
+			"--ccb-{$name}-tablet"  => $t_value . $t_unit,
+			"--ccb-{$name}-mobile"  => $m_value . $m_unit,
 		);
 	}
 }
@@ -142,27 +142,75 @@ $a = wp_parse_args(
 	)
 );
 
+// Site-wide Policy & Expiration defaults (admin/cookie-categories-page.php,
+// "Policy & Expiration" tab) fill in for any block left at its own block.json
+// default — an explicit per-block value (set in the editor's Inspector ->
+// Links panel) always wins. WordPress merges $attributes with block.json
+// defaults before render_callback runs, so there's no way to tell "user
+// left this blank" apart from "user explicitly typed 180" for the numeric
+// fields; matching the literal block.json default is the best available
+// signal that a block was never customized away from it.
+if ( function_exists( 'adaire_get_cookie_policy_settings' ) ) {
+	$policy_defaults = adaire_get_cookie_policy_settings();
+
+	if ( empty( $a['cookiePolicyUrl'] ) && ! empty( $policy_defaults['cookiePolicyUrl'] ) ) {
+		$a['cookiePolicyUrl']  = $policy_defaults['cookiePolicyUrl'];
+		$a['cookiePolicyText'] = ! empty( $a['cookiePolicyText'] ) ? $a['cookiePolicyText'] : $policy_defaults['cookiePolicyText'];
+	}
+	if ( empty( $a['privacyPolicyUrl'] ) && ! empty( $policy_defaults['privacyPolicyUrl'] ) ) {
+		$a['privacyPolicyUrl']  = $policy_defaults['privacyPolicyUrl'];
+		$a['privacyPolicyText'] = ! empty( $a['privacyPolicyText'] ) ? $a['privacyPolicyText'] : $policy_defaults['privacyPolicyText'];
+	}
+	if ( empty( $a['termsUrl'] ) && ! empty( $policy_defaults['termsUrl'] ) ) {
+		$a['termsUrl']  = $policy_defaults['termsUrl'];
+		$a['termsText'] = ! empty( $a['termsText'] ) ? $a['termsText'] : $policy_defaults['termsText'];
+	}
+	if ( 180 === (int) $a['consentExpirationDays'] && isset( $policy_defaults['expirationDays'] ) ) {
+		$a['consentExpirationDays'] = (int) $policy_defaults['expirationDays'];
+	}
+	if ( '1' === (string) $a['consentVersion'] && isset( $policy_defaults['consentVersion'] ) && '' !== $policy_defaults['consentVersion'] ) {
+		$a['consentVersion'] = (string) $policy_defaults['consentVersion'];
+	}
+}
+
 $categories = adaire_get_cookie_categories();
+$manager_list = function_exists( 'adaire_get_cookie_manager_list' ) ? adaire_get_cookie_manager_list() : array();
+
+// Group curated Cookie Manager entries by category key so the preferences
+// panel can list "cookies used in this category" under each toggle.
+$manager_by_category = array();
+foreach ( $manager_list as $cookie ) {
+	$cat_key = isset( $cookie['category'] ) ? $cookie['category'] : '';
+	if ( '' === $cat_key ) {
+		continue;
+	}
+	if ( ! isset( $manager_by_category[ $cat_key ] ) ) {
+		$manager_by_category[ $cat_key ] = array();
+	}
+	$manager_by_category[ $cat_key ][] = $cookie;
+}
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class'                    => 'adaire-cookie-banner',
-		'style'                    => adaire_cookie_banner_style_vars( $a ),
-		'data-layout'              => $a['layoutType'],
-		'data-density'             => $a['displayDensity'],
-		'data-align'               => $a['alignment'],
-		'data-shadow'              => $a['showShadow'] ? $a['shadowIntensity'] : 'none',
-		'data-shape'               => $a['buttonShape'],
-		'data-btn-size'            => $a['buttonSize'],
-		'data-anim'                => $a['entranceAnimation'],
-		'data-width'               => $a['bannerWidth'],
-		'data-consent-version'     => $a['consentVersion'],
-		'data-consent-days'        => $a['consentExpirationDays'],
-		'data-auto-hide'           => $a['autoHide'] ? '1' : '0',
-		'data-auto-hide-delay'     => $a['autoHideDelay'],
-		'data-google-consent-mode' => $a['googleConsentMode'] ? '1' : '0',
-		'data-block-scripts'       => $a['blockScriptsUntilConsent'] ? '1' : '0',
-		'data-categories'          => wp_json_encode(
+		'class'                     => 'adaire-cookie-banner',
+		'style'                     => adaire_cookie_banner_style_vars( $a ),
+		'data-layout'               => $a['layoutType'],
+		'data-density'              => $a['displayDensity'],
+		'data-align'                => $a['alignment'],
+		'data-shadow'               => $a['showShadow'] ? $a['shadowIntensity'] : 'none',
+		'data-shape'                => $a['buttonShape'],
+		'data-btn-size'             => $a['buttonSize'],
+		'data-anim'                 => $a['entranceAnimation'],
+		'data-width'                => $a['bannerWidth'],
+		'data-consent-version'      => $a['consentVersion'],
+		'data-consent-days'         => $a['consentExpirationDays'],
+		'data-auto-hide'            => $a['autoHide'] ? '1' : '0',
+		'data-auto-hide-delay'      => $a['autoHideDelay'],
+		'data-google-consent-mode'  => $a['googleConsentMode'] ? '1' : '0',
+		'data-block-scripts'        => $a['blockScriptsUntilConsent'] ? '1' : '0',
+		'data-consent-log-endpoint' => esc_url_raw( rest_url( 'adaire-blocks/v1/consent-log' ) ),
+			'data-cookie-scan-endpoint' => esc_url_raw( rest_url( 'adaire-blocks/v1/cookie-scan' ) ),
+		'data-categories'           => wp_json_encode(
 			array_map(
 				static function ( $cat ) {
 					return array(
@@ -200,19 +248,45 @@ $html .= '<p class="adaire-cookie-banner__description">' . wp_kses_post( $a['des
 
 $html .= '<div class="adaire-cookie-banner__prefs" hidden>';
 foreach ( $categories as $cat ) {
-	$key      = isset( $cat['key'] ) ? $cat['key'] : '';
-	$label    = isset( $cat['label'] ) ? $cat['label'] : $key;
-	$desc     = isset( $cat['description'] ) ? $cat['description'] : '';
-	$required = ! empty( $cat['required'] );
-	$checked  = ! empty( $cat['defaultChecked'] );
+	$key           = isset( $cat['key'] ) ? $cat['key'] : '';
+	$label         = isset( $cat['label'] ) ? $cat['label'] : $key;
+	$desc          = isset( $cat['description'] ) ? $cat['description'] : '';
+	$required      = ! empty( $cat['required'] );
+	$checked       = ! empty( $cat['defaultChecked'] );
+	$cat_cookies   = isset( $manager_by_category[ $key ] ) ? $manager_by_category[ $key ] : array();
+	$cookie_names  = wp_json_encode( wp_list_pluck( $cat_cookies, 'name' ) );
 
+	$html .= '<div class="adaire-cookie-banner__pref-group">';
 	$html .= '<label class="adaire-cookie-banner__pref-row">';
-	$html .= '<input type="checkbox" data-category="' . esc_attr( $key ) . '"' . ( $checked ? ' checked' : '' ) . ( $required ? ' disabled' : '' ) . ' />';
+	$html .= '<input type="checkbox" data-category="' . esc_attr( $key ) . '" data-cookie-names="' . esc_attr( $cookie_names ) . '"' . ( $checked ? ' checked' : '' ) . ( $required ? ' disabled' : '' ) . ' />';
 	$html .= '<span><strong>' . esc_html( $label ) . '</strong>' . ( $required ? ' ' . esc_html__( '(always active)', 'adaire-blocks' ) : '' );
 	if ( $desc ) {
 		$html .= '<em class="adaire-cookie-banner__cat-desc">' . esc_html( $desc ) . '</em>';
 	}
 	$html .= '</span></label>';
+
+	if ( ! empty( $cat_cookies ) ) {
+		$html .= '<details class="adaire-cookie-banner__cookie-list">';
+		$html .= '<summary>' . esc_html(
+			sprintf(
+				/* translators: %d: number of cookies */
+				_n( '%d cookie used', '%d cookies used', count( $cat_cookies ), 'adaire-blocks' ),
+				count( $cat_cookies )
+			)
+		) . '</summary>';
+		$html .= '<table class="adaire-cookie-banner__cookie-table"><tbody>';
+		foreach ( $cat_cookies as $cookie ) {
+			$html .= '<tr>';
+			$html .= '<td>' . esc_html( $cookie['name'] ?? '' ) . '</td>';
+			$html .= '<td>' . esc_html( $cookie['provider'] ?? '' ) . '</td>';
+			$html .= '<td>' . esc_html( $cookie['purpose'] ?? '' ) . '</td>';
+			$html .= '<td>' . esc_html( $cookie['duration'] ?? '' ) . '</td>';
+			$html .= '</tr>';
+		}
+		$html .= '</tbody></table>';
+		$html .= '</details>';
+	}
+	$html .= '</div>'; // .adaire-cookie-banner__pref-group
 }
 $html .= '<div class="adaire-cookie-banner__prefs-actions">';
 $html .= '<button type="button" class="adaire-cookie-banner__btn adaire-cookie-banner__btn--primary" data-cookie-action="save-prefs">' . esc_html( $a['savePreferencesText'] ) . '</button>';

@@ -16,7 +16,9 @@ const rootDir = path.resolve(__dirname, '..');
 const parentDir = path.resolve(rootDir, '..');
 const folderName = `adaire-blocks-${variant}`;
 const generatedDir = path.join(parentDir, folderName);
-const outputDir = path.join(parentDir, 'plugin-zips');
+// Zip output lives inside this project's own plugin-zips/ folder, not one
+// directory up — keeps the built zip alongside the source that produced it.
+const outputDir = path.join(rootDir, 'plugin-zips');
 const zipPath = path.join(outputDir, `${folderName}.zip`);
 
 const excludeNames = new Set([

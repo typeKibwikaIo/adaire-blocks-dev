@@ -66,7 +66,8 @@ export default function save({ attributes }) {
         dragCursorColor,
         dragCursorSize,
         dragCursorTextTransform,
-        dragCursorBgColor
+        dragCursorBgColor,
+        nextLabel
     } = attributes;
 
     // Get unique industries and capabilities for filter dropdowns
@@ -159,7 +160,8 @@ export default function save({ attributes }) {
         'data-show-filters': showFilters,
         'data-show-load-more': showLoadMore,
         'data-enable-carousel': enableCarousel,
-        'data-drag-cursor-text': dragCursorText
+        'data-drag-cursor-text': dragCursorText,
+        'data-next-label': nextLabel
     });
 
     const containerClasses = [
@@ -216,26 +218,21 @@ export default function save({ attributes }) {
                             isInitiallyHidden ? 'ad-case-studies__card--hidden' : ''
                         ].filter(Boolean).join(' ');
 
-                        const CardWrapper = study.linkUrl ? 'a' : 'div';
-                        const cardProps = study.linkUrl ? {
-                            href: study.linkUrl,
-                            target: study.openInNewTab ? '_blank' : '_self',
-                            rel: study.openInNewTab ? 'noopener noreferrer' : undefined
-                        } : {};
-
                         return (
-                            <CardWrapper
+                            <div
                                 key={study.id}
                                 className={cardClasses}
                                 data-id={study.id}
                                 data-industry={study.industry || ''}
                                 data-capabilities={JSON.stringify(study.capabilities || [])}
                                 data-index={index}
+                                role="button"
+                                tabIndex={0}
+                                aria-label={study.title}
                                 style={{
                                     backgroundImage: study.backgroundImage ? `url(${study.backgroundImage})` : 'none',
                                     backgroundColor: study.backgroundImage ? 'transparent' : 'var(--cs-card-bg-color, #374151)'
                                 }}
-                                {...cardProps}
                             >
                                 <div className="ad-case-studies__card-overlay">
                                     <div className="ad-case-studies__card-content">
@@ -243,7 +240,7 @@ export default function save({ attributes }) {
                                         <p className="ad-case-studies__card-description">{study.description}</p>
                                     </div>
                                 </div>
-                            </CardWrapper>
+                            </div>
                         );
                     })}
                 </div>

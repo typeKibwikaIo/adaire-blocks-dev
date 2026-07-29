@@ -58,6 +58,153 @@
 		}
 	}
 
+	// Best-effort id so an admin can tell "same visitor, changed their mind
+	// later" apart from two different visitors — never used to identify the
+	// person themselves, only to group their own decisions in the log.
+	function getConsentId( version ) {
+		var key = STORAGE_PREFIX + '_id';
+		try {
+			var id = window.localStorage.getItem( key );
+			if ( ! id ) {
+				id = 'c_' + Date.now().toString( 36 ) + '_' + Math.random().toString( 36 ).slice( 2, 10 );
+				window.localStorage.setItem( key, id );
+			}
+			return id;
+		} catch ( e ) {
+			return '';
+		}
+	}
+
+	// Send the decision to the server so it shows up in the Cookie
+	// Dashboard's consent log (Recent tab / Full History for Pro). Fire-and
+	// -forget: a blocked or failed request never affects the visitor's
+	// experience, it only means this one decision won't appear in the log.
+	function logConsentToServer( root, version, record ) {
+		var endpoint = root.getAttribute( 'data-consent-log-endpoint' );
+		if ( ! endpoint || typeof window.fetch !== 'function' ) return;
+
+		var payload = {
+			consentId: getConsentId( version ),
+			status: record.status,
+			categories: record.categories,
+			consentVersion: version,
+			pageUrl: window.location.href,
+			referrer: document.referrer || '',
+			expiresAt: record.expiresAt,
+		};
+
+		try {
+			window.fetch( endpoint, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify( payload ),
+				credentials: 'omit',
+				keepalive: true,
+			} ).catch( function () {
+				/* offline / blocked — ignore */
+			} );
+		} catch ( e ) {
+			/* no-op */
+		}
+	}
+
+	// ── Passive cookie scanner ──
+	// The "hand in hand with WordPress" equivalent of CookieYes's cloud
+	// crawler: instead of an external service crawling the site, this reads
+	// the cookie/localStorage/sessionStorage KEY NAMES actually present on a
+	// real page load — never values — and reports any name not already
+	// reported once before to WordPress's own REST API, where
+	// AdaireCookieScanner stores it and tries to auto-categorize it (see
+	// includes/cookie-known-trackers.php). Runs once per page load,
+	// independent of the visitor's consent decision — noting *which* cookies
+	// exist is a site-owner diagnostic, not itself a tracker, and nothing
+	// here ever leaves the site's own database.
+	var SCAN_REPORTED_KEY = STORAGE_PREFIX + 'ScanReported';
+
+	function readReportedNames() {
+		try {
+			var raw = window.localStorage.getItem( SCAN_REPORTED_KEY );
+			var parsed = raw ? JSON.parse( raw ) : [];
+			return Array.isArray( parsed ) ? parsed : [];
+		} catch ( e ) {
+			return [];
+		}
+	}
+
+	function rememberReportedNames( names ) {
+		try {
+			var existing = readReportedNames();
+			var merged = existing.concat( names );
+			// Cap so this never grows unbounded on a site with rotating/random
+			// cookie names — keep the most recent 300 remembered names.
+			if ( merged.length > 300 ) {
+				merged = merged.slice( merged.length - 300 );
+			}
+			window.localStorage.setItem( SCAN_REPORTED_KEY, JSON.stringify( merged ) );
+		} catch ( e ) {
+			/* no-op */
+		}
+	}
+
+	function currentCookieNames() {
+		if ( typeof document.cookie !== 'string' || ! document.cookie ) return [];
+		return document.cookie.split( ';' ).map( function ( pair ) {
+			return pair.split( '=' )[ 0 ].trim();
+		} ).filter( Boolean );
+	}
+
+	function currentStorageKeys( storage ) {
+		try {
+			return Object.keys( storage || {} );
+		} catch ( e ) {
+			return [];
+		}
+	}
+
+	function reportDetectedStorage( root ) {
+		var endpoint = root.getAttribute( 'data-cookie-scan-endpoint' );
+		if ( ! endpoint || typeof window.fetch !== 'function' ) return;
+
+		var seen = {};
+		var candidates = [];
+
+		currentCookieNames().forEach( function ( name ) {
+			candidates.push( { name: name, type: 'cookie' } );
+		} );
+		currentStorageKeys( window.localStorage ).forEach( function ( name ) {
+			candidates.push( { name: name, type: 'localStorage' } );
+		} );
+		currentStorageKeys( window.sessionStorage ).forEach( function ( name ) {
+			candidates.push( { name: name, type: 'sessionStorage' } );
+		} );
+
+		var alreadyReported = readReportedNames();
+		var items = candidates.filter( function ( c ) {
+			var id = c.type + ':' + c.name;
+			if ( seen[ id ] || alreadyReported.indexOf( id ) !== -1 ) return false;
+			seen[ id ] = true;
+			return true;
+		} );
+
+		if ( ! items.length ) return;
+
+		try {
+			window.fetch( endpoint, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify( { pageUrl: window.location.href, items: items } ),
+				credentials: 'omit',
+				keepalive: true,
+			} ).then( function () {
+				rememberReportedNames( items.map( function ( c ) { return c.type + ':' + c.name; } ) );
+			} ).catch( function () {
+				/* offline / blocked — try again next page load */
+			} );
+		} catch ( e ) {
+			/* no-op */
+		}
+	}
+
 	function updateGoogleConsentMode( categories ) {
 		if ( typeof window.gtag !== 'function' ) return;
 		var granted = function ( key ) {
@@ -70,6 +217,45 @@
 			ad_personalization: granted( 'marketing' ) === 'granted' || granted( 'advertising' ) === 'granted' ? 'granted' : 'denied',
 			functionality_storage: granted( 'functional' ),
 			personalization_storage: granted( 'preferences' ),
+		} );
+	}
+
+	// Best-effort deletion of real browser cookies belonging to a category
+	// the visitor just turned off — "delete previously accepted optional
+	// cookies" from the Cookie Manager spec. Only ever sees document.cookie,
+	// so httpOnly cookies (most session/auth cookies, by design) and cookies
+	// set on a different origin (third-party iframes) are out of reach from
+	// here; this covers first-party JS-writable cookies, which is what the
+	// curated Cookie Manager list (admin/cookie-categories-page.php) is
+	// meant to describe in the first place.
+	function deleteCookieExact( name ) {
+		var hostname = window.location.hostname;
+		var domainVariants = [ '', '; domain=' + hostname ];
+		if ( hostname.indexOf( '.' ) !== -1 ) {
+			domainVariants.push( '; domain=.' + hostname );
+		}
+		domainVariants.forEach( function ( domainAttr ) {
+			document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + domainAttr;
+		} );
+	}
+
+	function deleteCookiesByNames( names ) {
+		if ( ! names || ! names.length || typeof document.cookie !== 'string' ) return;
+
+		var existing = document.cookie.split( ';' ).map( function ( pair ) {
+			return pair.split( '=' )[ 0 ].trim();
+		} ).filter( Boolean );
+
+		names.forEach( function ( pattern ) {
+			if ( ! pattern ) return;
+			if ( pattern.indexOf( '*' ) !== -1 ) {
+				var prefix = pattern.slice( 0, pattern.indexOf( '*' ) );
+				existing.forEach( function ( cookieName ) {
+					if ( cookieName.indexOf( prefix ) === 0 ) deleteCookieExact( cookieName );
+				} );
+			} else {
+				deleteCookieExact( pattern );
+			}
 		} );
 	}
 
@@ -147,6 +333,30 @@
 		var prefsPanel = root.querySelector( '.adaire-cookie-banner__prefs' );
 		var reopenBtn = root.querySelector( '.adaire-cookie-banner__reopen' );
 
+		// { categoryKey: [cookieName, ...] }, read once from the curated
+		// Cookie Manager list baked into each checkbox's data-cookie-names
+		// (see render.php) — used to best-effort delete real browser cookies
+		// when a visitor turns a category off.
+		var categoryCookieNames = {};
+		if ( prefsPanel ) {
+			prefsPanel.querySelectorAll( 'input[type="checkbox"][data-category]' ).forEach( function ( box ) {
+				var key = box.getAttribute( 'data-category' );
+				try {
+					categoryCookieNames[ key ] = JSON.parse( box.getAttribute( 'data-cookie-names' ) || '[]' );
+				} catch ( e ) {
+					categoryCookieNames[ key ] = [];
+				}
+			} );
+		}
+
+		function deleteCookiesForDisabledCategories( categories ) {
+			Object.keys( categoryCookieNames ).forEach( function ( key ) {
+				if ( ! categories || ! categories[ key ] ) {
+					deleteCookiesByNames( categoryCookieNames[ key ] );
+				}
+			} );
+		}
+
 		// The preferences list (up to 8+ categories) can be much taller than the
 		// intro panel, so whichever corner/edge the banner is normally anchored
 		// to, expanding it in place risks overlapping page content. The
@@ -188,8 +398,10 @@
 		function commit( status, categories ) {
 			var record = writeConsent( version, status, categories, days );
 			dispatchConsentEvent( record );
+			logConsentToServer( root, version, record );
 			if ( googleConsentMode ) updateGoogleConsentMode( categories );
 			if ( blockScripts ) activateGatedScripts( categories );
+			deleteCookiesForDisabledCategories( categories );
 			hideBanner();
 		}
 
@@ -247,6 +459,19 @@
 				if ( kept ) hideBanner();
 			}
 		} );
+
+		// Scan once the page has fully settled — waiting past `load` (rather
+		// than scanning immediately) gives third-party analytics/ads/embed
+		// scripts, which commonly load asynchronously, a real chance to have
+		// already set their own cookies before this looks for them.
+		var scanOnceLoaded = function () {
+			setTimeout( function () { reportDetectedStorage( root ); }, 4000 );
+		};
+		if ( document.readyState === 'complete' ) {
+			scanOnceLoaded();
+		} else {
+			window.addEventListener( 'load', scanOnceLoaded );
+		}
 	}
 
 	function ready( fn ) {

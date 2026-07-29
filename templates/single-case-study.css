@@ -1,0 +1,205 @@
+/*
+ * Styles for the bundled single-adaire_case_study.php template.
+ * Enqueued only on is_singular('adaire_case_study') — see
+ * AdaireCaseStudiesCPT::enqueue_single_template_assets().
+ */
+
+.adaire-cs-single {
+	--adaire-cs-accent: #7c3aed;
+	--adaire-cs-text: #1f2937;
+	--adaire-cs-muted: #6b7280;
+	--adaire-cs-border: #e5e7eb;
+}
+
+.adaire-cs-single__hero {
+	position: relative;
+	min-height: 420px;
+	display: flex;
+	align-items: flex-end;
+	background-color: #111827;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	padding: 48px 24px;
+}
+
+.adaire-cs-single__hero::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+.adaire-cs-single__hero--no-image {
+	background-color: #1f2937;
+}
+
+.adaire-cs-single__hero-inner {
+	position: relative;
+	max-width: 1100px;
+	margin: 0 auto;
+	width: 100%;
+}
+
+.adaire-cs-single__title {
+	color: #ffffff;
+	font-size: clamp(2rem, 4vw, 3rem);
+	line-height: 1.15;
+	margin: 0;
+}
+
+.adaire-cs-single__container {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 40px 24px 80px;
+}
+
+.adaire-cs-single__subtitle {
+	font-size: 1.125rem;
+	color: var(--adaire-cs-text);
+	max-width: 760px;
+	margin: 0 0 32px;
+	line-height: 1.5;
+}
+
+.adaire-cs-single__meta {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 40px;
+	padding-bottom: 32px;
+	margin-bottom: 32px;
+	border-bottom: 1px solid var(--adaire-cs-border);
+}
+
+@media (max-width: 800px) {
+	.adaire-cs-single__meta {
+		grid-template-columns: 1fr;
+	}
+}
+
+.adaire-cs-single__summary h2,
+.adaire-cs-single__meta-label {
+	font-size: 0.8125rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--adaire-cs-accent);
+	margin: 0 0 8px;
+}
+
+.adaire-cs-single__summary p {
+	color: var(--adaire-cs-text);
+	line-height: 1.6;
+	margin: 0;
+}
+
+.adaire-cs-single__info-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 20px 24px;
+	margin: 0;
+}
+
+.adaire-cs-single__info-item dt {
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--adaire-cs-accent);
+	margin-bottom: 4px;
+}
+
+.adaire-cs-single__info-item dd {
+	margin: 0;
+	color: var(--adaire-cs-text);
+	font-size: 0.9375rem;
+	line-height: 1.4;
+}
+
+.adaire-cs-single__content {
+	color: var(--adaire-cs-text);
+	line-height: 1.7;
+	font-size: 1rem;
+	max-width: 760px;
+}
+
+.adaire-cs-single__content h2,
+.adaire-cs-single__content h3 {
+	margin-top: 2em;
+	margin-bottom: 0.6em;
+}
+
+.adaire-cs-single__content ul,
+.adaire-cs-single__content ol {
+	padding-left: 1.25em;
+}
+
+.adaire-cs-single__content img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	margin: 1.5em 0;
+}
+
+.adaire-cs-single__content blockquote {
+	border-left: 3px solid var(--adaire-cs-accent);
+	margin: 1.5em 0;
+	padding: 0.25em 0 0.25em 1.25em;
+	font-style: italic;
+	color: var(--adaire-cs-muted);
+}
+
+.adaire-cs-single__more {
+	margin-top: 64px;
+	padding-top: 40px;
+	border-top: 1px solid var(--adaire-cs-border);
+}
+
+.adaire-cs-single__more h2 {
+	font-size: 1.5rem;
+	margin: 0 0 24px;
+}
+
+.adaire-cs-more-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 20px;
+}
+
+.adaire-cs-more-card {
+	position: relative;
+	display: block;
+	height: 220px;
+	border-radius: 8px;
+	overflow: hidden;
+	background-color: #374151;
+	background-size: cover;
+	background-position: center;
+	text-decoration: none;
+}
+
+.adaire-cs-more-card__overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	padding: 16px;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.15) 60%, transparent 100%);
+}
+
+.adaire-cs-more-card__title {
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 1rem;
+	margin-bottom: 4px;
+}
+
+.adaire-cs-more-card__description {
+	color: rgba(255, 255, 255, 0.85);
+	font-size: 0.8125rem;
+	line-height: 1.4;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
