@@ -1,5 +1,5 @@
-﻿import { __ } from '@wordpress/i18n';
-import { useBlockProps, InspectorControls, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
+import { __ } from '@wordpress/i18n';
+import { useBlockProps, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 import { useEffect, useState } from '@wordpress/element';
 import {
 	PanelBody,
@@ -13,22 +13,36 @@ import {
 	ColorPicker,
 	BaseControl
 } from '@wordpress/components';
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import InspectorTabs from '../components/InspectorTabs';
+import DeviceSwitcher, { THREE_TIERS } from '../components/DeviceSwitcher';
+
+// Maps the shared DeviceSwitcher tier keys onto this block's flat, per-device
+// attributes. Desktop uses the un-suffixed base attribute (e.g. titleFontSize),
+// tablet/mobile use the "…Tablet"/"…Mobile" siblings — the exact shape save.js
+// and view.js already read.
+const DEVICE_SUFFIX = { desktop: '', tablet: 'Tablet', mobile: 'Mobile' };
+
+// Per-device fallbacks, kept in sync with block.json defaults.
+const DEVICE_DEFAULTS = {
+	titleFontSize: { desktop: 48, tablet: 36, mobile: 28 },
+	descriptionFontSize: { desktop: 18, tablet: 16, mobile: 14 },
+	titleScrollingGap: { desktop: 300, tablet: 200, mobile: 150 },
+};
 
 export default function Edit({ attributes, setAttributes }) {
 	const [deviceType, setDeviceType] = useState('desktop');
-	
-	const { 
-		videos = [], 
-		transitionDuration = 8000, 
-		autoPlay = true, 
+
+	const {
+		videos = [],
+		transitionDuration = 8000,
+		autoPlay = true,
 		showControls = true,
 		backgroundColor = "#000000",
 		textColor = "#ffffff",
-		titleFontSize = { desktop: 48, tablet: 36, mobile: 28, smartwatch: 20 },
+		titleFontSize = 48,
 		titleFontSizeUnit = "px",
 		titleFontWeight = "700",
-		descriptionFontSize = { desktop: 18, tablet: 16, mobile: 14, smartwatch: 12 },
+		descriptionFontSize = 18,
 		descriptionFontSizeUnit = "px",
 		overlayOpacity = 0.3,
 		navArrowLeftColor = "rgba(255, 255, 255, 0.7)",
@@ -48,25 +62,37 @@ export default function Edit({ attributes, setAttributes }) {
 		navArrowLeftBgBlurHover = 0,
 		navArrowRightBgBlur = 0,
 		navArrowRightBgBlurHover = 0,
-		titleScrollingGap = { desktop: 300, tablet: 200, mobile: 150, smartwatch: 100 },
 		titleScrollingSpeed = 100,
 		overlayType = "solid",
 		overlayGradientStart = "#ff0000",
 		overlayGradientEnd = "#0000ff",
 		overlayGradientDirection = "to bottom",
 		overlayGradientStartOpacity = 0.5,
-		overlayGradientEndOpacity = 0.3
+		overlayGradientEndOpacity = 0.3,
+		cursorColor = "#ffffff",
+		cursorBgColor = "#ffffff",
+		cursorBgOpacity = 0.1
 	} = attributes;
+
+	// Read/write the active breakpoint's flat attribute for a given base name.
+	const getDeviceAttr = (base) => {
+		const key = base + DEVICE_SUFFIX[deviceType];
+		return attributes[key] ?? DEVICE_DEFAULTS[base]?.[deviceType];
+	};
+	const setDeviceAttr = (base, value) => {
+		const key = base + DEVICE_SUFFIX[deviceType];
+		setAttributes({ [key]: value });
+	};
 
 	// Helper function to convert hex color to RGB and apply opacity (same as save.js)
 	const applyOpacityToColor = (colorString, opacity) => {
 		if (!colorString) return `rgba(255, 255, 255, ${opacity})`;
-		
+
 		// Handle hex colors (e.g., #ff0000 or #f00)
 		if (colorString.startsWith('#')) {
 			const hex = colorString.replace('#', '');
 			let r, g, b;
-			
+
 			if (hex.length === 3) {
 				// Short hex format (#f00)
 				r = parseInt(hex[0] + hex[0], 16);
@@ -81,10 +107,10 @@ export default function Edit({ attributes, setAttributes }) {
 				// Invalid hex, fallback
 				return `rgba(255, 255, 255, ${opacity})`;
 			}
-			
+
 			return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 		}
-		
+
 		// Handle existing rgba/rgb strings
 		const match = colorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
 		if (match) {
@@ -93,7 +119,7 @@ export default function Edit({ attributes, setAttributes }) {
 			const b = match[3];
 			return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 		}
-		
+
 		// Fallback if parsing fails
 		return `rgba(255, 255, 255, ${opacity})`;
 	};
@@ -196,7 +222,7 @@ export default function Edit({ attributes, setAttributes }) {
 	const updateVideo = (index, field, value) => {
 		const currentVideos = videos || [];
 		const newVideos = [...currentVideos];
-		
+
 		// Ensure the video exists
 		if (!newVideos[index]) {
 			newVideos[index] = {
@@ -214,10 +240,10 @@ export default function Edit({ attributes, setAttributes }) {
 				imageId: 0
 			};
 		}
-		
+
 		// Update the specific field
 		newVideos[index][field] = value;
-		
+
 		// Auto-update thumbnail for YouTube videos
 		if (field === 'videoUrl' && newVideos[index].videoType === 'youtube') {
 			const videoId = getVideoId(value, 'youtube');
@@ -225,7 +251,7 @@ export default function Edit({ attributes, setAttributes }) {
 				newVideos[index].thumbnail = getThumbnailUrl(videoId, 'youtube');
 			}
 		}
-		
+
 		setAttributes({ videos: newVideos });
 	};
 
@@ -244,7 +270,7 @@ export default function Edit({ attributes, setAttributes }) {
 			imageUrl: "",
 			imageId: 0
 		};
-		
+
 		const newVideos = [...(videos || []), newVideo];
 		setAttributes({ videos: newVideos });
 	};
@@ -276,10 +302,207 @@ export default function Edit({ attributes, setAttributes }) {
 		}
 	};
 
+	const deviceLabel = THREE_TIERS.find((t) => t.key === deviceType)?.label || 'Desktop';
+
+	const fontSizeUnitOptions = [
+		{ label: 'px', value: 'px' },
+		{ label: 'em', value: 'em' },
+		{ label: 'rem', value: 'rem' },
+		{ label: '%', value: '%' },
+		{ label: 'vw', value: 'vw' },
+		{ label: 'vh', value: 'vh' }
+	];
+
 	return (
-		<div {...useBlockProps()} style={{height: "95vh"}}>
-			<InspectorControls>
-				<PanelBody title={__('Video Slider Settings', 'adaire-blocks')}>
+		<div {...useBlockProps()} style={{ height: "95vh" }}>
+			<InspectorTabs attributes={attributes} setAttributes={setAttributes}>
+				{/* ---------------- CONTENT ---------------- */}
+				{(videos || []).map((video, index) => (
+					<PanelBody
+						section="content"
+						key={index}
+						title={__('Video', 'adaire-blocks') + ' ' + (index + 1)}
+						initialOpen={index === 0}
+					>
+						<TextControl
+							label={__('Video Title', 'adaire-blocks')}
+							value={video.title || ''}
+							onChange={(value) => updateVideo(index, 'title', value)}
+						/>
+
+						<TextareaControl
+							label={__('Video Description', 'adaire-blocks')}
+							value={video.description || ''}
+							onChange={(value) => updateVideo(index, 'description', value)}
+						/>
+
+						<SelectControl
+							label={__('Video Type', 'adaire-blocks')}
+							value={video.videoType || 'youtube'}
+							options={[
+								{ label: 'YouTube', value: 'youtube' },
+								{ label: 'Vimeo', value: 'vimeo' },
+								{ label: __('WordPress (Media Library)', 'adaire-blocks'), value: 'wordpress' }
+							]}
+							onChange={(value) => updateVideo(index, 'videoType', value)}
+						/>
+
+						{video.videoType === 'wordpress' ? (
+							<BaseControl label={__('Video File', 'adaire-blocks')}>
+								<MediaUploadCheck>
+									<MediaUpload
+										onSelect={(media) => updateVideo(index, 'videoUrl', media.url)}
+										allowedTypes={['video']}
+										render={({ open }) => (
+											<div className="video-upload-control">
+												{video.videoUrl ? (
+													<>
+														<video
+															src={video.videoUrl}
+															muted
+															style={{ maxWidth: '100%', maxHeight: '160px', display: 'block', marginBottom: '8px' }}
+														/>
+														<Button onClick={open} variant="secondary">
+															{__('Replace Video', 'adaire-blocks')}
+														</Button>
+														<Button
+															onClick={() => updateVideo(index, 'videoUrl', '')}
+															variant="link"
+															isDestructive
+															style={{ marginLeft: '8px' }}
+														>
+															{__('Remove', 'adaire-blocks')}
+														</Button>
+													</>
+												) : (
+													<Button onClick={open} variant="primary">
+														{__('Select Video', 'adaire-blocks')}
+													</Button>
+												)}
+											</div>
+										)}
+									/>
+								</MediaUploadCheck>
+							</BaseControl>
+						) : (
+							<TextControl
+								label={__('Video URL', 'adaire-blocks')}
+								value={video.videoUrl || ''}
+								onChange={(value) => updateVideo(index, 'videoUrl', value)}
+								help={__('Enter YouTube or Vimeo URL', 'adaire-blocks')}
+							/>
+						)}
+
+						<ToggleControl
+							label={__('Autoplay', 'adaire-blocks')}
+							checked={video.autoplay !== false}
+							onChange={(value) => updateVideo(index, 'autoplay', value)}
+						/>
+
+						<ToggleControl
+							label={__('Muted', 'adaire-blocks')}
+							checked={video.muted !== false}
+							onChange={(value) => updateVideo(index, 'muted', value)}
+						/>
+
+						<ToggleControl
+							label={__('Use Static Image Instead of Video', 'adaire-blocks')}
+							checked={video.useImage === true}
+							onChange={(value) => updateVideo(index, 'useImage', value)}
+							help={__('Toggle to use a static background image instead of video', 'adaire-blocks')}
+						/>
+
+						{video.useImage && (
+							<>
+								<BaseControl label={__('Background Image', 'adaire-blocks')}>
+									<MediaUploadCheck>
+										<MediaUpload
+											onSelect={(media) => {
+												updateVideo(index, 'imageUrl', media.url);
+												updateVideo(index, 'imageId', media.id);
+											}}
+											allowedTypes={['image']}
+											value={video.imageId || 0}
+											render={({ open }) => (
+												<div className="image-upload-control">
+													{video.imageUrl ? (
+														<div className="image-preview">
+															<img src={video.imageUrl} alt="Background" style={{ maxWidth: '100%', height: 'auto', maxHeight: '200px' }} />
+															<Button onClick={open} variant="secondary" style={{ marginTop: '10px' }}>
+																{__('Change Image', 'adaire-blocks')}
+															</Button>
+															<Button
+																onClick={() => {
+																	updateVideo(index, 'imageUrl', '');
+																	updateVideo(index, 'imageId', 0);
+																}}
+																variant="link"
+																isDestructive
+																style={{ marginTop: '5px' }}
+															>
+																{__('Remove Image', 'adaire-blocks')}
+															</Button>
+														</div>
+													) : (
+														<Button onClick={open} variant="primary">
+															{__('Select Background Image', 'adaire-blocks')}
+														</Button>
+													)}
+												</div>
+											)}
+										/>
+									</MediaUploadCheck>
+								</BaseControl>
+							</>
+						)}
+
+						<div className="video-controls">
+							{(videos && videos.length > 1) && (
+								<>
+									<div className="reorder-controls">
+										<ButtonGroup>
+											<Button
+												onClick={() => moveVideoUp(index)}
+												disabled={index === 0}
+												label={__('Move Up', 'adaire-blocks')}
+											>
+												↑ {__('Up', 'adaire-blocks')}
+											</Button>
+											<Button
+												onClick={() => moveVideoDown(index)}
+												disabled={index === (videos ? videos.length - 1 : 0)}
+												label={__('Move Down', 'adaire-blocks')}
+											>
+												↓ {__('Down', 'adaire-blocks')}
+											</Button>
+										</ButtonGroup>
+									</div>
+									<Button isDestructive onClick={() => removeVideo(index)}>
+										{__('Remove Video', 'adaire-blocks')}
+									</Button>
+								</>
+							)}
+						</div>
+					</PanelBody>
+				))}
+
+				<PanelBody section="content" title={__('Add New Video', 'adaire-blocks')}>
+					<Button isPrimary onClick={addVideo}>
+						{__('Add Video', 'adaire-blocks')}
+					</Button>
+				</PanelBody>
+
+				<PanelBody section="content" title={__('Block Settings', 'adaire-blocks')} initialOpen={false}>
+					<TextControl
+						label={__('Block ID', 'adaire-blocks')}
+						value={blockId}
+						onChange={(value) => setAttributes({ blockId: value })}
+						help={__('Add a custom ID to this block for CSS targeting or anchor links.', 'adaire-blocks')}
+					/>
+				</PanelBody>
+
+				{/* ---------------- LAYOUT ---------------- */}
+				<PanelBody section="layout" title={__('Video Slider Settings', 'adaire-blocks')} initialOpen={true}>
 					<RangeControl
 						label={__('Transition Duration (ms)', 'adaire-blocks')}
 						value={transitionDuration}
@@ -298,79 +521,50 @@ export default function Edit({ attributes, setAttributes }) {
 						checked={showControls}
 						onChange={(value) => setAttributes({ showControls: value })}
 					/>
-					<RangeControl
-						label={__('Overlay Opacity', 'adaire-blocks')}
-						value={overlayOpacity}
-						onChange={(value) => setAttributes({ overlayOpacity: value })}
-						min={0}
-						max={1}
-						step={0.1}
-					/>
 				</PanelBody>
 
-				<PanelBody title={__('Styling', 'adaire-blocks')}>
-					<BaseControl label={__('Background Color', 'adaire-blocks')}>
-						<ColorPicker
-							color={backgroundColor}
-							onChangeComplete={(color) => setAttributes({ backgroundColor: color.hex })}
-							disableAlpha
-						/>
-					</BaseControl>
-					<BaseControl label={__('Text Color', 'adaire-blocks')}>
-						<ColorPicker
-							color={textColor}
-							onChangeComplete={(color) => setAttributes({ textColor: color.hex })}
-							disableAlpha
-						/>
-					</BaseControl>
-					<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+				{/* ---------------- STYLE ---------------- */}
+				<PanelBody section="style" priority="high" title={__('Typography', 'adaire-blocks')} initialOpen={true}>
+					<DeviceSwitcher
+						deviceType={deviceType}
+						setDeviceType={setDeviceType}
+						label={__('Breakpoint', 'adaire-blocks')}
+						tiers={THREE_TIERS}
+					/>
+					<p style={{ marginBottom: '12px', fontSize: '12px', color: '#757575' }}>
+						{__('Editing:', 'adaire-blocks')} {deviceLabel} — {__('the editor preview shows desktop.', 'adaire-blocks')}
+					</p>
+
+					<div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
 						<div style={{ flex: 1 }}>
 							<TextControl
 								label={__('Title Font Size', 'adaire-blocks')}
-								value={titleFontSize}
+								type="number"
+								value={getDeviceAttr('titleFontSize')}
 								onChange={(value) => {
-									// Allow any input - we'll validate on blur
 									if (value === '') {
-										setAttributes({ titleFontSize: '' });
-									} else if (!isNaN(parseFloat(value)) && isFinite(value)) {
-										setAttributes({ titleFontSize: parseFloat(value) });
-									}
-								}}
-								onBlur={(e) => {
-									// Validate on blur and clamp to range
-									const value = e.target.value;
-									if (value === '') {
-										setAttributes({ titleFontSize: 48 });
+										setDeviceAttr('titleFontSize', '');
 									} else {
-										const numValue = parseFloat(value);
-										if (isNaN(numValue) || numValue < 12) {
-											setAttributes({ titleFontSize: 12 });
-										} else if (numValue > 120) {
-											setAttributes({ titleFontSize: 120 });
+										const num = parseFloat(value);
+										if (!isNaN(num)) {
+											setDeviceAttr('titleFontSize', num);
 										}
 									}
 								}}
-								type="number"
 								min={12}
 								max={120}
 								step={1}
 							/>
 						</div>
-						<div style={{ flex: '0 0 auto', marginTop: '20px' }}>
+						<div style={{ flex: '0 0 auto' }}>
 							<SelectControl
 								value={titleFontSizeUnit}
 								onChange={(value) => setAttributes({ titleFontSizeUnit: value })}
-								options={[
-									{ label: 'px', value: 'px' },
-									{ label: 'em', value: 'em' },
-									{ label: 'rem', value: 'rem' },
-									{ label: '%', value: '%' },
-									{ label: 'vw', value: 'vw' },
-									{ label: 'vh', value: 'vh' }
-								]}
+								options={fontSizeUnitOptions}
 							/>
 						</div>
 					</div>
+
 					<SelectControl
 						label={__('Title Font Weight', 'adaire-blocks')}
 						value={titleFontWeight}
@@ -385,33 +579,47 @@ export default function Edit({ attributes, setAttributes }) {
 							{ label: __('Black (900)', 'adaire-blocks'), value: '900' }
 						]}
 					/>
+
+					<div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
+						<div style={{ flex: 1 }}>
+							<TextControl
+								label={__('Description Font Size', 'adaire-blocks')}
+								type="number"
+								value={getDeviceAttr('descriptionFontSize')}
+								onChange={(value) => {
+									if (value === '') {
+										setDeviceAttr('descriptionFontSize', '');
+									} else {
+										const num = parseFloat(value);
+										if (!isNaN(num)) {
+											setDeviceAttr('descriptionFontSize', num);
+										}
+									}
+								}}
+								min={8}
+								max={48}
+								step={1}
+							/>
+						</div>
+						<div style={{ flex: '0 0 auto' }}>
+							<SelectControl
+								value={descriptionFontSizeUnit}
+								onChange={(value) => setAttributes({ descriptionFontSizeUnit: value })}
+								options={fontSizeUnitOptions}
+							/>
+						</div>
+					</div>
+
 					<RangeControl
 						label={__('Title Scrolling Gap', 'adaire-blocks')}
-						value={titleScrollingGap}
-						onChange={(value) => setAttributes({ titleScrollingGap: value })}
+						value={getDeviceAttr('titleScrollingGap')}
+						onChange={(value) => setDeviceAttr('titleScrollingGap', value)}
 						min={0}
 						max={1000}
 						step={10}
 						help={__('Space between repeated text copies in the scrolling animation', 'adaire-blocks')}
 					/>
-					<RangeControl
-						label={__('Title Scrolling Gap (Tablet)', 'adaire-blocks')}
-						value={titleScrollingGapTablet}
-						onChange={(value) => setAttributes({ titleScrollingGapTablet: value })}
-						min={0}
-						max={800}
-						step={10}
-						help={__('Space between repeated text copies on tablet screens (768px and below)', 'adaire-blocks')}
-					/>
-					<RangeControl
-						label={__('Title Scrolling Gap (Mobile)', 'adaire-blocks')}
-						value={titleScrollingGapMobile}
-						onChange={(value) => setAttributes({ titleScrollingGapMobile: value })}
-						min={0}
-						max={600}
-						step={10}
-						help={__('Space between repeated text copies on mobile screens (480px and below)', 'adaire-blocks')}
-					/>
+
 					<RangeControl
 						label={__('Title Scrolling Speed', 'adaire-blocks')}
 						value={titleScrollingSpeed}
@@ -421,96 +629,26 @@ export default function Edit({ attributes, setAttributes }) {
 						step={10}
 						help={__('Speed of the scrolling animation in pixels per second', 'adaire-blocks')}
 					/>
-					<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-						<div style={{ flex: 1 }}>
-							<TextControl
-								label={__('Description Font Size', 'adaire-blocks')}
-								value={descriptionFontSize}
-								onChange={(value) => {
-									// Allow any input - we'll validate on blur
-									if (value === '') {
-										setAttributes({ descriptionFontSize: '' });
-									} else if (!isNaN(parseFloat(value)) && isFinite(value)) {
-										setAttributes({ descriptionFontSize: parseFloat(value) });
-									}
-								}}
-								onBlur={(e) => {
-									// Validate on blur and clamp to range
-									const value = e.target.value;
-									if (value === '') {
-										setAttributes({ descriptionFontSize: 18 });
-									} else {
-										const numValue = parseFloat(value);
-										if (isNaN(numValue) || numValue < 8) {
-											setAttributes({ descriptionFontSize: 8 });
-										} else if (numValue > 48) {
-											setAttributes({ descriptionFontSize: 48 });
-										}
-									}
-								}}
-								type="number"
-								min={8}
-								max={48}
-								step={1}
-							/>
-						</div>
-						<div style={{ flex: '0 0 auto', marginTop: '20px' }}>
-							<SelectControl
-								value={descriptionFontSizeUnit}
-								onChange={(value) => setAttributes({ descriptionFontSizeUnit: value })}
-								options={[
-									{ label: 'px', value: 'px' },
-									{ label: 'em', value: 'em' },
-									{ label: 'rem', value: 'rem' },
-									{ label: '%', value: '%' },
-									{ label: 'vw', value: 'vw' },
-									{ label: 'vh', value: 'vh' }
-								]}
-							/>
-						</div>
-					</div>
 				</PanelBody>
-				
-				<PanelBody title={__('Responsive Settings', 'adaire-blocks')} initialOpen={false}>
-					<RangeControl
-						label={__('Title Font Size (Tablet)', 'adaire-blocks')}
-						value={titleFontSizeTablet}
-						onChange={(value) => setAttributes({ titleFontSizeTablet: value })}
-						min={16}
-						max={200}
-						step={1}
-						help={__('Font size for title on tablet screens (768px and below)', 'adaire-blocks')}
-					/>
-					<RangeControl
-						label={__('Title Font Size (Mobile)', 'adaire-blocks')}
-						value={titleFontSizeMobile}
-						onChange={(value) => setAttributes({ titleFontSizeMobile: value })}
-						min={12}
-						max={200}
-						step={1}
-						help={__('Font size for title on mobile screens (480px and below)', 'adaire-blocks')}
-					/>
-					<RangeControl
-						label={__('Description Font Size (Tablet)', 'adaire-blocks')}
-						value={descriptionFontSizeTablet}
-						onChange={(value) => setAttributes({ descriptionFontSizeTablet: value })}
-						min={8}
-						max={200}
-						step={1}
-						help={__('Font size for description on tablet screens (768px and below)', 'adaire-blocks')}
-					/>
-					<RangeControl
-						label={__('Description Font Size (Mobile)', 'adaire-blocks')}
-						value={descriptionFontSizeMobile}
-						onChange={(value) => setAttributes({ descriptionFontSizeMobile: value })}
-						min={8}
-						max={200}
-						step={1}
-						help={__('Font size for description on mobile screens (480px and below)', 'adaire-blocks')}
-					/>
+
+				<PanelBody section="style" priority="high" title={__('Colors', 'adaire-blocks')} initialOpen={false}>
+					<BaseControl label={__('Background Color', 'adaire-blocks')}>
+						<ColorPicker
+							color={backgroundColor}
+							onChangeComplete={(color) => setAttributes({ backgroundColor: color.hex })}
+							disableAlpha
+						/>
+					</BaseControl>
+					<BaseControl label={__('Text Color', 'adaire-blocks')}>
+						<ColorPicker
+							color={textColor}
+							onChangeComplete={(color) => setAttributes({ textColor: color.hex })}
+							disableAlpha
+						/>
+					</BaseControl>
 				</PanelBody>
-				
-				<PanelBody title={__('Video Overlay', 'adaire-blocks')} initialOpen={false}>
+
+				<PanelBody section="style" priority="medium" title={__('Video Overlay', 'adaire-blocks')} initialOpen={false}>
 					<SelectControl
 						label={__('Overlay Type', 'adaire-blocks')}
 						value={overlayType}
@@ -583,8 +721,8 @@ export default function Edit({ attributes, setAttributes }) {
 						</>
 					)}
 				</PanelBody>
-				
-				<PanelBody title={__('Navigation Arrow Colors', 'adaire-blocks')} initialOpen={false}>
+
+				<PanelBody section="style" priority="medium" title={__('Navigation Arrow Colors', 'adaire-blocks')} initialOpen={false}>
 					<BaseControl label={__('Left Arrow Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowLeftColor}
@@ -610,8 +748,8 @@ export default function Edit({ attributes, setAttributes }) {
 						/>
 					</BaseControl>
 				</PanelBody>
-				
-				<PanelBody title={__('Navigation Arrow Background Colors', 'adaire-blocks')} initialOpen={false}>
+
+				<PanelBody section="style" priority="medium" title={__('Navigation Arrow Background Colors', 'adaire-blocks')} initialOpen={false}>
 					<BaseControl label={__('Left Arrow Background Color', 'adaire-blocks')}>
 						<ColorPicker
 							color={navArrowLeftBgColor}
@@ -636,7 +774,7 @@ export default function Edit({ attributes, setAttributes }) {
 							onChangeComplete={(color) => setAttributes({ navArrowRightBgColorHover: color.hex })}
 						/>
 					</BaseControl>
-					
+
 					<RangeControl
 						label={__('Left Arrow Background Opacity', 'adaire-blocks')}
 						value={navArrowLeftBgOpacity}
@@ -645,7 +783,6 @@ export default function Edit({ attributes, setAttributes }) {
 						max={1}
 						step={0.1}
 					/>
-					
 					<RangeControl
 						label={__('Left Arrow Background Opacity (Hover)', 'adaire-blocks')}
 						value={navArrowLeftBgOpacityHover}
@@ -654,7 +791,6 @@ export default function Edit({ attributes, setAttributes }) {
 						max={1}
 						step={0.1}
 					/>
-					
 					<RangeControl
 						label={__('Right Arrow Background Opacity', 'adaire-blocks')}
 						value={navArrowRightBgOpacity}
@@ -663,7 +799,6 @@ export default function Edit({ attributes, setAttributes }) {
 						max={1}
 						step={0.1}
 					/>
-					
 					<RangeControl
 						label={__('Right Arrow Background Opacity (Hover)', 'adaire-blocks')}
 						value={navArrowRightBgOpacityHover}
@@ -672,7 +807,6 @@ export default function Edit({ attributes, setAttributes }) {
 						max={1}
 						step={0.1}
 					/>
-					
 					<RangeControl
 						label={__('Left Arrow Background Blur', 'adaire-blocks')}
 						value={navArrowLeftBgBlur}
@@ -681,7 +815,6 @@ export default function Edit({ attributes, setAttributes }) {
 						max={20}
 						step={1}
 					/>
-					
 					<RangeControl
 						label={__('Left Arrow Background Blur (Hover)', 'adaire-blocks')}
 						value={navArrowLeftBgBlurHover}
@@ -690,7 +823,6 @@ export default function Edit({ attributes, setAttributes }) {
 						max={20}
 						step={1}
 					/>
-					
 					<RangeControl
 						label={__('Right Arrow Background Blur', 'adaire-blocks')}
 						value={navArrowRightBgBlur}
@@ -699,7 +831,6 @@ export default function Edit({ attributes, setAttributes }) {
 						max={20}
 						step={1}
 					/>
-					
 					<RangeControl
 						label={__('Right Arrow Background Blur (Hover)', 'adaire-blocks')}
 						value={navArrowRightBgBlurHover}
@@ -710,149 +841,30 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 
-				{(videos || []).map((video, index) => (
-					<PanelBody 
-						key={index}
-						title={__('Video', 'adaire-blocks') + ' ' + (index + 1)}
-						initialOpen={index === 0}
-					>
-						<TextControl
-							label={__('Video Title', 'adaire-blocks')}
-							value={video.title || ''}
-							onChange={(value) => updateVideo(index, 'title', value)}
+				<PanelBody section="style" priority="medium" title={__('Cursor', 'adaire-blocks')} initialOpen={false}>
+					<BaseControl label={__('Cursor Color', 'adaire-blocks')} help={__('Colors the cursor ring, arrow glyph, and border.', 'adaire-blocks')}>
+						<ColorPicker
+							color={cursorColor}
+							onChangeComplete={(color) => setAttributes({ cursorColor: color.hex })}
 						/>
-
-						<TextareaControl
-							label={__('Video Description', 'adaire-blocks')}
-							value={video.description || ''}
-							onChange={(value) => updateVideo(index, 'description', value)}
+					</BaseControl>
+					<BaseControl label={__('Cursor Background Color', 'adaire-blocks')}>
+						<ColorPicker
+							color={cursorBgColor}
+							onChangeComplete={(color) => setAttributes({ cursorBgColor: color.hex })}
+							disableAlpha
 						/>
-
-						<SelectControl
-							label={__('Video Type', 'adaire-blocks')}
-							value={video.videoType || 'youtube'}
-							options={[
-								{ label: 'YouTube', value: 'youtube' },
-								{ label: 'Vimeo', value: 'vimeo' }
-							]}
-							onChange={(value) => updateVideo(index, 'videoType', value)}
-						/>
-
-						<TextControl
-							label={__('Video URL', 'adaire-blocks')}
-							value={video.videoUrl || ''}
-							onChange={(value) => updateVideo(index, 'videoUrl', value)}
-							help={__('Enter YouTube or Vimeo URL', 'adaire-blocks')}
-						/>
-
-						<ToggleControl
-							label={__('Autoplay', 'adaire-blocks')}
-							checked={video.autoplay !== false}
-							onChange={(value) => updateVideo(index, 'autoplay', value)}
-						/>
-
-						<ToggleControl
-							label={__('Muted', 'adaire-blocks')}
-							checked={video.muted !== false}
-							onChange={(value) => updateVideo(index, 'muted', value)}
-						/>
-
-						<ToggleControl
-							label={__('Use Static Image Instead of Video', 'adaire-blocks')}
-							checked={video.useImage === true}
-							onChange={(value) => updateVideo(index, 'useImage', value)}
-							help={__('Toggle to use a static background image instead of video', 'adaire-blocks')}
-						/>
-
-						{video.useImage && (
-							<>
-								<BaseControl label={__('Background Image', 'adaire-blocks')}>
-									<MediaUploadCheck>
-										<MediaUpload
-											onSelect={(media) => {
-												updateVideo(index, 'imageUrl', media.url);
-												updateVideo(index, 'imageId', media.id);
-											}}
-											allowedTypes={['image']}
-											value={video.imageId || 0}
-											render={({ open }) => (
-												<div className="image-upload-control">
-													{video.imageUrl ? (
-														<div className="image-preview">
-															<img src={video.imageUrl} alt="Background" style={{ maxWidth: '100%', height: 'auto', maxHeight: '200px' }} />
-															<Button onClick={open} variant="secondary" style={{ marginTop: '10px' }}>
-																{__('Change Image', 'adaire-blocks')}
-															</Button>
-															<Button 
-																onClick={() => {
-																	updateVideo(index, 'imageUrl', '');
-																	updateVideo(index, 'imageId', 0);
-																}} 
-																variant="link" 
-																isDestructive
-																style={{ marginTop: '5px' }}
-															>
-																{__('Remove Image', 'adaire-blocks')}
-															</Button>
-														</div>
-													) : (
-														<Button onClick={open} variant="primary">
-															{__('Select Background Image', 'adaire-blocks')}
-														</Button>
-													)}
-												</div>
-											)}
-										/>
-									</MediaUploadCheck>
-								</BaseControl>
-							</>
-						)}
-
-						<div className="video-controls">
-							{(videos && videos.length > 1) && (
-								<>
-									<div className="reorder-controls">
-										<ButtonGroup>
-											<Button
-												onClick={() => moveVideoUp(index)}
-												disabled={index === 0}
-												label={__('Move Up', 'adaire-blocks')}
-											>
-												â†‘ {__('Up', 'adaire-blocks')}
-											</Button>
-											<Button
-												onClick={() => moveVideoDown(index)}
-												disabled={index === (videos ? videos.length - 1 : 0)}
-												label={__('Move Down', 'adaire-blocks')}
-											>
-												â†“ {__('Down', 'adaire-blocks')}
-											</Button>
-										</ButtonGroup>
-									</div>
-									<Button isDestructive onClick={() => removeVideo(index)}>
-										{__('Remove Video', 'adaire-blocks')}
-									</Button>
-								</>
-							)}
-						</div>
-					</PanelBody>
-				))}
-
-				<PanelBody title={__('Add New Video', 'adaire-blocks')}>
-					<Button isPrimary onClick={addVideo}>
-						{__('Add Video', 'adaire-blocks')}
-					</Button>
-				</PanelBody>
-
-				<PanelBody title="Block Settings" initialOpen={false}>
-					<TextControl
-						label="Block ID"
-						value={blockId}
-						onChange={(value) => setAttributes({ blockId: value })}
-						help="Add a custom ID to this block for CSS targeting or anchor links."
+					</BaseControl>
+					<RangeControl
+						label={__('Cursor Background Opacity', 'adaire-blocks')}
+						value={cursorBgOpacity}
+						onChange={(value) => setAttributes({ cursorBgOpacity: value })}
+						min={0}
+						max={1}
+						step={0.1}
 					/>
 				</PanelBody>
-			</InspectorControls>
+			</InspectorTabs>
 
 			<div className="video-hero-editor" style={{
 				backgroundColor: backgroundColor,
@@ -879,7 +891,7 @@ export default function Edit({ attributes, setAttributes }) {
 						{videos && videos[0] ? (
 							<div style={{ textAlign: 'center' }}>
 								<div style={{ fontSize: '24px', marginBottom: '10px' }}>
-									{videos[0].videoType === 'youtube' ? 'ðŸ“º' : 'ðŸŽ¬'} {videos[0].title}
+									{videos[0].videoType === 'youtube' ? '📺' : '🎬'} {videos[0].title}
 								</div>
 								<div style={{ fontSize: '14px', opacity: 0.8 }}>
 									{videos[0].description}
@@ -912,14 +924,14 @@ export default function Edit({ attributes, setAttributes }) {
 						{videos && videos[0] && (
 							<>
 								<h1 style={{
-									fontSize: `${titleFontSize}px`,
+									fontSize: `${titleFontSize}${titleFontSizeUnit}`,
 									fontWeight: titleFontWeight,
 									margin: '0 0 10px 0'
 								}}>
 									{videos[0].title}
 								</h1>
 								<p style={{
-									fontSize: `${descriptionFontSize}px`,
+									fontSize: `${descriptionFontSize}${descriptionFontSizeUnit}`,
 									margin: '0 0 20px 0',
 									opacity: 0.9
 								}}>
@@ -971,6 +983,3 @@ export default function Edit({ attributes, setAttributes }) {
 		</div>
 	);
 }
-
-
-

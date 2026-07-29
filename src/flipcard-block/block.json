@@ -27,6 +27,10 @@
             "type": "string",
             "default": ""
         },
+        "contentPreset": {
+            "type": "string",
+            "default": ""
+        },
         "width": {
             "type": "object",
             "default": {

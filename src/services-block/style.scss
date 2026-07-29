@@ -52,10 +52,6 @@
 		height: var(--container-height-mobile, 55vh);
 	}
 
-	// Smartwatch responsive
-	@media (max-width: 320px) {
-		height: var(--container-height-watch, 50vh);
-	}
 }
 
 .ad-services-block-cursor {
@@ -98,10 +94,6 @@
 		height: var(--container-height-mobile, 55vh);
 	}
 
-	// Smartwatch responsive
-	@media (max-width: 320px) {
-		height: var(--container-height-watch, 50vh);
-	}
 }
 
 .ad-services-block-story-img img {
@@ -119,10 +111,6 @@
 		height: var(--container-height-mobile, 55vh);
 	}
 
-	// Smartwatch responsive
-	@media (max-width: 320px) {
-		height: var(--container-height-watch, 50vh);
-	}
 }
 
 .ad-services-block-story-img .img {
@@ -364,3 +352,400 @@
 
 // Responsive height breakpoints are now handled inline with media queries
 
+
+// ============================================================================
+
+// ============================================================================
+// Animated Content Carousel — layout modes (horizontal / vertical / fullscreen
+// / split). Cohesive surface + typography system with real contrast per mode.
+// ============================================================================
+.ad-acc {
+  --acc-accent: #14161a;
+  --acc-accent-ink: #ffffff;
+  --acc-surface: #ffffff;
+  --acc-surface-2: #f5f4f1;
+  --acc-ink: #14161a;
+  --acc-muted: #5b616e;
+  --acc-line: rgba(20, 22, 26, 0.1);
+  --acc-radius: 22px;
+
+  position: relative;
+  width: 100%;
+  color: var(--acc-ink);
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+
+  * { box-sizing: border-box; }
+
+  &__header { margin: 0 0 28px; max-width: 70ch; }
+  &__heading {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 10px;
+    color: var(--acc-ink);
+  }
+  &__intro {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--acc-muted);
+    margin: 0;
+  }
+
+  &__viewport { position: relative; overflow: hidden; width: 100%; }
+  &__track { display: flex; }
+  &__slide { flex: 0 0 100%; min-width: 0; }
+
+  &__media {
+    position: relative;
+    overflow: hidden;
+    background: var(--acc-surface-2);
+
+    img,
+    .ad-acc__media-placeholder {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+  &__media-placeholder {
+    min-height: 240px;
+    background:
+      radial-gradient(120% 120% at 0% 0%, #e9e7ff 0%, transparent 46%),
+      radial-gradient(120% 120% at 100% 100%, #ffe6ef 0%, transparent 46%),
+      #eef0f4;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 38px clamp(24px, 3vw, 48px);
+  }
+  &__num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--acc-muted);
+  }
+  &__title {
+    font-size: clamp(1.55rem, 2.4vw, 2.4rem);
+    font-weight: 640;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    margin: 0;
+    color: var(--acc-ink);
+  }
+  &__desc {
+    font-size: 1.02rem;
+    line-height: 1.6;
+    color: var(--acc-muted);
+    margin: 0;
+    max-width: 52ch;
+  }
+  &__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    margin: 4px 0 0;
+  }
+  &__tag {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--acc-muted);
+    background: var(--acc-surface-2);
+    border: 1px solid var(--acc-line);
+    border-radius: 999px;
+    padding: 4px 12px;
+  }
+  &__link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--acc-ink);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--acc-line);
+    background: var(--acc-surface);
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+
+    &:hover {
+      background: var(--acc-accent);
+      color: var(--acc-accent-ink);
+      transform: translateY(-1px);
+    }
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+  }
+  &__arrow {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--acc-line);
+    background: var(--acc-surface);
+    color: var(--acc-ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+
+    svg { width: 17px; height: 17px; }
+
+    &:hover {
+      background: var(--acc-accent);
+      color: var(--acc-accent-ink);
+      border-color: var(--acc-accent);
+      transform: scale(1.06);
+    }
+  }
+  &__dots {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+  }
+  &__dot {
+    position: relative;
+    width: 34px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--acc-line);
+    overflow: hidden;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &.is-active { background: rgba(20, 22, 26, 0.18); }
+  }
+  &__dot-fill {
+    position: absolute;
+    inset: 0;
+    width: 0;
+    background: var(--acc-accent);
+    border-radius: 999px;
+    pointer-events: none;
+  }
+
+  &__cta { margin-top: 26px; }
+  &__cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border-radius: 999px;
+    background: var(--acc-accent);
+    color: var(--acc-accent-ink);
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, opacity 0.2s;
+
+    &:hover { transform: translateY(-1px); opacity: 0.92; }
+  }
+
+  &__cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    pointer-events: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--acc-accent);
+    color: var(--acc-accent-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 10px 26px rgba(20, 22, 26, 0.22);
+
+    svg { width: 22px; height: 22px; transition: transform 0.25s ease; }
+    &.is-prev svg { transform: rotate(180deg); }
+    &.is-up svg { transform: rotate(-90deg); }
+    &.is-down svg { transform: rotate(90deg); }
+  }
+}
+
+// --- Horizontal & Vertical: card with media + content split ---
+.ad-acc--horizontal,
+.ad-acc--vertical {
+  .ad-acc__slide {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    background: var(--acc-surface);
+    border: 1px solid var(--acc-line);
+    border-radius: var(--acc-radius);
+    overflow: hidden;
+    box-shadow: 0 18px 50px rgba(20, 22, 26, 0.08);
+  }
+  .ad-acc__media { height: 100%; }
+  .ad-acc__content { justify-content: center; }
+}
+
+.ad-acc--horizontal {
+  .ad-acc__track { flex-direction: row; }
+  .ad-acc__slide { height: var(--container-height, 70vh); max-height: 640px; }
+
+  @media (max-width: 768px) {
+    .ad-acc__slide { grid-template-columns: 1fr; height: auto; }
+    .ad-acc__media { height: 240px; }
+  }
+}
+
+.ad-acc--vertical {
+  .ad-acc__viewport { height: var(--container-height, 70vh); max-height: 640px; }
+  .ad-acc__track { flex-direction: column; height: 100%; }
+  .ad-acc__slide { height: 100%; }
+
+  @media (max-width: 768px) {
+    .ad-acc__slide { grid-template-columns: 1fr; }
+    .ad-acc__media { display: none; }
+  }
+}
+
+// --- Split: two-column, one at a time ---
+.ad-acc--split {
+  .ad-acc__viewport {
+    height: var(--container-height, 70vh);
+    max-height: 680px;
+    border: 1px solid var(--acc-line);
+    border-radius: var(--acc-radius);
+    overflow: hidden;
+    background: var(--acc-surface);
+  }
+  .ad-acc__track { display: block; position: relative; height: 100%; }
+  .ad-acc__slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    opacity: 0;
+    visibility: hidden;
+
+    &.is-active { opacity: 1; visibility: visible; }
+  }
+  .ad-acc__media { height: 100%; }
+  .ad-acc__content { justify-content: center; padding: clamp(28px, 4vw, 64px); }
+
+  @media (max-width: 768px) {
+    .ad-acc__slide { grid-template-columns: 1fr; }
+    .ad-acc__media { display: none; }
+  }
+}
+
+// --- Full-screen: media background, light text over gradient ---
+.ad-acc--fullscreen {
+  --acc-ink: #ffffff;
+  --acc-muted: rgba(255, 255, 255, 0.82);
+  --acc-line: rgba(255, 255, 255, 0.28);
+  --acc-surface: rgba(255, 255, 255, 0.12);
+  --acc-accent: #ffffff;
+  --acc-accent-ink: #14161a;
+
+  .ad-acc__header {
+    --acc-ink: #14161a;
+    --acc-muted: #5b616e;
+  }
+
+  .ad-acc__viewport {
+    height: var(--container-height, 80vh);
+    min-height: 520px;
+    border-radius: var(--acc-radius);
+    overflow: hidden;
+  }
+  .ad-acc__track { display: block; position: relative; height: 100%; }
+  .ad-acc__slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    opacity: 0;
+    visibility: hidden;
+
+    &.is-active { opacity: 1; visibility: visible; }
+  }
+  .ad-acc__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(8, 9, 12, 0.88) 0%,
+        rgba(8, 9, 12, 0.3) 45%,
+        transparent 78%
+      );
+    }
+  }
+  .ad-acc__content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 760px;
+    gap: 16px;
+    padding: clamp(28px, 5vw, 64px);
+  }
+  .ad-acc__title { font-size: clamp(2rem, 4.5vw, 3.6rem); }
+  .ad-acc__nav {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    z-index: 2;
+    margin-top: 0;
+  }
+  .ad-acc__dots { flex: none; }
+}
+
+// When JS enhances the carousel, GSAP owns motion — drop CSS transitions.
+.ad-acc--enhanced {
+  .ad-acc__track,
+  .ad-acc__slide { transition: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ad-acc__track,
+  .ad-acc__slide,
+  .ad-acc__cursor svg { transition: none !important; }
+}
+
+// Custom follow-cursor only on pointer devices.
+@media (hover: hover) {
+  .ad-acc--enhanced { cursor: none; }
+  .ad-acc--enhanced a,
+  .ad-acc--enhanced .ad-acc__arrow,
+  .ad-acc--enhanced .ad-acc__dot,
+  .ad-acc--enhanced .ad-acc__cta-link { cursor: pointer; }
+}
+@media (hover: none) {
+  .ad-acc__cursor { display: none; }
+}
+
+// Content/header start hidden so GSAP can animate them in without a flash.
+// The editor preview (.ad-acc--static) and no-JS keep everything visible.
+.ad-acc__content > * { opacity: 0; transform: translateY(26px); }
+.ad-acc__header > * { opacity: 0; transform: translateY(20px); }
+.ad-acc--static .ad-acc__content > *,
+.ad-acc--static .ad-acc__header > * { opacity: 1; transform: none; }
+.ad-acc__media { clip-path: inset(0px 0px 0px 0px); }

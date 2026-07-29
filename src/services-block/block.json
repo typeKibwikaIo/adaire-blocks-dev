@@ -3,9 +3,9 @@
     "apiVersion": 3,
     "name": "create-block/services-block",
     "version": "0.1.0",
-    "title": "Services Showcase",
+    "title": "Animated Content Carousel",
     "category": "adaire-business",
-    "description": "Present your services with descriptions, icons, images, and customizable layouts.",
+    "description": "Showcase any content — services, projects, features — as an animated carousel with multiple layout modes (vertical, horizontal, full-screen, split).",
     "example": {},
     "supports": {
         "html": false,
@@ -21,6 +21,25 @@
     "style": "file:./style-index.css",
     "viewScript": "file:./view.js",
     "attributes": {
+        "layoutMode": {
+            "type": "string",
+            "default": "legacy",
+            "enum": [
+                "legacy",
+                "vertical",
+                "horizontal",
+                "fullscreen",
+                "split"
+            ]
+        },
+        "storyDuration": {
+            "type": "number",
+            "default": 8000
+        },
+        "contentPreset": {
+            "type": "string",
+            "default": ""
+        },
         "agencyTitle": {
             "type": "string",
             "default": "Our Work"
@@ -153,8 +172,7 @@
             "default": {
                 "desktop": 40,
                 "tablet": 36,
-                "mobile": 32,
-                "smartwatch": 28
+                "mobile": 32
             }
         },
         "titleFontFamily": {
@@ -166,8 +184,7 @@
             "default": {
                 "desktop": 18,
                 "tablet": 16,
-                "mobile": 14,
-                "smartwatch": 12
+                "mobile": 14
             }
         },
         "textFontFamily": {
@@ -179,8 +196,7 @@
             "default": {
                 "desktop": 112,
                 "tablet": 96,
-                "mobile": 80,
-                "smartwatch": 64
+                "mobile": 80
             }
         },
         "slideDescriptionFontSize": {
@@ -188,8 +204,7 @@
             "default": {
                 "desktop": 20,
                 "tablet": 18,
-                "mobile": 16,
-                "smartwatch": 14
+                "mobile": 16
             }
         },
         "slideTagFontSize": {
@@ -197,8 +212,7 @@
             "default": {
                 "desktop": 20,
                 "tablet": 18,
-                "mobile": 16,
-                "smartwatch": 14
+                "mobile": 16
             }
         },
         "previewText": {
@@ -218,8 +232,7 @@
             "default": {
                 "desktop": 70,
                 "tablet": 60,
-                "mobile": 55,
-                "smartwatch": 50
+                "mobile": 55
             }
         }
     },

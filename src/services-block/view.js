@@ -706,4 +706,446 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// ============================================================================
+// Animated Content Carousel — layout modes (vertical / horizontal /
+// fullscreen / split). Separate, self-contained controller: one instance per
+// `.ad-acc` root, independent of the legacy scroll engine above.
+// ============================================================================
+const ACC_CHEVRON =
+  '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+class AnimatedCarousel {
+  constructor(root) {
+    this.root = root;
+    this.mode = root.dataset.layoutMode || "horizontal";
+    this.track = root.querySelector(".ad-acc__track");
+    this.slides = Array.from(root.querySelectorAll(".ad-acc__slide"));
+    this.dots = Array.from(root.querySelectorAll(".ad-acc__dot"));
+    this.count = this.slides.length;
+    this.index = 0;
+    this.autoplayMs = parseInt(root.dataset.storyDuration, 10) || 0;
+    this.timer = null;
+    this.tl = null;
+    this.revealed = false;
+    this.fills = [];
+    this.cursor = null;
+    this.cursorText = null;
+    this.direction = "next";
+    this.reducedMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (this.count === 0) return;
+
+    // Enhanced flag lets CSS drop its own transitions so GSAP owns motion.
+    this.root.classList.add("ad-acc--enhanced");
+    this.ensureFurniture();
+    if (this.cursor) gsap.set(this.cursor, { autoAlpha: 0, left: 0, top: 0 });
+    this.prepInitial();
+    this.bind();
+    this.observe();
+  }
+
+  // Build the cursor + per-dot progress fills in JS so the effects work on
+  // every instance, including blocks saved before this markup existed.
+  ensureFurniture() {
+    this.cursor = this.root.querySelector(".ad-acc__cursor");
+    if (!this.cursor) {
+      this.cursor = document.createElement("div");
+      this.cursor.className = "ad-acc__cursor";
+      this.cursor.setAttribute("aria-hidden", "true");
+      this.root.appendChild(this.cursor);
+    }
+    // Ensure the cursor holds an SVG chevron (rotated per direction via CSS).
+    if (!this.cursor.querySelector("svg")) {
+      this.cursor.innerHTML = ACC_CHEVRON;
+    }
+
+    this.dots.forEach((dot) => {
+      if (!dot.querySelector(".ad-acc__dot-fill")) {
+        const fill = document.createElement("span");
+        fill.className = "ad-acc__dot-fill";
+        dot.appendChild(fill);
+      }
+    });
+    this.fills = Array.from(this.root.querySelectorAll(".ad-acc__dot-fill"));
+  }
+
+  usesTransform() {
+    return this.mode === "horizontal" || this.mode === "vertical";
+  }
+
+  transformKey() {
+    return this.mode === "vertical" ? "yPercent" : "xPercent";
+  }
+
+  contentItems(slide) {
+    return slide ? slide.querySelectorAll(".ad-acc__content > *") : [];
+  }
+
+  // Initial GSAP state before the block scrolls into view.
+  prepInitial() {
+    if (this.usesTransform()) {
+      gsap.set(this.track, { [this.transformKey()]: 0 });
+    } else {
+      this.slides.forEach((slide, n) =>
+        gsap.set(slide, { autoAlpha: n === 0 ? 1 : 0 }),
+      );
+    }
+    // Content is hidden by default in CSS (so it can animate in with no flash).
+    // Reduced motion never animates — reveal everything up front instead.
+    if (this.reducedMotion) {
+      this.slides.forEach((slide) =>
+        gsap.set(this.contentItems(slide), { autoAlpha: 1, y: 0 }),
+      );
+      const header = this.root.querySelector(".ad-acc__header");
+      if (header) gsap.set(header.children, { autoAlpha: 1, y: 0 });
+    }
+    this.setActiveMarkers(0);
+  }
+
+  mediaEl(slide) {
+    return slide ? slide.querySelector(".ad-acc__media") : null;
+  }
+
+  mediaImg(slide) {
+    return slide
+      ? slide.querySelector(".ad-acc__media img, .ad-acc__media-placeholder")
+      : null;
+  }
+
+  setActiveMarkers(i) {
+    this.slides.forEach((slide, n) =>
+      slide.classList.toggle("is-active", n === i),
+    );
+    this.dots.forEach((dot, n) => {
+      dot.classList.toggle("is-active", n === i);
+      dot.setAttribute("aria-selected", n === i ? "true" : "false");
+    });
+  }
+
+  // Reveal on first intersection — mirrors the legacy engine's scroll-in start.
+  observe() {
+    if (this.reducedMotion || typeof IntersectionObserver === "undefined") {
+      this.reveal();
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            this.reveal();
+            obs.disconnect();
+          }
+        });
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(this.root);
+  }
+
+  reveal() {
+    if (this.revealed) return;
+    this.revealed = true;
+    this.animateHeader();
+    this.enterSlide(this.index, "next", true);
+    this.startAutoplay();
+  }
+
+  // Header (heading + intro) rises in on first reveal.
+  animateHeader() {
+    if (this.reducedMotion) return;
+    const header = this.root.querySelector(".ad-acc__header");
+    if (!header || !header.children.length) return;
+    gsap.fromTo(
+      header.children,
+      { y: 20, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 0.6, ease: "power3.out", stagger: 0.08 },
+    );
+  }
+
+  // Choreograph a slide's entrance: media reveal + content stagger.
+  enterSlide(i, dir, initial = false) {
+    const slide = this.slides[i];
+    if (!slide || this.reducedMotion) return;
+    this.animateMediaIn(slide, dir);
+    this.animateContentIn(slide, initial ? 0.15 : 0.28);
+    if (this.mode === "fullscreen") this.kenBurns(slide);
+  }
+
+  // Content elements slide up + fade in, staggered (legacy title-row feel).
+  animateContentIn(slide, delay = 0) {
+    const items = this.contentItems(slide);
+    if (!items.length) return;
+    gsap.fromTo(
+      items,
+      { y: 26, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 0.6, ease: "power3.out", stagger: 0.07, delay },
+    );
+  }
+
+  // Media reveal: a directional clip-wipe (+ zoom) for the stacked modes,
+  // a scale/rotate settle for the card modes.
+  animateMediaIn(slide, dir) {
+    const media = this.mediaEl(slide);
+    const img = this.mediaImg(slide);
+    if (this.mode === "fullscreen" || this.mode === "split") {
+      if (media) {
+        const from =
+          dir === "prev" ? "inset(0px 100% 0px 0px)" : "inset(0px 0px 0px 100%)";
+        gsap.fromTo(
+          media,
+          { clipPath: from, webkitClipPath: from },
+          {
+            clipPath: "inset(0px 0px 0px 0px)",
+            webkitClipPath: "inset(0px 0px 0px 0px)",
+            duration: 1,
+            ease: "power4.inOut",
+          },
+        );
+      }
+      // Full-screen lets kenBurns own the scale; split gets an entry zoom.
+      if (img && this.mode === "split") {
+        gsap.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 1.2, ease: "power4.out" });
+      }
+    } else if (img) {
+      gsap.fromTo(
+        img,
+        { scale: 1.16, rotate: dir === "next" ? 1.5 : -1.5 },
+        { scale: 1, rotate: 0, duration: 1.1, ease: "power4.out" },
+      );
+    }
+  }
+
+  // Slow zoom on the active media for the full-screen mode.
+  kenBurns(slide) {
+    const media = this.mediaImg(slide);
+    if (!media || this.reducedMotion) return;
+    const dur = this.autoplayMs ? Math.max(this.autoplayMs / 1000, 4) : 6;
+    gsap.to(media, { scale: 1.08, duration: dur, ease: "none" });
+  }
+
+  moveCursor(event) {
+    if (!this.cursor) return;
+    const rect = this.root.getBoundingClientRect();
+    const overInteractive = event.target.closest(
+      ".ad-acc__arrow, .ad-acc__dot, a, .ad-acc__cta",
+    );
+    if (overInteractive) {
+      gsap.to(this.cursor, { autoAlpha: 0, duration: 0.2 });
+      return;
+    }
+    gsap.to(this.cursor, { autoAlpha: 1, duration: 0.2 });
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    // Animate left/top (not x/y) so the CSS translate(-50%,-50%) centering holds.
+    gsap.to(this.cursor, { left: x, top: y, duration: 0.3, ease: "power2.out" });
+
+    const isPrev =
+      this.mode === "vertical" ? y < rect.height / 2 : x < rect.width / 2;
+    this.direction = isPrev ? "prev" : "next";
+
+    // Rotate the chevron to point where a click will go.
+    this.cursor.classList.remove("is-prev", "is-up", "is-down");
+    if (this.mode === "vertical") {
+      this.cursor.classList.add(isPrev ? "is-up" : "is-down");
+    } else if (isPrev) {
+      this.cursor.classList.add("is-prev");
+    }
+  }
+
+  jumpTo(i) {
+    if (this.usesTransform()) {
+      gsap.set(this.track, { [this.transformKey()]: -i * 100 });
+    } else {
+      this.slides.forEach((slide, n) =>
+        gsap.set(slide, { autoAlpha: n === i ? 1 : 0 }),
+      );
+    }
+  }
+
+  goTo(i, dir) {
+    if (this.count === 0) return;
+    const prev = this.index;
+    this.index = (i + this.count) % this.count;
+    if (!dir) dir = this.index === (prev + 1) % this.count ? "next" : "prev";
+    this.setActiveMarkers(this.index);
+
+    if (this.reducedMotion || !this.revealed) {
+      this.jumpTo(this.index);
+      return;
+    }
+    if (prev === this.index) return;
+
+    if (this.tl) this.tl.kill();
+    if (this.usesTransform()) this.transitionSlide(dir);
+    else this.transitionFade(prev, dir);
+  }
+
+  // Horizontal / vertical: eased track move + incoming slide choreography.
+  transitionSlide(dir) {
+    this.tl = gsap.timeline();
+    this.tl.to(
+      this.track,
+      {
+        [this.transformKey()]: -this.index * 100,
+        duration: 0.9,
+        ease: "power3.inOut",
+      },
+      0,
+    );
+    this.enterSlide(this.index, dir);
+  }
+
+  // Full-screen / split: crossfade out the old slide, wipe/stagger in the new.
+  transitionFade(prev, dir) {
+    const prevSlide = this.slides[prev];
+    const nextSlide = this.slides[this.index];
+    this.tl = gsap.timeline();
+
+    if (prevSlide) {
+      this.tl.to(prevSlide, { autoAlpha: 0, duration: 0.5, ease: "power2.out" }, 0);
+    }
+    gsap.set(nextSlide, { autoAlpha: 1 });
+    this.enterSlide(this.index, dir);
+  }
+
+  next() {
+    this.goTo(this.index + 1, "next");
+  }
+
+  prev() {
+    this.goTo(this.index - 1, "prev");
+  }
+
+  startAutoplay() {
+    this.scheduleNext();
+  }
+
+  // Arm the next auto-advance and run the progress fill for the active slide.
+  scheduleNext() {
+    this.stopAutoplay();
+    if (!this.autoplayMs || this.reducedMotion || this.count <= 1) return;
+    this.animateFill(this.index);
+    this.timer = setTimeout(() => {
+      this.next();
+      this.scheduleNext();
+    }, this.autoplayMs);
+  }
+
+  stopAutoplay() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    // Freeze the progress fill in place.
+    if (this.fills.length) gsap.killTweensOf(this.fills);
+  }
+
+  // Progress indicator: fill the active dot over the autoplay interval.
+  animateFill(i) {
+    if (!this.fills.length || this.reducedMotion || !this.autoplayMs) return;
+    gsap.set(this.fills, { width: "0%" });
+    const fill = this.fills[i];
+    if (!fill) return;
+    gsap.fromTo(
+      fill,
+      { width: "0%" },
+      { width: "100%", duration: this.autoplayMs / 1000, ease: "none" },
+    );
+  }
+
+  bind() {
+    this.root.querySelectorAll(".ad-acc__arrow").forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (btn.dataset.dir === "next") this.next();
+        else this.prev();
+        this.scheduleNext();
+      });
+    });
+
+    this.dots.forEach((dot) => {
+      dot.addEventListener("click", (event) => {
+        event.stopPropagation();
+        this.goTo(parseInt(dot.dataset.index, 10));
+        this.scheduleNext();
+      });
+    });
+
+    this.root.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        event.preventDefault();
+        this.next();
+        this.scheduleNext();
+      } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        event.preventDefault();
+        this.prev();
+        this.scheduleNext();
+      }
+    });
+
+    // Custom follow-cursor (same idea as the legacy mode): shows Prev/Next by
+    // pointer position; clicking empty space advances in that direction.
+    if (this.cursor) {
+      this.root.addEventListener("mousemove", (event) => this.moveCursor(event));
+    }
+    this.root.addEventListener("click", (event) => {
+      if (event.target.closest(".ad-acc__arrow, .ad-acc__dot, a")) return;
+      if (this.direction === "prev") this.prev();
+      else this.next();
+      this.scheduleNext();
+    });
+
+    // Pause auto-advance on hover/focus.
+    this.root.addEventListener("mouseenter", () => this.stopAutoplay());
+    this.root.addEventListener("mouseleave", () => {
+      if (this.cursor) gsap.to(this.cursor, { autoAlpha: 0, duration: 0.2 });
+      this.startAutoplay();
+    });
+    this.root.addEventListener("focusin", () => this.stopAutoplay());
+    this.root.addEventListener("focusout", () => this.startAutoplay());
+
+    // Basic touch swipe.
+    let startX = null;
+    let startY = null;
+    this.root.addEventListener(
+      "touchstart",
+      (event) => {
+        const touch = event.changedTouches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+      },
+      { passive: true },
+    );
+    this.root.addEventListener(
+      "touchend",
+      (event) => {
+        if (startX === null) return;
+        const touch = event.changedTouches[0];
+        const dx = touch.clientX - startX;
+        const dy = touch.clientY - startY;
+        const threshold = 40;
+        if (this.mode === "vertical") {
+          if (dy > threshold) this.prev();
+          else if (dy < -threshold) this.next();
+        } else {
+          if (dx > threshold) this.prev();
+          else if (dx < -threshold) this.next();
+        }
+        startX = null;
+        startY = null;
+        this.scheduleNext();
+      },
+      { passive: true },
+    );
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .querySelectorAll(".ad-acc")
+    .forEach((root) => new AnimatedCarousel(root));
+});
+
 

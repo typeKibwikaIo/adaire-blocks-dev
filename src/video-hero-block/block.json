@@ -89,13 +89,16 @@
             "default": "#ffffff"
         },
         "titleFontSize": {
-            "type": "object",
-            "default": {
-                "desktop": 48,
-                "tablet": 36,
-                "mobile": 28,
-                "smartwatch": 20
-            }
+            "type": "number",
+            "default": 48
+        },
+        "titleFontSizeTablet": {
+            "type": "number",
+            "default": 36
+        },
+        "titleFontSizeMobile": {
+            "type": "number",
+            "default": 28
         },
         "titleFontSizeUnit": {
             "type": "string",
@@ -123,13 +126,16 @@
             ]
         },
         "descriptionFontSize": {
-            "type": "object",
-            "default": {
-                "desktop": 18,
-                "tablet": 16,
-                "mobile": 14,
-                "smartwatch": 12
-            }
+            "type": "number",
+            "default": 18
+        },
+        "descriptionFontSizeTablet": {
+            "type": "number",
+            "default": 16
+        },
+        "descriptionFontSizeMobile": {
+            "type": "number",
+            "default": 14
         },
         "descriptionFontSizeUnit": {
             "type": "string",
@@ -212,13 +218,16 @@
             "default": 12
         },
         "titleScrollingGap": {
-            "type": "object",
-            "default": {
-                "desktop": 300,
-                "tablet": 200,
-                "mobile": 150,
-                "smartwatch": 100
-            }
+            "type": "number",
+            "default": 300
+        },
+        "titleScrollingGapTablet": {
+            "type": "number",
+            "default": 200
+        },
+        "titleScrollingGapMobile": {
+            "type": "number",
+            "default": 150
         },
         "titleScrollingSpeed": {
             "type": "number",
@@ -262,6 +271,18 @@
             "type": "number",
             "default": 0.3
         },
+        "cursorColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "cursorBgColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "cursorBgOpacity": {
+            "type": "number",
+            "default": 0.1
+        },
         "blockId": {
             "type": "string",
             "default": ""
@@ -280,10 +301,6 @@
                 "mobile": {
                     "value": 100,
                     "unit": "%"
-                },
-                "smartwatch": {
-                    "value": 100,
-                    "unit": "%"
                 }
             }
         },
@@ -300,10 +317,6 @@
                 },
                 "mobile": {
                     "value": 300,
-                    "unit": "px"
-                },
-                "smartwatch": {
-                    "value": 250,
                     "unit": "px"
                 }
             }
