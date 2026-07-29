@@ -50,8 +50,8 @@
             "default": [
                 {
                     "id": 1,
-                    "title": "Luthando",
-                    "description": "Web Dev Lead",
+                    "title": "Team Member 1",
+                    "description": "Role Title",
                     "backgroundImage": {
                         "url": "",
                         "desktopSize": 160,
@@ -70,8 +70,8 @@
                 },
                 {
                     "id": 2,
-                    "title": "Reinhold",
-                    "description": "Project Manager",
+                    "title": "Team Member 2",
+                    "description": "Role Title",
                     "backgroundImage": {
                         "url": "",
                         "desktopSize": 185,
@@ -90,8 +90,8 @@
                 },
                 {
                     "id": 3,
-                    "title": "Daryn",
-                    "description": "Project Manager",
+                    "title": "Team Member 3",
+                    "description": "Role Title",
                     "backgroundImage": {
                         "url": "",
                         "desktopSize": 175,
@@ -110,8 +110,8 @@
                 },
                 {
                     "id": 4,
-                    "title": "Hilya",
-                    "description": "Web Developer (WordPress, Bubble)",
+                    "title": "Team Member 4",
+                    "description": "Role Title",
                     "backgroundImage": {
                         "url": "",
                         "desktopSize": 145,
@@ -130,8 +130,8 @@
                 },
                 {
                     "id": 5,
-                    "title": "Patrick",
-                    "description": "Web Developer (WordPress, Bubble)",
+                    "title": "Team Member 5",
+                    "description": "Role Title",
                     "backgroundImage": {
                         "url": "",
                         "desktopSize": 150,
@@ -150,8 +150,8 @@
                 },
                 {
                     "id": 6,
-                    "title": "Douglas",
-                    "description": "Web Developer (WordPress, Custom)",
+                    "title": "Team Member 6",
+                    "description": "Role Title",
                     "backgroundImage": {
                         "url": "",
                         "desktopSize": 160,
