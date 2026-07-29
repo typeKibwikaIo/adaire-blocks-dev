@@ -421,6 +421,18 @@ require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/cookie-categories-page.php';
 // the one page/post it's inserted into.
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/cookie-notice-global.php';
 
+// Mega Menu: centrally-managed mega panels (adaire_mega_panel CPT), the
+// panel-assignment fields added to native nav menu items, the Core
+// Navigation editor extension, and the Mega Menu dashboard screen.
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-item-sanitizer.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-post-type.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-migration.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-editor.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-renderer.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-menu-nav-item-fields.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-menu-editor.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/mega-menu-page.php';
+
 // Diagnostics tool removed
 
 /**
@@ -2027,6 +2039,24 @@ add_action(
 
 		if ( file_exists( $column_block_path . '/block.json' ) && ! WP_Block_Type_Registry::get_instance()->is_registered( 'adaire/column-block' ) ) {
 			register_block_type( $column_block_path );
+		}
+	},
+	12
+);
+
+/**
+ * Explicitly register adaire/mega-menu-item — an infrastructure block (a
+ * Core Navigation child, not a standalone insertable block in most
+ * contexts) that should always be available regardless of the free/pro
+ * block toggle grid, same reasoning as row-block/column-block above.
+ */
+add_action(
+	'init',
+	function () {
+		$mega_menu_item_path = __DIR__ . '/build/mega-menu-item';
+
+		if ( file_exists( $mega_menu_item_path . '/block.json' ) && ! WP_Block_Type_Registry::get_instance()->is_registered( 'adaire/mega-menu-item' ) ) {
+			register_block_type( $mega_menu_item_path );
 		}
 	},
 	12
