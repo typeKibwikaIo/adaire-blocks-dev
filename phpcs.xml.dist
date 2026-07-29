@@ -28,5 +28,13 @@
 	<exclude-pattern>*/assets/vendor/*</exclude-pattern>
 	<exclude-pattern>*/admin/js/*.min.js</exclude-pattern>
 
+	<!-- Standalone scripts deployed to our own server, not run inside WordPress
+	     (no WP bootstrap, no ABSPATH guard, by design — see their docblocks).
+	     WPCS's nonce/sanitize sniffs assume wp_verify_nonce()/wp_unslash()/
+	     sanitize_text_field() are available, which they are not in this context;
+	     both already have their own manual sanitization and auth. -->
+	<exclude-pattern>*/free-version-scaffold/feedback-handler\.php</exclude-pattern>
+	<exclude-pattern>*/misc/Validation server/index\.php</exclude-pattern>
+
 	<rule ref="WordPress"/>
 </ruleset>

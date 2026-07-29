@@ -1,0 +1,273 @@
+.adaire-mpe {
+	max-width: 900px;
+
+	h3 {
+		margin-top: 24px;
+		margin-bottom: 8px;
+	}
+}
+
+.adaire-mpe-layout-picker {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 10px;
+}
+
+.adaire-mpe-layout-option {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 12px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	cursor: pointer;
+
+	input {
+		margin-bottom: 4px;
+	}
+
+	&.is-selected {
+		border-color: #2271b1;
+		box-shadow: 0 0 0 1px #2271b1;
+	}
+
+	&__label {
+		font-weight: 600;
+	}
+
+	&__desc {
+		font-size: 12px;
+		color: #757575;
+	}
+}
+
+.adaire-mpe-item-list {
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 12px;
+	background: #fff;
+}
+
+.adaire-mpe-empty {
+	color: #757575;
+	font-style: italic;
+}
+
+.adaire-mpe-item {
+	margin-bottom: 4px;
+}
+
+.adaire-mpe-item-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 8px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	background: #f6f7f7;
+
+	&.is-drag-over {
+		border-color: #2271b1;
+		background: #e7f0f7;
+	}
+
+	&.is-hidden {
+		opacity: 0.55;
+	}
+}
+
+.adaire-mpe-drag-handle {
+	cursor: grab;
+	color: #757575;
+	font-size: 16px;
+}
+
+.adaire-mpe-item-toggle {
+	flex: 1;
+	text-align: left;
+	font-weight: 500;
+}
+
+.adaire-mpe-badge {
+	padding: 1px 6px;
+	font-size: 10px;
+	text-transform: uppercase;
+	background: #2271b1;
+	color: #fff;
+	border-radius: 3px;
+}
+
+.adaire-mpe-item-details {
+	margin: 8px 0 8px 24px;
+	padding: 12px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	background: #fff;
+}
+
+.adaire-mpe-item-form {
+	max-width: 640px;
+}
+
+.adaire-mpe-media-preview img {
+	max-width: 120px;
+	max-height: 80px;
+	display: block;
+	margin-bottom: 6px;
+	border-radius: 4px;
+}
+
+.adaire-mpe-media-actions {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.adaire-mpe-field-label {
+	display: block;
+	font-weight: 500;
+	margin-bottom: 4px;
+}
+
+.adaire-mpe-color-row {
+	display: flex;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.adaire-mpe-color-swatch-button {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.adaire-mpe-color-swatch {
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	border: 1px solid #dcdcde;
+	display: inline-block;
+}
+
+.adaire-mpe-save-bar {
+	margin-top: 20px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.adaire-mpe-unsaved-note {
+	color: #b32d2e;
+	font-size: 12px;
+}
+
+// Live preview — deliberately plain/neutral so it never gets mistaken for
+// the real, theme-styled front-end output; it's a structure-only aid.
+.adaire-mpe-preview {
+	border: 1px dashed #dcdcde;
+	border-radius: 4px;
+	padding: 16px;
+	background: #fafafa;
+}
+
+.adaire-mpe-preview-note {
+	color: #757575;
+	font-style: italic;
+}
+
+.adaire-mpe-preview--tabbed {
+	display: flex;
+	gap: 16px;
+}
+
+.adaire-mpe-preview-categories {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 160px;
+}
+
+.adaire-mpe-preview-category {
+	text-align: left;
+	padding: 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
+
+	&.is-active {
+		border-color: #2271b1;
+		background: #e7f0f7;
+	}
+}
+
+.adaire-mpe-preview-eyebrow {
+	display: block;
+	font-size: 10px;
+	text-transform: uppercase;
+	color: #757575;
+}
+
+.adaire-mpe-preview-cards {
+	flex: 1;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 12px;
+}
+
+.adaire-mpe-preview-card {
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 8px;
+	background: #fff;
+
+	img {
+		max-width: 100%;
+		border-radius: 4px;
+		margin-bottom: 6px;
+	}
+}
+
+.adaire-mpe-preview-breadcrumb {
+	margin-bottom: 12px;
+	font-size: 13px;
+
+	button {
+		background: none;
+		border: none;
+		color: #2271b1;
+		cursor: pointer;
+		padding: 0;
+	}
+}
+
+.adaire-mpe-preview-level {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.adaire-mpe-preview-drill-item {
+	text-align: left;
+	padding: 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
+}
+
+.adaire-mpe-preview--gallery {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+	gap: 12px;
+
+	img {
+		max-width: 100%;
+		border-radius: 4px;
+	}
+}
+
+.adaire-mpe-preview--link-list {
+	margin: 0;
+	padding-left: 18px;
+}

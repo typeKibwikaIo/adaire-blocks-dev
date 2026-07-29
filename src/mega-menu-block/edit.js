@@ -1,5 +1,6 @@
 ﻿import { __, sprintf } from "@wordpress/i18n";
-import { useCallback, useState } from "@wordpress/element";
+import { useCallback, useState, useEffect } from "@wordpress/element";
+import apiFetch from "@wordpress/api-fetch";
 import { useSelect } from "@wordpress/data";
 import {
 	useBlockProps,
@@ -126,6 +127,22 @@ function useResolvedMenuName(navigationSource, selectedMenuId) {
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const [deviceType, setDeviceType] = useState("desktop");
 	const [openDropdowns, setOpenDropdowns] = useState(new Set());
+
+	// Available Mega Panels a top-level item can opt into instead of its
+	// manual banner/canvas-story/children fields -- fetched once, same REST
+	// route the adaire/mega-menu-item block's picker already uses.
+	const [megaPanels, setMegaPanels] = useState([]);
+	useEffect(() => {
+		apiFetch({
+			path: "/wp/v2/adaire-mega-panels?status=publish,draft&per_page=100&_fields=id,title,status",
+		})
+			.then((results) => {
+				setMegaPanels(Array.isArray(results) ? results : []);
+			})
+			.catch(() => {
+				setMegaPanels([]);
+			});
+	}, []);
 
 	// Check block limits
 	const { isLimitReached, showUpgradeNotice, upgradeMessage } = useBlockLimits(
@@ -1177,6 +1194,71 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 						/>
 					</div>
 					{isTopLevel && (
+						<div
+							style={{
+								marginBottom: "8px",
+								padding: "8px",
+								border: "1px solid #ddd",
+								borderRadius: "4px",
+								backgroundColor: "#f9f9f9",
+							}}
+						>
+							<SelectControl
+								label={__("Dropdown content", "adaire-blocks")}
+								value={item.contentSource || "manual"}
+								options={[
+									{
+										label: __("Manual (fields below)", "adaire-blocks"),
+										value: "manual",
+									},
+									{
+										label: __("Use a Mega Panel", "adaire-blocks"),
+										value: "panel",
+									},
+								]}
+								onChange={(value) =>
+									updateMenuItem(item.id, { contentSource: value }, parentId)
+								}
+								help={__(
+									"A Mega Panel replaces the banner/canvas-story/children below with centrally-managed content from the Mega Menu dashboard.",
+									"adaire-blocks",
+								)}
+							/>
+							{"panel" === item.contentSource && (
+								<SelectControl
+									label={__("Mega Panel", "adaire-blocks")}
+									value={item.panelId || 0}
+									options={[
+										{ label: __("— Select a panel —", "adaire-blocks"), value: 0 },
+										...megaPanels.map((panel) => ({
+											label:
+												(panel.title && panel.title.rendered
+													? panel.title.rendered
+													: __("(no title)", "adaire-blocks")) +
+												("publish" !== panel.status ? ` (${panel.status})` : ""),
+											value: panel.id,
+										})),
+									]}
+									onChange={(value) =>
+										updateMenuItem(
+											item.id,
+											{ panelId: parseInt(value, 10) },
+											parentId,
+										)
+									}
+									help={
+										0 === megaPanels.length
+											? __(
+													"No mega panels exist yet — create one from the Mega Menu dashboard.",
+													"adaire-blocks",
+												)
+											: undefined
+									}
+								/>
+							)}
+						</div>
+					)}
+					{isTopLevel && "panel" !== item.contentSource && (
 						<>
 							<div style={{ marginBottom: "8px" }}>
 								<TextareaControl
@@ -1230,7 +1312,7 @@ const mobileStyleVars = ctaMobileUseSeparateStyles
 					</div>
 
 					{/* Canvas Image Controls - Only for Level 1 items */}
-					{level === 0 && (
+					{level === 0 && "panel" !== item.contentSource && (
 						<div
 							style={{
 								marginBottom: "8px",

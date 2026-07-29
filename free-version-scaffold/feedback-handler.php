@@ -13,7 +13,7 @@
 
 define( 'ADAIRE_SENDGRID_API_KEY', 'YOUR_SENDGRID_API_KEY_HERE' );
 define( 'ADAIRE_FEEDBACK_TOKEN', 'gb-feedback-k7x2m9p4' );
-define( 'ADAIRE_FEEDBACK_TO', 'support@adaire.com' );
+define( 'ADAIRE_FEEDBACK_TO', 'support@gutenblocks.com' );
 define( 'ADAIRE_FEEDBACK_FROM', 'noreply@adaire.com' );
 
 // -------------------------------------------------------------------------

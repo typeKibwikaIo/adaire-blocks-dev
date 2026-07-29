@@ -1,0 +1,424 @@
+// Scoped to .adaire-mega-menu-item so nothing leaks into the surrounding
+// Core Navigation styling — only this block's own markup is targeted.
+.adaire-mega-menu-item {
+	position: relative;
+	list-style: none;
+
+	&__trigger {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		background: none;
+		border: none;
+		font: inherit;
+		color: inherit;
+		cursor: pointer;
+		padding: 0;
+
+		// Never remove the native focus outline without an accessible
+		// replacement — this keeps the browser default but lets themes
+		// override it deliberately via :focus-visible if they choose to.
+		&:focus-visible {
+			outline: 2px solid currentcolor;
+			outline-offset: 2px;
+		}
+	}
+
+	&__chevron {
+		display: inline-block;
+		width: 0.5em;
+		height: 0.5em;
+		border-right: 2px solid currentcolor;
+		border-bottom: 2px solid currentcolor;
+		transform: rotate(45deg);
+		transition: transform var(--adaire-mega-menu-animation-duration, 200ms) ease;
+	}
+
+	&__panel {
+		position: absolute;
+		top: 100%;
+		z-index: 100;
+		background: var(--wp--preset--color--base, #fff);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+		border-radius: 4px;
+		padding: var(--adaire-mega-menu-padding, 24px);
+		opacity: 0;
+		visibility: hidden;
+		transform-origin: top;
+		// --adaire-mmp-x is set per alignment variant below (wide/center need a
+		// horizontal centering offset preserved through the animation);
+		// --adaire-mmp-anim-closed/open are set per `data-animation` value so
+		// each animation choice gets its own distinct transform, composed
+		// with the alignment offset rather than overwriting it.
+		transform: var(--adaire-mmp-x, none) var(--adaire-mmp-anim-closed, translateY(-6px));
+		transition:
+			opacity var(--adaire-mega-menu-animation-duration, 200ms) ease,
+			transform var(--adaire-mega-menu-animation-duration, 200ms) ease,
+			visibility 0s linear var(--adaire-mega-menu-animation-duration, 200ms);
+
+		&[hidden] {
+			display: block; // keep in the accessibility tree layout calc; visually hidden via opacity/visibility instead of `display:none` so the close transition can run
+		}
+
+		&[data-animation="none"] {
+			transition: none;
+		}
+
+		&[data-animation="fade"] {
+			--adaire-mmp-anim-closed: none;
+			--adaire-mmp-anim-open: none;
+		}
+
+		&[data-animation="scale"] {
+			--adaire-mmp-anim-closed: scale(0.96);
+			--adaire-mmp-anim-open: scale(1);
+		}
+	}
+
+	&--contained &__panel {
+		width: max-content;
+		max-width: var(--adaire-mega-menu-max-width, 960px);
+	}
+
+	&--wide &__panel {
+		width: 90vw;
+		max-width: 1200px;
+		left: 50%;
+		--adaire-mmp-x: translateX(-50%);
+	}
+
+	&--full &__panel {
+		position: fixed;
+		left: 0;
+		right: 0;
+		width: 100vw;
+		max-width: none;
+		border-radius: 0;
+	}
+
+	&--align-left &__panel {
+		left: 0;
+	}
+
+	&--align-right &__panel {
+		right: 0;
+	}
+
+	&--align-center &__panel {
+		left: 50%;
+		--adaire-mmp-x: translateX(-50%);
+	}
+
+	&--align-stretch &__panel {
+		left: 0;
+		right: 0;
+		width: auto;
+	}
+
+	&--open &__chevron {
+		transform: rotate(-135deg);
+	}
+
+	// Open state — driven by the frontend JS toggling this class and
+	// removing the [hidden] attribute together, never CSS alone, so
+	// no-JS visitors never see an unusable half-open panel. Composing
+	// through the same --adaire-mmp-x/--adaire-mmp-anim-open custom
+	// properties as the closed state means the alignment offset (wide/
+	// align-center) survives automatically without a separate
+	// higher-specificity override rule.
+	&--open &__panel {
+		opacity: 1;
+		visibility: visible;
+		transform: var(--adaire-mmp-x, none) var(--adaire-mmp-anim-open, translateY(0));
+		transition-delay: 0s;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+
+		&__panel,
+		&__chevron {
+			transition-duration: 0.01ms !important; // stylelint-disable-line declaration-no-important -- accessibility override, technically unavoidable here since it must beat an inline custom-property duration.
+		}
+	}
+}
+
+// Mobile: below the configured breakpoint the panel collapses into a
+// static accordion instead of an absolutely-positioned dropdown, driven by
+// a data attribute per-instance (see render.php) rather than a single
+// hardcoded media query, so each item's own breakpoint setting is honoured.
+// Combined with the base class (rather than a bare descendant selector) so
+// its specificity reliably wins over the desktop open/align rules above,
+// regardless of source order.
+// stylelint-disable no-descending-specificity -- Deliberate: this mobile
+// override must win over the desktop align-center + open combination above
+// regardless of source order, and chasing higher specificity to satisfy
+// this purely mechanical check would only make the selectors harder to read.
+.adaire-mega-menu-item.adaire-mega-menu-item--mobile-mode {
+
+	.adaire-mega-menu-item__panel {
+		position: static;
+		width: auto;
+		max-width: none;
+		box-shadow: none;
+		transform: none;
+		opacity: 1;
+		visibility: visible;
+		display: none;
+	}
+
+	&.adaire-mega-menu-item--open .adaire-mega-menu-item__panel {
+		display: block;
+	}
+}
+// stylelint-enable no-descending-specificity
+
+// ---------------------------------------------------------------------------
+// Shared card component — used by the tabbed and gallery layouts.
+// ---------------------------------------------------------------------------
+.adaire-mmp-card {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 12px;
+	border-radius: 6px;
+	text-decoration: none;
+	color: var(--adaire-mmp-card-text, inherit);
+	background: var(--adaire-mmp-card-bg, transparent);
+	position: relative;
+
+	&:hover,
+	&:focus-visible {
+		background: var(--adaire-mmp-card-bg, rgba(0, 0, 0, 0.03));
+	}
+
+	&--featured {
+		border: 1px solid var(--adaire-mmp-card-accent, currentcolor);
+	}
+
+	&__badge {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		padding: 2px 8px;
+		font-size: 0.7em;
+		text-transform: uppercase;
+		background: var(--adaire-mmp-card-accent, #000);
+		color: #fff;
+		border-radius: 3px;
+	}
+
+	&__image {
+		width: 100%;
+		height: auto;
+		border-radius: 4px;
+		margin-bottom: 4px;
+	}
+
+	&__eyebrow {
+		font-size: 0.75em;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		opacity: 0.7;
+	}
+
+	&__title {
+		font-weight: 600;
+	}
+
+	&__description {
+		margin: 0;
+		font-size: 0.9em;
+		opacity: 0.85;
+	}
+
+	&__link-label {
+		margin-top: 4px;
+		font-size: 0.85em;
+		font-weight: 600;
+		color: var(--adaire-mmp-card-accent, currentcolor);
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Tabbed / showcase layout (Pattern A).
+// ---------------------------------------------------------------------------
+.adaire-mmp-tabbed {
+	display: flex;
+	gap: 24px;
+
+	&__categories {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		min-width: 200px;
+		flex-shrink: 0;
+	}
+
+	&__category {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2px;
+		padding: 10px 12px;
+		background: none;
+		border: none;
+		border-radius: 6px;
+		text-align: left;
+		cursor: pointer;
+		font: inherit;
+		color: inherit;
+
+		&:hover,
+		&:focus-visible {
+			background: rgba(0, 0, 0, 0.04);
+		}
+
+		&.is-active {
+			background: rgba(0, 0, 0, 0.06);
+			font-weight: 600;
+		}
+	}
+
+	&__icon {
+		width: 20px;
+		height: 20px;
+	}
+
+	&__category-subtitle {
+		font-size: 0.8em;
+		font-weight: 400;
+		opacity: 0.7;
+	}
+
+	&__panels {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__panel[hidden] {
+		display: none;
+	}
+
+	&__cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+		gap: 16px;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Interactive drill-down layout (Pattern B).
+// ---------------------------------------------------------------------------
+.adaire-mmp-showcase {
+	min-width: 260px;
+
+	&__breadcrumb {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 4px;
+		margin-bottom: 8px;
+		font-size: 0.85em;
+
+		&:empty {
+			display: none;
+		}
+
+		button {
+			background: none;
+			border: none;
+			padding: 2px 4px;
+			cursor: pointer;
+			color: inherit;
+			text-decoration: underline;
+			font: inherit;
+		}
+	}
+
+	&__level {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	&__item {
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
+
+	&__link {
+		flex: 1;
+		padding: 10px 8px;
+		text-decoration: none;
+		color: inherit;
+
+		&:hover,
+		&:focus-visible {
+			background: rgba(0, 0, 0, 0.04);
+		}
+	}
+
+	&__drill {
+		background: none;
+		border: none;
+		padding: 10px 8px;
+		cursor: pointer;
+		font-size: 1.1em;
+		color: inherit;
+
+		&:hover,
+		&:focus-visible {
+			background: rgba(0, 0, 0, 0.04);
+		}
+	}
+
+	// Nested levels render inline under this item until the drill-down JS
+	// moves them into the active-level slot — kept visually out of the way
+	// (but still in the DOM/accessibility tree) until then.
+	&__item > &__level {
+		padding-left: 16px;
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Visual gallery layout.
+// ---------------------------------------------------------------------------
+.adaire-mmp-gallery {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	gap: 16px;
+}
+
+// ---------------------------------------------------------------------------
+// Simple link-list layout.
+// ---------------------------------------------------------------------------
+.adaire-mmp-link-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	&__item a {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px;
+		text-decoration: none;
+		color: inherit;
+		border-radius: 4px;
+
+		&:hover,
+		&:focus-visible {
+			background: rgba(0, 0, 0, 0.04);
+		}
+	}
+
+	&__icon {
+		width: 18px;
+		height: 18px;
+	}
+}

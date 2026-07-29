@@ -176,7 +176,7 @@ add_action(
 			wp_die( 'Unauthorized' );
 		}
 
-		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'my_plugin_rollback' ) ) {
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'my_plugin_rollback' ) ) {
 			error_log( '[Adaire Blocks Rollback] Nonce verification failed' );
 			wp_die( 'Security check failed.' );
 		}
@@ -229,12 +229,17 @@ add_action(
 add_action(
 	'admin_notices',
 	function () {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only status flag for a UI notice; the actual rollback action is nonce-verified above.
 		if ( ! isset( $_GET['rollback'] ) ) {
 			return;
 		}
-		if ( $_GET['rollback'] === 'success' ) {
+
+		$rollback_status = sanitize_text_field( wp_unslash( $_GET['rollback'] ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		if ( 'success' === $rollback_status ) {
 			echo '<div class="notice notice-success is-dismissible"><p>Plugin rolled back successfully and activated.</p></div>';
-		} elseif ( $_GET['rollback'] === 'failed' ) {
+		} elseif ( 'failed' === $rollback_status ) {
 			echo '<div class="notice notice-error is-dismissible"><p>Rollback failed. Check debug.log for details.</p></div>';
 		}
 	}
@@ -416,6 +421,18 @@ require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/cookie-categories-page.php';
 // the one page/post it's inserted into.
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/cookie-notice-global.php';
 
+// Mega Menu: centrally-managed mega panels (adaire_mega_panel CPT), the
+// panel-assignment fields added to native nav menu items, the Core
+// Navigation editor extension, and the Mega Menu dashboard screen.
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-item-sanitizer.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-post-type.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-migration.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-editor.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-panel-renderer.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-menu-nav-item-fields.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-mega-menu-editor.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/mega-menu-page.php';
+
 // Diagnostics tool removed
 
 /**
@@ -424,6 +441,10 @@ require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/cookie-notice-global.php';
 function adaire_sideload_media_ajax() {
 	if ( ! current_user_can( 'upload_files' ) ) {
 		wp_send_json_error( array( 'message' => 'Unauthorized' ), 403 );
+	}
+
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'adaire_sideload_media' ) ) {
+		wp_send_json_error( array( 'message' => 'Security check failed.' ), 403 );
 	}
 
 	if ( empty( $_POST['url'] ) ) {
@@ -1631,6 +1652,20 @@ function render_mega_menu_block( $attributes, $content ) {
 									|| '' !== trim( (string) $item_canvas_story_title )
 									|| '' !== trim( (string) $item_canvas_story_description )
 									|| '' !== trim( (string) $item_canvas_story_link_label );
+								// Opt-in alternative content source: instead of the manual
+								// banner/canvas-story/children fields above, this top-level item
+								// can point at a centrally-managed Mega Panel post (built in the
+								// Mega Menu dashboard) -- same panels adaire/mega-menu-item uses.
+								// is_publicly_usable() is the same guard used everywhere else this
+								// checks a panel id, so a draft/disabled/deleted panel degrades to
+								// "no dropdown" for this item rather than a broken render.
+								$item_content_source = $item['contentSource'] ?? 'manual';
+								$item_panel_id       = absint( $item['panelId'] ?? 0 );
+								$item_uses_panel     = 'panel' === $item_content_source
+									&& $item_panel_id
+									&& class_exists( 'AdaireMegaPanelPostType' )
+									&& class_exists( 'AdaireMegaPanelRenderer' )
+									&& AdaireMegaPanelPostType::is_publicly_usable( $item_panel_id );
 								?>
 								<li class="adaire-mega-menu__dropdown">
 									<a href="<?php echo esc_url( $item_url ); ?>" 
@@ -1643,23 +1678,28 @@ function render_mega_menu_block( $attributes, $content ) {
 										<span class="<?php echo ( $item_is_bold ? 'adaire-mega-menu__bold' : '' ); ?>">
 											<?php echo esc_html( $item_title ); ?>
 										</span>
-										<?php if ( ! empty( $item_children ) ) : ?>
+										<?php if ( ! empty( $item_children ) || $item_uses_panel ) : ?>
 											<span class="adaire-mega-menu__chevron">▼</span>
 										<?php endif; ?>
 									</a>
-									<?php if ( ! empty( $item_children ) ) : ?>
-										<?php
+									<?php if ( ! empty( $item_children ) || $item_uses_panel ) : ?>
+										<?php if ( $item_uses_panel ) : ?>
+											<div class="adaire-mega-menu__menu adaire-mega-menu__menu--panel">
+												<?php echo AdaireMegaPanelRenderer::render( get_post( $item_panel_id ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- AdaireMegaPanelRenderer::render() escapes every field itself, per its own class docblock. ?>
+											</div>
+										<?php else : ?>
+											<?php
 											$menu_classes = array( 'adaire-mega-menu__menu' );
-										if ( ! empty( $item['canvasIsSmaller'] ) ) {
-											$menu_classes[] = 'smaller';
-										}
-										if ( $item_canvas_is_smallest ) {
-											$menu_classes[] = 'smallest';
-										}
-										if ( ! $item_canvas_banner_enabled ) {
-											$menu_classes[] = 'no-banner';
-										}
-										?>
+											if ( ! empty( $item['canvasIsSmaller'] ) ) {
+												$menu_classes[] = 'smaller';
+											}
+											if ( $item_canvas_is_smallest ) {
+												$menu_classes[] = 'smallest';
+											}
+											if ( ! $item_canvas_banner_enabled ) {
+												$menu_classes[] = 'no-banner';
+											}
+											?>
 										<div class="<?php echo esc_attr( implode( ' ', $menu_classes ) ); ?>">
 											<?php if ( $item_canvas_banner_enabled ) : ?>
 												<div class="adaire-mega-menu__menu__banner">
@@ -1770,6 +1810,7 @@ function render_mega_menu_block( $attributes, $content ) {
 											<?php endif; ?>
 										</ul>
 										</div>
+										<?php endif; ?>
 
 									<?php endif; ?>
 								</li>
@@ -1778,7 +1819,7 @@ function render_mega_menu_block( $attributes, $content ) {
 					</div>
 
 					<div class="adaire-mega-menu__buttons">
-						<?php echo $render_cta_button(); ?>
+						<?php echo $render_cta_button(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $render_cta_button() builds its markup with esc_attr()/esc_url()/esc_html() internally. ?>
 						<button class="adaire-mega-menu__menu-btn">
 							<span class="adaire-mega-menu__menu-icon">☰</span>
 						</button>
@@ -1792,7 +1833,7 @@ function render_mega_menu_block( $attributes, $content ) {
 								<!-- Mobile menu content will be dynamically rendered here -->
 							</div>
 							<div class="adaire-mobile-menu__inner-blocks">
-								<?php echo $render_cta_button( 'adaire-mega-menu__action-button--mobile', true ); ?>
+								<?php echo $render_cta_button( 'adaire-mega-menu__action-button--mobile', true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $render_cta_button() builds its markup with esc_attr()/esc_url()/esc_html() internally. ?>
 							</div>
 						</div>
 					</div>
@@ -2018,6 +2059,24 @@ add_action(
 
 		if ( file_exists( $column_block_path . '/block.json' ) && ! WP_Block_Type_Registry::get_instance()->is_registered( 'adaire/column-block' ) ) {
 			register_block_type( $column_block_path );
+		}
+	},
+	12
+);
+
+/**
+ * Explicitly register adaire/mega-menu-item — an infrastructure block (a
+ * Core Navigation child, not a standalone insertable block in most
+ * contexts) that should always be available regardless of the free/pro
+ * block toggle grid, same reasoning as row-block/column-block above.
+ */
+add_action(
+	'init',
+	function () {
+		$mega_menu_item_path = __DIR__ . '/build/mega-menu-item';
+
+		if ( file_exists( $mega_menu_item_path . '/block.json' ) && ! WP_Block_Type_Registry::get_instance()->is_registered( 'adaire/mega-menu-item' ) ) {
+			register_block_type( $mega_menu_item_path );
 		}
 	},
 	12
@@ -2451,7 +2510,7 @@ function enqueue_video_hero_block_data() {
 				echo '<script>console.log("PHP Debug - video_hero_blocks:", ' . json_encode( $video_hero_blocks ) . ');</script>';
 				echo '<script>console.log("PHP Debug - videos in first block:", ' . json_encode( $video_hero_blocks[ array_keys( $video_hero_blocks )[0] ]['videos'] ?? 'NOT FOUND' ) . ');</script>';
 				echo '<script>window.videoHeroBlockData = ' . json_encode( $video_hero_blocks ) . ';</script>';
-				echo '<script>window.wpApiSettings = { postId: ' . get_the_ID() . ' };</script>';
+				echo '<script>window.wpApiSettings = { postId: ' . absint( get_the_ID() ) . ' };</script>';
 			}
 		);
 	}
@@ -2671,6 +2730,7 @@ function adaire_blocks_localize_editor_config() {
 		'isPremium'     => $is_premium,
 		'pluginVersion' => $plugin_version,
 		'blocks'        => $blocks_config,
+		'sideloadNonce' => wp_create_nonce( 'adaire_sideload_media' ),
 	);
 
 	// Localize script with configuration

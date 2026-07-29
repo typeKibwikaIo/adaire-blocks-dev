@@ -1,5 +1,6 @@
 ﻿import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { initTabbed, initShowcase } from "../mega-menu-item/panel-interactions";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,6 +44,20 @@ document.addEventListener("DOMContentLoaded", () => {
 		const menuImageScrollEl = block.querySelector(".adaire-mega-menu__menu-image--scroll");
 
 		if (!navbar) return;
+
+		// Menu items using a Mega Panel as their dropdown content ("Use a
+		// Mega Panel" per-item option in the editor) get the same
+		// tabbed/showcase interactivity as adaire/mega-menu-item — the
+		// server-rendered markup is identical (AdaireMegaPanelRenderer), so
+		// the same shared initializer applies unchanged. Both functions are
+		// no-ops (return null) when their matching markup isn't present, so
+		// calling both unconditionally on every embedded panel is safe.
+		block
+			.querySelectorAll(".adaire-mega-menu__menu--panel")
+			.forEach((panelEl) => {
+				initTabbed(panelEl, 100);
+				initShowcase(panelEl, () => false);
+			});
 
 		const supportsHover = window.matchMedia
 			? window.matchMedia("(hover: hover)").matches

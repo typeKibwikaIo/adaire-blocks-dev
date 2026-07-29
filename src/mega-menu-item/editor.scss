@@ -1,0 +1,41 @@
+.adaire-mega-menu-item-editor {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 6px 10px;
+	border: 1px dashed #ccc;
+	border-radius: 4px;
+
+	&__trigger {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-weight: 500;
+	}
+
+	&__chevron {
+		font-size: 10px;
+		opacity: 0.6;
+	}
+
+	&__preview {
+		font-size: 12px;
+		color: #1e1e1e;
+	}
+
+	&__status-badge {
+		margin-left: 6px;
+		padding: 1px 6px;
+		font-size: 10px;
+		text-transform: uppercase;
+		background: #f0f0f1;
+		border-radius: 3px;
+	}
+}
+
+.adaire-mega-menu-item-help {
+	margin-top: 0;
+	margin-bottom: 12px;
+	font-size: 12px;
+	color: #757575;
+}

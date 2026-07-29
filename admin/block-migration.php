@@ -77,6 +77,7 @@ add_action( 'admin_enqueue_scripts', 'adaire_blocks_enqueue_migration_assets' );
  * overhead to normal editor sessions.
  */
 function adaire_blocks_enqueue_migration_editor_script() {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only feature-flag gate for whether to enqueue a script; capability-checked below, nothing is written or acted on.
 	if ( empty( $_GET['adaire_auto_migrate'] ) ) {
 		return;
 	}

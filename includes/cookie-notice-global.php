@@ -119,10 +119,11 @@ if ( ! function_exists( 'adaire_cookie_notice_get_global_instance' ) ) {
 		}
 
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-off backfill scan, only runs until the option is populated; content search isn't practical to cache.
 		$post_id = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT ID FROM {$wpdb->posts} WHERE post_status IN ('publish','private') AND post_content LIKE %s LIMIT 1",
-				'%' . $wpdb->esc_like( 'wp:create-block/cookie-notice-block' ) . '%'
+				'%' . $wpdb->esc_like( 'wp:create-block/cookie-notice-block' ) . '%' // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- False positive: matches the word "create" inside the LIKE search pattern, this is a SELECT, not DDL.
 			)
 		);
 

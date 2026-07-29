@@ -122,19 +122,19 @@ class Adaire_Deactivation_Log_Page {
 		}
 
 		$sent     = ! empty( $test_result['sent'] ) ? 'yes' : 'no';
-		$provider = esc_html( $test_result['provider'] ?? '' );
-		$status   = esc_html( (string) ( $test_result['status'] ?? '' ) );
-		$from     = esc_html( $test_result['from_email'] ?? '' );
+		$provider = $test_result['provider'] ?? '';
+		$status   = (string) ( $test_result['status'] ?? '' );
+		$from     = $test_result['from_email'] ?? '';
 		$error    = $test_result['error'] ?? '';
 		if ( is_array( $error ) ) {
 			$error = wp_json_encode( $error );
 		}
-		$error = esc_html( (string) $error );
+		$error = (string) $error;
 
 		echo '<div class="notice notice-info"><p>';
-		echo 'Test sent: <strong>' . esc_html( $sent ) . '</strong> | Provider: <strong>' . $provider . '</strong> | Status: <strong>' . $status . '</strong> | From: <strong>' . $from . '</strong>';
+		echo 'Test sent: <strong>' . esc_html( $sent ) . '</strong> | Provider: <strong>' . esc_html( $provider ) . '</strong> | Status: <strong>' . esc_html( $status ) . '</strong> | From: <strong>' . esc_html( $from ) . '</strong>';
 		if ( $error !== '' ) {
-			echo ' | Error: <strong>' . $error . '</strong>';
+			echo ' | Error: <strong>' . esc_html( $error ) . '</strong>';
 		}
 		echo '</p></div>';
 	}
@@ -162,30 +162,30 @@ class Adaire_Deactivation_Log_Page {
 		echo '</tr></thead><tbody>';
 
 		foreach ( $logs as $row ) {
-			$date     = esc_html( $row['date'] ?? '' );
-			$site     = esc_html( $row['site'] ?? '' );
-			$reason   = esc_html( $row['reason'] ?? '' );
+			$date     = $row['date'] ?? '';
+			$site     = $row['site'] ?? '';
+			$reason   = $row['reason'] ?? '';
 			$sent     = ! empty( $row['mail_sent'] ) ? 'yes' : 'no';
-			$provider = esc_html( $row['mail_provider'] ?? 'sendgrid' );
-			$status   = esc_html( (string) ( $row['mail_status'] ?? '' ) );
-			$from     = esc_html( $row['from_email'] ?? '' );
-			$to       = esc_html( $row['to_email'] ?? '' );
+			$provider = $row['mail_provider'] ?? 'sendgrid';
+			$status   = (string) ( $row['mail_status'] ?? '' );
+			$from     = $row['from_email'] ?? '';
+			$to       = $row['to_email'] ?? '';
 			$error    = $row['mail_error'] ?? '';
 			if ( is_array( $error ) ) {
 				$error = wp_json_encode( $error );
 			}
-			$error = esc_html( (string) $error );
+			$error = (string) $error;
 
 			echo '<tr>';
-			echo '<td>' . $date . '</td>';
-			echo '<td>' . $site . '</td>';
-			echo '<td>' . $reason . '</td>';
+			echo '<td>' . esc_html( $date ) . '</td>';
+			echo '<td>' . esc_html( $site ) . '</td>';
+			echo '<td>' . esc_html( $reason ) . '</td>';
 			echo '<td>' . esc_html( $sent ) . '</td>';
-			echo '<td>' . $provider . '</td>';
-			echo '<td>' . $status . '</td>';
-			echo '<td>' . $from . '</td>';
-			echo '<td>' . $to . '</td>';
-			echo '<td style="max-width:520px;white-space:pre-wrap;">' . $error . '</td>';
+			echo '<td>' . esc_html( $provider ) . '</td>';
+			echo '<td>' . esc_html( $status ) . '</td>';
+			echo '<td>' . esc_html( $from ) . '</td>';
+			echo '<td>' . esc_html( $to ) . '</td>';
+			echo '<td style="max-width:520px;white-space:pre-wrap;">' . esc_html( $error ) . '</td>';
 			echo '</tr>';
 		}
 

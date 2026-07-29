@@ -158,8 +158,9 @@ class AdaireBlocksLicense {
 	public function get_license_data() {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom license table; there's only ever one row, so object caching wouldn't help.
 		$result = $wpdb->get_row(
-			"SELECT * FROM {$this->table_name} ORDER BY id DESC LIMIT 1",
+			$wpdb->prepare( 'SELECT * FROM %i ORDER BY id DESC LIMIT 1', $this->table_name ),
 			ARRAY_A
 		);
 
@@ -191,6 +192,7 @@ class AdaireBlocksLicense {
 		if ( $existing ) {
 			// Update existing record
 			error_log( 'Adaire Blocks License: Updating existing license record' );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->update() is WordPress's own parameterized wrapper; custom license table has only one row, not worth caching.
 			$result = $wpdb->update(
 				$this->table_name,
 				$license_data,
@@ -201,6 +203,7 @@ class AdaireBlocksLicense {
 		} else {
 			// Insert new record
 			error_log( 'Adaire Blocks License: Inserting new license record' );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- $wpdb->insert() is WordPress's own parameterized wrapper.
 			$result = $wpdb->insert( $this->table_name, $license_data );
 			error_log( 'Adaire Blocks License: Insert result: ' . print_r( $result, true ) );
 			error_log( 'Adaire Blocks License: Insert ID: ' . $wpdb->insert_id );
@@ -721,17 +724,17 @@ class AdaireBlocksLicense {
 	 * AJAX handler for license activation
 	 */
 	public function ajax_activate_license() {
+		check_ajax_referer( 'adaire_license_nonce', 'nonce' );
+
 		error_log( 'Adaire Blocks License: AJAX activation request received' );
 		error_log( 'Adaire Blocks License: POST data: ' . print_r( $_POST, true ) );
-
-		check_ajax_referer( 'adaire_license_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			error_log( 'Adaire Blocks License: AJAX activation - insufficient permissions' );
 			wp_die( 'Insufficient permissions' );
 		}
 
-		$license_key = sanitize_text_field( $_POST['license_key'] );
+		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
 		error_log( 'Adaire Blocks License: AJAX activation - raw license key: ' . $license_key );
 		error_log( 'Adaire Blocks License: AJAX activation - sanitized license key: ' . substr( $license_key, 0, 8 ) . '...' );
 
@@ -773,10 +776,10 @@ class AdaireBlocksLicense {
 	 * AJAX handler for license deactivation
 	 */
 	public function ajax_deactivate_license() {
+		check_ajax_referer( 'adaire_license_nonce', 'nonce' );
+
 		error_log( 'Adaire Blocks License: AJAX deactivation request received' );
 		error_log( 'Adaire Blocks License: POST data: ' . print_r( $_POST, true ) );
-
-		check_ajax_referer( 'adaire_license_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			error_log( 'Adaire Blocks License: AJAX deactivation - insufficient permissions' );
@@ -805,10 +808,10 @@ class AdaireBlocksLicense {
 	 * AJAX handler for license validation
 	 */
 	public function ajax_validate_license() {
+		check_ajax_referer( 'adaire_license_nonce', 'nonce' );
+
 		error_log( 'Adaire Blocks License: AJAX validation request received' );
 		error_log( 'Adaire Blocks License: POST data: ' . print_r( $_POST, true ) );
-
-		check_ajax_referer( 'adaire_license_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			error_log( 'Adaire Blocks License: AJAX validation - insufficient permissions' );
@@ -844,7 +847,8 @@ class AdaireBlocksLicense {
 	public function clear_license_data() {
 		global $wpdb;
 
-		$wpdb->query( "DELETE FROM {$this->table_name}" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom license table; there's only ever one row, so object caching wouldn't help.
+		$wpdb->query( $wpdb->prepare( 'DELETE FROM %i', $this->table_name ) );
 	}
 
 	/**
@@ -857,7 +861,7 @@ class AdaireBlocksLicense {
 			wp_die( 'Insufficient permissions' );
 		}
 
-		$license_key = sanitize_text_field( $_POST['license_key'] ?? '' );
+		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
 
 		if ( empty( $license_key ) ) {
 			wp_send_json_error( array( 'message' => 'License key is required for testing' ) );
@@ -929,7 +933,7 @@ class AdaireBlocksLicense {
 			wp_die( 'Insufficient permissions' );
 		}
 
-		$license_key = sanitize_text_field( $_POST['license_key'] ?? '' );
+		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
 
 		if ( empty( $license_key ) ) {
 			wp_send_json_error( array( 'message' => 'License key is required for testing' ) );
@@ -1012,17 +1016,17 @@ class AdaireBlocksLicense {
 	 * AJAX handler to save activation result to database
 	 */
 	public function ajax_save_activation() {
+		check_ajax_referer( 'adaire_license_nonce', 'nonce' );
+
 		error_log( 'Adaire Blocks License: AJAX save activation request received' );
 		error_log( 'Adaire Blocks License: POST data: ' . print_r( $_POST, true ) );
-
-		check_ajax_referer( 'adaire_license_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			error_log( 'Adaire Blocks License: AJAX save activation - insufficient permissions' );
 			wp_die( 'Insufficient permissions' );
 		}
 
-		$license_key = sanitize_text_field( $_POST['license_key'] );
+		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
 
 		error_log( 'Adaire Blocks License: License key: ' . substr( $license_key, 0, 8 ) . '...' );
 		error_log( 'Adaire Blocks License: POST data: ' . print_r( $_POST, true ) );
@@ -1032,16 +1036,18 @@ class AdaireBlocksLicense {
 			wp_send_json_error( array( 'message' => 'Missing license key' ) );
 		}
 
-		// Handle activation data - it might be an array or JSON string
+		// Handle activation data - it might be an array or JSON string.
 		$activation_data = null;
 		if ( isset( $_POST['activation_data'] ) ) {
-			if ( is_array( $_POST['activation_data'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- extract_activation_token() below only ever pulls a single known 'token' string out of this structure; nothing here is echoed or used unescaped.
+			$raw_activation_data = wp_unslash( $_POST['activation_data'] );
+			if ( is_array( $raw_activation_data ) ) {
 				// Already an array
-				$activation_data = $_POST['activation_data'];
+				$activation_data = $raw_activation_data;
 				error_log( 'Adaire Blocks License: Activation data received as array' );
 			} else {
 				// Try to decode as JSON
-				$activation_data = json_decode( $_POST['activation_data'], true );
+				$activation_data = json_decode( $raw_activation_data, true );
 				error_log( 'Adaire Blocks License: Activation data received as JSON string' );
 			}
 		}
@@ -1156,16 +1162,18 @@ class AdaireBlocksLicense {
 			wp_die( 'Insufficient permissions' );
 		}
 
-		// Handle validation data - it might be an array or JSON string
+		// Handle validation data - it might be an array or JSON string.
 		$validation_data = null;
 		if ( isset( $_POST['validation_data'] ) ) {
-			if ( is_array( $_POST['validation_data'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Only 'timesActivated'/'timesActivatedMax'/'remainingActivations' are ever read out below, each explicitly cast to (int).
+			$raw_validation_data = wp_unslash( $_POST['validation_data'] );
+			if ( is_array( $raw_validation_data ) ) {
 				// Already an array
-				$validation_data = $_POST['validation_data'];
+				$validation_data = $raw_validation_data;
 				error_log( 'Adaire Blocks License: Validation data received as array' );
 			} else {
 				// Try to decode as JSON
-				$validation_data = json_decode( $_POST['validation_data'], true );
+				$validation_data = json_decode( $raw_validation_data, true );
 				error_log( 'Adaire Blocks License: Validation data received as JSON string' );
 			}
 		}
@@ -1188,9 +1196,9 @@ class AdaireBlocksLicense {
 		// Update license data with validation results
 		$update_data = array(
 			'status'                => 'active',
-			'times_activated'       => $validation_data['timesActivated'] ?? $license_data['times_activated'],
-			'times_activated_max'   => $validation_data['timesActivatedMax'] ?? $license_data['times_activated_max'],
-			'remaining_activations' => $validation_data['remainingActivations'] ?? $license_data['remaining_activations'],
+			'times_activated'       => isset( $validation_data['timesActivated'] ) ? (int) $validation_data['timesActivated'] : $license_data['times_activated'],
+			'times_activated_max'   => isset( $validation_data['timesActivatedMax'] ) ? (int) $validation_data['timesActivatedMax'] : $license_data['times_activated_max'],
+			'remaining_activations' => isset( $validation_data['remainingActivations'] ) ? (int) $validation_data['remainingActivations'] : $license_data['remaining_activations'],
 		);
 
 		$this->save_license_data( $license_data['license_key'], $update_data );
