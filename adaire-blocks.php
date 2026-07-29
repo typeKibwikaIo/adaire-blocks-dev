@@ -1652,6 +1652,20 @@ function render_mega_menu_block( $attributes, $content ) {
 									|| '' !== trim( (string) $item_canvas_story_title )
 									|| '' !== trim( (string) $item_canvas_story_description )
 									|| '' !== trim( (string) $item_canvas_story_link_label );
+								// Opt-in alternative content source: instead of the manual
+								// banner/canvas-story/children fields above, this top-level item
+								// can point at a centrally-managed Mega Panel post (built in the
+								// Mega Menu dashboard) -- same panels adaire/mega-menu-item uses.
+								// is_publicly_usable() is the same guard used everywhere else this
+								// checks a panel id, so a draft/disabled/deleted panel degrades to
+								// "no dropdown" for this item rather than a broken render.
+								$item_content_source = $item['contentSource'] ?? 'manual';
+								$item_panel_id       = absint( $item['panelId'] ?? 0 );
+								$item_uses_panel     = 'panel' === $item_content_source
+									&& $item_panel_id
+									&& class_exists( 'AdaireMegaPanelPostType' )
+									&& class_exists( 'AdaireMegaPanelRenderer' )
+									&& AdaireMegaPanelPostType::is_publicly_usable( $item_panel_id );
 								?>
 								<li class="adaire-mega-menu__dropdown">
 									<a href="<?php echo esc_url( $item_url ); ?>" 
@@ -1664,23 +1678,28 @@ function render_mega_menu_block( $attributes, $content ) {
 										<span class="<?php echo ( $item_is_bold ? 'adaire-mega-menu__bold' : '' ); ?>">
 											<?php echo esc_html( $item_title ); ?>
 										</span>
-										<?php if ( ! empty( $item_children ) ) : ?>
+										<?php if ( ! empty( $item_children ) || $item_uses_panel ) : ?>
 											<span class="adaire-mega-menu__chevron">▼</span>
 										<?php endif; ?>
 									</a>
-									<?php if ( ! empty( $item_children ) ) : ?>
-										<?php
+									<?php if ( ! empty( $item_children ) || $item_uses_panel ) : ?>
+										<?php if ( $item_uses_panel ) : ?>
+											<div class="adaire-mega-menu__menu adaire-mega-menu__menu--panel">
+												<?php echo AdaireMegaPanelRenderer::render( get_post( $item_panel_id ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- AdaireMegaPanelRenderer::render() escapes every field itself, per its own class docblock. ?>
+											</div>
+										<?php else : ?>
+											<?php
 											$menu_classes = array( 'adaire-mega-menu__menu' );
-										if ( ! empty( $item['canvasIsSmaller'] ) ) {
-											$menu_classes[] = 'smaller';
-										}
-										if ( $item_canvas_is_smallest ) {
-											$menu_classes[] = 'smallest';
-										}
-										if ( ! $item_canvas_banner_enabled ) {
-											$menu_classes[] = 'no-banner';
-										}
-										?>
+											if ( ! empty( $item['canvasIsSmaller'] ) ) {
+												$menu_classes[] = 'smaller';
+											}
+											if ( $item_canvas_is_smallest ) {
+												$menu_classes[] = 'smallest';
+											}
+											if ( ! $item_canvas_banner_enabled ) {
+												$menu_classes[] = 'no-banner';
+											}
+											?>
 										<div class="<?php echo esc_attr( implode( ' ', $menu_classes ) ); ?>">
 											<?php if ( $item_canvas_banner_enabled ) : ?>
 												<div class="adaire-mega-menu__menu__banner">
@@ -1791,6 +1810,7 @@ function render_mega_menu_block( $attributes, $content ) {
 											<?php endif; ?>
 										</ul>
 										</div>
+										<?php endif; ?>
 
 									<?php endif; ?>
 								</li>
@@ -1799,7 +1819,7 @@ function render_mega_menu_block( $attributes, $content ) {
 					</div>
 
 					<div class="adaire-mega-menu__buttons">
-						<?php echo $render_cta_button(); ?>
+						<?php echo $render_cta_button(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $render_cta_button() builds its markup with esc_attr()/esc_url()/esc_html() internally. ?>
 						<button class="adaire-mega-menu__menu-btn">
 							<span class="adaire-mega-menu__menu-icon">☰</span>
 						</button>
@@ -1813,7 +1833,7 @@ function render_mega_menu_block( $attributes, $content ) {
 								<!-- Mobile menu content will be dynamically rendered here -->
 							</div>
 							<div class="adaire-mobile-menu__inner-blocks">
-								<?php echo $render_cta_button( 'adaire-mega-menu__action-button--mobile', true ); ?>
+								<?php echo $render_cta_button( 'adaire-mega-menu__action-button--mobile', true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $render_cta_button() builds its markup with esc_attr()/esc_url()/esc_html() internally. ?>
 							</div>
 						</div>
 					</div>

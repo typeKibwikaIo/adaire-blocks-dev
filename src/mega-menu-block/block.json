@@ -97,7 +97,9 @@
                         }
                     },
                     "canvasIsSmaller": false,
-                    "children": []
+                    "children": [],
+                    "contentSource": "manual",
+                    "panelId": 0
                 },
                 {
                     "id": "menu-item-2",
