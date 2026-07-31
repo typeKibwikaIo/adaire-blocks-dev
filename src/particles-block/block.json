@@ -33,7 +33,11 @@
             "type": "string",
             "default": "#0a0a0a"
         },
-        "textColor": {
+        "titleColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "descriptionColor": {
             "type": "string",
             "default": "#ffffff"
         },

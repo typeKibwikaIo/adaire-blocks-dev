@@ -107,7 +107,7 @@ const DEFAULT_IMAGE = { url: '', desktopSize: 160, tabletSize: 120, mobileSize: 
 
 export default function Edit({ attributes, setAttributes }) {
   const {
-    entryScrollHeight, backgroundColor, textColor, entries, gradientOverlay,
+    entryScrollHeight, backgroundColor, titleColor, descriptionColor, entries, gradientOverlay,
     textAnimationDuration, blockId, sectionIntroTitle, sectionIntroDescription,
     shapesEnabled, shapeCount, shapeColor,
   } = attributes;
@@ -170,6 +170,7 @@ export default function Edit({ attributes, setAttributes }) {
   };
 
   const titleStyle = {
+    color: titleColor || '#ffffff',
     fontSize: attributes.titleFontSize ? `${attributes.titleFontSize}px` : undefined,
     fontFamily: attributes.titleFontFamily && attributes.titleFontFamily !== 'custom'
       ? attributes.titleFontFamily
@@ -180,6 +181,7 @@ export default function Edit({ attributes, setAttributes }) {
   };
 
   const textStyle = {
+    color: descriptionColor || '#ffffff',
     fontSize: attributes.textFontSize ? `${attributes.textFontSize}px` : undefined,
     fontFamily: attributes.textFontFamily && attributes.textFontFamily !== 'custom'
       ? attributes.textFontFamily
@@ -391,9 +393,14 @@ export default function Edit({ attributes, setAttributes }) {
               label: __('Background Color', 'adaire-blocks'),
             },
             {
-              value: textColor,
-              onChange: (value) => setAttributes({ textColor: value || '#ffffff' }),
-              label: __('Text Color', 'adaire-blocks'),
+              value: titleColor,
+              onChange: (value) => setAttributes({ titleColor: value || '#ffffff' }),
+              label: __('Title Color', 'adaire-blocks'),
+            },
+            {
+              value: descriptionColor,
+              onChange: (value) => setAttributes({ descriptionColor: value || '#ffffff' }),
+              label: __('Description Color', 'adaire-blocks'),
             },
           ]}
         />
@@ -743,7 +750,7 @@ export default function Edit({ attributes, setAttributes }) {
           {(sectionIntroTitle || sectionIntroDescription) && (
             <div
               className="ad-particles-block__section-intro"
-              style={{ position: 'relative', zIndex: 10, color: textColor || '#ffffff' }}
+              style={{ position: 'relative', zIndex: 10 }}
             >
               {sectionIntroTitle && <h2 style={titleStyle}>{sectionIntroTitle}</h2>}
               {sectionIntroDescription && <p style={textStyle}>{sectionIntroDescription}</p>}
@@ -843,7 +850,6 @@ export default function Edit({ attributes, setAttributes }) {
 
                 <div
                   className="ad-particles-block__entry-text"
-                  style={{ color: textColor || '#ffffff' }}
                 >
                   <h2 style={titleStyle}>{entry.title}</h2>
                   <p style={textStyle}>{entry.description}</p>

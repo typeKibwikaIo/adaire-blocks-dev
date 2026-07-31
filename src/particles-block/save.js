@@ -115,13 +115,14 @@ const renderShapes = ( seed, count, color ) => {
 
 export default function save({ attributes }) {
   const {
-    entryScrollHeight, backgroundColor, textColor, entries, gradientOverlay,
+    entryScrollHeight, backgroundColor, titleColor, descriptionColor, entries, gradientOverlay,
     textAnimationDuration, blockId, sectionIntroTitle, sectionIntroDescription,
     shapesEnabled, shapeCount, shapeColor,
   } = attributes;
   const safeEntries = Array.isArray(entries) ? entries : [];
 
   const titleStyle = {
+    color: titleColor || '#ffffff',
     fontSize: attributes.titleFontSize ? `${attributes.titleFontSize}px` : undefined,
     fontFamily: attributes.titleFontFamily && attributes.titleFontFamily !== 'custom'
       ? attributes.titleFontFamily
@@ -132,6 +133,7 @@ export default function save({ attributes }) {
   };
 
   const textStyle = {
+    color: descriptionColor || '#ffffff',
     fontSize: attributes.textFontSize ? `${attributes.textFontSize}px` : undefined,
     fontFamily: attributes.textFontFamily && attributes.textFontFamily !== 'custom'
       ? attributes.textFontFamily
@@ -169,7 +171,7 @@ export default function save({ attributes }) {
         {(sectionIntroTitle || sectionIntroDescription) && (
           <div
             className="ad-particles-block__section-intro"
-            style={{ position: 'relative', zIndex: 10, color: textColor || '#ffffff' }}
+            style={{ position: 'relative', zIndex: 10 }}
           >
             {sectionIntroTitle && <h2 style={titleStyle}>{sectionIntroTitle}</h2>}
             {sectionIntroDescription && <p style={textStyle}>{sectionIntroDescription}</p>}
@@ -293,7 +295,7 @@ export default function save({ attributes }) {
                 />
               </div>
 
-              <div className="ad-particles-block__entry-text" style={{ color: textColor || '#ffffff' }}>
+              <div className="ad-particles-block__entry-text">
                 <h2 style={titleStyle}>{entry.title}</h2>
                 <p style={textStyle}>{entry.description}</p>
               </div>
