@@ -34,7 +34,11 @@
     },
     "testimonial-block": {
       "enabled": true,
-      "upgradeMessage": "Go pro to add more testimonial items."
+      "limits": {
+        "scrollEffect": false
+      },
+      "upgradeMessage": "Go pro to add more testimonial items.",
+      "scrollEffectUpgradeMessage": "Upgrade to Pro to reveal review cards with a scroll-triggered styling effect."
     },
     "posts-grid-block": {
       "enabled": true,
@@ -179,11 +183,15 @@
     },
     "testimonial-block": {
       "enabled": true,
+      "limits": {
+        "scrollEffect": true
+      },
       "features": [
         "unlimited-testimonials",
         "advanced-carousel",
         "filtering",
-        "custom-templates"
+        "custom-templates",
+        "scroll-effect"
       ]
     },
     "testimonial2-block": {

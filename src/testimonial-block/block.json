@@ -34,6 +34,29 @@
             "type": "string",
             "default": ""
         },
+        "scrollEffect": {
+            "type": "string",
+            "default": "none",
+            "enum": [
+                "none",
+                "fade-up",
+                "scale-in",
+                "blur-in",
+                "tilt-in"
+            ]
+        },
+        "scrollEffectDuration": {
+            "type": "number",
+            "default": 700
+        },
+        "scrollEffectStagger": {
+            "type": "number",
+            "default": 120
+        },
+        "scrollEffectOnce": {
+            "type": "boolean",
+            "default": true
+        },
         "arrowColor": {
             "type": "string",
             "default": "#503AA8"

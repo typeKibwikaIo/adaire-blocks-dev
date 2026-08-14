@@ -6,6 +6,10 @@ export default function save({ attributes }) {
 		quoteColor,
 		authorNameColor,
 		authorTitleColor,
+		scrollEffect,
+		scrollEffectDuration,
+		scrollEffectStagger,
+		scrollEffectOnce,
 		arrowColor,
 		dotColor,
 		fontSize,
@@ -131,6 +135,10 @@ export default function save({ attributes }) {
 			"--company-name-letter-spacing": companyNameLetterSpacing || '1px',
 			"--company-name-text-transform": companyNameTextTransform || 'none',
 			"--testimonial-font-family": fontFamily || 'inherit',
+			// Scroll-reveal timing — read by style.scss on the card transition.
+			// Emitted unconditionally so toggling the effect off and on again
+			// doesn't invalidate previously saved markup.
+			"--scroll-effect-duration": `${scrollEffectDuration ?? 700}ms`,
 			...(blockBackgroundColor && { background: blockBackgroundColor })
 		},
 		'data-slides-per-view': slidesPerView || 3,
