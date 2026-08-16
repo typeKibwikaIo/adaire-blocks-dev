@@ -35,6 +35,12 @@ const CONTENT_WIDTH_OPTIONS = [
 	{ label: __( 'Full' ), value: 'full' },
 ];
 
+const SECTION_ALIGN_OPTIONS = [
+	{ label: __( 'Left' ), value: 'left' },
+	{ label: __( 'Center' ), value: 'center' },
+	{ label: __( 'Right' ), value: 'right' },
+];
+
 const TEXT_TRANSFORM_OPTIONS = [
 	{ label: __( 'None' ), value: 'none' },
 	{ label: __( 'Uppercase' ), value: 'uppercase' },
@@ -131,6 +137,8 @@ export default function Edit( { attributes: a, setAttributes } ) {
 		className: [
 			'adaire-about',
 			`adaire-about--width-${ a.contentWidth || 'contained' }`,
+			`adaire-about--upper-align-${ a.upperSectionAlign || 'left' }`,
+			`adaire-about--lower-align-${ a.lowerSectionAlign || 'left' }`,
 		].join( ' ' ),
 		style: {
 			'--ab-bg'     : a.backgroundColor || '#0a0a0a',
@@ -204,7 +212,48 @@ export default function Edit( { attributes: a, setAttributes } ) {
 						) ) }
 					</ToggleGroupControl>
 				</PanelBody>
-				<PanelBody title={ __( 'Hero', 'adaire-blocks' ) } initialOpen>
+				<PanelBody title={ __( 'Sections', 'adaire-blocks' ) } initialOpen>
+					<ToggleControl
+						label={ __( 'Show image grid' ) }
+						checked={ a.showMediaGrid }
+						onChange={ set( 'showMediaGrid' ) }
+						help={ __( 'Hides the two-image grid without affecting the upper/lower sections around it.' ) }
+					/>
+
+					<p style={ { fontWeight: 600, marginTop: 16, marginBottom: 8 } }>{ __( 'Upper section' ) }</p>
+					<ToggleControl
+						label={ __( 'Show upper section' ) }
+						checked={ a.showUpperSection }
+						onChange={ set( 'showUpperSection' ) }
+						help={ __( 'Heading, tagline, mission and pull-quote statement.' ) }
+					/>
+					{ a.showUpperSection && (
+						<SelectControl
+							label={ __( 'Upper section alignment' ) }
+							value={ a.upperSectionAlign || 'left' }
+							options={ SECTION_ALIGN_OPTIONS }
+							onChange={ set( 'upperSectionAlign' ) }
+						/>
+					) }
+
+					<p style={ { fontWeight: 600, marginTop: 16, marginBottom: 8 } }>{ __( 'Lower section' ) }</p>
+					<ToggleControl
+						label={ __( 'Show lower section' ) }
+						checked={ a.showLowerSection }
+						onChange={ set( 'showLowerSection' ) }
+						help={ __( 'Closing statement.' ) }
+					/>
+					{ a.showLowerSection && (
+						<SelectControl
+							label={ __( 'Lower section alignment' ) }
+							value={ a.lowerSectionAlign || 'left' }
+							options={ SECTION_ALIGN_OPTIONS }
+							onChange={ set( 'lowerSectionAlign' ) }
+						/>
+					) }
+				</PanelBody>
+
+				<PanelBody title={ __( 'Hero', 'adaire-blocks' ) } initialOpen={ false }>
 					<ToggleControl
 						label={ __( 'Show scroll button' ) }
 						checked={ a.showScrollButton }
@@ -269,68 +318,73 @@ export default function Edit( { attributes: a, setAttributes } ) {
 			{ /* ── Canvas ─────────────────────────────────────── */ }
 			<section { ...blockProps }>
 
-				{ /* 1 · Hero zone */ }
-				<div className="adaire-about__hero">
-					<div className="adaire-about__hero-copy">
-						<RichText
-							tagName="h1"
-							className="adaire-about__heading"
-							value={ a.heading }
-							onChange={ set( 'heading' ) }
-							placeholder={ __( 'About us.' ) }
-							allowedFormats={ [] }
-						/>
-						<RichText
-							tagName="p"
-							className="adaire-about__tagline"
-							value={ a.tagline }
-							onChange={ set( 'tagline' ) }
-							placeholder={ __( 'One-line tagline…' ) }
-							allowedFormats={ [ 'core/bold', 'core/italic' ] }
-						/>
-						<RichText
-							tagName="p"
-							className="adaire-about__mission"
-							value={ a.mission }
-							onChange={ set( 'mission' ) }
-							placeholder={ __( 'Mission statement…' ) }
-							allowedFormats={ [ 'core/bold', 'core/italic' ] }
-						/>
-					</div>
-					{ a.showScrollButton && (
-						<QuickZone
-							id="scroll-cta"
-							label="Scroll Button"
-							activeZone={activeZone}
-							setActiveZone={setActiveZone}
-							content={
-								<TextControl
-									label={ __( 'Scroll button label' ) }
-									value={ a.scrollButtonText }
-									onChange={ set( 'scrollButtonText' ) }
+				{ a.showUpperSection && (
+					<>
+						{ /* 1 · Hero zone */ }
+						<div className="adaire-about__hero">
+							<div className="adaire-about__hero-copy">
+								<RichText
+									tagName="h1"
+									className="adaire-about__heading"
+									value={ a.heading }
+									onChange={ set( 'heading' ) }
+									placeholder={ __( 'About us.' ) }
+									allowedFormats={ [] }
 								/>
-							}
-						>
-						<div className="adaire-about__scroll-btn">
-							{ a.scrollButtonText || 'Scroll' }
+								<RichText
+									tagName="p"
+									className="adaire-about__tagline"
+									value={ a.tagline }
+									onChange={ set( 'tagline' ) }
+									placeholder={ __( 'One-line tagline…' ) }
+									allowedFormats={ [ 'core/bold', 'core/italic' ] }
+								/>
+								<RichText
+									tagName="p"
+									className="adaire-about__mission"
+									value={ a.mission }
+									onChange={ set( 'mission' ) }
+									placeholder={ __( 'Mission statement…' ) }
+									allowedFormats={ [ 'core/bold', 'core/italic' ] }
+								/>
+							</div>
+							{ a.showScrollButton && (
+								<QuickZone
+									id="scroll-cta"
+									label="Scroll Button"
+									activeZone={activeZone}
+									setActiveZone={setActiveZone}
+									content={
+										<TextControl
+											label={ __( 'Scroll button label' ) }
+											value={ a.scrollButtonText }
+											onChange={ set( 'scrollButtonText' ) }
+										/>
+									}
+								>
+								<div className="adaire-about__scroll-btn">
+									{ a.scrollButtonText || 'Scroll' }
+								</div>
+								</QuickZone>
+							) }
 						</div>
-						</QuickZone>
-					) }
-				</div>
 
-				{ /* 2 · Statement zone */ }
-				<div className="adaire-about__statement-zone">
-					<RichText
-						tagName="p"
-						className="adaire-about__statement"
-						value={ a.statement }
-						onChange={ set( 'statement' ) }
-						placeholder={ __( 'Large pull-quote statement…' ) }
-						allowedFormats={ [ 'core/bold', 'core/italic' ] }
-					/>
-				</div>
+						{ /* 2 · Statement zone */ }
+						<div className="adaire-about__statement-zone">
+							<RichText
+								tagName="p"
+								className="adaire-about__statement"
+								value={ a.statement }
+								onChange={ set( 'statement' ) }
+								placeholder={ __( 'Large pull-quote statement…' ) }
+								allowedFormats={ [ 'core/bold', 'core/italic' ] }
+							/>
+						</div>
+					</>
+				) }
 
 				{ /* 3 · Media grid: 4 zones */ }
+				{ a.showMediaGrid && (
 				<div className="adaire-about__media">
 					{ /* Zone A: main image */ }
 					<QuickZone
@@ -403,8 +457,10 @@ export default function Edit( { attributes: a, setAttributes } ) {
 					</div>
 					</QuickZone>
 				</div>
+				) }
 
 				{ /* 4 · Closing statement */ }
+				{ a.showLowerSection && (
 				<div className="adaire-about__closing-zone">
 					<RichText
 						tagName="p"
@@ -415,6 +471,7 @@ export default function Edit( { attributes: a, setAttributes } ) {
 						allowedFormats={ [ 'core/bold', 'core/italic' ] }
 					/>
 				</div>
+				) }
 			</section>
 		</>
 	);

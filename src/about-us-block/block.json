@@ -68,6 +68,36 @@
             "type": "string",
             "default": "We're here to make your design dreams come true."
         },
+        "showMediaGrid": {
+            "type": "boolean",
+            "default": true
+        },
+        "showUpperSection": {
+            "type": "boolean",
+            "default": true
+        },
+        "showLowerSection": {
+            "type": "boolean",
+            "default": true
+        },
+        "upperSectionAlign": {
+            "type": "string",
+            "default": "left",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
+        },
+        "lowerSectionAlign": {
+            "type": "string",
+            "default": "left",
+            "enum": [
+                "left",
+                "center",
+                "right"
+            ]
+        },
         "showScrollButton": {
             "type": "boolean",
             "default": true

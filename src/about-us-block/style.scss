@@ -12,6 +12,20 @@
 	*::before,
 	*::after { box-sizing: inherit; }
 
+	// Every text element gets this — prevents a long unbroken word/URL from
+	// blowing out its max-width container and clipping/overflowing on narrow
+	// screens.
+	.adaire-about__heading,
+	.adaire-about__tagline,
+	.adaire-about__mission,
+	.adaire-about__statement,
+	.adaire-about__caption,
+	.adaire-about__body,
+	.adaire-about__closing {
+		overflow-wrap: break-word;
+		word-break: break-word;
+	}
+
 	// ── Shared inner wrap ──────────────────────────────────────────────────
 	// All zones share the same horizontal gutter
 	.adaire-about__hero,
@@ -69,6 +83,47 @@
 		margin-right: calc( 50% - 50vw );
 	}
 
+	// Upper section (hero + statement) alignment — independent from the lower
+	// (closing) section's own alignment modifier below. "center"/"right" pull
+	// the max-width-capped copy blocks off the block-start edge with
+	// margin:auto rather than stretching them, so the max-width the Typography
+	// panel already governs keeps meaning something.
+	&--upper-align-center {
+		.adaire-about__hero { justify-content: center; }
+		.adaire-about__hero-copy,
+		.adaire-about__statement {
+			margin-left: auto;
+			margin-right: auto;
+			text-align: center;
+		}
+	}
+
+	&--upper-align-right {
+		.adaire-about__hero { justify-content: flex-end; }
+		.adaire-about__hero-copy,
+		.adaire-about__statement {
+			margin-left: auto;
+			margin-right: 0;
+			text-align: right;
+		}
+	}
+
+	&--lower-align-center {
+		.adaire-about__closing-zone { text-align: center; }
+		.adaire-about__closing {
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+
+	&--lower-align-right {
+		.adaire-about__closing-zone { text-align: right; }
+		.adaire-about__closing {
+			margin-left: auto;
+			margin-right: 0;
+		}
+	}
+
 	// ══════════════════════════════════════════════════════════════════════
 	// 1 · HERO ZONE
 	// ══════════════════════════════════════════════════════════════════════
@@ -95,7 +150,7 @@
 	}
 
 	.adaire-about__tagline {
-		font-size: 14px;
+		font-size: clamp( 13px, 3.4vw, 14px );
 		line-height: var( --ab-tagline-line-height, 1.65 );
 		letter-spacing: var( --ab-tagline-letter-spacing, normal );
 		text-transform: var( --ab-tagline-text-transform, none );
@@ -105,7 +160,7 @@
 	}
 
 	.adaire-about__mission {
-		font-size: 13px;
+		font-size: clamp( 12px, 3.2vw, 13px );
 		line-height: var( --ab-mission-line-height, 1.75 );
 		letter-spacing: var( --ab-mission-letter-spacing, normal );
 		text-transform: var( --ab-mission-text-transform, none );
@@ -207,7 +262,7 @@
 	}
 
 	.adaire-about__caption {
-		font-size: 14px;
+		font-size: clamp( 13px, 3.4vw, 14px );
 		line-height: var( --ab-caption-line-height, 1.72 );
 		letter-spacing: var( --ab-caption-letter-spacing, normal );
 		text-transform: var( --ab-caption-text-transform, none );
@@ -217,7 +272,7 @@
 	}
 
 	.adaire-about__body {
-		font-size: 15px;
+		font-size: clamp( 14px, 3.6vw, 15px );
 		line-height: var( --ab-body-line-height, 1.8 );
 		letter-spacing: var( --ab-body-letter-spacing, normal );
 		text-transform: var( --ab-body-text-transform, none );
