@@ -70,6 +70,10 @@ export default function Edit({ attributes, setAttributes }) {
 		quoteColor,
 		authorNameColor,
 		authorTitleColor,
+		scrollEffect,
+		scrollEffectDuration,
+		scrollEffectStagger,
+		scrollEffectOnce,
 		arrowColor,
 		dotColor,
 		fontSize,
@@ -118,6 +122,19 @@ export default function Edit({ attributes, setAttributes }) {
 		companyNameTextTransform,
 		fontFamily,
 	} = attributes;
+
+	// Enforce Pro gate for scroll effect — belt-and-braces alongside the
+	// disabled SelectControl below, matching the pattern used for
+	// call-to-action-block's free-tier layout restriction.
+	useEffect(() => {
+		const blockConfig = window.adaireBlocksConfig?.blocks?.['testimonial-block'] || {};
+		const isPremium = !!window.adaireBlocksConfig?.isPremium;
+		const scrollEffectAllowed = isPremium || blockConfig.limits?.scrollEffect === true;
+
+		if (!scrollEffectAllowed && scrollEffect && scrollEffect !== 'none') {
+			setAttributes({ scrollEffect: 'none' });
+		}
+	}, [scrollEffect]);
 
 	const splideRef = useRef(null);
 	const splideInstanceRef = useRef(null);
@@ -208,8 +225,13 @@ export default function Edit({ attributes, setAttributes }) {
 			"--company-name-letter-spacing": companyNameLetterSpacing || '1px',
 			"--company-name-text-transform": companyNameTextTransform || 'none',
 			"--testimonial-font-family": fontFamily || 'inherit',
+			"--scroll-effect-duration": `${scrollEffectDuration ?? 700}ms`,
 			...(blockBackgroundColor && { background: blockBackgroundColor })
 		},
+		// Scroll-trigger CSS keys off data-scroll-effect (see style.scss), but
+		// there's no IntersectionObserver in the editor canvas to ever add
+		// .is-in-view — omit the attribute here so cards stay visible while
+		// editing; the saved/frontend markup (save.js) still carries it.
 		'data-slides-per-view': slidesPerView || 3,
 		'data-slides-per-view-mobile': slidesPerViewMobile || 1,
 		'data-slides-per-view-tablet': slidesPerViewTablet || 2,
@@ -1347,6 +1369,70 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={(v) => setAttributes({ fontFamily: v })}
 						help={__('Applies to all text in this block.', 'adaire-blocks')}
 					/>
+				</PanelBody>
+
+				<PanelBody section="style" priority="medium" title={__('Scroll Effect', 'adaire-blocks')} initialOpen={false}>
+					{(() => {
+						const blockConfig = window.adaireBlocksConfig?.blocks?.['testimonial-block'] || {};
+						const blockLimits = blockConfig.limits || {};
+						const isPremium = !!window.adaireBlocksConfig?.isPremium;
+						const scrollEffectAllowed = isPremium || blockLimits.scrollEffect === true;
+						const upgradeMessage = blockConfig.scrollEffectUpgradeMessage || __('Upgrade to Pro to reveal review cards with a scroll-triggered styling effect.', 'adaire-blocks');
+
+						return (
+							<>
+								<SelectControl
+									label={__('Effect', 'adaire-blocks') + (scrollEffectAllowed ? '' : ' (Pro)')}
+									value={scrollEffect || 'none'}
+									options={[
+										{ label: __('None', 'adaire-blocks'), value: 'none' },
+										{ label: __('Fade Up', 'adaire-blocks'), value: 'fade-up' },
+										{ label: __('Scale In', 'adaire-blocks'), value: 'scale-in' },
+										{ label: __('Blur In', 'adaire-blocks'), value: 'blur-in' },
+										{ label: __('Tilt In', 'adaire-blocks'), value: 'tilt-in' },
+									]}
+									disabled={!scrollEffectAllowed}
+									onChange={(v) => setAttributes({ scrollEffect: v })}
+									help={!scrollEffectAllowed ? upgradeMessage : __('Cards animate into view as visitors scroll to them.', 'adaire-blocks')}
+								/>
+
+								{scrollEffectAllowed && scrollEffect && scrollEffect !== 'none' && (
+									<>
+										<RangeControl
+											label={__('Duration (ms)', 'adaire-blocks')}
+											value={scrollEffectDuration ?? 700}
+											onChange={(v) => setAttributes({ scrollEffectDuration: v })}
+											min={100}
+											max={2000}
+											step={50}
+										/>
+										<RangeControl
+											label={__('Stagger between cards (ms)', 'adaire-blocks')}
+											value={scrollEffectStagger ?? 120}
+											onChange={(v) => setAttributes({ scrollEffectStagger: v })}
+											min={0}
+											max={500}
+											step={10}
+										/>
+										<ToggleControl
+											label={__('Play once', 'adaire-blocks')}
+											help={__('When off, cards replay the effect every time they re-enter the viewport.', 'adaire-blocks')}
+											checked={scrollEffectOnce !== false}
+											onChange={(v) => setAttributes({ scrollEffectOnce: v })}
+										/>
+									</>
+								)}
+
+								{!scrollEffectAllowed && (
+									<UpgradeNotice
+										variant="inline"
+										itemType="scroll effect"
+										message={upgradeMessage}
+									/>
+								)}
+							</>
+						);
+					})()}
 				</PanelBody>
 
 				<PanelBody section="style" priority="medium" title={__('Spacing', 'adaire-blocks')} initialOpen={false}>

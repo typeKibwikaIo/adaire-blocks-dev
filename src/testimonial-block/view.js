@@ -1,10 +1,51 @@
 ﻿import { Splide } from '@splidejs/splide';
 
+// Pro scroll-triggered styling effect. `data-scroll-effect` is only ever
+// something other than "none" on Pro-built markup (the free editor can't set
+// it), so this stays a no-op on free sites.
+function initScrollEffect(block) {
+    const effect = block.dataset.scrollEffect;
+    if (!effect || effect === 'none') {
+        return;
+    }
+
+    const stagger = parseInt(block.dataset.scrollEffectStagger, 10) || 0;
+    const once = block.dataset.scrollEffectOnce !== 'false';
+    const cards = block.querySelectorAll('.ad-carousel-text-block__testimonial-card');
+
+    cards.forEach(function(card, index) {
+        card.style.setProperty('--scroll-effect-delay', `${index * stagger}ms`);
+    });
+
+    if (!('IntersectionObserver' in window)) {
+        // No observer support — reveal immediately rather than leaving cards hidden.
+        cards.forEach((card) => card.classList.add('is-in-view'));
+        return;
+    }
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-in-view');
+                if (once) {
+                    observer.unobserve(entry.target);
+                }
+            } else if (!once) {
+                entry.target.classList.remove('is-in-view');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    cards.forEach((card) => observer.observe(card));
+}
+
 // Frontend JavaScript for Carousel Text Block
 document.addEventListener('DOMContentLoaded', function() {
     const carouselBlocks = document.querySelectorAll('.ad-carousel-text-block');
     
     carouselBlocks.forEach(function(block) {
+        initScrollEffect(block);
+
         const splideContainer = block.querySelector(".splide");
         if (splideContainer) {
             // Get configuration from data attributes

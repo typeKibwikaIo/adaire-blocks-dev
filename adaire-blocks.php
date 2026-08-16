@@ -2532,16 +2532,14 @@ add_action( 'enqueue_block_editor_assets', 'adaire_blocks_enqueue_auto_recovery'
 
 // Pass block configuration to editor
 function adaire_blocks_localize_editor_config() {
-	// Only load in block editor
-	if ( ! is_admin() || ! function_exists( 'get_current_screen' ) ) {
-		return;
-	}
-	
-	$screen = get_current_screen();
-	if ( ! $screen || $screen->base !== 'post' ) {
-		return;
-	}
-	
+	// This hook (enqueue_block_editor_assets) only fires when a block editor
+	// is actually active — post editor, Site Editor, or widgets screen — so
+	// no extra screen-base gate is needed here. A prior `$screen->base !== 'post'`
+	// check excluded the Site Editor (base 'site-editor'), leaving
+	// window.adaireBlocksConfig undefined there and breaking every Pro gate
+	// that reads it (e.g. testimonial-block's scroll effect) for blocks
+	// placed in templates/template parts.
+
 	// Get configuration
 	$config = AdaireBlocksConfig::get_instance();
 	$plugin_version = $config->get_plugin_version();

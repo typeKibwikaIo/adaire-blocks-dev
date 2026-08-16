@@ -156,12 +156,72 @@
 		@media (max-width: 1024px) {
 			width: var(--card-width-tablet, 100%);
 		}
-		
+
 		@media (max-width: 768px) {
 			width: var(--card-width-mobile, 100%);
 		}
 	}
-	
+
+	// Pro scroll-triggered styling effect. Gated to Pro at the editor UI level
+	// (free tier can't set scrollEffect away from "none"), so its presence
+	// here is inert on free-built sites. Cards start hidden and reveal when
+	// view.js's IntersectionObserver adds .is-in-view; transition-delay is
+	// staggered per-card via --scroll-effect-delay (set inline by view.js).
+	&[data-scroll-effect]:not([data-scroll-effect="none"]) &__testimonial-card {
+		transition: opacity var(--scroll-effect-duration, 700ms) ease, transform var(--scroll-effect-duration, 700ms) ease, filter var(--scroll-effect-duration, 700ms) ease;
+		transition-delay: var(--scroll-effect-delay, 0ms);
+	}
+
+	&[data-scroll-effect="fade-up"] &__testimonial-card {
+		opacity: 0;
+		transform: translateY(40px);
+
+		&.is-in-view {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	&[data-scroll-effect="scale-in"] &__testimonial-card {
+		opacity: 0;
+		transform: scale(0.85);
+
+		&.is-in-view {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	&[data-scroll-effect="blur-in"] &__testimonial-card {
+		opacity: 0;
+		filter: blur(12px);
+
+		&.is-in-view {
+			opacity: 1;
+			filter: blur(0);
+		}
+	}
+
+	&[data-scroll-effect="tilt-in"] &__testimonial-card {
+		opacity: 0;
+		transform: perspective(800px) rotateX(20deg) translateY(20px);
+
+		&.is-in-view {
+			opacity: 1;
+			transform: perspective(800px) rotateX(0) translateY(0);
+		}
+	}
+
+	// Respect reduced-motion preference regardless of chosen effect.
+	@media (prefers-reduced-motion: reduce) {
+		&[data-scroll-effect]:not([data-scroll-effect="none"]) &__testimonial-card {
+			transition: none;
+			opacity: 1;
+			transform: none;
+			filter: none;
+		}
+	}
+
 	// Child elements of testimonial card
 	&__company-logo {
 		margin-bottom: 20px;

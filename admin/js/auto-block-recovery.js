@@ -25,11 +25,15 @@
 		
 		// Helper function to log to both console and parent window
 		function logToParent( message, level = 'info' ) {
-			// Always log to console
-			const logFunction = level === 'error' ? console.error : 
-							   level === 'warn' ? console.warn : console.log;
-			logFunction( message );
-			
+			// Only noisy in the console during migration mode, where the
+			// parent migration UI is actually listening for these; routine
+			// editor loads stay quiet.
+			if ( isMigrationMode ) {
+				const logFunction = level === 'error' ? console.error :
+								   level === 'warn' ? console.warn : console.log;
+				logFunction( message );
+			}
+
 			// Send to parent if in migration mode
 			if ( isInIframe && isMigrationMode && window.parent ) {
 				try {

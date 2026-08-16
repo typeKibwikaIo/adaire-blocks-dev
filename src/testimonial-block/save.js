@@ -141,6 +141,9 @@ export default function save({ attributes }) {
 			"--scroll-effect-duration": `${scrollEffectDuration ?? 700}ms`,
 			...(blockBackgroundColor && { background: blockBackgroundColor })
 		},
+		'data-scroll-effect': scrollEffect || 'none',
+		'data-scroll-effect-stagger': scrollEffectStagger ?? 120,
+		'data-scroll-effect-once': scrollEffectOnce === false ? 'false' : 'true',
 		'data-slides-per-view': slidesPerView || 3,
 		'data-slides-per-view-mobile': slidesPerViewMobile || 1,
 		'data-slides-per-view-tablet': slidesPerViewTablet || 2,
