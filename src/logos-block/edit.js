@@ -1,5 +1,5 @@
-﻿import { __ } from "@wordpress/i18n";
-import { useBlockProps, InspectorControls } from "@wordpress/block-editor";
+import { __ } from "@wordpress/i18n";
+import { useBlockProps } from "@wordpress/block-editor";
 import { MediaUpload } from "@wordpress/media-utils";
 import {
 	PanelBody,
@@ -11,8 +11,9 @@ import {
 	SelectControl,
 	ButtonGroup,
 } from "@wordpress/components";
-import { desktop, tablet, mobile } from "@wordpress/icons";
 import { useState } from "@wordpress/element";
+import InspectorTabs from "../components/InspectorTabs";
+import DeviceSwitcher, { THREE_TIERS, DeviceControlInput, getFlatDeviceValue, setFlatDeviceValue } from "../components/DeviceSwitcher";
 import UpgradeNotice from '../components/UpgradeNotice';
 import { useBlockLimits } from '../components/useBlockLimits';
 
@@ -20,18 +21,18 @@ const FREE_TIER_ITEM_LIMIT = 3;
 
 export default function Edit({ attributes, setAttributes }) {
 	const [deviceType, setDeviceType] = useState("desktop");
-	
+
 	// Check block limits
 	const { isLimitReached, showUpgradeNotice, upgradeMessage } = useBlockLimits(
-		'logos-block', 
-		attributes.partnerLogos || [], 
+		'logos-block',
+		attributes.partnerLogos || [],
 		'logo'
 	);
-	
+
 	const {
 		partnerLogos = [],
+		displayMode = "carousel",
 		sliderSpeed = 0.5,
-		slidesPerView = 4,
 		gap = "1rem",
 		pauseOnHover = true,
 		logoHeight = 60,
@@ -52,6 +53,11 @@ export default function Edit({ attributes, setAttributes }) {
 			mobile: { value: 100, unit: "%" }
 		}
 	} = attributes;
+
+	const itemsPerRowDesktop = getFlatDeviceValue(attributes, "slidesPerView", "desktop", 4);
+	const itemsPerRowTablet = getFlatDeviceValue(attributes, "slidesPerView", "tablet", 3);
+	const itemsPerRowMobile = getFlatDeviceValue(attributes, "slidesPerView", "mobile", 2);
+	const itemsPerRowMax = { desktop: 8, tablet: 6, mobile: 4 };
 
 	const blockProps = useBlockProps({
 		className: "logos-block logos-block-editor",
@@ -81,6 +87,7 @@ export default function Edit({ attributes, setAttributes }) {
 			companyName: `Company ${partnerLogos.length + 1}`,
 			imageUrl: "",
 			imageId: 0,
+			link: "",
 		};
 		setAttributes({ partnerLogos: [...partnerLogos, newLogo] });
 	};
@@ -97,17 +104,148 @@ export default function Edit({ attributes, setAttributes }) {
 		setAttributes({ partnerLogos: newLogos });
 	};
 
-	// Remove this function since we're using inline updateLogo calls
+	const updateContainerMaxWidth = (value, unit) => {
+		const current = containerMaxWidth?.[deviceType] || {};
+		setAttributes({
+			containerMaxWidth: {
+				...(containerMaxWidth || {}),
+				[deviceType]: {
+					value,
+					unit: unit ?? current.unit ?? (deviceType === "desktop" ? "px" : "%"),
+				},
+			},
+		});
+	};
 
 	return (
 		<div {...blockProps}>
-			<InspectorControls>
-				
-				{/* Container Settings */}
-				<PanelBody
-					title={__("Container Settings", "adaire-blocks")}
-					initialOpen={false}
-				>
+			<InspectorTabs attributes={attributes} setAttributes={setAttributes}>
+
+				{/* Content */}
+				<PanelBody section="content" title={__("Title", "adaire-blocks")} initialOpen={true}>
+					<TextControl
+						label={__("Title Text", "adaire-blocks")}
+						value={titleText}
+						onChange={(value) => setAttributes({ titleText: value })}
+						placeholder="Enter title text..."
+					/>
+				</PanelBody>
+
+				<PanelBody section="content" title={__("Partner Logos", "adaire-blocks")} initialOpen={true}>
+					{partnerLogos.map((logo, index) => (
+						<div
+							key={logo.id}
+							style={{
+								border: "1px solid #ddd",
+								padding: "10px",
+								margin: "10px 0",
+								borderRadius: "4px",
+							}}
+						>
+							<div
+								style={{
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "space-between",
+									marginBottom: "10px",
+								}}
+							>
+								<h4 style={{ margin: 0 }}>Logo {index + 1}</h4>
+								<div style={{ display: "flex", gap: "5px" }}>
+									{index > 0 && (
+										<Button
+											onClick={() => moveLogo(index, index - 1)}
+											isSmall
+											variant="secondary"
+										>
+											↑
+										</Button>
+									)}
+									{index < partnerLogos.length - 1 && (
+										<Button
+											onClick={() => moveLogo(index, index + 1)}
+											isSmall
+											variant="secondary"
+										>
+											↓
+										</Button>
+									)}
+								</div>
+							</div>
+
+							<TextControl
+								label="Company Name"
+								value={logo.companyName}
+								onChange={(value) => updateLogo(index, "companyName", value)}
+								placeholder="Enter company name..."
+							/>
+
+							<TextControl
+								label="Link URL"
+								value={logo.link || ""}
+								onChange={(value) => updateLogo(index, "link", value)}
+								placeholder="https://partner-site.com"
+								help="Optional. Makes this logo clickable, opening in a new tab."
+							/>
+
+							<MediaUpload
+								onSelect={(media) => updateLogo(index, "imageUrl", media.url)}
+								allowedTypes={["image"]}
+								value={logo.imageUrl}
+								render={({ open }) => (
+									<div>
+										<Button onClick={open} isSecondary>
+											{logo.imageUrl ? "Change Image" : "Select Image"}
+										</Button>
+										{logo.imageUrl && (
+											<img
+												src={logo.imageUrl}
+												alt="Logo"
+												style={{
+													width: "100%",
+													height: `${logoHeight}px`,
+													objectFit: "contain",
+													margin: "5px 0",
+													border: "1px solid #ddd",
+													borderRadius: "2px",
+													padding: "4px",
+													backgroundColor: "white",
+												}}
+											/>
+										)}
+									</div>
+								)}
+							/>
+
+							<Button
+								onClick={() => removeLogo(index)}
+								isDestructive
+								isSmall
+								style={{ marginTop: "10px" }}
+							>
+								Remove Logo
+							</Button>
+						</div>
+					))}
+
+					<Button
+						onClick={addLogo}
+						isPrimary
+						disabled={ isLimitReached }
+					>
+						Add Logo
+					</Button>
+					{ showUpgradeNotice && (
+						<UpgradeNotice
+							variant="inline"
+							itemType="logo"
+							message={upgradeMessage}
+						/>
+					) }
+				</PanelBody>
+
+				{/* Layout */}
+				<PanelBody section="layout" title={__("Container Settings", "adaire-blocks")} initialOpen={false}>
 					<ButtonGroup>
 						{[
 							{ label: __("Full Width", "adaire-blocks"), value: "full" },
@@ -128,88 +266,91 @@ export default function Edit({ attributes, setAttributes }) {
 							<p style={{ marginTop: "16px", marginBottom: "8px", fontWeight: 600 }}>
 								{__("Max Width", "adaire-blocks")}
 							</p>
-							<ButtonGroup style={{ marginBottom: "12px" }}>
-								<Button
-									icon={desktop}
-									isPrimary={deviceType === "desktop"}
-									onClick={() => setDeviceType("desktop")}
-									label={__("Desktop", "adaire-blocks")}
-								/>
-								<Button
-									icon={tablet}
-									isPrimary={deviceType === "tablet"}
-									onClick={() => setDeviceType("tablet")}
-									label={__("Tablet", "adaire-blocks")}
-								/>
-								<Button
-									icon={mobile}
-									isPrimary={deviceType === "mobile"}
-									onClick={() => setDeviceType("mobile")}
-									label={__("Mobile", "adaire-blocks")}
-								/>
-							</ButtonGroup>
-							<div style={{ display: "flex", gap: "8px" }}>
-								<TextControl
-									type="number"
-									value={
-										containerMaxWidth?.[deviceType]?.value ??
-										(deviceType === "desktop" ? 1200 : 100)
-									}
-									onChange={(v) =>
-										setAttributes({
-											containerMaxWidth: {
-												...(containerMaxWidth || {}),
-												[deviceType]: {
-													...(containerMaxWidth?.[deviceType] || {}),
-													value: Number(v),
-												},
-											},
-										})
-									}
-								/>
-								<ButtonGroup>
-									{["px", "%", "rem", "vw"].map((u) => (
-										<Button
-											key={u}
-											isPrimary={
-												(containerMaxWidth?.[deviceType]?.unit ??
-													(deviceType === "desktop" ? "px" : "%")) === u
-											}
-											isSecondary={
-												(containerMaxWidth?.[deviceType]?.unit ??
-													(deviceType === "desktop" ? "px" : "%")) !== u
-											}
-											onClick={() =>
-												setAttributes({
-													containerMaxWidth: {
-														...(containerMaxWidth || {}),
-														[deviceType]: {
-															...(containerMaxWidth?.[deviceType] || {}),
-															unit: u,
-														},
-													},
-												})
-											}
-										>
-											{u}
-										</Button>
-									))}
-								</ButtonGroup>
-							</div>
+							<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+							<DeviceControlInput
+								deviceType={deviceType}
+								attribute={containerMaxWidth}
+								onAttributeChange={updateContainerMaxWidth}
+								defaults={{
+									desktop: { value: 1200, unit: "px" },
+									tablet: { value: 100, unit: "%" },
+									mobile: { value: 100, unit: "%" },
+								}}
+							/>
 						</>
 					)}
 				</PanelBody>
-				<PanelBody
-					title={__("Title Settings", "adaire-blocks")}
-					initialOpen={true}
-				>
-					<TextControl
-						label={__("Title Text", "adaire-blocks")}
-						value={titleText}
-						onChange={(value) => setAttributes({ titleText: value })}
-						placeholder="Enter title text..."
+
+				<PanelBody section="layout" title={__("Display & Behavior", "adaire-blocks")} initialOpen={false}>
+					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
+						{__("Display Mode", "adaire-blocks")}
+					</p>
+					<ButtonGroup style={{ marginBottom: "16px" }}>
+						{[
+							{ label: __("Carousel", "adaire-blocks"), value: "carousel" },
+							{ label: __("Grid", "adaire-blocks"), value: "grid" },
+						].map((opt) => (
+							<Button
+								key={opt.value}
+								isPrimary={displayMode === opt.value}
+								isSecondary={displayMode !== opt.value}
+								onClick={() => setAttributes({ displayMode: opt.value })}
+							>
+								{opt.label}
+							</Button>
+						))}
+					</ButtonGroup>
+
+					{displayMode === "carousel" && (
+						<RangeControl
+							label={__("Slider Speed", "adaire-blocks")}
+							value={sliderSpeed}
+							onChange={(value) => setAttributes({ sliderSpeed: value })}
+							min={0.1}
+							max={3}
+							step={0.1}
+							help={__(
+								"Speed of continuous scrolling (lower = slower)",
+								"adaire-blocks",
+							)}
+						/>
+					)}
+
+					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
+						{__("Items Per Row", "adaire-blocks")}
+					</p>
+					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+					<RangeControl
+						value={getFlatDeviceValue(attributes, "slidesPerView", deviceType, itemsPerRowDesktop)}
+						onChange={(value) => setFlatDeviceValue(setAttributes, "slidesPerView", deviceType, value)}
+						min={1}
+						max={itemsPerRowMax[deviceType] ?? 8}
+						step={1}
+						help={__("Number of logos visible at once for this device", "adaire-blocks")}
 					/>
 
+					<TextControl
+						label={__("Gap Between Items", "adaire-blocks")}
+						value={gap}
+						onChange={(value) => setAttributes({ gap: value })}
+						help={__("CSS gap value (e.g., 1rem, 20px)", "adaire-blocks")}
+					/>
+
+					{displayMode === "carousel" && (
+						<ToggleControl
+							label={__("Pause on Hover", "adaire-blocks")}
+							checked={pauseOnHover}
+							onChange={(value) => setAttributes({ pauseOnHover: value })}
+							help={__(
+								"Pause scrolling when hovering over the slider",
+								"adaire-blocks",
+							)}
+						/>
+					)}
+				</PanelBody>
+
+				{/* Style */}
+				<PanelBody section="style" priority="high" title={__("Title Style", "adaire-blocks")} initialOpen={false}>
 					<RangeControl
 						label={__("Font Size (px)", "adaire-blocks")}
 						value={titleFontSize}
@@ -261,10 +402,28 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 
-				<PanelBody
-					title={__("Block Spacing", "adaire-blocks")}
-					initialOpen={false}
-				>
+				<PanelBody section="style" priority="high" title={__("Logo Style", "adaire-blocks")} initialOpen={false}>
+					<RangeControl
+						label={__("Logo Height (px)", "adaire-blocks")}
+						value={logoHeight}
+						onChange={(value) => setAttributes({ logoHeight: value })}
+						min={30}
+						max={150}
+						step={5}
+						help={__("Height of logos in pixels", "adaire-blocks")}
+					/>
+
+					<ColorPicker
+						label={__("Background Color", "adaire-blocks")}
+						color={backgroundColor}
+						onChangeComplete={(color) =>
+							setAttributes({ backgroundColor: color.hex })
+						}
+						disableAlpha
+					/>
+				</PanelBody>
+
+				<PanelBody section="style" priority="medium" title={__("Block Spacing", "adaire-blocks")} initialOpen={false}>
 					<RangeControl
 						label={__("Block Padding Top (px)", "adaire-blocks")}
 						value={blockPaddingTop}
@@ -286,185 +445,7 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 
-				<PanelBody
-					title={__("Slider Settings", "adaire-blocks")}
-					initialOpen={false}
-				>
-					<RangeControl
-						label={__("Slider Speed", "adaire-blocks")}
-						value={sliderSpeed}
-						onChange={(value) => setAttributes({ sliderSpeed: value })}
-						min={0.1}
-						max={3}
-						step={0.1}
-						help={__(
-							"Speed of continuous scrolling (lower = slower)",
-							"logos-block",
-						)}
-					/>
-
-					<RangeControl
-						label={__("Slides Per View", "adaire-blocks")}
-						value={slidesPerView}
-						onChange={(value) => setAttributes({ slidesPerView: value })}
-						min={1}
-						max={8}
-						step={1}
-						help={__("Number of logos visible at once", "adaire-blocks")}
-					/>
-
-					<TextControl
-						label={__("Gap Between Slides", "adaire-blocks")}
-						value={gap}
-						onChange={(value) => setAttributes({ gap: value })}
-						help={__("CSS gap value (e.g., 1rem, 20px)", "adaire-blocks")}
-					/>
-
-					<ToggleControl
-						label={__("Pause on Hover", "adaire-blocks")}
-						checked={pauseOnHover}
-						onChange={(value) => setAttributes({ pauseOnHover: value })}
-						help={__(
-							"Pause scrolling when hovering over the slider",
-							"logos-block",
-						)}
-					/>
-
-					<RangeControl
-						label={__("Logo Height (px)", "adaire-blocks")}
-						value={logoHeight}
-						onChange={(value) => setAttributes({ logoHeight: value })}
-						min={30}
-						max={150}
-						step={5}
-						help={__("Height of logos in pixels", "adaire-blocks")}
-					/>
-
-					<ColorPicker
-						label={__("Background Color", "adaire-blocks")}
-						color={backgroundColor}
-						onChangeComplete={(color) =>
-							setAttributes({ backgroundColor: color.hex })
-						}
-						disableAlpha
-					/>
-				</PanelBody>
-
-				<PanelBody title="Partner Logos" initialOpen={true}>
-					{partnerLogos.map((logo, index) => (
-						<div
-							key={logo.id}
-							style={{
-								border: "1px solid #ddd",
-								padding: "10px",
-								margin: "10px 0",
-								borderRadius: "4px",
-							}}
-						>
-							<div
-								style={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "space-between",
-									marginBottom: "10px",
-								}}
-							>
-								<h4 style={{ margin: 0 }}>Logo {index + 1}</h4>
-								<div style={{ display: "flex", gap: "5px" }}>
-									{index > 0 && (
-										<Button
-											onClick={() => moveLogo(index, index - 1)}
-											isSmall
-											variant="secondary"
-										>
-											â†‘
-										</Button>
-									)}
-									{index < partnerLogos.length - 1 && (
-										<Button
-											onClick={() => moveLogo(index, index + 1)}
-											isSmall
-											variant="secondary"
-										>
-											â†“
-										</Button>
-									)}
-								</div>
-							</div>
-
-							<TextControl
-								label="Company Name"
-								value={logo.companyName}
-								onChange={(value) => updateLogo(index, "companyName", value)}
-								placeholder="Enter company name..."
-							/>
-
-							<MediaUpload
-								onSelect={(media) => updateLogo(index, "imageUrl", media.url)}
-								allowedTypes={["image"]}
-								value={logo.imageUrl}
-								render={({ open }) => (
-									<div>
-										<Button onClick={open} isSecondary>
-											{logo.imageUrl ? "Change Image" : "Select Image"}
-										</Button>
-										{logo.imageUrl && (
-											<img
-												src={logo.imageUrl}
-												alt="Logo"
-												style={{
-													width: "100%",
-													height: `${logoHeight}px`,
-													objectFit: "contain",
-													margin: "5px 0",
-													border: "1px solid #ddd",
-													borderRadius: "2px",
-													padding: "4px",
-													backgroundColor: "white",
-												}}
-											/>
-										)}
-									</div>
-								)}
-							/>
-
-							<Button
-								onClick={() => removeLogo(index)}
-								isDestructive
-								isSmall
-								style={{ marginTop: "10px" }}
-							>
-								Remove Logo
-							</Button>
-						</div>
-					))}
-
-					<Button 
-						onClick={addLogo} 
-						isPrimary
-						disabled={ isLimitReached }
-					>
-						Add Logo
-					</Button>
-					{ showUpgradeNotice && (
-						<UpgradeNotice 
-							variant="inline"
-							itemType="logo"
-							message={upgradeMessage}
-						/>
-					) }
-				</PanelBody>
-
-				<PanelBody title="Block Settings" initialOpen={false}>
-					<TextControl
-						label="Block ID"
-						value={blockId}
-						onChange={(value) => setAttributes({ blockId: value })}
-						help="Add a custom ID to this block for CSS targeting or anchor links."
-					/>
-				</PanelBody>
-
-			</InspectorControls>
+			</InspectorTabs>
 
 			{/* Clean Preview Area */}
 			<div className={`logos-block__container ${containerMode === "constrained" ? "is-constrained" : ""}`}>
@@ -509,11 +490,13 @@ export default function Edit({ attributes, setAttributes }) {
 								fontSize: "14px",
 							}}
 						>
-							{__("Partner Logos Slider Preview", "adaire-blocks")} â€¢{" "}
-							{__("Edit in sidebar â†’", "adaire-blocks")}
+							{displayMode === "grid"
+								? __("Partner Logos Grid Preview", "adaire-blocks")
+								: __("Partner Logos Slider Preview", "adaire-blocks")} •{" "}
+							{__("Edit in sidebar →", "adaire-blocks")}
 						</div>
 
-						{/* Slider Preview */}
+						{/* Logos Preview */}
 						<div
 							style={{
 								padding: "30px 20px",
@@ -521,15 +504,25 @@ export default function Edit({ attributes, setAttributes }) {
 							}}
 						>
 							<div
-								style={{
-									display: "flex",
-									gap: gap,
-									alignItems: "center",
-									justifyContent: "center",
-									flexWrap: "wrap",
-								}}
+								style={
+									displayMode === "grid"
+										? {
+											display: "grid",
+											gridTemplateColumns: `repeat(${itemsPerRowDesktop}, minmax(0, 1fr))`,
+											gap: gap,
+											alignItems: "center",
+											justifyItems: "center",
+										}
+										: {
+											display: "flex",
+											gap: gap,
+											alignItems: "center",
+											justifyContent: "center",
+											flexWrap: "wrap",
+										}
+								}
 							>
-								{partnerLogos.slice(0, slidesPerView).map((logo, index) => (
+								{(displayMode === "grid" ? partnerLogos : partnerLogos.slice(0, itemsPerRowDesktop)).map((logo, index) => (
 									<div
 										key={logo.id}
 										style={{
@@ -543,14 +536,13 @@ export default function Edit({ attributes, setAttributes }) {
 									>
 										{logo.imageUrl ? (
 											<img
+												className="logos-block__logo-img"
 												src={logo.imageUrl}
 												alt={logo.companyName}
 												style={{
 													maxHeight: `${logoHeight}px`,
 													maxWidth: "200px",
 													objectFit: "contain",
-													opacity: 0.8,
-													filter: "grayscale(20%)",
 												}}
 											/>
 										) : (
@@ -577,7 +569,7 @@ export default function Edit({ attributes, setAttributes }) {
 								))}
 							</div>
 
-							{partnerLogos.length > slidesPerView && (
+							{displayMode === "carousel" && partnerLogos.length > itemsPerRowDesktop && (
 								<div
 									style={{
 										textAlign: "center",
@@ -586,9 +578,9 @@ export default function Edit({ attributes, setAttributes }) {
 										color: "#999",
 									}}
 								>
-									{__("+ ", "intro-block")}
-									{partnerLogos.length - slidesPerView}
-									{__(" more logos will scroll continuously", "intro-block")}
+									{__("+ ", "adaire-blocks")}
+									{partnerLogos.length - itemsPerRowDesktop}
+									{__(" more logos will scroll continuously", "adaire-blocks")}
 								</div>
 							)}
 						</div>
@@ -603,15 +595,15 @@ export default function Edit({ attributes, setAttributes }) {
 						<div
 							style={{ fontSize: "48px", marginBottom: "16px", opacity: 0.3 }}
 						>
-							ðŸ¢
+							🏢
 						</div>
 						<h3 style={{ margin: "0 0 8px 0", color: "#333" }}>
-							{__("Partner Logos Slider", "intro-block")}
+							{__("Partner Logos Slider", "adaire-blocks")}
 						</h3>
 						<p style={{ margin: "0", color: "#666", fontSize: "14px" }}>
 							{__(
 								"Add your partner logos using the sidebar controls to see the preview",
-								"intro-block",
+								"adaire-blocks",
 							)}
 						</p>
 					</div>
@@ -621,6 +613,3 @@ export default function Edit({ attributes, setAttributes }) {
 		</div>
 	);
 }
-
-
-
