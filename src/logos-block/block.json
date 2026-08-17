@@ -28,17 +28,34 @@
                     "id": 1,
                     "companyName": "Company 1",
                     "imageUrl": "",
-                    "imageId": 0
+                    "imageId": 0,
+                    "link": ""
                 }
+            ]
+        },
+        "displayMode": {
+            "type": "string",
+            "default": "carousel",
+            "enum": [
+                "carousel",
+                "grid"
             ]
         },
         "sliderSpeed": {
             "type": "number",
             "default": 0.5
         },
-        "slidesPerView": {
+        "slidesPerViewDesktop": {
             "type": "number",
             "default": 4
+        },
+        "slidesPerViewTablet": {
+            "type": "number",
+            "default": 3
+        },
+        "slidesPerViewMobile": {
+            "type": "number",
+            "default": 2
         },
         "gap": {
             "type": "string",

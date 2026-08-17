@@ -37,7 +37,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         iconSvg,
         iconName,
         chosenIcon,
-        iconSize,
+        responsiveIconSize,
         iconColor,
         backgroundColor,
         backgroundHoverColor,
@@ -87,6 +87,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     const pb = paddingBottom?.desktop ?? 40;
     const pl = paddingLeft?.desktop ?? 40;
 
+    const iconSizeDesktop = responsiveIconSize?.desktop ?? 64;
+    const iconSizeTablet  = responsiveIconSize?.tablet  ?? iconSizeDesktop;
+    const iconSizeMobile  = responsiveIconSize?.mobile  ?? iconSizeTablet;
+    const currentIconSize = responsiveIconSize?.[deviceType] ?? iconSizeDesktop;
+    const updateIconSize = (v) => setAttributes({
+        responsiveIconSize: { ...responsiveIconSize, [deviceType]: v },
+    });
+
     const blockProps = useBlockProps({
         className: `adaire-icon-box adaire-icon-box--align-${alignment}`,
         style: {
@@ -106,7 +114,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--icon-card-pb-m'    : `${paddingBottom?.mobile ?? paddingBottom?.tablet ?? pb}px`,
             '--icon-card-pl-m'    : `${paddingLeft?.mobile  ?? paddingLeft?.tablet  ?? pl}px`,
             '--icon-color'        : iconColor || '#ffffff',
-            '--icon-size'         : `${iconSize ?? 64}px`,
+            '--icon-size'         : `${iconSizeDesktop}px`,
+            '--icon-size-t'       : `${iconSizeTablet}px`,
+            '--icon-size-m'       : `${iconSizeMobile}px`,
             '--icon-border-width' : `${borderWidth ?? 0}px`,
             '--icon-border-color' : borderColor || 'transparent',
             color                 : textColor || '#ffffff',
@@ -165,10 +175,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 <PanelBody section="style" priority="high" title={__('Icon Style', 'adaire-blocks')} initialOpen={false}>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        tiers={THREE_TIERS}
+                        onReset={() => resetToDefaults(['responsiveIconSize'])}
+                    />
+
                     <RangeControl
                         label={__('Icon Size', 'adaire-blocks')}
-                        value={iconSize}
-                        onChange={(v) => setAttributes({ iconSize: v })}
+                        value={currentIconSize}
+                        onChange={updateIconSize}
                         min={16}
                         max={200}
                     />
@@ -339,9 +356,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                     {__('Change Icon', 'adaire-blocks')}
                                 </Button>
                                 <RangeControl
-                                    label={__('Icon Size', 'adaire-blocks')}
-                                    value={iconSize}
-                                    onChange={(v) => setAttributes({ iconSize: v })}
+                                    label={__('Icon Size', 'adaire-blocks') + ` (${THREE_TIERS.find(t => t.key === deviceType)?.label})`}
+                                    value={currentIconSize}
+                                    onChange={updateIconSize}
                                     min={16}
                                     max={200}
                                 />

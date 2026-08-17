@@ -38,10 +38,6 @@
             "type": "string",
             "default": "bi bi-lightning-charge-fill"
         },
-        "iconSize": {
-            "type": "number",
-            "default": 64
-        },
         "iconColor": {
             "type": "string",
             "default": "#ffffff"
@@ -195,10 +191,9 @@
         "responsiveIconSize": {
             "type": "object",
             "default": {
-                "desktop": 48,
-                "tablet": 40,
-                "mobile": 36,
-                "smartwatch": 28
+                "desktop": 64,
+                "tablet": 48,
+                "mobile": 36
             }
         }
     },

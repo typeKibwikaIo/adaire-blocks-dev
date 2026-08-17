@@ -6,7 +6,7 @@ export default function save({ attributes }) {
         iconSvg,
         iconName,
         chosenIcon,
-        iconSize,
+        responsiveIconSize,
         iconColor,
         backgroundColor,
         backgroundHoverColor,
@@ -38,6 +38,10 @@ export default function save({ attributes }) {
     const pb = paddingBottom?.desktop ?? 40;
     const pl = paddingLeft?.desktop ?? 40;
 
+    const iconSizeDesktop = responsiveIconSize?.desktop ?? 64;
+    const iconSizeTablet  = responsiveIconSize?.tablet  ?? iconSizeDesktop;
+    const iconSizeMobile  = responsiveIconSize?.mobile  ?? iconSizeTablet;
+
     const blockProps = useBlockProps.save({
         className: `adaire-icon-box adaire-icon-box--align-${alignment}`,
         id: blockId || undefined,
@@ -58,7 +62,9 @@ export default function save({ attributes }) {
             '--icon-card-pb-m'    : `${paddingBottom?.mobile ?? paddingBottom?.tablet ?? pb}px`,
             '--icon-card-pl-m'    : `${paddingLeft?.mobile  ?? paddingLeft?.tablet  ?? pl}px`,
             '--icon-color'        : iconColor || '#ffffff',
-            '--icon-size'         : `${iconSize ?? 64}px`,
+            '--icon-size'         : `${iconSizeDesktop}px`,
+            '--icon-size-t'       : `${iconSizeTablet}px`,
+            '--icon-size-m'       : `${iconSizeMobile}px`,
             '--icon-border-width' : `${borderWidth ?? 0}px`,
             '--icon-border-color' : borderColor || 'transparent',
             color                 : textColor || '#ffffff',

@@ -36,6 +36,7 @@
 		"popup-modal-block":           { "component": "modal",               "svg": "Premium Blocks/modal-premium-block.svg" },
 		"our-process-block":           { "component": "our-process",         "svg": "Plus Blocks/our-process-plus-block.svg" },
 		"particles-block":             { "component": "particles",           "svg": "Premium Blocks/particles-premium-block.svg" },
+		"pdf-reader-block":            { "component": "pdf-reader",          "svg": "Free Blocks/pdf-reader-block.svg" },
 		"portfolio-block":             { "component": "portfolio",           "svg": "Plus Blocks/portfolio-plus-block.svg" },
 		"posts-grid-block":            { "component": "posts-grid",          "svg": "Free Blocks/posts-grid-block.svg" },
 		"posts-carousel-block":        { "component": "posts-carousel",      "svg": "Free Blocks/posts-carousel-block.svg" },

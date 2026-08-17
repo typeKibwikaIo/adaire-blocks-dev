@@ -2334,9 +2334,15 @@ function enqueue_bootstrap_icons_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_bootstrap_icons_assets' );
 
-// Also enqueue in editor - use a later hook to avoid interfering with block.json parsing
+// Also enqueue for the block-editor canvas. The canvas renders inside a same-origin
+// iframe that WordPress rebuilds from the 'enqueue_block_assets' action (see
+// _wp_get_iframed_editor_assets() in wp-includes/block-editor.php) — it deliberately
+// does NOT replay 'admin_enqueue_scripts', so a style enqueued there only ever reaches
+// the outer wp-admin document, never the iframe where the block's own preview renders.
 function enqueue_bootstrap_icons_editor() {
-    // Use admin_enqueue_scripts instead to avoid interfering with block registration
+    if ( ! is_admin() ) {
+        return;
+    }
     wp_enqueue_style(
         'bootstrap-icons',
         ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css',
@@ -2344,7 +2350,7 @@ function enqueue_bootstrap_icons_editor() {
         '1.13.1'
     );
 }
-add_action( 'admin_enqueue_scripts', 'enqueue_bootstrap_icons_editor' );
+add_action( 'enqueue_block_assets', 'enqueue_bootstrap_icons_editor' );
 
 // Hide Gutenberg breadcrumb anchor badges (the ID pill shown in block breadcrumbs).
 add_action(

@@ -6,7 +6,8 @@
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
-		"prebuild": "node scripts/apply-new-icons.js && node scripts/update-block-icons.js",
+		"postinstall": "node scripts/copy-bootstrap-icons.js",
+		"prebuild": "node scripts/copy-bootstrap-icons.js && node scripts/apply-new-icons.js && node scripts/update-block-icons.js",
 		"build": "wp-scripts build --blocks-manifest",
 		"postbuild": "node scripts/patch-blocks-manifest-guard.js",
 		"build:free": "node scripts/generate-free-version.js",

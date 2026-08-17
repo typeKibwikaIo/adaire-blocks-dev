@@ -37,6 +37,11 @@
   .splide {
     width: 100%;
     overflow: hidden;
+
+    // Fade logos in/out at the viewport edges instead of hard-clipping
+    // them mid-shape as they scroll past the container boundary.
+    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
   }
 
   .splide__slide {
@@ -45,65 +50,116 @@
     justify-content: center;
     min-height: 80px;
     padding: 0 10px; // Add horizontal padding to prevent edge touching
-    
+
     // Responsive slide adjustments
     @media (max-width: 768px) {
       min-height: 70px;
       padding: 0 8px;
     }
-    
+
     @media (max-width: 480px) {
       min-height: 60px;
       padding: 0 5px;
     }
-    
+
     @media (max-width: 375px) {
       min-height: 50px;
       padding: 0 3px;
     }
-    
-    img {
-      max-height: 60px;
-      max-width: 200px;
-      object-fit: contain;
-      display: block;
-      opacity: 0.7;
-      transition: opacity 0.3s ease;
-      
-      &:hover {
-        opacity: 1;
-      }
-      
-      // Enhanced responsive image sizing
-      @media (max-width: 1024px) {
-        max-width: 180px;
-        max-height: 55px;
-      }
-      
-      @media (max-width: 768px) {
-        max-width: 140px;
-        max-height: 50px;
-      }
-      
-      @media (max-width: 640px) {
-        max-width: 120px;
-        max-height: 45px;
-      }
-      
-      @media (max-width: 480px) {
-        max-width: 100px;
-        max-height: 40px;
-      }
-      
-      @media (max-width: 375px) {
-        max-width: 80px;
-        max-height: 35px;
-      }
-      
-      @media (max-width: 320px) {
-        max-width: 70px;
-        max-height: 30px;
-      }
+  }
+
+  // Static grid mode — alternative to the carousel for a handful of
+  // equally-weighted logos where auto-scroll would feel gimmicky.
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--items-per-row, 4), minmax(0, 1fr));
+    gap: var(--logos-gap, 1rem);
+    align-items: center;
+    justify-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 30px 20px;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(var(--items-per-row-tablet, 3), minmax(0, 1fr));
     }
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(var(--items-per-row-mobile, 2), minmax(0, 1fr));
+    }
+  }
+
+  &__grid-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    padding: 0 10px;
+  }
+
+  .logos-block__logo-link {
+    display: block;
+    line-height: 0;
+  }
+
+  // Shared by the frontend carousel and the editor preview, so both look
+  // and behave the same instead of drifting out of sync.
+  .logos-block__logo-img {
+    max-height: 60px;
+    max-width: 200px;
+    object-fit: contain;
+    display: block;
+    // Idle state: desaturated and dimmed, like most trust/logo strips —
+    // color is reserved as the hover reward, not the resting state.
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+
+    // Enhanced responsive image sizing
+    @media (max-width: 1024px) {
+      max-width: 180px;
+      max-height: 55px;
+    }
+
+    @media (max-width: 768px) {
+      max-width: 140px;
+      max-height: 50px;
+    }
+
+    @media (max-width: 640px) {
+      max-width: 120px;
+      max-height: 45px;
+    }
+
+    @media (max-width: 480px) {
+      max-width: 100px;
+      max-height: 40px;
+    }
+
+    @media (max-width: 375px) {
+      max-width: 80px;
+      max-height: 35px;
+    }
+
+    @media (max-width: 320px) {
+      max-width: 70px;
+      max-height: 30px;
+    }
+
+    // Direct hover — covers the editor preview, where logos aren't
+    // wrapped in a .splide__slide.
+    &:hover {
+      filter: grayscale(0%);
+      opacity: 1;
+      transform: scale(1.03);
+    }
+  }
+
+  // Hovering the frontend slide (image or its optional link wrapper)
+  // reveals full color and a very slight lift — subtle, not a card effect.
+  .splide__slide:hover .logos-block__logo-img {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.03);
   }
 }

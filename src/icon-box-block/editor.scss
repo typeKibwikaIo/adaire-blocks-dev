@@ -67,15 +67,18 @@
         border-style: none !important;
     }
     
-    &__icon {
-        width: var(--icon-size, 48px) !important;
-        height: var(--icon-size, 48px) !important;
-        min-width: var(--icon-size, 48px) !important;
-        min-height: var(--icon-size, 48px) !important;
-        max-width: var(--icon-size, 48px) !important;
-        max-height: var(--icon-size, 48px) !important;
+    // SVG-fallback icon only — Bootstrap Icon <i> glyphs are sized via
+    // font-size in style.scss and must not get a forced box here, or the
+    // glyph and its container disagree on size/alignment.
+    span.adaire-icon-box__icon {
+        width: var(--icon-size, 64px) !important;
+        height: var(--icon-size, 64px) !important;
+        min-width: var(--icon-size, 64px) !important;
+        min-height: var(--icon-size, 64px) !important;
+        max-width: var(--icon-size, 64px) !important;
+        max-height: var(--icon-size, 64px) !important;
         box-sizing: border-box !important;
-        
+
         svg {
             width: 100% !important;
             height: 100% !important;
