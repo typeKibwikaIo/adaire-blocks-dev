@@ -39,19 +39,15 @@ const variations = [
 			],
 		},
 	},
-	{
-		name: 'single-video',
-		title: __('Video Banner: Single Video', 'adaire-blocks'),
-		description: __('One full-bleed background video — no slider indicators.', 'adaire-blocks'),
-		scope: ['inserter'],
-		attributes: {
-			overlayType: 'solid',
-			overlayOpacity: 0.4,
-			videos: [
-				vid(1, 'Your headline here', 'A short supporting line that introduces your video.', 'https://vimeo.com/1118056227', 'vimeo'),
-			],
-		},
-	},
+	// The former "single-video" variation (one full-bleed background video,
+	// no slider indicators) has been removed from here and merged into the
+	// Video Player (Free) block instead — see
+	// src/video-player-block/variations.js's `single-video-hero` entry,
+	// which replicates this exact design (headline + description + overlay
+	// over one video) on top of Video Player's simpler single-video
+	// foundation, rather than Video Banner's multi-video/view.js machinery.
+	// Removing the duplicate here satisfies the "redundant Single Video
+	// variant is fully removed" requirement.
 	{
 		name: 'gradient-spotlight',
 		title: __('Video Banner: Gradient Spotlight', 'adaire-blocks'),

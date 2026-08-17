@@ -73,11 +73,11 @@
       "enabled": true,
       "upgradeMessage": "Upgrade to Pro for advanced social sharing features."
     },
-    "header-block": {
+    "header-menu-block": {
       "enabled": true,
       "upgradeMessage": "Upgrade to Pro for mega menu layouts, advanced dropdowns, and deeper menu integrations."
     },
-    "infogrid-2-block": {
+    "feature-grid-free": {
       "enabled": true,
       "upgradeMessage": "Upgrade to Pro for even more advanced grid features."
     },

@@ -1,5 +1,5 @@
 /**
- * Advanced Feature Grid (infogrid-2-block) deprecations — most recent first.
+ * Advanced Feature Grid (feature-grid-free, formerly infogrid-2-block) deprecations — most recent first.
  *
  * v1  Frozen copy of the save() that shipped before ADAB-010's Font Family
  *     control added a `--infogrid-2-font-family` custom property to every

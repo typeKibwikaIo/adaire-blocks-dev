@@ -138,6 +138,23 @@ export const getYouTubeSrc = ( { ytVideoId, mute, controls, loop, autoplay } ) =
 export const getVimeoSrc = ( { vimeoVideoId, autoplay, mute, loop, controls } ) =>
 	`https://player.vimeo.com/video/${ vimeoVideoId }?autoplay=${ autoplay ? '1' : '0' }&muted=${ mute ? '1' : '0' }&loop=${ loop ? '1' : '0' }&controls=${ controls ? '1' : '0' }&background=${ autoplay && mute && ! controls ? '1' : '0' }`;
 
+// Converts a hex color + a 0-1 opacity into an rgba() string for the overlay
+// background. Falls back to a plain black overlay if the hex value is
+// missing/malformed rather than producing an invalid CSS value.
+export const getOverlayColorRgba = ( hex = '#000000', opacity = 0.4 ) => {
+	const normalized = ( hex || '#000000' ).replace( '#', '' );
+	const isShort = normalized.length === 3;
+	const r = parseInt( isShort ? normalized[ 0 ] + normalized[ 0 ] : normalized.substring( 0, 2 ), 16 );
+	const g = parseInt( isShort ? normalized[ 1 ] + normalized[ 1 ] : normalized.substring( 2, 4 ), 16 );
+	const b = parseInt( isShort ? normalized[ 2 ] + normalized[ 2 ] : normalized.substring( 4, 6 ), 16 );
+
+	if ( Number.isNaN( r ) || Number.isNaN( g ) || Number.isNaN( b ) ) {
+		return `rgba(0, 0, 0, ${ opacity ?? 0.4 })`;
+	}
+
+	return `rgba(${ r }, ${ g }, ${ b }, ${ opacity ?? 0.4 })`;
+};
+
 export const getBoxValues = ( values, device ) => ( {
 	top: `${ values.top?.[ device ] ?? 0 }px`,
 	right: `${ values.right?.[ device ] ?? 0 }px`,

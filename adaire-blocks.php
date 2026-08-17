@@ -633,7 +633,7 @@ if ( ! function_exists( 'adaire_mega_menu_register_nav_menu_locations' ) ) {
 	/**
 	 * Plugin-owned nav menu location slugs used to resolve the "Primary
 	 * Menu" / "Footer Menu" Navigation Source options — the same two
-	 * locations header-block and website-footer-block already use (see
+	 * locations header-menu-block and website-footer-block already use (see
 	 * register_nav_menus() elsewhere in this file). Reusing them means a
 	 * menu a site owner already assigned under Appearance > Menus for their
 	 * header or footer can power the mega menu too, with nothing new to
@@ -775,8 +775,8 @@ if ( ! function_exists( 'adaire_mega_menu_resolve_menu_items' ) ) {
 	 *
 	 * IMPORTANT: once a dynamic source ("primary"/"footer"/"menu") is
 	 * explicitly selected, this never falls back to the legacy items, even
-	 * if nothing is assigned/resolved yet — matching header-block's same
-	 * rule (see adaire_header_resolve_nav() in header-block/render.php) so
+	 * if nothing is assigned/resolved yet — matching header-menu-block's same
+	 * rule (see adaire_header_resolve_nav() in header-menu-block/render.php) so
 	 * a stale or unrelated placeholder menu never silently renders instead
 	 * of the real selected one.
 	 */
@@ -1863,6 +1863,29 @@ function create_block_gsap_hero_block_block_init() {
 				register_block_type( $block_path, array(
 					'render_callback' => 'render_mega_menu_block'
 				) );
+			} elseif ( $block_name === 'header-menu-block' ) {
+				// Register normally under the current slug.
+				register_block_type( $block_path );
+				// Backward-compatible alias: this block was renamed from
+				// header-block to header-menu-block so its slug matches its
+				// display name. It's a dynamic block (render.php), so
+				// existing published headers still have
+				// `<!-- wp:create-block/header-block -->` baked into
+				// post_content — registering that old name too, pointed at
+				// the same build folder, keeps them rendering. inserter is
+				// explicitly disabled here (redundant with the JS-side alias
+				// setting the same thing) so this old name never shows up
+				// as a second, duplicate "Header Menu (Free)" card in the
+				// block inserter — only the new header-menu-block name does.
+				register_block_type( $block_path, array(
+					'name'     => 'create-block/header-block',
+					'supports' => array(
+						'html'            => false,
+						'anchor'          => true,
+						'customClassName' => true,
+						'inserter'        => false,
+					),
+				) );
 			} else {
 				// Register block normally
 				register_block_type( $block_path );
@@ -1932,8 +1955,23 @@ function create_block_gsap_hero_block_block_init() {
 		}
 		
 		register_block_type( __DIR__ . "/build/{$block_type}" );
+
+		// Backward-compatible alias for the header-block -> header-menu-block
+		// rename (see the matching branch in the WP 6.8+ loop above for the
+		// full explanation of why this is needed for a dynamic block).
+		if ( $block_type === 'header-menu-block' ) {
+			register_block_type( __DIR__ . "/build/{$block_type}", array(
+				'name'     => 'create-block/header-block',
+				'supports' => array(
+					'html'            => false,
+					'anchor'          => true,
+					'customClassName' => true,
+					'inserter'        => false,
+				),
+			) );
+		}
 	}
-	
+
 	// Register dynamic blocks separately with render callbacks (for WordPress 6.7 and older)
 	$settings_fallback = AdaireBlocksSettings::get_instance();
 	$block_settings_fallback = $settings_fallback->get_settings();
@@ -2000,7 +2038,7 @@ add_action(
  * Register plugin-owned navigation menu locations so site owners can assign
  * WordPress menus to them from Appearance > Menus. These power the Header
  * block's "Primary Menu" / "Footer Menu" Navigation Source options (see
- * src/header-block/render.php). Purely additive — does not affect existing
+ * src/header-menu-block/render.php). Purely additive — does not affect existing
  * block registration or any other plugin behaviour.
  */
 add_action( 'init', function() {
@@ -2265,8 +2303,8 @@ function adaire_blocks_filter_editor_blocks() {
 }
 
 // Expose the plugin URL to block editor JS so blocks that need to load an
-// asset directly (e.g. infogrid-2-block's iframe-safe Bootstrap Icons link,
-// see src/infogrid-2-block/edit.js) can build a local URL instead of hardcoding one.
+// asset directly (e.g. feature-grid-free's iframe-safe Bootstrap Icons link,
+// see src/feature-grid-free/edit.js) can build a local URL instead of hardcoding one.
 function adaire_blocks_expose_plugin_url_to_editor() {
 	wp_add_inline_script(
 		'wp-blocks',
@@ -2320,7 +2358,7 @@ function enqueue_bootstrap_icons_assets() {
         has_block( 'create-block/industries-block', $post ) ||
         has_block( 'create-block/our-process-block', $post ) ||
         has_block( 'create-block/social-share-block', $post ) ||
-        has_block( 'create-block/infogrid-2-block', $post ) ||
+        has_block( 'create-block/feature-grid-free', $post ) ||
         has_block( 'create-block/saas-hero-block', $post ) ||
         has_block( 'create-block/rating-badge-block', $post )
     ) {

@@ -13,7 +13,7 @@ These blocks are available in the free version without limitations.
 - Icon Box Block (icon-box-block)
 - Image Composition (image-composition-block)
 - Info Grid (infogrid-block)
-- Info Grid 2 (infogrid-2-block)
+- Info Grid 2 (feature-grid-free)
 - Posts Grid (posts-grid-block)
 - Posts Carousel (posts-carousel-block)
 - Progress Bar (progress-block)

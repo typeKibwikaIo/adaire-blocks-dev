@@ -1,6 +1,6 @@
 /**
  * Header block is now a dynamic block: frontend markup is produced by
- * src/header-block/render.php (registered via block.json's "render"
+ * src/header-menu-block/render.php (registered via block.json's "render"
  * field), not by this save(). Returning null here is required for dynamic
  * blocks and means the block comment saved in post_content carries no
  * markup — WordPress calls the PHP render callback on every request, so

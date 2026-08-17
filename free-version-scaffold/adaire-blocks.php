@@ -66,6 +66,28 @@ function adaire_blocks_register_blocks() {
 
 		if ( file_exists( $block_json ) ) {
 			register_block_type( $block_dir );
+
+			// Backward-compatible alias: this block was renamed from
+			// header-block to header-menu-block so its slug matches its
+			// display name. It's a dynamic block (render.php), so existing
+			// published headers still have
+			// `<!-- wp:create-block/header-block -->` baked into
+			// post_content — registering that old name too, pointed at the
+			// same build/header-menu-block/render.php, keeps them
+			// rendering. inserter is disabled here so this old name never
+			// shows up as a second "Header Menu (Free)" card in the
+			// inserter.
+			if ( $block_name === 'header-menu-block' ) {
+				register_block_type( $block_dir, array(
+					'name'     => 'create-block/header-block',
+					'supports' => array(
+						'html'            => false,
+						'anchor'          => true,
+						'customClassName' => true,
+						'inserter'        => false,
+					),
+				) );
+			}
 		}
 	}
 }
@@ -74,7 +96,7 @@ function adaire_blocks_register_blocks() {
  * Register plugin-owned navigation menu locations so site owners can assign
  * WordPress menus to them from Appearance > Menus. These power the Header
  * block's "Primary Menu" / "Footer Menu" Navigation Source options (see
- * build/header-block/render.php). Purely additive — does not affect
+ * build/header-menu-block/render.php). Purely additive — does not affect
  * existing block registration or any other plugin behaviour.
  */
 function adaire_blocks_register_nav_menu_locations() {
@@ -247,7 +269,7 @@ function enqueue_bootstrap_icons_assets() {
 		has_block( 'create-block/social-banner-block', $post ) ||
 		has_block( 'create-block/social-share-block', $post ) ||
 		has_block( 'create-block/our-process-block', $post ) ||
-		has_block( 'create-block/infogrid-2-block', $post ) ||
+		has_block( 'create-block/feature-grid-free', $post ) ||
 		has_block( 'create-block/rating-badge-block', $post )
 	) {
 		wp_enqueue_style(

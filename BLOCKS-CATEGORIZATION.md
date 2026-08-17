@@ -23,7 +23,7 @@ These blocks are available in the free version without limitations.
 - **Our Process** (`our-process-block`)
 - **Hero 1** (`hero-1-block`)
 - **Info Grid** (`infogrid-block`)
-- **Info Grid 2** (`infogrid-2-block`)
+- **Info Grid 2** (`feature-grid-free`)
 - **Image Composition** (`image-composition-block`)
 - **Website Footer** (`website-footer-block`)
 - **Row** (`row-block`)

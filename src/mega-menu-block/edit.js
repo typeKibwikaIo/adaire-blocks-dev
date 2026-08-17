@@ -67,7 +67,7 @@ const navigationSourceOptions = [
 	{ label: __("Select existing menu", "adaire-blocks"), value: "menu" },
 ];
 
-// Same two plugin-owned locations header-block and website-footer-block
+// Same two plugin-owned locations header-menu-block and website-footer-block
 // already resolve against (see adaire_mega_menu_register_nav_menu_locations()
 // in adaire-blocks.php) — a menu already assigned there for the header can
 // power the mega menu too, with nothing new to configure.

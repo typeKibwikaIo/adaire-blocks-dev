@@ -360,7 +360,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     // Resets every responsive attribute back to its block.json default —
     // existing values only, nothing new is added.
     const resetResponsiveDefaults = () => {
-        const blockType = getBlockType('create-block/infogrid-2-block');
+        const blockType = getBlockType('create-block/feature-grid-free');
         const defaults = blockType?.attributes || {};
         const resetValues = {};
         RESPONSIVE_ATTRS.forEach((key) => {

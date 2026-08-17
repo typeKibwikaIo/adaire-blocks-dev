@@ -70,7 +70,7 @@ const columnTypeOptions = [
     { label: 'Custom HTML', value: 'custom' },
 ];
 
-// Mirrors header-block's navigationSourceOptions exactly — same source
+// Mirrors header-menu-block's navigationSourceOptions exactly — same source
 // vocabulary ('legacy' | 'primary' | 'footer' | 'menu') is read by
 // adaire_footer_resolve_nav_items() in render.php.
 const navigationSourceOptions = [
@@ -81,7 +81,7 @@ const navigationSourceOptions = [
 ];
 
 // Same plugin-owned menu-location slugs adaire_footer_register_nav_menu_locations()
-// uses in render.php (and the identical slugs header-block's render.php uses for
+// uses in render.php (and the identical slugs header-menu-block's render.php uses for
 // its own Primary/Footer options) — keeps editor resolution and frontend
 // resolution looking at the same WP menu locations.
 const NAV_MENU_LOCATION_SLUGS = { primary: 'adaire-blocks-primary', footer: 'adaire-blocks-footer' };
@@ -96,7 +96,7 @@ function decodeEntities(html) {
 // WP's wp_get_nav_menu_items() (and the REST menu-items endpoint that powers
 // core.getMenuItems) falls back to a raw "#123 (no title)" string when a menu
 // item has no custom label and its linked object has no title. Mirrors
-// isPlaceholderMenuTitle()/friendlyMenuLabel() in header-block/edit.js and
+// isPlaceholderMenuTitle()/friendlyMenuLabel() in header-menu-block/edit.js and
 // adaire_footer_friendly_menu_label() conventions, so the editor never shows
 // a raw DB id where the frontend would show a friendly fallback.
 function isPlaceholderMenuTitle(title) {
@@ -124,7 +124,7 @@ function friendlyMenuLabel(rawTitle, url) {
 // editor canvas. Mirrors adaire_footer_render_nav_node() in render.php
 // exactly — same `website-footer-block__nav-link` / `__nav-sublist` classes
 // and always-visible nested-<ul> structure (footer menus have no JS-driven
-// disclosure, unlike header-block's dropdown nav) — so the live preview and
+// disclosure, unlike header-menu-block's dropdown nav) — so the live preview and
 // the saved frontend output can never visually disagree. Uses a <span>
 // rather than an <a> since this tree isn't individually editable (items come
 // from the live WP menu, not column.navItems) and a real <a href> inside the
@@ -208,7 +208,7 @@ export default function Edit({ attributes, setAttributes }) {
     // existing menu" dropdown (source === 'menu') AND to resolve which menu
     // is assigned to the Primary/Footer theme locations (source === 'primary'
     // | 'footer', via each menu's `.locations` array) — same data source and
-    // `context: 'view'` (required for `.locations` to be present) header-block
+    // `context: 'view'` (required for `.locations` to be present) header-menu-block
     // uses for its own navigationSource resolution.
     const anyColumnNeedsMenuList = (columnsSection.columns || []).some(
         (col) => col.type === 'nav' && col.navigationSource && col.navigationSource !== 'legacy'
@@ -488,7 +488,7 @@ export default function Edit({ attributes, setAttributes }) {
     // ── reusable control block — defined once, rendered in BOTH the
     // Inspector "Footer Styling" panel and the canvas "Background" QuickZone,
     // so the two surfaces can never drift out of sync (mirrors the pattern
-    // used in header-block / saas-hero-block). Solid / Gradient / Image stay
+    // used in header-menu-block / saas-hero-block). Solid / Gradient / Image stay
     // mutually exclusive via the single `backgroundType` attribute. ────────
     const backgroundControls = (
         <>
