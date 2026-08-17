@@ -39,6 +39,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         chosenIcon,
         responsiveIconSize,
         iconColor,
+        iconView,
+        iconShape,
+        iconFrameColor,
         backgroundColor,
         backgroundHoverColor,
         textColor,
@@ -117,6 +120,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--icon-size'         : `${iconSizeDesktop}px`,
             '--icon-size-t'       : `${iconSizeTablet}px`,
             '--icon-size-m'       : `${iconSizeMobile}px`,
+            '--icon-frame-color'  : iconFrameColor || '#503AA8',
             '--icon-border-width' : `${borderWidth ?? 0}px`,
             '--icon-border-color' : borderColor || 'transparent',
             color                 : textColor || '#ffffff',
@@ -175,12 +179,45 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 <PanelBody section="style" priority="high" title={__('Icon Style', 'adaire-blocks')} initialOpen={false}>
+                    <SelectControl
+                        label={__('Icon View', 'adaire-blocks')}
+                        value={iconView || 'default'}
+                        options={[
+                            { label: __('Default', 'adaire-blocks'), value: 'default' },
+                            { label: __('Framed', 'adaire-blocks'), value: 'framed' },
+                            { label: __('Stacked', 'adaire-blocks'), value: 'stacked' },
+                        ]}
+                        onChange={(v) => setAttributes({ iconView: v })}
+                        help={__('Framed outlines a shape around the icon; Stacked fills it with a solid background.', 'adaire-blocks')}
+                    />
+
+                    {iconView && iconView !== 'default' && (
+                        <>
+                            <SelectControl
+                                label={__('Icon Shape', 'adaire-blocks')}
+                                value={iconShape || 'circle'}
+                                options={[
+                                    { label: __('Circle', 'adaire-blocks'), value: 'circle' },
+                                    { label: __('Square', 'adaire-blocks'), value: 'square' },
+                                ]}
+                                onChange={(v) => setAttributes({ iconShape: v })}
+                            />
+                            <BaseControl label={__('Icon Frame Color', 'adaire-blocks')}>
+                                <BoundColorPalette
+                                    value={iconFrameColor}
+                                    onChange={(v) => setAttributes({ iconFrameColor: v || "" })}
+                                />
+                            </BaseControl>
+                        </>
+                    )}
+
                     <DeviceSwitcher
                         deviceType={deviceType}
                         setDeviceType={setDeviceType}
                         tiers={THREE_TIERS}
                         onReset={() => resetToDefaults(['responsiveIconSize'])}
                     />
+
 
                     <RangeControl
                         label={__('Icon Size', 'adaire-blocks')}
@@ -355,6 +392,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 >
                                     {__('Change Icon', 'adaire-blocks')}
                                 </Button>
+                                <SelectControl
+                                    label={__('Icon View', 'adaire-blocks')}
+                                    value={iconView || 'default'}
+                                    options={[
+                                        { label: __('Default', 'adaire-blocks'), value: 'default' },
+                                        { label: __('Framed', 'adaire-blocks'), value: 'framed' },
+                                        { label: __('Stacked', 'adaire-blocks'), value: 'stacked' },
+                                    ]}
+                                    onChange={(v) => setAttributes({ iconView: v })}
+                                />
                                 <RangeControl
                                     label={__('Icon Size', 'adaire-blocks') + ` (${THREE_TIERS.find(t => t.key === deviceType)?.label})`}
                                     value={currentIconSize}
@@ -366,14 +413,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         }
                     >
                         <div className="adaire-icon-box__icon-area">
-                            {chosenIcon && chosenIcon.trim() ? (
-                                <i className={`adaire-icon-box__icon ${chosenIcon}`}></i>
-                            ) : iconSvg ? (
-                                <span
-                                    className="adaire-icon-box__icon"
-                                    dangerouslySetInnerHTML={{ __html: iconSvg }}
-                                />
-                            ) : null}
+                            <div className={`adaire-icon-box__icon-frame is-view-${iconView || 'default'} is-shape-${iconShape || 'circle'}`}>
+                                {chosenIcon && chosenIcon.trim() ? (
+                                    <i className={`adaire-icon-box__icon ${chosenIcon}`}></i>
+                                ) : iconSvg ? (
+                                    <span
+                                        className="adaire-icon-box__icon"
+                                        dangerouslySetInnerHTML={{ __html: iconSvg }}
+                                    />
+                                ) : null}
+                            </div>
                         </div>
                     </QuickZone>
                 )}

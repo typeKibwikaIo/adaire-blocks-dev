@@ -4,24 +4,35 @@
     .ad-case-studies__filters {
         pointer-events: none;
         opacity: 0.8;
-        
+
         .ad-case-studies__filter-select {
             background-color: #f9fafb;
         }
     }
+
+    .ad-case-studies__search-input,
+    .ad-case-studies__sort-select {
+        pointer-events: none;
+        background-color: #f9fafb;
+    }
+
+    .ad-case-studies__pill {
+        cursor: default;
+    }
     
     .ad-case-studies__card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        
+
         &:hover {
-            transform: scale(1.02);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+
+            .ad-case-studies__card-thumb {
+                transform: scale(1.03);
+            }
         }
     }
-    
-    .ad-case-studies__card-placeholder {
-        z-index: 1;
-        
+
+    .ad-case-studies__card-thumb--placeholder {
         span {
             background: rgba(255, 255, 255, 0.1);
             padding: 8px 16px;

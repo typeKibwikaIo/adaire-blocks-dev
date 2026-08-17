@@ -8,7 +8,6 @@ import {
 import {
     PanelBody,
     TextControl,
-    TextareaControl,
     BaseControl,
     Button,
     ButtonGroup,
@@ -39,6 +38,44 @@ const DEVICE_TYPES = [
 
 const UNIT_OPTIONS = ['px', '%', 'rem', 'vw'];
 
+// Unique per-study placeholder (no Hero Image set) — same deterministic
+// color + initials logic as the PHP renderer (adaire_case_studies_placeholder_color
+// / _initials) and view.js's popup, so the editor canvas preview matches
+// what visitors will actually see on the frontend.
+let editorCrc32Table = null;
+function editorCrc32(str) {
+    if (!editorCrc32Table) {
+        editorCrc32Table = new Array(256);
+        for (let n = 0; n < 256; n++) {
+            let c = n;
+            for (let k = 0; k < 8; k++) {
+                c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+            }
+            editorCrc32Table[n] = c;
+        }
+    }
+    let crc = 0 ^ -1;
+    const bytes = unescape(encodeURIComponent(str || ''));
+    for (let i = 0; i < bytes.length; i++) {
+        crc = (crc >>> 8) ^ editorCrc32Table[(crc ^ bytes.charCodeAt(i)) & 0xff];
+    }
+    return (crc ^ -1) >>> 0;
+}
+
+function editorPlaceholderColor(seed) {
+    const hue = editorCrc32(String(seed == null ? '' : seed)) % 360;
+    return `hsl(${hue}, 45%, 28%)`;
+}
+
+function editorPlaceholderInitials(title) {
+    const words = String(title || '').trim().split(/\s+/).filter(Boolean);
+    let initials = '';
+    for (const word of words.slice(0, 2)) {
+        initials += word.charAt(0).toUpperCase();
+    }
+    return initials || '•';
+}
+
 const formatDimensionValue = (dimension, fallbackValue, fallbackUnit) => {
     const value = dimension?.value ?? fallbackValue;
     const unit = dimension?.unit ?? fallbackUnit;
@@ -62,8 +99,9 @@ const stripTags = (html) => (html || '').replace(/<[^>]*>/g, '').trim();
 const mapPostToStudy = (post) => {
     const embedded = post._embedded || {};
     const media = embedded['wp:featuredmedia']?.[0];
+    const author = embedded['author']?.[0];
     const terms = (embedded['wp:term'] || []).flat();
-    const industryTerm = terms.find((t) => t.taxonomy === 'adaire_case_industry');
+    const industryTerms = terms.filter((t) => t.taxonomy === 'adaire_case_industry');
     const capabilityTerms = terms.filter((t) => t.taxonomy === 'adaire_case_capability');
     const meta = post.meta || {};
 
@@ -72,14 +110,21 @@ const mapPostToStudy = (post) => {
         title: stripTags(post.title?.rendered),
         description: stripTags(post.excerpt?.rendered),
         backgroundImage: media?.source_url || '',
+        permalink: post.link || '',
         linkUrl: meta._adaire_case_link_url || '',
         openInNewTab: !!meta._adaire_case_open_in_new_tab,
-        industry: industryTerm?.name || '',
+        industries: industryTerms.map((t) => t.name),
         capabilities: capabilityTerms.map((t) => t.name),
         client: meta._adaire_case_client || '',
         country: meta._adaire_case_country || '',
         language: meta._adaire_case_language || '',
         technology: meta._adaire_case_technology || '',
+        summary: meta._adaire_case_summary || '',
+        likes: parseInt(meta._adaire_case_likes, 10) || 0,
+        authorId: post.author || 0,
+        authorName: author?.name || '',
+        authorAvatar: author?.avatar_urls?.['48'] || author?.avatar_urls?.['24'] || '',
+        authorProfileUrl: author?.link || '',
         galleryItems: []
     };
 };
@@ -145,10 +190,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         dragCursorTextTransform,
         dragCursorBgColor,
         nextLabel,
-        popupDescription,
         popupImageId,
         popupImageUrl,
-        popupImageAlt
+        popupImageAlt,
+        showHeader,
+        headerEyebrow,
+        headerHeading,
+        headerDescription,
+        showSearch,
+        searchPlaceholder,
+        showCategoryPills,
+        showSort,
+        showSubmitButton,
+        submitButtonText,
+        submitButtonUrl
     } = attributes;
 
     const [activeZone, setActiveZone] = useState(null);
@@ -198,7 +253,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     // Unique industries / capabilities across the fetched preview, for the
     // (disabled, display-only) filter dropdowns in the canvas preview.
     const industries = [...new Set(
-        previewStudies.map((study) => study.industry).filter((industry) => industry && industry.trim() !== '')
+        previewStudies.flatMap((study) => study.industries || []).filter((industry) => industry && industry.trim() !== '')
     )].sort();
 
     const capabilities = [...new Set(
@@ -623,8 +678,91 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
                 </PanelBody>
 
+                {/* Header / Search / Toolbar Settings (Webflow "Made in Webflow"-style showcase header) */}
+                <PanelBody section="layout" title={__('Header, Search & Toolbar', 'adaire-blocks')} initialOpen={false}>
+                    <ToggleControl
+                        label={__('Show Header', 'adaire-blocks')}
+                        checked={showHeader}
+                        onChange={(value) => setAttributes({ showHeader: value })}
+                    />
+                    {showHeader && (
+                        <>
+                            <TextControl
+                                label={__('Eyebrow', 'adaire-blocks')}
+                                value={headerEyebrow}
+                                onChange={(value) => setAttributes({ headerEyebrow: value })}
+                            />
+                            <TextControl
+                                label={__('Heading', 'adaire-blocks')}
+                                value={headerHeading}
+                                onChange={(value) => setAttributes({ headerHeading: value })}
+                            />
+                            <TextControl
+                                label={__('Description', 'adaire-blocks')}
+                                value={headerDescription}
+                                onChange={(value) => setAttributes({ headerDescription: value })}
+                            />
+                        </>
+                    )}
+
+                    <div style={{ borderTop: '1px solid #ddd', marginTop: '16px', paddingTop: '16px' }}>
+                        <ToggleControl
+                            label={__('Show Search', 'adaire-blocks')}
+                            checked={showSearch}
+                            onChange={(value) => setAttributes({ showSearch: value })}
+                        />
+                        {showSearch && (
+                            <TextControl
+                                label={__('Search Placeholder', 'adaire-blocks')}
+                                value={searchPlaceholder}
+                                onChange={(value) => setAttributes({ searchPlaceholder: value })}
+                            />
+                        )}
+                    </div>
+
+                    <div style={{ borderTop: '1px solid #ddd', marginTop: '16px', paddingTop: '16px' }}>
+                        <ToggleControl
+                            label={__('Show Category Pills', 'adaire-blocks')}
+                            checked={showCategoryPills}
+                            onChange={(value) => setAttributes({ showCategoryPills: value })}
+                            help={__('Live filter pills built from each case study’s Industry taxonomy.', 'adaire-blocks')}
+                        />
+                        <ToggleControl
+                            label={__('Show Sort Dropdown', 'adaire-blocks')}
+                            checked={showSort}
+                            onChange={(value) => setAttributes({ showSort: value })}
+                            help={__('Newest / Most Liked sort control.', 'adaire-blocks')}
+                        />
+                    </div>
+
+                    <div style={{ borderTop: '1px solid #ddd', marginTop: '16px', paddingTop: '16px' }}>
+                        <ToggleControl
+                            label={__('Show Submit Button', 'adaire-blocks')}
+                            checked={showSubmitButton}
+                            onChange={(value) => setAttributes({ showSubmitButton: value })}
+                        />
+                        {showSubmitButton && (
+                            <>
+                                <TextControl
+                                    label={__('Button Text', 'adaire-blocks')}
+                                    value={submitButtonText}
+                                    onChange={(value) => setAttributes({ submitButtonText: value })}
+                                />
+                                <TextControl
+                                    label={__('Button URL', 'adaire-blocks')}
+                                    value={submitButtonUrl}
+                                    onChange={(value) => setAttributes({ submitButtonUrl: value })}
+                                />
+                            </>
+                        )}
+                    </div>
+                </PanelBody>
+
                 {/* Filter Settings */}
-                <PanelBody section="layout" title={__('Filter Settings', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Legacy Dropdown Filters', 'adaire-blocks')} initialOpen={false}>
+                    <p style={{ fontSize: '12px', color: '#666', marginTop: 0 }}>
+                        {__('Superseded by the Category Pills row above. Only kept for sites that already relied on it.', 'adaire-blocks')}
+                    </p>
                     <ToggleControl
                         label={__('Show Filters', 'adaire-blocks')}
                         checked={showFilters}
@@ -964,17 +1102,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                 </PanelBody>
 
-                {/* Popup left-side content — same for every card */}
-                <PanelBody section="content" title={__('Popup Content', 'adaire-blocks')} initialOpen={false}>
+                {/* Popup fallback preview — used only when a case study has
+                    no Website URL set, so there's nothing to embed live. */}
+                <PanelBody section="content" title={__('Popup Fallback', 'adaire-blocks')} initialOpen={false}>
                     <p style={{ fontSize: '12px', color: '#666', marginTop: 0 }}>
-                        {__('Clicking any case study card opens a popup. The description and image below appear on the left side of that popup for every card — the right side always shows the specific case study’s own Project Summary, details, and content.', 'adaire-blocks')}
+                        {__('Clicking a card opens a popup showing that case study’s Hero Image. If a study has no Hero Image of its own, this fallback image is shown instead.', 'adaire-blocks')}
                     </p>
-                    <TextareaControl
-                        label={__('Popup Description', 'adaire-blocks')}
-                        value={popupDescription}
-                        onChange={(value) => setAttributes({ popupDescription: value })}
-                    />
-                    <BaseControl label={__('Popup Image', 'adaire-blocks')} style={{ marginTop: '8px' }}>
+                    <BaseControl label={__('Fallback Preview Image', 'adaire-blocks')} style={{ marginTop: '8px' }}>
                         <MediaUploadCheck>
                             <MediaUpload
                                 onSelect={(media) => setAttributes({
@@ -997,7 +1131,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                             />
                                         ) : (
-                                            __('Select Popup Image', 'adaire-blocks')
+                                            __('Select Fallback Image', 'adaire-blocks')
                                         )}
                                     </Button>
                                 )}
@@ -1037,7 +1171,54 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     }
                 >
                 <div className={containerClasses}>
-                    {/* Filter Section */}
+                    {/* Header (Webflow "Made in Webflow"-style showcase heading) */}
+                    {showHeader && (
+                        <div className="ad-case-studies__header">
+                            {headerEyebrow && <span className="ad-case-studies__header-eyebrow">{headerEyebrow}</span>}
+                            {headerHeading && <h2 className="ad-case-studies__header-heading">{headerHeading}</h2>}
+                            {headerDescription && <p className="ad-case-studies__header-description">{headerDescription}</p>}
+                        </div>
+                    )}
+
+                    {/* Search */}
+                    {showSearch && (
+                        <div className="ad-case-studies__search">
+                            <svg className="ad-case-studies__search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.5" />
+                                <path d="M14 14L11 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                            </svg>
+                            <input type="search" className="ad-case-studies__search-input" placeholder={searchPlaceholder} disabled />
+                        </div>
+                    )}
+
+                    {/* Toolbar: category pills + sort + submit button */}
+                    {(showCategoryPills || showSort || showSubmitButton) && (
+                        <div className="ad-case-studies__toolbar">
+                            {showCategoryPills && (
+                                <div className="ad-case-studies__pills">
+                                    <button type="button" className="ad-case-studies__pill is-active">{__('All', 'adaire-blocks')}</button>
+                                    {industries.map((ind) => (
+                                        <button type="button" key={ind} className="ad-case-studies__pill">{ind}</button>
+                                    ))}
+                                </div>
+                            )}
+                            <div className="ad-case-studies__toolbar-right">
+                                {showSort && (
+                                    <div className="ad-case-studies__sort">
+                                        <select className="ad-case-studies__sort-select" disabled>
+                                            <option>{__('Newest', 'adaire-blocks')}</option>
+                                            <option>{__('Most Liked', 'adaire-blocks')}</option>
+                                        </select>
+                                    </div>
+                                )}
+                                {showSubmitButton && (
+                                    <span className="ad-case-studies__submit-btn">{submitButtonText}</span>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Legacy dropdown Filter Section */}
                     {showFilters && (
                         <div className="ad-case-studies__filters">
                             <div className="ad-case-studies__filter-group">
@@ -1069,28 +1250,55 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
                     {/* Case Studies Grid / Carousel */}
                     <div className={`ad-case-studies__grid${enableCarousel ? ' ad-case-studies__carousel' : ''}`}>
-                        {(enableCarousel ? previewStudies : previewStudies.slice(0, initialCount)).map((study, index) => (
-                            <div
-                                key={study.id}
-                                className="ad-case-studies__card"
-                                style={{
-                                    backgroundImage: study.backgroundImage ? `url(${study.backgroundImage})` : 'none',
-                                    backgroundColor: study.backgroundImage ? 'transparent' : 'var(--cs-card-bg-color, #374151)'
-                                }}
-                            >
-                                <div className="ad-case-studies__card-overlay">
-                                    <div className="ad-case-studies__card-content">
-                                        <h3 className="ad-case-studies__card-title">{study.title}</h3>
-                                        <p className="ad-case-studies__card-description">{study.description}</p>
+                        {(enableCarousel ? previewStudies : previewStudies.slice(0, initialCount)).map((study, index) => {
+                            const tagLabels = [];
+                            (study.industries || []).forEach((ind) => {
+                                if (tagLabels.length < 2) tagLabels.push(ind);
+                            });
+                            (study.capabilities || []).forEach((cap) => {
+                                if (tagLabels.length < 2) tagLabels.push(cap);
+                            });
+                            return (
+                                <div key={study.id} className="ad-case-studies__card">
+                                    <div className="ad-case-studies__card-media">
+                                        {study.backgroundImage ? (
+                                            <img className="ad-case-studies__card-thumb" src={study.backgroundImage} alt={study.title} />
+                                        ) : (
+                                            <div
+                                                className="ad-case-studies__card-thumb ad-case-studies__card-thumb--placeholder"
+                                                style={{ background: editorPlaceholderColor(study.id != null ? study.id : study.title) }}
+                                            >
+                                                <span className="ad-case-studies__card-thumb-initials">{editorPlaceholderInitials(study.title)}</span>
+                                            </div>
+                                        )}
                                     </div>
+                                    <div className="ad-case-studies__card-footer">
+                                        {study.authorAvatar ? (
+                                            <img className="ad-case-studies__card-avatar" src={study.authorAvatar} alt="" />
+                                        ) : (
+                                            <span className="ad-case-studies__card-avatar" />
+                                        )}
+                                        <div className="ad-case-studies__card-meta">
+                                            <span className="ad-case-studies__card-title">{study.title}</span>
+                                            <span className="ad-case-studies__card-author">{study.authorName}</span>
+                                        </div>
+                                        <span className="ad-case-studies__card-likes">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                                                <path d="M12 21s-6.7-4.35-9.33-8.2C.6 9.77 1.6 6.2 4.8 5.02c2-.74 4-.1 5.2 1.53A4.65 4.65 0 0115.2 5c3.2 1.18 4.2 4.75 2.13 7.8C18.7 16.65 12 21 12 21z" />
+                                            </svg>
+                                            {study.likes || 0}
+                                        </span>
+                                    </div>
+                                    {tagLabels.length > 0 && (
+                                        <div className="ad-case-studies__card-tags">
+                                            {tagLabels.map((label) => (
+                                                <span key={label} className="ad-case-studies__card-tag">{label}</span>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
-                                {!study.backgroundImage && (
-                                    <div className="ad-case-studies__card-placeholder">
-                                        <span>{__('No card image', 'adaire-blocks')}</span>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     {/* Load More Button (hidden in carousel mode) */}

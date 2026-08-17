@@ -139,6 +139,16 @@
     // Editor preview helpers for the map block
     .ad-map__box{ min-height: 380px; }
     .ad-map__map{ min-height: 360px; }
+
+    // Let the QuickZone wrapper fill the absolutely-positioned map panel so
+    // the iframe's width/height: 100% resolve against a real box instead of
+    // collapsing to the browser's default iframe size.
+    .ad-map__map__panel .adaire-qz {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+    }
 }
 
 /**

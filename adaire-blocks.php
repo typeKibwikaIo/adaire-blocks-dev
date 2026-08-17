@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Adaire Blocks
  * Description:       A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.
- * Version:           1.3.0
+ * Version:           1.3.1
  * Requires at least: 6.7
  * Requires PHP:      7.0
  * Author:            <a href="https://adaireblocks.com" target="_blank">Adaire Digital</a>
@@ -237,7 +237,7 @@ add_action(
 // End of version rollback code
 
 // Define plugin constants
-define('ADAIRE_BLOCKS_VERSION', '1.3.0');
+define('ADAIRE_BLOCKS_VERSION', '1.3.1');
 define('ADAIRE_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_FILE', __FILE__);
@@ -453,6 +453,30 @@ Adaire_Deactivation_Modal::get_instance();
 // Deactivation feedback log + SendGrid test page.
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/deactivation-log-page.php';
 Adaire_Deactivation_Log_Page::get_instance();
+
+// Welcome / Quick Start screen — owns the top-level 'adaire-blocks-settings'
+// menu page and sends admins there right after activation instead of
+// whatever submenu (e.g. Case Studies) happened to register first. Guarded
+// by class_exists() because the free "Adaire Blocks" plugin defines this
+// same class; if it's active alongside Pro, its own copy already handles
+// this and Pro must not redeclare the class or register a competing
+// top-level menu (see the class_exists() check in admin/settings-page.php's
+// add_admin_menu()).
+if ( is_admin() && ! class_exists( 'Adaire_Welcome_Screen' ) ) {
+	require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/welcome-screen.php';
+	Adaire_Welcome_Screen::register();
+}
+
+/**
+ * Send the admin to the Welcome / Quick Start screen on their next admin
+ * page load after activating the plugin.
+ */
+function adaire_blocks_queue_welcome_redirect() {
+	if ( class_exists( 'Adaire_Welcome_Screen' ) ) {
+		Adaire_Welcome_Screen::queue_activation_redirect();
+	}
+}
+register_activation_hook( __FILE__, 'adaire_blocks_queue_welcome_redirect' );
 
 // Diagnostics tool removed
 

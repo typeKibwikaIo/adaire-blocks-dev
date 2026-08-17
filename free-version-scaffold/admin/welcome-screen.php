@@ -45,26 +45,49 @@ class Adaire_Welcome_Screen {
 		);
 	}
 
+	/**
+	 * Pin the "Adaire Blocks" submenu into a deterministic order:
+	 * Welcome / Quick Start first (so the top-level "Adaire Blocks" link —
+	 * whose href WP derives from whichever submenu item is first in this
+	 * array — always opens the Welcome screen), then Case Studies (only
+	 * present when the Pro plugin's AdaireCaseStudiesCPT is also active,
+	 * via its `edit.php?post_type=adaire_case_study` slug) right after it,
+	 * with everything else left in its original relative order.
+	 */
 	public static function move_to_top() {
 		global $submenu;
 		$parent = 'adaire-blocks-settings';
 		if ( empty( $submenu[ $parent ] ) ) {
 			return;
 		}
-		$welcome_item = null;
-		$welcome_key  = null;
-		foreach ( $submenu[ $parent ] as $key => $item ) {
-			if ( isset( $item[2] ) && $item[2] === 'adaire-blocks-welcome' ) {
-				$welcome_item = $item;
-				$welcome_key  = $key;
-				break;
+
+		$pinned_slugs = array(
+			'adaire-blocks-welcome',
+			'edit.php?post_type=adaire_case_study',
+		);
+
+		$pinned = array();
+		$rest   = array();
+		foreach ( $submenu[ $parent ] as $item ) {
+			if ( isset( $item[2] ) && in_array( $item[2], $pinned_slugs, true ) ) {
+				$pinned[ $item[2] ] = $item;
+			} else {
+				$rest[] = $item;
 			}
 		}
-		if ( $welcome_item === null ) {
+
+		if ( empty( $pinned ) ) {
 			return;
 		}
-		unset( $submenu[ $parent ][ $welcome_key ] );
-		array_unshift( $submenu[ $parent ], $welcome_item );
+
+		$ordered = array();
+		foreach ( $pinned_slugs as $slug ) {
+			if ( isset( $pinned[ $slug ] ) ) {
+				$ordered[] = $pinned[ $slug ];
+			}
+		}
+
+		$submenu[ $parent ] = array_merge( $ordered, $rest );
 	}
 
 	public static function create_starter_page() {

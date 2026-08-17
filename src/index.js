@@ -23,7 +23,7 @@ import './posts-carousel-block';
 import "./counter-block";
 import "./mega-menu-block";
 import "./mega-menu-panel-block";
-import "./map-block"
+import "./location-map"
 import "./video-player-block"
 import "./animation-scroll-block"
 import "./icon-box-block"

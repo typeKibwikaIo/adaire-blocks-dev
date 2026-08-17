@@ -25,7 +25,7 @@ const BLOCK_CATEGORIES = {
     
     // PRO Blocks
     'counter-block': 'adaire-blocks-pro',
-    'map-block': 'adaire-blocks-pro',
+    'location-map': 'adaire-blocks-pro',
     'logos-block': 'adaire-blocks-pro',
     'portfolio-block': 'adaire-blocks-pro',
     'questions-block': 'adaire-blocks-pro',

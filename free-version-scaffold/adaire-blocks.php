@@ -283,18 +283,29 @@ function enqueue_bootstrap_icons_assets() {
 add_action( 'wp_enqueue_scripts', 'enqueue_bootstrap_icons_assets' );
 
 // Enqueue Bootstrap Icons inside the block editor canvas (iframed in WP 6.3+).
-// enqueue_block_editor_assets injects into the editor iframe; admin_enqueue_scripts
-// only reaches the outer admin shell and is invisible inside the canvas.
+// A plain wp_enqueue_style() on enqueue_block_editor_assets is NOT enough on
+// its own: WordPress only carries a stylesheet enqueued that way into the
+// iframe if it contains at least one of .editor-styles-wrapper, .wp-block,
+// or .wp-block-* — generic third-party CSS like this icon font doesn't, so
+// it silently never reached the canvas (or the icon picker modal, which
+// shares the same stylesheet). add_editor_style() is the mechanism
+// WordPress documents specifically for this — it isn't subject to that
+// selector restriction and is designed to reach every editor context
+// (post editor iframe, site editor, widget editor, and the outer admin
+// page where Modals/Popovers render).
 function enqueue_bootstrap_icons_editor() {
+	$bootstrap_icons_url = ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css';
+
 	wp_enqueue_style(
 		'bootstrap-icons',
-		ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css',
+		$bootstrap_icons_url,
 		array(),
 		'1.13.1'
 	);
+
+	add_editor_style( $bootstrap_icons_url );
 }
 add_action( 'enqueue_block_editor_assets', 'enqueue_bootstrap_icons_editor' );
-add_action( 'admin_enqueue_scripts', 'enqueue_bootstrap_icons_editor' );
 
 /**
  * Expose the free-tier block configuration to editor JavaScript.

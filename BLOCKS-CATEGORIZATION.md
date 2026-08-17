@@ -23,7 +23,7 @@ These blocks are available in the free version without limitations.
 - **Our Process** (`our-process-block`)
 - **Hero 1** (`hero-1-block`)
 - **Info Grid** (`infogrid-block`)
-- **Info Grid 2** (`feature-grid-free`)
+- **Feature Grid (Free)** (`feature-grid-free`)
 - **Image Composition** (`image-composition-block`)
 - **Website Footer** (`website-footer-block`)
 - **Row** (`row-block`)
@@ -36,7 +36,7 @@ These blocks are available in Plus and Premium versions.
 
 - **Call To Action (Plus)** (`call-to-action-block`)
 - **Counter (Plus)** (`counter-block`)
-- **Map (Plus)** (`map-block`)
+- **Location Map (Plus)** (`location-map`)
 - **Questions (Plus)** (`questions-block`)
 - **Portfolio (Plus)** (`portfolio-block`)
 - **Services (Plus)** (`services-block`)

@@ -231,7 +231,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
                 open: item.open || false,
             }, buildItemInnerBlocksTemplate( item.content ) )
         );
-        
+
         // Replace InnerBlocks with new template
         replaceInnerBlocks(clientId, newTemplate);
         

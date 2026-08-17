@@ -1,4 +1,4 @@
-=== Gutenberg Blocks - Powered by Adaire ===
+=== Adaire Blocks ===
 Contributors: adairedigital
 Donate link: https://adaireblocks.com/
 Tags: blocks, gutenberg, gsap, animation, portfolio

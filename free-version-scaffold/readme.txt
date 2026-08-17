@@ -4,11 +4,11 @@ Donate link: https://adaireblocks.com/
 Tags: blocks, gutenberg, page builder, layout, animation
 Requires at least: 6.7
 Tested up to: 6.8
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 Requires PHP: 7.4
 License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Source Code: https://github.com/helloadaire/Adaire-Blocks-Free
+Source Code: https://gitlab-onprem01.adaire.dev/adaire-public/Adaire-Blocks-Free
 
 A library of custom Gutenberg blocks for building responsive, animated WordPress pages — headers, hero sections, pricing tables, galleries, accordions, tabs, and more.
 
@@ -129,6 +129,10 @@ Git tags in the source repository correspond to the matching WordPress.org plugi
 
 == Changelog ==
 
+= 1.3.1 =
+* Fixed: the Bootstrap Icons font/CSS files referenced by `assets/vendor/bootstrap-icons/` were not actually present in the plugin package, so icon glyphs would not have rendered even though the code no longer loaded them from a CDN. The font and stylesheet files are now correctly bundled.
+* Corrected the "Source Code" link in this readme so both references to the human-readable source repository point to the same, publicly accessible location.
+
 = 1.3.0 =
 * WordPress.org compliance update, addressing a plugin-review guideline report:
 * Removed GSAP (a non-GPL-compatible third-party animation library) from every block in this free plugin and replaced it with native CSS transitions/animations and the Intersection Observer API. No functionality was removed; animation controls behave the same as before.
@@ -169,6 +173,9 @@ Git tags in the source repository correspond to the matching WordPress.org plugi
 * Built with modern JavaScript (ES6+) and React.
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+Fixes missing Bootstrap Icons font files so block icons render correctly. No action required.
 
 = 1.3.0 =
 Compliance and maintenance update: removes the GSAP animation library (replaced with native CSS/JS animations, no functional change), bundles Bootstrap Icons locally instead of loading it from a CDN, and corrects the plugin's text domain. No action required.

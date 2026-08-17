@@ -22,17 +22,24 @@ function initCaseStudiesBlocks() {
 }
 
 /* =====================================================================
- * Case study popup
+ * Case study popup — "Made in Webflow" showcase-style lightbox
  * ---------------------------------------------------------------------
  * Cards are real <a href> links to each case study's own page (good for
  * SEO, crawling, and users without JS). On a normal left-click, we
- * intercept that navigation and open a popup instead: the left column
- * shows the block-wide description/image (same for every card, set once
- * in the block's inspector), the right column shows the specific study's
- * own Project Summary, Client/Country/Industry/Language/Technology, and
- * full write-up. Ctrl/Cmd/Shift/middle-click still navigate normally.
+ * intercept that navigation and open a popup instead: a header with the
+ * study's title/author/like count and a "Visit Live Site" button, a big
+ * preview area that embeds the study's own Website URL in a live iframe
+ * (falling back to the block's shared fallback image/the card thumbnail
+ * when no URL is set), the study's own description/summary, a tag row
+ * built from its Industry + Capabilities, a copyright line, and — since
+ * every published study is already loaded client-side for filtering —
+ * "More by [author]" and "Similar sites" sections computed for free with
+ * no extra requests. Left/right arrow buttons cycle through every study
+ * currently loaded on the page. Ctrl/Cmd/Shift/middle-click on a card
+ * still navigate normally instead of opening the popup.
  * ===================================================================== */
 let activeCaseStudyPopup = null;
+let activeCaseStudyPopupState = null; // { allStudies, index, options }
 
 function escapeHtml(str) {
     const div = document.createElement('div');
@@ -40,15 +47,183 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+function escapeAttr(str) {
+    return escapeHtml(str);
+}
+
+/* -----------------------------------------------------------------------
+ * Unique per-study placeholder (no Hero Image set) — a deterministic
+ * color + initials, mirroring the PHP helpers in
+ * case-studies-render-helpers.php (adaire_case_studies_placeholder_color /
+ * _initials) so the server-rendered grid and this client-rendered popup
+ * agree on the same color for the same study. Uses the standard CRC-32
+ * (IEEE 802.3) algorithm, same as PHP's crc32().
+ * ----------------------------------------------------------------------- */
+let crc32Table = null;
+function crc32(str) {
+    if (!crc32Table) {
+        crc32Table = new Array(256);
+        for (let n = 0; n < 256; n++) {
+            let c = n;
+            for (let k = 0; k < 8; k++) {
+                c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+            }
+            crc32Table[n] = c;
+        }
+    }
+    let crc = 0 ^ -1;
+    const bytes = unescape(encodeURIComponent(str || ''));
+    for (let i = 0; i < bytes.length; i++) {
+        crc = (crc >>> 8) ^ crc32Table[(crc ^ bytes.charCodeAt(i)) & 0xff];
+    }
+    return (crc ^ -1) >>> 0;
+}
+
+function placeholderColor(seed) {
+    const hue = crc32(String(seed == null ? '' : seed)) % 360;
+    return `hsl(${hue}, 45%, 28%)`;
+}
+
+function placeholderInitials(title) {
+    const words = String(title || '').trim().split(/\s+/).filter(Boolean);
+    let initials = '';
+    for (const word of words.slice(0, 2)) {
+        initials += word.charAt(0).toUpperCase();
+    }
+    return initials || '•';
+}
+
+function placeholderThumbHtml(study, className) {
+    const seed = study && (study.id != null ? study.id : study.title);
+    const color = escapeAttr(placeholderColor(seed));
+    const initials = escapeHtml(placeholderInitials(study && study.title));
+    return `<div class="${className} ${className}--placeholder" style="background:${color};"><span class="${className}-initials">${initials}</span></div>`;
+}
+
 function popupInfoRow(label, value) {
     if (!value) return '';
     return `<div class="ad-case-studies__popup-info-item"><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`;
 }
 
+function popupTag(label) {
+    if (!label) return '';
+    return `<span class="ad-case-studies__popup-tag">${escapeHtml(label)}</span>`;
+}
+
+/**
+ * Finds studies related to `study` within the full list already loaded on
+ * the page — "More by [author]" (same authorId) and "Similar sites" (same
+ * Industry or an overlapping Capability, falling back to the newest
+ * remaining studies so the section is never empty when there's enough data).
+ */
+function getRelatedStudies(allStudies, study, limit = 3) {
+    const usedIds = new Set([study.id]);
+    const moreByAuthor = [];
+    const similar = [];
+
+    if (study.authorId) {
+        for (const s of allStudies) {
+            if (moreByAuthor.length >= limit) break;
+            if (usedIds.has(s.id)) continue;
+            if (s.authorId === study.authorId) {
+                moreByAuthor.push(s);
+                usedIds.add(s.id);
+            }
+        }
+    }
+
+    const caps = Array.isArray(study.capabilities) ? study.capabilities : [];
+    const industries = Array.isArray(study.industries) ? study.industries : [];
+    for (const s of allStudies) {
+        if (similar.length >= limit) break;
+        if (usedIds.has(s.id)) continue;
+        const sharesIndustry = industries.length && Array.isArray(s.industries) && s.industries.some((i) => industries.includes(i));
+        const sharesCapability = caps.length && Array.isArray(s.capabilities) && s.capabilities.some((c) => caps.includes(c));
+        if (sharesIndustry || sharesCapability) {
+            similar.push(s);
+            usedIds.add(s.id);
+        }
+    }
+    for (const s of allStudies) {
+        if (similar.length >= limit) break;
+        if (usedIds.has(s.id)) continue;
+        similar.push(s);
+        usedIds.add(s.id);
+    }
+
+    return { moreByAuthor, similar };
+}
+
+function popupMiniCard(study) {
+    const bg = study.backgroundImage ? escapeAttr(study.backgroundImage) : '';
+    const thumb = bg
+        ? `<img class="ad-case-studies__popup-mini-thumb" src="${bg}" alt="" loading="lazy" />`
+        : placeholderThumbHtml(study, 'ad-case-studies__popup-mini-thumb');
+    return `
+        <button type="button" class="ad-case-studies__popup-mini-card" data-study-id="${escapeAttr(study.id)}">
+            ${thumb}
+            <span class="ad-case-studies__popup-mini-title">${escapeHtml(study.title)}</span>
+            <span class="ad-case-studies__popup-mini-author">${escapeHtml(study.authorName || '')}</span>
+        </button>
+    `;
+}
+
+function popupRelatedSection(heading, studies, linkLabel, linkHref, sectionId) {
+    if (!studies.length) return '';
+    const cards = studies.map(popupMiniCard).join('');
+    const link = linkHref ? `<a class="ad-case-studies__popup-section-link" href="${escapeAttr(linkHref)}">${escapeHtml(linkLabel || 'See more')} →</a>` : '';
+    // Plain grid — the left/right slide preview on the main case study
+    // navigation covers browsing between studies, so this stays a simple
+    // static grid instead of its own scrollable carousel.
+    return `
+        <div class="ad-case-studies__popup-section"${sectionId ? ` id="${escapeAttr(sectionId)}"` : ''}>
+            <div class="ad-case-studies__popup-section-head">
+                <h3>${escapeHtml(heading)}</h3>
+                ${link}
+            </div>
+            <div class="ad-case-studies__popup-mini-grid">${cards}</div>
+        </div>
+    `;
+}
+
+// Preview card used in the prev/next "peek" — a proper square-ish showcase
+// of the case study the left/right arrows will jump to, not a small pill.
+function popupPeekThumb(study) {
+    if (!study) return '';
+    const bg = study.backgroundImage ? escapeAttr(study.backgroundImage) : '';
+    const thumb = bg
+        ? `<img class="ad-case-studies__popup-peek-thumb" src="${bg}" alt="" loading="lazy" />`
+        : placeholderThumbHtml(study, 'ad-case-studies__popup-peek-thumb');
+    return `
+        <span class="ad-case-studies__popup-peek">
+            ${thumb}
+            <span class="ad-case-studies__popup-peek-title">${escapeHtml(study.title)}</span>
+        </span>
+    `;
+}
+
+// Best-effort hostname for the browser-chrome bar (e.g. "lithosquare.com").
+// Falls back to an empty string if the URL can't be parsed.
+function popupHostname(url) {
+    if (!url) return '';
+    try {
+        return new URL(url).hostname.replace(/^www\./, '');
+    } catch (e) {
+        return url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+    }
+}
+
 function handleCaseStudyPopupKeydown(e) {
+    // The fullscreen image lightbox has its own Escape/arrow handling and
+    // sits above this popup — let it handle the keypress alone.
+    if (activeImageLightbox) return;
     if (e.key === 'Escape') {
         closeCaseStudyPopup();
+        return;
     }
+    if (!activeCaseStudyPopupState) return;
+    if (e.key === 'ArrowLeft') navigateCaseStudyPopup(-1);
+    if (e.key === 'ArrowRight') navigateCaseStudyPopup(1);
 }
 
 function closeCaseStudyPopup() {
@@ -56,39 +231,187 @@ function closeCaseStudyPopup() {
     document.removeEventListener('keydown', handleCaseStudyPopupKeydown);
     const overlay = activeCaseStudyPopup;
     activeCaseStudyPopup = null;
+    activeCaseStudyPopupState = null;
     document.body.classList.remove('ad-case-studies__popup-open');
     overlay.classList.remove('is-open');
     setTimeout(() => overlay.remove(), 250);
 }
 
-function openCaseStudyPopup(study, popupDescription, popupImageUrl, popupImageAlt) {
+// Fullscreen image inspector — lets the user zoom in on the hero showcase
+// image without leaving the case study popup. Independent overlay stacked
+// above the popup itself; Escape/backdrop-click closes just the lightbox.
+let activeImageLightbox = null;
+
+function closeImageLightbox() {
+    if (!activeImageLightbox) return;
+    const el = activeImageLightbox;
+    activeImageLightbox = null;
+    document.removeEventListener('keydown', handleImageLightboxKeydown);
+    el.classList.remove('is-open');
+    setTimeout(() => el.remove(), 200);
+}
+
+function handleImageLightboxKeydown(e) {
+    if (e.key === 'Escape') closeImageLightbox();
+}
+
+function openImageLightbox(src, alt) {
+    if (!src) return;
+    closeImageLightbox();
+    const el = document.createElement('div');
+    el.className = 'ad-case-studies__image-lightbox';
+    el.innerHTML = `
+        <button type="button" class="ad-case-studies__image-lightbox-close" aria-label="Close full screen preview">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <img class="ad-case-studies__image-lightbox-img" src="${escapeAttr(src)}" alt="${escapeAttr(alt || '')}" />
+    `;
+    document.body.appendChild(el);
+    activeImageLightbox = el;
+    el.addEventListener('click', (e) => {
+        if (e.target === el) closeImageLightbox();
+    });
+    el.querySelector('.ad-case-studies__image-lightbox-close').addEventListener('click', closeImageLightbox);
+    document.addEventListener('keydown', handleImageLightboxKeydown);
+    requestAnimationFrame(() => el.classList.add('is-open'));
+}
+
+function navigateCaseStudyPopup(delta) {
+    if (!activeCaseStudyPopupState) return;
+    const { allStudies, index, options } = activeCaseStudyPopupState;
+    if (!allStudies.length) return;
+    const nextIndex = (index + delta + allStudies.length) % allStudies.length;
+    openCaseStudyPopup(allStudies[nextIndex], allStudies, nextIndex, options);
+}
+
+function openCaseStudyPopup(study, allStudies, index, options) {
     if (!study) return;
+    allStudies = Array.isArray(allStudies) ? allStudies : [study];
+    index = typeof index === 'number' ? index : allStudies.findIndex((s) => s.id === study.id);
+    options = options || {};
+
+    const wasOpen = !!activeCaseStudyPopup;
     closeCaseStudyPopup();
 
+    // Hero image: the post's Hero Image (Featured Image) is always preferred (matches
+    // the single case-study template's "static showcase image, not a live
+    // embed" convention). The Website URL (study.linkUrl), when set, is only
+    // used for the browser-chrome bar's URL text and the "Open Live Site"
+    // button — not to embed the site live. A live iframe is used only as a
+    // last resort when no image has been uploaded at all.
+    const fallbackImage = study.backgroundImage || options.fallbackImageUrl || '';
+    const fallbackImageAlt = study.backgroundImage ? study.title : (options.fallbackImageAlt || '');
+    const hasLiveUrl = !!study.linkUrl;
+    const currentYear = options.currentYear || new Date().getFullYear();
+    const siteName = options.siteName || '';
+    const hostname = popupHostname(study.linkUrl) || popupHostname(options.fallbackImageUrl) || (siteName ? siteName.toLowerCase().replace(/\s+/g, '') : '');
+
+    const previewMarkup = fallbackImage
+        ? `<img class="ad-case-studies__popup-preview-image" src="${escapeAttr(fallbackImage)}" alt="${escapeAttr(fallbackImageAlt)}" />`
+        : (hasLiveUrl
+            ? `<iframe class="ad-case-studies__popup-iframe" src="${escapeAttr(study.linkUrl)}" title="${escapeAttr(study.title)}" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" referrerpolicy="no-referrer"></iframe>`
+            : placeholderThumbHtml(study, 'ad-case-studies__popup-preview-empty'));
+
+    const tags = [
+        ...(Array.isArray(study.industries) ? study.industries.map(popupTag) : []),
+        ...(Array.isArray(study.capabilities) ? study.capabilities.map(popupTag) : [])
+    ].join('');
     const infoRows = [
         popupInfoRow('Client', study.client),
         popupInfoRow('Country', study.country),
-        popupInfoRow('Industry', study.industry),
         popupInfoRow('Language', study.language),
         popupInfoRow('Technology', study.technology)
     ].join('');
+
+    const { moreByAuthor, similar } = getRelatedStudies(allStudies, study);
+    const hasSimilar = similar.length > 0;
+
+    const prevStudy = allStudies.length > 1 ? allStudies[(index - 1 + allStudies.length) % allStudies.length] : null;
+    const nextStudy = allStudies.length > 1 ? allStudies[(index + 1) % allStudies.length] : null;
+    const canInspectImage = !!fallbackImage;
 
     const overlay = document.createElement('div');
     overlay.className = 'ad-case-studies__popup';
     overlay.innerHTML = `
         <div class="ad-case-studies__popup-backdrop"></div>
-        <div class="ad-case-studies__popup-dialog" role="dialog" aria-modal="true" aria-label="${escapeHtml(study.title)}">
-            <button type="button" class="ad-case-studies__popup-close" aria-label="Close">&times;</button>
-            <div class="ad-case-studies__popup-left">
-                ${popupImageUrl ? `<img class="ad-case-studies__popup-left-image" src="${escapeHtml(popupImageUrl)}" alt="${escapeHtml(popupImageAlt || '')}" />` : ''}
-                ${popupDescription ? `<p class="ad-case-studies__popup-left-description">${escapeHtml(popupDescription)}</p>` : ''}
-            </div>
-            <div class="ad-case-studies__popup-right">
-                <span class="ad-case-studies__popup-eyebrow">Case Study</span>
-                <h2 class="ad-case-studies__popup-title">${escapeHtml(study.title)}</h2>
-                ${study.summary ? `<div class="ad-case-studies__popup-summary"><h3>${escapeHtml('Project Summary')}</h3><p>${escapeHtml(study.summary)}</p></div>` : ''}
-                ${infoRows ? `<dl class="ad-case-studies__popup-info-grid">${infoRows}</dl>` : ''}
-                <div class="ad-case-studies__popup-content">${study.content || ''}</div>
+        <div class="ad-case-studies__popup-chrome">
+            <button type="button" class="ad-case-studies__popup-expand"${canInspectImage ? '' : ' disabled'} aria-label="View image full screen">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+            </button>
+            <button type="button" class="ad-case-studies__popup-close" aria-label="Close">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        ${allStudies.length > 1 ? `
+            <button type="button" class="ad-case-studies__popup-nav ad-case-studies__popup-prev" aria-label="Previous case study">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                ${popupPeekThumb(prevStudy)}
+            </button>
+            <button type="button" class="ad-case-studies__popup-nav ad-case-studies__popup-next" aria-label="Next case study">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                ${popupPeekThumb(nextStudy)}
+            </button>
+        ` : ''}
+        <div class="ad-case-studies__popup-dialog" role="dialog" aria-modal="true" aria-label="${escapeAttr(study.title)}">
+            <div class="ad-case-studies__popup-scroll">
+                <header class="ad-case-studies__popup-header">
+                    <div class="ad-case-studies__popup-header-main">
+                        <span class="ad-case-studies__popup-eyebrow">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            Case Study
+                        </span>
+                        <h2 class="ad-case-studies__popup-title">${escapeHtml(study.title)}</h2>
+                        <div class="ad-case-studies__popup-byline">
+                            ${study.authorAvatar ? `<img class="ad-case-studies__popup-avatar" src="${escapeAttr(study.authorAvatar)}" alt="" width="24" height="24" />` : ''}
+                            ${study.authorProfileUrl ? `<a class="ad-case-studies__popup-author" href="${escapeAttr(study.authorProfileUrl)}">${escapeHtml(study.authorName || '')}</a>` : `<span class="ad-case-studies__popup-author">${escapeHtml(study.authorName || '')}</span>`}
+                        </div>
+                    </div>
+                    <div class="ad-case-studies__popup-header-actions">
+                        <span class="ad-case-studies__popup-likes" aria-label="${escapeAttr(study.likes || 0)} likes">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s-6.7-4.35-9.33-8.2C.6 9.77 1.6 6.2 4.8 5.02c2-.74 4-.1 5.2 1.53A4.65 4.65 0 0115.2 5c3.2 1.18 4.2 4.75 2.13 7.8C18.7 16.65 12 21 12 21z"/></svg>
+                            ${study.likes || 0}
+                        </span>
+                        ${hasSimilar ? `
+                            <button type="button" class="ad-case-studies__popup-cta" data-scroll-target="similar">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                Search similar case studies
+                            </button>
+                        ` : ''}
+                    </div>
+                </header>
+
+                <div class="ad-case-studies__popup-preview">
+                    <div class="ad-case-studies__popup-browser-frame">
+                        <div class="ad-case-studies__popup-browser-bar">
+                            <span></span><span></span><span></span>
+                            ${hostname ? `<span class="ad-case-studies__popup-browser-url">${escapeHtml(hostname)}</span>` : ''}
+                        </div>
+                        <div class="ad-case-studies__popup-browser-body">${previewMarkup}</div>
+                    </div>
+                </div>
+
+                <div class="ad-case-studies__popup-body">
+                    <div class="ad-case-studies__popup-body-top">
+                        <div class="ad-case-studies__popup-body-desc">
+                            ${study.summary ? `<p class="ad-case-studies__popup-summary">${escapeHtml(study.summary)}</p>` : (study.description ? `<p class="ad-case-studies__popup-summary">${escapeHtml(study.description)}</p>` : '')}
+                            ${tags ? `<div class="ad-case-studies__popup-tags">${tags}</div>` : ''}
+                        </div>
+                        <div class="ad-case-studies__popup-body-actions">
+                            <div class="ad-case-studies__popup-buttons">
+                                ${hasLiveUrl ? `<a class="ad-case-studies__popup-btn ad-case-studies__popup-btn--outline" href="${escapeAttr(study.linkUrl)}" target="${study.openInNewTab === false ? '_self' : '_blank'}" rel="noopener">Open live site ↗</a>` : ''}
+                                ${study.permalink ? `<a class="ad-case-studies__popup-btn ad-case-studies__popup-btn--primary" href="${escapeAttr(study.permalink)}">View Full Case Study</a>` : ''}
+                            </div>
+                            <p class="ad-case-studies__popup-copyright">© ${escapeHtml(String(currentYear))} ${escapeHtml(study.client || siteName)}${study.client && siteName ? ' — ' + escapeHtml('Case study by ' + siteName) : ''}</p>
+                        </div>
+                    </div>
+
+                    ${infoRows ? `<dl class="ad-case-studies__popup-info-grid">${infoRows}</dl>` : ''}
+
+                    ${study.content ? `<div class="ad-case-studies__popup-content">${study.content}</div>` : ''}
+                </div>
+
+                ${popupRelatedSection('More by ' + (study.authorName || 'this author'), moreByAuthor, 'See profile', study.authorProfileUrl)}
+                ${popupRelatedSection('Similar sites', similar, null, null, 'similar')}
             </div>
         </div>
     `;
@@ -96,12 +419,50 @@ function openCaseStudyPopup(study, popupDescription, popupImageUrl, popupImageAl
     document.body.appendChild(overlay);
     document.body.classList.add('ad-case-studies__popup-open');
     activeCaseStudyPopup = overlay;
+    activeCaseStudyPopupState = { allStudies, index, options };
 
     overlay.querySelector('.ad-case-studies__popup-close').addEventListener('click', closeCaseStudyPopup);
     overlay.querySelector('.ad-case-studies__popup-backdrop').addEventListener('click', closeCaseStudyPopup);
+    const prevBtn = overlay.querySelector('.ad-case-studies__popup-prev');
+    const nextBtn = overlay.querySelector('.ad-case-studies__popup-next');
+    if (prevBtn) prevBtn.addEventListener('click', () => navigateCaseStudyPopup(-1));
+    if (nextBtn) nextBtn.addEventListener('click', () => navigateCaseStudyPopup(1));
+
+    const expandBtn = overlay.querySelector('.ad-case-studies__popup-expand');
+    if (expandBtn && canInspectImage) {
+        expandBtn.addEventListener('click', () => openImageLightbox(fallbackImage, fallbackImageAlt || study.title));
+    }
+
+    const scrollBtn = overlay.querySelector('[data-scroll-target="similar"]');
+    if (scrollBtn) {
+        scrollBtn.addEventListener('click', () => {
+            const target = overlay.querySelector('#similar');
+            const scrollContainer = overlay.querySelector('.ad-case-studies__popup-scroll');
+            if (target && scrollContainer) {
+                scrollContainer.scrollTo({ top: target.offsetTop - 16, behavior: 'smooth' });
+            }
+        });
+    }
+
+    overlay.querySelectorAll('.ad-case-studies__popup-mini-card').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.dataset.studyId;
+            const targetIndex = allStudies.findIndex((s) => String(s.id) === String(targetId));
+            if (targetIndex > -1) {
+                openCaseStudyPopup(allStudies[targetIndex], allStudies, targetIndex, options);
+            }
+        });
+    });
+
     document.addEventListener('keydown', handleCaseStudyPopupKeydown);
 
-    requestAnimationFrame(() => overlay.classList.add('is-open'));
+    // Skip the fade-in transition when navigating prev/next from an already-
+    // open popup so the swap feels instant rather than flashing to black.
+    if (wasOpen) {
+        overlay.classList.add('is-open');
+    } else {
+        requestAnimationFrame(() => overlay.classList.add('is-open'));
+    }
 }
 
 /**
@@ -122,6 +483,9 @@ class CaseStudiesBlock {
         this.loadingSpinner = container.querySelector('.ad-case-studies__loading-spinner');
         this.industryFilter = container.querySelector('[data-filter-type="industry"]');
         this.capabilityFilter = container.querySelector('[data-filter-type="capability"]');
+        this.pills = Array.from(container.querySelectorAll('.ad-case-studies__pill'));
+        this.searchInput = container.querySelector('.ad-case-studies__search-input');
+        this.sortSelect = container.querySelector('.ad-case-studies__sort-select');
 
         // Get configuration from data attributes
         this.caseStudies = JSON.parse(container.dataset.caseStudies || '[]');
@@ -129,14 +493,19 @@ class CaseStudiesBlock {
         this.loadMoreCount = parseInt(container.dataset.loadMoreCount) || 4;
         this.animationDuration = parseFloat(container.dataset.animationDuration) || 0.5;
         this.animationEase = container.dataset.animationEase || 'power2.inOut';
-        this.popupDescription = container.dataset.popupDescription || '';
-        this.popupImageUrl = container.dataset.popupImage || '';
-        this.popupImageAlt = container.dataset.popupImageAlt || '';
+        this.popupOptions = {
+            fallbackImageUrl: container.dataset.popupFallbackImage || '',
+            fallbackImageAlt: container.dataset.popupFallbackImageAlt || '',
+            siteName: container.dataset.siteName || '',
+            currentYear: container.dataset.currentYear || new Date().getFullYear()
+        };
 
         // State
         this.visibleCount = this.initialCount;
         this.currentIndustry = '';
         this.currentCapability = '';
+        this.currentSearch = '';
+        this.currentSort = 'newest';
         this.isAnimating = false;
 
         this.init();
@@ -162,7 +531,7 @@ class CaseStudiesBlock {
                 e.preventDefault();
                 const index = parseInt(card.dataset.index, 10);
                 const study = this.caseStudies[index];
-                openCaseStudyPopup(study, this.popupDescription, this.popupImageUrl, this.popupImageAlt);
+                openCaseStudyPopup(study, this.caseStudies, index, this.popupOptions);
             });
         });
     }
@@ -201,33 +570,75 @@ class CaseStudiesBlock {
                 this.loadMore();
             });
         }
+
+        // Category pills (Webflow-style "All / Industry" filter row)
+        if (this.pills && this.pills.length) {
+            this.pills.forEach((pill) => {
+                pill.addEventListener('click', () => {
+                    this.pills.forEach((p) => p.classList.remove('is-active'));
+                    pill.classList.add('is-active');
+                    this.currentIndustry = pill.dataset.pillValue || '';
+                    this.visibleCount = this.initialCount;
+                    this.filterCards();
+                });
+            });
+        }
+
+        // Live search over title + author name
+        if (this.searchInput) {
+            this.searchInput.addEventListener('input', (e) => {
+                this.currentSearch = (e.target.value || '').trim().toLowerCase();
+                this.visibleCount = this.initialCount;
+                this.filterCards();
+            });
+        }
+
+        // Sort control (Newest / Most Liked)
+        if (this.sortSelect) {
+            this.sortSelect.addEventListener('change', (e) => {
+                this.applySort(e.target.value);
+                this.filterCards();
+            });
+        }
+    }
+
+    applySort(sortValue) {
+        this.currentSort = sortValue || 'newest';
+
+        const sorted = [...this.cards].sort((a, b) => {
+            if (this.currentSort === 'popular') {
+                const likesA = parseInt(a.dataset.likes, 10) || 0;
+                const likesB = parseInt(b.dataset.likes, 10) || 0;
+                return likesB - likesA;
+            }
+            const indexA = parseInt(a.dataset.index, 10) || 0;
+            const indexB = parseInt(b.dataset.index, 10) || 0;
+            return indexA - indexB;
+        });
+
+        sorted.forEach((card) => {
+            this.grid.appendChild(card);
+        });
+
+        this.cards = sorted;
     }
     
     initHoverAnimations() {
         this.cards.forEach(card => {
-            const overlay = card.querySelector('.ad-case-studies__card-overlay');
-            const content = card.querySelector('.ad-case-studies__card-content');
-            
+            const media = card.querySelector('.ad-case-studies__card-thumb');
+
             card.addEventListener('mouseenter', () => {
                 if (this.isAnimating) return;
                 gsap.to(card, {
-                    scale: parseFloat(getComputedStyle(this.container).getPropertyValue('--cs-hover-scale')) || 1.02,
+                    y: -3,
                     duration: 0.3,
                     ease: 'power2.out',
                     zIndex: 10
                 });
-                
-                if (overlay) {
-                    gsap.to(overlay, {
-                        backgroundColor: getComputedStyle(this.container).getPropertyValue('--cs-overlay-hover-color'),
-                        duration: 0.3,
-                        ease: 'power2.out'
-                    });
-                }
-                
-                if (content) {
-                    gsap.to(content, {
-                        y: -5,
+
+                if (media) {
+                    gsap.to(media, {
+                        scale: parseFloat(getComputedStyle(this.container).getPropertyValue('--cs-hover-scale')) || 1.04,
                         duration: 0.3,
                         ease: 'power2.out'
                     });
@@ -237,23 +648,15 @@ class CaseStudiesBlock {
             card.addEventListener('mouseleave', () => {
                 if (this.isAnimating) return;
                 gsap.to(card, {
-                    scale: 1,
+                    y: 0,
                     duration: 0.3,
                     ease: 'power2.out',
                     zIndex: 1
                 });
-                
-                if (overlay) {
-                    gsap.to(overlay, {
-                        backgroundColor: getComputedStyle(this.container).getPropertyValue('--cs-overlay-color'),
-                        duration: 0.3,
-                        ease: 'power2.out'
-                    });
-                }
-                
-                if (content) {
-                    gsap.to(content, {
-                        y: 0,
+
+                if (media) {
+                    gsap.to(media, {
+                        scale: 1,
                         duration: 0.3,
                         ease: 'power2.out'
                     });
@@ -265,21 +668,30 @@ class CaseStudiesBlock {
     getFilteredCards() {
         // Filter ALL cards regardless of their current visibility state
         return this.cards.filter(card => {
-            const industry = card.dataset.industry || '';
+            let industries = [];
+            try {
+                industries = JSON.parse(card.dataset.industries || '[]');
+            } catch (e) {
+                industries = [];
+            }
             let capabilities = [];
             try {
                 capabilities = JSON.parse(card.dataset.capabilities || '[]');
             } catch (e) {
                 capabilities = [];
             }
-            
+
             // Check industry filter - empty string means "All Industries"
-            const industryMatch = !this.currentIndustry || this.currentIndustry === '' || industry === this.currentIndustry;
+            const industryMatch = !this.currentIndustry || this.currentIndustry === '' || industries.includes(this.currentIndustry);
             
             // Check capability filter - empty string means "All Capabilities"
             const capabilityMatch = !this.currentCapability || this.currentCapability === '' || capabilities.includes(this.currentCapability);
-            
-            return industryMatch && capabilityMatch;
+
+            // Check live search - matches against title + author (data-search)
+            const searchText = (card.dataset.search || '').toLowerCase();
+            const searchMatch = !this.currentSearch || searchText.includes(this.currentSearch);
+
+            return industryMatch && capabilityMatch && searchMatch;
         });
     }
     
@@ -585,13 +997,19 @@ class CaseStudiesCarousel {
         this.dragCursor = container.querySelector('.ad-case-studies__drag-cursor');
         this.industryFilter = container.querySelector('[data-filter-type="industry"]');
         this.capabilityFilter = container.querySelector('[data-filter-type="capability"]');
-        
+        this.pills = Array.from(container.querySelectorAll('.ad-case-studies__pill'));
+        this.searchInput = container.querySelector('.ad-case-studies__search-input');
+        this.sortSelect = container.querySelector('.ad-case-studies__sort-select');
+
         // Get configuration
         this.dragCursorText = container.dataset.dragCursorText || 'Drag';
         this.caseStudies = JSON.parse(container.dataset.caseStudies || '[]');
-        this.popupDescription = container.dataset.popupDescription || '';
-        this.popupImageUrl = container.dataset.popupImage || '';
-        this.popupImageAlt = container.dataset.popupImageAlt || '';
+        this.popupOptions = {
+            fallbackImageUrl: container.dataset.popupFallbackImage || '',
+            fallbackImageAlt: container.dataset.popupFallbackImageAlt || '',
+            siteName: container.dataset.siteName || '',
+            currentYear: container.dataset.currentYear || new Date().getFullYear()
+        };
 
         // State
         this.isDragging = false;
@@ -606,8 +1024,10 @@ class CaseStudiesCarousel {
         this.dragDistance = 0;
         this.currentIndustry = '';
         this.currentCapability = '';
+        this.currentSearch = '';
+        this.currentSort = 'newest';
         this.animationFrameId = null;
-        
+
         this.init();
     }
     
@@ -636,7 +1056,7 @@ class CaseStudiesCarousel {
                 e.preventDefault();
                 const index = parseInt(card.dataset.index, 10);
                 const study = this.caseStudies[index];
-                openCaseStudyPopup(study, this.popupDescription, this.popupImageUrl, this.popupImageAlt);
+                openCaseStudyPopup(study, this.caseStudies, index, this.popupOptions);
             });
         });
     }
@@ -681,8 +1101,10 @@ class CaseStudiesCarousel {
         
         // Check for actual text elements (title/description text only)
         const contentSelectors = [
+            '.ad-case-studies__card-footer',
             '.ad-case-studies__card-title',
-            '.ad-case-studies__card-description',
+            '.ad-case-studies__card-author',
+            '.ad-case-studies__card-likes',
             'h3',
             'p',
             'span',
@@ -982,22 +1404,75 @@ class CaseStudiesCarousel {
                 this.filterCards();
             });
         }
+
+        if (this.pills && this.pills.length) {
+            this.pills.forEach((pill) => {
+                pill.addEventListener('click', () => {
+                    this.pills.forEach((p) => p.classList.remove('is-active'));
+                    pill.classList.add('is-active');
+                    this.currentIndustry = pill.dataset.pillValue || '';
+                    this.filterCards();
+                });
+            });
+        }
+
+        if (this.searchInput) {
+            this.searchInput.addEventListener('input', (e) => {
+                this.currentSearch = (e.target.value || '').trim().toLowerCase();
+                this.filterCards();
+            });
+        }
+
+        if (this.sortSelect) {
+            this.sortSelect.addEventListener('change', (e) => {
+                this.applySort(e.target.value);
+                this.filterCards();
+            });
+        }
     }
-    
+
+    applySort(sortValue) {
+        this.currentSort = sortValue || 'newest';
+
+        const sorted = [...this.cards].sort((a, b) => {
+            if (this.currentSort === 'popular') {
+                const likesA = parseInt(a.dataset.likes, 10) || 0;
+                const likesB = parseInt(b.dataset.likes, 10) || 0;
+                return likesB - likesA;
+            }
+            const indexA = parseInt(a.dataset.index, 10) || 0;
+            const indexB = parseInt(b.dataset.index, 10) || 0;
+            return indexA - indexB;
+        });
+
+        sorted.forEach((card) => {
+            this.carousel.appendChild(card);
+        });
+
+        this.cards = sorted;
+    }
+
     getFilteredCards() {
         return this.cards.filter(card => {
-            const industry = card.dataset.industry || '';
+            let industries = [];
+            try {
+                industries = JSON.parse(card.dataset.industries || '[]');
+            } catch (e) {
+                industries = [];
+            }
             let capabilities = [];
             try {
                 capabilities = JSON.parse(card.dataset.capabilities || '[]');
             } catch (e) {
                 capabilities = [];
             }
-            
-            const industryMatch = !this.currentIndustry || this.currentIndustry === '' || industry === this.currentIndustry;
+
+            const industryMatch = !this.currentIndustry || this.currentIndustry === '' || industries.includes(this.currentIndustry);
             const capabilityMatch = !this.currentCapability || this.currentCapability === '' || capabilities.includes(this.currentCapability);
-            
-            return industryMatch && capabilityMatch;
+            const searchText = (card.dataset.search || '').toLowerCase();
+            const searchMatch = !this.currentSearch || searchText.includes(this.currentSearch);
+
+            return industryMatch && capabilityMatch && searchMatch;
         });
     }
     

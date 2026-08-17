@@ -1,0 +1,8 @@
+﻿Drop your Lottie JSON files here. Name them exactly:
+
+  landing-page.json  →  "Landing Page"
+  about-page.json    →  "About Page"
+  services-page.json →  "Services Page"
+  blog-landing.json  →  "Blog Landing"
+  contact-page.json  →  "Contact Page"
+  blank-canvas.json  →  "Blank Canvas"

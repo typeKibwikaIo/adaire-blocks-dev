@@ -31,7 +31,7 @@
 		"infogrid-3-block":            { "component": "info-grid-3",         "svg": "part5/info-grid-3-block.svg" },
 		"bento-grid-block":            { "component": "info-grid-4",         "svg": "part5/info-grid-4-block.svg" },
 		"logos-block":                 { "component": "logos",               "svg": "Plus Blocks/logos-plus-block.svg" },
-		"map-block":                   { "component": "map",                 "svg": "Plus Blocks/map-plus-block.svg" },
+		"location-map":                { "component": "map",                 "svg": "Plus Blocks/map-plus-block.svg" },
 		"mega-menu-block":             { "component": "mega-menu",           "svg": "Plus Blocks/mega-menu-plus-block.svg" },
 		"popup-modal-block":           { "component": "modal",               "svg": "Premium Blocks/modal-premium-block.svg" },
 		"our-process-block":           { "component": "our-process",         "svg": "Plus Blocks/our-process-plus-block.svg" },

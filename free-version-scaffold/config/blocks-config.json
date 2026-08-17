@@ -293,7 +293,7 @@
         "custom-easing"
       ]
     },
-    "map-block": {
+    "location-map": {
       "enabled": true,
       "features": [
         "interactive-maps",

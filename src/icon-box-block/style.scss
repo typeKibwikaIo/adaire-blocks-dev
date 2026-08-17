@@ -31,6 +31,43 @@
         align-items: center;
     }
 
+    // Frame wrapper around the icon glyph — controls Icon View (Default /
+    // Framed / Stacked) and Icon Shape (Circle / Square). Default renders
+    // with no extra sizing/background so it's visually identical to a bare
+    // icon; Framed/Stacked size themselves relative to --icon-size so the
+    // frame scales proportionally as the icon size changes.
+    &__icon-frame {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+
+        &.is-view-framed,
+        &.is-view-stacked {
+            width: calc(var(--icon-size, 64px) * 1.8);
+            height: calc(var(--icon-size, 64px) * 1.8);
+        }
+
+        &.is-view-framed {
+            background: transparent;
+            border: 2px solid var(--icon-frame-color, #503AA8);
+        }
+
+        &.is-view-stacked {
+            background: var(--icon-frame-color, #503AA8);
+            border: none;
+        }
+
+        &.is-shape-circle {
+            border-radius: 50%;
+        }
+
+        &.is-shape-square {
+            border-radius: 20%;
+        }
+    }
+
     &__icon {
         color: var(--icon-color, #ffffff);
         font-size: var(--icon-size, 64px);
