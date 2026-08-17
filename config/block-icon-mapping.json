@@ -22,6 +22,7 @@
 		"gallery-block":               { "component": "gallery" },
 		"header-block":                { "component": "header" },
 		"hero-1-block":                { "component": "hero-1",              "svg": "part5/hero-1-block.svg" },
+		"hero-banner-block":           { "component": "hero-1",              "svg": "part5/hero-1-block.svg" },
 		"icon-box-block":              { "component": "icon-box",            "svg": "Free Blocks/icon-block.svg" },
 		"image-composition-block":     { "component": "image-composition",   "svg": "part5/image-composition-block.svg" },
 		"industries-block":            { "component": "industries",          "svg": "Premium Blocks/industries-premium-block.svg" },

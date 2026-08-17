@@ -71,6 +71,10 @@
       "enabled": true,
       "upgradeMessage": "Upgrade to Pro for advanced hero block features and layouts."
     },
+    "hero-banner-block": {
+      "enabled": true,
+      "upgradeMessage": "Upgrade to Pro for advanced hero block features and layouts."
+    },
     "infogrid-2-block": {
       "enabled": true,
       "upgradeMessage": "Upgrade to Pro for even more advanced grid features."

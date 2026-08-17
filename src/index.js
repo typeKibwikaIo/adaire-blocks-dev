@@ -44,6 +44,10 @@ import "./social-share-block"
 import "./pricing-table-block"
 import "./progress-block"
 import "./container-block"
+import "./hero-banner-block"
+// Legacy alias — keeps pages saved under the old create-block/hero-1-block
+// name fully editable/renderable. Hidden from the inserter (supports.inserter
+// is false in its block.json); do not remove without a content migration.
 import "./hero-1-block"
 import "./infogrid-2-block"
 import "./infogrid-3-block"
