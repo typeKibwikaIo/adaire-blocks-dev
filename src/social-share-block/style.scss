@@ -169,5 +169,36 @@
             white-space: nowrap;
         }
     }
+
+    // Below this width the flyout's own min-width (180px) plus its distance
+    // from a right/left-aligned button can push it past the viewport edge —
+    // there's no scroll container to clip it, so it just overflows and gets
+    // cut off by the browser. Force the safest anchor (centered, opening
+    // downward) and cap width to the viewport regardless of the configured
+    // tooltipPosition/alignment, which are both meaningless once the flyout
+    // no longer fits beside the button anyway.
+    @media (max-width: 480px) {
+        &__tooltip {
+            top: 100%;
+            bottom: auto;
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%) translateY(10px);
+            margin-top: 8px;
+            margin-bottom: 0;
+
+            &.is-visible {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        &__platforms,
+        .adaire-social-share--tooltip-left &__platforms,
+        .adaire-social-share--tooltip-right &__platforms {
+            flex-direction: column;
+            min-width: 160px;
+            max-width: calc(100vw - 32px);
+        }
+    }
 }
 

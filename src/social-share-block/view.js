@@ -26,6 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return encodeURIComponent(document.title);
         };
 
+        // Pinterest's pin-creation intent needs a source image or it opens to
+        // an empty/broken pin — og:image is the best available page image
+        // without pulling in the first <img> on the page (which may not be
+        // representative, e.g. a logo).
+        const getPageImage = () => {
+            const metaImage = document.querySelector('meta[property="og:image"]');
+            return metaImage ? encodeURIComponent(metaImage.getAttribute('content')) : '';
+        };
+
         // Share URL generators
         const shareUrls = {
             facebook: (url) => `https://www.facebook.com/sharer/sharer.php?u=${url}`,
@@ -34,7 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
             whatsapp: (url, title) => `https://wa.me/?text=${title}%20${url}`,
             telegram: (url, title) => `https://t.me/share/url?url=${url}&text=${title}`,
             reddit: (url, title) => `https://www.reddit.com/submit?url=${url}&title=${title}`,
-            pinterest: (url, title) => `https://pinterest.com/pin/create/button/?url=${url}&description=${title}`,
+            pinterest: (url, title, image) =>
+                `https://pinterest.com/pin/create/button/?url=${url}&description=${title}${
+                    image ? `&media=${image}` : ''
+                }`,
             email: (url, title) => `mailto:?subject=${title}&body=${url}`,
         };
 
@@ -101,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         shareUrl = shareUrls.reddit(url, title);
                         break;
                     case 'pinterest':
-                        shareUrl = shareUrls.pinterest(url, title);
+                        shareUrl = shareUrls.pinterest(url, title, getPageImage());
                         break;
                     case 'email':
                         shareUrl = shareUrls.email(url, title);

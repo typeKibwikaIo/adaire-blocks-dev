@@ -81,7 +81,10 @@ wp-content/debug.log
 #################################################
 # COMPOSER (if PHP used)
 #################################################
-vendor/
+# Anchored to repo root — a bare "vendor/" would also match, and silently
+# exclude, assets/vendor/ (bundled frontend libs like bootstrap-icons that
+# must ship with the plugin).
+/vendor/
 composer.lock
 
 #################################################
