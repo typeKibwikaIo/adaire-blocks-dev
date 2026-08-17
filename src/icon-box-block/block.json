@@ -46,6 +46,27 @@
             "type": "string",
             "default": "#ffffff"
         },
+        "iconView": {
+            "type": "string",
+            "default": "default",
+            "enum": [
+                "default",
+                "framed",
+                "stacked"
+            ]
+        },
+        "iconShape": {
+            "type": "string",
+            "default": "circle",
+            "enum": [
+                "circle",
+                "square"
+            ]
+        },
+        "iconFrameColor": {
+            "type": "string",
+            "default": "#503AA8"
+        },
         "backgroundColor": {
             "type": "string",
             "default": "#503AA8"

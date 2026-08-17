@@ -2,6 +2,12 @@
  * Styles for the bundled single-adaire_case_study.php template.
  * Enqueued only on is_singular('adaire_case_study') — see
  * AdaireCaseStudiesCPT::enqueue_single_template_assets().
+ *
+ * Premium portfolio showcase layout: centered title/byline, one large
+ * browser-chrome-framed showcase image (the Hero Image / Featured Image),
+ * the author's free-form write-up (native post content — no fixed
+ * sections), a compact detail row, and "More by author"/"Similar case
+ * studies" grids.
  */
 
 .adaire-cs-single {
@@ -11,96 +17,262 @@
 	--adaire-cs-border: #e5e7eb;
 }
 
-.adaire-cs-single__hero {
-	position: relative;
-	min-height: 420px;
-	display: flex;
-	align-items: flex-end;
-	background-color: #111827;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	padding: 48px 24px;
-}
-
-.adaire-cs-single__hero::before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.35) 100%);
-}
-
-.adaire-cs-single__hero--no-image {
-	background-color: #1f2937;
-}
-
-.adaire-cs-single__hero-inner {
-	position: relative;
-	max-width: 1100px;
+/* ---------------------------------------------------------------------
+ * Head — centered title, subtitle, byline, tags
+ * --------------------------------------------------------------------- */
+.adaire-cs-single__head {
+	max-width: 760px;
 	margin: 0 auto;
-	width: 100%;
+	padding: 64px 24px 32px;
+	text-align: center;
 }
 
 .adaire-cs-single__title {
-	color: #ffffff;
+	color: var(--adaire-cs-text);
 	font-size: clamp(2rem, 4vw, 3rem);
 	line-height: 1.15;
 	margin: 0;
 }
 
-.adaire-cs-single__container {
-	max-width: 1100px;
-	margin: 0 auto;
-	padding: 40px 24px 80px;
-}
-
 .adaire-cs-single__subtitle {
 	font-size: 1.125rem;
-	color: var(--adaire-cs-text);
-	max-width: 760px;
-	margin: 0 0 32px;
+	color: var(--adaire-cs-muted);
+	margin: 16px 0 0;
 	line-height: 1.5;
 }
 
-.adaire-cs-single__meta {
-	display: grid;
-	grid-template-columns: 2fr 1fr;
-	gap: 40px;
-	padding-bottom: 32px;
-	margin-bottom: 32px;
+.adaire-cs-single__byline {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 20px;
+}
+
+.adaire-cs-single__byline-avatar {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+.adaire-cs-single__byline-name {
+	color: var(--adaire-cs-text);
+	font-weight: 500;
+	font-size: 0.9rem;
+	text-decoration: none;
+}
+
+.adaire-cs-single__byline-name:hover {
+	color: var(--adaire-cs-accent);
+	text-decoration: underline;
+}
+
+.adaire-cs-single__byline-likes {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	color: var(--adaire-cs-muted);
+	font-size: 0.85rem;
+}
+
+.adaire-cs-single__tags {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 18px;
+}
+
+.adaire-cs-single__tag {
+	display: inline-block;
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: #4b5563;
+	background: #f3f4f6;
+	padding: 5px 12px;
+	border-radius: 999px;
+}
+
+/* ---------------------------------------------------------------------
+ * Showcase — the large, centered, browser-chrome-framed hero preview
+ * --------------------------------------------------------------------- */
+.adaire-cs-single__showcase {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 0 24px;
+}
+
+.adaire-cs-single__browser-frame {
+	border-radius: 14px;
+	overflow: hidden;
+	background: #ffffff;
+	border: 1px solid var(--adaire-cs-border);
+	box-shadow: 0 30px 70px -20px rgba(17, 24, 39, 0.25);
+}
+
+.adaire-cs-single__browser-bar {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	padding: 12px 16px;
+	background: #f3f4f6;
 	border-bottom: 1px solid var(--adaire-cs-border);
 }
 
-@media (max-width: 800px) {
-	.adaire-cs-single__meta {
-		grid-template-columns: 1fr;
+.adaire-cs-single__browser-bar span:not(.adaire-cs-single__browser-url) {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #d1d5db;
+	flex-shrink: 0;
+}
+
+.adaire-cs-single__browser-url {
+	margin-left: 10px;
+	font-size: 0.75rem;
+	color: var(--adaire-cs-muted);
+	background: #ffffff;
+	border: 1px solid var(--adaire-cs-border);
+	border-radius: 999px;
+	padding: 3px 12px;
+}
+
+.adaire-cs-single__showcase-image {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.adaire-cs-single__showcase-image--placeholder {
+	aspect-ratio: 16 / 10;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.adaire-cs-single__showcase-initials {
+	font-size: 56px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.adaire-cs-single__preview-actions {
+	display: flex;
+	justify-content: center;
+	margin: 24px 0 0;
+}
+
+.adaire-cs-single__btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.85rem;
+	font-weight: 600;
+	padding: 11px 22px;
+	border-radius: 999px;
+	text-decoration: none;
+}
+
+.adaire-cs-single__btn--primary {
+	background: #111827;
+	color: #ffffff;
+}
+
+.adaire-cs-single__btn--primary:hover {
+	background: #000000;
+	color: #ffffff;
+}
+
+/* ---------------------------------------------------------------------
+ * Container — everything below the showcase
+ * --------------------------------------------------------------------- */
+.adaire-cs-single__container {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 56px 24px 96px;
+}
+
+/* ---------------------------------------------------------------------
+ * Summary + free-form content (native post_content — screenshots,
+ * galleries, video, etc. are just blocks the author added, styled
+ * generically below via .adaire-cs-single__content).
+ * --------------------------------------------------------------------- */
+.adaire-cs-single__summary {
+	font-size: 1.05rem;
+	line-height: 1.7;
+	color: var(--adaire-cs-text);
+	margin: 0 0 48px;
+}
+
+.adaire-cs-single__section {
+	margin-bottom: 48px;
+}
+
+.adaire-cs-single__section h2 {
+	font-size: 1.4rem;
+	color: var(--adaire-cs-text);
+	margin: 0 0 16px;
+}
+
+.adaire-cs-single__section-body {
+	color: var(--adaire-cs-text);
+	line-height: 1.75;
+	font-size: 1rem;
+}
+
+.adaire-cs-single__section-body > *:first-child {
+	margin-top: 0;
+}
+
+.adaire-cs-single__section-body h3 {
+	margin-top: 1.6em;
+	margin-bottom: 0.6em;
+}
+
+.adaire-cs-single__section-body ul,
+.adaire-cs-single__section-body ol {
+	padding-left: 1.25em;
+}
+
+.adaire-cs-single__section-body img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	margin: 1.5em 0;
+}
+
+.adaire-cs-single__section-body blockquote {
+	border-left: 3px solid var(--adaire-cs-accent);
+	margin: 1.5em 0;
+	padding: 0.25em 0 0.25em 1.25em;
+	font-style: italic;
+	color: var(--adaire-cs-muted);
+}
+
+/* ---------------------------------------------------------------------
+ * Compact Client/Country/Language/Technology detail row
+ * --------------------------------------------------------------------- */
+.adaire-cs-single__info-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 20px 24px;
+	margin: 0 0 32px;
+	padding: 28px 0;
+	border-top: 1px solid var(--adaire-cs-border);
+	border-bottom: 1px solid var(--adaire-cs-border);
+}
+
+@media (max-width: 640px) {
+	.adaire-cs-single__info-grid {
+		grid-template-columns: repeat(2, 1fr);
 	}
 }
 
-.adaire-cs-single__summary h2,
-.adaire-cs-single__meta-label {
-	font-size: 0.8125rem;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
-	color: var(--adaire-cs-accent);
-	margin: 0 0 8px;
-}
-
-.adaire-cs-single__summary p {
-	color: var(--adaire-cs-text);
-	line-height: 1.6;
-	margin: 0;
-}
-
-.adaire-cs-single__info-grid {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 20px 24px;
-	margin: 0;
-}
-
 .adaire-cs-single__info-item dt {
-	font-size: 0.75rem;
+	font-size: 0.72rem;
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 	color: var(--adaire-cs-accent);
@@ -110,96 +282,69 @@
 .adaire-cs-single__info-item dd {
 	margin: 0;
 	color: var(--adaire-cs-text);
-	font-size: 0.9375rem;
+	font-size: 0.9rem;
 	line-height: 1.4;
 }
 
-.adaire-cs-single__content {
-	color: var(--adaire-cs-text);
-	line-height: 1.7;
-	font-size: 1rem;
-	max-width: 760px;
-}
-
-.adaire-cs-single__content h2,
-.adaire-cs-single__content h3 {
-	margin-top: 2em;
-	margin-bottom: 0.6em;
-}
-
-.adaire-cs-single__content ul,
-.adaire-cs-single__content ol {
-	padding-left: 1.25em;
-}
-
-.adaire-cs-single__content img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 8px;
-	margin: 1.5em 0;
-}
-
-.adaire-cs-single__content blockquote {
-	border-left: 3px solid var(--adaire-cs-accent);
-	margin: 1.5em 0;
-	padding: 0.25em 0 0.25em 1.25em;
-	font-style: italic;
+.adaire-cs-single__copyright {
+	margin: 0 0 8px;
+	font-size: 0.8rem;
 	color: var(--adaire-cs-muted);
 }
 
+/* ---------------------------------------------------------------------
+ * "More by author" / "Similar case studies"
+ * --------------------------------------------------------------------- */
 .adaire-cs-single__more {
-	margin-top: 64px;
-	padding-top: 40px;
-	border-top: 1px solid var(--adaire-cs-border);
+	max-width: 1100px;
+	margin: 64px auto 0;
+	padding: 0 24px;
 }
 
 .adaire-cs-single__more h2 {
-	font-size: 1.5rem;
+	font-size: 1.4rem;
 	margin: 0 0 24px;
+	text-align: center;
 }
 
+/*
+ * "Read more"/"Similar" grids reuse the Case Studies block's own card
+ * component (.ad-case-studies__card, from adaire_case_studies_render_card())
+ * so they look identical to the block everywhere else — its structural
+ * rules live in the block's own compiled stylesheet (enqueued alongside
+ * this file, see AdaireCaseStudiesCPT::enqueue_single_template_assets()).
+ * That component reads its sizing from CSS custom properties normally set
+ * on the block wrapper (.ad-case-studies-block); this page has no such
+ * wrapper, so fixed defaults are supplied here instead.
+ */
 .adaire-cs-more-grid {
+	--cs-card-height: 260px;
+	--cs-card-border-radius: 12px;
+	--cs-card-bg-color: #374151;
+	--cs-card-shadow: none;
+	--cs-card-hover-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.2);
+	--cs-hover-transition: 0.25s;
+	--cs-hover-scale: 1.03;
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-	gap: 20px;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 32px;
 }
 
-.adaire-cs-more-card {
-	position: relative;
-	display: block;
-	height: 220px;
-	border-radius: 8px;
-	overflow: hidden;
-	background-color: #374151;
-	background-size: cover;
-	background-position: center;
-	text-decoration: none;
+.adaire-cs-more-grid .ad-case-studies__card:hover .ad-case-studies__card-thumb {
+	transform: scale(var(--cs-hover-scale));
 }
 
-.adaire-cs-more-card__overlay {
-	position: absolute;
-	inset: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
-	padding: 16px;
-	background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.15) 60%, transparent 100%);
-}
+@media (max-width: 640px) {
+	.adaire-cs-single__showcase,
+	.adaire-cs-single__more {
+		padding: 0 16px;
+	}
 
-.adaire-cs-more-card__title {
-	color: #ffffff;
-	font-weight: 600;
-	font-size: 1rem;
-	margin-bottom: 4px;
-}
+	.adaire-cs-single__container {
+		padding: 40px 16px 64px;
+	}
 
-.adaire-cs-more-card__description {
-	color: rgba(255, 255, 255, 0.85);
-	font-size: 0.8125rem;
-	line-height: 1.4;
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
+	.adaire-cs-single__head {
+		padding: 40px 16px 24px;
+	}
 }

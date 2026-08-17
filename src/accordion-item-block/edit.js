@@ -240,6 +240,11 @@ export default function Edit({ attributes, clientId, setAttributes }) {
                     </svg>
                 </span>
             </button>
+            { ! isOpen && (
+                <p className="adaire-accordion__collapsed-hint">
+                    { __( 'Click the title above to expand this section and edit its content.', 'adaire-blocks' ) }
+                </p>
+            ) }
             <div {...innerBlocksProps} />
             </div>
         </>

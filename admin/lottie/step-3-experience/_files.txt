@@ -1,0 +1,5 @@
+﻿Drop your Lottie JSON files here. Name them exactly:
+
+  beginner.json      →  "Just getting started"
+  intermediate.json  →  "Some experience"
+  advanced.json      →  "Very comfortable with blocks"

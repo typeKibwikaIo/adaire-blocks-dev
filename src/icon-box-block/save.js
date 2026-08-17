@@ -8,6 +8,9 @@ export default function save({ attributes }) {
         chosenIcon,
         responsiveIconSize,
         iconColor,
+        iconView,
+        iconShape,
+        iconFrameColor,
         backgroundColor,
         backgroundHoverColor,
         textColor,
@@ -65,6 +68,7 @@ export default function save({ attributes }) {
             '--icon-size'         : `${iconSizeDesktop}px`,
             '--icon-size-t'       : `${iconSizeTablet}px`,
             '--icon-size-m'       : `${iconSizeMobile}px`,
+            '--icon-frame-color'  : iconFrameColor || '#503AA8',
             '--icon-border-width' : `${borderWidth ?? 0}px`,
             '--icon-border-color' : borderColor || 'transparent',
             color                 : textColor || '#ffffff',
@@ -81,18 +85,20 @@ export default function save({ attributes }) {
         <div {...blockProps}>
             {hasIcon && (
                 <div className="adaire-icon-box__icon-area">
-                    {chosenIcon && chosenIcon.trim() ? (
-                        <i
-                            className={`adaire-icon-box__icon ${chosenIcon}`}
-                            aria-label={iconName || 'Icon'}
-                        ></i>
-                    ) : (
-                        <span
-                            className="adaire-icon-box__icon"
-                            dangerouslySetInnerHTML={{ __html: iconSvg }}
-                            aria-label={iconName || 'Icon'}
-                        />
-                    )}
+                    <div className={`adaire-icon-box__icon-frame is-view-${iconView || 'default'} is-shape-${iconShape || 'circle'}`}>
+                        {chosenIcon && chosenIcon.trim() ? (
+                            <i
+                                className={`adaire-icon-box__icon ${chosenIcon}`}
+                                aria-label={iconName || 'Icon'}
+                            ></i>
+                        ) : (
+                            <span
+                                className="adaire-icon-box__icon"
+                                dangerouslySetInnerHTML={{ __html: iconSvg }}
+                                aria-label={iconName || 'Icon'}
+                            />
+                        )}
+                    </div>
                 </div>
             )}
 

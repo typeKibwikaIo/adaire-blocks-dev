@@ -1708,6 +1708,14 @@ export default function Edit({ attributes, setAttributes }) {
             <InspectorControls>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes } stylePanels={ stylePanels }>
 
+                <PanelBody section="content" title={ __( 'How to Use This Block', 'adaire-blocks' ) } initialOpen={ true }>
+                    <p>{ __( '1. Logo — add your image or text logo in the "Logo" panel below.', 'adaire-blocks' ) }</p>
+                    <p>{ __( '2. Navigation — pick where menu items come from in the "Navigation" panel: hand-typed items, or a real WordPress menu (Primary/Footer locations, or any menu by name) assigned under Appearance → Menus.', 'adaire-blocks' ) }</p>
+                    <p>{ __( '3. Action button — turn the "Get Started" CTA on/off and set its link in "Header Action Buttons".', 'adaire-blocks' ) }</p>
+                    <p>{ __( '4. Mobile menu — choose how navigation collapses on small screens in the "Mobile" panel.', 'adaire-blocks' ) }</p>
+                    <p>{ __( '5. Extras — top bar, search, social icons, and cart/payment icons each have their own panel below if you need them.', 'adaire-blocks' ) }</p>
+                </PanelBody>
+
                 {/* -- Layout tab panels ------------------------------------ */}
                 <PanelBody title={ __( 'Layout', 'adaire-blocks' ) } initialOpen={ true }>
                     <SelectControl label="Layout"          value={ attributes.layout }         options={ layoutOptions } onChange={ v => setAttributes({ layout: v }) } />

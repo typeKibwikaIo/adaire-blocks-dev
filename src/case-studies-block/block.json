@@ -186,7 +186,52 @@
         },
         "showFilters": {
             "type": "boolean",
+            "default": false,
+            "description": "Legacy Industry/Capability dropdown filters — superseded by the Category Pills row below. Kept only for sites that already relied on it."
+        },
+        "showHeader": {
+            "type": "boolean",
             "default": true
+        },
+        "headerEyebrow": {
+            "type": "string",
+            "default": "Showcase"
+        },
+        "headerHeading": {
+            "type": "string",
+            "default": "Discover inspiring case studies"
+        },
+        "headerDescription": {
+            "type": "string",
+            "default": "Browse real projects built by our community."
+        },
+        "showSearch": {
+            "type": "boolean",
+            "default": true
+        },
+        "searchPlaceholder": {
+            "type": "string",
+            "default": "Search"
+        },
+        "showCategoryPills": {
+            "type": "boolean",
+            "default": true
+        },
+        "showSort": {
+            "type": "boolean",
+            "default": true
+        },
+        "showSubmitButton": {
+            "type": "boolean",
+            "default": false
+        },
+        "submitButtonText": {
+            "type": "string",
+            "default": "Showcase your site"
+        },
+        "submitButtonUrl": {
+            "type": "string",
+            "default": ""
         },
         "showLoadMore": {
             "type": "boolean",
@@ -223,7 +268,7 @@
         },
         "cardBorderRadius": {
             "type": "number",
-            "default": 8
+            "default": 0
         },
         "cardBackgroundColor": {
             "type": "string",

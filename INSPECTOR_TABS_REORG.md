@@ -7,7 +7,7 @@ of duplicate/misplaced Advanced-tab content.
 
 **Scope (free blocks only):** accordion-block, animation-scroll-block, button-block,
 container-block, content-toggle-block, content-toggle-panel-block, hero-1-block,
-icon-box-block, image-composition-block, infogrid-2-block, posts-carousel-block,
+icon-box-block, image-composition-block, feature-grid-free, posts-carousel-block,
 posts-grid-block, pricing-table-block, row-block, social-banner-block,
 social-share-block, tab-panel-block, tabs-block, testimonial-block, timeline-block,
 video-player-block.

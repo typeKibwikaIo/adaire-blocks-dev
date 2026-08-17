@@ -91,6 +91,63 @@
 		&.is-constrained {
 			max-width: var(--container-max-width, 1200px);
 		}
+
+		// Hero-style overlay + headline/description, opt-in via
+		// showOverlayContent (off by default — see block.json). Absolutely
+		// positioned over the video/image content set above, which needs
+		// position: relative here so they anchor to the container rather
+		// than the page.
+		&.has-overlay {
+			position: relative;
+		}
+	}
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	&__text {
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 40px;
+		pointer-events: none;
+
+		@media (max-width: 768px) {
+			padding: 24px;
+		}
+	}
+
+	&__headline {
+		margin: 0;
+		font-size: 2rem;
+		line-height: 1.2;
+		font-weight: 700;
+		// Re-enable pointer events on the text itself (the __text wrapper
+		// above turns them off so an empty overlay never blocks clicks on
+		// the video underneath) — needed so this is selectable/editable
+		// (RichText, in the editor) rather than click-through.
+		pointer-events: auto;
+
+		@media (max-width: 768px) {
+			font-size: 1.5rem;
+		}
+	}
+
+	&__description {
+		margin: 0;
+		font-size: 1rem;
+		line-height: 1.5;
+		opacity: 0.9;
+		max-width: 640px;
+		pointer-events: auto;
 	}
 
 	// Responsive container max-width for tablet

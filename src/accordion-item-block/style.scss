@@ -23,3 +23,15 @@
     }
 }
 
+// Editor-only guidance shown under a collapsed item's header. This markup is
+// only ever output by edit.js (see the `! isOpen` block there) — save.js has
+// no equivalent, so this rule never has anything to match on the front end.
+.adaire-accordion__collapsed-hint {
+    margin: 4px 0 0;
+    padding: 0 20px 12px;
+    font-size: 12px;
+    font-style: italic;
+    color: #757575;
+    opacity: 0.85;
+}
+

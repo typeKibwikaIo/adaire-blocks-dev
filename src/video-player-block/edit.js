@@ -3,6 +3,7 @@ import { useEffect, useState } from '@wordpress/element';
 import {
 MediaUpload,
 MediaUploadCheck,
+RichText,
 useBlockProps, ColorPalette,
 } from '@wordpress/block-editor';
 import {
@@ -24,6 +25,7 @@ import {
 getBoxAttributes,
 getBoxValues,
 getContainerHeightForDevice,
+getOverlayColorRgba,
 getVimeoId,
 getVimeoSrc,
 getVideoPlayerStyles,
@@ -189,6 +191,54 @@ style={ { width: '100%', height: 'auto' } }
 );
 };
 
+// Editor-canvas overlay + headline/description, shown over the video preview
+// when showOverlayContent is on — mirrors what save.js renders on the front
+// end, but with RichText (editable) fields instead of RichText.Content.
+const OverlayContent = ( { attributes, setAttributes } ) => {
+const {
+showOverlayContent,
+headline,
+description,
+overlayColor,
+overlayOpacity,
+headlineColor,
+descriptionColor,
+} = attributes;
+
+if ( ! showOverlayContent ) {
+return null;
+}
+
+return (
+<>
+<div
+className="ad-video-player__overlay"
+style={ { backgroundColor: getOverlayColorRgba( overlayColor, overlayOpacity ) } }
+/>
+<div className="ad-video-player__text">
+<RichText
+tagName="h2"
+className="ad-video-player__headline"
+style={ { color: headlineColor || '#ffffff' } }
+placeholder={ __( 'Your headline here', 'adaire-blocks' ) }
+value={ headline }
+onChange={ ( value ) => setAttributes( { headline: value } ) }
+allowedFormats={ [] }
+/>
+<RichText
+tagName="p"
+className="ad-video-player__description"
+style={ { color: descriptionColor || '#ffffff' } }
+placeholder={ __( 'A short supporting line that introduces your video.', 'adaire-blocks' ) }
+value={ description }
+onChange={ ( value ) => setAttributes( { description: value } ) }
+allowedFormats={ [] }
+/>
+</div>
+</>
+);
+};
+
 export default function Edit( { attributes, setAttributes, clientId } ) {
 const [ deviceType, setDeviceType ] = useState( 'desktop' );
 const [ activeZone, setActiveZone ] = useState( null );
@@ -213,6 +263,11 @@ autoplay,
 mute,
 controls,
 loop,
+showOverlayContent,
+overlayColor,
+overlayOpacity,
+headlineColor,
+descriptionColor,
 } = attributes;
 
 useEffect( () => {
@@ -600,11 +655,59 @@ onChange={ ( value ) => setAttributes( { [ key ]: value } ) }
 />
 ) ) }
 </PanelBody>
+<PanelBody section="content" title={ __( 'Overlay Content', 'adaire-blocks' ) } initialOpen={ false }>
+<ToggleControl
+label={ __( 'Show Headline & Overlay', 'adaire-blocks' ) }
+checked={ !! showOverlayContent }
+onChange={ ( value ) => setAttributes( { showOverlayContent: value } ) }
+help={ __( 'Off by default so existing videos are unaffected. Adds a headline, description, and color overlay on top of the video — useful for a hero-style banner.', 'adaire-blocks' ) }
+/>
+{ showOverlayContent && (
+<>
+<TextControl
+label={ __( 'Headline', 'adaire-blocks' ) }
+value={ attributes.headline }
+onChange={ ( value ) => setAttributes( { headline: value } ) }
+/>
+<TextControl
+label={ __( 'Description', 'adaire-blocks' ) }
+value={ attributes.description }
+onChange={ ( value ) => setAttributes( { description: value } ) }
+/>
+<BaseControl label={ __( 'Overlay Color', 'adaire-blocks' ) } __nextHasNoMarginBottom>
+<BoundColorPalette
+value={ overlayColor || '#000000' }
+onChange={ ( v ) => setAttributes( { overlayColor: v || '#000000' } ) }
+/>
+</BaseControl>
+<RangeControl
+label={ __( 'Overlay Opacity', 'adaire-blocks' ) }
+value={ overlayOpacity ?? 0.4 }
+onChange={ ( value ) => setAttributes( { overlayOpacity: value } ) }
+min={ 0 }
+max={ 1 }
+step={ 0.05 }
+/>
+<BaseControl label={ __( 'Headline Color', 'adaire-blocks' ) } __nextHasNoMarginBottom>
+<BoundColorPalette
+value={ headlineColor || '#ffffff' }
+onChange={ ( v ) => setAttributes( { headlineColor: v || '#ffffff' } ) }
+/>
+</BaseControl>
+<BaseControl label={ __( 'Description Color', 'adaire-blocks' ) } __nextHasNoMarginBottom>
+<BoundColorPalette
+value={ descriptionColor || '#ffffff' }
+onChange={ ( v ) => setAttributes( { descriptionColor: v || '#ffffff' } ) }
+/>
+</BaseControl>
+</>
+) }
+</PanelBody>
 { renderSpacingControl( 'Margins', { top: 'marginTop', right: 'marginRight', bottom: 'marginBottom', left: 'marginLeft' } ) }
 { renderSpacingControl( 'Padding', { top: 'paddingTop', right: 'paddingRight', bottom: 'paddingBottom', left: 'paddingLeft' } ) }
 </InspectorTabs>
 <div { ...blockProps } data-block-id={ blockId }>
-<div className={ `ad-video-player__container ${ containerMode === 'constrained' ? 'is-constrained' : '' }` }>
+<div className={ `ad-video-player__container ${ containerMode === 'constrained' ? 'is-constrained' : '' }${ showOverlayContent ? ' has-overlay' : '' }` }>
 <QuickZone
 id="video-media"
 label="Video"
@@ -661,6 +764,7 @@ render={ ( { open } ) => (
 <VideoPreview attributes={ attributes } />
 </div>
 </QuickZone>
+<OverlayContent attributes={ attributes } setAttributes={ setAttributes } />
 </div>
 </div>
 </>

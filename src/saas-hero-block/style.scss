@@ -4,7 +4,7 @@
 // edit.js (see the useEffect there) — a build-time Sass @import of the third-party CSS
 // isn't usable here because css-loader tries to resolve bootstrap-icons.min.css's own
 // internal @font-face url()s as webpack modules and fails.
-// Same fix already applied to infogrid-2-block/style.scss for the same bug.
+// Same fix already applied to feature-grid-free/style.scss for the same bug.
 
 .adaire-saas-hero {
   position: relative;

@@ -1,5 +1,5 @@
-﻿import { useBlockProps } from '@wordpress/block-editor';
-import { getVimeoSrc, getVideoPlayerStyles, getYouTubeSrc } from './helpers';
+﻿import { RichText, useBlockProps } from '@wordpress/block-editor';
+import { getOverlayColorRgba, getVimeoSrc, getVideoPlayerStyles, getYouTubeSrc } from './helpers';
 
 const VideoOutput = ( { attributes } ) => {
 const {
@@ -69,18 +69,58 @@ loading="lazy"
 };
 
 export default function save( { attributes } ) {
-const { blockId, containerMode } = attributes;
+const {
+blockId,
+containerMode,
+showOverlayContent,
+headline,
+description,
+overlayColor,
+overlayOpacity,
+headlineColor,
+descriptionColor,
+} = attributes;
 const blockProps = useBlockProps.save( {
 className: 'ad-video-player',
 style: getVideoPlayerStyles( attributes ),
 } );
 
+// showOverlayContent defaults to false in block.json, so any block saved
+// before this attribute existed resolves it to false here too — existing
+// published Video Player content keeps rendering exactly as before, with
+// no overlay/headline markup added.
 return (
 <div { ...blockProps } data-block-id={ blockId }>
-<div className={ `ad-video-player__container ${ containerMode === 'constrained' ? 'is-constrained' : '' }` }>
+<div className={ `ad-video-player__container ${ containerMode === 'constrained' ? 'is-constrained' : '' }${ showOverlayContent ? ' has-overlay' : '' }` }>
 <div className="ad-video-player__content">
 <VideoOutput attributes={ attributes } />
 </div>
+{ showOverlayContent && (
+<>
+<div
+className="ad-video-player__overlay"
+style={ { backgroundColor: getOverlayColorRgba( overlayColor, overlayOpacity ) } }
+/>
+<div className="ad-video-player__text">
+{ ! RichText.isEmpty( headline ) && (
+<RichText.Content
+tagName="h2"
+className="ad-video-player__headline"
+value={ headline }
+style={ { color: headlineColor || '#ffffff' } }
+/>
+) }
+{ ! RichText.isEmpty( description ) && (
+<RichText.Content
+tagName="p"
+className="ad-video-player__description"
+value={ description }
+style={ { color: descriptionColor || '#ffffff' } }
+/>
+) }
+</div>
+</>
+) }
 </div>
 </div>
 );

@@ -10,7 +10,7 @@
     --cs-card-height-small-laptop: 300px;
     --cs-card-height-tablet: 280px;
     --cs-card-height-mobile: 240px;
-    --cs-card-border-radius: 8px;
+    --cs-card-border-radius: 0px;
     --cs-card-bg-color: #374151;
     --cs-card-shadow: none;
     --cs-card-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
@@ -139,6 +139,178 @@
     transform: rotate(180deg);
 }
 
+// Header — centered eyebrow / heading / description, Webflow "Made in
+// Webflow" showcase style.
+.ad-case-studies__header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 40px;
+}
+
+.ad-case-studies__header-eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #7c3aed;
+    margin-bottom: 12px;
+}
+
+.ad-case-studies__header-heading {
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.15;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 16px;
+}
+
+.ad-case-studies__header-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #6b7280;
+    margin: 0;
+}
+
+// Search — centered pill-shaped search input.
+.ad-case-studies__search {
+    position: relative;
+    max-width: 480px;
+    margin: 0 auto 24px;
+}
+
+.ad-case-studies__search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.ad-case-studies__search-input {
+    width: 100%;
+    padding: 12px 18px 12px 44px;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    background: #ffffff;
+    font-size: 14px;
+    color: #111827;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &::placeholder {
+        color: #9ca3af;
+    }
+
+    &:hover {
+        border-color: #9ca3af;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+}
+
+// Toolbar — category pills on the left, sort + submit button on the right.
+.ad-case-studies__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.ad-case-studies__toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.ad-case-studies__pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ad-case-studies__pill {
+    appearance: none;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #4b5563;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+        border-color: #9ca3af;
+    }
+
+    &.is-active {
+        background: #111827;
+        border-color: #111827;
+        color: #ffffff;
+    }
+}
+
+.ad-case-studies__sort {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.ad-case-studies__sort-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    padding: 9px 32px 9px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #4b5563;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        border-color: #9ca3af;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+}
+
+.ad-case-studies__submit-btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    background: #111827;
+    padding: 10px 20px;
+    border-radius: 999px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background: #000000;
+        color: #ffffff;
+    }
+}
+
 // Grid
 .ad-case-studies__grid {
     display: grid;
@@ -178,20 +350,23 @@
 }
 
 // Card
+// "Made in Webflow" showcase style: a thumbnail on top, and a plain
+// footer row underneath (avatar + title/author on the left, a heart/like
+// count on the right) — not an image overlay. The --cs-card-height,
+// --cs-card-border-radius, --cs-hover-scale, etc. custom properties are
+// still populated from the block's Layout/Card inspector controls (see
+// render.php) and drive the thumbnail's size/rounding/hover zoom.
 .ad-case-studies__card {
     position: relative;
-    height: var(--cs-card-height);
+    display: flex;
+    flex-direction: column;
     border-radius: var(--cs-card-border-radius);
     overflow: hidden;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: var(--cs-card-bg-color);
+    background-color: #ffffff;
     cursor: pointer;
     text-decoration: none;
-    display: block;
     transform-origin: center;
-    will-change: transform, opacity;
+    will-change: transform;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     box-shadow: var(--cs-card-shadow);
@@ -203,7 +378,6 @@
     }
 
     &:hover:not(.is-flipping) {
-        transform: scale(var(--cs-hover-scale));
         box-shadow: var(--cs-card-hover-shadow);
     }
 
@@ -212,6 +386,23 @@
         // Initial hidden state before JS takes over
         display: none;
     }
+}
+
+// FLIP animation states - these are applied during animations
+.ad-case-studies__card.is-leaving {
+    pointer-events: none;
+}
+
+.ad-case-studies__card.is-entering {
+    pointer-events: none;
+}
+
+.ad-case-studies__card-media {
+    position: relative;
+    height: var(--cs-card-height);
+    border-radius: var(--cs-card-border-radius);
+    overflow: hidden;
+    background-color: var(--cs-card-bg-color);
 
     // Big Desktop (>= 1921px)
     @media (min-width: 1921px) {
@@ -234,124 +425,111 @@
     }
 }
 
-// FLIP animation states - these are applied during animations
-.ad-case-studies__card.is-leaving {
-    pointer-events: none;
-}
-
-.ad-case-studies__card.is-entering {
-    pointer-events: none;
-}
-
-.ad-case-studies__card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to top,
-        var(--cs-overlay-hover-color) 0%,
-        var(--cs-overlay-color) 50%,
-        transparent 100%
-    );
-    display: flex;
-    align-items: flex-end;
-    transition: background var(--cs-hover-transition) ease;
-}
-
-.ad-case-studies__card:hover .ad-case-studies__card-overlay {
-    background: linear-gradient(
-        to top,
-        var(--cs-overlay-hover-color) 0%,
-        var(--cs-overlay-hover-color) 40%,
-        rgba(0, 0, 0, 0.2) 100%
-    );
-}
-
-.ad-case-studies__card-content {
-    padding: var(--cs-content-padding);
+.ad-case-studies__card-thumb {
+    display: block;
     width: 100%;
-    transform: translateY(0);
+    height: 100%;
+    object-fit: cover;
+    transform-origin: center;
+    will-change: transform;
     transition: transform var(--cs-hover-transition) ease;
+
+    &--placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.85);
+        text-align: center;
+        padding: 16px;
+    }
 }
 
-.ad-case-studies__card:hover .ad-case-studies__card-content {
-    transform: translateY(-5px);
+.ad-case-studies__card-thumb-initials {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    opacity: 0.9;
+}
+
+.ad-case-studies__card-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 2px 0;
+}
+
+.ad-case-studies__card-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #e5e7eb;
+}
+
+.ad-case-studies__card-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
 }
 
 .ad-case-studies__card-title {
-    color: var(--cs-title-color);
-    font-size: var(--cs-title-font-size);
-    font-weight: var(--cs-title-font-weight);
-    margin: 0 0 8px 0;
-    line-height: var(--cs-title-line-height);
-    letter-spacing: var(--cs-title-letter-spacing);
-
-    // Big Desktop (>= 1921px)
-    @media (min-width: 1921px) {
-        font-size: var(--cs-title-font-size-big-desktop, var(--cs-title-font-size));
-    }
-
-    // Small Laptop (1025px - 1300px)
-    @media (min-width: 1025px) and (max-width: 1300px) {
-        font-size: var(--cs-title-font-size-small-laptop, var(--cs-title-font-size));
-    }
-
-    // Tablet (601px - 1024px)
-    @media (min-width: 601px) and (max-width: 1024px) {
-        font-size: var(--cs-title-font-size-tablet);
-    }
-
-    // Mobile (<= 600px)
-    @media (max-width: 600px) {
-        font-size: var(--cs-title-font-size-mobile);
-    }
-}
-
-.ad-case-studies__card-description {
-    color: var(--cs-description-color);
-    font-size: var(--cs-description-font-size);
-    font-weight: var(--cs-description-font-weight);
-    margin: 0;
-    line-height: var(--cs-description-line-height);
-    letter-spacing: var(--cs-description-letter-spacing);
-    opacity: 0.9;
-    display: -webkit-box;
-    -webkit-line-clamp: var(--cs-description-max-lines);
-    line-clamp: var(--cs-description-max-lines);
-    -webkit-box-orient: vertical;
+    color: var(--cs-card-footer-title-color, #111827);
+    font-size: var(--cs-title-font-size, 15px);
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+}
 
-    // Big Desktop (>= 1921px)
-    @media (min-width: 1921px) {
-        font-size: var(--cs-description-font-size-big-desktop, var(--cs-description-font-size));
-    }
+.ad-case-studies__card-author {
+    color: var(--cs-card-footer-author-color, #6b7280);
+    font-size: 13px;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
-    // Small Laptop (1025px - 1300px)
-    @media (min-width: 1025px) and (max-width: 1300px) {
-        font-size: var(--cs-description-font-size-small-laptop, var(--cs-description-font-size));
-    }
+.ad-case-studies__card-likes {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    color: #9ca3af;
+    font-size: 13px;
+    font-weight: 500;
 
-    // Tablet (601px - 1024px)
-    @media (min-width: 601px) and (max-width: 1024px) {
-        font-size: var(--cs-description-font-size-tablet);
-    }
-
-    // Mobile (<= 600px)
-    @media (max-width: 600px) {
-        font-size: var(--cs-description-font-size-mobile);
+    svg {
+        flex-shrink: 0;
     }
 }
 
-// Card placeholder (when no image)
-.ad-case-studies__card-placeholder {
-    position: absolute;
-    inset: 0;
+.ad-case-studies__card-tags {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
-    color: #9ca3af;
-    font-size: 14px;
-    z-index: -1;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 2px 0;
+}
+
+.ad-case-studies__card-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    color: #4b5563;
+    background: #f3f4f6;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+// Legacy overlay/description classes kept only so any already-published
+// pages (before this rebuild) still render without a hard visual break —
+// no longer used by the current card markup.
+.ad-case-studies__card-description {
+    display: none;
 }
 
 // Load More
@@ -662,6 +840,9 @@ body.ad-case-studies__popup-open {
     overflow: hidden;
 }
 
+// ---------------------------------------------------------------------
+// Popup — "Made in Webflow" showcase-style lightbox
+// ---------------------------------------------------------------------
 .ad-case-studies__popup {
     position: fixed;
     inset: 0;
@@ -689,15 +870,193 @@ body.ad-case-studies__popup-open {
     backdrop-filter: blur(2px);
 }
 
+// Plain arrow buttons — no circle/background, just a bigger icon that's
+// easy to see against the dark backdrop.
+.ad-case-studies__popup-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100001;
+    width: 56px;
+    height: 56px;
+    border-radius: 0;
+    border: none;
+    background: none;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+    opacity: 0.85;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+
+    svg {
+        width: 34px;
+        height: 34px;
+    }
+
+    &:hover {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.08);
+    }
+
+    &.ad-case-studies__popup-prev {
+        left: 20px;
+    }
+
+    &.ad-case-studies__popup-next {
+        right: 20px;
+    }
+
+    // The peek card sits outside the modal at all times as a dim "shadow"
+    // preview of the adjacent case study; hovering (or focusing) the arrow
+    // brings it fully into view so the user can see what they're about to
+    // slide to before clicking.
+    &:hover .ad-case-studies__popup-peek,
+    &:focus-visible .ad-case-studies__popup-peek {
+        opacity: 1;
+        filter: none;
+        transform: translateY(-50%) scale(1);
+    }
+
+    @media (max-width: 1300px) {
+        .ad-case-studies__popup-peek {
+            display: none;
+        }
+    }
+
+    @media (max-width: 800px) {
+        display: none;
+    }
+}
+
+// Bigger, squarer preview card of the adjacent case study — not a small
+// pill. Sits outside the modal, dimmed by default like a background
+// shadow, and comes fully into focus on hover (see .popup-nav above).
+.ad-case-studies__popup-peek {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    background: rgba(17, 24, 39, 0.65);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+    opacity: 0.4;
+    filter: grayscale(40%);
+    cursor: pointer;
+    transform: translateY(-50%) scale(0.92);
+    transition: opacity 0.2s ease, filter 0.2s ease, transform 0.2s ease, background 0.2s ease;
+
+    .ad-case-studies__popup-prev & {
+        left: 100%;
+        margin-left: 20px;
+        transform-origin: left center;
+    }
+
+    .ad-case-studies__popup-next & {
+        right: 100%;
+        margin-right: 20px;
+        transform-origin: right center;
+    }
+
+    .ad-case-studies__popup-nav:hover &,
+    .ad-case-studies__popup-nav:focus-visible & {
+        background: rgba(255, 255, 255, 0.98);
+    }
+}
+
+.ad-case-studies__popup-peek-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f3f4f6;
+    margin-bottom: 10px;
+
+    &--placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &-initials {
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: rgba(255, 255, 255, 0.85);
+    }
+}
+
+.ad-case-studies__popup-peek-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #ffffff;
+    transition: color 0.2s ease;
+
+    .ad-case-studies__popup-nav:hover &,
+    .ad-case-studies__popup-nav:focus-visible & {
+        color: #111827;
+    }
+}
+
+// Close / fullscreen-expand — plain icon buttons floating above the dialog
+// (not attached to it), matching the reference's minimal top-right chrome.
+.ad-case-studies__popup-chrome {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 100002;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.ad-case-studies__popup-close,
+.ad-case-studies__popup-expand {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: #e5e7eb;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.85;
+    transition: opacity 0.15s ease, background 0.15s ease;
+
+    &:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:disabled {
+        opacity: 0.3;
+        cursor: default;
+        pointer-events: none;
+    }
+}
+
 .ad-case-studies__popup-dialog {
     position: relative;
     width: 100%;
-    max-width: 1120px;
+    max-width: 1240px;
     max-height: 90vh;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
     background: #ffffff;
-    border-radius: 16px;
+    // Big, square-cornered showcase modal (matches the "Made in Webflow"
+    // reference exactly) — deliberately no border-radius on the dialog
+    // itself, unlike the rounded pills/buttons inside it.
+    border-radius: 0;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), 0 4px 16px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     transform: translateY(16px) scale(0.98);
@@ -708,44 +1067,16 @@ body.ad-case-studies__popup-open {
     }
 
     @media (max-width: 800px) {
-        grid-template-columns: 1fr;
         max-height: 100vh;
         height: 100%;
-        border-radius: 0;
-        overflow-y: auto;
     }
 }
 
-.ad-case-studies__popup-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    z-index: 3;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(17, 24, 39, 0.55);
-    color: #ffffff;
-    font-size: 20px;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-    transition: background 0.15s ease, transform 0.15s ease;
-
-    &:hover {
-        background: rgba(17, 24, 39, 0.85);
-        transform: scale(1.05);
-    }
-}
-
-.ad-case-studies__popup-left,
-.ad-case-studies__popup-right {
+.ad-case-studies__popup-scroll {
+    max-height: 90vh;
     overflow-y: auto;
     scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 
     &::-webkit-scrollbar {
         width: 8px;
@@ -756,106 +1087,316 @@ body.ad-case-studies__popup-open {
     }
 
     &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
         border-radius: 4px;
     }
+
+    @media (max-width: 800px) {
+        max-height: 100vh;
+        height: 100%;
+    }
 }
 
-.ad-case-studies__popup-left {
-    background: #111827;
-    color: #ffffff;
-    padding: 40px 32px;
+.ad-case-studies__popup-header {
     display: flex;
-    flex-direction: column;
-    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 28px 20px;
+    flex-wrap: wrap;
 
-    &::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.3);
-    }
-
-    @media (max-width: 800px) {
-        padding: 28px 24px;
-    }
-}
-
-.ad-case-studies__popup-left-image {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    border-radius: 10px;
-    margin-bottom: 24px;
-    object-fit: cover;
-    flex-shrink: 0;
-
-    @media (max-width: 800px) {
-        aspect-ratio: 16 / 9;
-    }
-}
-
-.ad-case-studies__popup-left-description {
-    line-height: 1.7;
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.85);
-    margin: 0;
-}
-
-.ad-case-studies__popup-right {
-    padding: 40px 40px 48px;
-    color: #1f2937;
-    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-
-    &::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.2);
-    }
-
-    @media (max-width: 800px) {
-        padding: 28px 24px 36px;
+    @media (max-width: 600px) {
+        padding: 20px 20px 16px;
     }
 }
 
 .ad-case-studies__popup-eyebrow {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #7c3aed;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #6b7280;
     margin: 0 0 10px;
+
+    svg {
+        flex-shrink: 0;
+        color: #7c3aed;
+    }
 }
 
 .ad-case-studies__popup-title {
-    margin: 0 0 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e5e7eb;
-    font-size: 1.6rem;
+    margin: 0 0 10px;
+    font-size: 1.4rem;
     line-height: 1.3;
     color: #111827;
 }
 
-.ad-case-studies__popup-summary {
-    margin: 0 0 24px;
+.ad-case-studies__popup-byline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-    h3 {
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #7c3aed;
-        margin: 0 0 8px;
-    }
+.ad-case-studies__popup-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #e5e7eb;
+}
 
-    p {
-        margin: 0;
-        line-height: 1.65;
+.ad-case-studies__popup-author {
+    font-size: 0.85rem;
+    color: #6b7280;
+    text-decoration: none;
+
+    &:hover {
         color: #374151;
+        text-decoration: underline;
     }
+}
+
+.ad-case-studies__popup-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.ad-case-studies__popup-likes {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #374151;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 999px;
+    padding: 8px 14px;
+}
+
+.ad-case-studies__popup-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: none;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover {
+        background: #1d4ed8;
+        color: #ffffff;
+    }
+}
+
+.ad-case-studies__popup-preview {
+    position: relative;
+    margin: 0 28px;
+
+    @media (max-width: 600px) {
+        margin: 0 20px;
+    }
+}
+
+// Browser-chrome frame around the hero showcase image — mirrors the
+// single case-study template's .browser-frame so the same case study looks
+// consistent whether viewed in the popup or on its own page.
+.ad-case-studies__popup-browser-frame {
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 12px 30px -12px rgba(17, 24, 39, 0.25);
+}
+
+.ad-case-studies__popup-browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+
+    span:not(.ad-case-studies__popup-browser-url) {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #d1d5db;
+        flex-shrink: 0;
+    }
+}
+
+.ad-case-studies__popup-browser-url {
+    margin-left: 8px;
+    font-size: 0.7rem;
+    color: #6b7280;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    padding: 3px 12px;
+}
+
+.ad-case-studies__popup-browser-body {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #f4f2ff;
+}
+
+.ad-case-studies__popup-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #ffffff;
+}
+
+.ad-case-studies__popup-preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+}
+
+.ad-case-studies__popup-preview-empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &-initials {
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: rgba(255, 255, 255, 0.85);
+    }
+}
+
+.ad-case-studies__popup-body {
+    padding: 24px 28px 8px;
+
+    @media (max-width: 600px) {
+        padding: 20px 20px 4px;
+    }
+}
+
+.ad-case-studies__popup-body-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 8px;
+
+    @media (max-width: 700px) {
+        flex-direction: column;
+    }
+}
+
+.ad-case-studies__popup-body-desc {
+    flex: 1;
+    min-width: 0;
+}
+
+.ad-case-studies__popup-body-actions {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+
+    @media (max-width: 700px) {
+        align-items: flex-start;
+        text-align: left;
+        width: 100%;
+    }
+}
+
+.ad-case-studies__popup-summary {
+    margin: 0 0 16px;
+    line-height: 1.65;
+    color: #374151;
+    font-size: 0.95rem;
+}
+
+.ad-case-studies__popup-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 12px;
+
+    @media (max-width: 700px) {
+        justify-content: flex-start;
+    }
+}
+
+.ad-case-studies__popup-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+    &--outline {
+        background: #ffffff;
+        border: 1.5px solid #e5e7eb;
+        color: #111827;
+
+        &:hover {
+            border-color: #7c3aed;
+            color: #7c3aed;
+        }
+    }
+
+    &--primary {
+        background: #111827;
+        border: 1.5px solid #111827;
+        color: #ffffff;
+
+        &:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+    }
+}
+
+.ad-case-studies__popup-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.ad-case-studies__popup-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #4b5563;
+    background: #f3f4f6;
+    padding: 5px 12px;
+    border-radius: 999px;
 }
 
 .ad-case-studies__popup-info-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px 24px;
-    margin: 0 0 28px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #e5e7eb;
+    gap: 14px 24px;
+    margin: 0 0 24px;
+    padding: 18px 0 0;
+    border-top: 1px solid #e5e7eb;
 
     @media (max-width: 480px) {
         grid-template-columns: 1fr;
@@ -864,7 +1405,7 @@ body.ad-case-studies__popup-open {
 
 .ad-case-studies__popup-info-item {
     dt {
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -874,9 +1415,193 @@ body.ad-case-studies__popup-open {
 
     dd {
         margin: 0;
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         color: #1f2937;
         line-height: 1.4;
+    }
+}
+
+.ad-case-studies__popup-copyright {
+    margin: 0 0 8px;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.ad-case-studies__popup-section {
+    padding: 20px 28px;
+    border-top: 1px solid #f3f4f6;
+
+    @media (max-width: 600px) {
+        padding: 18px 20px;
+    }
+}
+
+.ad-case-studies__popup-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    h3 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #111827;
+    }
+}
+
+.ad-case-studies__popup-section-link {
+    font-size: 0.8rem;
+    color: #7c3aed;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.ad-case-studies__popup-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+
+    @media (max-width: 600px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+// Responsive — header/search/toolbar stack cleanly on mobile.
+@media (max-width: 600px) {
+    .ad-case-studies__header {
+        margin-bottom: 28px;
+    }
+
+    .ad-case-studies__toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ad-case-studies__toolbar-right {
+        margin-left: 0;
+        justify-content: space-between;
+    }
+
+    .ad-case-studies__pills {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+.ad-case-studies__popup-mini-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    width: 100%;
+}
+
+.ad-case-studies__popup-mini-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f3f4f6;
+
+    &--placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &-initials {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: rgba(255, 255, 255, 0.85);
+    }
+}
+
+.ad-case-studies__popup-mini-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.ad-case-studies__popup-mini-author {
+    font-size: 0.72rem;
+    color: #9ca3af;
+}
+
+// ---------------------------------------------------------------------
+// Fullscreen image lightbox — inspect the hero showcase image up close.
+// Stacks above the case study popup (z-index higher) so it can be opened
+// and closed independently without disturbing the popup underneath.
+// ---------------------------------------------------------------------
+.ad-case-studies__image-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.92);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    padding: 40px;
+    cursor: zoom-out;
+
+    &.is-open {
+        opacity: 1;
+    }
+
+    @media (max-width: 600px) {
+        padding: 16px;
+    }
+}
+
+.ad-case-studies__image-lightbox-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.ad-case-studies__image-lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.85;
+    transition: opacity 0.15s ease, background 0.15s ease;
+
+    &:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.1);
     }
 }
 

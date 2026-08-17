@@ -1,4 +1,5 @@
-=== Adaire Blocks - Amazing Blocks for Gutenberg - Need Only One Block, Pay for Only One Block! ===
+=== Adaire Blocks ===
+Note: this file is not used by any build script (see free-version-scaffold/readme.txt for the authoritative, submitted readme). Kept only for reference and cleaned up here to avoid stale promotional/trademark language.
 Contributors: adairedigital
 Donate link: https://adaire.digital/
 Tags: blocks, gutenberg, gsap, animation, portfolio
@@ -15,7 +16,7 @@ A powerful WordPress plugin for creating visually stunning, high-performance web
 
 == Description ==
 
-Adaire Blocks is a young library of premium-feeling Gutenberg blocks built with modern web technologies - we would love your feedback.. We believe that building a website should not cut into your web development fees - so the library our free blocks should allow you to build an amazing site. Our Plus Blocks are commercial, but priced on a "Pay for what you use" basis - if you need only one Block, you pay for only one Block. Currently we have ready-made sections like accordions, carousels, testimonial sliders, counters. And we are looking to drop a set of new Blocks every week - let us know what we can build! We will fine-tune every color, font, animation, and layout from the native block inspector; build templates, menus, animations and more.
+Adaire Blocks adds a set of custom Gutenberg blocks for building page layouts within the standard WordPress block editor, including accordions, carousels, testimonial sliders, and counters. Every block includes customization options — color, font, animation, and layout — directly in the native block inspector. Additional blocks are available as a separate paid add-on; see free-version-scaffold/readme.txt for the current, accurate feature list.
 
 
 == Commercial Plugin ==

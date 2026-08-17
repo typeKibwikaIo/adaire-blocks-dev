@@ -339,6 +339,19 @@ class FreeVersionGenerator {
             });
         }
 
+        // --- assets (vendor libraries bundled locally, e.g. Bootstrap Icons) ---
+        // adaire-blocks.php enqueues ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/...'
+        // for both the dev/paid plugin and the free scaffold's own adaire-blocks.php,
+        // but the scaffold folder doesn't keep its own copy of these vendor files —
+        // without this step the generated free plugin referenced a CSS/font path
+        // that never existed in its own package (icons silently failed to render).
+        const assetsSrc = path.join(this.sourceDir, 'assets');
+        const assetsDest = path.join(this.freeVersionDir, 'assets');
+        if (fs.existsSync(assetsSrc)) {
+            this.copyDirectoryRecursive(assetsSrc, assetsDest);
+            console.log('   ✓ Copied assets/ (vendor libraries, e.g. Bootstrap Icons)');
+        }
+
         // --- scripts ---
         // Copied so this generated folder can run its own prebuild/build steps.
         // Excluded from the final distributed zip by zip-generated-folder.js.

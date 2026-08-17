@@ -14,6 +14,16 @@ import BoundColorPalette from '../components/BoundColorPalette';
 const EASINGS = [ 'ease', 'linear', 'ease-in', 'ease-out', 'ease-in-out' ];
 const FREE_TIER_ITEM_LIMIT = 3;
 
+// Builds the InnerBlocks template for a single accordion item's default
+// content, seeded from that item's own `item.content` (the explanatory
+// copy already defined per-item in block.json's default `items` array).
+// Returns an empty template when there's no content to seed, matching the
+// previous always-empty-paragraph behavior for items that don't have any.
+const buildItemInnerBlocksTemplate = ( content ) =>
+    content
+        ? [ [ 'core/group', {}, [ [ 'core/paragraph', { content } ] ] ] ]
+        : [];
+
 export default function Edit( { attributes, setAttributes, clientId } ) {
     const [deviceType, setDeviceType] = useState('desktop');
     const [activeZone, setActiveZone] = useState(null);
@@ -213,15 +223,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
         updatedItems = [...updatedItems, newItem];
         
         // Create new InnerBlocks template with the new item
-        const newTemplate = updatedItems.map((item, index) => 
-            createBlock('create-block/accordion-item-block', { 
+        const newTemplate = updatedItems.map((item, index) =>
+            createBlock('create-block/accordion-item-block', {
                 title: item.title,
                 itemId: item.id,
                 itemIndex: index,
                 open: item.open || false,
-            })
+            }, buildItemInnerBlocksTemplate( item.content ) )
         );
-        
+
         // Replace InnerBlocks with new template
         replaceInnerBlocks(clientId, newTemplate);
         
@@ -320,13 +330,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
         
         // Check if InnerBlocks need to be synced
         if (innerBlocks.length !== items.length) {
-            const newTemplate = items.map((item, index) => 
-                createBlock('create-block/accordion-item-block', { 
+            const newTemplate = items.map((item, index) =>
+                createBlock('create-block/accordion-item-block', {
                     title: item.title || '',
                     itemId: item.id,
                     itemIndex: index,
                     open: item.open || false,
-                })
+                }, buildItemInnerBlocksTemplate( item.content ) )
             );
             replaceInnerBlocks(clientId, newTemplate, false);
         }
@@ -337,12 +347,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     const ALLOWED_BLOCKS = ['create-block/accordion-item-block'];
     const TEMPLATE = items.map((item, index) => [
         'create-block/accordion-item-block',
-        { 
+        {
             title: item.title,
             itemId: item.id,
             itemIndex: index,
             open: item.open || false,
-        }
+        },
+        buildItemInnerBlocksTemplate( item.content ),
     ]);
 
     const innerBlocksProps = useInnerBlocksProps(

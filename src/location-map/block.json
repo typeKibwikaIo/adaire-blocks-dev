@@ -1,11 +1,11 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "create-block/map-block",
+    "name": "create-block/location-map",
     "version": "0.1.0",
     "title": "Location Map",
     "category": "adaire-business",
-    "description": "Display business locations and addresses on an interactive map with customizable styling.",
+    "description": "Showcase one or more business locations on an interactive Google Map. Visitors click a location in the list to fly the map to that address and see its contact details, or show a single map with one address. Fully customizable colors, container width, and spacing.",
     "supports": {
         "html": false,
         "anchor": true,

@@ -66,6 +66,28 @@ function adaire_blocks_register_blocks() {
 
 		if ( file_exists( $block_json ) ) {
 			register_block_type( $block_dir );
+
+			// Backward-compatible alias: this block was renamed from
+			// header-block to header-menu-block so its slug matches its
+			// display name. It's a dynamic block (render.php), so existing
+			// published headers still have
+			// `<!-- wp:create-block/header-block -->` baked into
+			// post_content — registering that old name too, pointed at the
+			// same build/header-menu-block/render.php, keeps them
+			// rendering. inserter is disabled here so this old name never
+			// shows up as a second "Header Menu (Free)" card in the
+			// inserter.
+			if ( $block_name === 'header-menu-block' ) {
+				register_block_type( $block_dir, array(
+					'name'     => 'create-block/header-block',
+					'supports' => array(
+						'html'            => false,
+						'anchor'          => true,
+						'customClassName' => true,
+						'inserter'        => false,
+					),
+				) );
+			}
 		}
 	}
 }
@@ -74,7 +96,7 @@ function adaire_blocks_register_blocks() {
  * Register plugin-owned navigation menu locations so site owners can assign
  * WordPress menus to them from Appearance > Menus. These power the Header
  * block's "Primary Menu" / "Footer Menu" Navigation Source options (see
- * build/header-block/render.php). Purely additive — does not affect
+ * build/header-menu-block/render.php). Purely additive — does not affect
  * existing block registration or any other plugin behaviour.
  */
 function adaire_blocks_register_nav_menu_locations() {
@@ -247,7 +269,7 @@ function enqueue_bootstrap_icons_assets() {
 		has_block( 'create-block/social-banner-block', $post ) ||
 		has_block( 'create-block/social-share-block', $post ) ||
 		has_block( 'create-block/our-process-block', $post ) ||
-		has_block( 'create-block/infogrid-2-block', $post ) ||
+		has_block( 'create-block/feature-grid-free', $post ) ||
 		has_block( 'create-block/rating-badge-block', $post )
 	) {
 		wp_enqueue_style(
@@ -261,18 +283,29 @@ function enqueue_bootstrap_icons_assets() {
 add_action( 'wp_enqueue_scripts', 'enqueue_bootstrap_icons_assets' );
 
 // Enqueue Bootstrap Icons inside the block editor canvas (iframed in WP 6.3+).
-// enqueue_block_editor_assets injects into the editor iframe; admin_enqueue_scripts
-// only reaches the outer admin shell and is invisible inside the canvas.
+// A plain wp_enqueue_style() on enqueue_block_editor_assets is NOT enough on
+// its own: WordPress only carries a stylesheet enqueued that way into the
+// iframe if it contains at least one of .editor-styles-wrapper, .wp-block,
+// or .wp-block-* — generic third-party CSS like this icon font doesn't, so
+// it silently never reached the canvas (or the icon picker modal, which
+// shares the same stylesheet). add_editor_style() is the mechanism
+// WordPress documents specifically for this — it isn't subject to that
+// selector restriction and is designed to reach every editor context
+// (post editor iframe, site editor, widget editor, and the outer admin
+// page where Modals/Popovers render).
 function enqueue_bootstrap_icons_editor() {
+	$bootstrap_icons_url = ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css';
+
 	wp_enqueue_style(
 		'bootstrap-icons',
-		ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css',
+		$bootstrap_icons_url,
 		array(),
 		'1.13.1'
 	);
+
+	add_editor_style( $bootstrap_icons_url );
 }
 add_action( 'enqueue_block_editor_assets', 'enqueue_bootstrap_icons_editor' );
-add_action( 'admin_enqueue_scripts', 'enqueue_bootstrap_icons_editor' );
 
 /**
  * Expose the free-tier block configuration to editor JavaScript.

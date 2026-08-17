@@ -23,7 +23,7 @@ import './posts-carousel-block';
 import "./counter-block";
 import "./mega-menu-block";
 import "./mega-menu-panel-block";
-import "./map-block"
+import "./location-map"
 import "./video-player-block"
 import "./animation-scroll-block"
 import "./icon-box-block"
@@ -49,11 +49,11 @@ import "./hero-banner-block"
 // name fully editable/renderable. Hidden from the inserter (supports.inserter
 // is false in its block.json); do not remove without a content migration.
 import "./hero-1-block"
-import "./infogrid-2-block"
+import "./feature-grid-free"
 import "./infogrid-3-block"
 import "./bento-grid-block"
 import "./image-composition-block"
-import "./header-block"
+import "./header-menu-block"
 import "./website-footer-block"
 import "./contact-cards-block"
 import "./horizontal-scroll-carousel-block"

@@ -90,9 +90,9 @@ if ( ! function_exists( 'adaire_footer_register_nav_menu_locations' ) ) {
 	 * Plugin-owned nav menu location slugs used to resolve a nav column's
 	 * "Primary Menu" / "Footer Menu" Navigation Source options. Intentionally
 	 * the SAME slugs the Header block uses (see
-	 * src/header-block/render.php's identically-named function) so a site
+	 * src/header-menu-block/render.php's identically-named function) so a site
 	 * owner assigns one menu per location and both blocks can read it — this
-	 * file defines its own copy rather than depending on header-block's
+	 * file defines its own copy rather than depending on header-menu-block's
 	 * render.php having been loaded, since either block may render without
 	 * the other being present on the page. The locations themselves are
 	 * registered on 'init' from the plugin bootstrap file (not here —
@@ -146,7 +146,7 @@ if ( ! function_exists( 'adaire_footer_build_menu_tree' ) ) {
 	/**
 	 * Assembles a flat wp_get_nav_menu_items() result into a nested tree via
 	 * menu_item_parent. Same algorithm as
-	 * adaire_header_build_menu_tree() in src/header-block/render.php.
+	 * adaire_header_build_menu_tree() in src/header-menu-block/render.php.
 	 */
 	function adaire_footer_build_menu_tree( $menu_items ) {
 		$by_parent = array();

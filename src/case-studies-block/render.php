@@ -34,17 +34,26 @@ $a = is_array( $attributes ) ? $attributes : array();
 // Always sourced live from Case Studies Management — see the file header.
 $case_studies = adaire_case_studies_from_cpt();
 
-$enable_carousel = ! empty( $a['enableCarousel'] );
-$initial_count   = isset( $a['initialCount'] ) ? (int) $a['initialCount'] : 8;
-$show_filters    = ! empty( $a['showFilters'] );
-$show_load_more  = ! empty( $a['showLoadMore'] );
+$enable_carousel     = ! empty( $a['enableCarousel'] );
+$initial_count       = isset( $a['initialCount'] ) ? (int) $a['initialCount'] : 8;
+$show_filters        = ! empty( $a['showFilters'] );
+$show_load_more      = ! empty( $a['showLoadMore'] );
+$show_header         = ! isset( $a['showHeader'] ) || ! empty( $a['showHeader'] );
+$show_search         = ! isset( $a['showSearch'] ) || ! empty( $a['showSearch'] );
+$show_category_pills = ! isset( $a['showCategoryPills'] ) || ! empty( $a['showCategoryPills'] );
+$show_sort           = ! isset( $a['showSort'] ) || ! empty( $a['showSort'] );
+$show_submit_button  = ! empty( $a['showSubmitButton'] );
 
 // Unique industries / capabilities for the filter dropdowns.
 $industries_seen   = array();
 $capabilities_seen  = array();
 foreach ( $case_studies as $study ) {
-	if ( ! empty( $study['industry'] ) && '' !== trim( $study['industry'] ) ) {
-		$industries_seen[ $study['industry'] ] = true;
+	if ( ! empty( $study['industries'] ) && is_array( $study['industries'] ) ) {
+		foreach ( $study['industries'] as $ind ) {
+			if ( $ind && '' !== trim( $ind ) ) {
+				$industries_seen[ $ind ] = true;
+			}
+		}
 	}
 	if ( ! empty( $study['capabilities'] ) && is_array( $study['capabilities'] ) ) {
 		foreach ( $study['capabilities'] as $cap ) {
@@ -71,7 +80,7 @@ $style_vars = array(
 	'--cs-card-height-small-laptop'            => adaire_case_studies_format_dimension( isset( $a['cardHeight']['smallLaptop'] ) ? $a['cardHeight']['smallLaptop'] : null, 300, 'px' ),
 	'--cs-card-height-tablet'                  => adaire_case_studies_format_dimension( isset( $a['cardHeight']['tablet'] ) ? $a['cardHeight']['tablet'] : null, 280, 'px' ),
 	'--cs-card-height-mobile'                  => adaire_case_studies_format_dimension( isset( $a['cardHeight']['mobile'] ) ? $a['cardHeight']['mobile'] : null, 240, 'px' ),
-	'--cs-card-border-radius'                  => ( isset( $a['cardBorderRadius'] ) ? $a['cardBorderRadius'] : 8 ) . 'px',
+	'--cs-card-border-radius'                  => ( isset( $a['cardBorderRadius'] ) ? $a['cardBorderRadius'] : 0 ) . 'px',
 	'--cs-card-bg-color'                       => isset( $a['cardBackgroundColor'] ) ? $a['cardBackgroundColor'] : '#374151',
 	'--cs-card-shadow'                         => isset( $a['cardShadow'] ) ? $a['cardShadow'] : 'none',
 	'--cs-card-hover-shadow'                   => isset( $a['cardHoverShadow'] ) ? $a['cardHoverShadow'] : 'none',
@@ -150,9 +159,15 @@ $wrapper_attributes = get_block_wrapper_attributes(
 		'data-enable-carousel'    => $enable_carousel ? 'true' : 'false',
 		'data-drag-cursor-text'   => isset( $a['dragCursorText'] ) ? $a['dragCursorText'] : 'Drag',
 		'data-next-label'         => isset( $a['nextLabel'] ) ? $a['nextLabel'] : 'Next',
-		'data-popup-description'  => isset( $a['popupDescription'] ) ? $a['popupDescription'] : '',
-		'data-popup-image'        => isset( $a['popupImageUrl'] ) ? $a['popupImageUrl'] : '',
-		'data-popup-image-alt'    => isset( $a['popupImageAlt'] ) ? $a['popupImageAlt'] : '',
+		// Fallback preview image shown in the popup only for studies with no
+		// Website URL set (so there's nothing to embed in the live iframe).
+		'data-popup-fallback-image'     => isset( $a['popupImageUrl'] ) ? $a['popupImageUrl'] : '',
+		'data-popup-fallback-image-alt' => isset( $a['popupImageAlt'] ) ? $a['popupImageAlt'] : '',
+		'data-site-name'          => get_bloginfo( 'name' ),
+		'data-current-year'       => gmdate( 'Y' ),
+		'data-show-search'        => $show_search ? 'true' : 'false',
+		'data-show-category-pills' => $show_category_pills ? 'true' : 'false',
+		'data-show-sort'          => $show_sort ? 'true' : 'false',
 	)
 );
 
@@ -162,6 +177,54 @@ ob_start();
 ?>
 <div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>>
 	<div class="<?php echo esc_attr( $container_classes ); ?>">
+		<?php if ( $show_header ) : ?>
+			<div class="ad-case-studies__header">
+				<?php if ( ! empty( $a['headerEyebrow'] ) ) : ?>
+					<span class="ad-case-studies__header-eyebrow"><?php echo esc_html( $a['headerEyebrow'] ); ?></span>
+				<?php endif; ?>
+				<?php if ( ! empty( $a['headerHeading'] ) ) : ?>
+					<h2 class="ad-case-studies__header-heading"><?php echo esc_html( $a['headerHeading'] ); ?></h2>
+				<?php endif; ?>
+				<?php if ( ! empty( $a['headerDescription'] ) ) : ?>
+					<p class="ad-case-studies__header-description"><?php echo esc_html( $a['headerDescription'] ); ?></p>
+				<?php endif; ?>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( $show_search ) : ?>
+			<div class="ad-case-studies__search">
+				<svg class="ad-case-studies__search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M14 14L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+				<input type="search" class="ad-case-studies__search-input" placeholder="<?php echo esc_attr( isset( $a['searchPlaceholder'] ) ? $a['searchPlaceholder'] : 'Search' ); ?>" aria-label="<?php esc_attr_e( 'Search case studies', 'adaire-blocks' ); ?>" />
+			</div>
+		<?php endif; ?>
+
+		<?php if ( $show_category_pills || $show_sort || $show_submit_button ) : ?>
+			<div class="ad-case-studies__toolbar">
+				<?php if ( $show_category_pills ) : ?>
+					<div class="ad-case-studies__pills" role="tablist" aria-label="<?php esc_attr_e( 'Filter by category', 'adaire-blocks' ); ?>">
+						<button type="button" class="ad-case-studies__pill is-active" data-pill-value=""><?php esc_html_e( 'All', 'adaire-blocks' ); ?></button>
+						<?php foreach ( $industries as $ind ) : ?>
+							<button type="button" class="ad-case-studies__pill" data-pill-value="<?php echo esc_attr( $ind ); ?>"><?php echo esc_html( $ind ); ?></button>
+						<?php endforeach; ?>
+					</div>
+				<?php endif; ?>
+
+				<div class="ad-case-studies__toolbar-right">
+					<?php if ( $show_sort ) : ?>
+						<div class="ad-case-studies__sort">
+							<select class="ad-case-studies__sort-select" aria-label="<?php esc_attr_e( 'Sort case studies', 'adaire-blocks' ); ?>">
+								<option value="newest"><?php esc_html_e( 'Newest', 'adaire-blocks' ); ?></option>
+								<option value="popular"><?php esc_html_e( 'Most Liked', 'adaire-blocks' ); ?></option>
+							</select>
+						</div>
+					<?php endif; ?>
+					<?php if ( $show_submit_button ) : ?>
+						<a class="ad-case-studies__submit-btn" href="<?php echo esc_url( isset( $a['submitButtonUrl'] ) ? $a['submitButtonUrl'] : '#' ); ?>"><?php echo esc_html( isset( $a['submitButtonText'] ) ? $a['submitButtonText'] : 'Showcase your site' ); ?></a>
+					<?php endif; ?>
+				</div>
+			</div>
+		<?php endif; ?>
+
 		<?php if ( $show_filters ) : ?>
 			<div class="ad-case-studies__filters">
 				<div class="ad-case-studies__filter-group">
