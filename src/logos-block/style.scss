@@ -73,7 +73,7 @@
   &__grid {
     display: grid;
     grid-template-columns: repeat(var(--items-per-row, 4), minmax(0, 1fr));
-    gap: var(--logos-gap, 1rem);
+    gap: var(--logos-gap, 16px);
     align-items: center;
     justify-items: center;
     list-style: none;
@@ -109,10 +109,6 @@
     max-width: 200px;
     object-fit: contain;
     display: block;
-    // Idle state: desaturated and dimmed, like most trust/logo strips —
-    // color is reserved as the hover reward, not the resting state.
-    filter: grayscale(100%);
-    opacity: 0.6;
     transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 
     // Enhanced responsive image sizing
@@ -146,20 +142,41 @@
       max-height: 30px;
     }
 
-    // Direct hover — covers the editor preview, where logos aren't
-    // wrapped in a .splide__slide.
+    // Subtle lift on hover — a general "this is interactive" cue (several
+    // logos are links). Kept independent of the grayscale-until-hover
+    // toggle below, so it still applies even when color is disabled.
     &:hover {
-      filter: grayscale(0%);
-      opacity: 1;
       transform: scale(1.03);
     }
   }
 
-  // Hovering the frontend slide (image or its optional link wrapper)
-  // reveals full color and a very slight lift — subtle, not a card effect.
   .splide__slide:hover .logos-block__logo-img {
-    filter: grayscale(0%);
-    opacity: 1;
     transform: scale(1.03);
+  }
+
+  // Idle state: desaturated and dimmed, like most trust/logo strips — color
+  // is reserved as the hover reward, not the resting state. Opt-in via the
+  // "Grayscale Until Hover" toggle; on by default so existing blocks keep
+  // their current appearance.
+  &.logos-block--grayscale-until-hover {
+    .logos-block__logo-img {
+      filter: grayscale(100%);
+      opacity: 0.6;
+
+      // Direct hover — covers the editor preview, where logos aren't
+      // wrapped in a .splide__slide.
+      &:hover {
+        filter: grayscale(0%);
+        opacity: 1;
+      }
+    }
+
+    // Hovering the frontend slide (image or its optional link wrapper)
+    // reveals full color — covers cases where the link wrapper intercepts
+    // the hover before it reaches the img directly.
+    .splide__slide:hover .logos-block__logo-img {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
   }
 }
