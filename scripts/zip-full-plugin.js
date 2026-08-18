@@ -42,12 +42,26 @@ const zipPath = path.join(outputDir, 'adaire-blocks-pro.zip');
 // Everything a working install needs — the WordPress Plugin Handbook layout
 // PLUS config/ and plugin-update-checker/, which wp-scripts plugin-zip's
 // hardcoded glob doesn't know about.
+//
+// 'assets' and 'templates' were both missing from this list (found while
+// debugging why bootstrap-icons.min.css 404'd on every zip-installed site
+// no matter what PHP/JS fixes were made — the file was never packaged into
+// the zip in the first place). assets/vendor/bootstrap-icons/ is required
+// by every block that uses Bootstrap Icons (Icon Box, Social Banner,
+// Industries, Our Process, Social Share, Feature Grid Free, SaaS Hero,
+// Rating Badge); templates/ is required at runtime by
+// includes/class-adaire-case-studies-cpt.php, which loads
+// templates/single-adaire_case_study.php and templates/single-case-study.css
+// by direct file path — both were silently broken in every previously
+// built zip, independent of any editor/front-end enqueue logic.
 const includeItems = [
     'admin',
+    'assets',
     'build',
     'config',
     'includes',
     'plugin-update-checker',
+    'templates',
     'adaire-blocks.php',
     'uninstall.php',
     'readme.txt',

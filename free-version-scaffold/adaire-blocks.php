@@ -88,6 +88,29 @@ function adaire_blocks_register_blocks() {
 					),
 				) );
 			}
+
+			// Backward-compatible alias: this block was renamed from
+			// map-block to location-map. It's a static block (markup is
+			// baked into post_content at save time, no render.php), so
+			// existing published pages still have
+			// `<!-- wp:create-block/map-block -->` in their content.
+			// Without this alias WordPress no longer recognizes that name,
+			// so it never enqueues build/location-map's style-index.css or
+			// view.js on those pages — the saved HTML still prints, just
+			// with no styling and no interactivity. save.js is unchanged
+			// by the rename, so this alias alone fully restores it.
+			if ( $block_name === 'location-map' ) {
+				register_block_type( $block_dir, array(
+					'name'     => 'create-block/map-block',
+					'supports' => array(
+						'html'            => false,
+						'anchor'          => true,
+						'align'           => array( 'wide', 'full' ),
+						'customClassName' => true,
+						'inserter'        => false,
+					),
+				) );
+			}
 		}
 	}
 }
@@ -306,6 +329,38 @@ function enqueue_bootstrap_icons_editor() {
 	add_editor_style( $bootstrap_icons_url );
 }
 add_action( 'enqueue_block_editor_assets', 'enqueue_bootstrap_icons_editor' );
+
+// add_editor_style() above is a documented no-op unless
+// add_theme_support( 'editor-styles' ) has been declared — by the active
+// theme, or, as here, by this plugin. This declaration didn't exist
+// anywhere in the codebase, so the add_editor_style() call two lines up,
+// despite being correct, has had zero effect. Declaring it here rather than
+// relying on the active theme means the icon font reaches the editor
+// regardless of which theme the site is running.
+add_action( 'after_setup_theme', function () {
+	add_theme_support( 'editor-styles' );
+} );
+
+// Belt-and-suspenders #2: force an @font-face declaration with an ABSOLUTE
+// font URL directly into the block-editor iframe's own styles array.
+// bootstrap-icons.min.css declares its @font-face with a relative path
+// (url("fonts/bootstrap-icons.woff2?...")); the iframe often pulls in
+// editor-style CSS by inlining a file's contents into its own <style> tag
+// without rebasing relative url() references, which silently breaks that
+// path regardless of the add_editor_style() call above. Building the font
+// URL from ADAIRE_BLOCKS_PLUGIN_URL here means it's already absolute before
+// it reaches the iframe, so there's no relative path left to mishandle.
+add_filter( 'block_editor_settings_all', function ( $settings ) {
+	$font_base = ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/fonts/';
+	$css       = "@font-face{font-family:bootstrap-icons;font-display:block;src:url('{$font_base}bootstrap-icons.woff2') format('woff2'),url('{$font_base}bootstrap-icons.woff') format('woff')}";
+
+	if ( ! isset( $settings['styles'] ) || ! is_array( $settings['styles'] ) ) {
+		$settings['styles'] = array();
+	}
+	$settings['styles'][] = array( 'css' => $css );
+
+	return $settings;
+} );
 
 /**
  * Expose the free-tier block configuration to editor JavaScript.

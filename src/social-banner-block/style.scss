@@ -122,32 +122,62 @@
     
     // Horizontal positioning - use horizontal offset to position from left or right
     // Works with all position types (fixed, absolute, relative)
+    //
+    // clamp() keeps the configured offset within the viewport instead of
+    // applying it verbatim. This matters most for `position: fixed`, where
+    // offsets are relative to the *viewport*, not the page: an offset tuned
+    // to look right on a large desktop screen (e.g. left: 600px) would
+    // otherwise push the banner fully off-screen — invisible, not just
+    // misaligned — on a narrower tablet/mobile viewport. Percentage-unit
+    // offsets already scale with the viewport on their own; clamping is a
+    // no-op safety net for them (their value never approaches the vw/vh
+    // bound) and the actual fix for fixed pixel offsets. The reserved
+    // space in the upper bound roughly accounts for one icon plus padding
+    // so the banner is never clipped flush against the edge.
     &[style*="--banner-horizontal-offset-from: left"],
     &[style*="--banner-horizontal-offset-from:left"] {
-        left: var(--banner-horizontal-offset, 0);
+        left: clamp(0px, var(--banner-horizontal-offset, 0), calc(100vw - var(--icon-size, 24px) - 40px));
         right: auto;
     }
-    
+
     &[style*="--banner-horizontal-offset-from: right"],
     &[style*="--banner-horizontal-offset-from:right"] {
-        right: var(--banner-horizontal-offset, 0);
+        right: clamp(0px, var(--banner-horizontal-offset, 0), calc(100vw - var(--icon-size, 24px) - 40px));
         left: auto;
     }
-    
+
     // Vertical offset positioning based on offsetFrom
     &[style*="--banner-offset-from: top"],
     &[style*="--banner-offset-from:top"] {
-        top: var(--banner-offset, 100px);
+        top: clamp(0px, var(--banner-offset, 100px), calc(100vh - var(--icon-size, 24px) - 40px));
         bottom: auto;
     }
-    
+
     &[style*="--banner-offset-from: bottom"],
     &[style*="--banner-offset-from:bottom"] {
-        bottom: var(--banner-offset, 0px);
+        bottom: clamp(0px, var(--banner-offset, 0px), calc(100vh - var(--icon-size, 24px) - 40px));
         top: auto;
     }
-    
-    // Handle percentage offsets (no default needed, CSS variable handles it)
+
+    // Handle percentage offsets (no default needed, CSS variable handles it;
+    // clamp() above still applies and is harmless for them)
+
+    // position: relative isn't clamped above the fold the same way fixed/
+    // absolute are (it never leaves the document flow), but a very large
+    // configured offset can still visually shove the banner past its
+    // container on narrow screens. Constrain it the same way for
+    // consistency across all three position types.
+    &--position-relative {
+        &[style*="--banner-horizontal-offset-from: left"],
+        &[style*="--banner-horizontal-offset-from:left"] {
+            left: clamp(0px, var(--banner-horizontal-offset, 0), calc(100% - var(--icon-size, 24px) - 40px));
+        }
+
+        &[style*="--banner-horizontal-offset-from: right"],
+        &[style*="--banner-horizontal-offset-from:right"] {
+            right: clamp(0px, var(--banner-horizontal-offset, 0), calc(100% - var(--icon-size, 24px) - 40px));
+        }
+    }
 
     &__list {
         display: flex;

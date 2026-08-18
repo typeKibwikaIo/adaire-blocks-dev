@@ -1,9 +1,16 @@
 ﻿/**
+ * DEV-ONLY SCRIPT — not part of the block's webpack bundle, not imported by
+ * edit.js/index.js/BootstrapIconPicker.js anywhere. This is a one-off Node
+ * CLI tool for regenerating ./bootstrapIcons.js (the file the block actually
+ * uses) from Bootstrap Icons' own icon list, whenever that package is
+ * upgraded. It uses Node core modules (fs, https) that don't exist in a
+ * browser bundle, so it must never be imported from any block source file —
+ * doing so would break the @wordpress/scripts webpack build for this block.
+ * Run it directly with Node, from this directory:
+ *    node bicons.js
+ *
  * Generate a list of all Bootstrap Icons in the format:
  * { icon: "Star", class: "bi bi-star" }
- *
- * Run:
- *    node generateBootstrapIcons.js
  */
 
 import fs from "fs";

@@ -1910,6 +1910,41 @@ function create_block_gsap_hero_block_block_init() {
 						'inserter'        => false,
 					),
 				) );
+			} elseif ( $block_name === 'location-map' ) {
+				// Register normally under the current slug.
+				register_block_type( $block_path );
+				// Backward-compatible alias: this block was renamed from
+				// map-block to location-map. It's a STATIC block (no
+				// render.php — the markup is baked into post_content at
+				// save time), so existing published pages still have
+				// `<!-- wp:create-block/map-block -->` in their content.
+				// Without this alias, WordPress no longer recognizes that
+				// block name: the editor shows it as an unregistered block,
+				// and — more importantly — WordPress's automatic
+				// block.json-driven asset enqueue (style-index.css,
+				// view.js) never fires for that page, because it keys off
+				// has_block() matching a *registered* block name. The
+				// result on the front end is the raw saved HTML with no
+				// styling and no interactivity: every location's contact
+				// text stacked as plain paragraphs, followed by every
+				// map embed shown at once instead of just the active one.
+				// save.js is byte-for-byte identical between the old
+				// map-block and current location-map (confirmed via git
+				// history), so this alias alone — same build folder, same
+				// markup — fully restores both the editor and the front
+				// end with no manual recovery needed. inserter is disabled
+				// so this old name doesn't show up as a second card next
+				// to "Location Map" in the inserter.
+				register_block_type( $block_path, array(
+					'name'     => 'create-block/map-block',
+					'supports' => array(
+						'html'            => false,
+						'anchor'          => true,
+						'align'            => array( 'wide', 'full' ),
+						'customClassName' => true,
+						'inserter'        => false,
+					),
+				) );
 			} else {
 				// Register block normally
 				register_block_type( $block_path );
@@ -1989,6 +2024,22 @@ function create_block_gsap_hero_block_block_init() {
 				'supports' => array(
 					'html'            => false,
 					'anchor'          => true,
+					'customClassName' => true,
+					'inserter'        => false,
+				),
+			) );
+		}
+
+		// Backward-compatible alias for the map-block -> location-map
+		// rename (see the matching branch in the WP 6.8+ loop above for the
+		// full explanation of why this is needed for a static block).
+		if ( $block_type === 'location-map' ) {
+			register_block_type( __DIR__ . "/build/{$block_type}", array(
+				'name'     => 'create-block/map-block',
+				'supports' => array(
+					'html'            => false,
+					'anchor'          => true,
+					'align'           => array( 'wide', 'full' ),
 					'customClassName' => true,
 					'inserter'        => false,
 				),
@@ -2413,6 +2464,74 @@ function enqueue_bootstrap_icons_editor() {
     );
 }
 add_action( 'enqueue_block_assets', 'enqueue_bootstrap_icons_editor' );
+
+// Belt-and-suspenders companion to enqueue_bootstrap_icons_editor() above.
+// add_editor_style() is WordPress core's purpose-built, documented mechanism
+// for getting a stylesheet into the block-editor iframe (it registers the
+// URL into the iframe's own <link> tags at render time, independent of the
+// enqueue_block_assets replay path). This was the fix icon-box-block's own
+// editor.scss comments describe as the one that was actually tested and
+// confirmed working, but it was dropped when a merge conflict in this file
+// was resolved in favor of the enqueue_block_assets-only version above —
+// that version's own doc comment is correct about *why* enqueue_block_assets
+// is needed, but was never independently confirmed to reach the iframe on
+// its own for this vendor stylesheet. Restoring add_editor_style() as well
+// closes that gap without touching the (harmless, possibly still useful)
+// existing function.
+//
+// IMPORTANT: add_editor_style() is a documented no-op unless
+// add_theme_support( 'editor-styles' ) has been declared somewhere — by the
+// active theme, or, as here, by this plugin. Without it WordPress silently
+// drops every add_editor_style() call with no warning or error, which is
+// exactly what was happening: the call above was correct but had zero
+// effect because this declaration didn't exist anywhere in the codebase.
+// Declaring it from the plugin (rather than relying on the active theme to
+// have done so) means this doesn't depend on which theme the site is
+// running.
+add_action( 'after_setup_theme', function () {
+    add_theme_support( 'editor-styles' );
+} );
+
+function enqueue_bootstrap_icons_editor_style() {
+    add_editor_style( ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/bootstrap-icons.min.css' );
+}
+add_action( 'admin_init', 'enqueue_bootstrap_icons_editor_style' );
+
+// Belt-and-suspenders #2: force an @font-face declaration with an ABSOLUTE
+// font URL directly into the block-editor iframe's own styles array.
+//
+// bootstrap-icons.min.css declares its @font-face with a *relative* path
+// (url("fonts/bootstrap-icons.woff2?...")). The iframe that the block
+// editor canvas renders in (see _wp_get_iframed_editor_assets() /
+// get_block_editor_theme_styles() in wp-includes/block-editor.php) often
+// pulls in editor-style CSS by reading the file's contents and inlining
+// them into the iframe's own <style> tag, rather than linking the original
+// file — and does NOT rebase relative url() references when it does. Once
+// inlined, "fonts/bootstrap-icons.woff2" no longer resolves against
+// assets/vendor/bootstrap-icons/ at all, so the font silently fails to
+// load and every icon renders as a blank glyph, regardless of the
+// wp_enqueue_style()/add_editor_style() calls above (both of which are
+// otherwise correct — this is a separate WordPress core limitation, not a
+// mistake in how this plugin registers its styles).
+//
+// The fix: don't depend on a relative path surviving that inlining at all.
+// block_editor_settings_all is the same lower-level mechanism WordPress
+// core itself uses to deliver editor styles into the iframe, and it
+// accepts raw CSS strings directly (no file to read/rebase). Building the
+// font URL from ADAIRE_BLOCKS_PLUGIN_URL here means it's already a
+// fully-qualified absolute URL before it ever reaches the iframe, so
+// there's no relative path left for anything to mishandle.
+add_filter( 'block_editor_settings_all', function ( $settings ) {
+    $font_base = ADAIRE_BLOCKS_PLUGIN_URL . 'assets/vendor/bootstrap-icons/fonts/';
+    $css       = "@font-face{font-family:bootstrap-icons;font-display:block;src:url('{$font_base}bootstrap-icons.woff2') format('woff2'),url('{$font_base}bootstrap-icons.woff') format('woff')}";
+
+    if ( ! isset( $settings['styles'] ) || ! is_array( $settings['styles'] ) ) {
+        $settings['styles'] = array();
+    }
+    $settings['styles'][] = array( 'css' => $css );
+
+    return $settings;
+} );
 
 // Hide Gutenberg breadcrumb anchor badges (the ID pill shown in block breadcrumbs).
 add_action(
