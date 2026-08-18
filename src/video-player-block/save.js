@@ -79,6 +79,7 @@ overlayColor,
 overlayOpacity,
 headlineColor,
 descriptionColor,
+fitMode,
 } = attributes;
 const blockProps = useBlockProps.save( {
 className: 'ad-video-player',

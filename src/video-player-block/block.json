@@ -86,13 +86,21 @@
                 "y": 0.5
             }
         },
+        "fitMode": {
+            "type": "string",
+            "default": "contain",
+            "enum": [
+                "contain",
+                "cover"
+            ]
+        },
         "containerBorderRadius": {
             "type": "number",
             "default": 20
         },
         "containerBackgroundColor": {
             "type": "string",
-            "default": ""
+            "default": "#000000"
         },
         "containerBorderColor": {
             "type": "string",

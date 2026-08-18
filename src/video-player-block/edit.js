@@ -255,6 +255,7 @@ containerHeight,
 containerMaxWidth,
 containerMode,
 focalPoint,
+fitMode,
 mediaKind,
 mediaRemoteUrl,
 videoType,
@@ -274,8 +275,21 @@ descriptionColor,
 useEffect( () => {
 if ( ! blockId ) {
 // First time this block instance is ever mounted (freshly inserted,
-// never saved before) — flag it so the initial size prompt shows once.
-setAttributes( { blockId: clientId, dimensionsConfigured: false } );
+// never saved before). This used to also force dimensionsConfigured
+// to false here, showing a "set the initial width and height" gate
+// before rendering anything — but the block's only inserter
+// variation (see variations.js) already seeds sensible container
+// dimensions (500px desktop / 420px tablet / 360px mobile / 280px
+// smartwatch), and block.json's own default for dimensionsConfigured
+// is already true. Forcing it back to false here undid both of
+// those and made every fresh insertion go through a redundant manual
+// sizing step instead of just rendering at a good default size —
+// which is what caused the reported "undersized/overlapping on
+// insert" video sizing complaint. Leaving dimensionsConfigured
+// alone means new blocks render immediately at the variation's
+// defaults; users can still resize anytime from the Container
+// Settings panel, same as before.
+setAttributes( { blockId: clientId } );
 }
 }, [ blockId, clientId, setAttributes ] );
 
@@ -499,6 +513,27 @@ min={ 0 }
 max={ 1 }
 step={ 0.05 }
 />
+<BaseControl
+label={ __( 'Fit Mode', 'adaire-blocks' ) }
+help={ __( 'Contain (default) shows the whole video with no cropping, filling any leftover space with the Background Color above — matching how YouTube/Vimeo display it natively. Cover fills the entire container, cropping the video as needed.', 'adaire-blocks' ) }
+__nextHasNoMarginBottom
+>
+<ButtonGroup>
+{ [
+{ label: __( 'Contain', 'adaire-blocks' ), value: 'contain' },
+{ label: __( 'Cover', 'adaire-blocks' ), value: 'cover' },
+].map( ( option ) => (
+<Button
+key={ option.value }
+isPrimary={ ( fitMode || 'contain' ) === option.value }
+isSecondary={ ( fitMode || 'contain' ) !== option.value }
+onClick={ () => setAttributes( { fitMode: option.value } ) }
+>
+{ option.label }
+</Button>
+) ) }
+</ButtonGroup>
+</BaseControl>
 <BaseControl
 label={ __( 'Frame Position', 'adaire-blocks' ) }
 help={ __( 'Choose which part of the video stays visible when the container crops it — useful when the important part (a face, a product, on-screen text) would otherwise get cut off by the container height or aspect ratio.', 'adaire-blocks' ) }

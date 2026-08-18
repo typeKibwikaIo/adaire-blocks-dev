@@ -36,6 +36,7 @@ export const getVideoPlayerStyles = ( attributes ) => {
 		containerBorderEnabled,
 		containerShadowIntensity,
 		focalPoint,
+		fitMode,
 		marginTop,
 		marginRight,
 		marginBottom,
@@ -63,6 +64,15 @@ export const getVideoPlayerStyles = ( attributes ) => {
 		'--container-border-radius': `${ containerBorderRadius ?? 20 }px`,
 		'--video-focal-x': focalX,
 		'--video-focal-y': focalY,
+		// 'contain' (the default) preserves the video's real aspect ratio and
+		// shows the whole frame, filling any leftover space with the
+		// container's own background color instead of cropping — matching
+		// how the source platform (YouTube/Vimeo) itself displays the video.
+		// 'cover' is the previous always-crop-to-fill behavior, still
+		// available as an opt-in for layouts that want the container fully
+		// covered (e.g. hero banners), using the Frame Position control above
+		// to choose what gets cropped out.
+		'--video-fit-mode': fitMode === 'cover' ? 'cover' : 'contain',
 		'--container-background-color': containerBackgroundColor || 'transparent',
 		// Border only renders when explicitly enabled via the 'Show Border'
 		// toggle. This is deliberate, not redundant with the 0/'' defaults

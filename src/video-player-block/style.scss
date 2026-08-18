@@ -20,11 +20,17 @@
 	&__content {
 		height: 100%;
 		position: relative;
-		// Crops the intentionally-oversized iframe below so it always fully
-		// covers this box with no visible black bars, instead of showing
-		// whatever the platform's own player renders when its shape doesn't
-		// match the container.
+		// In 'cover' mode this crops the intentionally-oversized iframe so
+		// it always fully covers the box with no visible black bars. In
+		// 'contain' mode (the default) nothing actually overflows — the
+		// video/iframe is sized to fit within the box — so this has no
+		// visible effect there; it's harmless to leave on unconditionally.
 		overflow: hidden;
+		// Lets the container's own background-color (default black, see
+		// block.json/Container Settings) show through as letterbox/
+		// pillarbox fill wherever the video doesn't reach the edges of the
+		// box — 'contain' mode's whole reason for existing.
+		background-color: transparent;
 
 		// Browsers render an unstyled <iframe> with a default ~2px inset
 		// border (a legacy UA-stylesheet behavior the `frameBorder="0"`
@@ -32,22 +38,24 @@
 		// browsers) — that's what showed up as an unwanted black border
 		// around the video. Reset it explicitly with real CSS.
 		//
-		// object-fit: cover + object-position crop uploaded video/image
-		// files to fill the container without distorting them, anchored to
-		// the frame-position (focal point) chosen in the Inspector —
-		// --video-focal-x/y default to 50%/50% (center) when unset, which
-		// reproduces the previous plain-stretch-to-100% behavior's visual
-		// center exactly. This is the ONE case where the focal point can
-		// use real, native CSS: object-fit/object-position only apply to
-		// replaced elements like <video>/<img>, never to <iframe> (the
-		// YouTube/Vimeo case just below needs a different technique
-		// entirely, because of that).
+		// --video-fit-mode (set from the Fit Mode control, default
+		// 'contain') maps directly onto object-fit: 'contain' preserves the
+		// video's real aspect ratio and shows the whole frame — matching
+		// how the source platform itself displays it — while 'cover' crops
+		// it to fully fill the container. object-position, driven by the
+		// Frame Position control, anchors which part stays visible in
+		// 'cover' mode (in 'contain' mode there's no cropping to anchor,
+		// but it's harmless to leave applied). This is the ONE case where
+		// this can be done with real, native CSS: object-fit/object-position
+		// only apply to replaced elements like <video>/<img>, never to
+		// <iframe> (the YouTube/Vimeo case just below needs a completely
+		// different technique, because of that).
 		video,
 		img {
 			display: block !important;
 			width: 100% !important;
 			height: 100% !important;
-			object-fit: cover;
+			object-fit: var(--video-fit-mode, contain);
 			object-position: var(--video-focal-x, 50%) var(--video-focal-y, 50%);
 			border: none !important;
 			outline: none !important;
