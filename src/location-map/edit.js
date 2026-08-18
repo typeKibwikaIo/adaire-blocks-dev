@@ -161,10 +161,28 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                             placeholder={__('Address line', 'ad-map')}
                                             value={line}
                                             onChange={(v) => {
+                                                // Write the raw keystroke value straight through — no
+                                                // trim/filter here. This used to trim on every
+                                                // onChange, which stripped the trailing space the
+                                                // instant it was typed (TextControl is a controlled
+                                                // input, so the trimmed value immediately overwrote
+                                                // what was on screen), making the spacebar appear
+                                                // completely broken. Blank/whitespace-only lines are
+                                                // cleaned up on blur instead, once the user is done
+                                                // typing that line.
                                                 const next = [...locations];
                                                 const lines = [...(next[i].addressLines || [])];
                                                 lines[lineIdx] = v;
-                                                next[i] = { ...next[i], addressLines: lines.map(s => (s || '').trim()).filter(Boolean) };
+                                                next[i] = { ...next[i], addressLines: lines };
+                                                setAttributes({ locations: next });
+                                            }}
+                                            onBlur={() => {
+                                                const next = [...locations];
+                                                const lines = [...(next[i].addressLines || [])].map((s) => (s || '').trim());
+                                                // Keep the array's own indices/length changes (added
+                                                // via "Add Address Line", removed via "Remove") intact
+                                                // — only drop lines that end up empty after trimming.
+                                                next[i] = { ...next[i], addressLines: lines.filter(Boolean) };
                                                 setAttributes({ locations: next });
                                             }}
                                         />
@@ -607,11 +625,24 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                                     label={__('Address lines (one per line)', 'ad-map')}
                                                     value={(loc.addressLines || []).join('\n')}
                                                     onChange={(v) => {
+                                                        // Same fix as the per-line address inputs above:
+                                                        // trimming/filtering on every keystroke stripped
+                                                        // the trailing space right after it was typed
+                                                        // (this is a controlled textarea, so the trimmed
+                                                        // value immediately replaced what was on screen),
+                                                        // which made the spacebar look broken. Keep the
+                                                        // raw split value while typing; clean up on blur.
                                                         const next = [...locations];
                                                         next[i] = {
                                                             ...next[i],
-                                                            addressLines: v.split('\n').map((s) => s.trim()).filter(Boolean),
+                                                            addressLines: v.split('\n'),
                                                         };
+                                                        setAttributes({ locations: next });
+                                                    }}
+                                                    onBlur={() => {
+                                                        const next = [...locations];
+                                                        const lines = (next[i].addressLines || []).map((s) => (s || '').trim());
+                                                        next[i] = { ...next[i], addressLines: lines.filter(Boolean) };
                                                         setAttributes({ locations: next });
                                                     }}
                                                 />

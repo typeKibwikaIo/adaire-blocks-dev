@@ -35,6 +35,7 @@ export const getVideoPlayerStyles = ( attributes ) => {
 		containerBorderWidth,
 		containerBorderEnabled,
 		containerShadowIntensity,
+		focalPoint,
 		marginTop,
 		marginRight,
 		marginBottom,
@@ -46,10 +47,22 @@ export const getVideoPlayerStyles = ( attributes ) => {
 	} = attributes;
 	const margins = { Top: marginTop, Right: marginRight, Bottom: marginBottom, Left: marginLeft };
 	const padding = { Top: paddingTop, Right: paddingRight, Bottom: paddingBottom, Left: paddingLeft };
+	// Frame position / focal point: which part of the video stays visible
+	// when the container crops it. Stored as 0-1 (matching WordPress's own
+	// FocalPointPicker convention) and converted to percentages here for
+	// CSS. Consumed two different ways in style.scss/view.js depending on
+	// how the video is embedded — see the comments there — because
+	// `object-position` only works on real <video>/<img> elements
+	// (uploaded files), never on <iframe> (YouTube/Vimeo), which has no
+	// standard CSS-only equivalent.
+	const focalX = `${ ( ( focalPoint?.x ?? 0.5 ) * 100 ).toFixed( 2 ) }%`;
+	const focalY = `${ ( ( focalPoint?.y ?? 0.5 ) * 100 ).toFixed( 2 ) }%`;
 	const styles = {
 		'--container-max-width': getUnitValue( containerMaxWidth?.desktop, 1200, 'px' ),
 		'--container-height': getUnitValue( getContainerHeightForDevice( containerHeight, 'desktop' ), 315, 'px' ),
 		'--container-border-radius': `${ containerBorderRadius ?? 20 }px`,
+		'--video-focal-x': focalX,
+		'--video-focal-y': focalY,
 		'--container-background-color': containerBackgroundColor || 'transparent',
 		// Border only renders when explicitly enabled via the 'Show Border'
 		// toggle. This is deliberate, not redundant with the 0/'' defaults

@@ -79,6 +79,13 @@
                 }
             }
         },
+        "focalPoint": {
+            "type": "object",
+            "default": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
         "containerBorderRadius": {
             "type": "number",
             "default": 20

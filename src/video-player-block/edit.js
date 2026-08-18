@@ -254,6 +254,7 @@ containerShadowIntensity,
 containerHeight,
 containerMaxWidth,
 containerMode,
+focalPoint,
 mediaKind,
 mediaRemoteUrl,
 videoType,
@@ -498,6 +499,42 @@ min={ 0 }
 max={ 1 }
 step={ 0.05 }
 />
+<BaseControl
+label={ __( 'Frame Position', 'adaire-blocks' ) }
+help={ __( 'Choose which part of the video stays visible when the container crops it — useful when the important part (a face, a product, on-screen text) would otherwise get cut off by the container height or aspect ratio.', 'adaire-blocks' ) }
+__nextHasNoMarginBottom
+>
+<RangeControl
+label={ __( 'Horizontal', 'adaire-blocks' ) }
+value={ Math.round( ( focalPoint?.x ?? 0.5 ) * 100 ) }
+onChange={ ( value ) =>
+setAttributes( {
+focalPoint: { ...( focalPoint || { x: 0.5, y: 0.5 } ), x: ( value ?? 50 ) / 100 },
+} )
+}
+min={ 0 }
+max={ 100 }
+/>
+<RangeControl
+label={ __( 'Vertical', 'adaire-blocks' ) }
+value={ Math.round( ( focalPoint?.y ?? 0.5 ) * 100 ) }
+onChange={ ( value ) =>
+setAttributes( {
+focalPoint: { ...( focalPoint || { x: 0.5, y: 0.5 } ), y: ( value ?? 50 ) / 100 },
+} )
+}
+min={ 0 }
+max={ 100 }
+/>
+{ ( focalPoint?.x !== 0.5 || focalPoint?.y !== 0.5 ) && (
+<Button
+onClick={ () => setAttributes( { focalPoint: { x: 0.5, y: 0.5 } } ) }
+isSmall
+>
+{ __( 'Reset to center', 'adaire-blocks' ) }
+</Button>
+) }
+</BaseControl>
 <div className="ad-video-player__control-group">
 <DeviceSwitcher
 label={ __( 'Container Height', 'adaire-blocks' ) }

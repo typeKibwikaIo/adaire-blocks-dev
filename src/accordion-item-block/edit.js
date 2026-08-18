@@ -221,7 +221,7 @@ export default function Edit({ attributes, clientId, setAttributes }) {
                     className="adaire-accordion__title"
                     value={title || currentItem?.title || ''}
                     onChange={updateTitle}
-                    placeholder={__('Titleâ€¦', 'adaire-blocks')}
+                    placeholder={__('Title…', 'adaire-blocks')}
                     allowedFormats={['core/bold', 'core/italic', 'core/strikethrough']}
                 />
                 <span className="adaire-accordion__chevron" aria-hidden="true">

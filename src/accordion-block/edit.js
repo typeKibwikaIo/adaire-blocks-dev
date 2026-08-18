@@ -28,7 +28,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     const [deviceType, setDeviceType] = useState('desktop');
     const [activeZone, setActiveZone] = useState(null);
     
-    const { replaceInnerBlocks, insertBlock } = useDispatch(blockEditorStore);
+    const { replaceInnerBlocks, insertBlock, updateBlockAttributes } = useDispatch(blockEditorStore);
     const innerBlocks = useSelect(
         (select) => select(blockEditorStore).getBlocks(clientId),
         [clientId]
@@ -211,33 +211,45 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
             return; // Don't add if limit reached
         }
         const newId = `accordion-item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        const newItem = { id: newId, title: __('New Item', 'adaire-blocks'), open: false };
-        
+        // title is deliberately left empty, not "New Item" — accordion-item-
+        // block's title RichText already has a proper placeholder ("Title…")
+        // that only shows when the value is genuinely empty. Seeding real
+        // "New Item" text here meant that placeholder never appeared: users
+        // saw literal text they had to select and delete by hand instead of
+        // a faded hint that disappears the moment they start typing.
+        const newItem = { id: newId, title: '', open: false };
+
         // Close all other items if multiple open is disabled
         let updatedItems = [...items];
         if (!allowMultipleOpen) {
             updatedItems = items.map(item => ({ ...item, open: false }));
         }
-        
+
         // Add new item
         updatedItems = [...updatedItems, newItem];
-        
-        // Create new InnerBlocks template with the new item
-        const newTemplate = updatedItems.map((item, index) =>
-            createBlock('create-block/accordion-item-block', {
-                title: item.title,
-                itemId: item.id,
-                itemIndex: index,
-                open: item.open || false,
-            }, buildItemInnerBlocksTemplate( item.content ) )
-        );
 
-        // Replace InnerBlocks with new template
-        replaceInnerBlocks(clientId, newTemplate);
-        
+        // Insert just the ONE new inner block at the end, instead of the
+        // previous approach of calling replaceInnerBlocks() with a fresh
+        // createBlock() for every item in the list, including all the ones
+        // that already existed. createBlock() always generates a brand-new
+        // clientId and rebuilds InnerBlocks from buildItemInnerBlocksTemplate
+        // (which only knows about items[].content, not whatever a user has
+        // actually typed into an item's InnerBlocks tree since it was
+        // created) — so clicking "Add Item" was silently discarding any
+        // real edits made to existing items' content and replacing every
+        // item's identity, which is what made the button feel broken/
+        // destructive rather than simply "add one new item at the end."
+        const newBlock = createBlock('create-block/accordion-item-block', {
+            title: newItem.title,
+            itemId: newItem.id,
+            itemIndex: updatedItems.length - 1,
+            open: newItem.open,
+        });
+        insertBlock(newBlock, innerBlocks.length, clientId, false);
+
         // Update items array
         setAttributes({ items: updatedItems });
-    }, [isLimitReached, items, allowMultipleOpen, setAttributes, replaceInnerBlocks, clientId]);
+    }, [isLimitReached, items, allowMultipleOpen, setAttributes, insertBlock, innerBlocks, clientId]);
 
     const removeItem = ( index ) => {
         const next = items.filter( ( _, i ) => i !== index );
@@ -342,6 +354,63 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items.length]); // Only sync when items count changes
+
+    // Reconcile the OTHER direction too: InnerBlocks -> items. WordPress's
+    // native InnerBlocks list ("+" appender between/after items, and each
+    // item's own "Remove Block" toolbar option) is still fully available
+    // here — templateLock stays false so drag-to-reorder keeps working —
+    // which means a user can add or remove an accordion item without ever
+    // touching the "Add Item" button above. Before this effect, doing so
+    // left `items` out of sync with what's actually in the editor: a
+    // natively-inserted item had no entry in `items` at all (breaking
+    // title editing and open/close toggling for it, since
+    // accordion-item-block looks itself up in the parent's `items` by
+    // itemId), and a natively-removed item left a stale, orphaned entry
+    // behind. This makes every way of adding or removing an item — the
+    // button, or working directly with the InnerBlocks list — converge on
+    // the same consistent `items` state, which is what actually makes the
+    // two approaches "the same functionality" rather than two competing,
+    // divergent ones.
+    useEffect(() => {
+        if (innerBlocks.length === items.length) return;
+
+        if (innerBlocks.length > items.length) {
+            // A block was inserted natively. Give any inner block that
+            // doesn't already have a matching items[] entry a fresh one,
+            // and write the resolved id back onto the block itself so a
+            // block that was created with no itemId (or a colliding
+            // default one) gets a unique id both sides agree on.
+            const usedIds = new Set();
+            const newItems = innerBlocks.map((block, index) => {
+                const blockItemId = block.attributes.itemId;
+                const existing = blockItemId && ! usedIds.has(blockItemId)
+                    ? items.find((it) => it.id === blockItemId)
+                    : undefined;
+
+                if (existing) {
+                    usedIds.add(existing.id);
+                    return existing;
+                }
+
+                const freshId = `accordion-item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${index}`;
+                usedIds.add(freshId);
+                updateBlockAttributes(block.clientId, { itemId: freshId, itemIndex: index });
+                return {
+                    id: freshId,
+                    title: block.attributes.title || '',
+                    open: block.attributes.open || false,
+                };
+            });
+            setAttributes({ items: newItems });
+            return;
+        }
+
+        // innerBlocks.length < items.length: a block was removed natively.
+        // Drop the items[] entries that no longer have a matching block.
+        const survivingIds = new Set(innerBlocks.map((b) => b.attributes.itemId));
+        setAttributes({ items: items.filter((it) => survivingIds.has(it.id)) });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [innerBlocks.length]);
 
     // Template for accordion item blocks
     const ALLOWED_BLOCKS = ['create-block/accordion-item-block'];
