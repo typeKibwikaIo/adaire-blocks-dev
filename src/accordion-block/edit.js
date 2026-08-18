@@ -1,5 +1,5 @@
 ﻿import { __ } from '@wordpress/i18n';
-import { useCallback, useState, useEffect } from '@wordpress/element';
+import { useCallback, useState, useEffect, useRef } from '@wordpress/element';
 import { useBlockProps, useInnerBlocksProps, store as blockEditorStore, ColorPalette } from '@wordpress/block-editor';
 import { createBlock, getBlockType } from '@wordpress/blocks';
 import { useDispatch, useSelect } from '@wordpress/data';
@@ -17,11 +17,18 @@ const FREE_TIER_ITEM_LIMIT = 3;
 // Builds the InnerBlocks template for a single accordion item's default
 // content, seeded from that item's own `item.content` (the explanatory
 // copy already defined per-item in block.json's default `items` array).
+// Passed as the paragraph's `placeholder` — NOT its `content` — so it shows
+// as faded hint text the user can start typing over directly, exactly like
+// the title's placeholder (see accordion-item-block/edit.js) and the empty
+// "Add content for this accordion item..." placeholder new items already
+// get. Using `content` here instead would bake the demo copy in as real,
+// saved paragraph text, which is what made users feel like they had to
+// manually select-and-delete it rather than just typing to replace it.
 // Returns an empty template when there's no content to seed, matching the
 // previous always-empty-paragraph behavior for items that don't have any.
 const buildItemInnerBlocksTemplate = ( content ) =>
     content
-        ? [ [ 'core/group', {}, [ [ 'core/paragraph', { content } ] ] ] ]
+        ? [ [ 'core/group', {}, [ [ 'core/paragraph', { placeholder: content } ] ] ] ]
         : [];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
@@ -33,7 +40,24 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
         (select) => select(blockEditorStore).getBlocks(clientId),
         [clientId]
     );
-    
+
+    // Tracks whether InnerBlocks has EVER been observed non-empty for this
+    // block instance. Starts true for existing/published accordions (their
+    // InnerBlocks are parsed synchronously from post_content, so they're
+    // already populated on the very first render) and starts false for a
+    // brand-new block inserted from the block library, where the
+    // `template` prop passed to useInnerBlocksProps below is instantiated
+    // asynchronously — innerBlocks briefly reports 0 for a render or two
+    // before Gutenberg finishes creating the real inner blocks from it.
+    // Used below to tell "the user genuinely deleted every item" apart
+    // from "the template just hasn't finished loading yet".
+    const hasHydratedInnerBlocks = useRef(innerBlocks.length > 0);
+    useEffect(() => {
+        if (innerBlocks.length > 0) {
+            hasHydratedInnerBlocks.current = true;
+        }
+    }, [innerBlocks.length]);
+
     // Check block limits
     const { isLimitReached, showUpgradeNotice, upgradeMessage } = useBlockLimits(
         'accordion-block', 
@@ -405,8 +429,21 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
             return;
         }
 
-        // innerBlocks.length < items.length: a block was removed natively.
-        // Drop the items[] entries that no longer have a matching block.
+        // innerBlocks.length < items.length: either a block was removed
+        // natively, OR — on a freshly-inserted block — Gutenberg simply
+        // hasn't finished instantiating the InnerBlocks `template` yet
+        // (that happens async, one render after this component first
+        // mounts, so innerBlocks briefly reports 0 while items already has
+        // its full default set). Treating that transient 0-vs-N gap as "the
+        // user deleted every item" wiped `items` to an empty array before
+        // the template even finished creating the real inner blocks —
+        // which is what made brand-new Accordion blocks render completely
+        // empty in both the editor and on the published page. Guarding on
+        // hasHydratedInnerBlocks (only ever true once innerBlocks has been
+        // observed non-empty at least once) skips that wipe during initial
+        // mount, while still handling genuine native removals afterward.
+        if (!hasHydratedInnerBlocks.current) return;
+
         const survivingIds = new Set(innerBlocks.map((b) => b.attributes.itemId));
         setAttributes({ items: items.filter((it) => survivingIds.has(it.id)) });
         // eslint-disable-next-line react-hooks/exhaustive-deps
