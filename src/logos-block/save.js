@@ -9,6 +9,21 @@ import Logo4 from "./base/logoipsum4.png";
 // Only relevant in carousel mode; grid mode renders every logo once.
 const MIN_SLIDES_FOR_SMOOTH_LOOP = 8;
 
+// The "Gap Between Items" attribute used to be a free-text CSS length
+// (e.g. "1rem"); it's now a plain px number driving a RangeControl. Blocks
+// saved before that change still have the old string in their attributes,
+// so coerce it instead of letting parseFloat("1rem") silently truncate to 1.
+const remToPx = (value, fallback = 16) => {
+	if (typeof value === "number") return value;
+	if (typeof value === "string") {
+		const parsed = parseFloat(value);
+		if (Number.isFinite(parsed)) {
+			return value.trim().endsWith("rem") ? parsed * 16 : parsed;
+		}
+	}
+	return fallback;
+};
+
 export default function save({ attributes }) {
 	const {
 		partnerLogos = [],
@@ -17,8 +32,9 @@ export default function save({ attributes }) {
 		slidesPerViewDesktop = 4,
 		slidesPerViewTablet = 3,
 		slidesPerViewMobile = 2,
-		gap = "1rem",
+		gap: rawGap = 16,
 		pauseOnHover = true,
+		grayscaleUntilHover = true,
 		logoHeight = 60,
 		backgroundColor = "#ffffff",
 		titleText = "Our Partners",
@@ -38,6 +54,8 @@ export default function save({ attributes }) {
 			mobile: { value: 100, unit: "%" }
 		}
 	} = attributes;
+
+	const gap = remToPx(rawGap);
 
 	// Fallback to default logos if no custom logos are set
 	const defaultLogos = [
@@ -83,7 +101,7 @@ export default function save({ attributes }) {
 	};
 
 	const blockProps = useBlockProps.save({
-		className: `logos-block logos-block--${displayMode}`,
+		className: `logos-block logos-block--${displayMode}${grayscaleUntilHover ? " logos-block--grayscale-until-hover" : ""}`,
 		style: {
 			backgroundColor: backgroundColor || "#ffffff",
 			paddingTop: `${blockPaddingTop}px`,
@@ -94,7 +112,7 @@ export default function save({ attributes }) {
 			"--items-per-row": slidesPerViewDesktop,
 			"--items-per-row-tablet": slidesPerViewTablet,
 			"--items-per-row-mobile": slidesPerViewMobile,
-			"--logos-gap": gap,
+			"--logos-gap": `${gap}px`,
 		},
 		"data-display-mode": displayMode,
 		"data-slider-speed": sliderSpeed,

@@ -19,6 +19,21 @@ import { useBlockLimits } from '../components/useBlockLimits';
 
 const FREE_TIER_ITEM_LIMIT = 3;
 
+// The "Gap Between Items" attribute used to be a free-text CSS length
+// (e.g. "1rem"); it's now a plain px number driving a RangeControl. Blocks
+// saved before that change still have the old string in their attributes,
+// so coerce it instead of letting parseFloat("1rem") silently truncate to 1.
+const remToPx = (value, fallback = 16) => {
+	if (typeof value === "number") return value;
+	if (typeof value === "string") {
+		const parsed = parseFloat(value);
+		if (Number.isFinite(parsed)) {
+			return value.trim().endsWith("rem") ? parsed * 16 : parsed;
+		}
+	}
+	return fallback;
+};
+
 export default function Edit({ attributes, setAttributes }) {
 	const [deviceType, setDeviceType] = useState("desktop");
 
@@ -33,8 +48,9 @@ export default function Edit({ attributes, setAttributes }) {
 		partnerLogos = [],
 		displayMode = "carousel",
 		sliderSpeed = 0.5,
-		gap = "1rem",
+		gap: rawGap = 16,
 		pauseOnHover = true,
+		grayscaleUntilHover = true,
 		logoHeight = 60,
 		backgroundColor = "#ffffff",
 		titleText = "Our Partners",
@@ -54,13 +70,15 @@ export default function Edit({ attributes, setAttributes }) {
 		}
 	} = attributes;
 
+	const gap = remToPx(rawGap);
+
 	const itemsPerRowDesktop = getFlatDeviceValue(attributes, "slidesPerView", "desktop", 4);
 	const itemsPerRowTablet = getFlatDeviceValue(attributes, "slidesPerView", "tablet", 3);
 	const itemsPerRowMobile = getFlatDeviceValue(attributes, "slidesPerView", "mobile", 2);
 	const itemsPerRowMax = { desktop: 8, tablet: 6, mobile: 4 };
 
 	const blockProps = useBlockProps({
-		className: "logos-block logos-block-editor",
+		className: `logos-block logos-block-editor${grayscaleUntilHover ? " logos-block--grayscale-until-hover" : ""}`,
 		style: {
 			backgroundColor: backgroundColor || "#ffffff",
 			paddingTop: `${blockPaddingTop}px`,
@@ -329,11 +347,14 @@ export default function Edit({ attributes, setAttributes }) {
 						help={__("Number of logos visible at once for this device", "adaire-blocks")}
 					/>
 
-					<TextControl
-						label={__("Gap Between Items", "adaire-blocks")}
+					<RangeControl
+						label={__("Gap Between Items (px)", "adaire-blocks")}
 						value={gap}
 						onChange={(value) => setAttributes({ gap: value })}
-						help={__("CSS gap value (e.g., 1rem, 20px)", "adaire-blocks")}
+						min={0}
+						max={60}
+						step={1}
+						help={__("Space between logos", "adaire-blocks")}
 					/>
 
 					{displayMode === "carousel" && (
@@ -411,6 +432,16 @@ export default function Edit({ attributes, setAttributes }) {
 						max={150}
 						step={5}
 						help={__("Height of logos in pixels", "adaire-blocks")}
+					/>
+
+					<ToggleControl
+						label={__("Grayscale Until Hover", "adaire-blocks")}
+						checked={grayscaleUntilHover}
+						onChange={(value) => setAttributes({ grayscaleUntilHover: value })}
+						help={__(
+							"Show logos in grayscale at rest and reveal full color on hover. Turn off to always show logos in full color.",
+							"adaire-blocks",
+						)}
 					/>
 
 					<ColorPicker

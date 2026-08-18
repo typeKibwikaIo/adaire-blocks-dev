@@ -9,7 +9,9 @@
  * second, confusing entry next to it. Earlier this shipped as two separate
  * cards ("Hero (Headline + Overlay)" and "Plain Embed"); per feedback this
  * was collapsed back down to one card using the hero design, which is the
- * confirmed default look for newly-inserted blocks.
+ * confirmed default look for newly-inserted blocks. (jeremie-prelaunch
+ * still carried the old two-card version when this was merged in — keeping
+ * this single-card version here intentionally, not a merge artifact.)
  *
  * It replicates the design of the now-removed "Video Banner: Single Video"
  * variation (see video-hero-block/variations.js) — full-bleed video with a

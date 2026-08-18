@@ -1,6 +1,19 @@
 ﻿import Splide from "@splidejs/splide";
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
 
+// The "Gap Between Items" attribute used to be a free-text CSS length
+// (e.g. "1rem"); it's now a plain px number driving a RangeControl. Blocks
+// saved before that change still emit the old string via data-gap, and
+// parseFloat("1rem") alone would silently truncate that to 1 instead of 16.
+function remToPx(value, fallback = 16) {
+	if (typeof value === "string" && value.trim().endsWith("rem")) {
+		const parsed = parseFloat(value);
+		return Number.isFinite(parsed) ? parsed * 16 : fallback;
+	}
+	const parsed = parseFloat(value);
+	return Number.isFinite(parsed) ? parsed : fallback;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 	// Find all logos-block sliders
 	const sliderElements = document.querySelectorAll(".logos-block .splide");
@@ -13,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			const slidesPerView = parseInt(blockElement.dataset.slidesPerView) || 4;
 			const slidesPerViewTablet = parseInt(blockElement.dataset.slidesPerViewTablet) || 3;
 			const slidesPerViewMobile = parseInt(blockElement.dataset.slidesPerViewMobile) || 2;
-			const gap = blockElement.dataset.gap || "1rem";
+			const gap = `${remToPx(blockElement.dataset.gap)}px`;
 			const pauseOnHover = blockElement.dataset.pauseOnHover === "true";
 
 			const splide = new Splide(splideElement, {
@@ -28,11 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
 				breakpoints: {
 					1024: {
 						perPage: slidesPerViewTablet,
-						gap: '0.8rem',
 					},
 					768: {
 						perPage: slidesPerViewMobile,
-						gap: '0.5rem',
 					},
 				},
 				// Continuous smooth scrolling settings
