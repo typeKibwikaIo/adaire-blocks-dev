@@ -1,5 +1,6 @@
 ﻿import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
+import { FLUID } from './fluid-defaults';
 
 export default function Save({ attributes }) {
     const {
@@ -158,16 +159,18 @@ export default function Save({ attributes }) {
             // Container - Min Height
             '--hero-min-height-mobile': responsiveMinHeight?.mobile || 'auto',
             '--hero-min-height-tablet': responsiveMinHeight?.tablet || 'auto',
-            '--hero-min-height-small-laptop': responsiveMinHeight?.smallLaptop || 'auto',
-            '--hero-min-height-desktop': responsiveMinHeight?.desktop || '100vh',
-            '--hero-min-height-big-desktop': responsiveMinHeight?.bigDesktop || '100vh',
+            '--hero-min-height-small-laptop': responsiveMinHeight?.smallLaptop || FLUID.minHeight,
+            '--hero-min-height-desktop': responsiveMinHeight?.desktop || FLUID.minHeight,
+            '--hero-min-height-big-desktop': responsiveMinHeight?.bigDesktop || FLUID.minHeight,
 
             // Container - Width
             '--hero-width-mobile': responsiveWidth?.mobile || '100%',
             '--hero-width-tablet': responsiveWidth?.tablet || '100%',
             '--hero-width-small-laptop': responsiveWidth?.smallLaptop || '100%',
-            '--hero-width-desktop': responsiveWidth?.desktop || '100vw',
-            '--hero-width-big-desktop': responsiveWidth?.bigDesktop || '100vw',
+            // 100% not 100vw: 100vw includes the scrollbar gutter and ignores the
+            // block's own offset, which overflows horizontally on scrollbar'd pages.
+            '--hero-width-desktop': responsiveWidth?.desktop || '100%',
+            '--hero-width-big-desktop': responsiveWidth?.bigDesktop || '100%',
 
             // Container - Flex Direction
             '--hero-flex-direction-mobile': responsiveFlexDirection?.mobile || 'column',
@@ -199,25 +202,25 @@ export default function Save({ attributes }) {
             '--hero-padding-right-tablet': responsivePadding?.tablet?.right || '30px',
             '--hero-padding-bottom-tablet': responsivePadding?.tablet?.bottom || '40px',
             '--hero-padding-left-tablet': responsivePadding?.tablet?.left || '40px',
-            '--hero-padding-top-small-laptop': responsivePadding?.smallLaptop?.top || '40px',
-            '--hero-padding-right-small-laptop': responsivePadding?.smallLaptop?.right || '60px',
-            '--hero-padding-bottom-small-laptop': responsivePadding?.smallLaptop?.bottom || '40px',
-            '--hero-padding-left-small-laptop': responsivePadding?.smallLaptop?.left || '80px',
-            '--hero-padding-top-desktop': responsivePadding?.desktop?.top || '60px',
-            '--hero-padding-right-desktop': responsivePadding?.desktop?.right || '150px',
-            '--hero-padding-bottom-desktop': responsivePadding?.desktop?.bottom || '60px',
-            '--hero-padding-left-desktop': responsivePadding?.desktop?.left || '200px',
-            '--hero-padding-top-big-desktop': responsivePadding?.bigDesktop?.top || '60px',
-            '--hero-padding-right-big-desktop': responsivePadding?.bigDesktop?.right || '150px',
-            '--hero-padding-bottom-big-desktop': responsivePadding?.bigDesktop?.bottom || '60px',
-            '--hero-padding-left-big-desktop': responsivePadding?.bigDesktop?.left || '200px',
+            '--hero-padding-top-small-laptop': responsivePadding?.smallLaptop?.top || FLUID.paddingBlock,
+            '--hero-padding-right-small-laptop': responsivePadding?.smallLaptop?.right || FLUID.paddingRight,
+            '--hero-padding-bottom-small-laptop': responsivePadding?.smallLaptop?.bottom || FLUID.paddingBlock,
+            '--hero-padding-left-small-laptop': responsivePadding?.smallLaptop?.left || FLUID.paddingLeft,
+            '--hero-padding-top-desktop': responsivePadding?.desktop?.top || FLUID.paddingBlock,
+            '--hero-padding-right-desktop': responsivePadding?.desktop?.right || FLUID.paddingRight,
+            '--hero-padding-bottom-desktop': responsivePadding?.desktop?.bottom || FLUID.paddingBlock,
+            '--hero-padding-left-desktop': responsivePadding?.desktop?.left || FLUID.paddingLeft,
+            '--hero-padding-top-big-desktop': responsivePadding?.bigDesktop?.top || FLUID.paddingBlock,
+            '--hero-padding-right-big-desktop': responsivePadding?.bigDesktop?.right || FLUID.paddingRight,
+            '--hero-padding-bottom-big-desktop': responsivePadding?.bigDesktop?.bottom || FLUID.paddingBlock,
+            '--hero-padding-left-big-desktop': responsivePadding?.bigDesktop?.left || FLUID.paddingLeft,
 
             // CTA Container Width
             '--hero-cta-width-mobile': responsiveCtaWidth?.mobile || '100%',
             '--hero-cta-width-tablet': responsiveCtaWidth?.tablet || '100%',
-            '--hero-cta-width-small-laptop': responsiveCtaWidth?.smallLaptop || '60%',
-            '--hero-cta-width-desktop': responsiveCtaWidth?.desktop || '45%',
-            '--hero-cta-width-big-desktop': responsiveCtaWidth?.bigDesktop || '45%',
+            '--hero-cta-width-small-laptop': responsiveCtaWidth?.smallLaptop || FLUID.ctaWidth,
+            '--hero-cta-width-desktop': responsiveCtaWidth?.desktop || FLUID.ctaWidth,
+            '--hero-cta-width-big-desktop': responsiveCtaWidth?.bigDesktop || FLUID.ctaWidth,
 
             // CTA Container - Margin
             '--hero-cta-margin-top-mobile': responsiveCtaMargin?.mobile?.top || '0px',
@@ -244,14 +247,14 @@ export default function Save({ attributes }) {
             // Heading Typography
             '--hero-heading-font-size-mobile': responsiveHeadingFontSize?.mobile || '28px',
             '--hero-heading-font-size-tablet': responsiveHeadingFontSize?.tablet || '42px',
-            '--hero-heading-font-size-small-laptop': responsiveHeadingFontSize?.smallLaptop || '52px',
-            '--hero-heading-font-size-desktop': responsiveHeadingFontSize?.desktop || '72px',
-            '--hero-heading-font-size-big-desktop': responsiveHeadingFontSize?.bigDesktop || '72px',
+            '--hero-heading-font-size-small-laptop': responsiveHeadingFontSize?.smallLaptop || FLUID.headingFontSize,
+            '--hero-heading-font-size-desktop': responsiveHeadingFontSize?.desktop || FLUID.headingFontSize,
+            '--hero-heading-font-size-big-desktop': responsiveHeadingFontSize?.bigDesktop || FLUID.headingFontSize,
             '--hero-heading-line-height-mobile': responsiveHeadingLineHeight?.mobile || '36px',
             '--hero-heading-line-height-tablet': responsiveHeadingLineHeight?.tablet || '54px',
-            '--hero-heading-line-height-small-laptop': responsiveHeadingLineHeight?.smallLaptop || '68px',
-            '--hero-heading-line-height-desktop': responsiveHeadingLineHeight?.desktop || '92px',
-            '--hero-heading-line-height-big-desktop': responsiveHeadingLineHeight?.bigDesktop || '92px',
+            '--hero-heading-line-height-small-laptop': responsiveHeadingLineHeight?.smallLaptop || FLUID.headingLineHeight,
+            '--hero-heading-line-height-desktop': responsiveHeadingLineHeight?.desktop || FLUID.headingLineHeight,
+            '--hero-heading-line-height-big-desktop': responsiveHeadingLineHeight?.bigDesktop || FLUID.headingLineHeight,
             '--hero-heading-margin-bottom-mobile': responsiveHeadingMarginBottom?.mobile || '12px',
             '--hero-heading-margin-bottom-tablet': responsiveHeadingMarginBottom?.tablet || '18px',
             '--hero-heading-margin-bottom-small-laptop': responsiveHeadingMarginBottom?.smallLaptop || '20px',
@@ -266,9 +269,9 @@ export default function Save({ attributes }) {
             // Text Typography
             '--hero-text-font-size-mobile': responsiveTextFontSize?.mobile || '14px',
             '--hero-text-font-size-tablet': responsiveTextFontSize?.tablet || '18px',
-            '--hero-text-font-size-small-laptop': responsiveTextFontSize?.smallLaptop || '20px',
-            '--hero-text-font-size-desktop': responsiveTextFontSize?.desktop || '26px',
-            '--hero-text-font-size-big-desktop': responsiveTextFontSize?.bigDesktop || '26px',
+            '--hero-text-font-size-small-laptop': responsiveTextFontSize?.smallLaptop || FLUID.textFontSize,
+            '--hero-text-font-size-desktop': responsiveTextFontSize?.desktop || FLUID.textFontSize,
+            '--hero-text-font-size-big-desktop': responsiveTextFontSize?.bigDesktop || FLUID.textFontSize,
             '--hero-text-margin-bottom-mobile': responsiveTextMarginBottom?.mobile || '16px',
             '--hero-text-margin-bottom-tablet': responsiveTextMarginBottom?.tablet || '20px',
             '--hero-text-margin-bottom-small-laptop': responsiveTextMarginBottom?.smallLaptop || '20px',
@@ -300,9 +303,9 @@ export default function Save({ attributes }) {
             // Icon
             '--hero-icon-width-mobile': responsiveIconWidth?.mobile || '0px',
             '--hero-icon-width-tablet': responsiveIconWidth?.tablet || '0px',
-            '--hero-icon-width-small-laptop': responsiveIconWidth?.smallLaptop || '500px',
-            '--hero-icon-width-desktop': responsiveIconWidth?.desktop || '700px',
-            '--hero-icon-width-big-desktop': responsiveIconWidth?.bigDesktop || '700px',
+            '--hero-icon-width-small-laptop': responsiveIconWidth?.smallLaptop || FLUID.iconWidth,
+            '--hero-icon-width-desktop': responsiveIconWidth?.desktop || FLUID.iconWidth,
+            '--hero-icon-width-big-desktop': responsiveIconWidth?.bigDesktop || FLUID.iconWidth,
             '--hero-icon-transform-mobile': responsiveIconTransform?.mobile || 'none',
             '--hero-icon-transform-tablet': responsiveIconTransform?.tablet || 'none',
             '--hero-icon-transform-small-laptop': responsiveIconTransform?.smallLaptop || 'translateY(-50%)',
@@ -353,16 +356,16 @@ export default function Save({ attributes }) {
             // Breadcrumb - Top Offset
             '--hero-breadcrumb-top-offset-mobile': responsiveBreadcrumbTopOffset?.mobile || '20px',
             '--hero-breadcrumb-top-offset-tablet': responsiveBreadcrumbTopOffset?.tablet || '40px',
-            '--hero-breadcrumb-top-offset-small-laptop': responsiveBreadcrumbTopOffset?.smallLaptop || '60px',
-            '--hero-breadcrumb-top-offset-desktop': responsiveBreadcrumbTopOffset?.desktop || '90px',
-            '--hero-breadcrumb-top-offset-big-desktop': responsiveBreadcrumbTopOffset?.bigDesktop || '90px',
+            '--hero-breadcrumb-top-offset-small-laptop': responsiveBreadcrumbTopOffset?.smallLaptop || FLUID.breadcrumbTop,
+            '--hero-breadcrumb-top-offset-desktop': responsiveBreadcrumbTopOffset?.desktop || FLUID.breadcrumbTop,
+            '--hero-breadcrumb-top-offset-big-desktop': responsiveBreadcrumbTopOffset?.bigDesktop || FLUID.breadcrumbTop,
 
             // Breadcrumb - Left Offset
             '--hero-breadcrumb-left-offset-mobile': responsiveBreadcrumbLeftOffset?.mobile || '16px',
             '--hero-breadcrumb-left-offset-tablet': responsiveBreadcrumbLeftOffset?.tablet || '40px',
-            '--hero-breadcrumb-left-offset-small-laptop': responsiveBreadcrumbLeftOffset?.smallLaptop || '80px',
-            '--hero-breadcrumb-left-offset-desktop': responsiveBreadcrumbLeftOffset?.desktop || '200px',
-            '--hero-breadcrumb-left-offset-big-desktop': responsiveBreadcrumbLeftOffset?.bigDesktop || '200px',
+            '--hero-breadcrumb-left-offset-small-laptop': responsiveBreadcrumbLeftOffset?.smallLaptop || FLUID.breadcrumbLeft,
+            '--hero-breadcrumb-left-offset-desktop': responsiveBreadcrumbLeftOffset?.desktop || FLUID.breadcrumbLeft,
+            '--hero-breadcrumb-left-offset-big-desktop': responsiveBreadcrumbLeftOffset?.bigDesktop || FLUID.breadcrumbLeft,
 
             // Background Image (conditional)
             '--hero-bg-image': showBackgroundImage && backgroundImageUrl ? `url(${backgroundImageUrl})` : 'none',
@@ -397,9 +400,9 @@ export default function Save({ attributes }) {
             '--hero-video-width-big-desktop': responsiveVideoWidth?.bigDesktop || '50%',
             '--hero-video-height-mobile': responsiveVideoHeight?.mobile || '300px',
             '--hero-video-height-tablet': responsiveVideoHeight?.tablet || '400px',
-            '--hero-video-height-small-laptop': responsiveVideoHeight?.smallLaptop || '500px',
-            '--hero-video-height-desktop': responsiveVideoHeight?.desktop || '600px',
-            '--hero-video-height-big-desktop': responsiveVideoHeight?.bigDesktop || '600px',
+            '--hero-video-height-small-laptop': responsiveVideoHeight?.smallLaptop || FLUID.videoHeight,
+            '--hero-video-height-desktop': responsiveVideoHeight?.desktop || FLUID.videoHeight,
+            '--hero-video-height-big-desktop': responsiveVideoHeight?.bigDesktop || FLUID.videoHeight,
             '--hero-video-border-radius-mobile': responsiveVideoBorderRadius?.mobile || '8px',
             '--hero-video-border-radius-tablet': responsiveVideoBorderRadius?.tablet || '8px',
             '--hero-video-border-radius-small-laptop': responsiveVideoBorderRadius?.smallLaptop || '12px',

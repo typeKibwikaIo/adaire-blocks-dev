@@ -39,56 +39,56 @@
     background-position: var(--hero-bg-position, center), center;
     background-repeat: var(--hero-bg-repeat, no-repeat), no-repeat;
 
-    min-height: var(--hero-min-height-desktop, 100vh);
-    width: var(--hero-width-desktop, 100vw);
+    min-height: var(--hero-min-height-desktop, clamp(420px, 55vh, 720px));
+    width: var(--hero-width-desktop, 100%);
     display: flex;
     flex-direction: var(--hero-flex-direction-desktop, row);
     align-items: var(--hero-align-items-desktop, center);
     justify-content: var(--hero-justify-content-desktop, flex-start);
-    padding-top: var(--hero-padding-top-desktop, 60px);
-    padding-bottom: var(--hero-padding-bottom-desktop, 60px);
-    padding-left: var(--hero-padding-left-desktop, 200px);
-    padding-right: var(--hero-padding-right-desktop, 150px);
+    padding-top: var(--hero-padding-top-desktop, clamp(40px, 2.23vw + 17px, 60px));
+    padding-bottom: var(--hero-padding-bottom-desktop, clamp(40px, 2.23vw + 17px, 60px));
+    padding-left: var(--hero-padding-left-desktop, clamp(80px, 13.4vw - 57px, 200px));
+    padding-right: var(--hero-padding-right-desktop, clamp(60px, 10.06vw - 43px, 150px));
     position: relative;
     overflow: hidden;
 
     @include big-desktop {
         background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-big-desktop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
-        min-height: var(--hero-min-height-big-desktop, 100vh);
-        width: var(--hero-width-big-desktop, 100vw);
+        min-height: var(--hero-min-height-big-desktop, clamp(420px, 55vh, 720px));
+        width: var(--hero-width-big-desktop, 100%);
         flex-direction: var(--hero-flex-direction-big-desktop, row);
         align-items: var(--hero-align-items-big-desktop, center);
         justify-content: var(--hero-justify-content-big-desktop, flex-start);
-        padding-top: var(--hero-padding-top-big-desktop, 60px);
-        padding-bottom: var(--hero-padding-bottom-big-desktop, 60px);
-        padding-left: var(--hero-padding-left-big-desktop, 200px);
-        padding-right: var(--hero-padding-right-big-desktop, 150px);
+        padding-top: var(--hero-padding-top-big-desktop, clamp(40px, 2.23vw + 17px, 60px));
+        padding-bottom: var(--hero-padding-bottom-big-desktop, clamp(40px, 2.23vw + 17px, 60px));
+        padding-left: var(--hero-padding-left-big-desktop, clamp(80px, 13.4vw - 57px, 200px));
+        padding-right: var(--hero-padding-right-big-desktop, clamp(60px, 10.06vw - 43px, 150px));
     }
 
     @include desktop {
         background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-desktop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
-        min-height: var(--hero-min-height-desktop, 100vh);
-        width: var(--hero-width-desktop, 100vw);
+        min-height: var(--hero-min-height-desktop, clamp(420px, 55vh, 720px));
+        width: var(--hero-width-desktop, 100%);
         flex-direction: var(--hero-flex-direction-desktop, row);
         align-items: var(--hero-align-items-desktop, center);
         justify-content: var(--hero-justify-content-desktop, flex-start);
-        padding-top: var(--hero-padding-top-desktop, 60px);
-        padding-bottom: var(--hero-padding-bottom-desktop, 60px);
-        padding-left: var(--hero-padding-left-desktop, 200px);
-        padding-right: var(--hero-padding-right-desktop, 150px);
+        padding-top: var(--hero-padding-top-desktop, clamp(40px, 2.23vw + 17px, 60px));
+        padding-bottom: var(--hero-padding-bottom-desktop, clamp(40px, 2.23vw + 17px, 60px));
+        padding-left: var(--hero-padding-left-desktop, clamp(80px, 13.4vw - 57px, 200px));
+        padding-right: var(--hero-padding-right-desktop, clamp(60px, 10.06vw - 43px, 150px));
     }
 
     @include small-laptop {
         background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-small-laptop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
-        min-height: var(--hero-min-height-small-laptop, auto);
+        min-height: var(--hero-min-height-small-laptop, clamp(420px, 55vh, 720px));
         width: var(--hero-width-small-laptop, 100%);
         flex-direction: var(--hero-flex-direction-small-laptop, row);
         align-items: var(--hero-align-items-small-laptop, center);
         justify-content: var(--hero-justify-content-small-laptop, flex-start);
-        padding-top: var(--hero-padding-top-small-laptop, 40px);
-        padding-bottom: var(--hero-padding-bottom-small-laptop, 40px);
-        padding-left: var(--hero-padding-left-small-laptop, 80px);
-        padding-right: var(--hero-padding-right-small-laptop, 60px);
+        padding-top: var(--hero-padding-top-small-laptop, clamp(40px, 2.23vw + 17px, 60px));
+        padding-bottom: var(--hero-padding-bottom-small-laptop, clamp(40px, 2.23vw + 17px, 60px));
+        padding-left: var(--hero-padding-left-small-laptop, clamp(80px, 13.4vw - 57px, 200px));
+        padding-right: var(--hero-padding-right-small-laptop, clamp(60px, 10.06vw - 43px, 150px));
     }
 
     @include tablet {
@@ -141,18 +141,18 @@
 .adaire-hero-1__breadcrumbs {
     color: var(--hero-breadcrumbs-color, #ffffff);
     position: absolute;
-    top: var(--hero-breadcrumb-top-offset-desktop, 90px);
-    left: var(--hero-breadcrumb-left-offset-desktop, 200px);
+    top: var(--hero-breadcrumb-top-offset-desktop, clamp(60px, 3.35vw + 26px, 90px));
+    left: var(--hero-breadcrumb-left-offset-desktop, clamp(80px, 13.4vw - 57px, 200px));
     z-index: 2;
 
     @include big-desktop {
-        top: var(--hero-breadcrumb-top-offset-big-desktop, 90px);
-        left: var(--hero-breadcrumb-left-offset-big-desktop, 200px);
+        top: var(--hero-breadcrumb-top-offset-big-desktop, clamp(60px, 3.35vw + 26px, 90px));
+        left: var(--hero-breadcrumb-left-offset-big-desktop, clamp(80px, 13.4vw - 57px, 200px));
     }
 
     @include small-laptop {
-        top: var(--hero-breadcrumb-top-offset-small-laptop, 60px);
-        left: var(--hero-breadcrumb-left-offset-small-laptop, 80px);
+        top: var(--hero-breadcrumb-top-offset-small-laptop, clamp(60px, 3.35vw + 26px, 90px));
+        left: var(--hero-breadcrumb-left-offset-small-laptop, clamp(80px, 13.4vw - 57px, 200px));
     }
 
     @include tablet {
@@ -176,7 +176,12 @@
 }
 
 .adaire-hero-1__cta-container {
-    width: var(--hero-cta-width-desktop, 45%);
+    width: var(--hero-cta-width-desktop, clamp(615px, 27.8vw + 330px, 864px));
+    // Flex children default to min-width: auto, so a long heading refuses to
+    // shrink and grows the row instead of wrapping. Both needed so the column
+    // can never push the container past its content box.
+    min-width: 0;
+    max-width: 100%;
     position: relative;
     z-index: 1;
     text-align: var(--hero-text-alignment-desktop, left);
@@ -186,7 +191,7 @@
     margin-left: var(--hero-cta-margin-left-desktop, 0px);
 
     @include big-desktop {
-        width: var(--hero-cta-width-big-desktop, 45%);
+        width: var(--hero-cta-width-big-desktop, clamp(615px, 27.8vw + 330px, 864px));
         text-align: var(--hero-text-alignment-big-desktop, left);
         margin-top: var(--hero-cta-margin-top-big-desktop, 0px);
         margin-right: var(--hero-cta-margin-right-big-desktop, 0px);
@@ -195,7 +200,7 @@
     }
 
     @include desktop {
-        width: var(--hero-cta-width-desktop, 45%);
+        width: var(--hero-cta-width-desktop, clamp(615px, 27.8vw + 330px, 864px));
         text-align: var(--hero-text-alignment-desktop, left);
         margin-top: var(--hero-cta-margin-top-desktop, 0px);
         margin-right: var(--hero-cta-margin-right-desktop, 0px);
@@ -204,7 +209,7 @@
     }
 
     @include small-laptop {
-        width: var(--hero-cta-width-small-laptop, 60%);
+        width: var(--hero-cta-width-small-laptop, clamp(615px, 27.8vw + 330px, 864px));
         text-align: var(--hero-text-alignment-small-laptop, left);
         margin-top: var(--hero-cta-margin-top-small-laptop, 0px);
         margin-right: var(--hero-cta-margin-right-small-laptop, 0px);
@@ -265,29 +270,29 @@
 
 .adaire-hero-1__heading {
     color: var(--hero-heading-color, #ffffff);
-    font-size: var(--hero-heading-font-size-desktop, 72px);
+    font-size: var(--hero-heading-font-size-desktop, clamp(52px, 2.24vw + 29px, 72px));
     font-weight: var(--hero-heading-font-weight, 500);
-    line-height: var(--hero-heading-line-height-desktop, 92px);
+    line-height: var(--hero-heading-line-height-desktop, 1.28);
     margin-top: var(--hero-heading-margin-top-desktop, 0px);
     margin-bottom: var(--hero-heading-margin-bottom-desktop, 24px);
 
     @include big-desktop {
-        font-size: var(--hero-heading-font-size-big-desktop, 72px);
-        line-height: var(--hero-heading-line-height-big-desktop, 92px);
+        font-size: var(--hero-heading-font-size-big-desktop, clamp(52px, 2.24vw + 29px, 72px));
+        line-height: var(--hero-heading-line-height-big-desktop, 1.28);
         margin-top: var(--hero-heading-margin-top-big-desktop, 0px);
         margin-bottom: var(--hero-heading-margin-bottom-big-desktop, 24px);
     }
 
     @include desktop {
-        font-size: var(--hero-heading-font-size-desktop, 72px);
-        line-height: var(--hero-heading-line-height-desktop, 92px);
+        font-size: var(--hero-heading-font-size-desktop, clamp(52px, 2.24vw + 29px, 72px));
+        line-height: var(--hero-heading-line-height-desktop, 1.28);
         margin-top: var(--hero-heading-margin-top-desktop, 0px);
         margin-bottom: var(--hero-heading-margin-bottom-desktop, 24px);
     }
 
     @include small-laptop {
-        font-size: var(--hero-heading-font-size-small-laptop, 52px);
-        line-height: var(--hero-heading-line-height-small-laptop, 68px);
+        font-size: var(--hero-heading-font-size-small-laptop, clamp(52px, 2.24vw + 29px, 72px));
+        line-height: var(--hero-heading-line-height-small-laptop, 1.28);
         margin-top: var(--hero-heading-margin-top-small-laptop, 0px);
         margin-bottom: var(--hero-heading-margin-bottom-small-laptop, 20px);
     }
@@ -309,25 +314,25 @@
 
 .adaire-hero-1__text {
     color: var(--hero-text-color, #ffffff);
-    font-size: var(--hero-text-font-size-desktop, 26px);
+    font-size: var(--hero-text-font-size-desktop, clamp(20px, 0.67vw + 13px, 26px));
     font-weight: var(--hero-text-font-weight, 300);
     margin-top: var(--hero-text-margin-top-desktop, 0px);
     margin-bottom: var(--hero-text-margin-bottom-desktop, 24px);
 
     @include big-desktop {
-        font-size: var(--hero-text-font-size-big-desktop, 26px);
+        font-size: var(--hero-text-font-size-big-desktop, clamp(20px, 0.67vw + 13px, 26px));
         margin-top: var(--hero-text-margin-top-big-desktop, 0px);
         margin-bottom: var(--hero-text-margin-bottom-big-desktop, 24px);
     }
 
     @include desktop {
-        font-size: var(--hero-text-font-size-desktop, 26px);
+        font-size: var(--hero-text-font-size-desktop, clamp(20px, 0.67vw + 13px, 26px));
         margin-top: var(--hero-text-margin-top-desktop, 0px);
         margin-bottom: var(--hero-text-margin-bottom-desktop, 24px);
     }
 
     @include small-laptop {
-        font-size: var(--hero-text-font-size-small-laptop, 20px);
+        font-size: var(--hero-text-font-size-small-laptop, clamp(20px, 0.67vw + 13px, 26px));
         margin-top: var(--hero-text-margin-top-small-laptop, 0px);
         margin-bottom: var(--hero-text-margin-bottom-small-laptop, 20px);
     }
@@ -395,7 +400,7 @@
 
 .adaire-hero-1__icon {
     position: absolute;
-    width: var(--hero-icon-width-desktop, 700px);
+    width: var(--hero-icon-width-desktop, clamp(500px, 22.35vw + 271px, 700px));
     transform: var(--hero-icon-transform-desktop, translateY(-50%));
     z-index: 1;
 
@@ -422,7 +427,7 @@
     }
 
     @include big-desktop {
-        width: var(--hero-icon-width-big-desktop, 700px);
+        width: var(--hero-icon-width-big-desktop, clamp(500px, 22.35vw + 271px, 700px));
         transform: var(--hero-icon-transform-big-desktop, translateY(-50%));
 
         &[data-icon-vertical-position="top"] {
@@ -447,7 +452,7 @@
     }
 
     @include desktop {
-        width: var(--hero-icon-width-desktop, 700px);
+        width: var(--hero-icon-width-desktop, clamp(500px, 22.35vw + 271px, 700px));
         transform: var(--hero-icon-transform-desktop, translateY(-50%));
 
         &[data-icon-vertical-position="top"] {
@@ -472,7 +477,7 @@
     }
 
     @include small-laptop {
-        width: var(--hero-icon-width-small-laptop, 500px);
+        width: var(--hero-icon-width-small-laptop, clamp(500px, 22.35vw + 271px, 700px));
         transform: var(--hero-icon-transform-small-laptop, translateY(-50%));
 
         &[data-icon-vertical-position="top"] {
@@ -592,7 +597,7 @@
 
 .adaire-hero-1__video-player {
     width: var(--hero-video-width-desktop, 50%);
-    height: var(--hero-video-height-desktop, 600px);
+    height: var(--hero-video-height-desktop, clamp(500px, 11.17vw + 385px, 600px));
     border-radius: var(--hero-video-border-radius-desktop, 16px);
     overflow: hidden;
     flex-shrink: 0;
@@ -609,19 +614,19 @@
 
     @include big-desktop {
         width: var(--hero-video-width-big-desktop, 50%);
-        height: var(--hero-video-height-big-desktop, 600px);
+        height: var(--hero-video-height-big-desktop, clamp(500px, 11.17vw + 385px, 600px));
         border-radius: var(--hero-video-border-radius-big-desktop, 16px);
     }
 
     @include desktop {
         width: var(--hero-video-width-desktop, 50%);
-        height: var(--hero-video-height-desktop, 600px);
+        height: var(--hero-video-height-desktop, clamp(500px, 11.17vw + 385px, 600px));
         border-radius: var(--hero-video-border-radius-desktop, 16px);
     }
 
     @include small-laptop {
         width: var(--hero-video-width-small-laptop, 50%);
-        height: var(--hero-video-height-small-laptop, 500px);
+        height: var(--hero-video-height-small-laptop, clamp(500px, 11.17vw + 385px, 600px));
         border-radius: var(--hero-video-border-radius-small-laptop, 12px);
     }
 
