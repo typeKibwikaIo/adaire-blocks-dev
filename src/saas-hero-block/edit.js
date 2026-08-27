@@ -302,6 +302,14 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
       </PanelBody>
 
       <PanelBody title={__('CTA Content', 'adaire-blocks')} initialOpen={false}>
+        <ToggleControl
+          label={__('Show call to action', 'adaire-blocks')}
+          checked={a.showCta !== false}
+          onChange={set(setAttributes, 'showCta')}
+          help={__('Turn off to hide the buttons / email form entirely.', 'adaire-blocks')}
+        />
+        {a.showCta !== false && (
+        <>
         <SelectControl
           label={__('CTA Type', 'adaire-blocks')}
           value={a.ctaType || 'dual-buttons'}
@@ -332,6 +340,9 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
             <URLInput label={__('Button URL', 'adaire-blocks')} value={a.singleButtonUrl || ''} onChange={set(setAttributes, 'singleButtonUrl')} />
             <TextControl label={__('Micro-copy Link', 'adaire-blocks')} value={a.microCopy || ''} onChange={set(setAttributes, 'microCopy')} />
           </>
+        )}
+        <p className="adaire-help-note">{__('Clearing a button’s text hides just that button — useful for showing only one of the two.', 'adaire-blocks')}</p>
+        </>
         )}
       </PanelBody>
 
@@ -592,47 +603,60 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
                 <RichText tagName="p" className="adaire-saas-hero__text" value={a.text} onChange={set(setAttributes, 'text')} />
               </QuickZone>
 
-              <QuickZone
-                id="saas-hero-cta"
-                label={__('CTA', 'adaire-blocks')}
-                activeZone={activeZone}
-                setActiveZone={setActiveZone}
-                content={(
-                  <>
-                    <p className="adaire-qz-subhead">{__('Colors', 'adaire-blocks')}</p>
-                    {ctaStyleControls}
-                    <p className="adaire-qz-subhead">{__('Spacing & Alignment', 'adaire-blocks')}</p>
-                    {ctaSpacingControls}
-                  </>
-                )}
-              >
-                <div className="adaire-saas-hero__cta">
-                  {a.ctaType === 'dual-buttons' && (
+              {a.showCta !== false && (
+                <QuickZone
+                  id="saas-hero-cta"
+                  label={__('CTA', 'adaire-blocks')}
+                  activeZone={activeZone}
+                  setActiveZone={setActiveZone}
+                  content={(
                     <>
-                      <a href={a.primaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
-                        {a.primaryButtonText}
-                      </a>
-                      <a href={a.secondaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--secondary">
-                        {a.secondaryButtonText}
-                      </a>
+                      <ToggleControl
+                        label={__('Show call to action', 'adaire-blocks')}
+                        checked={a.showCta !== false}
+                        onChange={set(setAttributes, 'showCta')}
+                      />
+                      <p className="adaire-qz-subhead">{__('Colors', 'adaire-blocks')}</p>
+                      {ctaStyleControls}
+                      <p className="adaire-qz-subhead">{__('Spacing & Alignment', 'adaire-blocks')}</p>
+                      {ctaSpacingControls}
                     </>
                   )}
-                  {a.ctaType === 'email-form' && (
-                    <div className="adaire-saas-hero__email-form">
-                      <input type="email" placeholder={a.emailPlaceholder || 'Enter your email'} readOnly />
-                      <button type="button">{a.submitButtonText || 'Get Started'}</button>
-                    </div>
-                  )}
-                  {a.ctaType === 'single-button' && (
-                    <>
-                      <a href={a.singleButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
-                        {a.singleButtonText}
-                      </a>
-                      {a.microCopy && <p className="adaire-saas-hero__micro-copy">{a.microCopy}</p>}
-                    </>
-                  )}
-                </div>
-              </QuickZone>
+                >
+                  <div className="adaire-saas-hero__cta">
+                    {a.ctaType === 'dual-buttons' && (
+                      <>
+                        {a.primaryButtonText && (
+                          <a href={a.primaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                            {a.primaryButtonText}
+                          </a>
+                        )}
+                        {a.secondaryButtonText && (
+                          <a href={a.secondaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--secondary">
+                            {a.secondaryButtonText}
+                          </a>
+                        )}
+                      </>
+                    )}
+                    {a.ctaType === 'email-form' && (
+                      <div className="adaire-saas-hero__email-form">
+                        <input type="email" placeholder={a.emailPlaceholder || 'Enter your email'} readOnly />
+                        <button type="button">{a.submitButtonText || 'Get Started'}</button>
+                      </div>
+                    )}
+                    {a.ctaType === 'single-button' && (
+                      <>
+                        {a.singleButtonText && (
+                          <a href={a.singleButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                            {a.singleButtonText}
+                          </a>
+                        )}
+                        {a.microCopy && <p className="adaire-saas-hero__micro-copy">{a.microCopy}</p>}
+                      </>
+                    )}
+                  </div>
+                </QuickZone>
+              )}
             </div>
 
             {a.showHeroImage && a.heroImageUrl && (

@@ -1515,4 +1515,218 @@ const v4 = {
   },
 };
 
-export default [ v4, vRatingsExtraction, vTypography, v2, v1 ];
+// Frozen copy of shared.js's getStyleVars() as it stood immediately before the
+// CTA rework added `--ad-cta-text-align`. Same rule as
+// getStyleVarsTypography() above: never call the live getStyleVars() from a
+// deprecation — it keeps growing vars, and the stored `style` string of older
+// content stops matching the moment it does.
+function getStyleVarsPreCta( a ) {
+  const defaultGradient = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+
+  const styleVars = {
+    '--ad-accent': a.accentColor || '#6366f1',
+    '--ad-color': a.textColor || '#111827',
+
+    '--ad-bg-color': a.backgroundColor || '#ffffff',
+    '--ad-bg-gradient': a.backgroundGradient || defaultGradient,
+    '--ad-bg-image': a.backgroundImage ? `url(${ a.backgroundImage })` : 'none',
+    '--ad-bg-image-size': a.backgroundImageSize || 'cover',
+    '--ad-bg-image-position': a.backgroundImagePosition || 'center',
+    '--ad-bg-image-repeat': a.backgroundImageRepeat || 'no-repeat',
+
+    '--ad-button-primary-color': a.buttonPrimaryColor || '#ffffff',
+    '--ad-button-primary-bg': a.buttonPrimaryBg || a.accentColor || '#6366f1',
+    '--ad-button-secondary-color': a.buttonSecondaryColor || '#111827',
+    '--ad-button-secondary-bg': a.buttonSecondaryBg || '#ffffff',
+    '--ad-button-hover-color': a.buttonHoverColor || '#ffffff',
+    '--ad-button-hover-bg': a.buttonHoverBackgroundColor || '#111827',
+    '--ad-button-hover-border': a.buttonHoverBorderColor || '#111827',
+
+    '--ad-radius': `${ a.borderRadius ?? 12 }px`,
+    '--ad-padding': `${ a.padding ?? 80 }px`,
+    '--ad-font-size': `${ a.fontSize ?? 16 }px`,
+
+    '--ad-pill-bg': a.pillBg || '#dbeafe',
+    '--ad-pill-color': a.pillColor || '#1e40af',
+    '--ad-gradient-start': a.gradientStart || '#6366f1',
+    '--ad-gradient-end': a.gradientEnd || '#8b5cf6',
+
+    '--ad-cta-gap': `${ a.ctaGap ?? 16 }px`,
+    '--ad-cta-padding-v': `${ a.ctaPaddingV ?? 14 }px`,
+    '--ad-cta-padding-h': `${ a.ctaPaddingH ?? 32 }px`,
+    '--ad-cta-radius': `${ resolveSentinel( a.ctaBorderRadius, a.borderRadius ?? 12 ) }px`,
+    '--ad-cta-align': alignToFlex( a.ctaAlignment ),
+
+    '--ad-media-radius': `${ resolveSentinel( a.mediaBorderRadius, a.borderRadius ?? 12 ) }px`,
+    '--ad-media-spacing': `${ a.mediaSpacing ?? 48 }px`,
+    '--ad-media-shadow': a.mediaShadow === false ? 'none' : '0 20px 60px rgba(0, 0, 0, 0.15)',
+
+    '--ad-effect-gradient-overlay': `linear-gradient(135deg, ${ a.effectGradientOverlayColor1 || '#6366f1' }, ${ a.effectGradientOverlayColor2 || '#8b5cf6' })`,
+    '--ad-effect-gradient-overlay-opacity': `${ ( a.effectGradientOverlayOpacity ?? 30 ) / 100 }`,
+    '--ad-effect-glow-color': a.effectGlowColor || '#6366f1',
+
+    '--ad-rating-align': alignToFlex( a.ratingBadgesAlignment ),
+  };
+
+  const hasTypographyAttrs = a.eyebrowFontSize || a.fontFamily || a.headingFontSize ||
+    a.bodyTextFontWeight || a.pillFontSize || a.buttonFontSize;
+
+  if ( hasTypographyAttrs ) {
+    styleVars['--ad-font-family'] = a.fontFamily !== undefined && a.fontFamily !== '' ? a.fontFamily : 'inherit';
+    styleVars['--ad-eyebrow-font-size'] = a.eyebrowFontSize || '14px';
+    styleVars['--ad-eyebrow-font-weight'] = a.eyebrowFontWeight || '600';
+    styleVars['--ad-eyebrow-line-height'] = a.eyebrowLineHeight || 'normal';
+    styleVars['--ad-eyebrow-letter-spacing'] = a.eyebrowLetterSpacing || '1px';
+    styleVars['--ad-eyebrow-text-transform'] = a.eyebrowTextTransform || 'uppercase';
+
+    styleVars['--ad-heading-font-size'] = a.headingFontSize || 'clamp(36px, 5vw, 64px)';
+    styleVars['--ad-heading-font-weight'] = a.headingFontWeight || '800';
+    styleVars['--ad-heading-line-height'] = a.headingLineHeight || '1.2';
+    styleVars['--ad-heading-letter-spacing'] = a.headingLetterSpacing || 'normal';
+    styleVars['--ad-heading-text-transform'] = a.headingTextTransform || 'none';
+
+    styleVars['--ad-body-text-font-weight'] = a.bodyTextFontWeight || '400';
+    styleVars['--ad-body-text-line-height'] = a.bodyTextLineHeight || '1.6';
+    styleVars['--ad-body-text-letter-spacing'] = a.bodyTextLetterSpacing || 'normal';
+    styleVars['--ad-body-text-text-transform'] = a.bodyTextTextTransform || 'none';
+
+    styleVars['--ad-pill-font-size'] = a.pillFontSize || '14px';
+    styleVars['--ad-pill-font-weight'] = a.pillFontWeight || '600';
+    styleVars['--ad-pill-line-height'] = a.pillLineHeight || 'normal';
+    styleVars['--ad-pill-letter-spacing'] = a.pillLetterSpacing || 'normal';
+    styleVars['--ad-pill-text-transform'] = a.pillTextTransform || 'none';
+
+    styleVars['--ad-button-font-size'] = a.buttonFontSize || '16px';
+    styleVars['--ad-button-font-weight'] = a.buttonFontWeight || '600';
+    styleVars['--ad-button-line-height'] = a.buttonLineHeight || 'normal';
+    styleVars['--ad-button-letter-spacing'] = a.buttonLetterSpacing || 'normal';
+    styleVars['--ad-button-text-transform'] = a.buttonTextTransform || 'none';
+
+    styleVars['--ad-micro-copy-font-size'] = a.microCopyFontSize || '14px';
+    styleVars['--ad-micro-copy-font-weight'] = a.microCopyFontWeight || '400';
+    styleVars['--ad-micro-copy-line-height'] = a.microCopyLineHeight || 'normal';
+    styleVars['--ad-micro-copy-letter-spacing'] = a.microCopyLetterSpacing || 'normal';
+    styleVars['--ad-micro-copy-text-transform'] = a.microCopyTextTransform || 'none';
+  }
+
+  return styleVars;
+}
+
+/**
+ * v5 — frozen copy of save() as it stood immediately before the CTA rework,
+ * which:
+ *   - added the `showCta` toggle (CTA row can now be hidden entirely),
+ *   - replaced the email-form <form onSubmit="return false"> with a plain
+ *     <div> wrapper (the string event handler was never a valid React prop
+ *     and the form had no action, so it could never submit anywhere), and
+ *   - added the `--ad-cta-text-align` style var.
+ *
+ * All three change the serialized markup/style string, so content saved
+ * before them only validates against this entry. `migrate` is a no-op: every
+ * new attribute has a default that reproduces the old rendering (`showCta`
+ * defaults to true), so no attribute rewriting is needed.
+ */
+const vCtaToggle = {
+  migrate( attributes ) {
+    return attributes;
+  },
+
+  save( { attributes: a } ) {
+    const blockProps = useBlockProps.save( {
+      className: [
+        'adaire-saas-hero',
+        `layout-${ a.layoutStyle || 'centered' }`,
+        getBgTypeClass( a ),
+        a.effectFloatingElements ? 'has-floating-elements' : '',
+      ].filter( Boolean ).join( ' ' ),
+      style: getStyleVarsPreCta( a ),
+    } );
+
+    return (
+      <section { ...blockProps }>
+        { a.effectDotPattern && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--dots" aria-hidden="true" /> }
+        { a.effectGradientOverlay && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--gradient-overlay" aria-hidden="true" /> }
+        { a.effectBlur && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--blur" aria-hidden="true" /> }
+        { a.effectGlow && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--glow" aria-hidden="true" /> }
+        { a.effectAbstractShapes && (
+          <div className="adaire-saas-hero__fx adaire-saas-hero__fx--shapes" aria-hidden="true">
+            <span className="shape shape-1" /><span className="shape shape-2" /><span className="shape shape-3" />
+          </div>
+        ) }
+        { a.effectFloatingElements && (
+          <div className="adaire-saas-hero__fx adaire-saas-hero__fx--floating" aria-hidden="true">
+            <span className="float float-1" /><span className="float float-2" /><span className="float float-3" />
+          </div>
+        ) }
+        { a.effectAnimatedAccents && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--accent" aria-hidden="true" /> }
+
+        <div className="adaire-saas-hero__container">
+          { a.showPill && a.pillText && (
+            <div className="adaire-saas-hero__pill">
+              <RichText.Content tagName="span" value={ a.pillText } />
+            </div>
+          ) }
+
+          { a.showRatingBadges && (
+            <div className="adaire-saas-hero__ratings">
+              { ( a.ratingBadges || [] ).map( ( badge, i ) => <RatingBadgeView key={ i } badge={ badge } /> ) }
+            </div>
+          ) }
+
+          <div className="adaire-saas-hero__content">
+            <div className="adaire-saas-hero__text">
+              { a.eyebrow && (
+                <RichText.Content tagName="p" className="adaire-saas-hero__eyebrow" value={ a.eyebrow } />
+              ) }
+
+              <RichText.Content
+                tagName="h1"
+                className={ `adaire-saas-hero__heading ${ a.useGradientHeadline ? 'has-gradient' : '' }` }
+                value={ a.heading }
+              />
+
+              <RichText.Content tagName="p" className="adaire-saas-hero__text" value={ a.text } />
+
+              <div className="adaire-saas-hero__cta">
+                { a.ctaType === 'dual-buttons' && (
+                  <>
+                    <a href={ a.primaryButtonUrl || '#' } className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                      { a.primaryButtonText }
+                    </a>
+                    <a href={ a.secondaryButtonUrl || '#' } className="adaire-saas-hero__button adaire-saas-hero__button--secondary">
+                      { a.secondaryButtonText }
+                    </a>
+                  </>
+                ) }
+
+                { a.ctaType === 'email-form' && (
+                  <form className="adaire-saas-hero__email-form" onSubmit="return false">
+                    <input type="email" placeholder={ a.emailPlaceholder || 'Enter your email' } required />
+                    <button type="submit">{ a.submitButtonText || 'Get Started' }</button>
+                  </form>
+                ) }
+
+                { a.ctaType === 'single-button' && (
+                  <>
+                    <a href={ a.singleButtonUrl || '#' } className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                      { a.singleButtonText }
+                    </a>
+                    { a.microCopy && <p className="adaire-saas-hero__micro-copy">{ a.microCopy }</p> }
+                  </>
+                ) }
+              </div>
+            </div>
+
+            { a.showHeroImage && a.heroImageUrl && (
+              <div className={ `adaire-saas-hero__media adaire-saas-hero__media--${ a.imagePosition || 'below' }` }>
+                <img src={ a.heroImageUrl } alt="Hero" loading="lazy" />
+              </div>
+            ) }
+          </div>
+        </div>
+      </section>
+    );
+  },
+};
+
+export default [ vCtaToggle, v4, vRatingsExtraction, vTypography, v2, v1 ];
