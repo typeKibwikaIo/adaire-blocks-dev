@@ -69,91 +69,55 @@ $myUpdateChecker = PucFactory::buildUpdateChecker(
 // Version Rollback
 // =========================
 
-// Clear version cache when plugin is updated
+// Clear this plugin's legacy version-cache transient whenever a real
+// WordPress-driven update completes, or the plugin (re)activates. The
+// Stale Plugin/Update State Guard above now also covers this on every
+// admin request where the on-disk version changed by any means, but these
+// two hooks fire immediately at the moment WordPress itself knows about
+// the change, with no need to wait for the next page load.
 add_action('upgrader_process_complete', function($upgrader, $hook_extra) {
     if (isset($hook_extra['plugin']) && $hook_extra['plugin'] === plugin_basename(__FILE__)) {
         delete_transient('adaire-blocks_latest_version');
-        error_log('[Adaire Blocks Rollback] Plugin updated - cleared version cache');
     }
 }, 10, 2);
 
-// Also clear cache when plugin is activated (in case version changed)
 add_action('activated_plugin', function($plugin) {
     if ($plugin === plugin_basename(__FILE__)) {
         delete_transient('adaire-blocks_latest_version');
-        error_log('[Adaire Blocks Rollback] Plugin activated - cleared version cache');
     }
 });
 
-// Add rollback link in plugin row (only if current version is the latest)
+/**
+ * Add rollback link in the plugin row (only when the installed version is
+ * already the latest one available).
+ *
+ * This used to run its own independent wp_remote_get() against the same
+ * update-info.json feed the Plugin Update Checker above already polls, and
+ * cache the result in a separate transient. Two independently-cached
+ * "latest version" values for the same plugin can disagree with each
+ * other -- e.g. right after an update, PUC's own cached state (cleared by
+ * the Stale Plugin/Update State Guard) already knows the new version is
+ * current, while this filter's now-stale 1-hour cache could still think an
+ * "update" is available, or vice versa -- which is exactly the kind of
+ * "does the update mechanism leave stale/contradictory plugin state"
+ * problem this audit was asked to check for. There is no reason for a
+ * second, separately-cached source of truth: PUC's getUpdate() already
+ * returns null when the installed version is current, using state that
+ * the update checker itself keeps fresh (and that the guard above resets
+ * immediately on any version change), so read it directly instead.
+ */
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
-    // Get current version dynamically from plugin header
-    $plugin_data = get_plugin_data(__FILE__);
-    $current_version = $plugin_data['Version'];
+    global $myUpdateChecker;
+
     $is_latest_version = true;
-    
-    // Log the current version
-    error_log('[Adaire Blocks Rollback] Current version: ' . $current_version);
-    
-    // Check if there's a newer version available by directly checking the JSON file
-    // Cache the result for 1 hour to avoid checking too frequently
-    $cache_key = 'adaire-blocks_latest_version';
-    $cached_version = get_transient($cache_key);
-    
-    // Force refresh cache if we're on a newer version than what's cached
-    if ($cached_version !== false && $cached_version !== 'error') {
-        if (version_compare($current_version, $cached_version, '>')) {
-            error_log('[Adaire Blocks Rollback] Current version is newer than cached version - clearing cache');
-            delete_transient($cache_key);
-            $cached_version = false;
-        }
+    if ( isset( $myUpdateChecker ) && is_object( $myUpdateChecker ) && method_exists( $myUpdateChecker, 'getUpdate' ) ) {
+        $is_latest_version = ( $myUpdateChecker->getUpdate() === null );
     }
-    
-    if ($cached_version === false) {
-        // Cache expired or doesn't exist, fetch from JSON
-        $json_url = 'https://raw.githubusercontent.com/helloadaire/Adaire-Blocks-Update-JSON/main/update-info.json';
-        $response = wp_remote_get($json_url, array('timeout' => 5));
-        
-        if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
-            $json_data = json_decode(wp_remote_retrieve_body($response), true);
-            if ($json_data && isset($json_data['version'])) {
-                $latest_version = $json_data['version'];
-                error_log('[Adaire Blocks Rollback] Latest available version from JSON: ' . $latest_version);
-                
-                // Cache the result for 1 hour
-                set_transient($cache_key, $latest_version, HOUR_IN_SECONDS);
-                
-                if (version_compare($current_version, $latest_version, '<')) {
-                    $is_latest_version = false;
-                    error_log('[Adaire Blocks Rollback] Hiding rollback link - newer version available: ' . $latest_version);
-                }
-            } else {
-                error_log('[Adaire Blocks Rollback] Invalid JSON data received');
-                set_transient($cache_key, 'error', HOUR_IN_SECONDS);
-            }
-        } else {
-            error_log('[Adaire Blocks Rollback] Failed to fetch JSON: ' . (is_wp_error($response) ? $response->get_error_message() : 'HTTP ' . wp_remote_retrieve_response_code($response)));
-            set_transient($cache_key, 'error', HOUR_IN_SECONDS);
-        }
-    } else {
-        // Use cached version
-        if ($cached_version !== 'error') {
-            error_log('[Adaire Blocks Rollback] Using cached latest version: ' . $cached_version);
-            if (version_compare($current_version, $cached_version, '<')) {
-                $is_latest_version = false;
-                error_log('[Adaire Blocks Rollback] Hiding rollback link - newer version available: ' . $cached_version);
-            }
-        } else {
-            error_log('[Adaire Blocks Rollback] Using cached error state - showing rollback link');
-        }
-    }
-    
-    // Only show rollback link if current version is the latest
+
     if ($is_latest_version) {
-        error_log('[Adaire Blocks Rollback] Showing rollback link - current version is latest');
         $links[] = '<a href="' . esc_url(admin_url('admin-post.php?action=my_plugin_rollback&_wpnonce=' . wp_create_nonce('my_plugin_rollback'))) . '" class="my-plugin-rollback-btn">Rollback</a>';
     }
-    
+
     return $links;
 });
 
@@ -246,6 +210,77 @@ define('ADAIRE_BLOCKS_PLUGIN_FILE', __FILE__);
 if (!defined('ADAIRE_BLOCKS_IS_FREE')) {
     define('ADAIRE_BLOCKS_IS_FREE', false);
 }
+
+// =========================
+// Stale Plugin/Update State Guard
+// =========================
+//
+// Root cause this addresses: when this plugin's files are updated by any
+// route other than WordPress's own Plugin_Upgrader (e.g. a `git pull` or
+// SFTP/file-manager sync straight onto the server -- how this plugin is
+// actually deployed during development/testing here), none of the hooks
+// WordPress core relies on to know a plugin changed ever fire:
+// `upgrader_process_complete` is only dispatched by Plugin_Upgrader, so
+// `wp_clean_plugins_cache()` never runs, `get_plugins()`'s cached plugin
+// list/version keeps its old value (especially with a persistent object
+// cache -- common on managed hosts), the `update_plugins` site transient
+// keeps showing the old available-update state, the Plugin Update Checker
+// library's own saved state doesn't know the installed version moved, and
+// -- if the host runs PHP with `opcache.validate_timestamps` off or a long
+// `opcache.revalidate_freq` -- PHP itself keeps executing the *compiled
+// bytecode of the old files*, which is what actually produces symptoms
+// like "the admin menu doesn't show until I refresh": the request that
+// finally notices the version changed and clears these caches is the one
+// that renders against stale code, and only requests after it are fresh.
+//
+// Fix: compare the on-disk plugin version against the version we last saw
+// on the earliest possible admin hook (`admin_init`, priority 0 -- before
+// every other Adaire Blocks `admin_init` callback, and long before
+// `admin_menu` builds the sidebar). On every normal request this is a
+// single cheap option read-and-compare. The very first time it detects a
+// mismatch (a genuine WP-driven update, an out-of-band file sync, or the
+// very first activation) it proactively clears every layer above so the
+// *next* request -- not some arbitrary future "refresh" -- is guaranteed
+// fresh. No polling, no forced reloads: it only ever does work in response
+// to a real admin page load.
+function adaire_blocks_maybe_bust_stale_caches() {
+	$seen_version = get_option( 'adaire_blocks_seen_version' );
+
+	if ( $seen_version === ADAIRE_BLOCKS_VERSION ) {
+		return;
+	}
+
+	// 1. WordPress's own plugin-metadata cache (get_plugins()) and its
+	//    update-availability transient.
+	if ( function_exists( 'wp_clean_plugins_cache' ) ) {
+		wp_clean_plugins_cache( true );
+	}
+	delete_site_transient( 'update_plugins' );
+
+	// 2. This plugin's own legacy version-cache transient (see the
+	//    "Version Rollback" block above) so the rollback link's
+	//    "is this the latest version" check re-derives from PUC's fresh
+	//    state below instead of comparing against a pre-update value.
+	delete_transient( 'adaire-blocks_latest_version' );
+
+	// 3. The Plugin Update Checker library's own persisted state, so it
+	//    re-evaluates immediately instead of waiting out its normal
+	//    check interval with a now-outdated "installed version".
+	global $myUpdateChecker;
+	if ( isset( $myUpdateChecker ) && is_object( $myUpdateChecker ) && method_exists( $myUpdateChecker, 'resetUpdateState' ) ) {
+		$myUpdateChecker->resetUpdateState();
+	}
+
+	// 4. PHP OPcache. Only relevant when files changed outside WordPress's
+	//    own upgrader (see note above); a no-op otherwise.
+	if ( function_exists( 'opcache_reset' ) ) {
+		opcache_reset();
+	}
+
+	update_option( 'adaire_blocks_seen_version', ADAIRE_BLOCKS_VERSION );
+}
+add_action( 'admin_init', 'adaire_blocks_maybe_bust_stale_caches', 0 );
+
 
 // Include configuration manager
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-blocks-config.php';

@@ -15,6 +15,18 @@ class AdaireBlocksLicense {
 	private static $instance = null;
 	private $table_name;
 
+	/**
+	 * Bump this when create_license_table()'s CREATE TABLE statement
+	 * changes, so existing installs pick up the schema change once instead
+	 * of never (they won't re-fire register_activation_hook on a plain
+	 * in-place update) and instead of on every single admin page load
+	 * (dbDelta() was previously called unconditionally from init(), i.e.
+	 * on every wp-admin request -- unnecessary DB overhead on every page
+	 * load for a check that only ever needs to happen once per schema
+	 * version; see maybe_create_license_table()).
+	 */
+	const LICENSE_TABLE_SCHEMA_VERSION = '1';
+
 	// Validation server configuration
 	private $validation_server_url;
 
@@ -51,7 +63,7 @@ class AdaireBlocksLicense {
 	 * Initialize license system
 	 */
 	public function init() {
-		$this->create_license_table();
+		$this->maybe_create_license_table();
 		$this->check_license_status();
 	}
 
@@ -92,6 +104,19 @@ class AdaireBlocksLicense {
 	/**
 	 * Create license table
 	 */
+	/**
+	 * Run create_license_table() only when the schema hasn't been installed
+	 * yet, or is out of date -- not on every admin_init.
+	 */
+	private function maybe_create_license_table() {
+		if ( get_option( 'adaire_blocks_license_table_schema' ) === self::LICENSE_TABLE_SCHEMA_VERSION ) {
+			return;
+		}
+
+		$this->create_license_table();
+		update_option( 'adaire_blocks_license_table_schema', self::LICENSE_TABLE_SCHEMA_VERSION );
+	}
+
 	private function create_license_table() {
 		global $wpdb;
 
