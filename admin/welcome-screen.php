@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Adaire_Welcome_Screen {
 
 	public static function register() {
-		add_action( 'admin_menu', array( __CLASS__, 'add_menu_page' ) );
+		add_action( 'admin_menu', array( __CLASS__, 'add_menu_page' ), 9 );
 		add_action( 'admin_menu', array( __CLASS__, 'move_to_top' ), 999 );
 		add_action( 'wp_ajax_adaire_create_starter_page', array( __CLASS__, 'create_starter_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'maybe_redirect_after_activation' ) );
