@@ -3,9 +3,9 @@
     "apiVersion": 3,
     "name": "create-block/saas-hero-block",
     "version": "0.2.0",
-    "title": "SaaS Hero (Free)",
+    "title": "Hero Block (Pro)",
     "category": "adaire-layout-hero",
-    "description": "SaaS Hero block for Adaire Blocks.",
+    "description": "Hero block for Adaire Blocks.",
     "supports": {
         "html": false,
         "anchor": true,
@@ -132,6 +132,10 @@
         "gradientEnd": {
             "type": "string",
             "default": "#8b5cf6"
+        },
+        "showCta": {
+            "type": "boolean",
+            "default": true
         },
         "ctaType": {
             "type": "string",

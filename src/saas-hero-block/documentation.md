@@ -1,8 +1,10 @@
-# SaaS Hero Block Documentation
+# Hero Block Documentation
 
 ## Overview
 
-The **SaaS Hero** block (`create-block/saas-hero-block`) is a focused hero section for
+The **Hero Block** (`create-block/saas-hero-block` — the slug keeps its original name so
+already-published content stays valid; it ships as "Hero Block (Pro)" in the paid build
+and "Hero Block (Free)" in the free one) is a focused hero section for
 software products, startups, and landing pages: an eyebrow label, headline, supporting
 text, a configurable call-to-action, an optional hero image, a rating/app-store badge
 strip, and a set of purely decorative background effects. It does not include a
@@ -11,7 +13,7 @@ Trusted-By logo bar, a security/feature grid, or an FAQ accordion — those were
 
 ## Adding the Block
 
-1. Type "/" and then "SaaS Hero" in the block inserter, or search "SaaS Hero" in the
+1. Type "/" and then "Hero Block" in the block inserter, or search "Hero" in the
    block library.
 2. The block appears pre-filled with demo copy ("Launch your SaaS faster") and a
    dual-button CTA that you can edit directly in the canvas or via the sidebar.
@@ -33,10 +35,15 @@ Trusted-By logo bar, a security/feature grid, or an FAQ accordion — those were
 - **Text** — supporting paragraph under the headline.
 
 ### CTA Content
+- **Show call to action** — off hides the whole CTA row (buttons / email form /
+  micro-copy) and every CTA control with it, for heroes that are copy + image only.
 - **CTA Type** — Dual Buttons, Email Form, or Single Button.
-  - *Dual Buttons*: primary + secondary button text/URL.
-  - *Email Form*: an email input with a placeholder and submit button label (frontend
-    markup only — no submit handler is wired up by the block itself).
+  - *Dual Buttons*: primary + secondary button text/URL. Clearing one button's text
+    hides that button, so this type also covers "one button only".
+  - *Email Form*: an email input with a placeholder and submit button label. This is
+    presentational markup only — a plain `<div>`, not a `<form>` — because a static
+    block can't carry a submit handler; wire it to your own form plugin/endpoint if
+    you need real submissions.
   - *Single Button*: one button plus an optional micro-copy line underneath.
 
 ### Media Asset

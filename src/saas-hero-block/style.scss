@@ -170,8 +170,17 @@
     margin: 0 auto;
   }
 
+  // `display: flex` + `width: fit-content` + auto side margins, rather than
+  // inline-flex: an inline-flex pill is an inline box, so it ignored auto
+  // margins and always sat hard against the left edge of the container even
+  // though every other element in the centered layout is centered. The split
+  // layouts pin it back to the left below.
   &__pill {
-    display: inline-flex;
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     align-items: center;
     padding: 8px 16px;
     background: var(--ad-pill-bg, #dbeafe);
@@ -262,8 +271,16 @@
     gap: 24px;
   }
 
-  &__text {
+  // NOTE: `adaire-saas-hero__text` is deliberately carried by two different
+  // elements — the <div> column wrapper AND the body <p> inside it (both are
+  // baked into already-published markup, so neither can be renamed without a
+  // new deprecation). Every rule for the two is therefore tag-qualified;
+  // an unqualified `&__text` block would apply the paragraph's font size,
+  // opacity and bottom margin to the whole column as well, which is exactly
+  // what threw the heading/CTA spacing off.
+  div#{&}__text {
     max-width: 700px;
+    width: 100%;
   }
 
   &__eyebrow {
@@ -292,19 +309,24 @@
     }
   }
 
-  &__text {
+  p#{&}__text {
     font-size: var(--ad-font-size, 18px);
     font-weight: var(--ad-body-text-font-weight, 400);
     line-height: var(--ad-body-text-line-height, 1.6);
     letter-spacing: var(--ad-body-text-letter-spacing, normal);
     text-transform: var(--ad-body-text-text-transform, none);
     opacity: 0.9;
-    margin-bottom: 32px;
+    // Spacing below the body copy belongs to whatever follows it, so the gap
+    // is owned solely by .adaire-saas-hero__cta's margin-top. The old
+    // margin-bottom: 32px here stacked with that margin for a 64px void
+    // between the paragraph and the buttons.
+    margin-bottom: 0;
   }
 
   &__cta {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--ad-cta-gap, 16px);
     justify-content: var(--ad-cta-align, center);
     margin-top: 32px;
@@ -325,6 +347,8 @@
     text-decoration: none;
     transition: all 0.3s ease;
     cursor: pointer;
+    max-width: 100%;
+    text-align: center;
 
     &--primary {
       background: var(--ad-button-primary-bg, var(--ad-accent));
@@ -391,14 +415,23 @@
     }
   }
 
+  // The micro-copy line lives inside the CTA flex row, so without a
+  // full-width basis it wrapped up next to the button instead of sitting
+  // under it. text-align (not justify-content) is what positions the text
+  // once it owns the full row — hence the --ad-cta-text-align twin var.
   &__micro-copy {
+    flex: 0 0 100%;
+    width: 100%;
+    text-align: var(--ad-cta-text-align, center);
     font-size: var(--ad-micro-copy-font-size, 14px);
     font-weight: var(--ad-micro-copy-font-weight, 400);
     line-height: var(--ad-micro-copy-line-height, normal);
     letter-spacing: var(--ad-micro-copy-letter-spacing, normal);
     text-transform: var(--ad-micro-copy-text-transform, none);
     opacity: 0.7;
-    margin-top: 12px;
+    // Spacing from the button above is the CTA row gap, not a margin —
+    // otherwise the two stack and the gap slider stops matching reality.
+    margin-top: 0;
   }
 
   // ── Media asset ───────────────────────────────────────────────────────
@@ -424,6 +457,23 @@
     }
   }
 
+  // "Image Position: Above Text" (centered layout only — the split layouts
+  // take their side from the layout control instead). The `imagePosition`
+  // enum only ever emits `--above` / `--below`, so the `--left` / `--right`
+  // rules above never matched it and the Above option silently did nothing.
+  // The `:has()` selector covers the editor canvas, where QuickZone wraps the
+  // media box in its own .adaire-qz div — that wrapper, not the media box, is
+  // the actual flex child, so `order` has to land on it (same reason the
+  // split-layout rules below carry a .adaire-qz twin).
+  &:not(.layout-split-left):not(.layout-split-right) {
+    .adaire-saas-hero__media--above,
+    .adaire-saas-hero__content > .adaire-qz:has(.adaire-saas-hero__media--above) {
+      order: -1;
+      margin-top: 0;
+      margin-bottom: var(--ad-media-spacing, 48px);
+    }
+  }
+
   // ── Layout variants ──────────────────────────────────────────────────
   &.layout-split-left,
   &.layout-split-right {
@@ -434,13 +484,25 @@
       gap: 48px;
     }
 
-    .adaire-saas-hero__text {
+    // Left-align the elements that sit above the split columns too — they
+    // used to stay centered while the text column beside them read left,
+    // which is what made the split layouts look misaligned at the top.
+    .adaire-saas-hero__pill {
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    div.adaire-saas-hero__text {
       flex: 1;
       max-width: 500px;
     }
 
     .adaire-saas-hero__cta {
       justify-content: flex-start;
+    }
+
+    .adaire-saas-hero__micro-copy {
+      text-align: left;
     }
 
     // The second selector here covers the editor canvas only: edit.js wraps
@@ -501,12 +563,16 @@
       font-size: clamp(28px, 8vw, 42px);
     }
 
-    &__text {
+    p#{&}__text {
       font-size: 16px;
     }
 
+    // Stacked CTA: the row's justify-content now runs down the block axis, so
+    // alignment has to move to align-items, and the buttons stretch full
+    // width instead of hugging their labels.
     &__cta {
       flex-direction: column;
+      align-items: stretch;
       width: 100%;
     }
 
@@ -516,6 +582,11 @@
 
     &__email-form {
       flex-direction: column;
+      max-width: none;
+
+      button {
+        width: 100%;
+      }
     }
 
     &.layout-split-left,
@@ -525,8 +596,17 @@
         text-align: center;
       }
 
+      .adaire-saas-hero__pill {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
       .adaire-saas-hero__cta {
         justify-content: center;
+      }
+
+      .adaire-saas-hero__micro-copy {
+        text-align: center;
       }
 
       .adaire-saas-hero__media,

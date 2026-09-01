@@ -28,6 +28,7 @@ const { execSync, execFileSync } = require('child_process');
  */
 const FREE_TITLE_OVERRIDES = {
     'tabs-block': 'Tabbed Content Free',
+    'saas-hero-block': 'Hero Block (Free)',
 };
 
 class FreeVersionGenerator {

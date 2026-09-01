@@ -65,34 +65,45 @@ export default function save({ attributes: a }) {
 
             <RichText.Content tagName="p" className="adaire-saas-hero__text" value={a.text} />
 
-            <div className="adaire-saas-hero__cta">
-              {a.ctaType === 'dual-buttons' && (
-                <>
-                  <a href={a.primaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
-                    {a.primaryButtonText}
-                  </a>
-                  <a href={a.secondaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--secondary">
-                    {a.secondaryButtonText}
-                  </a>
-                </>
-              )}
+            {a.showCta !== false && (
+              <div className="adaire-saas-hero__cta">
+                {a.ctaType === 'dual-buttons' && (
+                  <>
+                    {a.primaryButtonText && (
+                      <a href={a.primaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                        {a.primaryButtonText}
+                      </a>
+                    )}
+                    {a.secondaryButtonText && (
+                      <a href={a.secondaryButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--secondary">
+                        {a.secondaryButtonText}
+                      </a>
+                    )}
+                  </>
+                )}
 
-              {a.ctaType === 'email-form' && (
-                <form className="adaire-saas-hero__email-form" onSubmit="return false">
-                  <input type="email" placeholder={a.emailPlaceholder || 'Enter your email'} required />
-                  <button type="submit">{a.submitButtonText || 'Get Started'}</button>
-                </form>
-              )}
+                {/* A plain <div>, not a <form>: this markup is static (no action,
+                    no handler — save() can't carry one), so a real form would
+                    either do nothing or GET-submit the page back to itself. */}
+                {a.ctaType === 'email-form' && (
+                  <div className="adaire-saas-hero__email-form">
+                    <input type="email" placeholder={a.emailPlaceholder || 'Enter your email'} aria-label={a.emailPlaceholder || 'Enter your email'} />
+                    <button type="button">{a.submitButtonText || 'Get Started'}</button>
+                  </div>
+                )}
 
-              {a.ctaType === 'single-button' && (
-                <>
-                  <a href={a.singleButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
-                    {a.singleButtonText}
-                  </a>
-                  {a.microCopy && <p className="adaire-saas-hero__micro-copy">{a.microCopy}</p>}
-                </>
-              )}
-            </div>
+                {a.ctaType === 'single-button' && (
+                  <>
+                    {a.singleButtonText && (
+                      <a href={a.singleButtonUrl || '#'} className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                        {a.singleButtonText}
+                      </a>
+                    )}
+                    {a.microCopy && <p className="adaire-saas-hero__micro-copy">{a.microCopy}</p>}
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           {a.showHeroImage && a.heroImageUrl && (

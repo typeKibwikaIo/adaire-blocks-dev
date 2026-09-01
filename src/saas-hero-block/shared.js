@@ -156,6 +156,10 @@ export function getStyleVars(a) {
 		'--ad-cta-padding-h': `${a.ctaPaddingH ?? 32}px`,
 		'--ad-cta-radius': `${resolveSentinel(a.ctaBorderRadius, a.borderRadius ?? 12)}px`,
 		'--ad-cta-align': alignToFlex(a.ctaAlignment),
+		// Text-align twin of --ad-cta-align. The CTA row is a flex container, so
+		// justify-content alone can't align a full-width child like the
+		// micro-copy line — that needs a text-align value, not a flex one.
+		'--ad-cta-text-align': a.ctaAlignment || 'center',
 
 		// Media asset
 		'--ad-media-radius': `${resolveSentinel(a.mediaBorderRadius, a.borderRadius ?? 12)}px`,
