@@ -4,6 +4,7 @@ export default function save({ attributes }) {
     const { 
         width, 
         height, 
+        cardBehaviour,
         flipDirection, 
         animationDuration, 
         animationEasing,
@@ -17,6 +18,11 @@ export default function save({ attributes }) {
         backBorderColor,
         backBorderWidth
     } = attributes;
+
+    // Card behaviour: 'flip' (default) reveals the back face on hover/tap,
+    // 'static' renders the front face only and never transforms.
+    const isStatic = cardBehaviour === 'static';
+
 
     // Handle legacy width/height (number) and convert to object format
     const normalizedWidth = typeof width === 'object' ? width : {
@@ -32,7 +38,10 @@ export default function save({ attributes }) {
     };
 
     const blockProps = useBlockProps.save({
-        className: `adaire-flipcard adaire-flipcard--${flipDirection}`,
+        // The `--static` modifier is only appended when the user actually
+        // picks Static Card, so every card left on the default (Flip Card)
+        // keeps byte-identical saved markup and needs no block recovery.
+        className: `adaire-flipcard adaire-flipcard--${flipDirection}${isStatic ? ' adaire-flipcard--static' : ''}`,
         style: {
             '--flipcard-width-desktop': `${normalizedWidth?.desktop?.value ?? 300}${normalizedWidth?.desktop?.unit ?? 'px'}`,
             '--flipcard-width-tablet': `${normalizedWidth?.tablet?.value ?? 100}${normalizedWidth?.tablet?.unit ?? '%'}`,

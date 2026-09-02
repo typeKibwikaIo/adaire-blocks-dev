@@ -192,4 +192,17 @@
 	&:hover &__container {
 		transform: none !important;
 	}
+
+	// Static Card: the back face is not part of the rendered card, so don't
+	// offer it for editing either. Its inner blocks stay in the document, so
+	// switching back to Flip Card restores that content untouched.
+	&--static {
+		.adaire-flipcard-back {
+			display: none;
+		}
+
+		.adaire-flipcard-front::before {
+			content: "Card";
+		}
+	}
 }

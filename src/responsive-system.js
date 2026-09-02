@@ -633,6 +633,41 @@ function ResponsivePreviewPlugin() {
 		return () => window.clearInterval( interval );
 	}, [] );
 
+	// A block's own Device View control can drive the canvas by dispatching
+	// this event (see components/useEditorDevice.js). Without this listener the
+	// toolbar only ever *emitted* the event and ignored anyone else's, so an
+	// externally-requested device change updated the per-block HOCs but never
+	// resized the canvas — the two halves of the preview disagreed.
+	useEffect( () => {
+		const handleDeviceChange = ( event ) => {
+			const nextDevice = event?.detail?.device;
+
+			if ( ! nextDevice || nextDevice === activeDevice ) {
+				return;
+			}
+
+			const nextDeviceConfig = getDeviceConfig( nextDevice );
+
+			setActiveDeviceState( nextDevice );
+			setViewportState( {
+				width: nextDeviceConfig.width,
+				height: nextDeviceConfig.height,
+				zoom: viewport.zoom,
+			} );
+		};
+
+		window.addEventListener(
+			'adaire-responsive-device-change',
+			handleDeviceChange
+		);
+
+		return () =>
+			window.removeEventListener(
+				'adaire-responsive-device-change',
+				handleDeviceChange
+			);
+	}, [ activeDevice, viewport.zoom ] );
+
 	useEffect( () => {
 		applyDeviceToEditor( activeDevice, viewport );
 	}, [ activeDevice, viewport, device.width ] );

@@ -84,6 +84,11 @@
     padding-right: var(--infogrid-padding-right-mobile, 20px);
     padding-bottom: var(--infogrid-padding-bottom-mobile, 40px);
     padding-left: var(--infogrid-padding-left-mobile, 20px);
+
+    margin-top: var(--infogrid-margin-top-mobile, 0);
+    margin-right: var(--infogrid-margin-right-mobile, 0);
+    margin-bottom: var(--infogrid-margin-bottom-mobile, 0);
+    margin-left: var(--infogrid-margin-left-mobile, 0);
     
     &__container {
         width: 100%;
@@ -106,6 +111,10 @@
         padding-right: var(--infogrid-padding-right-tablet, var(--infogrid-padding-right-mobile, 40px));
         padding-bottom: var(--infogrid-padding-bottom-tablet, var(--infogrid-padding-bottom-mobile, 60px));
         padding-left: var(--infogrid-padding-left-tablet, var(--infogrid-padding-left-mobile, 40px));
+        margin-top: var(--infogrid-margin-top-tablet, var(--infogrid-margin-top-mobile, 0));
+        margin-right: var(--infogrid-margin-right-tablet, var(--infogrid-margin-right-mobile, 0));
+        margin-bottom: var(--infogrid-margin-bottom-tablet, var(--infogrid-margin-bottom-mobile, 0));
+        margin-left: var(--infogrid-margin-left-tablet, var(--infogrid-margin-left-mobile, 0));
 
         &__container.is-constrained {
             max-width: var(--container-max-width-tablet, var(--container-max-width, 100%));
@@ -117,6 +126,10 @@
         padding-right: var(--infogrid-padding-right-small-laptop, var(--infogrid-padding-right-tablet, 60px));
         padding-bottom: var(--infogrid-padding-bottom-small-laptop, var(--infogrid-padding-bottom-tablet, 80px));
         padding-left: var(--infogrid-padding-left-small-laptop, var(--infogrid-padding-left-tablet, 60px));
+        margin-top: var(--infogrid-margin-top-small-laptop, var(--infogrid-margin-top-tablet, 0));
+        margin-right: var(--infogrid-margin-right-small-laptop, var(--infogrid-margin-right-tablet, 0));
+        margin-bottom: var(--infogrid-margin-bottom-small-laptop, var(--infogrid-margin-bottom-tablet, 0));
+        margin-left: var(--infogrid-margin-left-small-laptop, var(--infogrid-margin-left-tablet, 0));
         &__container.is-constrained {
             max-width: var(--container-max-width-small-laptop, var(--container-max-width, 1200px));
         }
@@ -127,6 +140,10 @@
         padding-right: var(--infogrid-padding-right-desktop, var(--infogrid-padding-right-small-laptop, 80px));
         padding-bottom: var(--infogrid-padding-bottom-desktop, var(--infogrid-padding-bottom-small-laptop, 100px));
         padding-left: var(--infogrid-padding-left-desktop, var(--infogrid-padding-left-small-laptop, 80px));
+        margin-top: var(--infogrid-margin-top-desktop, var(--infogrid-margin-top-small-laptop, 0));
+        margin-right: var(--infogrid-margin-right-desktop, var(--infogrid-margin-right-small-laptop, 0));
+        margin-bottom: var(--infogrid-margin-bottom-desktop, var(--infogrid-margin-bottom-small-laptop, 0));
+        margin-left: var(--infogrid-margin-left-desktop, var(--infogrid-margin-left-small-laptop, 0));
 
         &__container.is-constrained {
             max-width: var(--container-max-width-desktop, var(--container-max-width, 1200px));
@@ -138,6 +155,10 @@
         padding-right: var(--infogrid-padding-right-big-desktop, var(--infogrid-padding-right-desktop, 80px));
         padding-bottom: var(--infogrid-padding-bottom-big-desktop, var(--infogrid-padding-bottom-desktop, 100px));
         padding-left: var(--infogrid-padding-left-big-desktop, var(--infogrid-padding-left-desktop, 80px));
+        margin-top: var(--infogrid-margin-top-big-desktop, var(--infogrid-margin-top-desktop, 0));
+        margin-right: var(--infogrid-margin-right-big-desktop, var(--infogrid-margin-right-desktop, 0));
+        margin-bottom: var(--infogrid-margin-bottom-big-desktop, var(--infogrid-margin-bottom-desktop, 0));
+        margin-left: var(--infogrid-margin-left-big-desktop, var(--infogrid-margin-left-desktop, 0));
         &__container.is-constrained {
             max-width: var(--container-max-width-big-desktop, var(--container-max-width, 1200px));
         }

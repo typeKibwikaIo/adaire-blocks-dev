@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/infogrid-block",
     "version": "0.1.0",
-    "title": "Feature Grid",
+    "title": "Feature Grid (Pro)",
     "category": "adaire-information-blocks",
     "description": "Display features, services, or information in a responsive grid layout with customizable styling.",
     "supports": {
@@ -221,6 +221,10 @@
                     "unit": "px"
                 }
             }
+        },
+        "responsiveMargin": {
+            "type": "object",
+            "default": {}
         },
         "responsivePadding": {
             "type": "object",

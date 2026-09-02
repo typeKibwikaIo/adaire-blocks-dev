@@ -35,18 +35,20 @@
     }
 
     .adaire-device-toggle-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-        justify-content: center;
+        // Five breakpoints in a narrow sidebar: a flex row with text labels
+        // wrapped onto three ragged lines. A fixed 5-up grid keeps them on one.
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2px;
 
         .components-button {
-            height: 36px;
-            padding: 0 8px;
+            height: auto;
+            padding: 6px 2px;
             border-radius: 4px;
-            flex: 1;
-            min-width: 40px;
+            min-width: 0;
             display: flex;
+            flex-direction: column;
+            gap: 2px;
             align-items: center;
             justify-content: center;
 
@@ -61,11 +63,23 @@
             }
 
             span {
-                font-size: 11px;
-                margin-left: 6px;
-                white-space: nowrap;
+                font-size: 9px;
+                line-height: 1.2;
+                text-align: center;
             }
         }
+    }
+
+    // Shown for smallLaptop / bigDesktop, which the preview toolbar has no
+    // canvas size for — see components/useEditorDevice.js.
+    .adaire-device-toggle-hint {
+        margin: 8px 0 0;
+        padding-left: 8px;
+        border-left: 2px solid #dba617;
+        font-size: 11px;
+        line-height: 1.4;
+        color: #646970;
+        text-align: left;
     }
 
     .adaire-device-toggle-status {

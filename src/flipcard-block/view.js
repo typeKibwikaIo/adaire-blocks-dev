@@ -1,93 +1,116 @@
-﻿/**
+/**
  * Flip Card Block - Frontend View Script
- * Handles touch and click interactions for flip cards
+ *
+ * Adds tap/keyboard flipping for cards the CSS can't flip on hover.
+ *
+ * Hover itself is handled entirely in CSS, behind
+ * `@media (hover: hover) and (pointer: fine)`. This script no longer sniffs
+ * `ontouchstart` / `navigator.maxTouchPoints` to decide that — it asks the
+ * browser the same question the stylesheet asks, so the two can never
+ * disagree (they did on hybrid laptops, and the old class was only stamped
+ * on after the script ran).
+ *
+ * Cards set to the "Static Card" behaviour carry `adaire-flipcard--static`
+ * and are skipped entirely: they never flip, on any device or screen size.
  */
+
+const HOVER_QUERY = '(hover: hover) and (pointer: fine)';
 
 document.addEventListener('DOMContentLoaded', () => {
     initFlipCards();
 });
 
 /**
- * Initialize all flip card blocks on the page
+ * Initialize every flip card on the page.
  */
 function initFlipCards() {
-    const flipCards = document.querySelectorAll('.adaire-flipcard');
-    
-    flipCards.forEach(flipCard => {
-        new FlipCardHandler(flipCard);
-    });
+    document
+        .querySelectorAll('.adaire-flipcard:not(.adaire-flipcard--static)')
+        .forEach((card) => new FlipCardHandler(card));
 }
 
 /**
- * Flip Card Handler Class
- * Manages flip interactions for a single flip card
+ * Manages tap/keyboard flipping for a single flip card.
  */
 class FlipCardHandler {
     constructor(card) {
         this.card = card;
-        this.container = card.querySelector('.adaire-flipcard__container');
         this.isFlipped = false;
-        this.isTouchDevice = this.detectTouchDevice();
-        
-        // Add touch device class for CSS targeting
-        if (this.isTouchDevice) {
-            this.card.classList.add('adaire-flipcard--touch-device');
+        this.hoverQuery = window.matchMedia(HOVER_QUERY);
+
+        this.handleClick = this.handleClick.bind(this);
+        this.handleKeydown = this.handleKeydown.bind(this);
+        this.syncMode = this.syncMode.bind(this);
+
+        this.syncMode();
+
+        // Re-evaluate when the pointer capability changes (e.g. a detachable
+        // keyboard/trackpad, or moving the window to another display).
+        if (typeof this.hoverQuery.addEventListener === 'function') {
+            this.hoverQuery.addEventListener('change', this.syncMode);
         }
-        
-        this.bindEvents();
     }
-    
+
     /**
-     * Detect if the device supports touch
+     * Bind or unbind the toggle handlers to match the current pointer type.
      */
-    detectTouchDevice() {
-        return (
-            'ontouchstart' in window ||
-            navigator.maxTouchPoints > 0 ||
-            navigator.msMaxTouchPoints > 0
-        );
-    }
-    
-    /**
-     * Bind event listeners
-     */
-    bindEvents() {
-        if (this.isTouchDevice) {
-            // Use click events for touch devices (click works on both touch and mouse)
-            this.card.addEventListener('click', this.handleClick.bind(this));
+    syncMode() {
+        if (this.hoverQuery.matches) {
+            this.disableToggle();
+        } else {
+            this.enableToggle();
         }
-        // Note: Hover is handled by CSS for non-touch devices
     }
-    
-    /**
-     * Handle click events on touch devices
-     */
-    handleClick(event) {
-        // Don't flip if clicking on a link or button inside the card
-        if (event.target.closest('a, button, [role="button"]')) {
+
+    enableToggle() {
+        if (this.toggleEnabled) {
             return;
         }
-        
-        // Prevent event bubbling
-        event.stopPropagation();
-        
-        this.toggleFlip();
+        this.toggleEnabled = true;
+        this.card.classList.add('adaire-flipcard--interactive');
+        this.card.setAttribute('tabindex', '0');
+        this.card.setAttribute('role', 'button');
+        this.card.setAttribute('aria-pressed', 'false');
+        this.card.addEventListener('click', this.handleClick);
+        this.card.addEventListener('keydown', this.handleKeydown);
     }
-    
-    /**
-     * Toggle the flip state
-     */
-    toggleFlip() {
-        this.isFlipped = !this.isFlipped;
-        
-        if (this.isFlipped) {
-            this.card.classList.add('adaire-flipcard--flipped');
-        } else {
-            this.card.classList.remove('adaire-flipcard--flipped');
+
+    disableToggle() {
+        if (!this.toggleEnabled) {
+            return;
         }
+        this.toggleEnabled = false;
+        this.card.classList.remove('adaire-flipcard--interactive');
+        this.card.removeAttribute('tabindex');
+        this.card.removeAttribute('role');
+        this.card.removeAttribute('aria-pressed');
+        this.card.removeEventListener('click', this.handleClick);
+        this.card.removeEventListener('keydown', this.handleKeydown);
+        this.setFlipped(false);
+    }
+
+    handleClick(event) {
+        // Let links and buttons inside the card do their own job.
+        if (event.target.closest('a, button, [role="button"]') !== this.card) {
+            return;
+        }
+
+        event.stopPropagation();
+        this.setFlipped(!this.isFlipped);
+    }
+
+    handleKeydown(event) {
+        if (event.key !== 'Enter' && event.key !== ' ' && event.key !== 'Spacebar') {
+            return;
+        }
+
+        event.preventDefault();
+        this.setFlipped(!this.isFlipped);
+    }
+
+    setFlipped(flipped) {
+        this.isFlipped = flipped;
+        this.card.classList.toggle('adaire-flipcard--flipped', flipped);
+        this.card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
     }
 }
-
-
-
-

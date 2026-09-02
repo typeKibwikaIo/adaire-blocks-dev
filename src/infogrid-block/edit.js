@@ -20,6 +20,8 @@ import {
     __experimentalUnitControl as UnitControl,
     __experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
+import { normalizeBoxUnits } from '../components/spacing-utils';
+import useEditorDevice, { hasCanvasPreset } from '../components/useEditorDevice';
 import { useState, useEffect, createElement, useCallback, useRef } from '@wordpress/element';
 import { dragHandle, trash, plus, chevronUp, chevronDown, desktop, tablet, mobile } from '@wordpress/icons';
 import BootstrapIconPicker from './BootstrapIconPicker';
@@ -107,7 +109,7 @@ const formatDimensionValue = (dimension, fallbackValue, fallbackUnit) => {
 const Edit = ({ attributes, setAttributes, clientId }) => {
     const {
         blockId,
-        items,
+        items: rawItems,
         backgroundColor,
         titleColor,
         taglineColor,
@@ -130,11 +132,21 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         containerMaxWidth,
         layoutStyle,
         itemsPerRow,
-        responsivePadding
+        responsivePadding,
+        responsiveMargin
     } = attributes;
+
+    // Content saved with an explicit `"items": null` bypasses the array
+    // default (null is a value, not an absence), and every items.map() below
+    // would throw and blank the editor. Normalise once here rather than
+    // guarding seven call sites.
+    const items = Array.isArray( rawItems ) ? rawItems : [];
 
     const [expandedItem, setExpandedItem] = useState(null);
     const [deviceType, setDeviceType] = useState('desktop');
+
+    // Two-way sync with the responsive preview toolbar in the editor header.
+    useEditorDevice(deviceType, setDeviceType);
     const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
     const [iconPickerTargetId, setIconPickerTargetId] = useState(null);
     const [activeZone, setActiveZone] = useState(null);
@@ -173,6 +185,33 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         });
     };
 
+
+    // BoxControl can hand back a bare number ("60"); a unitless non-zero
+    // length is invalid CSS, so the browser drops the whole declaration --
+    // which is why these controls read as doing nothing. normalizeBoxUnits()
+    // supplies the unit, and reading through it here also self-heals any
+    // block already saved with an unnormalised value.
+    const padBox = ( device ) => normalizeBoxUnits( responsivePadding?.[ device ] || {} );
+    const marBox = ( device ) => normalizeBoxUnits( responsiveMargin?.[ device ] || {} );
+
+    const pad = {
+        mobile: padBox( 'mobile' ),
+        tablet: padBox( 'tablet' ),
+        smallLaptop: padBox( 'smallLaptop' ),
+        desktop: padBox( 'desktop' ),
+        bigDesktop: padBox( 'bigDesktop' ),
+    };
+
+    // Margin emits no custom property until the user sets one, so a block that
+    // never touched it keeps byte-identical saved markup.
+    const mar = {
+        mobile: marBox( 'mobile' ),
+        tablet: marBox( 'tablet' ),
+        smallLaptop: marBox( 'smallLaptop' ),
+        desktop: marBox( 'desktop' ),
+        bigDesktop: marBox( 'bigDesktop' ),
+    };
+
     const blockProps = useBlockProps({
         className: 'adaire-infogrid',
         style: {
@@ -201,26 +240,46 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             '--container-max-width-small-laptop': `${containerMaxWidth?.smallLaptop?.value ?? 1200}${containerMaxWidth?.smallLaptop?.unit ?? 'px'}`,
             '--container-max-width-big-desktop': `${containerMaxWidth?.bigDesktop?.value ?? 1200}${containerMaxWidth?.bigDesktop?.unit ?? 'px'}`,
             // Responsive padding
-            '--infogrid-padding-top-mobile': responsivePadding?.mobile?.top || '40px',
-            '--infogrid-padding-right-mobile': responsivePadding?.mobile?.right || '20px',
-            '--infogrid-padding-bottom-mobile': responsivePadding?.mobile?.bottom || '40px',
-            '--infogrid-padding-left-mobile': responsivePadding?.mobile?.left || '20px',
-            '--infogrid-padding-top-tablet': responsivePadding?.tablet?.top || '60px',
-            '--infogrid-padding-right-tablet': responsivePadding?.tablet?.right || '40px',
-            '--infogrid-padding-bottom-tablet': responsivePadding?.tablet?.bottom || '60px',
-            '--infogrid-padding-left-tablet': responsivePadding?.tablet?.left || '40px',
-            '--infogrid-padding-top-small-laptop': responsivePadding?.smallLaptop?.top || '80px',
-            '--infogrid-padding-right-small-laptop': responsivePadding?.smallLaptop?.right || '60px',
-            '--infogrid-padding-bottom-small-laptop': responsivePadding?.smallLaptop?.bottom || '80px',
-            '--infogrid-padding-left-small-laptop': responsivePadding?.smallLaptop?.left || '60px',
-            '--infogrid-padding-top-desktop': responsivePadding?.desktop?.top || '100px',
-            '--infogrid-padding-right-desktop': responsivePadding?.desktop?.right || '80px',
-            '--infogrid-padding-bottom-desktop': responsivePadding?.desktop?.bottom || '100px',
-            '--infogrid-padding-left-desktop': responsivePadding?.desktop?.left || '80px',
-            '--infogrid-padding-top-big-desktop': responsivePadding?.bigDesktop?.top || '100px',
-            '--infogrid-padding-right-big-desktop': responsivePadding?.bigDesktop?.right || '80px',
-            '--infogrid-padding-bottom-big-desktop': responsivePadding?.bigDesktop?.bottom || '100px',
-            '--infogrid-padding-left-big-desktop': responsivePadding?.bigDesktop?.left || '80px'
+            '--infogrid-padding-top-mobile': pad.mobile.top || '40px',
+            '--infogrid-padding-right-mobile': pad.mobile.right || '20px',
+            '--infogrid-padding-bottom-mobile': pad.mobile.bottom || '40px',
+            '--infogrid-padding-left-mobile': pad.mobile.left || '20px',
+            '--infogrid-padding-top-tablet': pad.tablet.top || '60px',
+            '--infogrid-padding-right-tablet': pad.tablet.right || '40px',
+            '--infogrid-padding-bottom-tablet': pad.tablet.bottom || '60px',
+            '--infogrid-padding-left-tablet': pad.tablet.left || '40px',
+            '--infogrid-padding-top-small-laptop': pad.smallLaptop.top || '80px',
+            '--infogrid-padding-right-small-laptop': pad.smallLaptop.right || '60px',
+            '--infogrid-padding-bottom-small-laptop': pad.smallLaptop.bottom || '80px',
+            '--infogrid-padding-left-small-laptop': pad.smallLaptop.left || '60px',
+            '--infogrid-padding-top-desktop': pad.desktop.top || '100px',
+            '--infogrid-padding-right-desktop': pad.desktop.right || '80px',
+            '--infogrid-padding-bottom-desktop': pad.desktop.bottom || '100px',
+            '--infogrid-padding-left-desktop': pad.desktop.left || '80px',
+            '--infogrid-padding-top-big-desktop': pad.bigDesktop.top || '100px',
+            '--infogrid-padding-right-big-desktop': pad.bigDesktop.right || '80px',
+            '--infogrid-padding-bottom-big-desktop': pad.bigDesktop.bottom || '100px',
+            '--infogrid-padding-left-big-desktop': pad.bigDesktop.left || '80px',
+            '--infogrid-margin-top-mobile': mar.mobile.top || undefined,
+            '--infogrid-margin-right-mobile': mar.mobile.right || undefined,
+            '--infogrid-margin-bottom-mobile': mar.mobile.bottom || undefined,
+            '--infogrid-margin-left-mobile': mar.mobile.left || undefined,
+            '--infogrid-margin-top-tablet': mar.tablet.top || undefined,
+            '--infogrid-margin-right-tablet': mar.tablet.right || undefined,
+            '--infogrid-margin-bottom-tablet': mar.tablet.bottom || undefined,
+            '--infogrid-margin-left-tablet': mar.tablet.left || undefined,
+            '--infogrid-margin-top-small-laptop': mar.smallLaptop.top || undefined,
+            '--infogrid-margin-right-small-laptop': mar.smallLaptop.right || undefined,
+            '--infogrid-margin-bottom-small-laptop': mar.smallLaptop.bottom || undefined,
+            '--infogrid-margin-left-small-laptop': mar.smallLaptop.left || undefined,
+            '--infogrid-margin-top-desktop': mar.desktop.top || undefined,
+            '--infogrid-margin-right-desktop': mar.desktop.right || undefined,
+            '--infogrid-margin-bottom-desktop': mar.desktop.bottom || undefined,
+            '--infogrid-margin-left-desktop': mar.desktop.left || undefined,
+            '--infogrid-margin-top-big-desktop': mar.bigDesktop.top || undefined,
+            '--infogrid-margin-right-big-desktop': mar.bigDesktop.right || undefined,
+            '--infogrid-margin-bottom-big-desktop': mar.bigDesktop.bottom || undefined,
+            '--infogrid-margin-left-big-desktop': mar.bigDesktop.left || undefined,
         }
     });
 
@@ -276,8 +335,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         ))}
                     </div>
                     <p className="adaire-device-toggle-status">
-                        {__('Configuring:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
+                        {__('Editing:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
                     </p>
+                    {!hasCanvasPreset(deviceType) && (
+                        <p className="adaire-device-toggle-hint">
+                            {__('The preview toolbar has no canvas size for this breakpoint, so the canvas stays on Desktop. Check this one on the front end.', 'adaire-blocks')}
+                        </p>
+                    )}
                 </div>
 
                 {/* Items Management */}
@@ -605,7 +669,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     <BoxControl
                         label={__('Block Padding', 'adaire-blocks')}
                         values={responsivePadding?.[deviceType] || {}}
-                        onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, val)}
+                        onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, normalizeBoxUnits(val))}
+                    />
+
+                    <BoxControl
+                        label={__('Block Margin', 'adaire-blocks')}
+                        values={responsiveMargin?.[deviceType] || {}}
+                        onChange={(val) => updateResponsiveAttribute('responsiveMargin', deviceType, normalizeBoxUnits(val))}
                     />
                 </PanelBody>
             </InspectorTabs>

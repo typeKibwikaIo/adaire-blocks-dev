@@ -24,6 +24,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         blockId, 
         width, 
         height, 
+        cardBehaviour,
         flipDirection, 
         animationDuration, 
         animationEasing,
@@ -38,6 +39,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         backBorderWidth,
         contentPreset
     } = attributes;
+
+    // Card behaviour: 'flip' (default) reveals the back face on hover/tap,
+    // 'static' renders the front face only and never transforms.
+    const isStatic = cardBehaviour === 'static';
+
 
     // Ensure blockId is set
     useEffect(() => {
@@ -80,7 +86,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     };
 
     const blockProps = useBlockProps({
-        className: `adaire-flipcard adaire-flipcard--${flipDirection}`,
+        // The `--static` modifier is only appended when the user actually
+        // picks Static Card, so every card left on the default (Flip Card)
+        // keeps byte-identical saved markup and needs no block recovery.
+        className: `adaire-flipcard adaire-flipcard--${flipDirection}${isStatic ? ' adaire-flipcard--static' : ''}`,
         style: {
             '--flipcard-width-desktop': `${normalizedWidth?.desktop?.value ?? 300}${normalizedWidth?.desktop?.unit ?? 'px'}`,
             '--flipcard-width-tablet': `${normalizedWidth?.tablet?.value ?? 100}${normalizedWidth?.tablet?.unit ?? '%'}`,
@@ -156,6 +165,23 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             );
                         })}
                     </div>
+                </PanelBody>
+
+                <PanelBody section="layout" title={__('Card Behaviour', 'adaire-blocks')} initialOpen={true}>
+                    <SelectControl
+                        label={__('Behaviour', 'adaire-blocks')}
+                        value={cardBehaviour || 'flip'}
+                        options={[
+                            { label: __('Flip Card', 'adaire-blocks'), value: 'flip' },
+                            { label: __('Static Card', 'adaire-blocks'), value: 'static' },
+                        ]}
+                        onChange={(value) => setAttributes({ cardBehaviour: value })}
+                        help={
+                            isStatic
+                                ? __('Only the front face is shown. The card never flips, on any device or screen size.', 'adaire-blocks')
+                                : __('The back face is revealed on hover, or on tap where hover is unavailable.', 'adaire-blocks')
+                        }
+                    />
                 </PanelBody>
 
                 <PanelBody section="layout" title={__('Card Dimensions', 'adaire-blocks')} initialOpen={true}>
@@ -415,6 +441,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
                 </PanelBody>
 
+                {!isStatic && (
                 <PanelBody section="layout" title={__('Flip Animation', 'adaire-blocks')} initialOpen={false}>
                     <SelectControl
                         label={__('Flip Direction', 'adaire-blocks')}
@@ -445,6 +472,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         onChange={(value) => setAttributes({ animationEasing: value })}
                     />
                 </PanelBody>
+                )}
             </InspectorTabs>
 
             <div {...blockProps}>

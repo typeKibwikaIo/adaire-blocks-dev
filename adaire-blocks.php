@@ -437,6 +437,14 @@ function adaire_render_license_notice($block_name) {
 // Include block migration tool
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/block-migration.php';
 
+// Newsletter: subscriber storage + the public subscribe endpoint that the
+// Hero Block Pro email CTA and the Form block post to, the campaign sender
+// (batched over WP-Cron), and the admin dashboard that composes and sends.
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-blocks-subscribers.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-blocks-newsletter.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-blocks-submissions.php';
+require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/newsletter-page.php';
+
 // Cookie Banner consent log — server-side record of visitor decisions,
 // backs the Cookie Dashboard's Recent/Full History toggle.
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'includes/class-adaire-cookie-consent-log.php';
@@ -2329,7 +2337,10 @@ function adaire_blocks_register_block_categories( $categories, $editor_context )
 	return array_merge( $custom_categories_to_add, $categories );
 }
 add_filter( 'block_categories_all', 'adaire_blocks_register_block_categories', 10, 2 );
-add_filter( 'block_categories', 'adaire_blocks_register_block_categories', 10, 2 );
+// NOTE: the legacy `block_categories` filter is deliberately NOT hooked. It was
+// deprecated in WP 5.8 and core fires it through apply_filters_deprecated(), which
+// emits a PHP deprecation notice for every callback attached to it. This plugin
+// requires WP 6.7+, so `block_categories_all` above covers every supported version.
 
 // Filter to prevent disabled blocks from appearing in the block editor
 add_filter( 'block_editor_rest_api_preload_paths', 'adaire_blocks_filter_block_editor_blocks' );

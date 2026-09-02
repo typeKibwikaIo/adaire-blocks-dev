@@ -1,34 +1,110 @@
-.wp-block-adaire-blocks-dev2-infogrid-3-block {
-    // Ensure the block expands to full width in editor if needed
-    width: 100%;
+// Inspector sidebar: device toggle above the responsive Layout controls.
+//
+// NOTE: this markup renders inside InspectorControls, i.e. outside the block
+// element — so it must NOT be nested under the block's class. It used to be,
+// under a `wp-block-adaire-blocks-dev2-…` class this block never had, so none
+// of it applied and the toggle rendered as unstyled default buttons.
+.adaire-device-toggle {
+    margin: 0 0 4px;
+    padding: 12px 16px 14px;
+    background: #f6f7f7;
+    border-bottom: 1px solid #dcdcde;
 
-    // Padding for the device toggle in sidebar
-    .adaire-device-toggle {
-        background: #f0f0f0;
-        padding: 15px;
-        margin: -16px -16px 20px -16px;
-        border-bottom: 1px solid #ddd;
+    .adaire-device-toggle-label {
+        margin: 0 0 8px;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.4;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #50575e;
+    }
 
-        .adaire-device-toggle-label {
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 11px;
-            text-transform: uppercase;
-            color: #666;
-        }
+    .adaire-device-toggle-group {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2px;
+        padding: 2px;
+        background: #fff;
+        border: 1px solid #dcdcde;
+        border-radius: 4px;
 
-        .adaire-device-toggle-group {
+        // These are core <Button> components, so the reset has to be explicit
+        // enough to beat .components-button's own padding and min-height.
+        .components-button {
             display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            min-width: 0;
+            height: auto;
+            padding: 6px 2px;
+            border-radius: 3px;
+            color: #50575e;
 
-            button {
-                flex: 1;
-                justify-content: center;
-                min-width: 40px;
+            svg {
+                width: 18px;
+                height: 18px;
+                fill: currentColor;
+            }
+
+            // The label is tiny by necessity — five devices in a sidebar.
+            span {
+                font-size: 9px;
+                font-weight: 500;
+                line-height: 1.2;
+                letter-spacing: 0.01em;
+                text-align: center;
+            }
+
+            &:hover:not(.is-primary) {
+                background: #f0f0f1;
+                color: #1e1e1e;
+            }
+
+            &.is-primary {
+                background: #3858e9;
+                color: #fff;
+
+                &:hover {
+                    background: #2f45c5;
+                }
+            }
+
+            &:focus-visible {
+                outline: 2px solid #3858e9;
+                outline-offset: -1px;
             }
         }
     }
+
+    .adaire-device-toggle-status {
+        margin: 10px 0 0;
+        font-size: 11px;
+        line-height: 1.4;
+        color: #50575e;
+
+        strong {
+            color: #1e1e1e;
+        }
+    }
+
+    // Shown for smallLaptop / bigDesktop, which the preview toolbar has no
+    // canvas size for — see components/useEditorDevice.js.
+    .adaire-device-toggle-hint {
+        margin: 6px 0 0;
+        padding-left: 8px;
+        border-left: 2px solid #dba617;
+        font-size: 11px;
+        line-height: 1.4;
+        color: #646970;
+    }
+}
+
+.wp-block-create-block-infogrid-3-block {
+    // Ensure the block expands to full width in editor if needed
+    width: 100%;
 
     // RichText placeholder styling
     [data-rich-text-placeholder]::after {

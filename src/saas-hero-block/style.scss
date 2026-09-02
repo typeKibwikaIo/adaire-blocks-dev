@@ -379,9 +379,42 @@
 
   &__email-form {
     display: flex;
+    // view.js appends a status line as a third child; it needs its own row.
+    flex-wrap: wrap;
     gap: 12px;
     max-width: 500px;
     width: 100%;
+    position: relative;
+
+    input[disabled],
+    button[disabled] {
+      opacity: 0.6;
+      cursor: progress;
+    }
+  }
+
+  // view.js sets data-state on the email-form wrapper.
+  &__email-form[data-state='error'] &__form-status {
+    color: #b91c1c;
+  }
+
+  &__email-form[data-state='success'] &__form-status {
+    color: #15803d;
+  }
+
+  &__form-status {
+    flex-basis: 100%;
+    margin: 0;
+    min-height: 1.4em;
+    font-size: 14px;
+    line-height: 1.4;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__email-form {
 
     input {
       flex: 1;

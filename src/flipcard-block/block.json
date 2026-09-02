@@ -65,6 +65,14 @@
                 }
             }
         },
+        "cardBehaviour": {
+            "type": "string",
+            "default": "flip",
+            "enum": [
+                "flip",
+                "static"
+            ]
+        },
         "flipDirection": {
             "type": "string",
             "default": "horizontal",

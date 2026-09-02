@@ -21,6 +21,8 @@ import {
     __experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
 import { useState, useEffect, createElement, useMemo, useCallback, useRef } from '@wordpress/element';
+import { normalizeBoxUnits } from '../components/spacing-utils';
+import useEditorDevice, { hasCanvasPreset } from '../components/useEditorDevice';
 import {
     desktop,
     tablet,
@@ -168,11 +170,15 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         responsiveWidth,
         responsiveMaxWidth,
         responsivePadding,
+        responsiveMargin,
         responsiveGridBorderColor,
         responsiveGridThickness
     } = attributes;
 
     const [deviceType, setDeviceType] = useState('desktop');
+
+    // Two-way sync with the responsive preview toolbar in the editor header.
+    useEditorDevice(deviceType, setDeviceType);
 
     const CONTAINER_MODES = [
         { label: __('Full Width', 'adaire-blocks'), value: 'full' },
@@ -254,9 +260,15 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     const val = attributes[key][deviceAttr];
                     if (val !== undefined && val !== null) {
                         if (typeof val === 'object' && !Array.isArray(val)) {
-                            // Handle BoxControl objects (padding, etc.)
-                            Object.entries(val).forEach(([side, sideVal]) => {
-                                if (sideVal !== undefined && sideVal !== null) {
+                            // Handle BoxControl objects (padding, margin).
+                            // normalizeBoxUnits() appends `px` to a bare number
+                            // ("60"): a unitless non-zero length is invalid CSS,
+                            // so the browser drops the whole declaration and the
+                            // control reads as "does nothing" even though the
+                            // value really was saved. Empty sides are skipped so
+                            // an untouched box emits no custom property at all.
+                            Object.entries(normalizeBoxUnits(val)).forEach(([side, sideVal]) => {
+                                if (sideVal !== undefined && sideVal !== null && sideVal !== '') {
                                     vars[`--${baseKey}-${side}-${deviceClass}`] = sideVal;
                                 }
                             });
@@ -296,8 +308,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         ))}
                     </div>
                     <p className="adaire-device-toggle-status">
-                        {__('Configuring:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
+                        {__('Editing:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
                     </p>
+                    {!hasCanvasPreset(deviceType) && (
+                        <p className="adaire-device-toggle-hint">
+                            {__('The preview toolbar has no canvas size for this breakpoint, so the canvas stays on Desktop. Check this one on the front end.', 'adaire-blocks')}
+                        </p>
+                    )}
                 </div>
 
                 <PanelBody title={__('Layout Settings', 'adaire-blocks')}>
@@ -365,8 +382,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
                     <BoxControl
                         label={__('Block Padding', 'adaire-blocks')}
-                        values={responsivePadding[deviceType]}
-                        onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, val)}
+                        values={responsivePadding?.[deviceType]}
+                        onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, normalizeBoxUnits(val))}
+                    />
+
+                    <BoxControl
+                        label={__('Block Margin', 'adaire-blocks')}
+                        values={responsiveMargin?.[deviceType]}
+                        onChange={(val) => updateResponsiveAttribute('responsiveMargin', deviceType, normalizeBoxUnits(val))}
                     />
                 </PanelBody>
 

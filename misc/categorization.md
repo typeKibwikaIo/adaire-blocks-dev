@@ -32,7 +32,7 @@ These blocks are available in Plus and Premium versions.
 - Case Studies (case-studies-block)
 - Counter (counter-block)
 - Flip Card (flipcard-block)
-- Info Grid 3 (infogrid-3-block)
+- Feature Grid Pro (Legacy) (infogrid-3-block) — archived
 - Info Grid 4 (bento-grid-block)
 - Logos (logos-block)
 - Location Map (location-map)

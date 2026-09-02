@@ -50,31 +50,75 @@
         transform-style: preserve-3d;
     }
 
-    // Make touch devices cursor pointer to indicate clickability
-    &--touch-device {
+    // Marked by view.js on cards it made tap/keyboard operable.
+    &--interactive {
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
         -webkit-user-select: none;
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 3px;
+        }
     }
 
-    // Class-based flipping for touch devices (Sass doesn't allow `&` mid-selector)
-    &.adaire-flipcard--touch-device.adaire-flipcard--horizontal.adaire-flipcard--flipped &__container {
+    // Toggled flip (tap / keyboard). Sass doesn't allow `&` mid-selector.
+    &.adaire-flipcard--horizontal.adaire-flipcard--flipped &__container {
         transform: rotateY(180deg);
     }
 
-    &.adaire-flipcard--touch-device.adaire-flipcard--vertical.adaire-flipcard--flipped &__container {
+    &.adaire-flipcard--vertical.adaire-flipcard--flipped &__container {
         transform: rotateX(180deg);
     }
 
-    // Flip on hover - horizontal (default) - only for non-touch devices
-    &--horizontal:not(.adaire-flipcard--touch-device):hover &__container {
-        transform: rotateY(180deg);
+    // Hover flip, only where the pointer can genuinely hover.
+    //
+    // This replaces the previous approach, where view.js sniffed
+    // `ontouchstart` / `maxTouchPoints` at runtime and stamped an
+    // `--touch-device` class on the element, which every hover rule then had
+    // to `:not()` around. The media query is the same decision, made by the
+    // browser itself and applied before first paint instead of after the
+    // script runs — and it stays correct on hybrid devices.
+    @media (hover: hover) and (pointer: fine) {
+        &--horizontal:not(.adaire-flipcard--static):hover &__container {
+            transform: rotateY(180deg);
+        }
+
+        &--vertical:not(.adaire-flipcard--static):hover &__container {
+            transform: rotateX(180deg);
+        }
     }
 
-    // Flip on hover - vertical - only for non-touch devices
-    &--vertical:not(.adaire-flipcard--touch-device):hover &__container {
-        transform: rotateX(180deg);
+    // ─── Static Card ─────────────────────────────────────────────────────────
+    // Front face only, no 3D context, no transform — identical at every
+    // breakpoint, so the behaviour holds across responsive layouts.
+    &--static {
+        perspective: none;
+        cursor: default;
+
+        .adaire-flipcard__container,
+        .adaire-flipcard__inner {
+            transform: none;
+            transition: none;
+            transform-style: flat;
+        }
+
+        .adaire-flipcard-back {
+            display: none;
+        }
+
+        // Static faces flow normally rather than being stacked in 3D space.
+        // `position: relative` keeps the front face in normal flow (the site
+        // CSS hack this setting replaces had to force exactly this), while
+        // `height: 100%` keeps the face filling the card box the user sized.
+        .adaire-flipcard-front {
+            position: relative;
+            height: 100%;
+            transform: none;
+            backface-visibility: visible;
+            -webkit-backface-visibility: visible;
+        }
     }
 
     // Front and back sides - horizontal

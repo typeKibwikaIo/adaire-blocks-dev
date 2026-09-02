@@ -437,8 +437,19 @@
         "analytics-tracking"
       ]
     },
+    "infogrid-block": {
+      "enabled": true,
+      "limits": {},
+      "features": [
+        "feature-item-grid-with-icons",
+        "hover-colour-states",
+        "responsive-padding-and-margin",
+        "constrained-or-full-width-container"
+      ]
+    },
     "infogrid-3-block": {
       "enabled": true,
+      "archived": true,
       "limits": {},
       "features": [
         "two-row-case-study-layout",

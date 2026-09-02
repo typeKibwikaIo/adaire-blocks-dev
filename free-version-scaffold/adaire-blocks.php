@@ -275,7 +275,10 @@ function adaire_blocks_register_block_categories( $categories, $editor_context )
 	return array_merge( $custom_categories_to_add, $categories );
 }
 add_filter( 'block_categories_all', 'adaire_blocks_register_block_categories', 10, 2 );
-add_filter( 'block_categories', 'adaire_blocks_register_block_categories', 10, 2 );
+// NOTE: the legacy `block_categories` filter is deliberately NOT hooked. It was
+// deprecated in WP 5.8 and core fires it through apply_filters_deprecated(), which
+// emits a PHP deprecation notice for every callback attached to it. This plugin
+// requires WP 6.7+, so `block_categories_all` above covers every supported version.
 
 // Enqueue Bootstrap Icons CSS if any block that uses Bootstrap icons is present on the page
 function enqueue_bootstrap_icons_assets() {

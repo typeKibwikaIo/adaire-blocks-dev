@@ -1,7 +1,25 @@
-﻿import { useBlockProps, RichText } from '@wordpress/block-editor';
-import { normalizeBoxUnits } from '../components/spacing-utils';
+/**
+ * Feature Grid Pro (infogrid-3-block) deprecations - most recent first.
+ *
+ * v1  Frozen copy of the save() that shipped before the Padding/Margin fix.
+ *     That version wrote each BoxControl side into its CSS custom property
+ *     exactly as `__experimentalBoxControl` handed it back - and BoxControl
+ *     can hand back a bare number ("60") instead of "60px". A unitless
+ *     non-zero length is invalid CSS, so the browser dropped the whole
+ *     `padding-*` declaration and the control read as "does nothing". The
+ *     current save() runs every box through `normalizeBoxUnits()` and skips
+ *     empty sides, so a grid saved with an unnormalized value would no
+ *     longer re-serialize to its stored markup and Gutenberg would flag it
+ *     as invalid. This entry reproduces that old output so those posts keep
+ *     validating. The new `responsiveMargin` attribute defaults to `{}` and
+ *     therefore emits no custom properties until the user sets one, so
+ *     untouched blocks are byte-identical either way; no attribute shape
+ *     changed, so `migrate` is a no-op and this entry omits `attributes`
+ *     (Gutenberg falls back to the current block.json).
+ */
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 
-export default function save({ attributes }) {
+function saveV1({ attributes }) {
     const {
         blockId,
         containerMode,
@@ -70,15 +88,9 @@ export default function save({ attributes }) {
                     const val = attributes[key][deviceAttr];
                     if (val !== undefined && val !== null) {
                         if (typeof val === 'object' && !Array.isArray(val)) {
-                            // Handle BoxControl objects (padding, margin).
-                            // normalizeBoxUnits() appends `px` to a bare number
-                            // ("60"): a unitless non-zero length is invalid CSS,
-                            // so the browser drops the whole declaration and the
-                            // control reads as "does nothing" even though the
-                            // value really was saved. Empty sides are skipped so
-                            // an untouched box emits no custom property at all.
-                            Object.entries(normalizeBoxUnits(val)).forEach(([side, sideVal]) => {
-                                if (sideVal !== undefined && sideVal !== null && sideVal !== '') {
+                            // Handle BoxControl objects (padding, etc.)
+                            Object.entries(val).forEach(([side, sideVal]) => {
+                                if (sideVal !== undefined && sideVal !== null) {
                                     vars[`--${baseKey}-${side}-${deviceClass}`] = sideVal;
                                 }
                             });
@@ -201,5 +213,11 @@ export default function save({ attributes }) {
     );
 }
 
+const deprecatedV1 = {
+    migrate(attributes) {
+        return attributes;
+    },
+    save: saveV1,
+};
 
-
+export default [deprecatedV1];

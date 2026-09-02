@@ -22,7 +22,7 @@ These blocks are available in the free version without limitations.
 - **Swiper Carousel** (`swiper-carousel-block`)
 - **Our Process** (`our-process-block`)
 - **Hero 1** (`hero-1-block`)
-- **Info Grid** (`infogrid-block`)
+- **Feature Grid (Pro)** (`infogrid-block`)
 - **Feature Grid (Free)** (`feature-grid-free`)
 - **Image Composition** (`image-composition-block`)
 - **Website Footer** (`website-footer-block`)
@@ -46,7 +46,7 @@ These blocks are available in Plus and Premium versions.
 - **Mega Menu (Plus)** (`mega-menu-block`)
 - **Testimonial (Plus)** (`testimonial2-block`)
 - **Pricing Table (Plus)** (`pricing-table-block`)
-- **Info Grid 3** (`infogrid-3-block`)
+- **Feature Grid Pro (Legacy)** (`infogrid-3-block`) — archived, hidden from the inserter; kept registered so existing pages keep rendering
 - **Info Grid 4** (`bento-grid-block`)
 - **Case Studies (Plus)** (`case-studies-block`)
 - **Video Carousel (Plus)** (`video-carousel-block`)

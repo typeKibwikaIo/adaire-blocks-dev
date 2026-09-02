@@ -1,1 +1,167 @@
-document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.adaire-booking-form').forEach((el)=>{if(el.dataset.expiry&&new Date(el.dataset.expiry)<new Date()){el.classList.add('is-hidden')}const key='adaire-'+(el.className||'block').split(' ')[0]+'-'+(el.dataset.version||'1');if(localStorage.getItem(key)==='hidden'||localStorage.getItem(key)==='accepted'){el.classList.add('is-hidden')}el.querySelectorAll('[data-cookie-action]').forEach((btn)=>btn.addEventListener('click',()=>{if(btn.dataset.cookieAction==='manage'){const prefs=el.querySelector('.adaire-booking-form__prefs');if(prefs)prefs.hidden=!prefs.hidden;return}localStorage.setItem(key,btn.dataset.cookieAction==='accept'?'accepted':'hidden');setTimeout(()=>el.classList.add('is-hidden'),Number(el.dataset.delay||0))}));const close=el.querySelector('.adaire-booking-form__close');if(close)close.addEventListener('click',()=>{localStorage.setItem(key,'hidden');el.classList.add('is-hidden')});const countdown=el.querySelector('[data-countdown]');if(countdown&&el.dataset.expiry){const tick=()=>{const diff=new Date(el.dataset.expiry)-new Date();if(diff<=0){el.classList.add('is-hidden');return}const d=Math.floor(diff/86400000),h=Math.floor(diff/3600000)%24,m=Math.floor(diff/60000)%60;countdown.textContent=d+'d '+h+'h '+m+'m'};tick();setInterval(tick,60000)}el.querySelectorAll('form').forEach((form)=>form.addEventListener('submit',(e)=>{e.preventDefault();const hp=form.querySelector('.ad-hp');if(hp&&hp.value)return;const email=form.querySelector('[type=email]');const feedback=form.querySelector('[role=status]');if(email&&!email.checkValidity()){if(feedback)feedback.textContent='Please enter a valid email address.';return}if(feedback)feedback.textContent=el.dataset.success||'Thanks, your submission was received.';if(el.dataset.redirect)window.location.href=el.dataset.redirect}))})});
+/**
+ * Form block — front-end submission.
+ *
+ * The previous version of this file called preventDefault() and then wrote the
+ * success message straight into the page without sending anything anywhere, so
+ * every enquiry was silently discarded while the visitor was told it had been
+ * received. It also carried a large block of cookie-banner logic (expiry
+ * countdowns, accept/dismiss buttons, localStorage hiding) copied from another
+ * block, targeting elements this block's save() never renders — all of it
+ * dead. Both are gone.
+ *
+ * Submissions POST to adaire-blocks/v1/form-submit, which stores the entry and
+ * emails it to the site owner.
+ */
+
+document.addEventListener( 'DOMContentLoaded', () => {
+	document
+		.querySelectorAll( '.adaire-booking-form form' )
+		.forEach( ( form ) => new AdaireForm( form ) );
+} );
+
+class AdaireForm {
+	constructor( form ) {
+		this.form = form;
+		this.root = form.closest( '.adaire-booking-form' );
+		this.button = form.querySelector( 'button[type="submit"]' );
+		this.feedback = form.querySelector( '[role="status"]' );
+		this.honeypot = form.querySelector( '.ad-hp' );
+		this.config = window.adaireBlocksNewsletter || {};
+		this.busy = false;
+		this.buttonHTML = this.button ? this.button.innerHTML : '';
+
+		if ( this.feedback ) {
+			this.feedback.setAttribute( 'aria-live', 'polite' );
+		}
+
+		form.addEventListener( 'submit', ( event ) => {
+			event.preventDefault();
+			this.submit();
+		} );
+	}
+
+	say( message, state ) {
+		if ( this.feedback ) {
+			this.feedback.textContent = message;
+		}
+		if ( this.root ) {
+			this.root.dataset.state = state;
+		}
+	}
+
+	setBusy( busy ) {
+		this.busy = busy;
+
+		if ( this.button ) {
+			this.button.disabled = busy;
+			this.button.setAttribute( 'aria-busy', busy ? 'true' : 'false' );
+		}
+	}
+
+	/**
+	 * Collect every named control into a flat { label: value } map. Checkboxes
+	 * report Yes/No rather than the browser's "on", which is meaningless in a
+	 * notification email.
+	 */
+	collect() {
+		const fields = {};
+
+		this.form
+			.querySelectorAll( 'input[name], select[name], textarea[name]' )
+			.forEach( ( control ) => {
+				if ( control.classList.contains( 'ad-hp' ) ) {
+					return;
+				}
+
+				if ( 'checkbox' === control.type ) {
+					fields[ control.name ] = control.checked ? 'Yes' : 'No';
+					return;
+				}
+
+				if ( 'radio' === control.type && ! control.checked ) {
+					return;
+				}
+
+				fields[ control.name ] = control.value;
+			} );
+
+		return fields;
+	}
+
+	async submit() {
+		if ( this.busy ) {
+			return;
+		}
+
+		if ( this.honeypot && this.honeypot.value ) {
+			return;
+		}
+
+		// Let the browser report missing required fields in its own words.
+		if ( ! this.form.checkValidity() ) {
+			this.form.reportValidity();
+			return;
+		}
+
+		if ( ! this.config.formEndpoint ) {
+			this.say(
+				'This form is not connected yet. Please contact us directly.',
+				'error'
+			);
+			return;
+		}
+
+		this.setBusy( true );
+		this.say( '', 'pending' );
+
+		try {
+			const response = await fetch( this.config.formEndpoint, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					...( this.config.nonce ? { 'X-WP-Nonce': this.config.nonce } : {} ),
+				},
+				body: JSON.stringify( {
+					fields: this.collect(),
+					source_url: window.location.href,
+					// A consent checkbox named "subscribe" opts the address
+					// into the newsletter list as well as sending the enquiry.
+					subscribe: this.wantsSubscription(),
+				} ),
+			} );
+
+			const data = await response.json().catch( () => ( {} ) );
+
+			if ( response.ok && data.success ) {
+				this.say(
+					( this.root && this.root.dataset.success ) ||
+						'Thanks, your submission was received.',
+					'success'
+				);
+				this.form.reset();
+
+				const redirect = this.root && this.root.dataset.redirect;
+				if ( redirect ) {
+					window.location.href = redirect;
+				}
+			} else {
+				this.say(
+					data.message || 'Sorry, we could not send that. Please try again.',
+					'error'
+				);
+			}
+		} catch ( error ) {
+			this.say( 'Sorry, we could not send that. Please try again.', 'error' );
+		} finally {
+			this.setBusy( false );
+		}
+	}
+
+	wantsSubscription() {
+		const box = this.form.querySelector(
+			'input[type="checkbox"][name="subscribe"], input[type="checkbox"][name="newsletter"]'
+		);
+
+		return !! ( box && box.checked );
+	}
+}
