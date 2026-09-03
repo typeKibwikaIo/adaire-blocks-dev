@@ -18,14 +18,17 @@ The fix is not a redesign. It is a single categorisation rule applied consistent
 
 ## 2. The tabs
 
-Every block exposes the same four tabs, in this order:
+Every block exposes the same three tabs, in this order:
 
 | Tab | Owns |
 |---|---|
 | **Content** | The actual content of the block and how that content is configured |
 | **Layout** | Anything that changes the structure — the arrangement of elements in space |
 | **Style** | Anything that is purely CSS presentation |
-| **Advanced** | Standard WordPress advanced controls (anchor, additional CSS class, visibility) |
+
+There is no Advanced tab. Settings that used to be filed as "advanced" are
+categorised by the same rule as everything else and live in whichever of the three
+tabs Section 3 puts them in — see "Former 'advanced' settings" in Section 3.
 
 A tab with no applicable settings for a given block is hidden, not shown empty.
 
@@ -73,8 +76,25 @@ Goes here:
 
 **Test:** if the setting maps to a CSS property and does not move or remove anything, it is Style.
 
-### Advanced
-WordPress-standard controls only. Do not put plugin-specific settings here.
+### Former "advanced" settings
+
+There is no Advanced bucket. Anything previously treated as advanced is filed by the
+tests above. The recurring cases resolve as follows — do not re-litigate them per
+block:
+
+| Setting | Tab | Why |
+|---|---|---|
+| HTML Anchor, Additional CSS Class(es) | *(neither — see below)* | WordPress core renders these itself |
+| Block ID / custom identifier used for CSS or JS targeting | Content | It is a property of the block instance, and it is functional, not presentational |
+| Z-Index | Layout | Stacking is a spatial relationship between elements |
+| Visibility / responsive show-hide | Layout | Hiding removes the element from the DOM |
+| Custom CSS, inline style overrides | Style | Pure CSS presentation |
+
+**HTML Anchor and Additional CSS Class(es) are not ours to place.** WordPress core
+renders its own panel for them, below the block's `InspectorControls`, for any block
+declaring `supports.anchor` / `supports.customClassName`. It appears regardless of
+which tab is active. Do not re-implement either control inside a tab — that produces
+two fields writing the same attribute.
 
 ---
 
@@ -88,7 +108,7 @@ These come up repeatedly. Resolve them this way, not by personal judgement.
 - The *decision* to have an effect at all, and any effect that reveals or removes an element → Layout
 - The visual character of the effect — duration, easing, colour change → Style
 
-If in doubt on a specific effect, default to Style and flag it for review rather than inventing a fifth tab.
+If in doubt on a specific effect, default to Style and flag it for review rather than inventing a fourth tab.
 
 **Show/hide toggles.** Layout. Hiding removes the element from the DOM, which is a structural change.
 
@@ -110,7 +130,7 @@ Consequence: the existing separate entry point is removed once the settings are 
 
 Beyond tab placement, the following must be true across every block:
 
-1. **Tab order is identical.** Content, Layout, Style, Advanced. No exceptions.
+1. **Tab order is identical.** Content, Layout, Style. No exceptions.
 2. **Naming is identical.** The same setting is called the same thing in every block. "Gap" is not "Spacing" in one block and "Gutter" in another.
 3. **Control types are identical.** The same kind of setting uses the same control everywhere — a colour is always a colour picker, a spacing value always uses the same unit control.
 4. **Icons are one system.** Icons used in the inspector come from a single set. Do not mix icon sets between blocks.
@@ -141,6 +161,7 @@ A block is compliant when:
 - [ ] Icons come from the single approved set
 - [ ] Within-tab ordering follows Section 6.5
 - [ ] Empty tabs are hidden, not shown blank
+- [ ] No custom Advanced tab or Advanced panel; HTML Anchor / Additional CSS Class(es) are left to WordPress core, not duplicated
 - [ ] Any ambiguous setting has been flagged rather than guessed at
 
 ---
@@ -149,6 +170,6 @@ A block is compliant when:
 
 These were raised and are not yet resolved. Do not resolve them unilaterally.
 
-- **Quick edit.** Its relationship to the four tabs is undefined. Deferred.
+- **Quick edit.** Its relationship to the three tabs is undefined. Deferred.
 - **Premium block gating.** Changes made in one place are propagating to the main environment when they should not. Needs a fix; out of scope for this spec but relevant to anyone touching shared settings.
 - **Global settings location.** The target location inside the block panel needs a design decision before implementation.
