@@ -497,14 +497,9 @@ Adaire_Deactivation_Modal::get_instance();
 require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/deactivation-log-page.php';
 Adaire_Deactivation_Log_Page::get_instance();
 
-// Welcome / Quick Start screen — owns the top-level 'adaire-blocks-settings'
-// menu page and sends admins there right after activation instead of
-// whatever submenu (e.g. Case Studies) happened to register first. Guarded
-// by class_exists() because the free "Adaire Blocks" plugin defines this
-// same class; if it's active alongside Pro, its own copy already handles
-// this and Pro must not redeclare the class or register a competing
-// top-level menu (see the class_exists() check in admin/settings-page.php's
-// add_admin_menu()).
+// Welcome / Quick Start screen — registers the 'adaire-blocks-welcome'
+// submenu and handles post-activation onboarding redirect. Guarded by
+// class_exists() to avoid re-declaring if already loaded.
 if ( is_admin() && ! class_exists( 'Adaire_Welcome_Screen' ) ) {
 	require_once ADAIRE_BLOCKS_PLUGIN_PATH . 'admin/welcome-screen.php';
 	Adaire_Welcome_Screen::register();

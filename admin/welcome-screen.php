@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Adaire_Welcome_Screen {
 
 	public static function register() {
-		add_action( 'admin_menu', array( __CLASS__, 'add_menu_page' ), 9 );
+		add_action( 'admin_menu', array( __CLASS__, 'add_menu_page' ), 10 );
 		add_action( 'admin_menu', array( __CLASS__, 'move_to_top' ), 999 );
 		add_action( 'wp_ajax_adaire_create_starter_page', array( __CLASS__, 'create_starter_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'maybe_redirect_after_activation' ) );
@@ -35,32 +35,9 @@ class Adaire_Welcome_Screen {
 	}
 
 	/**
-	 * Register the admin menu.
-	 *
-	 * Unlike the standalone free plugin (where admin/settings-page.php always
-	 * registers the top-level 'adaire-blocks-settings' page via add_menu_page()
-	 * regardless of whether this Welcome screen is present), the Pro plugin's
-	 * admin/settings-page.php deliberately SKIPS add_menu_page() whenever this
-	 * class exists — it nests itself as a "Pro Settings" submenu instead, to
-	 * avoid registering a competing top-level menu when the free plugin (which
-	 * also defines Adaire_Welcome_Screen) is active alongside Pro. That means
-	 * when Pro supplies its own bundled copy of this class (i.e. the free
-	 * plugin isn't active), nobody else will call add_menu_page() — so this
-	 * method must register the top-level page itself.
+	 * Register the Welcome / Quick Start submenu page.
 	 */
 	public static function add_menu_page() {
-		$svg_icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg width="20" height="20" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M408.523 321.353H163.388V393.981H401.889V483.583H195.142C156 483.583 125 516.017 125 556.18V645.814C125 685.978 156 718.411 195.142 718.411H401.889V645.814H201.776V556.18H401.889V645.814H477.941V393.981C477.941 353.818 446.941 321.353 408.523 321.353Z" fill="black"/><path d="M603.247 267.692V357.441H801.292C842.251 357.441 875 389.932 875 429.647V643.346C875 686.658 838.511 718.412 793.842 718.412H592.057C553.348 718.412 522.059 688.102 522.059 650.569V189C566.728 189 603.217 224.381 603.217 267.692H603.247ZM603.247 650.569H793.842V429.647H603.247V650.569Z" fill="black"/></svg>' );
-
-		add_menu_page(
-			__( 'Adaire Blocks', 'adaire-blocks' ),
-			__( 'Adaire Blocks', 'adaire-blocks' ),
-			'manage_options',
-			'adaire-blocks-settings',
-			array( __CLASS__, 'render' ),
-			$svg_icon,
-			30
-		);
-
 		add_submenu_page(
 			'adaire-blocks-settings',
 			__( 'Welcome to Adaire Blocks', 'adaire-blocks' ),
@@ -73,15 +50,11 @@ class Adaire_Welcome_Screen {
 
 	/**
 	 * Pin the "Adaire Blocks" submenu into a deterministic order:
-	 * Welcome / Quick Start first (so the top-level "Adaire Blocks" link —
-	 * whose href WP derives from whichever submenu item is first in this
-	 * array — always opens the Welcome screen), then Case Studies (if the
-	 * Pro plugin's `AdaireCaseStudiesCPT` registered it, via its
-	 * `edit.php?post_type=adaire_case_study` slug) right after it, with
-	 * everything else left in its original relative order. Without this,
-	 * both items are only ordered by hook-registration timing, which is
-	 * not guaranteed and previously let a differently-ordered submenu
-	 * change which page the top-level link opened.
+	 * "All Blocks" (adaire-blocks-settings) first, so the top-level "Adaire Blocks"
+	 * menu link always opens the full blocks management screen;
+	 * then "Welcome / Quick Start" (adaire-blocks-welcome) second;
+	 * then "Case Studies" (if registered) third;
+	 * with everything else left in its original relative order.
 	 */
 	public static function move_to_top() {
 		global $submenu;
@@ -91,6 +64,7 @@ class Adaire_Welcome_Screen {
 		}
 
 		$pinned_slugs = array(
+			'adaire-blocks-settings',
 			'adaire-blocks-welcome',
 			'edit.php?post_type=adaire_case_study',
 		);
@@ -159,12 +133,7 @@ class Adaire_Welcome_Screen {
 		$ajax_url      = admin_url( 'admin-ajax.php' );
 		$docs_url      = 'https://adaire.digital/docs/';
 		$support_url   = 'https://adaire.digital/support/';
-		// The free plugin's Settings page keeps the shared 'adaire-blocks-settings'
-		// slug. The Pro plugin nests its Settings page under 'adaire-blocks-pro-settings'
-		// instead (see admin/settings-page.php), since 'adaire-blocks-settings' is this
-		// Welcome screen's own top-level slug when Pro supplies this class itself.
-		$is_free_build = defined( 'ADAIRE_BLOCKS_IS_FREE' ) && ADAIRE_BLOCKS_IS_FREE;
-		$settings_url  = admin_url( 'admin.php?page=' . ( $is_free_build ? 'adaire-blocks-settings' : 'adaire-blocks-pro-settings' ) );
+		$settings_url  = admin_url( 'admin.php?page=adaire-blocks-settings' );
 		$migration_url = admin_url( 'admin.php?page=adaire-blocks-migration' );
 		$exit_url      = admin_url();
 		$new_page_url  = admin_url( 'post-new.php?post_type=page' );

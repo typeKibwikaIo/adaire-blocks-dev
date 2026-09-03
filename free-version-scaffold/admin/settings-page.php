@@ -17,7 +17,7 @@ class AdaireBlocksSettings {
 	private $settings;
 
 	private function __construct() {
-		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'add_admin_menu' ), 9 );
 		add_action( 'admin_init', array( $this, 'init_settings' ) );
 		add_action( 'admin_init', array( $this, 'sync_block_registry' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
@@ -53,6 +53,15 @@ class AdaireBlocksSettings {
 			array( $this, 'settings_page' ),
 			$svg_icon,
 			30
+		);
+
+		add_submenu_page(
+			'adaire-blocks-settings',
+			__( 'Adaire Blocks - All Blocks', 'adaire-blocks' ),
+			__( 'All Blocks', 'adaire-blocks' ),
+			'manage_options',
+			'adaire-blocks-settings',
+			array( $this, 'settings_page' )
 		);
 	}
 
