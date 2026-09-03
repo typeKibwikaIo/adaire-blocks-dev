@@ -47,11 +47,11 @@ class Adaire_Welcome_Screen {
 
 	/**
 	 * Pin the "Adaire Blocks" submenu into a deterministic order:
-	 * Welcome / Quick Start first (so the top-level "Adaire Blocks" link —
-	 * whose href WP derives from whichever submenu item is first in this
-	 * array — always opens the Welcome screen), then Case Studies (only
-	 * present when the Pro plugin's AdaireCaseStudiesCPT is also active,
-	 * via its `edit.php?post_type=adaire_case_study` slug) right after it,
+	 * "All Blocks" (adaire-blocks-settings) first, so the top-level "Adaire Blocks"
+	 * menu link always opens the full blocks management screen;
+	 * then "Welcome / Quick Start" (adaire-blocks-welcome) second;
+	 * then "Case Studies" (only present when the Pro plugin's AdaireCaseStudiesCPT
+	 * is also active, via its `edit.php?post_type=adaire_case_study` slug) right after it,
 	 * with everything else left in its original relative order.
 	 */
 	public static function move_to_top() {
@@ -62,6 +62,7 @@ class Adaire_Welcome_Screen {
 		}
 
 		$pinned_slugs = array(
+			'adaire-blocks-settings',
 			'adaire-blocks-welcome',
 			'edit.php?post_type=adaire_case_study',
 		);

@@ -17,7 +17,8 @@ class AdaireBlocksSettings {
 	private $settings;
 
 	private function __construct() {
-		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'add_admin_menu' ), 9 );
+		add_action( 'admin_init', array( $this, 'maybe_redirect_legacy_slug' ) );
 		add_action( 'admin_init', array( $this, 'init_settings' ) );
 		add_action( 'admin_init', array( $this, 'sync_block_registry' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
@@ -38,58 +39,51 @@ class AdaireBlocksSettings {
 	}
 
 	/**
-	 * Slug this Settings page is actually registered under.
-	 *
-	 * Mirrors the branching in add_admin_menu(): nested under
-	 * 'adaire-blocks-pro-settings' when a Welcome screen owns the top-level
-	 * menu, otherwise this page IS the top-level 'adaire-blocks-settings' page.
+	 * Slug this Settings page is registered under.
 	 */
 	private function get_page_slug() {
-		return class_exists( 'Adaire_Welcome_Screen' ) ? 'adaire-blocks-pro-settings' : 'adaire-blocks-settings';
+		return 'adaire-blocks-settings';
 	}
 
 	/**
-	 * Add admin menu
+	 * Redirect any legacy bookmarks or links from 'adaire-blocks-pro-settings'
+	 * to the canonical 'adaire-blocks-settings' page.
+	 */
+	public function maybe_redirect_legacy_slug() {
+		if ( isset( $_GET['page'] ) && 'adaire-blocks-pro-settings' === $_GET['page'] ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=adaire-blocks-settings' ) );
+			exit;
+		}
+	}
+
+	/**
+	 * Add admin menu.
 	 *
-	 * If the free "Adaire Blocks" plugin is also active, or if Pro's own
-	 * bundled Welcome screen (identified by its Adaire_Welcome_Screen marker
-	 * class) is present, that class already owns the shared top-level
-	 * 'adaire-blocks-settings' menu. Calling add_menu_page() again here with
-	 * the identical slug would register a second, competing top-level entry:
-	 * WordPress does not deduplicate add_menu_page() calls by slug, so two
-	 * registrations of the same slug/position corrupts the admin menu's
-	 * internal routing (overwritten $menu entries, competing render
-	 * callbacks firing on the same hook, submenus resolving unpredictably)
-	 * — this is what caused the free plugin's post-activation redirect to
-	 * land on an unrelated admin screen instead of its own Welcome page
-	 * when both plugins were active at once. Nest under the existing menu
-	 * with a distinct slug instead of re-registering the top-level page.
+	 * Registers the top-level "Adaire Blocks" menu page pointing to the full block
+	 * settings catalog (showing all blocks), plus the first submenu item "All Blocks".
 	 */
 	public function add_admin_menu() {
 		// Custom SVG icon for the admin menu
 		// Note: Remove background, use fill="black" for proper WordPress admin menu color handling
 		$svg_icon = 'data:image/svg+xml;base64,' . base64_encode( '<svg width="20" height="20" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M408.523 321.353H163.388V393.981H401.889V483.583H195.142C156 483.583 125 516.017 125 556.18V645.814C125 685.978 156 718.411 195.142 718.411H401.889V645.814H201.776V556.18H401.889V645.814H477.941V393.981C477.941 353.818 446.941 321.353 408.523 321.353Z" fill="black"/><path d="M603.247 267.692V357.441H801.292C842.251 357.441 875 389.932 875 429.647V643.346C875 686.658 838.511 718.412 793.842 718.412H592.057C553.348 718.412 522.059 688.102 522.059 650.569V189C566.728 189 603.217 224.381 603.217 267.692H603.247ZM603.247 650.569H793.842V429.647H603.247V650.569Z" fill="black"/></svg>' );
 
-		if ( class_exists( 'Adaire_Welcome_Screen' ) ) {
-			add_submenu_page(
-				'adaire-blocks-settings',
-				'Adaire Blocks Pro Settings',
-				'Pro Settings',
-				'manage_options',
-				'adaire-blocks-pro-settings',
-				array( $this, 'settings_page' )
-			);
-			return;
-		}
-
 		add_menu_page(
-			'Adaire Blocks',
-			'Adaire Blocks',
+			__( 'Adaire Blocks', 'adaire-blocks' ),
+			__( 'Adaire Blocks', 'adaire-blocks' ),
 			'manage_options',
 			'adaire-blocks-settings',
 			array( $this, 'settings_page' ),
 			$svg_icon,
 			30
+		);
+
+		add_submenu_page(
+			'adaire-blocks-settings',
+			__( 'Adaire Blocks - All Blocks', 'adaire-blocks' ),
+			__( 'All Blocks', 'adaire-blocks' ),
+			'manage_options',
+			'adaire-blocks-settings',
+			array( $this, 'settings_page' )
 		);
 	}
 
@@ -665,13 +659,7 @@ class AdaireBlocksSettings {
 			'}'
 		);
 
-		// Normally this page is the top-level menu itself (hook
-		// 'toplevel_page_adaire-blocks-settings'). But when the Welcome screen
-		// (Adaire_Welcome_Screen) owns the top-level menu instead — either
-		// because it's bundled with Pro directly, or because the free plugin
-		// is active alongside Pro — this page is nested as the
-		// 'adaire-blocks-pro-settings' submenu, and WordPress names its hook
-		// 'adaire-blocks-settings_page_adaire-blocks-pro-settings'.
+		// Expected hooks for this page (top-level page or submenu):
 		$page_slug      = $this->get_page_slug();
 		$expected_hooks = array(
 			'toplevel_page_adaire-blocks-settings',

@@ -4,7 +4,7 @@ Donate link: https://adaireblocks.com/
 Tags: blocks, gutenberg, page builder, layout, animation
 Requires at least: 6.7
 Tested up to: 6.8
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 Requires PHP: 7.4
 License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -129,6 +129,17 @@ Git tags in the source repository correspond to the matching WordPress.org plugi
 
 == Changelog ==
 
+= 1.3.2 =
+* The Hero, Button, and Feature Grid blocks now share one sidebar layout. Settings sit in the same tab, under the same panel name, in the same order, whichever of these blocks you are editing.
+* Removed a second row of tabs. Some blocks previously showed a "Settings | Styles" tab pair with a further three tabs nested inside one of them; there is now a single row of three tabs — Content, Layout, Style.
+* A tab with no settings for the block you are editing is now hidden rather than shown empty.
+* Some settings have moved between tabs. Spacing (padding, margin, gap) is now under Style; hover effects that move an element are now under Layout. Your existing values are unchanged — only where you find the control has moved.
+* Setting names are now consistent between blocks. The same control is no longer called "Device Preview" in one block and "Device View" in another, and control labels no longer repeat the breakpoint name ("Button Padding (Desktop)"); each panel states the breakpoint it is editing once, at the top.
+* Fixed: the Hero block's rating badges were not saved. The badge settings were missing from the block's data schema, so anything you configured was discarded when the page reloaded. Badges now persist and ship with placeholder content you can edit.
+* Fixed: the Hero block's rating badge and hero image panels appeared empty when the corresponding toggle was off, giving no way to set them up beforehand and no indication that a toggle was responsible. Both are now always editable, with a note pointing to the toggle.
+* Fixed: Feature Grid was generating layout CSS from column count, grid gap, and block margin values that had no controls anywhere in the sidebar, so they were stuck at their defaults. All three are now editable, per breakpoint.
+* Feature Grid and Hero: the WordPress "Dimensions" spacing panel has been replaced by each block's own spacing controls, which apply per breakpoint. Previously both were present and wrote different values for the same job.
+
 = 1.3.1 =
 * Fixed: the Bootstrap Icons font/CSS files referenced by `assets/vendor/bootstrap-icons/` were not actually present in the plugin package, so icon glyphs would not have rendered even though the code no longer loaded them from a CDN. The font and stylesheet files are now correctly bundled.
 * Corrected the "Source Code" link in this readme so both references to the human-readable source repository point to the same, publicly accessible location.
@@ -173,6 +184,9 @@ Git tags in the source repository correspond to the matching WordPress.org plugi
 * Built with modern JavaScript (ES6+) and React.
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+Editing update. The Hero, Button, and Feature Grid blocks now share one sidebar layout, and the second row of tabs some blocks showed is gone. Some settings have moved between tabs - spacing is now under Style, hover effects under Layout - but no saved values, content, or page markup change. Also fixes Hero rating badges, which previously did not survive a page reload.
 
 = 1.3.1 =
 Fixes missing Bootstrap Icons font files so block icons render correctly. No action required.
