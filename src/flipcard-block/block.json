@@ -12,6 +12,12 @@
         "html": false,
         "anchor": true,
         "customClassName": true,
+        "color": false,
+        "typography": false,
+        "spacing": false,
+        "border": false,
+        "dimensions": false,
+        "shadow": false,
         "align": [
             "wide",
             "full"

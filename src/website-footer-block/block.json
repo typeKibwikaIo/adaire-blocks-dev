@@ -13,7 +13,13 @@
         "alignWide": true,
         "anchor": true,
         "customClassName": true,
-        "reusable": true
+        "reusable": true,
+        "color": false,
+        "typography": false,
+        "spacing": false,
+        "border": false,
+        "dimensions": false,
+        "shadow": false
     },
     "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",

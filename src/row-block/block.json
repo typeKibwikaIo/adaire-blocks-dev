@@ -14,8 +14,12 @@
     "align": ["wide", "full"],
     "anchor": true,
     "customClassName": true,
-    "spacing": { "padding": true, "margin": true },
-    "color": { "background": true, "gradients": true }
+    "color": false,
+    "typography": false,
+    "spacing": false,
+    "border": false,
+    "dimensions": false,
+    "shadow": false
   },
   "attributes": {
     "layout": {

@@ -350,7 +350,12 @@
         },
         "margin": {
             "type": "object",
-            "default": { "top": "0px", "right": "0px", "bottom": "0px", "left": "0px" }
+            "default": {
+                "top": "0px",
+                "right": "0px",
+                "bottom": "0px",
+                "left": "0px"
+            }
         },
         "padding": {
             "type": "number",
