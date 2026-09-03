@@ -14,10 +14,13 @@
  * and are skipped entirely: they never flip, on any device or screen size.
  */
 
+import { initScrollAnimation } from '../components/scroll-animation-runtime';
+
 const HOVER_QUERY = '(hover: hover) and (pointer: fine)';
 
 document.addEventListener('DOMContentLoaded', () => {
     initFlipCards();
+    initScrollAnimation('.adaire-flipcard.adaire-scroll-animate');
 });
 
 /**

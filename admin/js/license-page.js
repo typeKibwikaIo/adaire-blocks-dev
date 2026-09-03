@@ -19,6 +19,20 @@
             this.bindEvents();
         }
 
+        /**
+         * Local/dev testing shortcut for the "douglasmasho" license key.
+         *
+         * Activate/Validate/Deactivate below call the external validation
+         * server directly via fetch() and never touch admin-ajax.php, so
+         * the matching bypass in AdaireBlocksLicense::activate_license()/
+         * validate_license() (PHP) can never run from this UI. Mirrored
+         * here so local testing works without a real license key or
+         * network access to the validation server.
+         */
+        isDevBypassKey(licenseKey) {
+            return licenseKey === 'douglasmasho';
+        }
+
         bindEvents() {
             // License form submission
             $(document).on('submit', '#adaire-license-form', this.handleLicenseActivation.bind(this));
@@ -80,6 +94,23 @@
             
             this.setLoading($button, adaireLicense.strings.activating);
             $container.addClass('adaire-license-loading');
+
+            if (this.isDevBypassKey(licenseKey)) {
+                const devActivationData = {
+                    success: true,
+                    data: {
+                        token: 'dev-bypass-token-' + Date.now(),
+                        timesActivated: 1,
+                        timesActivatedMax: 999,
+                        remainingActivations: 999
+                    }
+                };
+                this.showMessage('success', 'License activated successfully! (Development Mode)');
+                this.saveActivationResult(licenseKey, devActivationData);
+                this.removeLoading($button, adaireLicense.strings.activate);
+                $container.removeClass('adaire-license-loading');
+                return;
+            }
             
             // First, activate the license to get the token
             this.performActivation(licenseKey)
@@ -353,6 +384,16 @@
                 this.showMessage('error', 'No license key found. Please activate the license first.');
                 return;
             }
+
+            if (this.isDevBypassKey(licenseKey)) {
+                this.setLoading($button, adaireLicense.strings.deactivating);
+                $container.addClass('adaire-license-loading');
+                this.showMessage('success', 'License deactivated successfully! (Development Mode)');
+                this.saveDeactivationResult();
+                this.removeLoading($button, adaireLicense.strings.deactivate);
+                $container.removeClass('adaire-license-loading');
+                return;
+            }
             
             // Build URL with or without token parameter
             let fullUrl;
@@ -450,6 +491,21 @@
             
             if (!licenseKey) {
                 this.showMessage('error', 'No license key found. Please activate a license first.');
+                return;
+            }
+
+            if (this.isDevBypassKey(licenseKey)) {
+                this.setLoading($button, adaireLicense.strings.validating);
+                $container.addClass('adaire-license-loading');
+                const devValidationData = {
+                    timesActivated: 1,
+                    timesActivatedMax: 999,
+                    remainingActivations: 999
+                };
+                this.showMessage('success', 'License validation successful! (Development Mode)');
+                this.updateLicenseData(devValidationData);
+                this.removeLoading($button, adaireLicense.strings.validate);
+                $container.removeClass('adaire-license-loading');
                 return;
             }
             

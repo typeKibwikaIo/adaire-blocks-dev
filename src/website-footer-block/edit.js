@@ -549,7 +549,7 @@ export default function Edit({ attributes, setAttributes }) {
             <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
 
                 {/* ── Footer Styling ──────────────────────────────────── */}
-                <PanelBody title={__('Footer Styling', 'adaire-blocks')} initialOpen={true}>
+                <PanelBody section="style" priority="high" title={__('Footer Styling', 'adaire-blocks')} initialOpen={true}>
                     <SelectControl
                         label="Font family"
                         value={fontFamily || ''}
@@ -566,6 +566,10 @@ export default function Edit({ attributes, setAttributes }) {
                         <label>Accent Color</label>
                         <BoundColorPalette value={accentColor} onChange={(v) => setAttributes({ accentColor: v || '' })} />
                     </div>
+                </PanelBody>
+
+                {/* ── Footer Layout (spacing/structure) ───────────────── */}
+                <PanelBody section="layout" title={__('Footer Layout', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl label="Max Width (px)"        value={maxWidth}      onChange={(v) => setAttributes({ maxWidth: v })}      min={800} max={1600} />
                     <RangeControl label="Padding Top (px)"      value={paddingTop}    onChange={(v) => setAttributes({ paddingTop: v })}    min={0} max={120} />
                     <RangeControl label="Padding Bottom (px)"   value={paddingBottom} onChange={(v) => setAttributes({ paddingBottom: v })} min={0} max={120} />
@@ -574,7 +578,7 @@ export default function Edit({ attributes, setAttributes }) {
                 </PanelBody>
 
                 {/* ── Zone Visibility ─────────────────────────────────── */}
-                <PanelBody title={__('Zone Visibility', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="layout" title={__('Zone Visibility', 'adaire-blocks')} initialOpen={false}>
                     <ToggleControl label="Show Top Bar"         checked={showTopBar}         onChange={(v) => setAttributes({ showTopBar: v })} />
                     <ToggleControl label="Show Columns Section" checked={showColumnsSection} onChange={(v) => setAttributes({ showColumnsSection: v })} />
                     <ToggleControl label="Show Bottom Bar"      checked={showBottomBar}      onChange={(v) => setAttributes({ showBottomBar: v })} />
@@ -582,7 +586,7 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Top Bar Settings ────────────────────────────────── */}
                 {showTopBar && (
-                    <PanelBody title={__('Top Bar Settings', 'adaire-blocks')} initialOpen={false}>
+                    <PanelBody section="layout" title={__('Top Bar Settings', 'adaire-blocks')} initialOpen={false}>
                         <ToggleControl label="Show Copyright"   checked={topBar.showCopyright}   onChange={(v) => updateTopBar({ showCopyright: v })} />
                         <ToggleControl label="Show Contact Link" checked={topBar.showContactLink} onChange={(v) => updateTopBar({ showContactLink: v })} />
                         {topBar.showContactLink && (
@@ -592,24 +596,6 @@ export default function Edit({ attributes, setAttributes }) {
                                     label={__('Underline contact link', 'adaire-blocks')}
                                     checked={!!topBar.contactLinkUnderline}
                                     onChange={(v) => updateTopBar({ contactLinkUnderline: v })}
-                                />
-                                <div style={{ marginBottom: 8 }}>
-                                    <label>{__('Contact Link Hover Color', 'adaire-blocks')}</label>
-                                    <BoundColorPalette value={topBar.contactLinkHoverColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverColor: v || '' })} />
-                                </div>
-                                <div style={{ marginBottom: 8 }}>
-                                    <label>{__('Contact Link Hover Underline Color', 'adaire-blocks')}</label>
-                                    <BoundColorPalette value={topBar.contactLinkHoverUnderlineColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverUnderlineColor: v || '' })} />
-                                </div>
-                                <div style={{ marginBottom: 8 }}>
-                                    <label>{__('Contact Link Hover Background', 'adaire-blocks')}</label>
-                                    <BoundColorPalette value={topBar.contactLinkHoverBackgroundColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverBackgroundColor: v || '' })} />
-                                </div>
-                                <RangeControl
-                                    label={__('Contact Link Hover Transition (ms)', 'adaire-blocks')}
-                                    value={topBar.contactLinkTransitionDuration != null && topBar.contactLinkTransitionDuration >= 0 ? topBar.contactLinkTransitionDuration : 300}
-                                    min={0} max={1000} step={50}
-                                    onChange={(v) => updateTopBar({ contactLinkTransitionDuration: v })}
                                 />
                             </>
                         )}
@@ -632,6 +618,68 @@ export default function Edit({ attributes, setAttributes }) {
                                 <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Icon Styling', 'adaire-blocks')}</strong>
                                 <RangeControl label={__('Icon Size (px)', 'adaire-blocks')} value={topBar.iconSize || 24} min={12} max={60}
                                     onChange={(v) => updateTopBar({ iconSize: v })} />
+                                <RangeControl
+                                    label={__('Icon Spacing (px)', 'adaire-blocks')}
+                                    value={topBar.iconSpacing != null && topBar.iconSpacing >= 0 ? topBar.iconSpacing : 12}
+                                    min={0} max={40}
+                                    onChange={(v) => updateTopBar({ iconSpacing: v })}
+                                />
+                                <RangeControl
+                                    label={__('Hover Transition (ms)', 'adaire-blocks')}
+                                    value={topBar.transitionDuration != null && topBar.transitionDuration >= 0 ? topBar.transitionDuration : 300}
+                                    min={0} max={1000} step={50}
+                                    onChange={(v) => updateTopBar({ transitionDuration: v })}
+                                />
+                            </>
+                        )}
+                        <SelectControl label="Alignment" value={topBar.alignment}
+                            options={[
+                                { label: 'Left', value: 'left' }, { label: 'Center', value: 'center' },
+                                { label: 'Right', value: 'right' }, { label: 'Space Between', value: 'space-between' },
+                            ]}
+                            onChange={(v) => updateTopBar({ alignment: v })} />
+                        <ToggleControl label="Show Divider" checked={topBar.showDivider} onChange={(v) => updateTopBar({ showDivider: v })} />
+                        <RangeControl label="Vertical Padding (px)" value={topBar.paddingVertical} min={0} max={60} onChange={(v) => updateTopBar({ paddingVertical: v })} />
+                        <RangeControl label="Margin Top (px)" value={topBar.marginTop || 0} min={0} max={100} onChange={(v) => updateTopBar({ marginTop: v })} />
+                        <RangeControl label="Margin Bottom (px)" value={topBar.marginBottom || 0} min={0} max={100} onChange={(v) => updateTopBar({ marginBottom: v })} />
+                    </PanelBody>
+                )}
+
+                {showTopBar && (
+                    <PanelBody section="style" priority="medium" title={__('Top Bar Style', 'adaire-blocks')} initialOpen={false}>
+                        <div style={{ marginBottom: 16, marginTop: 8 }}>
+                            <label>Top Bar Background Color</label>
+                            <BoundColorPalette value={topBar.backgroundColor || ''} onChange={(v) => updateTopBar({ backgroundColor: v || '' })} />
+                        </div>
+                        <div style={{ marginBottom: 16 }}>
+                            <label>Text / Icon Color</label>
+                            <BoundColorPalette value={topBar.textColor || ''} onChange={(v) => updateTopBar({ textColor: v || '' })} />
+                        </div>
+                        <SelectControl label="Font Size" value={topBar.fontSize}
+                            options={[{ label: 'Small', value: 'small' }, { label: 'Medium', value: 'medium' }, { label: 'Large', value: 'large' }]}
+                            onChange={(v) => updateTopBar({ fontSize: v })} />
+                        {topBar.showContactLink && (
+                            <>
+                                <hr />
+                                <p style={{ fontWeight: 600, marginBottom: 8 }}>{__('Contact Link Hover', 'adaire-blocks')}</p>
+                                <div style={{ marginBottom: 8 }}>
+                                    <label>{__('Contact Link Hover Color', 'adaire-blocks')}</label>
+                                    <BoundColorPalette value={topBar.contactLinkHoverColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverColor: v || '' })} />
+                                </div>
+                                <div style={{ marginBottom: 8 }}>
+                                    <label>{__('Contact Link Hover Underline Color', 'adaire-blocks')}</label>
+                                    <BoundColorPalette value={topBar.contactLinkHoverUnderlineColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverUnderlineColor: v || '' })} />
+                                </div>
+                                <div style={{ marginBottom: 8 }}>
+                                    <label>{__('Contact Link Hover Background', 'adaire-blocks')}</label>
+                                    <BoundColorPalette value={topBar.contactLinkHoverBackgroundColor || ''} onChange={(v) => updateTopBar({ contactLinkHoverBackgroundColor: v || '' })} />
+                                </div>
+                            </>
+                        )}
+                        {topBar.showSocialMedia && (
+                            <>
+                                <hr />
+                                <p style={{ fontWeight: 600, marginBottom: 8 }}>{__('Social Icon Colors', 'adaire-blocks')}</p>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={topBar.iconColor || ''} onChange={(v) => updateTopBar({ iconColor: v || '' })} />
@@ -663,47 +711,14 @@ export default function Edit({ attributes, setAttributes }) {
                                     onChange={(v) => updateTopBar({ borderRadius: v })}
                                     help={__('50% = circle, 0% = square', 'adaire-blocks')}
                                 />
-                                <RangeControl
-                                    label={__('Icon Spacing (px)', 'adaire-blocks')}
-                                    value={topBar.iconSpacing != null && topBar.iconSpacing >= 0 ? topBar.iconSpacing : 12}
-                                    min={0} max={40}
-                                    onChange={(v) => updateTopBar({ iconSpacing: v })}
-                                />
-                                <RangeControl
-                                    label={__('Hover Transition (ms)', 'adaire-blocks')}
-                                    value={topBar.transitionDuration != null && topBar.transitionDuration >= 0 ? topBar.transitionDuration : 300}
-                                    min={0} max={1000} step={50}
-                                    onChange={(v) => updateTopBar({ transitionDuration: v })}
-                                />
                             </>
                         )}
-                        <div style={{ marginBottom: 16, marginTop: 8 }}>
-                            <label>Top Bar Background Color</label>
-                            <BoundColorPalette value={topBar.backgroundColor || ''} onChange={(v) => updateTopBar({ backgroundColor: v || '' })} />
-                        </div>
-                        <div style={{ marginBottom: 16 }}>
-                            <label>Text / Icon Color</label>
-                            <BoundColorPalette value={topBar.textColor || ''} onChange={(v) => updateTopBar({ textColor: v || '' })} />
-                        </div>
-                        <SelectControl label="Alignment" value={topBar.alignment}
-                            options={[
-                                { label: 'Left', value: 'left' }, { label: 'Center', value: 'center' },
-                                { label: 'Right', value: 'right' }, { label: 'Space Between', value: 'space-between' },
-                            ]}
-                            onChange={(v) => updateTopBar({ alignment: v })} />
-                        <ToggleControl label="Show Divider" checked={topBar.showDivider} onChange={(v) => updateTopBar({ showDivider: v })} />
-                        <SelectControl label="Font Size" value={topBar.fontSize}
-                            options={[{ label: 'Small', value: 'small' }, { label: 'Medium', value: 'medium' }, { label: 'Large', value: 'large' }]}
-                            onChange={(v) => updateTopBar({ fontSize: v })} />
-                        <RangeControl label="Vertical Padding (px)" value={topBar.paddingVertical} min={0} max={60} onChange={(v) => updateTopBar({ paddingVertical: v })} />
-                        <RangeControl label="Margin Top (px)" value={topBar.marginTop || 0} min={0} max={100} onChange={(v) => updateTopBar({ marginTop: v })} />
-                        <RangeControl label="Margin Bottom (px)" value={topBar.marginBottom || 0} min={0} max={100} onChange={(v) => updateTopBar({ marginBottom: v })} />
                     </PanelBody>
                 )}
 
                 {/* ── Columns Section Settings ────────────────────────── */}
                 {showColumnsSection && (
-                    <PanelBody title={__('Columns Section Settings', 'adaire-blocks')} initialOpen={false}>
+                    <PanelBody section="layout" title={__('Columns Section Settings', 'adaire-blocks')} initialOpen={false}>
                         <RangeControl label="Column Gap (px)" value={columnsSection.columnGap} min={0} max={80} onChange={(v) => updateColumnsSection({ columnGap: v })} />
                         <SelectControl label="Vertical Alignment" value={columnsSection.verticalAlignment}
                             options={[
@@ -717,7 +732,7 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Brand Logo Upload ───────────────────────────────── */}
                 {showColumnsSection && columnsSection.columns.filter(col => col.type === 'brand').map((column) => (
-                    <PanelBody key={column.id} title={__('Brand Logo', 'adaire-blocks')} initialOpen={false}>
+                    <PanelBody key={column.id} section="content" title={__('Brand Logo', 'adaire-blocks')} initialOpen={false}>
                         <MediaUploadCheck>
                             <MediaUpload
                                 onSelect={(media) => updateColumn(column.id, { brandLogo: media.url })}
@@ -747,14 +762,17 @@ export default function Edit({ attributes, setAttributes }) {
                     confusingly-similar free-text attribute — but we expose it
                     here under an explicit "Tagline" label/panel plus its own
                     typography + color controls, none of which existed before. */}
-                {showColumnsSection && columnsSection.columns.filter(col => col.type === 'brand').map((column) => (
-                    <PanelBody key={column.id} title={__('Tagline', 'adaire-blocks')} initialOpen={false}>
+                {showColumnsSection && columnsSection.columns.filter(col => col.type === 'brand').map((column) => [
+                    <PanelBody key={`${column.id}-tagline-content`} section="content" title={__('Tagline', 'adaire-blocks')} initialOpen={false}>
                         <TextControl
                             label={__('Tagline text', 'adaire-blocks')}
                             value={column.description || ''}
                             onChange={(v) => updateColumn(column.id, { description: v })}
                             help={__('Shown under the brand name/logo. Also editable directly on canvas.', 'adaire-blocks')}
                         />
+                    </PanelBody>,
+
+                    <PanelBody key={`${column.id}-tagline-style`} section="style" priority="medium" title={__('Tagline Style', 'adaire-blocks')} initialOpen={false}>
                         <RangeControl
                             label={__('Font Size (px)', 'adaire-blocks')}
                             value={column.taglineFontSize != null && column.taglineFontSize >= 0 ? column.taglineFontSize : 14}
@@ -789,8 +807,8 @@ export default function Edit({ attributes, setAttributes }) {
                             <label>{__('Tagline Color', 'adaire-blocks')}</label>
                             <BoundColorPalette value={column.taglineColor || ''} onChange={(v) => updateColumn(column.id, { taglineColor: v || '' })} />
                         </div>
-                    </PanelBody>
-                ))}
+                    </PanelBody>,
+                ])}
 
                 {/* ── Navigation Source (nav columns) ─────────────────── */}
                 {/* Mirrors the same control inside each nav column's QuickZone
@@ -799,6 +817,7 @@ export default function Edit({ attributes, setAttributes }) {
                 {showColumnsSection && columnsSection.columns.filter(col => col.type === 'nav').map((column) => (
                     <PanelBody
                         key={column.id}
+                        section="layout"
                         title={column.headingText ? `${__('Navigation Source', 'adaire-blocks')}: ${column.headingText}` : __('Navigation Source', 'adaire-blocks')}
                         initialOpen={false}
                     >
@@ -830,7 +849,7 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Bottom Bar Settings ─────────────────────────────── */}
                 {showBottomBar && (
-                    <PanelBody title={__('Bottom Bar Settings', 'adaire-blocks')} initialOpen={false}>
+                    <PanelBody section="layout" title={__('Bottom Bar Settings', 'adaire-blocks')} initialOpen={false}>
                         <ToggleControl label="Show Copyright"         checked={bottomBar.showCopyright}    onChange={(v) => updateBottomBar({ showCopyright: v })} />
                         <ToggleControl label="Show Privacy Links"     checked={bottomBar.showPrivacyPolicy} onChange={(v) => updateBottomBar({ showPrivacyPolicy: v })} />
                         {bottomBar.showPrivacyPolicy && (
@@ -865,6 +884,38 @@ export default function Edit({ attributes, setAttributes }) {
                                 <strong style={{ fontSize: 11, textTransform: 'uppercase', color: '#888', letterSpacing: 1 }}>{__('Icon Styling', 'adaire-blocks')}</strong>
                                 <RangeControl label={__('Icon Size (px)', 'adaire-blocks')} value={bottomBar.iconSize || 24} min={12} max={60}
                                     onChange={(v) => updateBottomBar({ iconSize: v })} />
+                                <RangeControl
+                                    label={__('Icon Spacing (px)', 'adaire-blocks')}
+                                    value={bottomBar.iconSpacing != null && bottomBar.iconSpacing >= 0 ? bottomBar.iconSpacing : 12}
+                                    min={0} max={40}
+                                    onChange={(v) => updateBottomBar({ iconSpacing: v })}
+                                />
+                                <RangeControl
+                                    label={__('Hover Transition (ms)', 'adaire-blocks')}
+                                    value={bottomBar.transitionDuration != null && bottomBar.transitionDuration >= 0 ? bottomBar.transitionDuration : 300}
+                                    min={0} max={1000} step={50}
+                                    onChange={(v) => updateBottomBar({ transitionDuration: v })}
+                                />
+                            </>
+                        )}
+                        <SelectControl label="Alignment" value={bottomBar.alignment}
+                            options={[
+                                { label: 'Left', value: 'left' }, { label: 'Center', value: 'center' },
+                                { label: 'Right', value: 'right' }, { label: 'Space Between', value: 'space-between' },
+                            ]}
+                            onChange={(v) => updateBottomBar({ alignment: v })} />
+                        <ToggleControl label="Show Divider" checked={bottomBar.showDivider} onChange={(v) => updateBottomBar({ showDivider: v })} />
+                        <RangeControl label="Vertical Padding (px)" value={bottomBar.paddingVertical} min={0} max={60} onChange={(v) => updateBottomBar({ paddingVertical: v })} />
+                        <RangeControl label="Margin Top (px)" value={bottomBar.marginTop || 0} min={0} max={100} onChange={(v) => updateBottomBar({ marginTop: v })} />
+                        <RangeControl label="Margin Bottom (px)" value={bottomBar.marginBottom || 0} min={0} max={100} onChange={(v) => updateBottomBar({ marginBottom: v })} />
+                    </PanelBody>
+                )}
+
+                {showBottomBar && (
+                    <PanelBody section="style" priority="medium" title={__('Bottom Bar Style', 'adaire-blocks')} initialOpen={false}>
+                        {bottomBar.showSocialIcons && (
+                            <>
+                                <p style={{ fontWeight: 600, marginBottom: 8 }}>{__('Social Icon Colors', 'adaire-blocks')}</p>
                                 <div style={{ marginBottom: 4 }}>
                                     <label>{__('Icon Color', 'adaire-blocks')}</label>
                                     <BoundColorPalette value={bottomBar.iconColor || ''} onChange={(v) => updateBottomBar({ iconColor: v || '' })} />
@@ -896,30 +947,9 @@ export default function Edit({ attributes, setAttributes }) {
                                     onChange={(v) => updateBottomBar({ borderRadius: v })}
                                     help={__('50% = circle, 0% = square', 'adaire-blocks')}
                                 />
-                                <RangeControl
-                                    label={__('Icon Spacing (px)', 'adaire-blocks')}
-                                    value={bottomBar.iconSpacing != null && bottomBar.iconSpacing >= 0 ? bottomBar.iconSpacing : 12}
-                                    min={0} max={40}
-                                    onChange={(v) => updateBottomBar({ iconSpacing: v })}
-                                />
-                                <RangeControl
-                                    label={__('Hover Transition (ms)', 'adaire-blocks')}
-                                    value={bottomBar.transitionDuration != null && bottomBar.transitionDuration >= 0 ? bottomBar.transitionDuration : 300}
-                                    min={0} max={1000} step={50}
-                                    onChange={(v) => updateBottomBar({ transitionDuration: v })}
-                                />
+                                <hr />
                             </>
                         )}
-                        <SelectControl label="Alignment" value={bottomBar.alignment}
-                            options={[
-                                { label: 'Left', value: 'left' }, { label: 'Center', value: 'center' },
-                                { label: 'Right', value: 'right' }, { label: 'Space Between', value: 'space-between' },
-                            ]}
-                            onChange={(v) => updateBottomBar({ alignment: v })} />
-                        <ToggleControl label="Show Divider" checked={bottomBar.showDivider} onChange={(v) => updateBottomBar({ showDivider: v })} />
-                        <RangeControl label="Vertical Padding (px)" value={bottomBar.paddingVertical} min={0} max={60} onChange={(v) => updateBottomBar({ paddingVertical: v })} />
-                        <RangeControl label="Margin Top (px)" value={bottomBar.marginTop || 0} min={0} max={100} onChange={(v) => updateBottomBar({ marginTop: v })} />
-                        <RangeControl label="Margin Bottom (px)" value={bottomBar.marginBottom || 0} min={0} max={100} onChange={(v) => updateBottomBar({ marginBottom: v })} />
                         <div style={{ marginBottom: 16, marginTop: 8 }}>
                             <label>Text / Copyright Color</label>
                             <BoundColorPalette value={bottomBar.textColor || ''} onChange={(v) => updateBottomBar({ textColor: v || '' })} />

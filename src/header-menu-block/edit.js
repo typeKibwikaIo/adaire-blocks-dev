@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, InspectorControls, ColorPalette, useSettings } from '@wordpress/block-editor';
+import { useBlockProps, MediaUpload, MediaUploadCheck, RichText, ColorPalette, useSettings } from '@wordpress/block-editor';
 import {
     Button, ColorPicker, GradientPicker, PanelBody, Popover,
     RangeControl, SelectControl, TextControl,
@@ -1705,7 +1705,6 @@ export default function Edit({ attributes, setAttributes }) {
 
     return (
         <>
-            <InspectorControls>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes } stylePanels={ stylePanels }>
 
                 <PanelBody section="content" title={ __( 'How to Use This Block', 'adaire-blocks' ) } initialOpen={ true }>
@@ -1717,12 +1716,12 @@ export default function Edit({ attributes, setAttributes }) {
                 </PanelBody>
 
                 {/* -- Layout tab panels ------------------------------------ */}
-                <PanelBody title={ __( 'Layout', 'adaire-blocks' ) } initialOpen={ true }>
+                <PanelBody section="layout" title={ __( 'Layout', 'adaire-blocks' ) } initialOpen={ true }>
                     <SelectControl label="Layout"          value={ attributes.layout }         options={ layoutOptions } onChange={ v => setAttributes({ layout: v }) } />
                     <SelectControl label="Sticky behavior" value={ attributes.stickyBehavior } options={ stickyOptions } onChange={ v => setAttributes({ stickyBehavior: v }) } />
                 </PanelBody>
 
-                <PanelBody title={ __( 'Logo', 'adaire-blocks' ) } initialOpen={ false }>
+                <PanelBody section="content" title={ __( 'Logo', 'adaire-blocks' ) } initialOpen={ false }>
                     <SelectControl label="Logo type" value={ attributes.logoType } options={ [{ label: 'Text', value: 'text' }, { label: 'Image', value: 'image' }] } onChange={ v => setAttributes({ logoType: v }) } />
                     { attributes.logoType === 'image' && (
                         <MediaUploadCheck>
@@ -1742,7 +1741,7 @@ export default function Edit({ attributes, setAttributes }) {
                     { attributes.linkLogoHome && <TextControl label="Logo URL" value={ attributes.logoUrl } onChange={ v => setAttributes({ logoUrl: v }) } /> }
                 </PanelBody>
 
-                <PanelBody title={ __( 'Navigation', 'adaire-blocks' ) } initialOpen={ false }>
+                <PanelBody section="layout" title={ __( 'Navigation', 'adaire-blocks' ) } initialOpen={ false }>
                     <ToggleControl label="Show navigation" checked={ attributes.showNav }         onChange={ v => setAttributes({ showNav: v }) } />
                     <SelectControl label="Orientation"     value={ attributes.navOrientation }    options={ [{ label: 'Horizontal', value: 'horizontal' }, { label: 'Vertical', value: 'vertical' }] } onChange={ v => setAttributes({ navOrientation: v }) } />
                     <RangeControl  label="Item spacing"    value={ attributes.navSpacing }         min={ 0 } max={ 80 } onChange={ v => setAttributes({ navSpacing: v }) } />
@@ -1773,8 +1772,6 @@ export default function Edit({ attributes, setAttributes }) {
                             />
                             <RangeControl label="Dot size"    value={ attributes.navDotSize != null ? attributes.navDotSize : 6 }    min={ 2 } max={ 20 } onChange={ v => setAttributes({ navDotSize: v }) } />
                             <RangeControl label="Dot spacing" value={ attributes.navDotSpacing != null ? attributes.navDotSpacing : 8 } min={ 0 } max={ 30 } onChange={ v => setAttributes({ navDotSpacing: v }) } />
-                            <p style={{ marginBottom: 8 }}>Dot color</p>
-                            <ColorPalette value={ resolveColor(attributes.navDotColor) } onChange={ v => setAttributes({ navDotColor: bindColor(v) }) } />
                         </>
                     ) }
 
@@ -1804,11 +1801,13 @@ export default function Edit({ attributes, setAttributes }) {
                         </p>
                     ) }
 
+                </PanelBody>
+
+                <PanelBody section="content" title={ __( 'Navigation Items', 'adaire-blocks' ) } initialOpen={ false }>
+                    <p className="adaire-header-help-text">{ __( 'Only used when Navigation source (in the Navigation panel) is set to manually entered items.', 'adaire-blocks' ) }</p>
                     { ( ! attributes.navigationSource || attributes.navigationSource === 'legacy' ) && (
                         <>
                             <hr />
-                            <p>Nav icon color</p>
-                            <ColorPicker color={ attributes.navIconColor } onChange={ v => setAttributes({ navIconColor: v }) } enableAlpha />
                             { ( attributes.navItems || [] ).map( ( item, index ) => (
                                 <div className="adaire-header-control-group" key={ index }>
                                     <TextControl   label={ `Item ${ index + 1 } label` } value={ item.label }        onChange={ v => updateNavItem( index, 'label', v ) } />
@@ -1826,7 +1825,22 @@ export default function Edit({ attributes, setAttributes }) {
                     ) }
                 </PanelBody>
 
-                <PanelBody title={ __( 'Header Action Buttons', 'adaire-blocks' ) } initialOpen={ false }>
+                <PanelBody section="style" priority="medium" title={ __( 'Navigation Style', 'adaire-blocks' ) } initialOpen={ false }>
+                    { attributes.navShowDots && (
+                        <>
+                            <p style={{ marginBottom: 8 }}>Dot color</p>
+                            <ColorPalette value={ resolveColor(attributes.navDotColor) } onChange={ v => setAttributes({ navDotColor: bindColor(v) }) } />
+                        </>
+                    ) }
+                    { ( ! attributes.navigationSource || attributes.navigationSource === 'legacy' ) && (
+                        <>
+                            <p>Nav icon color</p>
+                            <ColorPicker color={ attributes.navIconColor } onChange={ v => setAttributes({ navIconColor: v }) } enableAlpha />
+                        </>
+                    ) }
+                </PanelBody>
+
+                <PanelBody section="content" title={ __( 'Header Action Buttons', 'adaire-blocks' ) } initialOpen={ false }>
                     {/* Sign In */}
                     <div className="adaire-header-control-group">
                         <ToggleControl label="Show Sign In" checked={ attributes.showSignIn } onChange={ v => setAttributes({ showSignIn: v }) } />
@@ -1838,11 +1852,6 @@ export default function Edit({ attributes, setAttributes }) {
                         { attributes.showSignInIcon !== false && (
                             <SelectControl label="Icon"  value={ attributes.signInIcon }  options={ iconOptions }     onChange={ v => setAttributes({ signInIcon: v }) } />
                         ) }
-                        <p style={{ marginBottom: 4, fontWeight: 600 }}>Sign In colors</p>
-                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.signInBgColor) }     onChange={ v => setAttributes({ signInBgColor: bindColor(v) }) } />
-                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.signInTextColor) }   onChange={ v => setAttributes({ signInTextColor: bindColor(v) }) } />
-                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.signInBorderColor) } onChange={ v => setAttributes({ signInBorderColor: bindColor(v) }) } />
-                        <RangeControl label="Font size" value={ attributes.signInFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signInFontSize: v }) } />
                     </div>
                     {/* Sign Up */}
                     <div className="adaire-header-control-group">
@@ -1855,11 +1864,6 @@ export default function Edit({ attributes, setAttributes }) {
                         { attributes.showSignUpIcon !== false && (
                             <SelectControl label="Icon"  value={ attributes.signUpIcon }  options={ iconOptions }     onChange={ v => setAttributes({ signUpIcon: v }) } />
                         ) }
-                        <p style={{ marginBottom: 4, fontWeight: 600 }}>Sign Up colors</p>
-                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.signUpBgColor) }     onChange={ v => setAttributes({ signUpBgColor: bindColor(v) }) } />
-                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.signUpTextColor) }   onChange={ v => setAttributes({ signUpTextColor: bindColor(v) }) } />
-                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.signUpBorderColor) } onChange={ v => setAttributes({ signUpBorderColor: bindColor(v) }) } />
-                        <RangeControl label="Font size" value={ attributes.signUpFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signUpFontSize: v }) } />
                     </div>
                     {/* CTA */}
                     <div className="adaire-header-control-group">
@@ -1875,6 +1879,42 @@ export default function Edit({ attributes, setAttributes }) {
                                 <SelectControl label="Icon position"   value={ attributes.ctaIconPosition } options={ iconPositionOptions } onChange={ v => setAttributes({ ctaIconPosition: v }) } />
                             </>
                         ) }
+                    </div>
+                </PanelBody>
+
+                <PanelBody section="layout" title={ __( 'Header Action Buttons Layout', 'adaire-blocks' ) } initialOpen={ false }>
+                    <p className="adaire-header-qpop__section-label">CTA Spacing</p>
+                    <RangeControl
+                        label="Vertical padding"
+                        value={ attributes.ctaPaddingVertical != null && attributes.ctaPaddingVertical >= 0 ? attributes.ctaPaddingVertical : undefined }
+                        min={ 0 } max={ 40 } allowReset resetFallbackValue={ undefined }
+                        onChange={ v => setAttributes({ ctaPaddingVertical: v == null ? -1 : v }) }
+                        help={ __( 'Applies to the CTA button only.', 'adaire-blocks' ) }
+                    />
+                    <RangeControl
+                        label="Horizontal padding"
+                        value={ attributes.ctaPaddingHorizontal != null && attributes.ctaPaddingHorizontal >= 0 ? attributes.ctaPaddingHorizontal : undefined }
+                        min={ 0 } max={ 60 } allowReset resetFallbackValue={ undefined }
+                        onChange={ v => setAttributes({ ctaPaddingHorizontal: v == null ? -1 : v }) }
+                    />
+                </PanelBody>
+
+                <PanelBody section="style" priority="medium" title={ __( 'Header Action Buttons Style', 'adaire-blocks' ) } initialOpen={ false }>
+                    <p className="adaire-header-qpop__section-label">Sign In</p>
+                        <p style={{ marginBottom: 4, fontWeight: 600 }}>Sign In colors</p>
+                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.signInBgColor) }     onChange={ v => setAttributes({ signInBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.signInTextColor) }   onChange={ v => setAttributes({ signInTextColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.signInBorderColor) } onChange={ v => setAttributes({ signInBorderColor: bindColor(v) }) } />
+                        <RangeControl label="Font size" value={ attributes.signInFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signInFontSize: v }) } />
+                    <hr />
+                    <p className="adaire-header-qpop__section-label">Sign Up</p>
+                        <p style={{ marginBottom: 4, fontWeight: 600 }}>Sign Up colors</p>
+                        <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.signUpBgColor) }     onChange={ v => setAttributes({ signUpBgColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.signUpTextColor) }   onChange={ v => setAttributes({ signUpTextColor: bindColor(v) }) } />
+                        <p style={{ marginBottom: 4 }}>Border</p>    <ColorPalette value={ resolveColor(attributes.signUpBorderColor) } onChange={ v => setAttributes({ signUpBorderColor: bindColor(v) }) } />
+                        <RangeControl label="Font size" value={ attributes.signUpFontSize || 16 } min={ 10 } max={ 28 } onChange={ v => setAttributes({ signUpFontSize: v }) } />
+                    <hr />
+                    <p className="adaire-header-qpop__section-label">CTA</p>
                         <p style={{ marginBottom: 4, fontWeight: 600 }}>CTA colors</p>
                         <p style={{ marginBottom: 4 }}>Background</p><ColorPalette value={ resolveColor(attributes.ctaBgColor) }     onChange={ v => setAttributes({ ctaBgColor: bindColor(v) }) } />
                         <p style={{ marginBottom: 4 }}>Text</p>      <ColorPalette value={ resolveColor(attributes.ctaTextColor) }   onChange={ v => setAttributes({ ctaTextColor: bindColor(v) }) } />
@@ -1891,19 +1931,8 @@ export default function Edit({ attributes, setAttributes }) {
                             onChange={ v => setAttributes({ ctaBorderRadius: v == null ? -1 : v }) }
                             help={ __( 'Leave unset to use the button shape default.', 'adaire-blocks' ) }
                         />
-                        <RangeControl
-                            label="Vertical padding"
-                            value={ attributes.ctaPaddingVertical != null && attributes.ctaPaddingVertical >= 0 ? attributes.ctaPaddingVertical : undefined }
-                            min={ 0 } max={ 40 } allowReset resetFallbackValue={ undefined }
-                            onChange={ v => setAttributes({ ctaPaddingVertical: v == null ? -1 : v }) }
-                        />
-                        <RangeControl
-                            label="Horizontal padding"
-                            value={ attributes.ctaPaddingHorizontal != null && attributes.ctaPaddingHorizontal >= 0 ? attributes.ctaPaddingHorizontal : undefined }
-                            min={ 0 } max={ 60 } allowReset resetFallbackValue={ undefined }
-                            onChange={ v => setAttributes({ ctaPaddingHorizontal: v == null ? -1 : v }) }
-                        />
-                    </div>
+                    <hr />
+                    <p className="adaire-header-qpop__section-label">Global Button Shape</p>
                     <SelectControl
                         label="Button shape"
                         value={ attributes.buttonShape }
@@ -1930,7 +1959,7 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                 </PanelBody>
 
-                <PanelBody title={ __( 'Mobile', 'adaire-blocks' ) } initialOpen={ false }>
+                <PanelBody section="layout" title={ __( 'Mobile', 'adaire-blocks' ) } initialOpen={ false }>
                     <RangeControl  label="Mobile logo width"   value={ attributes.mobileLogoWidth } min={ 40 } max={ 260 } onChange={ v => setAttributes({ mobileLogoWidth: v }) } />
                     <SelectControl label="Mobile menu style"    value={ attributes.mobileMenuStyle }     options={ mobileStyleOptions } onChange={ v => setAttributes({ mobileMenuStyle: v }) } />
                     { attributes.mobileMenuStyle === 'slide-in' && (
@@ -1978,6 +2007,9 @@ export default function Edit({ attributes, setAttributes }) {
                         checked={ attributes.mobileCloseOnEscape !== false }
                         onChange={ v => setAttributes({ mobileCloseOnEscape: v }) }
                     />
+                </PanelBody>
+
+                <PanelBody section="style" priority="medium" title={ __( 'Mobile Menu Style', 'adaire-blocks' ) } initialOpen={ false }>
                     <ToggleControl label="Hamburger button border" checked={ attributes.hamburgerBorder } onChange={ v => setAttributes({ hamburgerBorder: v }) } />
                     { attributes.hamburgerBorder && (
                         <>
@@ -1990,7 +2022,7 @@ export default function Edit({ attributes, setAttributes }) {
                     ) }
                 </PanelBody>
 
-                <PanelBody title={ __( 'Search', 'adaire-blocks' ) } initialOpen={ false }>
+                <PanelBody section="layout" title={ __( 'Search', 'adaire-blocks' ) } initialOpen={ false }>
                     <ToggleControl label="Show search icon" checked={ attributes.showSearch }             onChange={ v => setAttributes({ showSearch: v }) } />
                     <SelectControl label="Search mode"      value={ attributes.searchMode }               options={ [{ label: 'Expand on click', value: 'expand' }, { label: 'Always visible', value: 'always' }] } onChange={ v => setAttributes({ searchMode: v }) } />
                     <SelectControl
@@ -2018,6 +2050,9 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                     <RangeControl  label="Icon size"        value={ attributes.searchIconSize || 18 }      min={ 12 } max={ 32 } onChange={ v => setAttributes({ searchIconSize: v }) } />
                     <RangeControl  label="Button size"      value={ attributes.searchButtonSize || 38 }    min={ 28 } max={ 60 } onChange={ v => setAttributes({ searchButtonSize: v }) } />
+                </PanelBody>
+
+                <PanelBody section="style" priority="medium" title={ __( 'Search Style', 'adaire-blocks' ) } initialOpen={ false }>
                     <p style={{ marginBottom: 8 }}>Icon color</p>
                     <ColorPalette value={ resolveColor(attributes.searchIconColor) }   onChange={ v => setAttributes({ searchIconColor: bindColor(v) }) } />
                     <p style={{ marginBottom: 8 }}>Button background</p>
@@ -2035,7 +2070,7 @@ export default function Edit({ attributes, setAttributes }) {
                     <ColorPalette value={ resolveColor(attributes.searchContainerBgColor) } onChange={ v => setAttributes({ searchContainerBgColor: bindColor(v) }) } />
                 </PanelBody>
 
-                <PanelBody title={ __( 'Social Icons', 'adaire-blocks' ) } initialOpen={ false }>
+                <PanelBody section="layout" title={ __( 'Social Icons', 'adaire-blocks' ) } initialOpen={ false }>
                     <ToggleControl label="Show social icons" checked={ attributes.showSocial } onChange={ v => setAttributes({ showSocial: v }) } />
                     <SelectControl
                         label="Placement"
@@ -2060,6 +2095,10 @@ export default function Edit({ attributes, setAttributes }) {
                         ] }
                         onChange={ v => setAttributes({ socialHoverEffect: v }) }
                     />
+                    <RangeControl label="Icon size"  value={ attributes.socialIconSize }  min={ 12 } max={ 40 } onChange={ v => setAttributes({ socialIconSize: v }) } />
+                </PanelBody>
+
+                <PanelBody section="content" title={ __( 'Social Links', 'adaire-blocks' ) } initialOpen={ false }>
                     { ( attributes.socialLinks || [] ).map( ( item, index ) => (
                         <div className="adaire-header-control-group" key={ index }>
                             <SelectControl label={ `Platform ${ index + 1 }` } value={ item.platform } options={ platformOptions.map( p => ({ label: p, value: p }) ) } onChange={ v => updateSocialItem( index, 'platform', v ) } />
@@ -2100,11 +2139,13 @@ export default function Edit({ attributes, setAttributes }) {
                     <Button variant="secondary" onClick={ () => setAttributes({ socialLinks: [ ...( attributes.socialLinks || [] ), { platform: 'Facebook', url: '#' } ] }) }>
                         Add social icon
                     </Button>
-                    <RangeControl label="Icon size"  value={ attributes.socialIconSize }  min={ 12 } max={ 40 } onChange={ v => setAttributes({ socialIconSize: v }) } />
+                </PanelBody>
+
+                <PanelBody section="style" priority="medium" title={ __( 'Social Icons Style', 'adaire-blocks' ) } initialOpen={ false }>
                     <ColorPicker  color={ attributes.socialIconColor } onChange={ v => setAttributes({ socialIconColor: v }) } enableAlpha />
                 </PanelBody>
 
-                <PanelBody title={ __( 'Cart & Payment Icons', 'adaire-blocks' ) } initialOpen={ false }>
+                <PanelBody section="layout" title={ __( 'Cart & Payment Icons', 'adaire-blocks' ) } initialOpen={ false }>
                     {/* WooCommerce cart icon (ADAB-016) */}
                     <p className="adaire-header-qpop__section-label">Cart icon</p>
                     <ToggleControl
@@ -2128,8 +2169,6 @@ export default function Edit({ attributes, setAttributes }) {
                                 onChange={ v => setAttributes({ cartShowCount: v }) }
                             />
                             <RangeControl label="Icon size"  value={ attributes.cartIconSize || 18 } min={ 12 } max={ 40 } onChange={ v => setAttributes({ cartIconSize: v }) } />
-                            <p style={{ marginBottom: 8 }}>Icon color</p>
-                            <ColorPalette value={ attributes.cartIconColor } onChange={ v => setAttributes({ cartIconColor: v || '' }) } />
                         </>
                     ) }
 
@@ -2172,13 +2211,26 @@ export default function Edit({ attributes, setAttributes }) {
                                 Add payment icon
                             </Button>
                             <RangeControl label="Icon size"  value={ attributes.paymentIconSize || 22 } min={ 14 } max={ 48 } onChange={ v => setAttributes({ paymentIconSize: v }) } />
-                            <p style={{ marginBottom: 8 }}>Icon color</p>
+                        </>
+                    ) }
+                </PanelBody>
+
+                <PanelBody section="style" priority="medium" title={ __( 'Cart & Payment Icons Style', 'adaire-blocks' ) } initialOpen={ false }>
+                    { attributes.showCartIcon && (
+                        <>
+                            <p style={{ marginBottom: 8 }}>Cart icon color</p>
+                            <ColorPalette value={ attributes.cartIconColor } onChange={ v => setAttributes({ cartIconColor: v || '' }) } />
+                        </>
+                    ) }
+                    { attributes.showPaymentIcons && (
+                        <>
+                            <p style={{ marginBottom: 8 }}>Payment icon color</p>
                             <ColorPalette value={ attributes.paymentIconColor } onChange={ v => setAttributes({ paymentIconColor: v || '' }) } />
                         </>
                     ) }
                 </PanelBody>
 
-                <PanelBody title={ __( 'Top Bar', 'adaire-blocks' ) } initialOpen={ false }>
+                <PanelBody section="layout" title={ __( 'Top Bar', 'adaire-blocks' ) } initialOpen={ false }>
                     <ToggleControl label="Show top bar" checked={ attributes.showTopBar } onChange={ v => setAttributes({ showTopBar: v }) } />
                     <SelectControl
                         label="Layout"
@@ -2191,15 +2243,12 @@ export default function Edit({ attributes, setAttributes }) {
                         ] }
                         onChange={ v => setAttributes({ topBarLayout: v }) }
                     />
+                </PanelBody>
+
+                <PanelBody section="content" title={ __( 'Top Bar Content', 'adaire-blocks' ) } initialOpen={ false }>
                     <TextControl  label="Left content"  value={ attributes.topBarLeft }  onChange={ v => setAttributes({ topBarLeft: v }) } />
                     <TextControl  label="Right content" value={ attributes.topBarRight } onChange={ v => setAttributes({ topBarRight: v }) } />
-                    <RangeControl label="Font size"     value={ attributes.topBarFontSize } min={ 10 } max={ 24 } onChange={ v => setAttributes({ topBarFontSize: v }) } />
-                    <p style={{ marginBottom: 8 }}>Background color</p>
-                    <ColorPicker color={ attributes.topBarBackgroundColor } onChange={ v => setAttributes({ topBarBackgroundColor: v }) } enableAlpha />
-                    <p style={{ marginBottom: 8 }}>Text color</p>                    <ColorPicker color={ attributes.topBarTextColor } onChange={ v => setAttributes({ topBarTextColor: v }) } enableAlpha />
-
                     <hr />
-
                     {/* Follow Us (req #8) � flexible content block, off by default */}
                     <p className="adaire-header-qpop__section-label">Follow Us</p>
                     <ToggleControl
@@ -2253,8 +2302,15 @@ export default function Edit({ attributes, setAttributes }) {
                     ) }
                 </PanelBody>
 
+                <PanelBody section="style" priority="medium" title={ __( 'Top Bar Style', 'adaire-blocks' ) } initialOpen={ false }>
+                    <RangeControl label="Font size"     value={ attributes.topBarFontSize } min={ 10 } max={ 24 } onChange={ v => setAttributes({ topBarFontSize: v }) } />
+                    <p style={{ marginBottom: 8 }}>Background color</p>
+                    <ColorPicker color={ attributes.topBarBackgroundColor } onChange={ v => setAttributes({ topBarBackgroundColor: v }) } enableAlpha />
+                    <p style={{ marginBottom: 8 }}>Text color</p>                    <ColorPicker color={ attributes.topBarTextColor } onChange={ v => setAttributes({ topBarTextColor: v }) } enableAlpha />
+
+                </PanelBody>
+
             </InspectorTabs>
-            </InspectorControls>
 
             <div {...blockProps}>
             <HeaderPreview

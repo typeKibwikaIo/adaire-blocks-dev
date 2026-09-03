@@ -1,4 +1,4 @@
-import { useBlockProps, useInnerBlocksProps, ButtonBlockAppender } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps, ButtonBlockAppender, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 import {
   PanelBody,
   Button,
@@ -6,6 +6,7 @@ import {
   SelectControl,
   ToggleControl,
   BaseControl,
+  TextControl,
   __experimentalToggleGroupControl as ToggleGroupControl,
   __experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
@@ -17,6 +18,7 @@ import PresetIcon from './PresetIcon';
 import { getRowWidthClass } from './width-utils';
 import BoundColorPalette from '../components/BoundColorPalette';
 import { boxToCss, normalizeBoxUnits } from '../components/spacing-utils';
+import AnimationSettings from '../components/AnimationSettings';
 
 /**
  * Evenly distributes 100% across `count` columns as whole numbers, putting
@@ -121,6 +123,28 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     borderColor = '',
     borderRadius = 0,
     style: blockStyle,
+    backgroundColor = '',
+    backgroundImageUrl = '',
+    backgroundImageId = 0,
+    backgroundImageAlt = '',
+    backgroundImagePosition = 'center center',
+    backgroundImageSize = 'cover',
+    backgroundImageRepeat = 'no-repeat',
+    shadowEnabled = false,
+    shadowColor = 'rgba(0, 0, 0, 0.15)',
+    shadowX = 0,
+    shadowY = 4,
+    shadowBlur = 12,
+    shadowSpread = 0,
+    animationEnabled = false,
+    animationType = 'fade-in',
+    animationDuration = 1000,
+    animationDelay = 0,
+    animationEasing = 'ease-out',
+    animationDistance = 50,
+    animationThreshold = 0.2,
+    animationOnce = false,
+    animationReverseOnScrollOut = false,
   } = attributes;
 
   // Padding/Margin are still stored at the same `style.spacing` attribute
@@ -253,7 +277,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
   // ─── Spacing (visual — tagged "style"/medium per the AdaireBlocks
   // free-tier InspectorTabs reorg) ──
   const spacingPanel = (
-    <PanelBody section="style" priority="medium" title={ __( 'Spacing', 'adaire-blocks' ) } initialOpen={ false }>
+    <PanelBody section="layout" title={ __( 'Spacing', 'adaire-blocks' ) } initialOpen={ false }>
       <RangeControl
         label={ __( 'Gap Between Columns (px)', 'adaire-blocks' ) }
         value={ gap }
@@ -335,18 +359,208 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
           />
         </>
       ) }
+      { shadowEnabled && (
+        <BaseControl label={ __( 'Shadow Color', 'adaire-blocks' ) }>
+          <BoundColorPalette
+            value={ shadowColor }
+            onChange={ ( v ) => setAttributes( { shadowColor: v || 'rgba(0, 0, 0, 0.15)' } ) }
+          />
+        </BaseControl>
+      ) }
     </PanelBody>
   );
 
+  // ─── Background Color (tagged "style"/high — a pure color/CSS concern) ──
+  const backgroundColorPanel = (
+    <PanelBody section="style" priority="high" title={ __( 'Background Color', 'adaire-blocks' ) } initialOpen={ false }>
+      <BaseControl label={ __( 'Background Color', 'adaire-blocks' ) }>
+        <BoundColorPalette
+          value={ backgroundColor }
+          onChange={ ( v ) => setAttributes( { backgroundColor: v || '' } ) }
+        />
+      </BaseControl>
+      <p style={ { marginTop: '8px', color: '#757575', fontSize: '12px' } }>
+        { __( 'Sits behind the background image (if one is set) in the Content tab.', 'adaire-blocks' ) }
+      </p>
+    </PanelBody>
+  );
+
+  // ─── Background Media (tagged "content" — the block's own media) ──
+  const backgroundMediaPanel = (
+    <PanelBody section="content" title={ __( 'Background Media', 'adaire-blocks' ) } initialOpen={ false }>
+      <MediaUploadCheck>
+        <MediaUpload
+          onSelect={ ( media ) => setAttributes( {
+            backgroundImageUrl: media.url,
+            backgroundImageId: media.id,
+            backgroundImageAlt: media.alt || '',
+          } ) }
+          allowedTypes={ [ 'image' ] }
+          value={ backgroundImageId }
+          render={ ( { open } ) => (
+            <div className="adaire-row-bg-media">
+              { backgroundImageUrl && (
+                <img
+                  src={ backgroundImageUrl }
+                  alt=""
+                  style={ { width: '100%', height: 80, objectFit: 'cover', borderRadius: 4, marginBottom: 8 } }
+                />
+              ) }
+              <Button variant="secondary" onClick={ open }>
+                { backgroundImageUrl ? __( 'Replace image', 'adaire-blocks' ) : __( 'Upload background image', 'adaire-blocks' ) }
+              </Button>
+              { backgroundImageUrl && (
+                <Button
+                  variant="link"
+                  isDestructive
+                  onClick={ () => setAttributes( { backgroundImageUrl: '', backgroundImageId: 0, backgroundImageAlt: '' } ) }
+                >
+                  { __( 'Remove image', 'adaire-blocks' ) }
+                </Button>
+              ) }
+            </div>
+          ) }
+        />
+      </MediaUploadCheck>
+      { backgroundImageUrl && (
+        <>
+          <TextControl
+            label={ __( 'Alt Text (for screen readers)', 'adaire-blocks' ) }
+            value={ backgroundImageAlt }
+            onChange={ ( value ) => setAttributes( { backgroundImageAlt: value } ) }
+            help={ __( 'Leave blank if this image is purely decorative.', 'adaire-blocks' ) }
+          />
+          <SelectControl
+            label={ __( 'Position', 'adaire-blocks' ) }
+            value={ backgroundImagePosition }
+            options={ [
+              { label: __( 'Center', 'adaire-blocks' ), value: 'center center' },
+              { label: __( 'Top', 'adaire-blocks' ), value: 'center top' },
+              { label: __( 'Bottom', 'adaire-blocks' ), value: 'center bottom' },
+              { label: __( 'Left', 'adaire-blocks' ), value: 'left center' },
+              { label: __( 'Right', 'adaire-blocks' ), value: 'right center' },
+            ] }
+            onChange={ ( value ) => setAttributes( { backgroundImagePosition: value } ) }
+          />
+          <SelectControl
+            label={ __( 'Size', 'adaire-blocks' ) }
+            value={ backgroundImageSize }
+            options={ [
+              { label: __( 'Cover (fill)', 'adaire-blocks' ), value: 'cover' },
+              { label: __( 'Contain (fit inside)', 'adaire-blocks' ), value: 'contain' },
+              { label: __( 'Auto', 'adaire-blocks' ), value: 'auto' },
+            ] }
+            onChange={ ( value ) => setAttributes( { backgroundImageSize: value } ) }
+          />
+          <SelectControl
+            label={ __( 'Repeat', 'adaire-blocks' ) }
+            value={ backgroundImageRepeat }
+            options={ [
+              { label: __( 'No repeat', 'adaire-blocks' ), value: 'no-repeat' },
+              { label: __( 'Repeat', 'adaire-blocks' ), value: 'repeat' },
+              { label: __( 'Repeat X', 'adaire-blocks' ), value: 'repeat-x' },
+              { label: __( 'Repeat Y', 'adaire-blocks' ), value: 'repeat-y' },
+            ] }
+            onChange={ ( value ) => setAttributes( { backgroundImageRepeat: value } ) }
+          />
+        </>
+      ) }
+    </PanelBody>
+  );
+
+  // ─── Effects (tagged "layout" — a structural/depth effect, not a
+  // color/typography concern, per this block's Content/Layout/Style split) ──
+  const effectsPanel = (
+    <PanelBody section="layout" title={ __( 'Effects', 'adaire-blocks' ) } initialOpen={ false }>
+      <ToggleControl
+        label={ __( 'Enable Shadow', 'adaire-blocks' ) }
+        checked={ shadowEnabled }
+        onChange={ ( val ) => setAttributes( { shadowEnabled: val } ) }
+      />
+      { shadowEnabled && (
+        <>
+          <RangeControl
+            label={ __( 'Horizontal Offset (px)', 'adaire-blocks' ) }
+            value={ shadowX }
+            onChange={ ( val ) => setAttributes( { shadowX: val } ) }
+            min={ -60 }
+            max={ 60 }
+          />
+          <RangeControl
+            label={ __( 'Vertical Offset (px)', 'adaire-blocks' ) }
+            value={ shadowY }
+            onChange={ ( val ) => setAttributes( { shadowY: val } ) }
+            min={ -60 }
+            max={ 60 }
+          />
+          <RangeControl
+            label={ __( 'Blur (px)', 'adaire-blocks' ) }
+            value={ shadowBlur }
+            onChange={ ( val ) => setAttributes( { shadowBlur: val } ) }
+            min={ 0 }
+            max={ 100 }
+          />
+          <RangeControl
+            label={ __( 'Spread (px)', 'adaire-blocks' ) }
+            value={ shadowSpread }
+            onChange={ ( val ) => setAttributes( { shadowSpread: val } ) }
+            min={ -40 }
+            max={ 40 }
+          />
+        </>
+      ) }
+    </PanelBody>
+  );
+
+  const backgroundImageVars = backgroundImageUrl
+    ? {
+      backgroundImage: `url(${ backgroundImageUrl })`,
+      backgroundPosition: backgroundImagePosition,
+      backgroundSize: backgroundImageSize,
+      backgroundRepeat: backgroundImageRepeat,
+    }
+    : {};
+
+  const shadowStyleVars = shadowEnabled
+    ? { boxShadow: `${ shadowX }px ${ shadowY }px ${ shadowBlur }px ${ shadowSpread }px ${ shadowColor }` }
+    : {};
+
+  const animationDataAttrs = animationEnabled
+    ? {
+      'data-animation-enabled': 'true',
+      'data-animation-type': animationType,
+      'data-animation-duration': animationDuration,
+      'data-animation-delay': animationDelay,
+      'data-animation-easing': animationEasing,
+      'data-animation-distance': animationDistance,
+      'data-animation-threshold': animationThreshold,
+      'data-animation-once': animationOnce ? 'true' : 'false',
+      'data-animation-reverse-scroll': animationReverseOnScrollOut ? 'true' : 'false',
+    }
+    : {};
+
+  const rowClassName = [
+    'adaire-row',
+    `adaire-row--cols-${ columnWidths.length }`,
+    getRowWidthClass( align ),
+    verticalAlign ? `adaire-row--valign-${ verticalAlign }` : '',
+    mobileColumns ? `adaire-row--mobile-cols-${ mobileColumns }` : '',
+    animationEnabled ? 'adaire-scroll-animate' : '',
+  ].filter( Boolean ).join( ' ' );
+
   const blockProps = useBlockProps( {
-    className: `adaire-row adaire-row--cols-${ columnWidths.length } ${ getRowWidthClass( align ) } ${ verticalAlign ? `adaire-row--valign-${ verticalAlign }` : '' } ${ mobileColumns ? `adaire-row--mobile-cols-${ mobileColumns }` : '' }`,
+    className: rowClassName,
     style: {
       gridTemplateColumns,
       gap: `${ gap }px`,
       ...borderStyleVars,
+      backgroundColor: backgroundColor || undefined,
+      ...backgroundImageVars,
+      ...shadowStyleVars,
       padding: paddingCss || undefined,
       margin: marginCss || undefined,
     },
+    ...animationDataAttrs,
   } );
 
   // Use the store name string — compatible with all Gutenberg versions.
@@ -522,6 +736,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
       <>
         <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
           { rowLayoutPanel }
+          { backgroundColorPanel }
+          { backgroundMediaPanel }
+          { effectsPanel }
+          <AnimationSettings attributes={ attributes } setAttributes={ setAttributes } />
           { spacingPanel }
           { borderPanel }
         </InspectorTabs>
@@ -563,6 +781,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
       <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
         { rowLayoutPanel }
         { columnsPanel }
+        { backgroundColorPanel }
+        { backgroundMediaPanel }
+        { effectsPanel }
+        <AnimationSettings attributes={ attributes } setAttributes={ setAttributes } />
         { spacingPanel }
         { borderPanel }
       </InspectorTabs>

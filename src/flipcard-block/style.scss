@@ -8,6 +8,19 @@
     display: block;
     border: none;
 
+    // Only emitted when the user picks something other than the default
+    // (Center, which is already the unconditional auto/auto rule above) —
+    // existing cards get no new class and no changed CSS.
+    &--align-left {
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    &--align-right {
+        margin-left: auto;
+        margin-right: 0;
+    }
+
     // Responsive width
     @media (max-width: 1024px) {
         width: var(--flipcard-width-tablet, 100%);
@@ -209,12 +222,20 @@
     // Front side specific styles
     .adaire-flipcard-front {
         background-color: var(--flipcard-front-bg, #ffffff);
+        background-image: var(--flipcard-front-bg-image, none);
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
         border: var(--flipcard-front-border-width, 1px) solid var(--flipcard-front-border-color, #e0e0e0);
     }
 
     // Back side specific styles
     .adaire-flipcard-back {
         background-color: var(--flipcard-back-bg, #f5f5f5);
+        background-image: var(--flipcard-back-bg-image, none);
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
         border: var(--flipcard-back-border-width, 1px) solid var(--flipcard-back-border-color, #e0e0e0);
     }
 

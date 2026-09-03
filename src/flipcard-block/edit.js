@@ -1,5 +1,5 @@
 ﻿import { __ } from '@wordpress/i18n';
-import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, SelectControl, ButtonGroup, Button, TextControl, BaseControl, ColorPicker } from '@wordpress/components';
 import { desktop, tablet, mobile } from '@wordpress/icons';
 import { useEffect, useState } from '@wordpress/element';
@@ -7,6 +7,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
+import AnimationSettings from '../components/AnimationSettings';
 import { FLIPCARD_PRESETS } from './flipcard-presets';
 import './editor.scss';
 
@@ -25,11 +26,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         width, 
         height, 
         cardBehaviour,
+        cardAlignment,
         flipDirection, 
         animationDuration, 
         animationEasing,
         frontBackgroundColor,
         backBackgroundColor,
+        frontBackgroundImageUrl,
+        frontBackgroundImageId,
+        backBackgroundImageUrl,
+        backBackgroundImageId,
         borderRadius,
         padding,
         shadowIntensity,
@@ -85,11 +91,34 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         mobile: { value: 250, unit: 'px' }
     };
 
+    // Entrance (scroll) animation attributes live under the `entrance` prefix
+    // to avoid colliding with this block's own animationDuration/animationEasing
+    // (the card-flip mechanic). See AnimationSettings.js for the field list.
+    const entranceAnimationEnabled = attributes.entranceAnimationEnabled ?? false;
+    const animationDataAttrs = entranceAnimationEnabled
+        ? {
+            'data-animation-enabled': 'true',
+            'data-animation-type': attributes.entranceAnimationType ?? 'fade-in',
+            'data-animation-duration': attributes.entranceAnimationDuration ?? 1000,
+            'data-animation-delay': attributes.entranceAnimationDelay ?? 0,
+            'data-animation-easing': attributes.entranceAnimationEasing ?? 'ease-out',
+            'data-animation-distance': attributes.entranceAnimationDistance ?? 50,
+            'data-animation-threshold': attributes.entranceAnimationThreshold ?? 0.2,
+            'data-animation-once': attributes.entranceAnimationOnce ? 'true' : 'false',
+            'data-animation-reverse-scroll': attributes.entranceAnimationReverseOnScrollOut ? 'true' : 'false',
+        }
+        : {};
+
+    const flipcardClassName = [
+        'adaire-flipcard',
+        `adaire-flipcard--${flipDirection}`,
+        isStatic ? 'adaire-flipcard--static' : '',
+        cardAlignment && cardAlignment !== 'center' ? `adaire-flipcard--align-${cardAlignment}` : '',
+        entranceAnimationEnabled ? 'adaire-scroll-animate' : '',
+    ].filter(Boolean).join(' ');
+
     const blockProps = useBlockProps({
-        // The `--static` modifier is only appended when the user actually
-        // picks Static Card, so every card left on the default (Flip Card)
-        // keeps byte-identical saved markup and needs no block recovery.
-        className: `adaire-flipcard adaire-flipcard--${flipDirection}${isStatic ? ' adaire-flipcard--static' : ''}`,
+        className: flipcardClassName,
         style: {
             '--flipcard-width-desktop': `${normalizedWidth?.desktop?.value ?? 300}${normalizedWidth?.desktop?.unit ?? 'px'}`,
             '--flipcard-width-tablet': `${normalizedWidth?.tablet?.value ?? 100}${normalizedWidth?.tablet?.unit ?? '%'}`,
@@ -101,6 +130,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--flipcard-easing': animationEasing,
             '--flipcard-front-bg': frontBackgroundColor || '#ffffff',
             '--flipcard-back-bg': backBackgroundColor || '#f5f5f5',
+            ...(frontBackgroundImageUrl ? { '--flipcard-front-bg-image': `url(${frontBackgroundImageUrl})` } : {}),
+            ...(backBackgroundImageUrl ? { '--flipcard-back-bg-image': `url(${backBackgroundImageUrl})` } : {}),
             '--flipcard-front-border-color': frontBorderColor || '#e0e0e0',
             '--flipcard-front-border-width': `${frontBorderWidth ?? 1}px`,
             '--flipcard-back-border-color': backBorderColor || '#e0e0e0',
@@ -109,6 +140,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--flipcard-padding': `${padding ?? 20}px`,
             '--flipcard-shadow-intensity': shadowIntensity ?? 0.1,
         },
+        ...animationDataAttrs,
     });
 
     const innerBlocksProps = useInnerBlocksProps(
@@ -181,6 +213,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 ? __('Only the front face is shown. The card never flips, on any device or screen size.', 'adaire-blocks')
                                 : __('The back face is revealed on hover, or on tap where hover is unavailable.', 'adaire-blocks')
                         }
+                    />
+                    <SelectControl
+                        label={__('Card Alignment', 'adaire-blocks')}
+                        value={cardAlignment || 'center'}
+                        options={[
+                            { label: __('Left', 'adaire-blocks'), value: 'left' },
+                            { label: __('Center', 'adaire-blocks'), value: 'center' },
+                            { label: __('Right', 'adaire-blocks'), value: 'right' },
+                        ]}
+                        onChange={(value) => setAttributes({ cardAlignment: value })}
+                        help={__('Aligns the card within its container when the card is narrower than the available width.', 'adaire-blocks')}
                     />
                 </PanelBody>
 
@@ -302,6 +345,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             ))}
                         </ButtonGroup>
                     </div>
+
+                    <RangeControl
+                        label={__('Padding (px)', 'adaire-blocks')}
+                        value={padding ?? 20}
+                        onChange={(value) => setAttributes({ padding: value })}
+                        min={0}
+                        max={60}
+                        step={5}
+                    />
                 </PanelBody>
 
                 <PanelBody section="style" priority="high" title={__('Card Styling', 'adaire-blocks')} initialOpen={false}>
@@ -422,15 +474,88 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         step={1}
                     />
 
-                    <RangeControl
-                        label={__('Padding (px)', 'adaire-blocks')}
-                        value={padding ?? 20}
-                        onChange={(value) => setAttributes({ padding: value })}
-                        min={0}
-                        max={60}
-                        step={5}
-                    />
+                </PanelBody>
 
+                <PanelBody section="content" title={__('Front/Back Background Media', 'adaire-blocks')} initialOpen={false}>
+                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>
+                        {__('Front Face Image', 'adaire-blocks')}
+                    </p>
+                    <MediaUploadCheck>
+                        <MediaUpload
+                            onSelect={(media) => setAttributes({
+                                frontBackgroundImageUrl: media.url,
+                                frontBackgroundImageId: media.id,
+                            })}
+                            allowedTypes={['image']}
+                            value={frontBackgroundImageId}
+                            render={({ open }) => (
+                                <div className="adaire-flipcard-bg-media" style={{ marginBottom: '16px' }}>
+                                    {frontBackgroundImageUrl && (
+                                        <img
+                                            src={frontBackgroundImageUrl}
+                                            alt=""
+                                            style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 4, marginBottom: 8 }}
+                                        />
+                                    )}
+                                    <Button variant="secondary" onClick={open}>
+                                        {frontBackgroundImageUrl ? __('Replace image', 'adaire-blocks') : __('Upload front image', 'adaire-blocks')}
+                                    </Button>
+                                    {frontBackgroundImageUrl && (
+                                        <Button
+                                            variant="link"
+                                            isDestructive
+                                            onClick={() => setAttributes({ frontBackgroundImageUrl: '', frontBackgroundImageId: 0 })}
+                                        >
+                                            {__('Remove image', 'adaire-blocks')}
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
+                        />
+                    </MediaUploadCheck>
+
+                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>
+                        {__('Back Face Image', 'adaire-blocks')}
+                    </p>
+                    <MediaUploadCheck>
+                        <MediaUpload
+                            onSelect={(media) => setAttributes({
+                                backBackgroundImageUrl: media.url,
+                                backBackgroundImageId: media.id,
+                            })}
+                            allowedTypes={['image']}
+                            value={backBackgroundImageId}
+                            render={({ open }) => (
+                                <div className="adaire-flipcard-bg-media">
+                                    {backBackgroundImageUrl && (
+                                        <img
+                                            src={backBackgroundImageUrl}
+                                            alt=""
+                                            style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 4, marginBottom: 8 }}
+                                        />
+                                    )}
+                                    <Button variant="secondary" onClick={open}>
+                                        {backBackgroundImageUrl ? __('Replace image', 'adaire-blocks') : __('Upload back image', 'adaire-blocks')}
+                                    </Button>
+                                    {backBackgroundImageUrl && (
+                                        <Button
+                                            variant="link"
+                                            isDestructive
+                                            onClick={() => setAttributes({ backBackgroundImageUrl: '', backBackgroundImageId: 0 })}
+                                        >
+                                            {__('Remove image', 'adaire-blocks')}
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
+                        />
+                    </MediaUploadCheck>
+                    <p style={{ marginTop: '8px', color: '#757575', fontSize: '12px' }}>
+                        {__('Background images sit behind each face\'s background color and content.', 'adaire-blocks')}
+                    </p>
+                </PanelBody>
+
+                <PanelBody section="layout" title={__('Effects', 'adaire-blocks')} initialOpen={false}>
                     <RangeControl
                         label={__('Shadow Intensity', 'adaire-blocks')}
                         value={shadowIntensity ?? 0.1}
@@ -473,6 +598,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     />
                 </PanelBody>
                 )}
+
+                <AnimationSettings
+                    attributes={attributes}
+                    setAttributes={setAttributes}
+                    prefix="entrance"
+                    title={__('Entrance Animation', 'adaire-blocks')}
+                />
             </InspectorTabs>
 
             <div {...blockProps}>
