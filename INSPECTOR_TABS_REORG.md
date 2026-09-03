@@ -1,5 +1,10 @@
 # Inspector Controls Reorg — Free-Tier Blocks
 
+**Sections 1–4 shipped in 1.3.0. Sections 5–6 shipped in 1.3.2.**
+The rules this log implements are specified in `AGENTS/BLOCK_SETTINGS_SPEC.md`;
+user-facing summaries are in the `readme.txt` changelog, and `AGENTS/VERSIONING.md`
+covers how releases are numbered and which files have to agree.
+
 Summary of the Inspector Controls standardization work completed across the plugin's
 free-tier blocks. Covers the shared `InspectorTabs` component, the shared responsive
 `DeviceSwitcher` component, removal of the `smartwatch` breakpoint tier, and cleanup
@@ -17,7 +22,7 @@ throughout — they're inner-block-only, no top-level Inspector tabs.)
 
 ---
 
-## 1. Shared `InspectorTabs` component (`src/components/InspectorTabs.js`)
+## 1. Shared `InspectorTabs` component (`src/components/InspectorTabs.js`) (1.3.0)
 
 ### Panel classification
 Replaced ad hoc/keyword-guessed panel placement with an explicit `section` prop on
@@ -73,7 +78,7 @@ of its supporting code were removed:
 
 ---
 
-## 2. Shared `DeviceSwitcher` component (`src/components/DeviceSwitcher.js`)
+## 2. Shared `DeviceSwitcher` component (`src/components/DeviceSwitcher.js`) (1.3.0)
 
 Confirmed the one shared responsive-tier switcher (desktop/tablet/mobile[/smartwatch])
 is used consistently instead of ad hoc per-block switcher UI. Found and fixed several
@@ -91,7 +96,7 @@ since several **premium/out-of-scope** blocks still rely on it — see §3).
 
 ---
 
-## 3. Removed the `smartwatch` breakpoint tier
+## 3. Removed the `smartwatch` breakpoint tier (1.3.0)
 
 Removed entirely from the 8 free-tier blocks that had real (non-dead) smartwatch
 usage — `block.json` attribute schemas, `edit.js`/`save.js` CSS-var generation,
@@ -151,7 +156,7 @@ Content / Layout / Style only.
 
 ---
 
-## 5. Follow-up: settings unified against BLOCK_SETTINGS_SPEC.md
+## 5. Follow-up: settings unified against BLOCK_SETTINGS_SPEC.md (1.3.2)
 
 The pass above put every in-scope block on a three-tab sidebar, but it only
 decided *which tab* a panel sat in. It did not settle what a panel is called,
@@ -213,7 +218,7 @@ writing the attributes that were already wired up.
 
 ---
 
-## 6. Corrections after review
+## 6. Corrections after review (1.3.2)
 
 Four issues found on the first pass through the unified sidebars.
 

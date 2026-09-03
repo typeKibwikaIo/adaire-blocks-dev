@@ -4,7 +4,19 @@
 
 **Audience:** Developers and AI coding agents working on blocks in this plugin. Read this before adding, moving, or renaming any control in a block's sidebar.
 
-**Status:** Active. The categorisation rule and the three-tab structure are settled and enforced in code (Section 10). Five blocks are compliant; the rest of the library follows incrementally using the same shared components.
+**Status:** Active. The categorisation rule and the three-tab structure are settled and
+enforced in code (Section 10). Five blocks are compliant; the rest of the library follows
+incrementally using the same shared components.
+
+**Applies from:** 1.3.2. The shared components this spec relies on
+(`inspector-vocabulary.js`, `InspectorTabs`, `BreakpointNote`, the
+`blockInspectorTabs` filter) all ship in that release — see the changelog in
+`readme.txt`, the implementation log in `INSPECTOR_TABS_REORG.md`, and
+`AGENTS/VERSIONING.md` for how releases are numbered and recorded.
+
+Earlier groundwork: 1.3.0 introduced the tabbed inspector and dropped the custom
+Advanced tab and the smartwatch breakpoint tier, but did not settle panel naming,
+ordering, or which tab owns which kind of setting. That is what this document adds.
 
 ---
 

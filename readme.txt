@@ -4,7 +4,7 @@ Donate link: https://adaireblocks.com/
 Tags: blocks, gutenberg, gsap, animation, portfolio
 Requires at least: 6.7
 Tested up to: 6.8
-Stable tag: 1.2.5
+Stable tag: 1.3.2
 Requires PHP: 7.4
 License: GPL-3.0
 Source Code: https://github.com/helloadaire/Adaire-Blocks-Free
@@ -147,6 +147,76 @@ For support, please visit our website at https://adaireblocks.com/ or contact us
 6. Posts Grid Block with filtering and pagination
 
 == Changelog ==
+
+= 1.3.2 =
+* Unified the block inspector across the Hero, Button, and Feature Grid families - Hero Block (Pro), Hero Banner, Button (Free), Feature Grid (Free), and Feature Grid (Pro) now present the same three tabs, the same panel names, and the same panel order
+* Removed WordPress's second, outer inspector tab strip ("Settings | Styles") from Adaire blocks - previously a block could show two tabs with three more nested inside one of them
+* Added a shared inspector vocabulary so the same setting is called the same thing in every block ("Gap" is no longer "Spacing" in one block and "Gutter" in another)
+* A tab with no settings for a given block is now hidden instead of rendering empty
+* Standardised how a panel shows which breakpoint it is editing; removed device names baked into control labels ("Button Padding (Desktop)")
+* Fixed Hero Block (Pro) rating badges never persisting - the three badge attributes were missing from the block schema, so nothing configured survived a reload
+* Hero Block (Pro): the badge and hero-image panels are now editable whether or not the block is currently showing them, and ship with placeholder content
+* Fixed Feature Grid (Free) generating grid CSS from column, gap, and margin values it offered no controls for - all three are now editable per breakpoint
+* Replaced the duplicate WordPress spacing panel on Feature Grid (Free) and Hero Block (Pro) with the blocks' own responsive spacing controls
+* Added a newsletter block with form handling
+* Hero blocks: added a call-to-action toggle, fluid type defaults using clamp() fallbacks, and an image fallback
+* Fixed accordion, video player, and Location Map issues found in pre-launch testing
+* Client Logos: gap now uses px, added grayscale-until-hover
+
+= 1.3.1 =
+* Added Hero Banner block, with the previous Hero 1 kept registered as a hidden legacy alias so existing pages keep rendering
+* Added PDF Reader block
+* Added a centrally-managed Mega Menu system - custom post type, dashboard, and Mega Menu Item block, plus a "Use a Mega Panel" content source
+* Added Case Studies and Location Map blocks; rebuilt Header Menu, Feature Grid (Free), Video Player, and Icon Box
+* Added scroll reveal effects and scroll effect settings to the Testimonial block
+* Vendored Bootstrap Icons locally instead of loading them remotely; icon sizing is now responsive
+* Split the Testimonial block's single text colour into separate title and description colours
+* Section toggles, alignment, and responsive styles added across several blocks
+* Fixed the mobile share flyout and Pinterest sharing in the Share Buttons block
+* Fixed the Mega Menu block reserving a full 100vh of empty space in the editor preview
+* Hardened nonce verification and fixed WordPress Coding Standards violations across the admin and free-version code
+* Replaced real team member names with generic placeholders in the Animated Background block's demo content
+
+= 1.3.0 =
+* Rebranded to Adaire Blocks and consolidated the product into Free and Pro tiers
+* WordPress.org compliance: removed GSAP and other CDN dependencies, corrected text domains, and added ABSPATH guards throughout
+* Implemented a unified tabbed inspector layout across blocks
+* Removed the smartwatch breakpoint tier - responsive controls now cascade desktop, tablet, mobile
+* Removed the custom Advanced tab, which duplicated WordPress's own Advanced panel
+* Added Bento Grid layout presets
+* Enhanced the Popup Modal editor UI, controls, and behaviour
+* Migrated the Rating Badges block to the shared inspector pattern
+* Fixed block pattern validation errors introduced by the smartwatch tier removal
+* Fixed the welcome screen's animation layout, URL, and behaviour
+* Updates to the Cookie Banner and Progress Bar blocks
+
+= 1.2.9 =
+* Added the Cookie Banner block with a site-wide category dashboard, and redesigned the admin UI
+* Added an in-plugin Support page
+* Added brand-consistent icons for seven blocks
+* Added a Lottie player and animation assets
+* Updates to the Footer, Row, and Hero blocks
+* Fixed block pattern validation errors
+* Fixed Rating Badges icons not loading on the front end
+
+= 1.2.8 =
+* Added a standalone Rating Badges block, extracted from the Hero block
+* Renamed Feature Box to Icon Box (Free); moved Plan Comparison from the Free tier to Premium
+* Redesigned the Icon Box card and updated the home page template
+* Added pill-style tabs and styling options to the Tabbed Content block
+* Converted the Pricing Plans block's inspector to the shared tabbed layout
+* Added BoundColorPalette and applied it across blocks so colour pickers stay consistent
+* Removed the yearly billing toggle from the Pricing Plans block
+* Removed Trusted By, Security Panel, and FAQ sections from the Hero block
+* Free tier: block configuration is now exposed to the editor so free-tier limits are enforced rather than silently ignored
+* Deactivation feedback now posts through a webhook proxy with a server-side handler
+* Timeline margin controls, testimonial arrow colour, and gallery block improvements
+
+= 1.2.7 =
+* Released for the free build only, as the Adaire Blocks rename. The full plugin's version went straight from 1.2.6 to 1.2.8, so no release of the full plugin carries this number. See free-version-scaffold/readme.txt for what shipped.
+
+= 1.2.6 =
+* Fixed a rendering issue affecting the WordPress.org build
 
 = 1.2.5 =
 * Added Horizontal Scroll Carousel Block (Plus) - scroll-scrubbed horizontal track: page scroll moves the card row, section pins with configurable scrub speed, heading and section styling, responsive padding, card width, gap, and track padding
@@ -359,6 +429,15 @@ For support, please visit our website at https://adaireblocks.com/ or contact us
 * CTA Block with gradient backgrounds
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+Editing update. The Hero, Button, and Feature Grid blocks now share one sidebar layout, so settings sit in the same place with the same names across all of them. Some settings have moved between tabs: spacing is now under Style, and hover effects under Layout. No content, markup, or saved values change. Also fixes Hero rating badges, which previously did not survive a reload.
+
+= 1.3.1 =
+Adds the Hero Banner, PDF Reader, Case Studies, and Location Map blocks, plus a centrally-managed Mega Menu system. Bootstrap Icons are now bundled with the plugin rather than fetched remotely. Recommended for all users.
+
+= 1.3.0 =
+Rebrand to Adaire Blocks and consolidation to Free and Pro tiers, with WordPress.org compliance work: GSAP and other CDN dependencies removed, text domains corrected, ABSPATH guards added. The smartwatch breakpoint is gone - responsive controls now cascade desktop, tablet, mobile. Recommended for all users.
 
 = 1.1.8 =
 Major update adding Modal Block with comprehensive customization options, responsive controls, and accessibility features. Recommended upgrade for enhanced dialog functionality.
