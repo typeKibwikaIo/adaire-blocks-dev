@@ -4,7 +4,7 @@
 
 **Audience:** Developers and AI coding agents working on blocks in this plugin. Read this before adding, moving, or renaming any control in a block's sidebar.
 
-**Status:** Draft — derived from the block settings UX discussion. Layout is the first tab to be brought into line; the rest follow incrementally.
+**Status:** Active. The categorisation rule and the three-tab structure are settled and enforced in code (Section 10). Five blocks are compliant; the rest of the library follows incrementally using the same shared components.
 
 ---
 
@@ -32,6 +32,13 @@ tabs Section 3 puts them in — see "Former 'advanced' settings" in Section 3.
 
 A tab with no applicable settings for a given block is hidden, not shown empty.
 
+**These three are the only tabs on screen.** WordPress adds a tab strip of its own
+— "Settings | Styles" — to any block declaring a style-generating `supports` entry
+(`spacing`, `color`, `typography`, `border`…), and nests the block's own inspector
+inside the Settings half. The result is two tabs, one of which contains three more.
+That is the same "learn it twice" problem in Section 1, so core's strip is
+suppressed plugin-wide; see Section 10.
+
 ---
 
 ## 3. The categorisation rule
@@ -55,9 +62,9 @@ Does this setting change the structure — either by adding/removing DOM element
 Goes here:
 - Number of columns, column widths, grid definitions
 - Alignment and justification
-- Gap and spacing *between* elements
-- Padding and margin
 - Order, direction, wrapping, stacking
+- Width, height, and other element dimensions
+- Motion effects that displace an element — hover scale, bounce, shake, slide
 - Responsive breakpoint behaviour for any of the above
 - Show/hide toggles for structural sub-elements (e.g. "show arrows", "show caption"), because hiding one removes it from the DOM
 
@@ -70,8 +77,9 @@ Goes here:
 - Colours: text, background, border, icon, hover, active
 - Typography: font family, size, weight, line height, letter spacing, transform
 - Borders, border radius, box shadow
+- Padding, margin, and gap
 - Opacity, filters, overlays
-- Transitions and animation timing (the visual treatment, not the structure)
+- Transitions and animation timing (the visual treatment, not the displacement)
 - Hover and focus state styling
 
 **Test:** if the setting maps to a CSS property and does not move or remove anything, it is Style.
@@ -102,15 +110,39 @@ two fields writing the same attribute.
 
 These come up repeatedly. Resolve them this way, not by personal judgement.
 
-**Spacing.** Padding, margin, and gap are Layout, not Style, even though they are CSS. They change the spatial arrangement of elements, which is the Layout test. Be consistent — do not split padding into Style and gap into Layout.
+**Spacing.** Padding, margin, and gap are **Style, not Layout.** They are CSS properties applied to elements that already exist — nothing is added, removed, or reordered. Be consistent: do not split padding into Style and gap into Layout.
+
+Layout owns the *arrangement* of elements — how many columns, in what order, aligned how, at what size. Spacing is the trim applied once that arrangement is settled, which is why it sits with the other CSS in Style.
 
 **Animations and hover effects.** Split by what they do:
-- The *decision* to have an effect at all, and any effect that reveals or removes an element → Layout
-- The visual character of the effect — duration, easing, colour change → Style
+- An effect that **moves** an element — scale, bounce, shake, slide — or that reveals or removes one → Layout, in the `Effects` panel
+- An effect that only **repaints** an element — a colour transition, a glow, a blur, a fade → Style
+- The decision to have an effect at all → Layout, with the effect itself
 
-If in doubt on a specific effect, default to Style and flag it for review rather than inventing a fourth tab.
+If in doubt on a specific effect, ask whether the element occupies different space while the effect runs. If it does, it is Layout.
 
 **Show/hide toggles.** Layout. Hiding removes the element from the DOM, which is a structural change.
+
+**A Content panel is never gated on its Layout toggle.** The toggle controls what
+the front end renders; the Content tab is where the thing is authored. Wrapping a
+Content panel in `{ showThing && … }` leaves it rendering empty whenever the toggle
+is off, so there is no way to set the content up before switching it on and no clue
+that the toggle is what is missing. Show the controls unconditionally, seeded with
+placeholder defaults, and say where the toggle lives:
+
+```jsx
+<PanelBody section="content" title={ PANEL.BADGES }>
+    { ! attributes.showRatingBadges && (
+        <p className="adaire-help-note">
+            { __( 'These badges are hidden on the front end. Turn on "Show Ratings & Badges" in Layout > Structure to display them.' ) }
+        </p>
+    ) }
+    <RepeaterField … />
+</PanelBody>
+```
+
+The same applies on canvas: draw the zone so it can be clicked and edited, mark it
+as hidden (`.adaire-is-editor-hidden`), and let `save()` continue to emit nothing.
 
 **Icon choice vs icon colour.** The icon itself is Content. Its size, colour, and spacing are Style and Layout respectively.
 
@@ -134,7 +166,9 @@ Beyond tab placement, the following must be true across every block:
 2. **Naming is identical.** The same setting is called the same thing in every block. "Gap" is not "Spacing" in one block and "Gutter" in another.
 3. **Control types are identical.** The same kind of setting uses the same control everywhere — a colour is always a colour picker, a spacing value always uses the same unit control.
 4. **Icons are one system.** Icons used in the inspector come from a single set. Do not mix icon sets between blocks.
-5. **Order within a tab is predictable.** Within Layout, structure before alignment before spacing. Within Style, colour before typography before borders and effects.
+5. **Order within a tab is predictable.** Within Layout, structure before alignment before dimensions before effects. Within Style, colour before typography before borders before spacing.
+
+Requirements 1, 2 and 5 are enforced in code rather than by review — see Section 10.
 
 ---
 
@@ -162,6 +196,9 @@ A block is compliant when:
 - [ ] Within-tab ordering follows Section 6.5
 - [ ] Empty tabs are hidden, not shown blank
 - [ ] No custom Advanced tab or Advanced panel; HTML Anchor / Additional CSS Class(es) are left to WordPress core, not duplicated
+- [ ] No `supports` entry duplicates a control the block already owns
+- [ ] No Content panel is gated on a Layout show/hide toggle
+- [ ] Every attribute the block reads is declared in `block.json` — an undeclared attribute does not survive a reload
 - [ ] Any ambiguous setting has been flagged rather than guessed at
 
 ---
@@ -173,3 +210,77 @@ These were raised and are not yet resolved. Do not resolve them unilaterally.
 - **Quick edit.** Its relationship to the three tabs is undefined. Deferred.
 - **Premium block gating.** Changes made in one place are propagating to the main environment when they should not. Needs a fix; out of scope for this spec but relevant to anyone touching shared settings.
 - **Global settings location.** The target location inside the block panel needs a design decision before implementation.
+- **Icon sets (Section 6.4).** The inspector's own chrome is one set — the tab glyphs in `InspectorTabs.js`. Block-level icon *pickers* are not: `saas-hero-block`, `feature-grid-free` and `infogrid-block` offer Bootstrap Icons, while `button-block` offers its own small arrow/chevron set (`src/button-block/icons.js`). These are content assets the visitor sees, not sidebar chrome, so 6.4 arguably does not reach them. Flagged rather than unified — needs a ruling.
+- **Visual presets vs. structural variants.** `PANEL.VARIANT` (Style) is for a preset that only swaps CSS treatments — button fill/outline/glass. `PANEL.STRUCTURE` (Layout) is for one that rearranges elements — the hero's centered/split-left/split-right. The two read alike to a user but land in different tabs. Confirm that split is what we want before more blocks adopt it.
+
+---
+
+## 10. How this is enforced
+
+Three pieces of shared code carry the rules, so a block gets them by using them
+rather than by remembering them.
+
+**`src/components/inspector-vocabulary.js`** is the single source of panel titles
+(`PANEL`), the labels of settings that recur across blocks (`LABEL`), the declared
+within-tab order (`PANEL_ORDER`), and each Style panel's priority group
+(`STYLE_PRIORITY`). A block imports its titles; it does not type them.
+
+```jsx
+import { PANEL, LABEL } from '../components/inspector-vocabulary';
+
+<PanelBody section="layout" title={ PANEL.SPACING }>
+    <BoxControl label={ LABEL.PADDING } … />
+</PanelBody>
+```
+
+Adding a name means adding it there first. If nothing in the list fits, that is
+usually a sign the panel is doing two jobs and should be split along Section 3.
+
+**`src/components/InspectorTabs.js`** takes the panels a block declares and:
+
+- routes each into the tab named by its `section` prop (`"content" | "layout" | "style"`);
+- sorts them within that tab by `PANEL_ORDER`, so authoring order can't change what the user sees;
+- reads each Style panel's priority group from `STYLE_PRIORITY` unless a `priority` prop overrides it;
+- hides a tab that has no panels, rather than rendering it empty (Section 8).
+
+An untagged panel still falls back to the legacy keyword classifier, so blocks
+outside this work keep rendering as before — but a panel with no `section` prop
+is a block that has not been done yet, not a supported state.
+
+**`blockInspectorTabs`** (filtered in `adaire-blocks.php`) turns off WordPress's own
+tab strip for every block whose name starts `create-block/` or `adaire/`. Core then
+renders its inspector fills in a single column with no tabs of its own, so the only
+tabs on screen are the plugin's three. This hides core's *tab chrome only* —
+nothing is unregistered and no control is removed. Blocks from core and other
+plugins keep their normal tabbed inspector.
+
+Prefer removing a redundant `supports` entry over relying on the filter alone. If a
+block already owns a control for something (`feature-grid-free` has responsive
+padding and margin), declaring `supports.spacing` gives the user two controls for
+one job that write different attributes — the filter hides the extra tab but not
+the duplicate panel underneath it. Where a `supports` entry is dropped, its
+capability must be replaced by an equivalent control in the block's own panels, not
+silently lost.
+
+**`BreakpointNote`** (exported from `src/components/DeviceSwitcher.js`) is the one
+approved way a panel says which breakpoint its controls are editing. Responsive
+controls end up in panels away from the switcher, so each such panel states the
+active tier. Do not hand-roll a "Current Breakpoint: X" paragraph and do not bake
+the device name into control labels (`Button Padding (Desktop)`).
+
+### Compliant blocks
+
+| Block | Directory |
+|---|---|
+| Hero Block (Pro) | `src/saas-hero-block` |
+| Hero Banner | `src/hero-banner-block` |
+| Button (Free) | `src/button-block` |
+| Feature Grid (Free) | `src/feature-grid-free` |
+| Feature Grid (Pro) | `src/infogrid-block` |
+
+Deliberately out of scope: `src/hero-1-block` (Hero Banner (Legacy)) and
+`src/infogrid-3-block` (Feature Grid Pro (Legacy)). Both are `inserter: false`
+back-compat registrations for content saved before a rename — they cannot be
+inserted, so no user learns their sidebar.
+
+---

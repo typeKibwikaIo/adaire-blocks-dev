@@ -2,9 +2,10 @@ import { useBlockProps, ColorPalette } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl, SelectControl, RangeControl, BaseControl, Button, __experimentalBoxControl as BoxControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS } from '../components/DeviceSwitcher';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS, BreakpointNote } from '../components/DeviceSwitcher';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import { PANEL, LABEL } from '../components/inspector-vocabulary';
 import ButtonIcon, { BUTTON_ICON_OPTIONS } from './icons';
 import BoundColorPalette from '../components/BoundColorPalette';
 
@@ -124,7 +125,7 @@ export default function Edit({ attributes, setAttributes }) {
   return (
     <>
       <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-        <PanelBody section="content" title="Button Settings" initialOpen={true}>
+        <PanelBody section="content" title={ PANEL.CONTENT } initialOpen={true}>
           <TextControl
             label="Button Text"
             value={buttonText}
@@ -148,14 +149,62 @@ export default function Edit({ attributes, setAttributes }) {
           />
 
           <TextControl
-            label="Block ID"
+            label={ LABEL.BLOCK_ID }
             value={blockId}
             onChange={(value) => setAttributes({ blockId: value })}
             help="Add a custom ID to this block for CSS targeting or anchor links."
           />
+        </PanelBody>
+
+        {/*
+          Spec §4: the icon asset itself is Content. Its visibility and position
+          are structural, so they live in Layout > Structure — which is why this
+          panel is gated on showIcon rather than owning the toggle.
+        */}
+        {showIcon && (
+          <PanelBody section="content" title={ PANEL.ICON } initialOpen={false}>
+            <SelectControl
+              label={ PANEL.ICON }
+              value={iconType || 'arrow-diagonal'}
+              options={BUTTON_ICON_OPTIONS}
+              onChange={(value) => setAttributes({ iconType: value })}
+            />
+          </PanelBody>
+        )}
+
+        <PanelBody section="layout" title={ PANEL.RESPONSIVE } initialOpen={false}>
+          <DeviceSwitcher
+            deviceType={deviceType}
+            setDeviceType={setDeviceType}
+            label={ LABEL.BREAKPOINT }
+            tiers={THREE_TIERS}
+          />
+        </PanelBody>
+
+        <PanelBody section="layout" title={ PANEL.STRUCTURE } initialOpen={false}>
+          <ToggleControl
+            label="Show Icon"
+            checked={showIcon}
+            onChange={(value) => setAttributes({ showIcon: value })}
+            help={showIcon ? 'Icon will be visible' : 'Icon will be hidden'}
+          />
+
+          {showIcon && (
+            <SelectControl
+              label="Icon Position"
+              value={iconPosition || 'right'}
+              options={[
+                { label: 'Right of text', value: 'right' },
+                { label: 'Left of text', value: 'left' },
+                { label: 'Inline (no gap)', value: 'inline' }
+              ]}
+              onChange={(value) => setAttributes({ iconPosition: value })}
+              help="Left/Right move the icon using flex order; Inline keeps it after the text but removes the spacing gap."
+            />
+          )}
 
           <RangeControl
-            label="Z-Index"
+            label={ LABEL.Z_INDEX }
             value={zIndex}
             onChange={(value) => setAttributes({ zIndex: value })}
             min={0}
@@ -164,16 +213,8 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
-        <PanelBody section="layout" title="Responsive Settings" initialOpen={false}>
-          <DeviceSwitcher
-            deviceType={deviceType}
-            setDeviceType={setDeviceType}
-            label="Device Preview"
-            tiers={THREE_TIERS}
-          />
-        </PanelBody>
-
-        <PanelBody section="layout" title="Button Variant" initialOpen={false}>
+        {/* Variant is a pure CSS preset — Style, not Layout (spec §3). */}
+        <PanelBody section="style" title={ PANEL.VARIANT } initialOpen={false}>
           <SelectControl
             label="Button Style"
             value={buttonStyle}
@@ -188,39 +229,7 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
-        <PanelBody section="layout" title="Icon Settings" initialOpen={false}>
-          <ToggleControl
-            label="Show Icon"
-            checked={showIcon}
-            onChange={(value) => setAttributes({ showIcon: value })}
-            help={showIcon ? 'Icon will be visible' : 'Icon will be hidden'}
-          />
-
-          {showIcon && (
-            <>
-              <SelectControl
-                label="Icon"
-                value={iconType || 'arrow-diagonal'}
-                options={BUTTON_ICON_OPTIONS}
-                onChange={(value) => setAttributes({ iconType: value })}
-              />
-
-              <SelectControl
-                label="Icon Position"
-                value={iconPosition || 'right'}
-                options={[
-                  { label: 'Right of text', value: 'right' },
-                  { label: 'Left of text', value: 'left' },
-                  { label: 'Inline (no gap)', value: 'inline' }
-                ]}
-                onChange={(value) => setAttributes({ iconPosition: value })}
-                help="Left/Right move the icon using flex order; Inline keeps it after the text but removes the spacing gap."
-              />
-            </>
-          )}
-        </PanelBody>
-
-        <PanelBody section="style" priority="high" title="Colors" initialOpen={false}>
+        <PanelBody section="style" title={ PANEL.COLORS } initialOpen={false}>
           <BaseControl label="Button Color">
             <BoundColorPalette
               value={buttonColor}
@@ -363,7 +372,7 @@ export default function Edit({ attributes, setAttributes }) {
           </BaseControl>
         </PanelBody>
 
-        <PanelBody section="style" priority="medium" title="Border & Effects" initialOpen={false}>
+        <PanelBody section="style" title={ PANEL.BORDER } initialOpen={false}>
           {/*
             ADAB-014: border controls used to be gated behind
             `buttonStyle === 'border'`. They're now always visible — the
@@ -378,7 +387,7 @@ export default function Edit({ attributes, setAttributes }) {
             existed unconditionally; only the UI was gated).
           */}
           <RangeControl
-            label="Border Width (px)"
+            label={ LABEL.BORDER_WIDTH }
             value={borderWidth}
             onChange={(value) => setAttributes({ borderWidth: value })}
             min={0}
@@ -388,7 +397,7 @@ export default function Edit({ attributes, setAttributes }) {
           />
 
           <SelectControl
-            label="Border Style"
+            label={ LABEL.BORDER_STYLE }
             value={borderStyle}
             options={[
               { label: 'Solid', value: 'solid' },
@@ -404,7 +413,7 @@ export default function Edit({ attributes, setAttributes }) {
           />
 
           <RangeControl
-            label="Border Radius (px)"
+            label={ LABEL.BORDER_RADIUS }
             value={borderRadius}
             onChange={(value) => setAttributes({ borderRadius: value })}
             min={0}
@@ -412,8 +421,16 @@ export default function Edit({ attributes, setAttributes }) {
             step={1}
           />
 
+        </PanelBody>
+
+        {/*
+          Effects sit in Layout, not Style: the hover animations here (scale,
+          bounce, shake, slide-underline) move the button relative to what's
+          around it, which is the Layout test in BLOCK_SETTINGS_SPEC.md §3.
+        */}
+        <PanelBody section="layout" title={ PANEL.EFFECTS } initialOpen={false}>
           <RangeControl
-            label="Blur Amount (px)"
+            label="Blur Amount"
             value={blurAmount}
             onChange={(value) => setAttributes({ blurAmount: value })}
             min={0}
@@ -436,9 +453,11 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
-        <PanelBody section="style" priority="high" title="Typography" initialOpen={false}>
+        <PanelBody section="style" title={ PANEL.TYPOGRAPHY } initialOpen={false}>
+          <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+
           <RangeControl
-            label={`Font Size (px) - ${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)}`}
+            label={ LABEL.FONT_SIZE }
             value={getDeviceFontSize()}
             onChange={(value) => setAttributes({ fontSize: updateDeviceAttribute(fontSize, deviceType, value) })}
             min={deviceType === 'mobile' ? 10 : 12}
@@ -471,7 +490,7 @@ export default function Edit({ attributes, setAttributes }) {
           />
 
           <SelectControl
-            label="Font Family"
+            label={ LABEL.FONT_FAMILY }
             value={fontFamily || ''}
             options={FONT_FAMILY_OPTIONS}
             onChange={(value) => setAttributes({ fontFamily: value })}
@@ -479,7 +498,7 @@ export default function Edit({ attributes, setAttributes }) {
           />
 
           <SelectControl
-            label="Font Weight"
+            label={ LABEL.FONT_WEIGHT }
             value={fontWeight}
             options={[
               { label: 'Thin (100)', value: '100' },
@@ -497,9 +516,11 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
-        <PanelBody section="style" priority="medium" title="Spacing" initialOpen={false}>
+        <PanelBody section="style" title={ PANEL.SPACING } initialOpen={false}>
+          <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+
           <BoxControl
-            label={`Button Padding (${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)})`}
+            label={ LABEL.PADDING }
             values={getDevicePadding()}
             onChange={(value) => setAttributes({ buttonPadding: updateDeviceAttribute(buttonPadding, deviceType, value) })}
             units={[
@@ -510,7 +531,7 @@ export default function Edit({ attributes, setAttributes }) {
           />
 
           <BoxControl
-            label={`Button Margin (${deviceType.charAt(0).toUpperCase() + deviceType.slice(1)})`}
+            label={ LABEL.MARGIN }
             values={getDeviceMargin()}
             onChange={(value) => setAttributes({ buttonMargin: updateDeviceAttribute(buttonMargin, deviceType, value) })}
             units={[

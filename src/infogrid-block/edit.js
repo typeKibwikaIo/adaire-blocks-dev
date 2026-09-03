@@ -27,6 +27,8 @@ import { dragHandle, trash, plus, chevronUp, chevronDown, desktop, tablet, mobil
 import BootstrapIconPicker from './BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import { PANEL, LABEL } from '../components/inspector-vocabulary';
+import DeviceSwitcher, { BreakpointNote } from '../components/DeviceSwitcher';
 
 // Custom icons for small laptop and big desktop
 const smallLaptopIcon = createElement('svg', {
@@ -90,6 +92,10 @@ const BREAKPOINTS = [
     { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
     { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks') }
 ];
+
+// Shared DeviceSwitcher tiers, derived from the same BREAKPOINTS list above,
+// so the switcher and the responsive attribute keys can't drift apart.
+const TIERS = BREAKPOINTS.map((bp) => ({ key: bp.name, label: bp.label, icon: bp.icon }));
 
 const CONTAINER_MODES = [
     { label: __('Full Width', 'adaire-blocks'), value: 'full' },
@@ -320,32 +326,23 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <div className="adaire-device-toggle">
-                    <p className="adaire-device-toggle-label">{__('Device View', 'adaire-blocks')}</p>
-                    <div className="adaire-device-toggle-group">
-                        {BREAKPOINTS.map((bp) => (
-                            <Button
-                                key={bp.name}
-                                isPrimary={deviceType === bp.name}
-                                onClick={() => setDeviceType(bp.name)}
-                                icon={bp.icon}
-                            >
-                                <span>{bp.label}</span>
-                            </Button>
-                        ))}
-                    </div>
-                    <p className="adaire-device-toggle-status">
-                        {__('Editing:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
-                    </p>
+                <PanelBody section="layout" title={ PANEL.RESPONSIVE } initialOpen={true}>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        label={ LABEL.BREAKPOINT }
+                        tiers={TIERS}
+                    />
+                    <BreakpointNote deviceType={deviceType} tiers={TIERS} />
                     {!hasCanvasPreset(deviceType) && (
                         <p className="adaire-device-toggle-hint">
                             {__('The preview toolbar has no canvas size for this breakpoint, so the canvas stays on Desktop. Check this one on the front end.', 'adaire-blocks')}
                         </p>
                     )}
-                </div>
+                </PanelBody>
 
                 {/* Items Management */}
-                <PanelBody title={__('Manage Items', 'adaire-blocks')} initialOpen={true}>
+                <PanelBody section="content" title={ PANEL.ITEMS } initialOpen={true}>
                     <Button
                         variant="primary"
                         icon={plus}
@@ -453,8 +450,8 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     ))}
                 </PanelBody>
 
-                {/* Typography Settings */}
-                <PanelBody title={__('Typography', 'adaire-blocks')} initialOpen={false}>
+                {/* Typography */}
+                <PanelBody section="style" title={ PANEL.TYPOGRAPHY } initialOpen={false}>
                     <RangeControl
                         label={__('Title Font Size', 'adaire-blocks')}
                         value={titleFontSize}
@@ -480,7 +477,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         step={1}
                     />
                     <RangeControl
-                        label={__('Icon Size', 'adaire-blocks')}
+                        label={ LABEL.ICON_SIZE }
                         value={iconSize}
                         onChange={(value) => setAttributes({ iconSize: value })}
                         min={12}
@@ -489,26 +486,9 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                {/* Layout Settings */}
-                <PanelBody title={__('Layout', 'adaire-blocks')} initialOpen={false}>
-                    <RangeControl
-                        label={__('Item Padding', 'adaire-blocks')}
-                        value={itemPadding}
-                        onChange={(value) => setAttributes({ itemPadding: value })}
-                        min={16}
-                        max={64}
-                        step={4}
-                    />
-                    <RangeControl
-                        label={__('Gap Between Items', 'adaire-blocks')}
-                        value={gap}
-                        onChange={(value) => setAttributes({ gap: value })}
-                        min={0}
-                        max={16}
-                        step={1}
-                    />
-
-                    <p style={{ marginTop: '16px', marginBottom: '8px', fontWeight: 600 }}>
+                {/* Structure — the grid's shape */}
+                <PanelBody section="layout" title={ PANEL.STRUCTURE } initialOpen={false}>
+                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>
                         {__('Layout Style', 'adaire-blocks')}
                     </p>
                     <ButtonGroup>
@@ -537,7 +517,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
                     {layoutStyle === 'grid' && (
                         <RangeControl
-                            label={__('Items Per Row (Desktop)', 'adaire-blocks')}
+                            label={ LABEL.COLUMNS }
                             help={__('Items are distributed evenly and wrap to new rows automatically — no fixed positions, so any number of items lays out cleanly. Tablet shows up to 2 per row and mobile stacks to 1.', 'adaire-blocks')}
                             value={itemsPerRow || 3}
                             onChange={(value) => setAttributes({ itemsPerRow: value })}
@@ -548,9 +528,15 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
                 </PanelBody>
 
-                {/* Color Settings */}
+                {/*
+                  PanelColorSettings is nested inside a tagged PanelBody rather
+                  than tagged itself — InspectorTabs classifies on the child's
+                  own props, and only PanelBody is guaranteed to ignore the
+                  extra `section` prop. Same shape feature-grid-free uses.
+                */}
+                <PanelBody section="style" title={ PANEL.COLORS } initialOpen={false}>
                 <PanelColorSettings
-                    title={__('Colors', 'adaire-blocks')}
+                    title={__('Item Colors', 'adaire-blocks')}
                     colorSettings={[
                         {
                             label: __('Background Color', 'adaire-blocks'),
@@ -609,9 +595,12 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         }
                     ]}
                 />
+                </PanelBody>
 
-                {/* Layout Settings */}
-                <PanelBody title={__('Layout Settings', 'adaire-blocks')}>
+                {/* Container sizing */}
+                <PanelBody section="layout" title={ PANEL.DIMENSIONS } initialOpen={false}>
+                    <BreakpointNote deviceType={deviceType} tiers={TIERS} />
+
                     <p>{__('Container Width', 'adaire-blocks')}</p>
                     <ButtonGroup style={{ marginBottom: '16px' }}>
                         {CONTAINER_MODES.map((mode) => (
@@ -666,16 +655,40 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         </div>
                     </div>
 
+                </PanelBody>
+
+                {/* Padding, margin and gap are Style, not Layout (spec §4). */}
+                <PanelBody section="style" title={ PANEL.SPACING } initialOpen={false}>
+                    <BreakpointNote deviceType={deviceType} tiers={TIERS} />
+
                     <BoxControl
-                        label={__('Block Padding', 'adaire-blocks')}
+                        label={ LABEL.PADDING }
                         values={responsivePadding?.[deviceType] || {}}
                         onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, normalizeBoxUnits(val))}
                     />
 
                     <BoxControl
-                        label={__('Block Margin', 'adaire-blocks')}
+                        label={ LABEL.MARGIN }
                         values={responsiveMargin?.[deviceType] || {}}
                         onChange={(val) => updateResponsiveAttribute('responsiveMargin', deviceType, normalizeBoxUnits(val))}
+                    />
+
+                    <RangeControl
+                        label={__('Item Padding', 'adaire-blocks')}
+                        value={itemPadding}
+                        onChange={(value) => setAttributes({ itemPadding: value })}
+                        min={16}
+                        max={64}
+                        step={4}
+                    />
+
+                    <RangeControl
+                        label={ LABEL.GAP }
+                        value={gap}
+                        onChange={(value) => setAttributes({ gap: value })}
+                        min={0}
+                        max={16}
+                        step={1}
                     />
                 </PanelBody>
             </InspectorTabs>

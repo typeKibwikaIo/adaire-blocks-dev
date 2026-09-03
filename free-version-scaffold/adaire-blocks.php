@@ -365,6 +365,35 @@ add_filter( 'block_editor_settings_all', function ( $settings ) {
 	return $settings;
 } );
 
+// Turn off WordPress's own inspector tab strip for every Adaire block.
+//
+// Each block already renders one tab strip — Content / Layout / Style, see
+// src/components/InspectorTabs.js. When a block declares a style-generating
+// `supports` entry, WordPress adds a second, outer strip ("Settings | Styles")
+// and nests ours inside the Settings half, so the user faces two tabs and one
+// of them holds three more.
+//
+// `blockInspectorTabs` is core's own switch for this (getShowTabs() /
+// useInspectorControlsTabs() in wp-includes/js/dist/block-editor.js). Keyed
+// false for a block name, core renders every inspector fill in one column with
+// no tab strip of its own. This suppresses core's tab chrome only — nothing is
+// unregistered, no control is removed, and other plugins' blocks are untouched.
+add_filter( 'block_editor_settings_all', function ( $settings ) {
+	$tabs = isset( $settings['blockInspectorTabs'] ) && is_array( $settings['blockInspectorTabs'] )
+		? $settings['blockInspectorTabs']
+		: array();
+
+	foreach ( WP_Block_Type_Registry::get_instance()->get_all_registered() as $name => $block_type ) {
+		if ( 0 === strpos( $name, 'create-block/' ) || 0 === strpos( $name, 'adaire/' ) ) {
+			$tabs[ $name ] = false;
+		}
+	}
+
+	$settings['blockInspectorTabs'] = $tabs;
+
+	return $settings;
+} );
+
 /**
  * Expose the free-tier block configuration to editor JavaScript.
  *

@@ -148,3 +148,137 @@ Content / Layout / Style only.
 - All responsive tiers across the 8 cleaned-up blocks now correctly cascade
   desktop → tablet → mobile, with mobile as the smallest tier.
 
+
+---
+
+## 5. Follow-up: settings unified against BLOCK_SETTINGS_SPEC.md
+
+The pass above put every in-scope block on a three-tab sidebar, but it only
+decided *which tab* a panel sat in. It did not settle what a panel is called,
+what order panels appear in, or which tab owns a given kind of setting — so
+spacing was Style in one block and Layout in another, and the same control was
+"Device Preview", "Device View" or "Breakpoint" depending on where you clicked.
+
+`AGENTS/BLOCK_SETTINGS_SPEC.md` now rules on all three. This follow-up applies it
+to the five live blocks in the hero / button / feature-grid families.
+
+### New shared code
+
+- **`src/components/inspector-vocabulary.js`** — canonical panel titles (`PANEL`),
+  recurring control labels (`LABEL`), declared within-tab order (`PANEL_ORDER`),
+  and the Style-tab priority group for each Style panel (`STYLE_PRIORITY`).
+- **`BreakpointNote`** (exported from `DeviceSwitcher.js`) — the one way a panel
+  states which breakpoint its controls edit. Replaces three competing idioms: a
+  bold "Current Breakpoint: Desktop" paragraph, a grey "Configuring: Desktop"
+  hint, and device names baked into labels (`Button Padding (Desktop)`).
+
+### `InspectorTabs.js` changes
+
+- Sorts each tab's panels by `PANEL_ORDER` instead of trusting authoring order.
+- Reads a Style panel's priority group from `STYLE_PRIORITY` when the panel
+  doesn't pass `priority` explicitly.
+- **Hides a tab with no panels** rather than rendering the "This block has no …"
+  placeholder, per spec §8. `.adaire-inspector-empty` removed from the SCSS.
+- Renamed the medium Style group from "Effects & Spacing" to **"Effects"** —
+  spacing is a Layout setting now, so nothing spacing-related lands there.
+
+### Per-block moves
+
+| Block | What moved |
+|---|---|
+| `saas-hero-block` | Was fully untagged and relied on the keyword classifier, which put "Headline" in Style and left the **Content tab empty**. Now explicitly tagged: pill/CTA/badge text → Content, media asset → Content, decoration *toggles* → Layout, decoration *colours* → Style. |
+| `hero-banner-block` | 14 panels rebuilt into the canonical set. `Container Layout` split across Structure / Alignment / Dimensions; `Container Spacing` and all margins → Layout; the four colour controls split out of `Typography` into `Colors`; media border radius → Style, media sizes → Layout. |
+| `button-block` | `Spacing` (padding/margin) Style → Layout. `Button Variant` Layout → Style as `Variant` (it only swaps CSS). `Icon Settings` split: asset → Content, visibility and position → Layout. Z-Index Content → Layout. `Border & Effects` split into `Border` and `Effects`. |
+| `feature-grid-free` | `Container Spacing` and `Item Padding` → Layout. Text alignment → Layout `Alignment`. `Item Styles` reduced to Style, split into `Colors` and `Border`. **Added missing Columns and Gap controls** — see below. |
+| `infogrid-block` | Was untagged, with a hand-rolled device toggle rendered as a bare `<div>` child. Now uses the shared `DeviceSwitcher` in a `Responsive` panel; item padding, gap, block padding and margin → Layout `Spacing`; container sizing → Layout `Dimensions`. |
+
+### One functional fix
+
+`feature-grid-free` read `responsiveGridColumns` and `responsiveGridGap` when
+generating its grid CSS, but exposed **no controls for either** — the values were
+always whatever `block.json` defaulted to. Feature Grid (Pro) has always offered
+both. Added `Columns` and `Gap` to the free block's Layout > Structure panel,
+writing the attributes that were already wired up.
+
+### Deliberately unchanged
+
+- `src/hero-1-block` and `src/infogrid-3-block` — both `inserter: false`,
+  back-compat registrations for content saved before a rename. They can't be
+  inserted, so nobody learns their sidebar.
+- Saved markup, attribute names, ranges, option lists and help text. Controls
+  were lifted verbatim between panels; a before/after diff of hero-banner's
+  control labels is identical at 64 controls.
+- Global spacing / global style consolidation (spec §5) — still an open item
+  pending a design decision on where it lives.
+
+---
+
+## 6. Corrections after review
+
+Four issues found on the first pass through the unified sidebars.
+
+### Spacing and Effects were the wrong way round
+
+Padding, margin and gap are **Style**, not Layout: they are CSS applied to elements
+that already exist — nothing is added, removed or reordered. Layout owns the
+*arrangement* (how many columns, in what order, aligned how, at what size); spacing
+is the trim applied once that arrangement is settled.
+
+Effects are **Layout**, not Style: the hover treatments blocks offer here — scale,
+bounce, shake, slide-underline — displace the element relative to its neighbours,
+which is the Layout test. An effect that only repaints (colour transition, glow,
+blur, fade) stays in Style.
+
+Applied to all five blocks, plus `PANEL_ORDER` / `STYLE_PRIORITY` in
+`inspector-vocabulary.js` and spec §3, §4 and §6.5, which said the opposite.
+
+### Two tab strips, not one
+
+Any block declaring a style-generating `supports` entry (`spacing`, `color`,
+`typography`, `border`…) gets a tab strip **from WordPress** — "Settings | Styles"
+— with the plugin's own three tabs nested inside the Settings half. Two tabs, one
+holding three more.
+
+`blockInspectorTabs` is core's own switch for this (`getShowTabs()` /
+`useInspectorControlsTabs()` in `wp-includes/js/dist/block-editor.js`). Keyed false
+for a block name, core renders its inspector fills in a single column with no tab
+strip. Filtered in both `adaire-blocks.php` and `free-version-scaffold/adaire-blocks.php`
+for every `create-block/` and `adaire/` block. Core's tab *chrome* is hidden;
+nothing is unregistered, no control is removed, other plugins' blocks are untouched.
+
+Eight blocks plugin-wide declared such a `supports` entry: about-us, card-scroll,
+column, feature-grid-free, gallery, mega-menu-item, row, saas-hero.
+
+### Redundant `supports.spacing` on two blocks
+
+The filter hides the extra tab but not the duplicate panel under it, so for the two
+in-scope blocks the redundant support was removed outright:
+
+- **`feature-grid-free`** already had responsive padding, and `responsiveMargin` was
+  generating margin CSS but **had no control** — so the only way to set a block
+  margin was WordPress's non-responsive Dimensions panel, writing a different
+  attribute. Dropped `supports.spacing`, added the missing per-breakpoint `Margin`
+  control to Style > Spacing.
+- **`saas-hero-block`** had its own section padding but no margin. Dropped
+  `supports.spacing`, added a `margin` attribute, its four CSS vars in `shared.js`,
+  the rule in `style.scss`, and a `Margin` BoxControl — so the capability moves into
+  the plugin's own panel rather than disappearing.
+
+### Rating badges were a dead feature
+
+`showRatingBadges`, `ratingBadgesAlignment` and `ratingBadges` were read by
+`edit.js` and `save.js` but **declared nowhere in `block.json`**. Undeclared
+attributes are dropped when the block is parsed, so nothing the user set survived a
+reload and the badges never rendered.
+
+All three are now declared, with `ratingBadges` seeded with two placeholder entries.
+`showRatingBadges` defaults to `false` — matching the effective behaviour of every
+saved block to date, so no existing content invalidates.
+
+Separately, the Content panel for the badges (and for the hero image) was gated on
+its own Layout toggle, so it rendered empty when the toggle was off — no way to set
+the content up before switching it on, no clue the toggle was what was missing. Both
+panels now show their controls unconditionally, with a note pointing at the toggle.
+On canvas the badge row renders whether or not it's switched on, dimmed and outlined
+via `.adaire-is-editor-hidden` when off; `save()` still emits nothing. This is now a
+rule in spec §4.

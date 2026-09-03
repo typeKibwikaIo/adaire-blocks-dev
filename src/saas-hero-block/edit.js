@@ -1,10 +1,11 @@
 import { MediaUpload, MediaUploadCheck, RichText, URLInput, useBlockProps } from '@wordpress/block-editor';
-import { BaseControl, Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
+import { BaseControl, Button, PanelBody, RangeControl, SelectControl, TextControl, TextareaControl, ToggleControl, __experimentalBoxControl as BoxControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import AdaireColorControl from '../components/AdaireColorControl';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
+import { PANEL, LABEL } from '../components/inspector-vocabulary';
 import BootstrapIconPicker from './BootstrapIconPicker';
 import {
   getStyleVars,
@@ -194,14 +195,26 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
     </>
   );
 
-  const colorTypographyControls = (
+  // The colour and typography halves are separate groups because the spec puts
+  // them in separate Style panels (§6.5: colour before typography). The QuickZone
+  // popover still renders both together, so nothing changes on canvas.
+  const colorControls = (
     <>
       <AdaireColorControl label={__('Accent color', 'adaire-blocks')} value={a.accentColor} onChange={(v) => setAttributes({ accentColor: v || '#6366f1' })} />
       <AdaireColorControl label={__('Text color', 'adaire-blocks')} value={a.textColor} onChange={(v) => setAttributes({ textColor: v || '#111827' })} />
-      <RangeControl label={__('Font size', 'adaire-blocks')} value={a.fontSize || 16} onChange={set(setAttributes, 'fontSize')} min={10} max={80} />
+      <AdaireColorControl label={__('Gradient Start', 'adaire-blocks')} value={a.gradientStart} onChange={(v) => setAttributes({ gradientStart: v || '#6366f1' })} />
+      <AdaireColorControl label={__('Gradient End', 'adaire-blocks')} value={a.gradientEnd} onChange={(v) => setAttributes({ gradientEnd: v || '#8b5cf6' })} />
+      <AdaireColorControl label={__('Pill Background', 'adaire-blocks')} value={a.pillBg} onChange={(v) => setAttributes({ pillBg: v || '#dbeafe' })} />
+      <AdaireColorControl label={__('Pill Text Color', 'adaire-blocks')} value={a.pillColor} onChange={(v) => setAttributes({ pillColor: v || '#1e40af' })} />
+    </>
+  );
+
+  const typographyControls = (
+    <>
+      <RangeControl label={ LABEL.FONT_SIZE } value={a.fontSize || 16} onChange={set(setAttributes, 'fontSize')} min={10} max={80} />
 
       <SelectControl
-        label={__('Font family', 'adaire-blocks')}
+        label={ LABEL.FONT_FAMILY }
         value={a.fontFamily || ''}
         options={FONT_FAMILY_OPTIONS}
         onChange={set(setAttributes, 'fontFamily')}
@@ -217,14 +230,23 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
     </>
   );
 
-  const spacingControls = (
+  // Section padding and the radius beside it are both Style (spec §4).
+  const sectionSpacingControls = (
     <>
-      <RangeControl label={__('Section padding', 'adaire-blocks')} value={a.padding || 80} onChange={set(setAttributes, 'padding')} min={0} max={200} />
-      <RangeControl label={__('Global border radius', 'adaire-blocks')} value={a.borderRadius || 12} onChange={set(setAttributes, 'borderRadius')} min={0} max={50} />
+      <RangeControl label={ LABEL.PADDING } value={a.padding || 80} onChange={set(setAttributes, 'padding')} min={0} max={200} />
+      <BoxControl
+        label={ LABEL.MARGIN }
+        values={a.margin}
+        onChange={(v) => setAttributes({ margin: v })}
+      />
     </>
   );
 
-  const layoutControls = (
+  const radiusControls = (
+    <RangeControl label={__('Global Border Radius', 'adaire-blocks')} value={a.borderRadius || 12} onChange={set(setAttributes, 'borderRadius')} min={0} max={50} />
+  );
+
+  const structureControls = (
     <SelectControl
       label={__('Layout Style', 'adaire-blocks')}
       value={a.layoutStyle || 'centered'}
@@ -249,65 +271,72 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
     </>
   );
 
+  const ctaAlignmentControls = (
+    <SelectControl
+      label={ LABEL.ALIGNMENT }
+      value={a.ctaAlignment || 'center'}
+      options={[{ label: 'Left', value: 'left' }, { label: 'Center', value: 'center' }, { label: 'Right', value: 'right' }]}
+      onChange={set(setAttributes, 'ctaAlignment')}
+    />
+  );
+
   const ctaSpacingControls = (
     <>
-      <SelectControl
-        label={__('Alignment', 'adaire-blocks')}
-        value={a.ctaAlignment || 'center'}
-        options={[{ label: 'Left', value: 'left' }, { label: 'Center', value: 'center' }, { label: 'Right', value: 'right' }]}
-        onChange={set(setAttributes, 'ctaAlignment')}
-      />
-      <RangeControl label={__('Gap between buttons', 'adaire-blocks')} value={a.ctaGap ?? 16} onChange={set(setAttributes, 'ctaGap')} min={0} max={60} />
-      <RangeControl label={__('Button padding (vertical)', 'adaire-blocks')} value={a.ctaPaddingV ?? 14} onChange={set(setAttributes, 'ctaPaddingV')} min={0} max={40} />
-      <RangeControl label={__('Button padding (horizontal)', 'adaire-blocks')} value={a.ctaPaddingH ?? 32} onChange={set(setAttributes, 'ctaPaddingH')} min={0} max={80} />
+      <RangeControl label={__('Gap Between Buttons', 'adaire-blocks')} value={a.ctaGap ?? 16} onChange={set(setAttributes, 'ctaGap')} min={0} max={60} />
+      <RangeControl label={__('Button Padding (Vertical)', 'adaire-blocks')} value={a.ctaPaddingV ?? 14} onChange={set(setAttributes, 'ctaPaddingV')} min={0} max={40} />
+      <RangeControl label={__('Button Padding (Horizontal)', 'adaire-blocks')} value={a.ctaPaddingH ?? 32} onChange={set(setAttributes, 'ctaPaddingH')} min={0} max={80} />
+      <RangeControl label={__('Spacing Above Image', 'adaire-blocks')} value={a.mediaSpacing ?? 48} onChange={set(setAttributes, 'mediaSpacing')} min={0} max={120} />
+    </>
+  );
+
+  const borderControls = (
+    <>
+      { radiusControls }
       <RangeControl
-        label={__('Button border radius', 'adaire-blocks')}
+        label={__('Button Border Radius', 'adaire-blocks')}
         value={resolveSentinel(a.ctaBorderRadius, a.borderRadius ?? 12)}
         onChange={set(setAttributes, 'ctaBorderRadius')}
         min={0}
         max={50}
         help={__('Defaults to the global border radius until changed here.', 'adaire-blocks')}
       />
-    </>
-  );
-
-  const mediaControls = (
-    <>
-      <ToggleControl label={__('Drop shadow', 'adaire-blocks')} checked={a.mediaShadow !== false} onChange={set(setAttributes, 'mediaShadow')} />
       <RangeControl
-        label={__('Image border radius', 'adaire-blocks')}
+        label={__('Image Border Radius', 'adaire-blocks')}
         value={resolveSentinel(a.mediaBorderRadius, a.borderRadius ?? 12)}
         onChange={set(setAttributes, 'mediaBorderRadius')}
         min={0}
         max={60}
       />
-      <RangeControl label={__('Spacing above image', 'adaire-blocks')} value={a.mediaSpacing ?? 48} onChange={set(setAttributes, 'mediaSpacing')} min={0} max={120} />
     </>
+  );
+
+  // The on-canvas Media QuickZone keeps offering all three media treatments
+  // together, even though the Inspector now files them under Effects, Border
+  // and Spacing respectively.
+  const mediaControls = (
+    <>
+      <ToggleControl label={__('Drop shadow', 'adaire-blocks')} checked={a.mediaShadow !== false} onChange={set(setAttributes, 'mediaShadow')} />
+      <RangeControl
+        label={__('Image Border Radius', 'adaire-blocks')}
+        value={resolveSentinel(a.mediaBorderRadius, a.borderRadius ?? 12)}
+        onChange={set(setAttributes, 'mediaBorderRadius')}
+        min={0}
+        max={60}
+      />
+      <RangeControl label={__('Spacing Above Image', 'adaire-blocks')} value={a.mediaSpacing ?? 48} onChange={set(setAttributes, 'mediaSpacing')} min={0} max={120} />
+    </>
+  );
+
+  const mediaShadowControls = (
+    <ToggleControl label={__('Drop shadow', 'adaire-blocks')} checked={a.mediaShadow !== false} onChange={set(setAttributes, 'mediaShadow')} />
   );
 
   return (<>
     <InspectorTabs attributes={a} setAttributes={setAttributes}>
-      {/* ── Layout tab: content & structure ───────────────────────────── */}
-      <PanelBody title={__('Layout', 'adaire-blocks')} initialOpen={true}>
-        {layoutControls}
-      </PanelBody>
-
-      <PanelBody title={__('Top Pill', 'adaire-blocks')} initialOpen={false}>
-        <ToggleControl label={__('Show Top Pill', 'adaire-blocks')} checked={a.showPill} onChange={set(setAttributes, 'showPill')} />
+      {/* Content: what the hero says and shows. */}
+      <PanelBody section="content" title={ PANEL.CONTENT } initialOpen={true}>
         {a.showPill && <TextControl label={__('Pill Text', 'adaire-blocks')} value={a.pillText || ''} onChange={set(setAttributes, 'pillText')} />}
-      </PanelBody>
 
-      <PanelBody title={__('Headline', 'adaire-blocks')} initialOpen={false}>
-        <ToggleControl label={__('Use Gradient on Headline', 'adaire-blocks')} checked={a.useGradientHeadline} onChange={set(setAttributes, 'useGradientHeadline')} />
-      </PanelBody>
-
-      <PanelBody title={__('CTA Content', 'adaire-blocks')} initialOpen={false}>
-        <ToggleControl
-          label={__('Show call to action', 'adaire-blocks')}
-          checked={a.showCta !== false}
-          onChange={set(setAttributes, 'showCta')}
-          help={__('Turn off to hide the buttons / email form entirely.', 'adaire-blocks')}
-        />
         {a.showCta !== false && (
         <>
         <SelectControl
@@ -346,72 +375,30 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
         )}
       </PanelBody>
 
-      <PanelBody title={__('Media Asset', 'adaire-blocks')} initialOpen={false}>
-        <ToggleControl label={__('Show Hero Image', 'adaire-blocks')} checked={a.showHeroImage} onChange={set(setAttributes, 'showHeroImage')} />
-        {a.showHeroImage && media(__('Hero Image', 'adaire-blocks'), a.heroImageUrl, (v) => setAttributes({ heroImageUrl: v }))}
-        {/* Split layouts already imply left/right image position via the Layout
-            control above — showing a second position control here would just
-            duplicate it, so it's only offered for the centered layout. */}
-        {a.showHeroImage && (a.layoutStyle || 'centered') === 'centered' && (
-          <SelectControl
-            label={__('Image Position', 'adaire-blocks')}
-            value={a.imagePosition || 'below'}
-            options={[
-              { label: __('Below Text', 'adaire-blocks'), value: 'below' },
-              { label: __('Above Text', 'adaire-blocks'), value: 'above' },
-            ]}
-            onChange={set(setAttributes, 'imagePosition')}
-          />
+      <PanelBody section="content" title={ PANEL.MEDIA } initialOpen={false}>
+        {! a.showHeroImage && (
+          <p className="adaire-help-note">
+            {__('This image is hidden on the front end. Turn on "Show Hero Image" in Layout > Structure to display it.', 'adaire-blocks')}
+          </p>
         )}
+        {media(__('Hero Image', 'adaire-blocks'), a.heroImageUrl, (v) => setAttributes({ heroImageUrl: v }))}
       </PanelBody>
 
-      <PanelBody title={__('Hero Effects & Decorations', 'adaire-blocks')} initialOpen={false}>
-        <SelectControl
-          label={__('Industry preset', 'adaire-blocks')}
-          value={a.effectsPreset || 'none'}
-          options={[
-            { label: __('None', 'adaire-blocks'), value: 'none' },
-            { label: __('Sports', 'adaire-blocks'), value: 'sports' },
-            { label: __('Gym / Fitness', 'adaire-blocks'), value: 'gym' },
-            { label: __('E-commerce', 'adaire-blocks'), value: 'ecommerce' },
-            { label: __('Business', 'adaire-blocks'), value: 'business' },
-            { label: __('Medical / Hospital', 'adaire-blocks'), value: 'medical' },
-            { label: __('Gaming', 'adaire-blocks'), value: 'gaming' },
-            { label: __('Custom', 'adaire-blocks'), value: 'custom' },
-          ]}
-          onChange={(v) => setAttributes(buildPresetPatch(v))}
-          help={__('Presets just set the toggles below — tweak anything afterward.', 'adaire-blocks')}
-        />
-        <ToggleControl label={__('Dot pattern', 'adaire-blocks')} checked={!!a.effectDotPattern} onChange={set(setAttributes, 'effectDotPattern')} />
-        <ToggleControl label={__('Gradient overlay', 'adaire-blocks')} checked={!!a.effectGradientOverlay} onChange={set(setAttributes, 'effectGradientOverlay')} />
-        {a.effectGradientOverlay && (
-          <>
-            <AdaireColorControl label={__('Overlay color 1', 'adaire-blocks')} value={a.effectGradientOverlayColor1} onChange={(v) => setAttributes({ effectGradientOverlayColor1: v })} />
-            <AdaireColorControl label={__('Overlay color 2', 'adaire-blocks')} value={a.effectGradientOverlayColor2} onChange={(v) => setAttributes({ effectGradientOverlayColor2: v })} />
-            <RangeControl label={__('Overlay opacity %', 'adaire-blocks')} value={a.effectGradientOverlayOpacity ?? 30} onChange={set(setAttributes, 'effectGradientOverlayOpacity')} min={0} max={100} />
-          </>
+      {/*
+        The badge list is editable whether or not the block is currently showing
+        it. Gating the content behind the Layout toggle meant this panel rendered
+        empty, so there was no way to set the badges up before turning them on —
+        and no hint that the toggle was what was missing.
+      */}
+      <PanelBody section="content" title={ PANEL.BADGES } initialOpen={false}>
+        {! a.showRatingBadges && (
+          <p className="adaire-help-note">
+            {__('These badges are hidden on the front end. Turn on "Show Ratings & Badges" in Layout > Structure to display them.', 'adaire-blocks')}
+          </p>
         )}
-        <ToggleControl label={__('Abstract shapes', 'adaire-blocks')} checked={!!a.effectAbstractShapes} onChange={set(setAttributes, 'effectAbstractShapes')} />
-        <ToggleControl label={__('Glow', 'adaire-blocks')} checked={!!a.effectGlow} onChange={set(setAttributes, 'effectGlow')} />
-        {a.effectGlow && <AdaireColorControl label={__('Glow color', 'adaire-blocks')} value={a.effectGlowColor} onChange={(v) => setAttributes({ effectGlowColor: v })} />}
-        <ToggleControl label={__('Blur blob', 'adaire-blocks')} checked={!!a.effectBlur} onChange={set(setAttributes, 'effectBlur')} />
-        <ToggleControl label={__('Floating elements', 'adaire-blocks')} checked={!!a.effectFloatingElements} onChange={set(setAttributes, 'effectFloatingElements')} />
-        <ToggleControl label={__('Animated accents', 'adaire-blocks')} checked={!!a.effectAnimatedAccents} onChange={set(setAttributes, 'effectAnimatedAccents')} />
-        <p className="adaire-help-note">{__('All effects are off by default, purely decorative (aria-hidden), and respect reduced-motion settings.', 'adaire-blocks')}</p>
-      </PanelBody>
 
-      <PanelBody title={__('Ratings & Badges', 'adaire-blocks')} initialOpen={false}>
-        <ToggleControl label={__('Show ratings / app-store badges', 'adaire-blocks')} checked={!!a.showRatingBadges} onChange={set(setAttributes, 'showRatingBadges')} />
-        {a.showRatingBadges && (
-          <>
-            <SelectControl
-              label={__('Alignment', 'adaire-blocks')}
-              value={a.ratingBadgesAlignment || 'center'}
-              options={[{ label: 'Left', value: 'left' }, { label: 'Center', value: 'center' }, { label: 'Right', value: 'right' }]}
-              onChange={set(setAttributes, 'ratingBadgesAlignment')}
-            />
-            <RepeaterField
-              items={a.ratingBadges}
+        <RepeaterField
+          items={a.ratingBadges}
               onChange={(items) => setAttributes({ ratingBadges: items })}
               addLabel={__('Add badge', 'adaire-blocks')}
               newItem={{ icon: 'bi bi-star-fill', imageUrl: '', text: '5.0/5', subtext: __('Reviews', 'adaire-blocks') }}
@@ -441,44 +428,121 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
                   <TextControl label={__('Subtext', 'adaire-blocks')} value={item.subtext || ''} onChange={(v) => update({ subtext: v })} />
                 </>
               )}
-            />
-          </>
+        />
+      </PanelBody>
+
+      {/* Layout: structure, then alignment, then spacing (spec 6.5). */}
+      <PanelBody section="layout" title={ PANEL.STRUCTURE } initialOpen={true}>
+        {structureControls}
+
+        {/*
+          Show/hide toggles are Layout, not Content (spec 4) - switching one off
+          removes the element from the DOM. The text and media they reveal stay
+          in the Content tab.
+        */}
+        <ToggleControl label={__('Show Top Pill', 'adaire-blocks')} checked={a.showPill} onChange={set(setAttributes, 'showPill')} />
+        <ToggleControl
+          label={__('Show Call to Action', 'adaire-blocks')}
+          checked={a.showCta !== false}
+          onChange={set(setAttributes, 'showCta')}
+          help={__('Turn off to hide the buttons / email form entirely.', 'adaire-blocks')}
+        />
+        <ToggleControl label={__('Show Hero Image', 'adaire-blocks')} checked={a.showHeroImage} onChange={set(setAttributes, 'showHeroImage')} />
+        <ToggleControl label={__('Show Ratings & Badges', 'adaire-blocks')} checked={!!a.showRatingBadges} onChange={set(setAttributes, 'showRatingBadges')} />
+
+        {/* Split layouts already imply left/right image position via the Layout
+            Style control above - showing a second position control here would
+            just duplicate it, so it's only offered for the centered layout. */}
+        {a.showHeroImage && (a.layoutStyle || 'centered') === 'centered' && (
+          <SelectControl
+            label={__('Image Position', 'adaire-blocks')}
+            value={a.imagePosition || 'below'}
+            options={[
+              { label: __('Below Text', 'adaire-blocks'), value: 'below' },
+              { label: __('Above Text', 'adaire-blocks'), value: 'above' },
+            ]}
+            onChange={set(setAttributes, 'imagePosition')}
+          />
+        )}
+
+        {/*
+          The decision to run a decoration at all adds or removes a DOM node, so
+          the toggles are Layout; the colours and opacity that dress them are
+          Style, over in the Effects panel (spec 4).
+        */}
+
+        <SelectControl
+          label={__('Industry preset', 'adaire-blocks')}
+          value={a.effectsPreset || 'none'}
+          options={[
+            { label: __('None', 'adaire-blocks'), value: 'none' },
+            { label: __('Sports', 'adaire-blocks'), value: 'sports' },
+            { label: __('Gym / Fitness', 'adaire-blocks'), value: 'gym' },
+            { label: __('E-commerce', 'adaire-blocks'), value: 'ecommerce' },
+            { label: __('Business', 'adaire-blocks'), value: 'business' },
+            { label: __('Medical / Hospital', 'adaire-blocks'), value: 'medical' },
+            { label: __('Gaming', 'adaire-blocks'), value: 'gaming' },
+            { label: __('Custom', 'adaire-blocks'), value: 'custom' },
+          ]}
+          onChange={(v) => setAttributes(buildPresetPatch(v))}
+          help={__('Presets just set the toggles below — tweak anything afterward.', 'adaire-blocks')}
+        />
+        <ToggleControl label={__('Dot pattern', 'adaire-blocks')} checked={!!a.effectDotPattern} onChange={set(setAttributes, 'effectDotPattern')} />
+        <ToggleControl label={__('Gradient overlay', 'adaire-blocks')} checked={!!a.effectGradientOverlay} onChange={set(setAttributes, 'effectGradientOverlay')} />
+        <ToggleControl label={__('Abstract shapes', 'adaire-blocks')} checked={!!a.effectAbstractShapes} onChange={set(setAttributes, 'effectAbstractShapes')} />
+        <ToggleControl label={__('Glow', 'adaire-blocks')} checked={!!a.effectGlow} onChange={set(setAttributes, 'effectGlow')} />
+        <ToggleControl label={__('Blur blob', 'adaire-blocks')} checked={!!a.effectBlur} onChange={set(setAttributes, 'effectBlur')} />
+        <ToggleControl label={__('Floating elements', 'adaire-blocks')} checked={!!a.effectFloatingElements} onChange={set(setAttributes, 'effectFloatingElements')} />
+        <ToggleControl label={__('Animated accents', 'adaire-blocks')} checked={!!a.effectAnimatedAccents} onChange={set(setAttributes, 'effectAnimatedAccents')} />
+        <p className="adaire-help-note">{__('All effects are off by default, purely decorative (aria-hidden), and respect reduced-motion settings.', 'adaire-blocks')}</p>
+      </PanelBody>
+
+      <PanelBody section="layout" title={ PANEL.ALIGNMENT } initialOpen={false}>
+        {a.showCta !== false && ctaAlignmentControls}
+        {a.showRatingBadges && (
+          <SelectControl
+            label={__('Ratings & Badges Alignment', 'adaire-blocks')}
+            value={a.ratingBadgesAlignment || 'center'}
+            options={[{ label: 'Left', value: 'left' }, { label: 'Center', value: 'center' }, { label: 'Right', value: 'right' }]}
+            onChange={set(setAttributes, 'ratingBadgesAlignment')}
+          />
         )}
       </PanelBody>
 
-      {/* ── Style tab (auto-routed by InspectorTabs via title keywords) ── */}
-      <PanelBody title={__('Background', 'adaire-blocks')} initialOpen={false}>
-        {backgroundControls}
-      </PanelBody>
-
-      <PanelBody title={__('Colors & Typography', 'adaire-blocks')} initialOpen={false}>
-        {colorTypographyControls}
-      </PanelBody>
-
-      <PanelBody title={__('Headline Gradient Colors', 'adaire-blocks')} initialOpen={false}>
-        <AdaireColorControl label={__('Gradient Start', 'adaire-blocks')} value={a.gradientStart} onChange={(v) => setAttributes({ gradientStart: v || '#6366f1' })} />
-        <AdaireColorControl label={__('Gradient End', 'adaire-blocks')} value={a.gradientEnd} onChange={(v) => setAttributes({ gradientEnd: v || '#8b5cf6' })} />
-      </PanelBody>
-
-      <PanelBody title={__('Top Pill Colors', 'adaire-blocks')} initialOpen={false}>
-        <AdaireColorControl label={__('Pill Background', 'adaire-blocks')} value={a.pillBg} onChange={(v) => setAttributes({ pillBg: v || '#dbeafe' })} />
-        <AdaireColorControl label={__('Pill Text Color', 'adaire-blocks')} value={a.pillColor} onChange={(v) => setAttributes({ pillColor: v || '#1e40af' })} />
-      </PanelBody>
-
-      <PanelBody title={__('CTA Colors & Hover', 'adaire-blocks')} initialOpen={false}>
-        {ctaStyleControls}
-      </PanelBody>
-
-      <PanelBody title={__('CTA Spacing & Alignment', 'adaire-blocks')} initialOpen={false}>
+      <PanelBody section="style" title={ PANEL.SPACING } initialOpen={false}>
+        {sectionSpacingControls}
         {ctaSpacingControls}
       </PanelBody>
 
-      <PanelBody title={__('Media Shadow & Spacing', 'adaire-blocks')} initialOpen={false}>
-        {mediaControls}
+      {/* Style: colour, then typography, then borders and effects. */}
+      <PanelBody section="style" title={ PANEL.BACKGROUND } initialOpen={false}>
+        {backgroundControls}
       </PanelBody>
 
-      <PanelBody title={__('Global Spacing & Radius', 'adaire-blocks')} initialOpen={false}>
-        {spacingControls}
+      <PanelBody section="style" title={ PANEL.COLORS } initialOpen={false}>
+        {colorControls}
+        <ToggleControl label={__('Use Gradient on Headline', 'adaire-blocks')} checked={a.useGradientHeadline} onChange={set(setAttributes, 'useGradientHeadline')} />
+        {ctaStyleControls}
+      </PanelBody>
+
+      <PanelBody section="style" title={ PANEL.TYPOGRAPHY } initialOpen={false}>
+        {typographyControls}
+      </PanelBody>
+
+      <PanelBody section="style" title={ PANEL.BORDER } initialOpen={false}>
+        {borderControls}
+      </PanelBody>
+
+      <PanelBody section="layout" title={ PANEL.EFFECTS } initialOpen={false}>
+        {mediaShadowControls}
+        {a.effectGradientOverlay && (
+          <>
+            <AdaireColorControl label={__('Overlay color 1', 'adaire-blocks')} value={a.effectGradientOverlayColor1} onChange={(v) => setAttributes({ effectGradientOverlayColor1: v })} />
+            <AdaireColorControl label={__('Overlay color 2', 'adaire-blocks')} value={a.effectGradientOverlayColor2} onChange={(v) => setAttributes({ effectGradientOverlayColor2: v })} />
+            <RangeControl label={__('Overlay opacity %', 'adaire-blocks')} value={a.effectGradientOverlayOpacity ?? 30} onChange={set(setAttributes, 'effectGradientOverlayOpacity')} min={0} max={100} />
+          </>
+        )}
+        {a.effectGlow && <AdaireColorControl label={__('Glow color', 'adaire-blocks')} value={a.effectGlowColor} onChange={(v) => setAttributes({ effectGlowColor: v })} />}
       </PanelBody>
     </InspectorTabs>
 
@@ -520,13 +584,15 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
         content={(
           <>
             <p className="adaire-qz-subhead">{__('Layout', 'adaire-blocks')}</p>
-            {layoutControls}
+            {structureControls}
             <p className="adaire-qz-subhead">{__('Background', 'adaire-blocks')}</p>
             {backgroundControls}
             <p className="adaire-qz-subhead">{__('Colors & Typography', 'adaire-blocks')}</p>
-            {colorTypographyControls}
+            {colorControls}
+            {typographyControls}
             <p className="adaire-qz-subhead">{__('Spacing', 'adaire-blocks')}</p>
-            {spacingControls}
+            {sectionSpacingControls}
+            {radiusControls}
           </>
         )}
       >
@@ -545,26 +611,40 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
             </QuickZone>
           )}
 
-          {a.showRatingBadges && (
-            <QuickZone
-              id="saas-hero-ratings"
-              label={__('Ratings', 'adaire-blocks')}
-              activeZone={activeZone}
-              setActiveZone={setActiveZone}
-              content={(
+          {/*
+            Rendered in the editor whether or not the badges are switched on, so
+            there is something to click and edit. When they're off it's drawn
+            dimmed and labelled, and save.js still emits nothing — the canvas
+            says "hidden", it doesn't pretend the front end shows this.
+          */}
+          <QuickZone
+            id="saas-hero-ratings"
+            label={a.showRatingBadges ? __('Ratings', 'adaire-blocks') : __('Ratings (hidden)', 'adaire-blocks')}
+            activeZone={activeZone}
+            setActiveZone={setActiveZone}
+            content={(
+              <>
+                <ToggleControl
+                  label={__('Show Ratings & Badges', 'adaire-blocks')}
+                  checked={!!a.showRatingBadges}
+                  onChange={set(setAttributes, 'showRatingBadges')}
+                />
                 <SelectControl
                   label={__('Alignment', 'adaire-blocks')}
                   value={a.ratingBadgesAlignment || 'center'}
                   options={[{ label: 'Left', value: 'left' }, { label: 'Center', value: 'center' }, { label: 'Right', value: 'right' }]}
                   onChange={set(setAttributes, 'ratingBadgesAlignment')}
                 />
-              )}
+              </>
+            )}
+          >
+            <div
+              className={`adaire-saas-hero__ratings${a.showRatingBadges ? '' : ' adaire-is-editor-hidden'}`}
+              title={a.showRatingBadges ? undefined : __('Hidden on the front end', 'adaire-blocks')}
             >
-              <div className="adaire-saas-hero__ratings">
-                {(a.ratingBadges || []).map((badge, i) => <RatingBadgeView key={i} badge={badge} />)}
-              </div>
-            </QuickZone>
-          )}
+              {(a.ratingBadges || []).map((badge, i) => <RatingBadgeView key={i} badge={badge} />)}
+            </div>
+          </QuickZone>
 
           <div className="adaire-saas-hero__content">
             <div className="adaire-saas-hero__text">
@@ -619,6 +699,7 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
                       <p className="adaire-qz-subhead">{__('Colors', 'adaire-blocks')}</p>
                       {ctaStyleControls}
                       <p className="adaire-qz-subhead">{__('Spacing & Alignment', 'adaire-blocks')}</p>
+                      {ctaAlignmentControls}
                       {ctaSpacingControls}
                     </>
                   )}

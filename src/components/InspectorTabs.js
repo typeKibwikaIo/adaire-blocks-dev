@@ -17,10 +17,14 @@
  *   ┌────────────────────────────────┐
  *   │  Content  │  Layout  │  Style  │
  *   ├────────────────────────────────┤
- *   │  HIGH PRIORITY                  │  ← most-used styling (colors, type)
- *   │   ▾ Colors                      │
- *   │  MEDIUM PRIORITY                │  ← border, spacing, effects…
+ *   │  APPEARANCE                     │  ← most-used styling (background,
+ *   │   ▾ Colors                      │     colours, typography)
+ *   │  EFFECTS                        │  ← border, shadow, overlay…
  *   └────────────────────────────────┘
+ *
+ * A tab with no panels is hidden rather than rendered empty (spec §8), and
+ * panels are ordered within their tab by the shared vocabulary in
+ * `inspector-vocabulary.js` (spec §6.5) rather than by authoring order.
  *
  * Usage inside a block's Edit():
  *   <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
@@ -43,12 +47,15 @@ import {
 } from '@wordpress/components';
 import { Children, isValidElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { panelOrder, STYLE_PRIORITY } from './inspector-vocabulary';
 import './InspectorTabs.scss';
 
 const STYLE_ORDER = [ 'high', 'medium' ];
 const STYLE_LABELS = {
 	high:   __( 'Appearance' ),
-	medium: __( 'Effects & Spacing' ),
+	// Not "Effects & Spacing" — padding, margin and gap are Layout settings
+	// (BLOCK_SETTINGS_SPEC.md §4), so nothing spacing-related lands here.
+	medium: __( 'Effects' ),
 };
 
 // Legacy fallback only: used when a panel has no explicit `section` prop.
@@ -122,7 +129,12 @@ function classifyChild( child ) {
 		: null;
 
 	if ( explicitSection ) {
-		const priority = props.priority === 'high' ? 'high' : 'medium';
+		// An explicit `priority` wins; otherwise a canonical Style panel title
+		// carries its own priority (inspector-vocabulary.js) so blocks don't
+		// each decide where "Typography" sits in the Style tab.
+		const priority = props.priority === 'high' || props.priority === 'medium'
+			? props.priority
+			: ( STYLE_PRIORITY[ props.title ] || 'medium' );
 		return { section: explicitSection, priority };
 	}
 
@@ -131,6 +143,27 @@ function classifyChild( child ) {
 		return { section: 'style', priority: legacyPriority };
 	}
 	return { section: 'layout', priority: 'medium' };
+}
+
+/**
+ * Order a tab's panels by the shared vocabulary (spec §6.5). Panels whose title
+ * isn't in the canonical list sort last and keep their authored order, so a
+ * block-specific panel still renders where the author put it relative to its
+ * peers.
+ *
+ * @param {string} tab      'content' | 'layout' | 'style'.
+ * @param {Array}  children Panel elements.
+ * @return {Array} Sorted panels.
+ */
+function sortPanels( tab, children ) {
+	return children
+		.map( ( child, i ) => ( {
+			child,
+			i,
+			rank: panelOrder( tab, isValidElement( child ) ? child.props.title : null ),
+		} ) )
+		.sort( ( a, b ) => ( a.rank - b.rank ) || ( a.i - b.i ) )
+		.map( ( entry ) => entry.child );
 }
 
 export default function InspectorTabs( {
@@ -169,53 +202,49 @@ export default function InspectorTabs( {
 		);
 	} );
 
+	// Order every tab's panels by the shared vocabulary (spec §6.5).
+	const contentPanels = sortPanels( 'content', contentChildren );
+	const layoutPanels = sortPanels( 'layout', layoutChildren );
+	STYLE_ORDER.forEach( ( priority ) => {
+		styleGroups[ priority ] = sortPanels( 'style', styleGroups[ priority ] );
+	} );
+
 	const hasStyle = styleGroups.high.length > 0 || styleGroups.medium.length > 0;
+
+	// Spec §8: a tab with no applicable settings is hidden, not shown empty.
+	const tabDefs = [
+		{ name: 'content', label: __( 'Content' ), icon: ContentIcon, has: contentPanels.length > 0 },
+		{ name: 'layout',  label: __( 'Layout' ),  icon: LayoutIcon,  has: layoutPanels.length > 0 },
+		{ name: 'style',   label: __( 'Style' ),   icon: StyleIcon,   has: hasStyle },
+	].filter( ( tab ) => tab.has );
+
+	// A block with no panels at all has nothing to render — don't leave an
+	// empty tab strip behind.
+	if ( tabDefs.length === 0 ) {
+		return null;
+	}
 
 	return (
 		<InspectorControls>
 			<TabPanel
-				className="adaire-inspector-tabs"
+				className={ `adaire-inspector-tabs has-${ tabDefs.length }-tabs` }
 				activeClass="is-active"
-				tabs={ [
-					{
-						name: 'content',
-						title: (
-							<span className="adaire-tab-title">
-								{ ContentIcon }
-								{ __( 'Content' ) }
-							</span>
-						),
-						className: 'adaire-inspector-tab',
-					},
-					{
-						name: 'layout',
-						title: (
-							<span className="adaire-tab-title">
-								{ LayoutIcon }
-								{ __( 'Layout' ) }
-							</span>
-						),
-						className: 'adaire-inspector-tab',
-					},
-					{
-						name: 'style',
-						title: (
-							<span className="adaire-tab-title">
-								{ StyleIcon }
-								{ __( 'Style' ) }
-							</span>
-						),
-						className: 'adaire-inspector-tab',
-					},
-				] }
+				tabs={ tabDefs.map( ( tab ) => ( {
+					name: tab.name,
+					title: (
+						<span className="adaire-tab-title">
+							{ tab.icon }
+							{ tab.label }
+						</span>
+					),
+					className: 'adaire-inspector-tab',
+				} ) ) }
 			>
 				{ ( tab ) => {
 					if ( tab.name === 'content' ) {
 						return (
 							<div className="adaire-inspector-tabs__panel">
-								{ contentChildren.length > 0
-									? contentChildren
-									: <p className="adaire-inspector-empty">{ __( 'This block has no content settings — see the Layout and Style tabs.' ) }</p> }
+								{ contentPanels }
 							</div>
 						);
 					}
@@ -223,30 +252,26 @@ export default function InspectorTabs( {
 					if ( tab.name === 'layout' ) {
 						return (
 							<div className="adaire-inspector-tabs__panel">
-								{ layoutChildren.length > 0
-									? layoutChildren
-									: <p className="adaire-inspector-empty">{ __( 'This block has no layout settings — see the other tabs.' ) }</p> }
+								{ layoutPanels }
 							</div>
 						);
 					}
 
 					return (
 						<div className="adaire-inspector-tabs__panel">
-							{ hasStyle
-								? STYLE_ORDER.map( ( priority ) => {
-									const panels = styleGroups[ priority ];
-									if ( panels.length === 0 ) return null;
+							{ STYLE_ORDER.map( ( priority ) => {
+								const panels = styleGroups[ priority ];
+								if ( panels.length === 0 ) return null;
 
-									return (
-										<div key={ priority } className={ `adaire-priority-group is-${ priority }` }>
-											<div className={ `adaire-priority-label is-${ priority }` }>
-												{ STYLE_LABELS[ priority ] }
-											</div>
-											{ panels }
+								return (
+									<div key={ priority } className={ `adaire-priority-group is-${ priority }` }>
+										<div className={ `adaire-priority-label is-${ priority }` }>
+											{ STYLE_LABELS[ priority ] }
 										</div>
-									);
-								} )
-								: <p className="adaire-inspector-empty">{ __( 'This block has no style settings.' ) }</p> }
+										{ panels }
+									</div>
+								);
+							} ) }
 						</div>
 					);
 				} }

@@ -266,3 +266,30 @@ export function setFlatDeviceValue( setAttributes, prefix, device, value ) {
 	setAttributes( { [ key ]: value } );
 }
 
+
+/**
+ * BreakpointNote — the one way a panel says which breakpoint its controls are
+ * editing.
+ *
+ * Responsive-scoped controls live in panels away from the switcher itself
+ * (Layout > Spacing, Style > Typography …), so each of those panels has to
+ * state the active tier. Blocks used to do this three different ways: a bold
+ * "Current Breakpoint: Desktop" paragraph, a grey hint paragraph, or a device
+ * name baked into every control label ("Button Padding (Desktop)"). This is the
+ * single approved form — spec §6.2 and §6.3.
+ *
+ * @param {Object} props
+ * @param {string} props.deviceType   Current device key.
+ * @param {Array}  [props.tiers]      Tier set the block uses; defaults to 3-tier.
+ * @return {JSX.Element} The note.
+ */
+export function BreakpointNote( { deviceType, tiers = THREE_TIERS } ) {
+	const tier = tiers.find( ( t ) => t.key === deviceType );
+
+	return (
+		<p className="adaire-breakpoint-note">
+			{ __( 'Editing:', 'adaire-blocks' ) }{ ' ' }
+			<strong>{ tier ? tier.label : deviceType }</strong>
+		</p>
+	);
+}

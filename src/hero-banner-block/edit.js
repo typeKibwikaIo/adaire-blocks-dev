@@ -34,8 +34,9 @@ import {
 	mobile,
 } from "@wordpress/icons";
 import { getBlockType } from "@wordpress/blocks";
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, BreakpointNote } from '../components/DeviceSwitcher';
 import InspectorTabs from '../components/InspectorTabs';
+import { PANEL, LABEL } from '../components/inspector-vocabulary';
 import QuickZone from '../components/QuickZone';
 import "./editor.scss";
 
@@ -71,7 +72,7 @@ const CTA_TEMPLATE = [["create-block/button-block", { buttonText: "Get Started" 
 
 // The block's one and only breakpoint set — every responsive control in this
 // block reads/writes the same `deviceType` state, so there is a single
-// switcher (in the "Responsive Settings" panel) rather than one per panel.
+// switcher (in the Layout tab's "Responsive" panel) rather than one per panel.
 const BREAKPOINTS = ["mobile", "tablet", "smallLaptop", "desktop", "bigDesktop"];
 const BREAKPOINT_LABELS = {
 	mobile: __("Mobile", "adaire-blocks"),
@@ -949,1481 +950,1423 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
     return (
         <>
-            <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
+			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody
-					section="layout"
-					title={__("Responsive Settings", "adaire-blocks")}
+					section="content"
+					title={ PANEL.CONTENT }
 					initialOpen={true}
 				>
-					<DeviceSwitcher
-						deviceType={deviceType}
-						setDeviceType={setDeviceType}
-						label={__("Breakpoint", "adaire-blocks")}
-						tiers={FIVE_TIERS}
-						onReset={resetResponsiveDefaults}
+					{showPreheader && (
+					    <TextControl
+					        label={__("Preheader Text", "adaire-blocks")}
+					        value={preheaderText}
+					        onChange={(value) => setAttributes({ preheaderText: value })}
+					    />
+					)}
+					{showBreadcrumbs && (
+					    <>
+					        <BaseControl
+					            label={__("Breadcrumbs", "adaire-blocks")}
+					            help={__(
+					                "Configure breadcrumb items with text and URLs. Leave URL empty for the current page.",
+					                "adaire-blocks",
+					            )}
+					        >
+					            {(breadcrumbsItems || []).map((item, index) => (
+					                <div
+					                    key={index}
+					                    style={{
+					                        marginBottom: "12px",
+					                        padding: "10px",
+					                        border: "1px solid #ddd",
+					                        borderRadius: "4px",
+					                    }}
+					                >
+					                    <div
+					                        style={{
+					                            display: "flex",
+					                            gap: "8px",
+					                            marginBottom: "8px",
+					                        }}
+					                    >
+					                        <TextControl
+					                            label={__("Text", "adaire-blocks")}
+					                            value={item.text || ""}
+					                            onChange={(value) => {
+					                                const updated = [...(breadcrumbsItems || [])];
+					                                updated[index] = { ...updated[index], text: value };
+					                                setAttributes({ breadcrumbsItems: updated });
+					                            }}
+					                            style={{ flex: 1 }}
+					                        />
+					                        <Button
+					                            isDestructive
+					                            isSmall
+					                            onClick={() => {
+					                                const updated = [...(breadcrumbsItems || [])];
+					                                updated.splice(index, 1);
+					                                setAttributes({ breadcrumbsItems: updated });
+					                            }}
+					                            label={__("Remove", "adaire-blocks")}
+					                        >
+					                            {__("Remove", "adaire-blocks")}
+					                        </Button>
+					                    </div>
+					                    <TextControl
+					                        label={__("URL", "adaire-blocks")}
+					                        value={item.url || ""}
+					                        onChange={(value) => {
+					                            const updated = [...(breadcrumbsItems || [])];
+					                            updated[index] = { ...updated[index], url: value };
+					                            setAttributes({ breadcrumbsItems: updated });
+					                        }}
+					                        placeholder={__(
+					                            "Leave empty for current page",
+					                            "adaire-blocks",
+					                        )}
+					                    />
+					                </div>
+					            ))}
+					            <Button
+					                isSecondary
+					                isSmall
+					                onClick={() => {
+					                    const updated = [
+					                        ...(breadcrumbsItems || []),
+					                        { text: "", url: "" },
+					                    ];
+					                    setAttributes({ breadcrumbsItems: updated });
+					                }}
+					                style={{ marginTop: "8px" }}
+					            >
+					                {__("Add Breadcrumb Item", "adaire-blocks")}
+					            </Button>
+					        </BaseControl>
+					    </>
+					)}
+					<TextareaControl
+					    label={__("Heading", "adaire-blocks")}
+					    value={headingText}
+					    onChange={(value) => setAttributes({ headingText: value })}
 					/>
-						<p style={{ marginTop: "8px", fontSize: "12px", color: "#757575" }}>
-							{__(
-								"Select a breakpoint to configure its settings. The editor preview shows desktop view.",
-								"adaire-blocks",
-							)}
-                        </p>
+					<TextControl
+					    label={__("Text Content", "adaire-blocks")}
+					    value={textContent}
+					    onChange={(value) => setAttributes({ textContent: value })}
+					    multiline
+					    rows={3}
+					/>
 				</PanelBody>
-
-				<PanelBody section="content" title={__("Content", "adaire-blocks")} initialOpen={true}>
-                    <ToggleControl
-						label={__("Show Breadcrumbs", "adaire-blocks")}
-                        checked={showBreadcrumbs}
-                        onChange={(value) => setAttributes({ showBreadcrumbs: value })}
-                    />
-                    <ToggleControl
-						label={__("Show Preheader", "adaire-blocks")}
-                        checked={showPreheader}
-                        onChange={(value) => setAttributes({ showPreheader: value })}
-                    />
-                    {showPreheader && (
-                        <TextControl
-							label={__("Preheader Text", "adaire-blocks")}
-                            value={preheaderText}
-                            onChange={(value) => setAttributes({ preheaderText: value })}
-                        />
-                    )}
-                    {showBreadcrumbs && (
-                        <>
-							<BaseControl
-								label={__("Breadcrumbs", "adaire-blocks")}
-								help={__(
-									"Configure breadcrumb items with text and URLs. Leave URL empty for the current page.",
-									"adaire-blocks",
-								)}
-							>
-                                {(breadcrumbsItems || []).map((item, index) => (
-									<div
-										key={index}
-										style={{
-											marginBottom: "12px",
-											padding: "10px",
-											border: "1px solid #ddd",
-											borderRadius: "4px",
-										}}
-									>
-										<div
-											style={{
-												display: "flex",
-												gap: "8px",
-												marginBottom: "8px",
-											}}
-										>
-                                            <TextControl
-												label={__("Text", "adaire-blocks")}
-												value={item.text || ""}
-                                                onChange={(value) => {
-                                                    const updated = [...(breadcrumbsItems || [])];
-                                                    updated[index] = { ...updated[index], text: value };
-                                                    setAttributes({ breadcrumbsItems: updated });
-                                                }}
-                                                style={{ flex: 1 }}
-                                            />
-                                            <Button
-                                                isDestructive
-                                                isSmall
-                                                onClick={() => {
-                                                    const updated = [...(breadcrumbsItems || [])];
-                                                    updated.splice(index, 1);
-                                                    setAttributes({ breadcrumbsItems: updated });
-                                                }}
-												label={__("Remove", "adaire-blocks")}
-                                            >
-												{__("Remove", "adaire-blocks")}
-                                            </Button>
-                                        </div>
-                                        <TextControl
-											label={__("URL", "adaire-blocks")}
-											value={item.url || ""}
-                                            onChange={(value) => {
-                                                const updated = [...(breadcrumbsItems || [])];
-                                                updated[index] = { ...updated[index], url: value };
-                                                setAttributes({ breadcrumbsItems: updated });
-                                            }}
-											placeholder={__(
-												"Leave empty for current page",
-												"adaire-blocks",
-											)}
-                                        />
-                                    </div>
-                                ))}
-                                <Button
-                                    isSecondary
-                                    isSmall
-                                    onClick={() => {
-										const updated = [
-											...(breadcrumbsItems || []),
-											{ text: "", url: "" },
-										];
-                                        setAttributes({ breadcrumbsItems: updated });
-                                    }}
-									style={{ marginTop: "8px" }}
-                                >
-									{__("Add Breadcrumb Item", "adaire-blocks")}
-                                </Button>
-                            </BaseControl>
-                        </>
-                    )}
-                    <TextareaControl
-						label={__("Heading", "adaire-blocks")}
-                        value={headingText}
-                        onChange={(value) => setAttributes({ headingText: value })}
-                    />
-                    <TextControl
-						label={__("Text Content", "adaire-blocks")}
-                        value={textContent}
-                        onChange={(value) => setAttributes({ textContent: value })}
-                        multiline
-                        rows={3}
-                    />
-                </PanelBody>
-
 				<PanelBody
 					section="content"
-					title={__("Icon", "adaire-blocks")}
+					title={ PANEL.ICON }
 					initialOpen={false}
 				>
-                    <ToggleControl
-						label={__("Show Icon", "adaire-blocks")}
-                        checked={showIcon}
-                        onChange={(value) => setAttributes({ showIcon: value })}
-                    />
-                    {showIcon && (
-                        <>
-                            <MediaUploadCheck>
-                                <MediaUpload
-                                    onSelect={(media) => {
-                                        setAttributes({
-                                            iconImageUrl: media.url,
-                                            iconImageId: media.id,
-                                        });
-                                    }}
-									allowedTypes={["image"]}
-                                    value={iconImageId}
-                                    render={({ open }) => (
-                                        <Button onClick={open} isSecondary>
-											{iconImageUrl
-												? __("Replace Icon Image", "adaire-blocks")
-												: __("Select Icon Image", "adaire-blocks")}
-                                        </Button>
-                                    )}
-                                />
-                            </MediaUploadCheck>
-                            {iconImageUrl && (
-								<div style={{ marginTop: "10px" }}>
-									<img
-										src={iconImageUrl}
-										alt=""
-										style={{ maxWidth: "100%", height: "auto" }}
-									/>
-                                    <Button
-										onClick={() =>
-											setAttributes({ iconImageUrl: "", iconImageId: 0 })
-										}
-                                        isDestructive
-                                        isSmall
-										style={{ marginTop: "10px" }}
-                                    >
-										{__("Remove Image", "adaire-blocks")}
-                                    </Button>
-                                </div>
-                            )}
-                        </>
-                    )}
-                </PanelBody>
-
-				<PanelBody
-					section="layout"
-					title={__("Icon Position", "adaire-blocks")}
-					initialOpen={false}
-				>
-                    {showIcon && (
-                        <>
-                            <SelectControl
-								label={__("Horizontal Position", "adaire-blocks")}
-                                value={iconPosition}
-                                options={[
-									{ label: __("Left", "adaire-blocks"), value: "left" },
-									{ label: __("Right", "adaire-blocks"), value: "right" },
-                                ]}
-                                onChange={(value) => setAttributes({ iconPosition: value })}
-                            />
-                            <SelectControl
-								label={__("Vertical Position", "adaire-blocks")}
-                                value={iconVerticalPosition}
-                                options={[
-									{ label: __("Top", "adaire-blocks"), value: "top" },
-									{ label: __("Bottom", "adaire-blocks"), value: "bottom" },
-                                ]}
-								onChange={(value) =>
-									setAttributes({ iconVerticalPosition: value })
-								}
-                            />
-							<p
-								style={{
-									marginTop: "16px",
-									marginBottom: "8px",
-									fontWeight: 600,
-								}}
-							>
-								{__("Icon Settings (Responsive)", "adaire-blocks")}
-                            </p>
-							<p
-								style={{
-									marginBottom: "8px",
-									fontSize: "12px",
-									color: "#757575",
-								}}
-							>
-								{__("Current Breakpoint:", "adaire-blocks")}{" "}
-								{BREAKPOINT_LABELS[deviceType]}
-                            </p>
-                            <UnitControl
-								label={__("Icon Width", "adaire-blocks")}
-                                value={currentIconWidth}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveIconWidth",
-										deviceType,
-										value || "700px",
-									)
-								}
-                                units={[
-									{ value: "px", label: "px" },
-									{ value: "%", label: "%" },
-									{ value: "rem", label: "rem" },
-                                ]}
-                            />
-                            <SelectControl
-								label={__("Transform", "adaire-blocks")}
-                                value={currentIconTransform}
-                                options={[
-									{ label: __("None", "adaire-blocks"), value: "none" },
-									{
-										label: __("Translate Y -50%", "adaire-blocks"),
-										value: "translateY(-50%)",
-									},
-									{
-										label: __("Translate Y 50%", "adaire-blocks"),
-										value: "translateY(50%)",
-									},
-									{
-										label: __("Translate X -50%", "adaire-blocks"),
-										value: "translateX(-50%)",
-									},
-									{
-										label: __("Translate X 50%", "adaire-blocks"),
-										value: "translateX(50%)",
-									},
-                                ]}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveIconTransform",
-										deviceType,
-										value,
-									)
-								}
-                            />
-                            <UnitControl
-								label={
-									iconVerticalPosition === "top"
-										? __("Top Offset", "adaire-blocks")
-										: __("Bottom Offset", "adaire-blocks")
-								}
-                                value={currentIconVerticalOffset}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveIconVerticalOffset",
-										deviceType,
-										value || "0px",
-									)
-								}
-                                units={[
-									{ value: "px", label: "px" },
-									{ value: "%", label: "%" },
-									{ value: "rem", label: "rem" },
-									{ value: "em", label: "em" },
-                                ]}
-                            />
-                            <UnitControl
-								label={
-									iconPosition === "left"
-										? __("Left Offset", "adaire-blocks")
-										: __("Right Offset", "adaire-blocks")
-								}
-                                value={currentIconHorizontalOffset}
-								onChange={(value) =>
-									setResponsiveValue(
-										"responsiveIconHorizontalOffset",
-										deviceType,
-										value || "0px",
-									)
-								}
-                                units={[
-									{ value: "px", label: "px" },
-									{ value: "%", label: "%" },
-									{ value: "rem", label: "rem" },
-									{ value: "em", label: "em" },
-                                ]}
-                            />
-                        </>
-                    )}
-                </PanelBody>
-
-                {/* Responsive Background Gradient */}
-				<PanelBody
-					section="style"
-					priority="high"
-					title={__("Background Gradient", "adaire-blocks")}
-					initialOpen={false}
-				>
-					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Current Breakpoint:", "adaire-blocks")}{" "}
-						{BREAKPOINT_LABELS[deviceType]}
-                    </p>
-					<BaseControl label={__("Background Gradient", "adaire-blocks")}>
-                        <GradientPicker
-                            value={currentBackgroundGradient || backgroundGradient}
-							onChange={(value) =>
-								setResponsiveValue(
-									"responsiveBackgroundGradient",
-									deviceType,
-									withRadialCenter(
-										value ||
-											"linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)",
-										currentRadialCenterX ?? 50,
-										currentRadialCenterY ?? 50,
-									),
-								)
-							}
-                        />
-                    </BaseControl>
-					{isRadialGradient(currentBackgroundGradient) && (
-						<>
-							<RangeControl
-								label={__("Radial center X (%)", "adaire-blocks")}
-								value={Number(currentRadialCenterX ?? 50)}
-								onChange={(value) => {
-									setResponsiveValue(
-										"responsiveRadialGradientCenterX",
-										deviceType,
-										value ?? 50,
-									);
-									setResponsiveValue(
-										"responsiveBackgroundGradient",
-										deviceType,
-										withRadialCenter(
-											currentBackgroundGradient,
-											value ?? 50,
-											currentRadialCenterY ?? 50,
-										),
-									);
-								}}
-								min={0}
-								max={100}
-							/>
-							<RangeControl
-								label={__("Radial center Y (%)", "adaire-blocks")}
-								value={Number(currentRadialCenterY ?? 50)}
-								onChange={(value) => {
-									setResponsiveValue(
-										"responsiveRadialGradientCenterY",
-										deviceType,
-										value ?? 50,
-									);
-									setResponsiveValue(
-										"responsiveBackgroundGradient",
-										deviceType,
-										withRadialCenter(
-											currentBackgroundGradient,
-											currentRadialCenterX ?? 50,
-											value ?? 50,
-										),
-									);
-								}}
-								min={0}
-								max={100}
-							/>
-						</>
+					{showIcon && (
+					    <>
+					        <MediaUploadCheck>
+					            <MediaUpload
+					                onSelect={(media) => {
+					                    setAttributes({
+					                        iconImageUrl: media.url,
+					                        iconImageId: media.id,
+					                    });
+					                }}
+					                allowedTypes={["image"]}
+					                value={iconImageId}
+					                render={({ open }) => (
+					                    <Button onClick={open} isSecondary>
+					                        {iconImageUrl
+					                            ? __("Replace Icon Image", "adaire-blocks")
+					                            : __("Select Icon Image", "adaire-blocks")}
+					                    </Button>
+					                )}
+					            />
+					        </MediaUploadCheck>
+					        {iconImageUrl && (
+					            <div style={{ marginTop: "10px" }}>
+					                <img
+					                    src={iconImageUrl}
+					                    alt=""
+					                    style={{ maxWidth: "100%", height: "auto" }}
+					                />
+					                <Button
+					                    onClick={() =>
+					                        setAttributes({ iconImageUrl: "", iconImageId: 0 })
+					                    }
+					                    isDestructive
+					                    isSmall
+					                    style={{ marginTop: "10px" }}
+					                >
+					                    {__("Remove Image", "adaire-blocks")}
+					                </Button>
+					            </div>
+					        )}
+					    </>
 					)}
 				</PanelBody>
-
-				{/* Responsive Container Layout */}
-				<PanelBody
-					section="layout"
-					title={__("Container Layout", "adaire-blocks")}
-					initialOpen={false}
-				>
-					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Current Breakpoint:", "adaire-blocks")}{" "}
-						{BREAKPOINT_LABELS[deviceType]}
-                    </p>
-                    <UnitControl
-						label={__("Width", "adaire-blocks")}
-                        value={currentWidth}
-						onChange={(value) =>
-							setResponsiveValue("responsiveWidth", deviceType, value || "100%")
-						}
-                        units={[
-							{ value: "vw", label: "vw" },
-							{ value: "%", label: "%" },
-							{ value: "px", label: "px" },
-							{ value: "rem", label: "rem" },
-                        ]}
-                    />
-                    <UnitControl
-						label={__("Min Height", "adaire-blocks")}
-                        value={currentMinHeight}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveMinHeight",
-								deviceType,
-								value || "auto",
-							)
-						}
-                        units={[
-							{ value: "vh", label: "vh" },
-							{ value: "px", label: "px" },
-							{ value: "rem", label: "rem" },
-							{ value: "auto", label: "auto" },
-                        ]}
-                    />
-                    <SelectControl
-						label={__("Flex Direction", "adaire-blocks")}
-                        value={currentFlexDirection}
-                        options={[
-							{ label: __("Row", "adaire-blocks"), value: "row" },
-							{ label: __("Column", "adaire-blocks"), value: "column" },
-                        ]}
-						onChange={(value) =>
-							setResponsiveValue("responsiveFlexDirection", deviceType, value)
-						}
-                    />
-                    <SelectControl
-						label={__("Justify Content", "adaire-blocks")}
-                        value={currentJustifyContent}
-                        options={[
-							{ label: __("Flex Start", "adaire-blocks"), value: "flex-start" },
-							{ label: __("Flex End", "adaire-blocks"), value: "flex-end" },
-							{ label: __("Center", "adaire-blocks"), value: "center" },
-							{
-								label: __("Space Between", "adaire-blocks"),
-								value: "space-between",
-							},
-							{
-								label: __("Space Around", "adaire-blocks"),
-								value: "space-around",
-							},
-							{
-								label: __("Space Evenly", "adaire-blocks"),
-								value: "space-evenly",
-							},
-                        ]}
-						onChange={(value) =>
-							setResponsiveValue("responsiveJustifyContent", deviceType, value)
-						}
-                    />
-                    <SelectControl
-						label={__("Align Items", "adaire-blocks")}
-                        value={currentAlignItems}
-                        options={[
-							{ label: __("Flex Start", "adaire-blocks"), value: "flex-start" },
-							{ label: __("Flex End", "adaire-blocks"), value: "flex-end" },
-							{ label: __("Center", "adaire-blocks"), value: "center" },
-							{ label: __("Stretch", "adaire-blocks"), value: "stretch" },
-							{ label: __("Baseline", "adaire-blocks"), value: "baseline" },
-                        ]}
-						onChange={(value) =>
-							setResponsiveValue("responsiveAlignItems", deviceType, value)
-						}
-                    />
-					<BaseControl
-						label={__("Text Alignment", "adaire-blocks")}
-						style={{ marginTop: "16px" }}
-					>
-                        <ButtonGroup>
-                            <Button
-								isPrimary={currentTextAlignment === "left"}
-								onClick={() =>
-									setResponsiveValue(
-										"responsiveTextAlignment",
-										deviceType,
-										"left",
-									)
-								}
-                            >
-								{__("Left", "adaire-blocks")}
-                            </Button>
-                            <Button
-								isPrimary={currentTextAlignment === "center"}
-								onClick={() =>
-									setResponsiveValue(
-										"responsiveTextAlignment",
-										deviceType,
-										"center",
-									)
-								}
-                            >
-								{__("Center", "adaire-blocks")}
-                            </Button>
-                            <Button
-								isPrimary={currentTextAlignment === "right"}
-								onClick={() =>
-									setResponsiveValue(
-										"responsiveTextAlignment",
-										deviceType,
-										"right",
-									)
-								}
-                            >
-								{__("Right", "adaire-blocks")}
-                            </Button>
-                        </ButtonGroup>
-                    </BaseControl>
-					<BaseControl
-						label={__("Button Alignment", "adaire-blocks")}
-						style={{ marginTop: "16px" }}
-					>
-                        <ButtonGroup>
-                            <Button
-								isPrimary={currentButtonAlignment === "left"}
-								onClick={() =>
-									setResponsiveValue(
-										"responsiveButtonAlignment",
-										deviceType,
-										"left",
-									)
-								}
-                            >
-								{__("Left", "adaire-blocks")}
-                            </Button>
-                            <Button
-								isPrimary={currentButtonAlignment === "center"}
-								onClick={() =>
-									setResponsiveValue(
-										"responsiveButtonAlignment",
-										deviceType,
-										"center",
-									)
-								}
-                            >
-								{__("Center", "adaire-blocks")}
-                            </Button>
-                            <Button
-								isPrimary={currentButtonAlignment === "right"}
-								onClick={() =>
-									setResponsiveValue(
-										"responsiveButtonAlignment",
-										deviceType,
-										"right",
-									)
-								}
-                            >
-								{__("Right", "adaire-blocks")}
-                            </Button>
-                        </ButtonGroup>
-                    </BaseControl>
-                    <UnitControl
-						label={__("CTA Container Width", "adaire-blocks")}
-                        value={currentCtaWidth}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveCtaWidth",
-								deviceType,
-								value || "100%",
-							)
-						}
-                        units={[
-							{ value: "%", label: "%" },
-							{ value: "px", label: "px" },
-							{ value: "rem", label: "rem" },
-						]}
-					/>
-                </PanelBody>
-
-				{/* Responsive Container Spacing */}
-				<PanelBody
-					section="style"
-					priority="medium"
-					title={__("Container Spacing", "adaire-blocks")}
-					initialOpen={false}
-				>
-					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Current Breakpoint:", "adaire-blocks")}{" "}
-						{BREAKPOINT_LABELS[deviceType]}
-                    </p>
-                    <BoxControl
-						label={__("Padding", "adaire-blocks")}
-                        values={currentPadding}
-						onChange={(value) =>
-							setResponsiveValue("responsivePadding", deviceType, value)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-							{ value: "%", label: "%" },
-                        ]}
-                    />
-					<BoxControl
-						label={__("CTA Container Margin", "adaire-blocks")}
-						values={currentCtaMargin}
-						onChange={(value) =>
-							setResponsiveValue("responsiveCtaMargin", deviceType, value)
-						}
-						units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-							{ value: "%", label: "%" },
-                        ]}
-                    />
-                </PanelBody>
-
-                {/* Background & Overlay */}
-				<PanelBody
-					section="style"
-					priority="high"
-					title={__("Background & Overlay", "adaire-blocks")}
-					initialOpen={false}
-				>
-                    <ToggleControl
-						label={__("Show Background Image", "adaire-blocks")}
-                        checked={showBackgroundImage}
-                        onChange={(value) => setAttributes({ showBackgroundImage: value })}
-                    />
-                    {showBackgroundImage && (
-                        <>
-							<BaseControl label={__("Background Image", "adaire-blocks")}>
-                                <MediaUploadCheck>
-                                    <MediaUpload
-										onSelect={(media) =>
-											setAttributes({
-												backgroundImageUrl: media.url,
-												backgroundImageId: media.id,
-											})
-										}
-										allowedTypes={["image"]}
-                                        value={backgroundImageId}
-                                        render={({ open }) => (
-											<div style={{ marginBottom: "10px" }}>
-                                                {backgroundImageUrl ? (
-													<div
-														style={{
-															marginBottom: "10px",
-															position: "relative",
-														}}
-													>
-														<img
-															src={backgroundImageUrl}
-															alt=""
-															style={{ width: "100%", borderRadius: "4px" }}
-														/>
-                                                        <Button
-                                                            isDestructive
-															onClick={() =>
-																setAttributes({
-																	backgroundImageUrl: "",
-																	backgroundImageId: 0,
-																})
-															}
-															style={{
-																position: "absolute",
-																top: "5px",
-																right: "5px",
-															}}
-                                                        >
-															{__("Remove", "adaire-blocks")}
-                                                        </Button>
-                                                    </div>
-                                                ) : (
-                                                    <Button isSecondary onClick={open}>
-														{__("Select Image", "adaire-blocks")}
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        )}
-                                    />
-                                </MediaUploadCheck>
-                            </BaseControl>
-                            <SelectControl
-								label={__("Background Size", "adaire-blocks")}
-                                value={backgroundSize}
-                                options={[
-									{ label: __("Cover", "adaire-blocks"), value: "cover" },
-									{ label: __("Contain", "adaire-blocks"), value: "contain" },
-									{ label: __("Fixed", "adaire-blocks"), value: "fixed" },
-									{ label: __("Original", "adaire-blocks"), value: "auto" },
-                                ]}
-                                onChange={(value) => setAttributes({ backgroundSize: value })}
-                            />
-                            <SelectControl
-								label={__("Background Position", "adaire-blocks")}
-                                value={backgroundPosition}
-                                options={[
-									{ label: __("Top Left", "adaire-blocks"), value: "top left" },
-									{
-										label: __("Top Center", "adaire-blocks"),
-										value: "top center",
-									},
-									{
-										label: __("Top Right", "adaire-blocks"),
-										value: "top right",
-									},
-									{
-										label: __("Center Left", "adaire-blocks"),
-										value: "center left",
-									},
-									{
-										label: __("Center Center", "adaire-blocks"),
-										value: "center center",
-									},
-									{
-										label: __("Center Right", "adaire-blocks"),
-										value: "center right",
-									},
-									{
-										label: __("Bottom Left", "adaire-blocks"),
-										value: "bottom left",
-									},
-									{
-										label: __("Bottom Center", "adaire-blocks"),
-										value: "bottom center",
-									},
-									{
-										label: __("Bottom Right", "adaire-blocks"),
-										value: "bottom right",
-									},
-                                ]}
-								onChange={(value) =>
-									setAttributes({ backgroundPosition: value })
-								}
-                            />
-                            <SelectControl
-								label={__("Background Repeat", "adaire-blocks")}
-                                value={backgroundRepeat}
-                                options={[
-									{
-										label: __("No Repeat", "adaire-blocks"),
-										value: "no-repeat",
-									},
-									{ label: __("Repeat", "adaire-blocks"), value: "repeat" },
-									{ label: __("Repeat X", "adaire-blocks"), value: "repeat-x" },
-									{ label: __("Repeat Y", "adaire-blocks"), value: "repeat-y" },
-                                ]}
-                                onChange={(value) => setAttributes({ backgroundRepeat: value })}
-                            />
-                        </>
-                    )}
-
-                    <SelectControl
-						label={__("Overlay Type", "adaire-blocks")}
-                        value={overlayType}
-                        options={[
-							{ label: __("None", "adaire-blocks"), value: "none" },
-							{ label: __("Solid", "adaire-blocks"), value: "solid" },
-							{ label: __("Gradient", "adaire-blocks"), value: "gradient" },
-                        ]}
-                        onChange={(value) => setAttributes({ overlayType: value })}
-                    />
-
-					{overlayType === "solid" && (
-                        <>
-                            <PanelColorSettings
-								title={__("Overlay Color", "adaire-blocks")}
-                                initialOpen={true}
-                                colorSettings={[
-                                    {
-                                        value: overlayColor,
-                                        onChange: (value) => setAttributes({ overlayColor: value }),
-										label: __("Solid Color", "adaire-blocks"),
-                                    },
-                                ]}
-                            />
-                            <RangeControl
-								label={__("Overlay Opacity", "adaire-blocks")}
-                                value={overlayOpacity}
-                                onChange={(value) => setAttributes({ overlayOpacity: value })}
-                                min={0}
-                                max={1}
-                                step={0.1}
-                            />
-                        </>
-                    )}
-
-					{overlayType === "gradient" && (
-						<BaseControl label={__("Overlay Gradient", "adaire-blocks")}>
-                            <GradientPicker
-                                value={overlayGradient}
-                                onChange={(value) => setAttributes({ overlayGradient: value })}
-                            />
-                        </BaseControl>
-                    )}
-                </PanelBody>
-
-                {/* Breadcrumb Position (Responsive) */}
-				<PanelBody
-					section="layout"
-					title={__("Breadcrumb Position (Responsive)", "adaire-blocks")}
-					initialOpen={false}
-				>
-					<p
-						style={{ marginBottom: "8px", fontSize: "12px", color: "#757575" }}
-					>
-						{__("Current Breakpoint:", "adaire-blocks")}{" "}
-						{BREAKPOINT_LABELS[deviceType]}
-                    </p>
-                    <UnitControl
-						label={__("Top Offset", "adaire-blocks")}
-                        value={currentBreadcrumbTopOffset}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveBreadcrumbTopOffset",
-								deviceType,
-								value || "90px",
-							)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "%", label: "%" },
-							{ value: "rem", label: "rem" },
-							{ value: "em", label: "em" },
-                        ]}
-                    />
-                    <UnitControl
-						label={__("Left Offset", "adaire-blocks")}
-                        value={currentBreadcrumbLeftOffset}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveBreadcrumbLeftOffset",
-								deviceType,
-								value || "200px",
-							)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "%", label: "%" },
-							{ value: "rem", label: "rem" },
-							{ value: "em", label: "em" },
-                        ]}
-                    />
-                </PanelBody>
-
-                {/* Preheader Typography (Responsive) */}
-                {showPreheader && (
-					<PanelBody
-						section="style"
-						priority="high"
-						title={__("Preheader Typography (Responsive)", "adaire-blocks")}
-						initialOpen={false}
-					>
-						<p
-							style={{
-								marginBottom: "8px",
-								fontSize: "12px",
-								color: "#757575",
-							}}
-						>
-							{__("Current Breakpoint:", "adaire-blocks")}{" "}
-							{BREAKPOINT_LABELS[deviceType]}
-                        </p>
-                        <UnitControl
-							label={__("Font Size", "adaire-blocks")}
-                            value={currentPreheaderFontSize}
-							onChange={(value) =>
-								setResponsiveValue(
-									"responsivePreheaderFontSize",
-									deviceType,
-									value || "18px",
-								)
-							}
-                            units={[
-								{ value: "px", label: "px" },
-								{ value: "rem", label: "rem" },
-								{ value: "em", label: "em" },
-                            ]}
-                        />
-                        <UnitControl
-							label={__("Line Height", "adaire-blocks")}
-                            value={currentPreheaderLineHeight}
-							onChange={(value) =>
-								setResponsiveValue(
-									"responsivePreheaderLineHeight",
-									deviceType,
-									value || "28px",
-								)
-							}
-                            units={[
-								{ value: "px", label: "px" },
-								{ value: "rem", label: "rem" },
-								{ value: "em", label: "em" },
-                            ]}
-                        />
-                        <UnitControl
-							label={__("Margin Bottom", "adaire-blocks")}
-                            value={currentPreheaderMarginBottom}
-							onChange={(value) =>
-								setResponsiveValue(
-									"responsivePreheaderMarginBottom",
-									deviceType,
-									value || "12px",
-								)
-							}
-                            units={[
-								{ value: "px", label: "px" },
-								{ value: "rem", label: "rem" },
-								{ value: "em", label: "em" },
-                            ]}
-                        />
-                    </PanelBody>
-                )}
-
-                {/* Typography Settings */}
-				<PanelBody section="style" priority="high" title={__("Typography", "adaire-blocks")} initialOpen={false}>
-					<p
-						style={{ marginBottom: "12px", fontWeight: 600, fontSize: "13px" }}
-					>
-						{__("Colors & Font Weights", "adaire-blocks")}
-                    </p>
-                    {showPreheader && (
-                        <>
-							<BaseControl label={__("Preheader Color", "adaire-blocks")}>
-                                <ColorPicker
-                                    color={preheaderColor}
-									onChangeComplete={(color) =>
-										setAttributes({ preheaderColor: color.hex })
-									}
-                                    disableAlpha
-                                />
-                            </BaseControl>
-                            <SelectControl
-								label={__("Preheader Font Weight", "adaire-blocks")}
-                                value={preheaderFontWeight}
-                                options={[
-									{ label: __("Thin (100)", "adaire-blocks"), value: "100" },
-									{
-										label: __("Extra Light (200)", "adaire-blocks"),
-										value: "200",
-									},
-									{ label: __("Light (300)", "adaire-blocks"), value: "300" },
-									{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
-									{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
-									{
-										label: __("Semi Bold (600)", "adaire-blocks"),
-										value: "600",
-									},
-									{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
-									{
-										label: __("Extra Bold (800)", "adaire-blocks"),
-										value: "800",
-									},
-									{ label: __("Black (900)", "adaire-blocks"), value: "900" },
-                                ]}
-								onChange={(value) =>
-									setAttributes({ preheaderFontWeight: value })
-								}
-                            />
-                        </>
-                    )}
-					<BaseControl label={__("Breadcrumbs Color", "adaire-blocks")}>
-                        <ColorPicker
-                            color={breadcrumbsColor}
-							onChangeComplete={(color) =>
-								setAttributes({ breadcrumbsColor: color.hex })
-							}
-                            disableAlpha
-                        />
-                    </BaseControl>
-					<BaseControl label={__("Heading Color", "adaire-blocks")}>
-                        <ColorPicker
-                            color={headingColor}
-							onChangeComplete={(color) =>
-								setAttributes({ headingColor: color.hex })
-							}
-                            disableAlpha
-                        />
-                    </BaseControl>
-					<BaseControl label={__("Text Color", "adaire-blocks")}>
-                        <ColorPicker
-                            color={textColor}
-							onChangeComplete={(color) =>
-								setAttributes({ textColor: color.hex })
-							}
-                            disableAlpha
-                        />
-                    </BaseControl>
-                    <SelectControl
-						label={__("Heading Font Weight", "adaire-blocks")}
-                        value={headingFontWeight}
-                        options={[
-							{ label: __("Thin (100)", "adaire-blocks"), value: "100" },
-							{ label: __("Extra Light (200)", "adaire-blocks"), value: "200" },
-							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
-							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
-							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
-							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
-							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
-							{ label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
-							{ label: __("Black (900)", "adaire-blocks"), value: "900" },
-                        ]}
-                        onChange={(value) => setAttributes({ headingFontWeight: value })}
-                    />
-                    <SelectControl
-						label={__("Text Font Weight", "adaire-blocks")}
-                        value={textFontWeight}
-                        options={[
-							{ label: __("Thin (100)", "adaire-blocks"), value: "100" },
-							{ label: __("Extra Light (200)", "adaire-blocks"), value: "200" },
-							{ label: __("Light (300)", "adaire-blocks"), value: "300" },
-							{ label: __("Normal (400)", "adaire-blocks"), value: "400" },
-							{ label: __("Medium (500)", "adaire-blocks"), value: "500" },
-							{ label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
-							{ label: __("Bold (700)", "adaire-blocks"), value: "700" },
-							{ label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
-							{ label: __("Black (900)", "adaire-blocks"), value: "900" },
-                        ]}
-                        onChange={(value) => setAttributes({ textFontWeight: value })}
-                    />
-
-					<p
-						style={{
-							marginTop: "24px",
-							marginBottom: "8px",
-							fontWeight: 600,
-							fontSize: "13px",
-						}}
-					>
-						{__("Responsive Typography Settings", "adaire-blocks")}
-                    </p>
-					<p
-						style={{ marginBottom: "8px", fontSize: "12px", color: "#757575" }}
-					>
-						{__("Current Breakpoint:", "adaire-blocks")}{" "}
-						{BREAKPOINT_LABELS[deviceType]}
-                    </p>
-                    <UnitControl
-						label={__("Heading Font Size", "adaire-blocks")}
-                        value={currentHeadingFontSize}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveHeadingFontSize",
-								deviceType,
-								value || "72px",
-							)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-                        ]}
-                    />
-                    <UnitControl
-						label={__("Heading Line Height", "adaire-blocks")}
-                        value={currentHeadingLineHeight}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveHeadingLineHeight",
-								deviceType,
-								value || "92px",
-							)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-                        ]}
-                    />
-
-                    <UnitControl
-						label={__("Heading Margin Top", "adaire-blocks")}
-						value={currentHeadingMarginTop}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveHeadingMarginTop",
-								deviceType,
-								value || "0px",
-							)
-						}
-						units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-						]}
-					/>
-					<UnitControl
-						label={__("Heading Margin Bottom", "adaire-blocks")}
-                        value={currentHeadingMarginBottom}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveHeadingMarginBottom",
-								deviceType,
-								value || "24px",
-							)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-                        ]}
-                    />
-                    <UnitControl
-						label={__("Text Font Size", "adaire-blocks")}
-                        value={currentTextFontSize}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveTextFontSize",
-								deviceType,
-								value || "26px",
-							)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-                        ]}
-                    />
-
-                    <UnitControl
-						label={__("Text Margin Top", "adaire-blocks")}
-						value={currentTextMarginTop}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveTextMarginTop",
-								deviceType,
-								value || "0px",
-							)
-						}
-						units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-						]}
-					/>
-					<UnitControl
-						label={__("Text Margin Bottom", "adaire-blocks")}
-                        value={currentTextMarginBottom}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveTextMarginBottom",
-								deviceType,
-								value || "24px",
-							)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-                        ]}
-                    />
-                </PanelBody>
-
-                {/* Responsive Button Container Settings */}
-				<PanelBody
-					section="layout"
-					title={__("Button Container (Responsive)", "adaire-blocks")}
-					initialOpen={false}
-				>
-					<p style={{ marginBottom: "8px", fontWeight: 600 }}>
-						{__("Current Breakpoint:", "adaire-blocks")}{" "}
-						{BREAKPOINT_LABELS[deviceType]}
-                    </p>
-                    <SelectControl
-						label={__("Flex Direction", "adaire-blocks")}
-                        value={currentButtonContainerFlexDirection}
-                        options={[
-							{ label: __("Row", "adaire-blocks"), value: "row" },
-							{ label: __("Column", "adaire-blocks"), value: "column" },
-                        ]}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveButtonContainerFlexDirection",
-								deviceType,
-								value,
-							)
-						}
-                    />
-                    <UnitControl
-						label={__("Gap", "adaire-blocks")}
-                        value={currentButtonContainerGap}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveButtonContainerGap",
-								deviceType,
-								value || "35px",
-							)
-						}
-                        units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-						]}
-					/>
-					<UnitControl
-						label={__("Margin Top", "adaire-blocks")}
-						value={currentButtonContainerMarginTop}
-						onChange={(value) =>
-							setResponsiveValue(
-								"responsiveButtonContainerMarginTop",
-								deviceType,
-								value || "0px",
-							)
-						}
-						units={[
-							{ value: "px", label: "px" },
-							{ value: "em", label: "em" },
-							{ value: "rem", label: "rem" },
-                        ]}
-                    />
-                </PanelBody>
-
-				{/* Media Settings */}
 				<PanelBody
 					section="content"
-					title={__("Media (Image/Video)", "adaire-blocks")}
+					title={ PANEL.MEDIA }
 					initialOpen={false}
 				>
 					<SelectControl
-						label={__("Media Type", "adaire-blocks")}
-						value={mediaType}
-						options={[
-							{ label: __("None", "adaire-blocks"), value: "none" },
-							{ label: __("Image", "adaire-blocks"), value: "image" },
-							{ label: __("Video", "adaire-blocks"), value: "video" },
-						]}
-						onChange={(value) => setAttributes({ mediaType: value })}
+					    label={__("Media Type", "adaire-blocks")}
+					    value={mediaType}
+					    options={[
+					        { label: __("None", "adaire-blocks"), value: "none" },
+					        { label: __("Image", "adaire-blocks"), value: "image" },
+					        { label: __("Video", "adaire-blocks"), value: "video" },
+					    ]}
+					    onChange={(value) => setAttributes({ mediaType: value })}
 					/>
 					{mediaType === "image" && (
-						<BaseControl label={__("Media Image", "adaire-blocks")}>
-							<MediaUploadCheck>
-								<MediaUpload
-									onSelect={(media) => {
-										setAttributes({
-											mediaImageUrl: media.url,
-											mediaImageId: media.id,
-										});
-									}}
-									allowedTypes={["image"]}
-									value={mediaImageId}
-									render={({ open }) => (
-										<div style={{ marginBottom: "10px" }}>
-											{mediaImageUrl ? (
-												<div
-													style={{
-														marginBottom: "10px",
-														position: "relative",
-													}}
-												>
-													<img
-														src={mediaImageUrl}
-														alt=""
-														style={{ width: "100%", borderRadius: "4px" }}
-													/>
-													<Button
-														isDestructive
-														onClick={() =>
-															setAttributes({
-																mediaImageUrl: "",
-																mediaImageId: 0,
-															})
-														}
-														style={{
-															position: "absolute",
-															top: "5px",
-															right: "5px",
-														}}
-													>
-														{__("Remove", "adaire-blocks")}
-													</Button>
-												</div>
-											) : (
-												<Button isSecondary onClick={open}>
-													{__("Select Image", "adaire-blocks")}
-												</Button>
-											)}
-										</div>
-									)}
-								/>
-							</MediaUploadCheck>
-						</BaseControl>
+					    <BaseControl label={__("Media Image", "adaire-blocks")}>
+					        <MediaUploadCheck>
+					            <MediaUpload
+					                onSelect={(media) => {
+					                    setAttributes({
+					                        mediaImageUrl: media.url,
+					                        mediaImageId: media.id,
+					                    });
+					                }}
+					                allowedTypes={["image"]}
+					                value={mediaImageId}
+					                render={({ open }) => (
+					                    <div style={{ marginBottom: "10px" }}>
+					                        {mediaImageUrl ? (
+					                            <div
+					                                style={{
+					                                    marginBottom: "10px",
+					                                    position: "relative",
+					                                }}
+					                            >
+					                                <img
+					                                    src={mediaImageUrl}
+					                                    alt=""
+					                                    style={{ width: "100%", borderRadius: "4px" }}
+					                                />
+					                                <Button
+					                                    isDestructive
+					                                    onClick={() =>
+					                                        setAttributes({
+					                                            mediaImageUrl: "",
+					                                            mediaImageId: 0,
+					                                        })
+					                                    }
+					                                    style={{
+					                                        position: "absolute",
+					                                        top: "5px",
+					                                        right: "5px",
+					                                    }}
+					                                >
+					                                    {__("Remove", "adaire-blocks")}
+					                                </Button>
+					                            </div>
+					                        ) : (
+					                            <Button isSecondary onClick={open}>
+					                                {__("Select Image", "adaire-blocks")}
+					                            </Button>
+					                        )}
+					                    </div>
+					                )}
+					            />
+					        </MediaUploadCheck>
+					    </BaseControl>
 					)}
 					{mediaType === "video" && (
-                        <>
-                            <SelectControl
-								label={__("Video Type", "adaire-blocks")}
-                                value={videoType}
-                                options={[
-									{ label: __("YouTube", "adaire-blocks"), value: "youtube" },
-									{ label: __("Vimeo", "adaire-blocks"), value: "vimeo" },
-									{ label: __("WordPress Video", "adaire-blocks"), value: "wp" },
-                                ]}
-                                onChange={(value) => setAttributes({ videoType: value })}
-                            />
-							{videoType === "wp" ? (
-                                <>
-									<BaseControl label={__("WordPress Video", "adaire-blocks")}>
-                                        <MediaUploadCheck>
-                                            <MediaUpload
-                                                onSelect={(media) => {
-                                                    setAttributes({
-                                                        wpVideoUrl: media.url,
-                                                        wpVideoId: media.id,
-                                                    });
-                                                }}
-												allowedTypes={["video"]}
-                                                value={wpVideoId}
-                                                render={({ open }) => (
-													<div style={{ marginBottom: "10px" }}>
-                                                        {wpVideoUrl ? (
-															<div style={{ marginBottom: "10px" }}>
-                                                                <video
-                                                                    src={wpVideoUrl}
-                                                                    controls
-																	style={{
-																		maxWidth: "100%",
-																		height: "auto",
-																		borderRadius: "4px",
-																	}}
-                                                                />
-                                                                <Button
-																	onClick={() =>
-																		setAttributes({
-																			wpVideoUrl: "",
-																			wpVideoId: 0,
-																		})
-																	}
-                                                                    isDestructive
-                                                                    isSmall
-																	style={{ marginTop: "10px" }}
-                                                                >
-																	{__("Remove Video", "adaire-blocks")}
-                                                                </Button>
-                                                            </div>
-                                                        ) : (
-                                                            <Button isSecondary onClick={open}>
-																{__("Select Video", "adaire-blocks")}
-                                                            </Button>
-                                                        )}
-                                                    </div>
-                                                )}
-                                            />
-                                        </MediaUploadCheck>
-                                    </BaseControl>
-                                </>
-                            ) : (
-                                <TextControl
-									label={
-										videoType === "youtube"
-											? __("YouTube URL", "adaire-blocks")
-											: __("Vimeo URL", "adaire-blocks")
-									}
-                                    value={videoUrl}
-                                    onChange={(value) => setAttributes({ videoUrl: value })}
-									placeholder={
-										videoType === "youtube"
-											? "https://www.youtube.com/watch?v=..."
-											: "https://vimeo.com/..."
-									}
-									help={
-										videoType === "youtube"
-											? __("Enter a YouTube video URL", "adaire-blocks")
-											: __("Enter a Vimeo video URL", "adaire-blocks")
-									}
-                                />
-                            )}
-                        </>
-                    )}
+					    <>
+					        <SelectControl
+					            label={__("Video Type", "adaire-blocks")}
+					            value={videoType}
+					            options={[
+					                { label: __("YouTube", "adaire-blocks"), value: "youtube" },
+					                { label: __("Vimeo", "adaire-blocks"), value: "vimeo" },
+					                { label: __("WordPress Video", "adaire-blocks"), value: "wp" },
+					            ]}
+					            onChange={(value) => setAttributes({ videoType: value })}
+					        />
+					        {videoType === "wp" ? (
+					            <>
+					                <BaseControl label={__("WordPress Video", "adaire-blocks")}>
+					                    <MediaUploadCheck>
+					                        <MediaUpload
+					                            onSelect={(media) => {
+					                                setAttributes({
+					                                    wpVideoUrl: media.url,
+					                                    wpVideoId: media.id,
+					                                });
+					                            }}
+					                            allowedTypes={["video"]}
+					                            value={wpVideoId}
+					                            render={({ open }) => (
+					                                <div style={{ marginBottom: "10px" }}>
+					                                    {wpVideoUrl ? (
+					                                        <div style={{ marginBottom: "10px" }}>
+					                                            <video
+					                                                src={wpVideoUrl}
+					                                                controls
+					                                                style={{
+					                                                    maxWidth: "100%",
+					                                                    height: "auto",
+					                                                    borderRadius: "4px",
+					                                                }}
+					                                            />
+					                                            <Button
+					                                                onClick={() =>
+					                                                    setAttributes({
+					                                                        wpVideoUrl: "",
+					                                                        wpVideoId: 0,
+					                                                    })
+					                                                }
+					                                                isDestructive
+					                                                isSmall
+					                                                style={{ marginTop: "10px" }}
+					                                            >
+					                                                {__("Remove Video", "adaire-blocks")}
+					                                            </Button>
+					                                        </div>
+					                                    ) : (
+					                                        <Button isSecondary onClick={open}>
+					                                            {__("Select Video", "adaire-blocks")}
+					                                        </Button>
+					                                    )}
+					                                </div>
+					                            )}
+					                        />
+					                    </MediaUploadCheck>
+					                </BaseControl>
+					            </>
+					        ) : (
+					            <TextControl
+					                label={
+					                    videoType === "youtube"
+					                        ? __("YouTube URL", "adaire-blocks")
+					                        : __("Vimeo URL", "adaire-blocks")
+					                }
+					                value={videoUrl}
+					                onChange={(value) => setAttributes({ videoUrl: value })}
+					                placeholder={
+					                    videoType === "youtube"
+					                        ? "https://www.youtube.com/watch?v=..."
+					                        : "https://vimeo.com/..."
+					                }
+					                help={
+					                    videoType === "youtube"
+					                        ? __("Enter a YouTube video URL", "adaire-blocks")
+					                        : __("Enter a Vimeo video URL", "adaire-blocks")
+					                }
+					            />
+					        )}
+					    </>
+					)}
 
-                    <TextControl
-						label={__("Block ID", "adaire-blocks")}
-                        value={blockId}
-                        onChange={(value) => setAttributes({ blockId: value })}
-						help={__(
-							"Add a custom ID to this block for CSS targeting or anchor links.",
-							"adaire-blocks",
-						)}
-                    />
-                </PanelBody>
+					<TextControl
+					    label={__("Block ID", "adaire-blocks")}
+					    value={blockId}
+					    onChange={(value) => setAttributes({ blockId: value })}
+					    help={__(
+					        "Add a custom ID to this block for CSS targeting or anchor links.",
+					        "adaire-blocks",
+					    )}
+					/>
+				</PanelBody>
+				<PanelBody
+					section="layout"
+					title={ PANEL.RESPONSIVE }
+					initialOpen={true}
+				>
+					<DeviceSwitcher
+					    deviceType={deviceType}
+					    setDeviceType={setDeviceType}
+					    label={ LABEL.BREAKPOINT }
+					    tiers={FIVE_TIERS}
+					    onReset={resetResponsiveDefaults}
+					/>
+					    <p style={{ marginTop: "8px", fontSize: "12px", color: "#757575" }}>
+					        {__(
+					            "Select a breakpoint to configure its settings. The editor preview shows desktop view.",
+					            "adaire-blocks",
+					        )}
+					    </p>
+				</PanelBody>
+				<PanelBody
+					section="layout"
+					title={ PANEL.STRUCTURE }
+					initialOpen={false}
+				>
+					{/*
+					  Show/hide toggles are Layout, not Content (spec §4): turning one
+					  off removes the element from the DOM. The text, icon and media
+					  they reveal stay in the Content tab. They apply to every
+					  breakpoint, so the BreakpointNote sits below them, next to the
+					  controls it actually describes.
+					*/}
+					<ToggleControl
+					    label={__("Show Breadcrumbs", "adaire-blocks")}
+					    checked={showBreadcrumbs}
+					    onChange={(value) => setAttributes({ showBreadcrumbs: value })}
+					/>
+					<ToggleControl
+					    label={__("Show Preheader", "adaire-blocks")}
+					    checked={showPreheader}
+					    onChange={(value) => setAttributes({ showPreheader: value })}
+					/>
+					<ToggleControl
+					    label={__("Show Icon", "adaire-blocks")}
+					    checked={showIcon}
+					    onChange={(value) => setAttributes({ showIcon: value })}
+					/>
+					<ToggleControl
+					    label={__("Show Background Image", "adaire-blocks")}
+					    checked={showBackgroundImage}
+					    onChange={(value) => setAttributes({ showBackgroundImage: value })}
+					/>
+					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
 
-				{(mediaType === "image" || mediaType === "video") && (
-					<PanelBody
-						section="style"
-						priority="medium"
-						title={__("Media Dimensions (Responsive)", "adaire-blocks")}
-						initialOpen={false}
+					<SelectControl
+					    label={__("Flex Direction", "adaire-blocks")}
+					    value={currentFlexDirection}
+					    options={[
+					        { label: __("Row", "adaire-blocks"), value: "row" },
+					        { label: __("Column", "adaire-blocks"), value: "column" },
+					    ]}
+					    onChange={(value) =>
+					        setResponsiveValue("responsiveFlexDirection", deviceType, value)
+					    }
+					/>
+					<SelectControl
+					    label={__("Justify Content", "adaire-blocks")}
+					    value={currentJustifyContent}
+					    options={[
+					        { label: __("Flex Start", "adaire-blocks"), value: "flex-start" },
+					        { label: __("Flex End", "adaire-blocks"), value: "flex-end" },
+					        { label: __("Center", "adaire-blocks"), value: "center" },
+					        {
+					            label: __("Space Between", "adaire-blocks"),
+					            value: "space-between",
+					        },
+					        {
+					            label: __("Space Around", "adaire-blocks"),
+					            value: "space-around",
+					        },
+					        {
+					            label: __("Space Evenly", "adaire-blocks"),
+					            value: "space-evenly",
+					        },
+					    ]}
+					    onChange={(value) =>
+					        setResponsiveValue("responsiveJustifyContent", deviceType, value)
+					    }
+					/>
+					<SelectControl
+					    label={__("Align Items", "adaire-blocks")}
+					    value={currentAlignItems}
+					    options={[
+					        { label: __("Flex Start", "adaire-blocks"), value: "flex-start" },
+					        { label: __("Flex End", "adaire-blocks"), value: "flex-end" },
+					        { label: __("Center", "adaire-blocks"), value: "center" },
+					        { label: __("Stretch", "adaire-blocks"), value: "stretch" },
+					        { label: __("Baseline", "adaire-blocks"), value: "baseline" },
+					    ]}
+					    onChange={(value) =>
+					        setResponsiveValue("responsiveAlignItems", deviceType, value)
+					    }
+					/>
+					{showIcon && (
+					    <>
+					        <SelectControl
+					            label={__("Horizontal Position", "adaire-blocks")}
+					            value={iconPosition}
+					            options={[
+					                { label: __("Left", "adaire-blocks"), value: "left" },
+					                { label: __("Right", "adaire-blocks"), value: "right" },
+					            ]}
+					            onChange={(value) => setAttributes({ iconPosition: value })}
+					        />
+					        <SelectControl
+					            label={__("Vertical Position", "adaire-blocks")}
+					            value={iconVerticalPosition}
+					            options={[
+					                { label: __("Top", "adaire-blocks"), value: "top" },
+					                { label: __("Bottom", "adaire-blocks"), value: "bottom" },
+					            ]}
+					            onChange={(value) =>
+					                setAttributes({ iconVerticalPosition: value })
+					            }
+					        />
+					        <p
+					            style={{
+					                marginTop: "16px",
+					                marginBottom: "8px",
+					                fontWeight: 600,
+					            }}
+					        >
+					            {__("Icon Settings (Responsive)", "adaire-blocks")}
+					        </p>
+					        <SelectControl
+					            label={__("Transform", "adaire-blocks")}
+					            value={currentIconTransform}
+					            options={[
+					                { label: __("None", "adaire-blocks"), value: "none" },
+					                {
+					                    label: __("Translate Y -50%", "adaire-blocks"),
+					                    value: "translateY(-50%)",
+					                },
+					                {
+					                    label: __("Translate Y 50%", "adaire-blocks"),
+					                    value: "translateY(50%)",
+					                },
+					                {
+					                    label: __("Translate X -50%", "adaire-blocks"),
+					                    value: "translateX(-50%)",
+					                },
+					                {
+					                    label: __("Translate X 50%", "adaire-blocks"),
+					                    value: "translateX(50%)",
+					                },
+					            ]}
+					            onChange={(value) =>
+					                setResponsiveValue(
+					                    "responsiveIconTransform",
+					                    deviceType,
+					                    value,
+					                )
+					            }
+					        />
+					        <UnitControl
+					            label={
+					                iconVerticalPosition === "top"
+					                    ? __("Top Offset", "adaire-blocks")
+					                    : __("Bottom Offset", "adaire-blocks")
+					            }
+					            value={currentIconVerticalOffset}
+					            onChange={(value) =>
+					                setResponsiveValue(
+					                    "responsiveIconVerticalOffset",
+					                    deviceType,
+					                    value || "0px",
+					                )
+					            }
+					            units={[
+					                { value: "px", label: "px" },
+					                { value: "%", label: "%" },
+					                { value: "rem", label: "rem" },
+					                { value: "em", label: "em" },
+					            ]}
+					        />
+					        <UnitControl
+					            label={
+					                iconPosition === "left"
+					                    ? __("Left Offset", "adaire-blocks")
+					                    : __("Right Offset", "adaire-blocks")
+					            }
+					            value={currentIconHorizontalOffset}
+					            onChange={(value) =>
+					                setResponsiveValue(
+					                    "responsiveIconHorizontalOffset",
+					                    deviceType,
+					                    value || "0px",
+					                )
+					            }
+					            units={[
+					                { value: "px", label: "px" },
+					                { value: "%", label: "%" },
+					                { value: "rem", label: "rem" },
+					                { value: "em", label: "em" },
+					            ]}
+					        />
+					    </>
+					)}
+					<SelectControl
+					    label={__("Flex Direction", "adaire-blocks")}
+					    value={currentButtonContainerFlexDirection}
+					    options={[
+					        { label: __("Row", "adaire-blocks"), value: "row" },
+					        { label: __("Column", "adaire-blocks"), value: "column" },
+					    ]}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveButtonContainerFlexDirection",
+					            deviceType,
+					            value,
+					        )
+					    }
+					/>
+				</PanelBody>
+				<PanelBody
+					section="layout"
+					title={ PANEL.ALIGNMENT }
+					initialOpen={false}
+				>
+					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BaseControl
+					    label={__("Text Alignment", "adaire-blocks")}
+					    style={{ marginTop: "16px" }}
 					>
-						<p
-							style={{
-								marginBottom: "8px",
-								fontSize: "12px",
-								color: "#757575",
-							}}
-						>
-							{__("Current Breakpoint:", "adaire-blocks")}{" "}
-							{BREAKPOINT_LABELS[deviceType]}
-						</p>
+					    <ButtonGroup>
+					        <Button
+					            isPrimary={currentTextAlignment === "left"}
+					            onClick={() =>
+					                setResponsiveValue(
+					                    "responsiveTextAlignment",
+					                    deviceType,
+					                    "left",
+					                )
+					            }
+					        >
+					            {__("Left", "adaire-blocks")}
+					        </Button>
+					        <Button
+					            isPrimary={currentTextAlignment === "center"}
+					            onClick={() =>
+					                setResponsiveValue(
+					                    "responsiveTextAlignment",
+					                    deviceType,
+					                    "center",
+					                )
+					            }
+					        >
+					            {__("Center", "adaire-blocks")}
+					        </Button>
+					        <Button
+					            isPrimary={currentTextAlignment === "right"}
+					            onClick={() =>
+					                setResponsiveValue(
+					                    "responsiveTextAlignment",
+					                    deviceType,
+					                    "right",
+					                )
+					            }
+					        >
+					            {__("Right", "adaire-blocks")}
+					        </Button>
+					    </ButtonGroup>
+					</BaseControl>
+					<BaseControl
+					    label={__("Button Alignment", "adaire-blocks")}
+					    style={{ marginTop: "16px" }}
+					>
+					    <ButtonGroup>
+					        <Button
+					            isPrimary={currentButtonAlignment === "left"}
+					            onClick={() =>
+					                setResponsiveValue(
+					                    "responsiveButtonAlignment",
+					                    deviceType,
+					                    "left",
+					                )
+					            }
+					        >
+					            {__("Left", "adaire-blocks")}
+					        </Button>
+					        <Button
+					            isPrimary={currentButtonAlignment === "center"}
+					            onClick={() =>
+					                setResponsiveValue(
+					                    "responsiveButtonAlignment",
+					                    deviceType,
+					                    "center",
+					                )
+					            }
+					        >
+					            {__("Center", "adaire-blocks")}
+					        </Button>
+					        <Button
+					            isPrimary={currentButtonAlignment === "right"}
+					            onClick={() =>
+					                setResponsiveValue(
+					                    "responsiveButtonAlignment",
+					                    deviceType,
+					                    "right",
+					                )
+					            }
+					        >
+					            {__("Right", "adaire-blocks")}
+					        </Button>
+					    </ButtonGroup>
+					</BaseControl>
+				</PanelBody>
+				<PanelBody
+					section="layout"
+					title={ PANEL.DIMENSIONS }
+					initialOpen={false}
+				>
+					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<UnitControl
+					    label={__("Width", "adaire-blocks")}
+					    value={currentWidth}
+					    onChange={(value) =>
+					        setResponsiveValue("responsiveWidth", deviceType, value || "100%")
+					    }
+					    units={[
+					        { value: "vw", label: "vw" },
+					        { value: "%", label: "%" },
+					        { value: "px", label: "px" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("Min Height", "adaire-blocks")}
+					    value={currentMinHeight}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveMinHeight",
+					            deviceType,
+					            value || "auto",
+					        )
+					    }
+					    units={[
+					        { value: "vh", label: "vh" },
+					        { value: "px", label: "px" },
+					        { value: "rem", label: "rem" },
+					        { value: "auto", label: "auto" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("CTA Container Width", "adaire-blocks")}
+					    value={currentCtaWidth}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveCtaWidth",
+					            deviceType,
+					            value || "100%",
+					        )
+					    }
+					    units={[
+					        { value: "%", label: "%" },
+					        { value: "px", label: "px" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("Icon Width", "adaire-blocks")}
+					    value={currentIconWidth}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveIconWidth",
+					            deviceType,
+					            value || "700px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "%", label: "%" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={
+					        mediaType === "image"
+					            ? __("Image Width", "adaire-blocks")
+					            : __("Video Width", "adaire-blocks")
+					    }
+					    value={currentVideoWidth}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveVideoWidth",
+					            deviceType,
+					            value || "50%",
+					        )
+					    }
+					    units={[
+					        { value: "%", label: "%" },
+					        { value: "px", label: "px" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={
+					        mediaType === "image"
+					            ? __("Image Height", "adaire-blocks")
+					            : __("Video Height", "adaire-blocks")
+					    }
+					    value={currentVideoHeight}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveVideoHeight",
+					            deviceType,
+					            value || "600px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "rem", label: "rem" },
+					        { value: "%", label: "%" },
+					    ]}
+					/>
+				</PanelBody>
+				<PanelBody
+					section="style"
+					title={ PANEL.SPACING }
+					initialOpen={false}
+				>
+					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					{/* Padding, margin and gap are Style, not Layout (spec §4). */}
+					<BoxControl
+					    label={ LABEL.PADDING }
+					    values={currentPadding}
+					    onChange={(value) =>
+					        setResponsiveValue("responsivePadding", deviceType, value)
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					        { value: "%", label: "%" },
+					    ]}
+					/>
+					<BoxControl
+					    label={__("CTA Container Margin", "adaire-blocks")}
+					    values={currentCtaMargin}
+					    onChange={(value) =>
+					        setResponsiveValue("responsiveCtaMargin", deviceType, value)
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					        { value: "%", label: "%" },
+					    ]}
+					/>
+					<UnitControl
+					    label={ LABEL.GAP }
+					    value={currentButtonContainerGap}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveButtonContainerGap",
+					            deviceType,
+					            value || "35px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("Margin Top", "adaire-blocks")}
+					    value={currentButtonContainerMarginTop}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveButtonContainerMarginTop",
+					            deviceType,
+					            value || "0px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					{/* Preheader spacing only applies while the preheader is shown. */}
+					{showPreheader && (
 						<UnitControl
-							label={
-								mediaType === "image"
-									? __("Image Width", "adaire-blocks")
-									: __("Video Width", "adaire-blocks")
-							}
-							value={currentVideoWidth}
-							onChange={(value) =>
-								setResponsiveValue(
-									"responsiveVideoWidth",
-									deviceType,
-									value || "50%",
-								)
-							}
-							units={[
-								{ value: "%", label: "%" },
-								{ value: "px", label: "px" },
-								{ value: "rem", label: "rem" },
-							]}
+						    label={__("Margin Bottom", "adaire-blocks")}
+						    value={currentPreheaderMarginBottom}
+						    onChange={(value) =>
+						        setResponsiveValue(
+						            "responsivePreheaderMarginBottom",
+						            deviceType,
+						            value || "12px",
+						        )
+						    }
+						    units={[
+						        { value: "px", label: "px" },
+						        { value: "rem", label: "rem" },
+						        { value: "em", label: "em" },
+						    ]}
 						/>
+					)}
+					<UnitControl
+					    label={__("Heading Margin Top", "adaire-blocks")}
+					    value={currentHeadingMarginTop}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveHeadingMarginTop",
+					            deviceType,
+					            value || "0px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("Heading Margin Bottom", "adaire-blocks")}
+					    value={currentHeadingMarginBottom}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveHeadingMarginBottom",
+					            deviceType,
+					            value || "24px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("Text Margin Top", "adaire-blocks")}
+					    value={currentTextMarginTop}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveTextMarginTop",
+					            deviceType,
+					            value || "0px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("Text Margin Bottom", "adaire-blocks")}
+					    value={currentTextMarginBottom}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveTextMarginBottom",
+					            deviceType,
+					            value || "24px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("Top Offset", "adaire-blocks")}
+					    value={currentBreadcrumbTopOffset}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveBreadcrumbTopOffset",
+					            deviceType,
+					            value || "90px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "%", label: "%" },
+					        { value: "rem", label: "rem" },
+					        { value: "em", label: "em" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("Left Offset", "adaire-blocks")}
+					    value={currentBreadcrumbLeftOffset}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveBreadcrumbLeftOffset",
+					            deviceType,
+					            value || "200px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "%", label: "%" },
+					        { value: "rem", label: "rem" },
+					        { value: "em", label: "em" },
+					    ]}
+					/>
+				</PanelBody>
+				<PanelBody
+					section="style"
+					title={ PANEL.BACKGROUND }
+					initialOpen={false}
+				>
+					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BaseControl label={__("Background Gradient", "adaire-blocks")}>
+					    <GradientPicker
+					        value={currentBackgroundGradient || backgroundGradient}
+					        onChange={(value) =>
+					            setResponsiveValue(
+					                "responsiveBackgroundGradient",
+					                deviceType,
+					                withRadialCenter(
+					                    value ||
+					                        "linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)",
+					                    currentRadialCenterX ?? 50,
+					                    currentRadialCenterY ?? 50,
+					                ),
+					            )
+					        }
+					    />
+					</BaseControl>
+					{isRadialGradient(currentBackgroundGradient) && (
+					    <>
+					        <RangeControl
+					            label={__("Radial center X (%)", "adaire-blocks")}
+					            value={Number(currentRadialCenterX ?? 50)}
+					            onChange={(value) => {
+					                setResponsiveValue(
+					                    "responsiveRadialGradientCenterX",
+					                    deviceType,
+					                    value ?? 50,
+					                );
+					                setResponsiveValue(
+					                    "responsiveBackgroundGradient",
+					                    deviceType,
+					                    withRadialCenter(
+					                        currentBackgroundGradient,
+					                        value ?? 50,
+					                        currentRadialCenterY ?? 50,
+					                    ),
+					                );
+					            }}
+					            min={0}
+					            max={100}
+					        />
+					        <RangeControl
+					            label={__("Radial center Y (%)", "adaire-blocks")}
+					            value={Number(currentRadialCenterY ?? 50)}
+					            onChange={(value) => {
+					                setResponsiveValue(
+					                    "responsiveRadialGradientCenterY",
+					                    deviceType,
+					                    value ?? 50,
+					                );
+					                setResponsiveValue(
+					                    "responsiveBackgroundGradient",
+					                    deviceType,
+					                    withRadialCenter(
+					                        currentBackgroundGradient,
+					                        currentRadialCenterX ?? 50,
+					                        value ?? 50,
+					                    ),
+					                );
+					            }}
+					            min={0}
+					            max={100}
+					        />
+					    </>
+					)}
+					{showBackgroundImage && (
+					    <>
+					        <BaseControl label={__("Background Image", "adaire-blocks")}>
+					            <MediaUploadCheck>
+					                <MediaUpload
+					                    onSelect={(media) =>
+					                        setAttributes({
+					                            backgroundImageUrl: media.url,
+					                            backgroundImageId: media.id,
+					                        })
+					                    }
+					                    allowedTypes={["image"]}
+					                    value={backgroundImageId}
+					                    render={({ open }) => (
+					                        <div style={{ marginBottom: "10px" }}>
+					                            {backgroundImageUrl ? (
+					                                <div
+					                                    style={{
+					                                        marginBottom: "10px",
+					                                        position: "relative",
+					                                    }}
+					                                >
+					                                    <img
+					                                        src={backgroundImageUrl}
+					                                        alt=""
+					                                        style={{ width: "100%", borderRadius: "4px" }}
+					                                    />
+					                                    <Button
+					                                        isDestructive
+					                                        onClick={() =>
+					                                            setAttributes({
+					                                                backgroundImageUrl: "",
+					                                                backgroundImageId: 0,
+					                                            })
+					                                        }
+					                                        style={{
+					                                            position: "absolute",
+					                                            top: "5px",
+					                                            right: "5px",
+					                                        }}
+					                                    >
+					                                        {__("Remove", "adaire-blocks")}
+					                                    </Button>
+					                                </div>
+					                            ) : (
+					                                <Button isSecondary onClick={open}>
+					                                    {__("Select Image", "adaire-blocks")}
+					                                </Button>
+					                            )}
+					                        </div>
+					                    )}
+					                />
+					            </MediaUploadCheck>
+					        </BaseControl>
+					        <SelectControl
+					            label={__("Background Size", "adaire-blocks")}
+					            value={backgroundSize}
+					            options={[
+					                { label: __("Cover", "adaire-blocks"), value: "cover" },
+					                { label: __("Contain", "adaire-blocks"), value: "contain" },
+					                { label: __("Fixed", "adaire-blocks"), value: "fixed" },
+					                { label: __("Original", "adaire-blocks"), value: "auto" },
+					            ]}
+					            onChange={(value) => setAttributes({ backgroundSize: value })}
+					        />
+					        <SelectControl
+					            label={__("Background Position", "adaire-blocks")}
+					            value={backgroundPosition}
+					            options={[
+					                { label: __("Top Left", "adaire-blocks"), value: "top left" },
+					                {
+					                    label: __("Top Center", "adaire-blocks"),
+					                    value: "top center",
+					                },
+					                {
+					                    label: __("Top Right", "adaire-blocks"),
+					                    value: "top right",
+					                },
+					                {
+					                    label: __("Center Left", "adaire-blocks"),
+					                    value: "center left",
+					                },
+					                {
+					                    label: __("Center Center", "adaire-blocks"),
+					                    value: "center center",
+					                },
+					                {
+					                    label: __("Center Right", "adaire-blocks"),
+					                    value: "center right",
+					                },
+					                {
+					                    label: __("Bottom Left", "adaire-blocks"),
+					                    value: "bottom left",
+					                },
+					                {
+					                    label: __("Bottom Center", "adaire-blocks"),
+					                    value: "bottom center",
+					                },
+					                {
+					                    label: __("Bottom Right", "adaire-blocks"),
+					                    value: "bottom right",
+					                },
+					            ]}
+					            onChange={(value) =>
+					                setAttributes({ backgroundPosition: value })
+					            }
+					        />
+					        <SelectControl
+					            label={__("Background Repeat", "adaire-blocks")}
+					            value={backgroundRepeat}
+					            options={[
+					                {
+					                    label: __("No Repeat", "adaire-blocks"),
+					                    value: "no-repeat",
+					                },
+					                { label: __("Repeat", "adaire-blocks"), value: "repeat" },
+					                { label: __("Repeat X", "adaire-blocks"), value: "repeat-x" },
+					                { label: __("Repeat Y", "adaire-blocks"), value: "repeat-y" },
+					            ]}
+					            onChange={(value) => setAttributes({ backgroundRepeat: value })}
+					        />
+					    </>
+					)}
+
+					<SelectControl
+					    label={__("Overlay Type", "adaire-blocks")}
+					    value={overlayType}
+					    options={[
+					        { label: __("None", "adaire-blocks"), value: "none" },
+					        { label: __("Solid", "adaire-blocks"), value: "solid" },
+					        { label: __("Gradient", "adaire-blocks"), value: "gradient" },
+					    ]}
+					    onChange={(value) => setAttributes({ overlayType: value })}
+					/>
+
+					{overlayType === "solid" && (
+					    <>
+					        <PanelColorSettings
+					            title={__("Overlay Color", "adaire-blocks")}
+					            initialOpen={true}
+					            colorSettings={[
+					                {
+					                    value: overlayColor,
+					                    onChange: (value) => setAttributes({ overlayColor: value }),
+					                    label: __("Solid Color", "adaire-blocks"),
+					                },
+					            ]}
+					        />
+					        <RangeControl
+					            label={__("Overlay Opacity", "adaire-blocks")}
+					            value={overlayOpacity}
+					            onChange={(value) => setAttributes({ overlayOpacity: value })}
+					            min={0}
+					            max={1}
+					            step={0.1}
+					        />
+					    </>
+					)}
+
+					{overlayType === "gradient" && (
+					    <BaseControl label={__("Overlay Gradient", "adaire-blocks")}>
+					        <GradientPicker
+					            value={overlayGradient}
+					            onChange={(value) => setAttributes({ overlayGradient: value })}
+					        />
+					    </BaseControl>
+					)}
+				</PanelBody>
+				<PanelBody
+					section="style"
+					title={ PANEL.COLORS }
+					initialOpen={false}
+				>
+					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					{/* Preheader colour only applies while the preheader is shown. */}
+					{showPreheader && (
+						<BaseControl label={__("Preheader Color", "adaire-blocks")}>
+						    <ColorPicker
+						        color={preheaderColor}
+						        onChangeComplete={(color) =>
+						            setAttributes({ preheaderColor: color.hex })
+						        }
+						        disableAlpha
+						    />
+						</BaseControl>
+					)}
+					<BaseControl label={__("Breadcrumbs Color", "adaire-blocks")}>
+					    <ColorPicker
+					        color={breadcrumbsColor}
+					        onChangeComplete={(color) =>
+					            setAttributes({ breadcrumbsColor: color.hex })
+					        }
+					        disableAlpha
+					    />
+					</BaseControl>
+					<BaseControl label={__("Heading Color", "adaire-blocks")}>
+					    <ColorPicker
+					        color={headingColor}
+					        onChangeComplete={(color) =>
+					            setAttributes({ headingColor: color.hex })
+					        }
+					        disableAlpha
+					    />
+					</BaseControl>
+					<BaseControl label={__("Text Color", "adaire-blocks")}>
+					    <ColorPicker
+					        color={textColor}
+					        onChangeComplete={(color) =>
+					            setAttributes({ textColor: color.hex })
+					        }
+					        disableAlpha
+					    />
+					</BaseControl>
+				</PanelBody>
+				<PanelBody
+					section="style"
+					title={ PANEL.TYPOGRAPHY }
+					initialOpen={false}
+				>
+					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					{/* Preheader typography only applies while the preheader is shown. */}
+					{showPreheader && (
 						<UnitControl
-							label={
-								mediaType === "image"
-									? __("Image Height", "adaire-blocks")
-									: __("Video Height", "adaire-blocks")
-							}
-							value={currentVideoHeight}
-							onChange={(value) =>
-								setResponsiveValue(
-									"responsiveVideoHeight",
-									deviceType,
-									value || "600px",
-								)
-							}
-							units={[
-								{ value: "px", label: "px" },
-								{ value: "rem", label: "rem" },
-								{ value: "%", label: "%" },
-							]}
+						    label={__("Font Size", "adaire-blocks")}
+						    value={currentPreheaderFontSize}
+						    onChange={(value) =>
+						        setResponsiveValue(
+						            "responsivePreheaderFontSize",
+						            deviceType,
+						            value || "18px",
+						        )
+						    }
+						    units={[
+						        { value: "px", label: "px" },
+						        { value: "rem", label: "rem" },
+						        { value: "em", label: "em" },
+						    ]}
 						/>
+					)}
+					{/* Preheader typography only applies while the preheader is shown. */}
+					{showPreheader && (
 						<UnitControl
-							label={__("Border Radius", "adaire-blocks")}
-							value={currentVideoBorderRadius}
-							onChange={(value) =>
-								setResponsiveValue(
-									"responsiveVideoBorderRadius",
-									deviceType,
-									value || "16px",
-								)
-							}
-							units={[
-								{ value: "px", label: "px" },
-								{ value: "rem", label: "rem" },
-							]}
+						    label={__("Line Height", "adaire-blocks")}
+						    value={currentPreheaderLineHeight}
+						    onChange={(value) =>
+						        setResponsiveValue(
+						            "responsivePreheaderLineHeight",
+						            deviceType,
+						            value || "28px",
+						        )
+						    }
+						    units={[
+						        { value: "px", label: "px" },
+						        { value: "rem", label: "rem" },
+						        { value: "em", label: "em" },
+						    ]}
 						/>
-					</PanelBody>
-				)}
-            </InspectorTabs>
+					)}
+					<p
+					    style={{ marginBottom: "12px", fontWeight: 600, fontSize: "13px" }}
+					>
+					    {__("Colors & Font Weights", "adaire-blocks")}
+					</p>
+					{showPreheader && (
+					    <>
+					        {/* Preheader typography only applies while the preheader is shown. */}
+					        {showPreheader && (
+						        <SelectControl
+						            label={__("Preheader Font Weight", "adaire-blocks")}
+						            value={preheaderFontWeight}
+						            options={[
+						                { label: __("Thin (100)", "adaire-blocks"), value: "100" },
+						                {
+						                    label: __("Extra Light (200)", "adaire-blocks"),
+						                    value: "200",
+						                },
+						                { label: __("Light (300)", "adaire-blocks"), value: "300" },
+						                { label: __("Normal (400)", "adaire-blocks"), value: "400" },
+						                { label: __("Medium (500)", "adaire-blocks"), value: "500" },
+						                {
+						                    label: __("Semi Bold (600)", "adaire-blocks"),
+						                    value: "600",
+						                },
+						                { label: __("Bold (700)", "adaire-blocks"), value: "700" },
+						                {
+						                    label: __("Extra Bold (800)", "adaire-blocks"),
+						                    value: "800",
+						                },
+						                { label: __("Black (900)", "adaire-blocks"), value: "900" },
+						            ]}
+						            onChange={(value) =>
+						                setAttributes({ preheaderFontWeight: value })
+						            }
+						        />
+					        )}
+					    </>
+					)}
+					<SelectControl
+					    label={__("Heading Font Weight", "adaire-blocks")}
+					    value={headingFontWeight}
+					    options={[
+					        { label: __("Thin (100)", "adaire-blocks"), value: "100" },
+					        { label: __("Extra Light (200)", "adaire-blocks"), value: "200" },
+					        { label: __("Light (300)", "adaire-blocks"), value: "300" },
+					        { label: __("Normal (400)", "adaire-blocks"), value: "400" },
+					        { label: __("Medium (500)", "adaire-blocks"), value: "500" },
+					        { label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+					        { label: __("Bold (700)", "adaire-blocks"), value: "700" },
+					        { label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
+					        { label: __("Black (900)", "adaire-blocks"), value: "900" },
+					    ]}
+					    onChange={(value) => setAttributes({ headingFontWeight: value })}
+					/>
+					<SelectControl
+					    label={__("Text Font Weight", "adaire-blocks")}
+					    value={textFontWeight}
+					    options={[
+					        { label: __("Thin (100)", "adaire-blocks"), value: "100" },
+					        { label: __("Extra Light (200)", "adaire-blocks"), value: "200" },
+					        { label: __("Light (300)", "adaire-blocks"), value: "300" },
+					        { label: __("Normal (400)", "adaire-blocks"), value: "400" },
+					        { label: __("Medium (500)", "adaire-blocks"), value: "500" },
+					        { label: __("Semi Bold (600)", "adaire-blocks"), value: "600" },
+					        { label: __("Bold (700)", "adaire-blocks"), value: "700" },
+					        { label: __("Extra Bold (800)", "adaire-blocks"), value: "800" },
+					        { label: __("Black (900)", "adaire-blocks"), value: "900" },
+					    ]}
+					    onChange={(value) => setAttributes({ textFontWeight: value })}
+					/>
+
+					<p
+					    style={{
+					        marginTop: "24px",
+					        marginBottom: "8px",
+					        fontWeight: 600,
+					        fontSize: "13px",
+					    }}
+					>
+					    {__("Responsive Sizes", "adaire-blocks")}
+					</p>
+					<UnitControl
+					    label={__("Heading Font Size", "adaire-blocks")}
+					    value={currentHeadingFontSize}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveHeadingFontSize",
+					            deviceType,
+					            value || "72px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+					<UnitControl
+					    label={__("Heading Line Height", "adaire-blocks")}
+					    value={currentHeadingLineHeight}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveHeadingLineHeight",
+					            deviceType,
+					            value || "92px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+
+					<UnitControl
+					    label={__("Text Font Size", "adaire-blocks")}
+					    value={currentTextFontSize}
+					    onChange={(value) =>
+					        setResponsiveValue(
+					            "responsiveTextFontSize",
+					            deviceType,
+					            value || "26px",
+					        )
+					    }
+					    units={[
+					        { value: "px", label: "px" },
+					        { value: "em", label: "em" },
+					        { value: "rem", label: "rem" },
+					    ]}
+					/>
+
+				</PanelBody>
+				<PanelBody
+					section="style"
+					title={ PANEL.BORDER }
+					initialOpen={false}
+				>
+					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					{/* Media styling only applies when the block renders media. */}
+					{(mediaType === "image" || mediaType === "video") && (
+						<UnitControl
+						    label={ LABEL.BORDER_RADIUS }
+						    value={currentVideoBorderRadius}
+						    onChange={(value) =>
+						        setResponsiveValue(
+						            "responsiveVideoBorderRadius",
+						            deviceType,
+						            value || "16px",
+						        )
+						    }
+						    units={[
+						        { value: "px", label: "px" },
+						        { value: "rem", label: "rem" },
+						    ]}
+						/>
+					)}
+				</PanelBody>
+			</InspectorTabs>
 
             <div {...blockProps}>
 				{overlayType !== "none" && (

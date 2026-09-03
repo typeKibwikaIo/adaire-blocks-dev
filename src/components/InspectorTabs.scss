@@ -53,19 +53,11 @@
 	}
 }
 
-// Styling tiers (Appearance / Effects & Spacing) so users don't get lost
+// Styling tiers (Appearance / Effects) so users don't get lost
 .adaire-priority-group {
 	& + .adaire-priority-group {
 		margin-top: 4px;
 	}
-}
-
-.adaire-inspector-empty {
-	margin: 0;
-	padding: 16px;
-	font-size: 12px;
-	font-style: italic;
-	color: #757575;
 }
 
 .adaire-priority-label {
@@ -78,4 +70,16 @@
 	background: #f6f7f7;
 	border-top: 1px solid #e0e0e0;
 	border-bottom: 1px solid #e0e0e0;
+}
+
+// Shown at the top of any panel whose controls are scoped to the breakpoint
+// picked in Layout > Responsive. See BreakpointNote in DeviceSwitcher.js.
+.adaire-breakpoint-note {
+	margin: 0 0 12px;
+	font-size: 12px;
+	color: #757575;
+
+	strong {
+		color: #1e1e1e;
+	}
 }

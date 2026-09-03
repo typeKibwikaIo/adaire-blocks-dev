@@ -2579,6 +2579,42 @@ add_filter( 'block_editor_settings_all', function ( $settings ) {
     return $settings;
 } );
 
+// Turn off WordPress's own inspector tab strip for every Adaire block.
+//
+// Why: the plugin already gives each block one tab strip — Content / Layout /
+// Style, see AGENTS/BLOCK_SETTINGS_SPEC.md and src/components/InspectorTabs.js.
+// When a block declares a style-generating `supports` entry (spacing, color,
+// typography, border…), WordPress adds a *second*, outer tab strip of its own —
+// "Settings | Styles" — and nests ours inside the Settings half. The user then
+// faces two tabs, one of which contains three more. That is exactly the
+// "learn it twice" problem the spec exists to remove.
+//
+// `blockInspectorTabs` is core's own switch for this (see getShowTabs() /
+// useInspectorControlsTabs() in wp-includes/js/dist/block-editor.js). Keyed
+// false for a block name, core renders every inspector fill in a single column
+// with no tab strip of its own — so the only tabs on screen are the plugin's
+// three, and any panel core contributes stacks underneath them.
+//
+// This suppresses core's *tab chrome* only. Nothing is unregistered and no
+// control is removed: a block that genuinely needs a core style panel still
+// gets it, just not behind a competing tab. Blocks from other plugins and from
+// core keep their normal tabbed inspector — the filter only names ours.
+add_filter( 'block_editor_settings_all', function ( $settings ) {
+	$tabs = isset( $settings['blockInspectorTabs'] ) && is_array( $settings['blockInspectorTabs'] )
+		? $settings['blockInspectorTabs']
+		: array();
+
+	foreach ( WP_Block_Type_Registry::get_instance()->get_all_registered() as $name => $block_type ) {
+		if ( 0 === strpos( $name, 'create-block/' ) || 0 === strpos( $name, 'adaire/' ) ) {
+			$tabs[ $name ] = false;
+		}
+	}
+
+	$settings['blockInspectorTabs'] = $tabs;
+
+	return $settings;
+} );
+
 // Hide Gutenberg breadcrumb anchor badges (the ID pill shown in block breadcrumbs).
 add_action(
 	'enqueue_block_editor_assets',

@@ -143,6 +143,13 @@ export function getStyleVars(a) {
 
 		'--ad-radius': `${a.borderRadius ?? 12}px`,
 		'--ad-padding': `${a.padding ?? 80}px`,
+		// Block margin. Replaces the WordPress `supports.spacing` panel this
+		// block used to declare — that panel came with its own tab strip,
+		// which duplicated the plugin's own. See BLOCK_SETTINGS_SPEC.md §10.
+		'--ad-margin-top': a.margin?.top || '0px',
+		'--ad-margin-right': a.margin?.right || '0px',
+		'--ad-margin-bottom': a.margin?.bottom || '0px',
+		'--ad-margin-left': a.margin?.left || '0px',
 		'--ad-font-size': `${a.fontSize ?? 16}px`,
 
 		'--ad-pill-bg': a.pillBg || '#dbeafe',

@@ -44,7 +44,8 @@ import { getBlockType } from '@wordpress/blocks';
 import BootstrapIconPicker from '../icon-box-block/BootstrapIconPicker';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
-import DeviceSwitcher from '../components/DeviceSwitcher';
+import { PANEL, LABEL } from '../components/inspector-vocabulary';
+import DeviceSwitcher, { BreakpointNote } from '../components/DeviceSwitcher';
 
 // Custom icons for small laptop and big desktop
 const smallLaptopIcon = createElement('svg', {
@@ -157,7 +158,7 @@ const FONT_WEIGHT_OPTIONS = [
 // Compact quick-edit typography controls used inside QuickZone popovers for
 // the Heading / Item Title / Item Text on-canvas zones — font size, weight,
 // and color only (the full set, incl. line-height/letter-spacing/transform,
-// stays in the Inspector's "Typography Settings" panel).
+// stays in the Inspector's Style > "Typography" panel).
 const QuickTypographyControls = ({ attributes, updateResponsiveAttribute, deviceType, fontSizeAttr, fontWeightAttr, colorAttr }) => {
     const [ themeColors ] = useSettings( 'color.palette.theme' );
     const bindColor = ( hex ) => {
@@ -623,20 +624,18 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
-                <PanelBody section="layout" title={__('Responsive Settings', 'adaire-blocks')} initialOpen={true}>
+                <PanelBody section="layout" title={ PANEL.RESPONSIVE } initialOpen={true}>
                     <DeviceSwitcher
                         deviceType={deviceType}
                         setDeviceType={setDeviceType}
-                        label={__('Device View', 'adaire-blocks')}
+                        label={ LABEL.BREAKPOINT }
                         tiers={FIVE_TIERS}
                         onReset={resetResponsiveDefaults}
                     />
-                    <p className="adaire-device-toggle-status">
-                        {__('Configuring:', 'adaire-blocks')} <strong>{BREAKPOINTS.find(b => b.name === deviceType).label}</strong>
-                    </p>
+                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Background & Overlay', 'adaire-blocks')}>
+                <PanelBody section="style" title={ PANEL.BACKGROUND }>
                     <PanelColorSettings
                         title={__('Solid Background Color', 'adaire-blocks')}
                         initialOpen={false}
@@ -758,12 +757,37 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     )}
                 </PanelBody>
 
-                <PanelBody section="layout" title={__('Layout Settings', 'adaire-blocks')}>
+                <PanelBody section="layout" title={ PANEL.STRUCTURE }>
+                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+
                     <ToggleControl
                         label={__('Show Heading', 'adaire-blocks')}
                         checked={showHeading !== false}
                         onChange={(val) => setAttributes({ showHeading: val })}
                         help={__('Hide the main heading above the grid items.', 'adaire-blocks')}
+                    />
+
+                    {/*
+                      Columns and Gap drive the grid CSS emitted below (see the
+                      `flex:1 1 max(calc(...))` rule) but had no controls of
+                      their own — the values were only ever the block.json
+                      defaults. Feature Grid (Pro) has always exposed both, so
+                      the two blocks disagreed on something the spec puts
+                      squarely in Layout (§3).
+                    */}
+                    <RangeControl
+                        label={ LABEL.COLUMNS }
+                        value={parseInt(responsiveGridColumns?.[deviceType], 10) || 3}
+                        onChange={(val) => updateResponsiveAttribute('responsiveGridColumns', deviceType, String(val))}
+                        min={1}
+                        max={6}
+                        step={1}
+                    />
+
+                    <UnitControl
+                        label={ LABEL.GAP }
+                        value={responsiveGridGap?.[deviceType] || '30px'}
+                        onChange={(val) => updateResponsiveAttribute('responsiveGridGap', deviceType, val)}
                     />
 
                     <p>{__('Container Width', 'adaire-blocks')}</p>
@@ -778,6 +802,11 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             </Button>
                         ))}
                     </ButtonGroup>
+
+                </PanelBody>
+
+                <PanelBody section="layout" title={ PANEL.DIMENSIONS } initialOpen={false}>
+                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
 
                     <UnitControl
                         label={__('Block Width', 'adaire-blocks')}
@@ -833,17 +862,58 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Container Spacing', 'adaire-blocks')} initialOpen={false}>
+                {/* Padding, margin and gap are Style, not Layout (spec §4). */}
+                <PanelBody section="style" title={ PANEL.SPACING } initialOpen={false}>
+                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+
                     <BoxControl
-                        label={__('Block Padding', 'adaire-blocks')}
+                        label={ LABEL.PADDING }
                         values={responsivePadding[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsivePadding', deviceType, val)}
                     />
+
+                    {/*
+                      `responsiveMargin` was already generating margin CSS (see
+                      the style block above) but had no control — so the only
+                      way to set a block margin was WordPress's own Dimensions
+                      panel, which wrote a different, non-responsive attribute.
+                      That native panel is gone now (supports.spacing removed
+                      from block.json); this is its replacement, and it is
+                      per-breakpoint like everything else here.
+                    */}
+                    <BoxControl
+                        label={ LABEL.MARGIN }
+                        values={responsiveMargin[deviceType]}
+                        onChange={(val) => updateResponsiveAttribute('responsiveMargin', deviceType, val)}
+                    />
+
+                    <BoxControl
+                        label={__('Item Padding', 'adaire-blocks')}
+                        values={responsiveItemPadding[deviceType]}
+                        onChange={(val) => updateResponsiveAttribute('responsiveItemPadding', deviceType, val)}
+                    />
                 </PanelBody>
 
-                <PanelBody section="style" priority="high" title={__('Typography Settings', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="layout" title={ PANEL.ALIGNMENT } initialOpen={false}>
+                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+
                     <SelectControl
-                        label={__('Font Family', 'adaire-blocks')}
+                        label={__('Item Text Alignment', 'adaire-blocks')}
+                        value={responsiveItemTextAlign?.[deviceType] || 'left'}
+                        options={[
+                            { label: __('Left', 'adaire-blocks'), value: 'left' },
+                            { label: __('Center', 'adaire-blocks'), value: 'center' },
+                            { label: __('Right', 'adaire-blocks'), value: 'right' },
+                        ]}
+                        onChange={(val) => updateResponsiveAttribute('responsiveItemTextAlign', deviceType, val)}
+                    />
+                </PanelBody>
+
+                <PanelBody section="style" title={ PANEL.TYPOGRAPHY } initialOpen={false}>
+                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+
+                    <SelectControl
+                        label={ LABEL.FONT_FAMILY }
                         value={fontFamily || ''}
                         options={FONT_FAMILY_OPTIONS}
                         onChange={(val) => setAttributes({ fontFamily: val })}
@@ -890,9 +960,11 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     />
                 </PanelBody>
 
-                <PanelBody section="style" priority="medium" title={__('Item Styles', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="style" title={ PANEL.COLORS } initialOpen={false}>
+                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+
                     <UnitControl
-                        label={__('Icon Size', 'adaire-blocks')}
+                        label={ LABEL.ICON_SIZE }
                         value={responsiveIconSize[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveIconSize', deviceType, val)}
                     />
@@ -907,30 +979,18 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             }
                         ]}
                     />
-                    <BoxControl
-                        label={__('Item Padding', 'adaire-blocks')}
-                        values={responsiveItemPadding[deviceType]}
-                        onChange={(val) => updateResponsiveAttribute('responsiveItemPadding', deviceType, val)}
-                    />
-                    <SelectControl
-                        label={__('Text Alignment', 'adaire-blocks')}
-                        value={responsiveItemTextAlign?.[deviceType] || 'left'}
-                        options={[
-                            { label: __('Left', 'adaire-blocks'), value: 'left' },
-                            { label: __('Center', 'adaire-blocks'), value: 'center' },
-                            { label: __('Right', 'adaire-blocks'), value: 'right' },
-                        ]}
-                        onChange={(val) => updateResponsiveAttribute('responsiveItemTextAlign', deviceType, val)}
-                    />
-                    <hr style={{ margin: '20px 0', border: '0', borderTop: '1px solid #ccc' }} />
-                    <p style={{ fontWeight: 600, fontSize: '12px', marginBottom: '12px' }}>{__('Item Border', 'adaire-blocks')}</p>
+                </PanelBody>
+
+                <PanelBody section="style" title={ PANEL.BORDER } initialOpen={false}>
+                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+
                     <UnitControl
-                        label={__('Border Width', 'adaire-blocks')}
+                        label={ LABEL.BORDER_WIDTH }
                         value={responsiveItemBorderWidth[deviceType]}
                         onChange={(val) => updateResponsiveAttribute('responsiveItemBorderWidth', deviceType, val)}
                     />
                     <SelectControl
-                        label={__('Border Style', 'adaire-blocks')}
+                        label={ LABEL.BORDER_STYLE }
                         value={responsiveItemBorderStyle[deviceType]}
                         options={[
                             { label: __('Solid', 'adaire-blocks'), value: 'solid' },
@@ -953,13 +1013,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         ]}
                     />
                     <UnitControl
-                        label={__('Border Radius', 'adaire-blocks')}
+                        label={ LABEL.BORDER_RADIUS }
                         value={responsiveItemBorderRadius?.[deviceType] || '12px'}
                         onChange={(val) => updateResponsiveAttribute('responsiveItemBorderRadius', deviceType, val)}
                     />
                 </PanelBody>
 
-                <PanelBody section="content" title={__('Manage Grid Items', 'adaire-blocks')} initialOpen={false}>
+                <PanelBody section="content" title={ PANEL.ITEMS } initialOpen={false}>
                     <Button
                         variant="primary"
                         icon={plus}

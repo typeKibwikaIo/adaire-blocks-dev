@@ -14,11 +14,7 @@
             "wide",
             "full"
         ],
-        "customClassName": true,
-        "spacing": {
-            "margin": true,
-            "padding": true
-        }
+        "customClassName": true
     },
     "textdomain": "adaire-blocks",
     "editorScript": "file:./index.js",

@@ -8,6 +8,11 @@
 
 .adaire-saas-hero {
   position: relative;
+  margin:
+    var(--ad-margin-top, 0px)
+    var(--ad-margin-right, 0px)
+    var(--ad-margin-bottom, 0px)
+    var(--ad-margin-left, 0px);
   padding: var(--ad-padding, 80px) 20px;
   background-color: var(--ad-bg-color, #ffffff);
   color: var(--ad-color);
@@ -937,4 +942,14 @@
       text-align: center;
     }
   }
+}
+
+// Editor-only affordance. `save.js` never emits this class, so it cannot reach
+// the front end — it marks a zone the editor draws for editing convenience but
+// that the published page will not render (currently the ratings/badges row
+// while "Show Ratings & Badges" is off). See edit.js.
+.adaire-is-editor-hidden {
+	opacity: 0.4;
+	outline: 1px dashed currentColor;
+	outline-offset: 4px;
 }
