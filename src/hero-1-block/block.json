@@ -5,7 +5,7 @@
     "version": "0.1.0",
     "title": "Hero Banner (Legacy)",
     "category": "adaire-layout-hero",
-    "description": "Legacy registration kept only so pages saved before the create-block/hero-1-block → create-block/hero-banner-block rename keep rendering and editing correctly. Not for new use — insert \"Hero Banner\" instead.",
+    "description": "Legacy registration kept only so pages saved before the create-block/hero-1-block → create-block/hero-banner-block rename keep rendering and editing correctly. Not for new use — insert \"Hero (Free)\" instead.",
     "supports": {
         "html": false,
         "anchor": true,

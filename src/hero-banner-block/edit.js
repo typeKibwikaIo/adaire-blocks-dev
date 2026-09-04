@@ -263,19 +263,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		return withRadialCenter(g, x, y);
 	};
 
-    // Helper to get editor preview value (always desktop unless Gutenberg responsive preview)
-    const getEditorValue = (obj) => {
-		if (!obj || typeof obj !== "object") return "";
-		return obj.desktop !== undefined ? obj.desktop : obj.mobile || "";
-    };
-
-    // Editor preview values (for inline styles - always desktop)
-	const editorBreadcrumbTopOffset = getEditorValue(
-		responsiveBreadcrumbTopOffset,
-	);
-	const editorBreadcrumbLeftOffset = getEditorValue(
-		responsiveBreadcrumbLeftOffset,
-	);
+    // The breadcrumb used to carry inline top/left pinned to the desktop
+    // values. Inline styles beat the media queries in style.scss, so at any
+    // canvas narrower than the desktop breakpoint the editor placed the
+    // breadcrumb at 90px/200px while the front end used the small-laptop,
+    // tablet or mobile offsets. Rendering it bare lets the same responsive
+    // CSS variables drive it in both places, exactly like save.js.
 
     // Current values for selected breakpoint (for controls)
     const currentMinHeight = getResponsiveValue(responsiveMinHeight, deviceType);
@@ -2376,10 +2369,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<nav
 						className="adaire-hero-banner__breadcrumbs"
 						aria-label={__("Breadcrumb", "adaire-blocks")}
-						style={{
-                        top: editorBreadcrumbTopOffset,
-                        left: editorBreadcrumbLeftOffset,
-						}}
 					>
                         {(breadcrumbsItems || []).map((item, index) => (
                             <span key={index}>

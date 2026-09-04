@@ -3,7 +3,7 @@
     "apiVersion": 3,
     "name": "create-block/hero-banner-block",
     "version": "0.1.0",
-    "title": "Hero Banner",
+    "title": "Hero (Free)",
     "category": "adaire-layout-hero",
     "description": "Create large introductory hero sections with headings, text, and call-to-action buttons.",
     "supports": {

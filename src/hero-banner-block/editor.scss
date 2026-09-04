@@ -1,9 +1,92 @@
+// Breakpoint mixins — mirror style.scss so the editor overrides below switch
+// on exactly the same widths the front-end rules do.
+@mixin phone {
+    @media (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 601px) and (max-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin small-laptop {
+    @media (min-width: 1025px) and (max-width: 1300px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 1301px) and (max-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin big-desktop {
+    @media (min-width: 1921px) {
+        @content;
+    }
+}
+
+// Copy of the CTA column's own box for whichever element is the real flex
+// item — see the .adaire-qz block below.
+@mixin hero-cta-box($bp, $width) {
+    width: var(--hero-cta-width-#{$bp}, #{$width});
+    margin-top: var(--hero-cta-margin-top-#{$bp}, 0px);
+    margin-right: var(--hero-cta-margin-right-#{$bp}, 0px);
+    margin-bottom: var(--hero-cta-margin-bottom-#{$bp}, 0px);
+    margin-left: var(--hero-cta-margin-left-#{$bp}, 0px);
+}
+
 .adaire-hero-banner-container {
-    // Editor-specific styles if needed
-    min-height: 200px; // Ensure minimum height in editor
     // Ensure align-items and justify-content work in editor preview
     align-items: var(--hero-align-items-desktop, center) !important;
     justify-content: var(--hero-justify-content-desktop, flex-start) !important;
+}
+
+// QuickZone wraps the CTA column in a plain <div class="adaire-qz">, so in
+// the editor *that* wrapper — not __cta-container — is the container's flex
+// item. A flex item with width:auto sizes to its content (max-content, then
+// shrunk to fit), so __cta-container's percentage width resolved against the
+// wrapper instead of against the hero: at a 1920px canvas the column came out
+// 548px wide instead of the front end's 707px, wrapping the heading onto
+// twice as many lines and stretching the whole block vertically. save.js has
+// no wrapper, which is why the page renders fine. Hand the wrapper the CTA's
+// own width/margins and let __cta-container fill it, so the geometry matches
+// save.js in both the plain and the media (content + video) layouts.
+.adaire-hero-banner-container > .adaire-qz,
+.adaire-hero-banner__content-video-wrapper > .adaire-qz {
+    @include hero-cta-box(desktop, 45%);
+    // Flex items default to min-width:auto, which would let the heading's
+    // longest word hold the wrapper above the width we just set.
+    min-width: 0;
+
+    @include big-desktop {
+        @include hero-cta-box(big-desktop, 45%);
+    }
+
+    @include desktop {
+        @include hero-cta-box(desktop, 45%);
+    }
+
+    @include small-laptop {
+        @include hero-cta-box(small-laptop, 60%);
+    }
+
+    @include tablet {
+        @include hero-cta-box(tablet, 100%);
+    }
+
+    @include phone {
+        @include hero-cta-box(mobile, 100%);
+    }
+
+    > .adaire-hero-banner__cta-container {
+        width: 100% !important;
+        margin: 0 !important;
+    }
 }
 
 .adaire-hero-banner__content-video-wrapper {
@@ -37,10 +120,17 @@
         padding-left: var(--hero-padding-left-tablet, 40px) !important;
     }
     
+    // The QuickZone wrapper is the flex item in the editor, so it carries the
+    // preview width; __cta-container stays at 100% of it (see above).
+    .adaire-hero-banner-container > .adaire-qz,
+    .adaire-hero-banner__content-video-wrapper > .adaire-qz {
+        width: var(--hero-cta-width-tablet, 100%) !important;
+    }
+
     .adaire-hero-banner__cta-container {
         width: var(--hero-cta-width-tablet, 100%) !important;
     }
-    
+
     .adaire-hero-banner__heading {
         font-size: var(--hero-heading-font-size-tablet, 42px) !important;
         line-height: var(--hero-heading-line-height-tablet, 54px) !important;
@@ -112,10 +202,17 @@
         padding-left: var(--hero-padding-left-mobile, 16px) !important;
     }
     
+    // The QuickZone wrapper is the flex item in the editor, so it carries the
+    // preview width; __cta-container stays at 100% of it (see above).
+    .adaire-hero-banner-container > .adaire-qz,
+    .adaire-hero-banner__content-video-wrapper > .adaire-qz {
+        width: var(--hero-cta-width-mobile, 100%) !important;
+    }
+
     .adaire-hero-banner__cta-container {
         width: var(--hero-cta-width-mobile, 100%) !important;
     }
-    
+
     .adaire-hero-banner__heading {
         font-size: var(--hero-heading-font-size-mobile, 28px) !important;
         line-height: var(--hero-heading-line-height-mobile, 36px) !important;
