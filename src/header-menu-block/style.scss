@@ -115,6 +115,22 @@ body.adaire-header-no-scroll {
 .adaire-header-logo-link {
     color: inherit;
     text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus,
+    &:active {
+        outline: none;
+        box-shadow: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+    }
+
+    img {
+        outline: none;
+    }
 }
 
 .adaire-header-logo-text {
