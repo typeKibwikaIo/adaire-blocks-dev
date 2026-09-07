@@ -1972,7 +1972,7 @@ export default function Edit({ attributes, setAttributes }) {
                     ) }
                     <RangeControl
                         label="Mobile breakpoint (px)"
-                        value={ attributes.mobileBreakpoint || 782 }
+                        value={ attributes.mobileBreakpoint || 600 }
                         min={ 480 }
                         max={ 1024 }
                         onChange={ v => setAttributes({ mobileBreakpoint: v }) }

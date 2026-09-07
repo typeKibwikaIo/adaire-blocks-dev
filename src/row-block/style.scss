@@ -19,6 +19,31 @@
   box-sizing: border-box;
   min-height: 80px;
 
+  // Responsive breakpoints (Desktop 783px+, Tablet 601-782px, Mobile 600px-)
+  @media (max-width: 782px) {
+    gap: var(--row-gap-tablet, 16px);
+    padding-top: var(--row-padding-top-tablet);
+    padding-right: var(--row-padding-right-tablet);
+    padding-bottom: var(--row-padding-bottom-tablet);
+    padding-left: var(--row-padding-left-tablet);
+    margin-top: var(--row-margin-top-tablet);
+    margin-right: var(--row-margin-right-tablet);
+    margin-bottom: var(--row-margin-bottom-tablet);
+    margin-left: var(--row-margin-left-tablet);
+  }
+
+  @media (max-width: 600px) {
+    gap: var(--row-gap-mobile, 16px);
+    padding-top: var(--row-padding-top-mobile);
+    padding-right: var(--row-padding-right-mobile);
+    padding-bottom: var(--row-padding-bottom-mobile);
+    padding-left: var(--row-padding-left-mobile);
+    margin-top: var(--row-margin-top-mobile);
+    margin-right: var(--row-margin-right-mobile);
+    margin-bottom: var(--row-margin-bottom-mobile);
+    margin-left: var(--row-margin-left-mobile);
+  }
+
   &--valign-top { align-items: start; }
   &--valign-center { align-items: center; }
   &--valign-bottom { align-items: end; }

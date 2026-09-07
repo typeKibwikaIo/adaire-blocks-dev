@@ -16,6 +16,10 @@ const DEFAULT_TIERS = [
 // 3-tier set (no smartwatch) for blocks that have dropped the watch
 // breakpoint. Kept separate from DEFAULT_TIERS since other blocks still
 // rely on the 4-tier default.
+// Updated with specific breakpoint descriptions per requirements:
+// Desktop/Laptop — 783px and wider
+// Tablet — 601px to 782px
+// Mobile — 600px and smaller
 export const THREE_TIERS = [
 	{ key: "desktop", label: "Desktop", icon: desktop },
 	{ key: "tablet", label: "Tablet", icon: tablet },

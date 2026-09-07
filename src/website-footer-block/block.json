@@ -91,6 +91,60 @@
             "type": "number",
             "default": 1200
         },
+        "responsivePadding": {
+            "type": "object",
+            "default": {
+                "desktop": {
+                    "top": "60px",
+                    "right": "0px",
+                    "bottom": "40px",
+                    "left": "0px"
+                },
+                "tablet": {
+                    "top": "40px",
+                    "right": "0px",
+                    "bottom": "30px",
+                    "left": "0px"
+                },
+                "mobile": {
+                    "top": "30px",
+                    "right": "0px",
+                    "bottom": "20px",
+                    "left": "0px"
+                }
+            }
+        },
+        "responsiveMargin": {
+            "type": "object",
+            "default": {
+                "desktop": {
+                    "top": "0px",
+                    "right": "0px",
+                    "bottom": "0px",
+                    "left": "0px"
+                },
+                "tablet": {
+                    "top": "0px",
+                    "right": "0px",
+                    "bottom": "0px",
+                    "left": "0px"
+                },
+                "mobile": {
+                    "top": "0px",
+                    "right": "0px",
+                    "bottom": "0px",
+                    "left": "0px"
+                }
+            }
+        },
+        "responsiveMaxWidth": {
+            "type": "object",
+            "default": {
+                "desktop": 1200,
+                "tablet": 1000,
+                "mobile": 100
+            }
+        },
         "typography": {
             "type": "object",
             "default": {

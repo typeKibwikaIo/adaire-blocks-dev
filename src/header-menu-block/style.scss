@@ -305,7 +305,7 @@ body.adaire-header-no-scroll {
 // Wraps the mobile-only CTA rendered inside .adaire-header-nav by
 // render.php (adaire_header_render_nav()). Hidden by default — it only
 // ever shows inside the open dropdown/slide-in/overlay panel below the
-// ≤782px breakpoint (see the override there).
+// ≤600px breakpoint (see the override there).
 .adaire-header-nav-mobile-cta {
     display: none;
 }
@@ -870,7 +870,7 @@ a.adaire-header-follow-us:focus {
     }
 }
 
-@media (max-width: 782px) {
+@media (max-width: 600px) {
     .adaire-header-topbar {
         flex-direction: column;
         gap: 6px;

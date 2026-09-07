@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Adaire Blocks
  * Description:       A powerful WordPress plugin that helps developers and designers create visually stunning, high-performance websites with ease right inside the Gutenberg editor.
- * Version:           1.3.2
+ * Version:           1.3.3
  * Requires at least: 6.7
  * Requires PHP:      7.0
  * Author:            <a href="https://adaireblocks.com" target="_blank">Adaire Digital</a>
@@ -57,8 +57,15 @@ if ( ! function_exists( 'adaire_blocks_hex_to_rgba' ) ) {
 require_once __DIR__ . '/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
+// Points at the public adaire-blocks-dev repo. Because this is a
+// github.com URL (not a raw-JSON manifest URL), PucFactory auto-detects
+// it as a GitHub VCS source and checks that repo's Releases (tags) for
+// the highest version number, downloading the matching release zip.
+// To ship a new test build: bump the Version header + ADAIRE_BLOCKS_VERSION
+// here, then in adaire-blocks-dev create a new GitHub Release whose tag
+// matches that version (e.g. 1.3.2-dev-0.1) and attach/point at the zip.
 $myUpdateChecker = PucFactory::buildUpdateChecker(
-    'https://raw.githubusercontent.com/helloadaire/Adaire-Blocks-Update-JSON/main/update-info.json',
+    'https://github.com/typeKibwikaIo/adaire-blocks-dev',
     __FILE__,
     'adaire-blocks'
 );
@@ -201,7 +208,7 @@ add_action(
 // End of version rollback code
 
 // Define plugin constants
-define('ADAIRE_BLOCKS_VERSION', '1.3.2');
+define('ADAIRE_BLOCKS_VERSION', '1.3.2-dev-0.0');
 define('ADAIRE_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_FILE', __FILE__);

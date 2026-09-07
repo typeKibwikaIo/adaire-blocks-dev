@@ -73,8 +73,7 @@
             "default": {
                 "desktop": 18,
                 "tablet": 16,
-                "mobile": 14,
-                "smartwatch": 12
+                "mobile": 14
             }
         },
         "showIcon": {
@@ -133,12 +132,6 @@
                     "right": "12px",
                     "bottom": "6px",
                     "left": "12px"
-                },
-                "smartwatch": {
-                    "top": "4px",
-                    "right": "8px",
-                    "bottom": "4px",
-                    "left": "8px"
                 }
             }
         },
@@ -161,12 +154,6 @@
                     "top": "12px",
                     "right": "0px",
                     "bottom": "12px",
-                    "left": "0px"
-                },
-                "smartwatch": {
-                    "top": "8px",
-                    "right": "0px",
-                    "bottom": "8px",
                     "left": "0px"
                 }
             }
@@ -225,8 +212,7 @@
             "default": {
                 "desktop": "normal",
                 "tablet": "normal",
-                "mobile": "normal",
-                "smartwatch": "normal"
+                "mobile": "normal"
             }
         },
         "letterSpacing": {
@@ -234,8 +220,7 @@
             "default": {
                 "desktop": "normal",
                 "tablet": "normal",
-                "mobile": "normal",
-                "smartwatch": "normal"
+                "mobile": "normal"
             }
         },
         "textTransform": {

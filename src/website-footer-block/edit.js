@@ -6,6 +6,7 @@ import { __ } from '@wordpress/i18n';
 import { useState, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import BoundColorPalette from '../components/BoundColorPalette';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS, BreakpointNote } from '../components/DeviceSwitcher';
 
 // ── helpers ──────────────────────────────────────────────────────────────
 
@@ -176,13 +177,20 @@ const widgetAreaOptions = [
 // ── component ───────────────────────────────────────────────────────────
 
 export default function Edit({ attributes, setAttributes }) {
+    const [deviceType, setDeviceType] = useState('desktop');
     const {
         backgroundColor, backgroundImage, backgroundGradient, backgroundType,
         textColor, accentColor, fontFamily,
         paddingTop, paddingBottom, marginTop, marginBottom, maxWidth,
         showTopBar, showColumnsSection, showBottomBar,
         topBar, columnsSection, bottomBar,
+        responsivePadding, responsiveMargin, responsiveMaxWidth,
     } = attributes;
+
+    // Helper functions for responsive values
+    const getResponsivePadding = () => responsivePadding?.[deviceType] || responsivePadding?.desktop || { top: '60px', right: '0px', bottom: '40px', left: '0px' };
+    const getResponsiveMargin = () => responsiveMargin?.[deviceType] || responsiveMargin?.desktop || { top: '0px', right: '0px', bottom: '0px', left: '0px' };
+    const getResponsiveMaxWidth = () => getDeviceValue(responsiveMaxWidth, deviceType, 1200);
 
     const blockProps = useBlockProps({
         className: 'website-footer-block',

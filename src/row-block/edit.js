@@ -13,12 +13,14 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { createBlock } from '@wordpress/blocks';
 import { select, useDispatch, useSelect } from '@wordpress/data';
+import { useState } from '@wordpress/element';
 import InspectorTabs from '../components/InspectorTabs';
 import PresetIcon from './PresetIcon';
 import { getRowWidthClass } from './width-utils';
 import BoundColorPalette from '../components/BoundColorPalette';
 import { boxToCss, normalizeBoxUnits } from '../components/spacing-utils';
 import AnimationSettings from '../components/AnimationSettings';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS, BreakpointNote } from '../components/DeviceSwitcher';
 
 /**
  * Evenly distributes 100% across `count` columns as whole numbers, putting
@@ -110,6 +112,7 @@ const PRESETS = [
 ];
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
+  const [deviceType, setDeviceType] = useState('desktop');
   const { layout: layoutAttr, align } = attributes;
 
   const {
@@ -145,6 +148,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     animationThreshold = 0.2,
     animationOnce = false,
     animationReverseOnScrollOut = false,
+    responsiveGap,
+    responsivePadding,
+    responsiveMargin,
   } = attributes;
 
   // Padding/Margin are still stored at the same `style.spacing` attribute
@@ -187,10 +193,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     return Number.isNaN( num ) ? 0 : num;
   };
 
-  const paddingVertical = parsePx( rowPadding.top ?? rowPadding.bottom );
-  const paddingHorizontal = parsePx( rowPadding.left ?? rowPadding.right );
-  const marginVertical = parsePx( rowMargin.top ?? rowMargin.bottom );
-  const marginHorizontal = parsePx( rowMargin.left ?? rowMargin.right );
+  // Helper functions for responsive values
+  const getResponsiveGap = () => getDeviceValue(responsiveGap, deviceType, 16);
+  const getResponsivePadding = () => responsivePadding?.[deviceType] || responsivePadding?.desktop || { top: '0px', right: '0px', bottom: '0px', left: '0px' };
+  const getResponsiveMargin = () => responsiveMargin?.[deviceType] || responsiveMargin?.desktop || { top: '0px', right: '0px', bottom: '0px', left: '0px' };
+
+  const paddingVertical = parsePx( getResponsivePadding().top ?? getResponsivePadding().bottom );
+  const paddingHorizontal = parsePx( getResponsivePadding().left ?? getResponsivePadding().right );
+  const marginVertical = parsePx( getResponsiveMargin().top ?? getResponsiveMargin().bottom );
+  const marginHorizontal = parsePx( getResponsiveMargin().left ?? getResponsiveMargin().right );
 
   // key: 'padding' | 'margin'. axis: 'vertical' (writes top+bottom) or
   // 'horizontal' (writes left+right) — always keeping the pair in sync so
@@ -278,10 +289,17 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
   // free-tier InspectorTabs reorg) ──
   const spacingPanel = (
     <PanelBody section="layout" title={ __( 'Spacing', 'adaire-blocks' ) } initialOpen={ false }>
+      <DeviceSwitcher
+        deviceType={deviceType}
+        setDeviceType={setDeviceType}
+        label={ __( 'Breakpoint', 'adaire-blocks' ) }
+        tiers={THREE_TIERS}
+      />
+      <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
       <RangeControl
         label={ __( 'Gap Between Columns (px)', 'adaire-blocks' ) }
-        value={ gap }
-        onChange={ ( value ) => setAttributes( { gap: value } ) }
+        value={ getResponsiveGap() }
+        onChange={ ( val ) => setAttributes( { responsiveGap: updateDeviceAttribute(responsiveGap, deviceType, val) } ) }
         min={ 0 }
         max={ 80 }
         help={ __( 'Set to 0 to remove the space columns leave on the sides.', 'adaire-blocks' ) }
@@ -289,28 +307,76 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
       <RangeControl
         label={ __( 'Padding — Top & Bottom (px)', 'adaire-blocks' ) }
         value={ paddingVertical }
-        onChange={ ( value ) => updateSpacingAxis( 'padding', 'vertical', value ) }
+        onChange={ ( value ) => {
+          const currentPadding = getResponsivePadding();
+          setAttributes({
+            responsivePadding: {
+              ...(responsivePadding || {}),
+              [deviceType]: {
+                ...currentPadding,
+                top: `${ value }px`,
+                bottom: `${ value }px`
+              }
+            }
+          });
+        }}
         min={ 0 }
         max={ 200 }
       />
       <RangeControl
         label={ __( 'Padding — Left & Right (px)', 'adaire-blocks' ) }
         value={ paddingHorizontal }
-        onChange={ ( value ) => updateSpacingAxis( 'padding', 'horizontal', value ) }
+        onChange={ ( value ) => {
+          const currentPadding = getResponsivePadding();
+          setAttributes({
+            responsivePadding: {
+              ...(responsivePadding || {}),
+              [deviceType]: {
+                ...currentPadding,
+                left: `${ value }px`,
+                right: `${ value }px`
+              }
+            }
+          });
+        }}
         min={ 0 }
         max={ 200 }
       />
       <RangeControl
         label={ __( 'Margin — Top & Bottom (px)', 'adaire-blocks' ) }
         value={ marginVertical }
-        onChange={ ( value ) => updateSpacingAxis( 'margin', 'vertical', value ) }
+        onChange={ ( value ) => {
+          const currentMargin = getResponsiveMargin();
+          setAttributes({
+            responsiveMargin: {
+              ...(responsiveMargin || {}),
+              [deviceType]: {
+                ...currentMargin,
+                top: `${ value }px`,
+                bottom: `${ value }px`
+              }
+            }
+          });
+        }}
         min={ 0 }
         max={ 200 }
       />
       <RangeControl
         label={ __( 'Margin — Left & Right (px)', 'adaire-blocks' ) }
         value={ marginHorizontal }
-        onChange={ ( value ) => updateSpacingAxis( 'margin', 'horizontal', value ) }
+        onChange={ ( value ) => {
+          const currentMargin = getResponsiveMargin();
+          setAttributes({
+            responsiveMargin: {
+              ...(responsiveMargin || {}),
+              [deviceType]: {
+                ...currentMargin,
+                left: `${ value }px`,
+                right: `${ value }px`
+              }
+            }
+          });
+        }}
         min={ 0 }
         max={ 200 }
       />
@@ -552,13 +618,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     className: rowClassName,
     style: {
       gridTemplateColumns,
-      gap: `${ gap }px`,
+      gap: `${ getResponsiveGap() }px`,
       ...borderStyleVars,
       backgroundColor: backgroundColor || undefined,
       ...backgroundImageVars,
       ...shadowStyleVars,
-      padding: paddingCss || undefined,
-      margin: marginCss || undefined,
+      padding: boxToCss(normalizeBoxUnits(getResponsivePadding())) || undefined,
+      margin: boxToCss(normalizeBoxUnits(getResponsiveMargin())) || undefined,
     },
     ...animationDataAttrs,
   } );

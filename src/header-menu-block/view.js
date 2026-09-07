@@ -200,12 +200,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Custom mobile breakpoints: the default (782px) is handled entirely by
+        // Custom mobile breakpoints: the default (600px) is handled entirely by
         // style.scss's static media query, so non-default values are the only
         // case that needs a runtime override — scoped to this header instance
         // only, leaving every existing (default-breakpoint) page untouched.
-        const breakpoint = parseInt(header.dataset.mobileBreakpoint, 10) || 782;
-        if (breakpoint !== 782) {
+        const breakpoint = parseInt(header.dataset.mobileBreakpoint, 10) || 600;
+        if (breakpoint !== 600) {
             const uid = `adaire-hdr-${Math.random().toString(36).slice(2, 9)}`;
             header.setAttribute('data-header-uid', uid);
 

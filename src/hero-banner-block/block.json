@@ -88,8 +88,7 @@
             "default": {
                 "desktop": "0px",
                 "tablet": "0px",
-                "mobile": "0px",
-                "smartwatch": "0px"
+                "mobile": "0px"
             }
         },
         "responsiveIconHorizontalOffset": {
@@ -97,8 +96,7 @@
             "default": {
                 "desktop": "0px",
                 "tablet": "0px",
-                "mobile": "0px",
-                "smartwatch": "0px"
+                "mobile": "0px"
             }
         },
         "backgroundGradient": {
@@ -110,8 +108,7 @@
             "default": {
                 "desktop": "linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)",
                 "tablet": "linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)",
-                "mobile": "linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)",
-                "smartwatch": "linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)"
+                "mobile": "linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)"
             }
         },
         "responsiveRadialGradientCenterX": {
@@ -119,8 +116,7 @@
             "default": {
                 "desktop": 50,
                 "tablet": 50,
-                "mobile": 50,
-                "smartwatch": 50
+                "mobile": 50
             }
         },
         "responsiveRadialGradientCenterY": {
@@ -128,8 +124,7 @@
             "default": {
                 "desktop": 50,
                 "tablet": 50,
-                "mobile": 50,
-                "smartwatch": 50
+                "mobile": 50
             }
         },
         "responsiveJustifyContent": {
@@ -137,8 +132,7 @@
             "default": {
                 "desktop": "flex-start",
                 "tablet": "flex-start",
-                "mobile": "center",
-                "smartwatch": "center"
+                "mobile": "center"
             }
         },
         "breadcrumbsColor": {
@@ -150,8 +144,7 @@
             "default": {
                 "desktop": "90px",
                 "tablet": "40px",
-                "mobile": "20px",
-                "smartwatch": "16px"
+                "mobile": "20px"
             }
         },
         "responsiveBreadcrumbLeftOffset": {
@@ -159,8 +152,7 @@
             "default": {
                 "desktop": "200px",
                 "tablet": "40px",
-                "mobile": "16px",
-                "smartwatch": "8px"
+                "mobile": "16px"
             }
         },
         "headingColor": {
@@ -206,8 +198,7 @@
             "default": {
                 "desktop": "100vh",
                 "tablet": "auto",
-                "mobile": "auto",
-                "smartwatch": "auto"
+                "mobile": "auto"
             }
         },
         "responsiveWidth": {
@@ -215,8 +206,7 @@
             "default": {
                 "desktop": "100vw",
                 "tablet": "100%",
-                "mobile": "100%",
-                "smartwatch": "100%"
+                "mobile": "100%"
             }
         },
         "responsiveFlexDirection": {
@@ -224,8 +214,7 @@
             "default": {
                 "desktop": "row",
                 "tablet": "row",
-                "mobile": "column",
-                "smartwatch": "column"
+                "mobile": "column"
             }
         },
         "responsiveAlignItems": {
@@ -233,8 +222,7 @@
             "default": {
                 "desktop": "center",
                 "tablet": "center",
-                "mobile": "flex-start",
-                "smartwatch": "flex-start"
+                "mobile": "flex-start"
             }
         },
         "responsivePadding": {
@@ -257,12 +245,6 @@
                     "right": "16px",
                     "bottom": "20px",
                     "left": "16px"
-                },
-                "smartwatch": {
-                    "top": "16px",
-                    "right": "12px",
-                    "bottom": "16px",
-                    "left": "12px"
                 }
             }
         },
@@ -271,8 +253,7 @@
             "default": {
                 "desktop": "45%",
                 "tablet": "100%",
-                "mobile": "100%",
-                "smartwatch": "100%"
+                "mobile": "100%"
             }
         },
         "responsiveCtaMargin": {
@@ -295,12 +276,6 @@
                     "right": "0px",
                     "bottom": "0px",
                     "left": "0px"
-                },
-                "smartwatch": {
-                    "top": "0px",
-                    "right": "0px",
-                    "bottom": "0px",
-                    "left": "0px"
                 }
             }
         },
@@ -309,8 +284,7 @@
             "default": {
                 "desktop": 72,
                 "tablet": 42,
-                "mobile": 28,
-                "smartwatch": 20
+                "mobile": 28
             }
         },
         "responsiveHeadingLineHeight": {
@@ -318,8 +292,7 @@
             "default": {
                 "desktop": 92,
                 "tablet": 54,
-                "mobile": 36,
-                "smartwatch": 28
+                "mobile": 36
             }
         },
         "responsiveHeadingMarginBottom": {

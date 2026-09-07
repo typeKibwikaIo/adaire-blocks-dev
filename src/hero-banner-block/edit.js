@@ -34,7 +34,7 @@ import {
 	mobile,
 } from "@wordpress/icons";
 import { getBlockType } from "@wordpress/blocks";
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, BreakpointNote } from '../components/DeviceSwitcher';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS, BreakpointNote } from '../components/DeviceSwitcher';
 import InspectorTabs from '../components/InspectorTabs';
 import { PANEL, LABEL } from '../components/inspector-vocabulary';
 import QuickZone from '../components/QuickZone';
@@ -73,20 +73,20 @@ const CTA_TEMPLATE = [["create-block/button-block", { buttonText: "Get Started" 
 // The block's one and only breakpoint set — every responsive control in this
 // block reads/writes the same `deviceType` state, so there is a single
 // switcher (in the Layout tab's "Responsive" panel) rather than one per panel.
-const BREAKPOINTS = ["mobile", "tablet", "smallLaptop", "desktop", "bigDesktop"];
+// Updated with specific breakpoint descriptions per requirements:
+// Desktop/Laptop — 783px and wider
+// Tablet — 601px to 782px
+// Mobile — 600px and smaller
+const BREAKPOINTS = ["mobile", "tablet", "desktop"];
 const BREAKPOINT_LABELS = {
 	mobile: __("Mobile", "adaire-blocks"),
 	tablet: __("Tablet", "adaire-blocks"),
-	smallLaptop: __("Small Laptop", "adaire-blocks"),
 	desktop: __("Desktop", "adaire-blocks"),
-	bigDesktop: __("Big Desktop", "adaire-blocks"),
 };
-const FIVE_TIERS = [
+const THREE_TIERS = [
 	{ key: "mobile", label: BREAKPOINT_LABELS.mobile, icon: mobile },
 	{ key: "tablet", label: BREAKPOINT_LABELS.tablet, icon: tablet },
-	{ key: "smallLaptop", label: BREAKPOINT_LABELS.smallLaptop, icon: laptop },
 	{ key: "desktop", label: BREAKPOINT_LABELS.desktop, icon: desktop },
-	{ key: "bigDesktop", label: BREAKPOINT_LABELS.bigDesktop, icon: desktop },
 ];
 
 export default function Edit({ attributes, setAttributes, clientId }) {
@@ -1273,7 +1273,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					    deviceType={deviceType}
 					    setDeviceType={setDeviceType}
 					    label={ LABEL.BREAKPOINT }
-					    tiers={FIVE_TIERS}
+					    tiers={THREE_TIERS}
 					    onReset={resetResponsiveDefaults}
 					/>
 					    <p style={{ marginTop: "8px", fontSize: "12px", color: "#757575" }}>
@@ -1315,7 +1315,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					    checked={showBackgroundImage}
 					    onChange={(value) => setAttributes({ showBackgroundImage: value })}
 					/>
-					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 
 					<SelectControl
 					    label={__("Flex Direction", "adaire-blocks")}
@@ -1492,7 +1492,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					title={ PANEL.ALIGNMENT }
 					initialOpen={false}
 				>
-					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 					<BaseControl
 					    label={__("Text Alignment", "adaire-blocks")}
 					    style={{ marginTop: "16px" }}
@@ -1585,7 +1585,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					title={ PANEL.DIMENSIONS }
 					initialOpen={false}
 				>
-					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 					<UnitControl
 					    label={__("Width", "adaire-blocks")}
 					    value={currentWidth}
@@ -1694,7 +1694,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					title={ PANEL.SPACING }
 					initialOpen={false}
 				>
-					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 					{/* Padding, margin and gap are Style, not Layout (spec §4). */}
 					<BoxControl
 					    label={ LABEL.PADDING }
@@ -1877,7 +1877,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					title={ PANEL.BACKGROUND }
 					initialOpen={false}
 				>
-					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 					<BaseControl label={__("Background Gradient", "adaire-blocks")}>
 					    <GradientPicker
 					        value={currentBackgroundGradient || backgroundGradient}
@@ -2116,7 +2116,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					title={ PANEL.COLORS }
 					initialOpen={false}
 				>
-					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 					{/* Preheader colour only applies while the preheader is shown. */}
 					{showPreheader && (
 						<BaseControl label={__("Preheader Color", "adaire-blocks")}>
@@ -2162,7 +2162,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					title={ PANEL.TYPOGRAPHY }
 					initialOpen={false}
 				>
-					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 					{/* Preheader typography only applies while the preheader is shown. */}
 					{showPreheader && (
 						<UnitControl
@@ -2339,7 +2339,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					title={ PANEL.BORDER }
 					initialOpen={false}
 				>
-					<BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 					{/* Media styling only applies when the block renders media. */}
 					{(mediaType === "image" || mediaType === "video") && (
 						<UnitControl

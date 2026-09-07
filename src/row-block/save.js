@@ -1,6 +1,7 @@
 import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 import { getRowWidthClass } from './width-utils';
 import { boxToCss, normalizeBoxUnits } from '../components/spacing-utils';
+import { getDeviceValue } from '../components/DeviceSwitcher';
 
 export default function save( { attributes } ) {
   const {
@@ -36,6 +37,9 @@ export default function save( { attributes } ) {
     animationThreshold = 0.2,
     animationOnce = false,
     animationReverseOnScrollOut = false,
+    responsiveGap,
+    responsivePadding,
+    responsiveMargin,
   } = attributes;
 
   // Mirrors edit.js: padding/margin are converted from the BoxControl-shaped
@@ -45,6 +49,19 @@ export default function save( { attributes } ) {
   // matching comment in edit.js).
   const paddingCss = boxToCss( normalizeBoxUnits( blockStyle?.spacing?.padding ) );
   const marginCss = boxToCss( normalizeBoxUnits( blockStyle?.spacing?.margin ) );
+
+  // Responsive values for 3-tier breakpoints
+  const desktopGap = getDeviceValue(responsiveGap, 'desktop', 16);
+  const tabletGap = getDeviceValue(responsiveGap, 'tablet', 16);
+  const mobileGap = getDeviceValue(responsiveGap, 'mobile', 16);
+
+  const desktopPadding = responsivePadding?.desktop || { top: '0px', right: '0px', bottom: '0px', left: '0px' };
+  const tabletPadding = responsivePadding?.tablet || desktopPadding;
+  const mobilePadding = responsivePadding?.mobile || desktopPadding;
+
+  const desktopMargin = responsiveMargin?.desktop || { top: '0px', right: '0px', bottom: '0px', left: '0px' };
+  const tabletMargin = responsiveMargin?.tablet || desktopMargin;
+  const mobileMargin = responsiveMargin?.mobile || desktopMargin;
 
   const gridTemplateColumns = columnWidths.length
     ? columnWidths.map( ( w ) => `${ w }fr` ).join( ' ' )
@@ -116,13 +133,31 @@ export default function save( { attributes } ) {
     className: rowClassName,
     style: {
       gridTemplateColumns,
-      gap: `${ gap }px`,
+      gap: `${ desktopGap }px`,
+      '--row-gap-tablet': `${ tabletGap }px`,
+      '--row-gap-mobile': `${ mobileGap }px`,
       ...borderStyleVars,
       backgroundColor: backgroundColor || undefined,
       ...backgroundImageVars,
       ...shadowStyleVars,
-      padding: paddingCss || undefined,
-      margin: marginCss || undefined,
+      padding: boxToCss(normalizeBoxUnits(desktopPadding)) || undefined,
+      '--row-padding-top-tablet': tabletPadding.top,
+      '--row-padding-right-tablet': tabletPadding.right,
+      '--row-padding-bottom-tablet': tabletPadding.bottom,
+      '--row-padding-left-tablet': tabletPadding.left,
+      '--row-padding-top-mobile': mobilePadding.top,
+      '--row-padding-right-mobile': mobilePadding.right,
+      '--row-padding-bottom-mobile': mobilePadding.bottom,
+      '--row-padding-left-mobile': mobilePadding.left,
+      margin: boxToCss(normalizeBoxUnits(desktopMargin)) || undefined,
+      '--row-margin-top-tablet': tabletMargin.top,
+      '--row-margin-right-tablet': tabletMargin.right,
+      '--row-margin-bottom-tablet': tabletMargin.bottom,
+      '--row-margin-left-tablet': tabletMargin.left,
+      '--row-margin-top-mobile': mobileMargin.top,
+      '--row-margin-right-mobile': mobileMargin.right,
+      '--row-margin-bottom-mobile': mobileMargin.bottom,
+      '--row-margin-left-mobile': mobileMargin.left,
     },
     ...animationDataAttrs,
     ...backgroundA11yAttrs,

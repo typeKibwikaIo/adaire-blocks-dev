@@ -193,7 +193,7 @@
         },
         "mobileBreakpoint": {
             "type": "number",
-            "default": 782
+            "default": 600
         },
         "mobileCloseOnOutsideClick": {
             "type": "boolean",

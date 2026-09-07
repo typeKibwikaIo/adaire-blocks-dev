@@ -105,13 +105,11 @@ const bigDesktopIcon = createElement('svg', {
 const BREAKPOINTS = [
     { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
     { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
-    { name: 'smallLaptop', icon: smallLaptopIcon, label: __('Small Laptop', 'adaire-blocks') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
-    { name: 'bigDesktop', icon: bigDesktopIcon, label: __('Big Desktop', 'adaire-blocks') }
+    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') }
 ];
 
 // Shared DeviceSwitcher tiers, derived from the same BREAKPOINTS list above.
-const FIVE_TIERS = BREAKPOINTS.map((bp) => ({ key: bp.name, label: bp.label, icon: bp.icon }));
+const THREE_TIERS = BREAKPOINTS.map((bp) => ({ key: bp.name, label: bp.label, icon: bp.icon }));
 
 // Every responsive attribute that has a visible control in this block's
 // panels — used by the "Reset to default" action next to the switcher.
@@ -629,10 +627,10 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         deviceType={deviceType}
                         setDeviceType={setDeviceType}
                         label={ LABEL.BREAKPOINT }
-                        tiers={FIVE_TIERS}
+                        tiers={THREE_TIERS}
                         onReset={resetResponsiveDefaults}
                     />
-                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
                 </PanelBody>
 
                 <PanelBody section="style" title={ PANEL.BACKGROUND }>
@@ -758,7 +756,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody section="layout" title={ PANEL.STRUCTURE }>
-                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 
                     <ToggleControl
                         label={__('Show Heading', 'adaire-blocks')}
@@ -806,7 +804,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody section="layout" title={ PANEL.DIMENSIONS } initialOpen={false}>
-                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 
                     <UnitControl
                         label={__('Block Width', 'adaire-blocks')}
@@ -864,7 +862,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
 
                 {/* Padding, margin and gap are Style, not Layout (spec §4). */}
                 <PanelBody section="style" title={ PANEL.SPACING } initialOpen={false}>
-                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 
                     <BoxControl
                         label={ LABEL.PADDING }
@@ -895,7 +893,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody section="layout" title={ PANEL.ALIGNMENT } initialOpen={false}>
-                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 
                     <SelectControl
                         label={__('Item Text Alignment', 'adaire-blocks')}
@@ -910,7 +908,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody section="style" title={ PANEL.TYPOGRAPHY } initialOpen={false}>
-                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 
                     <SelectControl
                         label={ LABEL.FONT_FAMILY }
@@ -961,7 +959,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody section="style" title={ PANEL.COLORS } initialOpen={false}>
-                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 
                     <UnitControl
                         label={ LABEL.ICON_SIZE }
@@ -982,7 +980,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
 
                 <PanelBody section="style" title={ PANEL.BORDER } initialOpen={false}>
-                    <BreakpointNote deviceType={deviceType} tiers={FIVE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 
                     <UnitControl
                         label={ LABEL.BORDER_WIDTH }
