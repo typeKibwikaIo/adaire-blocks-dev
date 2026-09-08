@@ -77,17 +77,7 @@ const CTA_TEMPLATE = [["create-block/button-block", { buttonText: "Get Started" 
 // Desktop/Laptop — 783px and wider
 // Tablet — 601px to 782px
 // Mobile — 600px and smaller
-const BREAKPOINTS = ["mobile", "tablet", "desktop"];
-const BREAKPOINT_LABELS = {
-	mobile: __("Mobile", "adaire-blocks"),
-	tablet: __("Tablet", "adaire-blocks"),
-	desktop: __("Desktop", "adaire-blocks"),
-};
-const THREE_TIERS = [
-	{ key: "mobile", label: BREAKPOINT_LABELS.mobile, icon: mobile },
-	{ key: "tablet", label: BREAKPOINT_LABELS.tablet, icon: tablet },
-	{ key: "desktop", label: BREAKPOINT_LABELS.desktop, icon: desktop },
-];
+// THREE_TIERS is imported from DeviceSwitcher component
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const [deviceType, setDeviceType] = useState("desktop");
@@ -429,12 +419,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				getBackgroundGradientForBreakpoint("mobile"),
 			"--hero-bg-gradient-tablet":
 				getBackgroundGradientForBreakpoint("tablet"),
-			"--hero-bg-gradient-small-laptop":
-				getBackgroundGradientForBreakpoint("smallLaptop"),
 			"--hero-bg-gradient-desktop":
 				getBackgroundGradientForBreakpoint("desktop"),
-			"--hero-bg-gradient-big-desktop":
-				getBackgroundGradientForBreakpoint("bigDesktop"),
 
             // Colors
 			"--hero-breadcrumbs-color": breadcrumbsColor || "#ffffff",
@@ -446,50 +432,32 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             // Container - Min Height
 			"--hero-min-height-mobile": responsiveMinHeight?.mobile || "auto",
 			"--hero-min-height-tablet": responsiveMinHeight?.tablet || "auto",
-			"--hero-min-height-small-laptop":
-				responsiveMinHeight?.smallLaptop || "auto",
 			"--hero-min-height-desktop": responsiveMinHeight?.desktop || "100vh",
-			"--hero-min-height-big-desktop":
-				responsiveMinHeight?.bigDesktop || "100vh",
 
             // Container - Width
 			"--hero-width-mobile": responsiveWidth?.mobile || "100%",
 			"--hero-width-tablet": responsiveWidth?.tablet || "100%",
-			"--hero-width-small-laptop": responsiveWidth?.smallLaptop || "100%",
 			"--hero-width-desktop": responsiveWidth?.desktop || "100vw",
-			"--hero-width-big-desktop": responsiveWidth?.bigDesktop || "100vw",
 
             // Container - Flex Direction
 			"--hero-flex-direction-mobile":
 				responsiveFlexDirection?.mobile || "column",
 			"--hero-flex-direction-tablet": responsiveFlexDirection?.tablet || "row",
-			"--hero-flex-direction-small-laptop":
-				responsiveFlexDirection?.smallLaptop || "row",
 			"--hero-flex-direction-desktop":
 				responsiveFlexDirection?.desktop || "row",
-			"--hero-flex-direction-big-desktop":
-				responsiveFlexDirection?.bigDesktop || "row",
 
             // Container - Justify Content
 			"--hero-justify-content-mobile":
 				responsiveJustifyContent?.mobile || "center",
 			"--hero-justify-content-tablet":
 				responsiveJustifyContent?.tablet || "flex-start",
-			"--hero-justify-content-small-laptop":
-				responsiveJustifyContent?.smallLaptop || "flex-start",
 			"--hero-justify-content-desktop":
 				responsiveJustifyContent?.desktop || "flex-start",
-			"--hero-justify-content-big-desktop":
-				responsiveJustifyContent?.bigDesktop || "flex-start",
 
             // Container - Align Items
 			"--hero-align-items-mobile": responsiveAlignItems?.mobile || "flex-start",
 			"--hero-align-items-tablet": responsiveAlignItems?.tablet || "center",
-			"--hero-align-items-small-laptop":
-				responsiveAlignItems?.smallLaptop || "center",
 			"--hero-align-items-desktop": responsiveAlignItems?.desktop || "center",
-			"--hero-align-items-big-desktop":
-				responsiveAlignItems?.bigDesktop || "center",
 
             // Container - Padding
 			"--hero-padding-top-mobile": responsivePadding?.mobile?.top || "20px",

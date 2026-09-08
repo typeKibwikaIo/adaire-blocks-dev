@@ -76,7 +76,6 @@ const BUTTON = (text, variant = 'dark') => [
 			desktop: { top: '18px', right: '0px', bottom: '0px', left: '0px' },
 			tablet: { top: '16px', right: '0px', bottom: '0px', left: '0px' },
 			mobile: { top: '12px', right: '0px', bottom: '0px', left: '0px' },
-			smartwatch: { top: '8px', right: '0px', bottom: '0px', left: '0px' },
 		},
 		...(variant === 'light'
 			? {
