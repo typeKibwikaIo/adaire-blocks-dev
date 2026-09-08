@@ -1612,6 +1612,750 @@ function getStyleVarsPreCta( a ) {
   return styleVars;
 }
 
+function resolveSentinelV6( value, fallback ) {
+  return value === undefined || value === null || value < 0 ? fallback : value;
+}
+
+function alignToFlexV6( align ) {
+  if ( align === 'left' ) return 'flex-start';
+  if ( align === 'right' ) return 'flex-end';
+  return 'center';
+}
+
+function getBgTypeClassV6( a ) {
+  return `bg-type-${ a.backgroundType || 'solid' }`;
+}
+
+function getStyleVarsV6( a ) {
+  const defaultGradient = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+  const responsivePadding = a.responsivePadding || {};
+
+  const styleVars = {
+    '--ad-accent': a.accentColor || '#6366f1',
+    '--ad-color': a.textColor || '#111827',
+
+    '--ad-bg-color': a.backgroundColor || '#ffffff',
+    '--ad-bg-gradient': a.backgroundGradient || defaultGradient,
+    '--ad-bg-image': a.backgroundImage ? `url(${ a.backgroundImage })` : 'none',
+    '--ad-bg-image-size': a.backgroundImageSize || 'cover',
+    '--ad-bg-image-position': a.backgroundImagePosition || 'center',
+    '--ad-bg-image-repeat': a.backgroundImageRepeat || 'no-repeat',
+
+    '--ad-button-primary-color': a.buttonPrimaryColor || '#ffffff',
+    '--ad-button-primary-bg': a.buttonPrimaryBg || a.accentColor || '#6366f1',
+    '--ad-button-secondary-color': a.buttonSecondaryColor || '#111827',
+    '--ad-button-secondary-bg': a.buttonSecondaryBg || '#ffffff',
+    '--ad-button-hover-color': a.buttonHoverColor || '#ffffff',
+    '--ad-button-hover-bg': a.buttonHoverBackgroundColor || '#111827',
+    '--ad-button-hover-border': a.buttonHoverBorderColor || '#111827',
+
+    '--ad-radius': `${ a.borderRadius ?? 12 }px`,
+    '--ad-padding-desktop': `${ responsivePadding.desktop ?? a.padding ?? 80 }px`,
+    '--ad-padding-tablet': `${ responsivePadding.tablet ?? responsivePadding.desktop ?? a.padding ?? 80 }px`,
+    '--ad-padding-mobile': `${ responsivePadding.mobile ?? responsivePadding.tablet ?? responsivePadding.desktop ?? a.padding ?? 80 }px`,
+    '--ad-margin-top': a.margin?.top || '0px',
+    '--ad-margin-right': a.margin?.right || '0px',
+    '--ad-margin-bottom': a.margin?.bottom || '0px',
+    '--ad-margin-left': a.margin?.left || '0px',
+    '--ad-font-size': `${ a.fontSize ?? 16 }px`,
+
+    '--ad-pill-bg': a.pillBg || '#dbeafe',
+    '--ad-pill-color': a.pillColor || '#1e40af',
+    '--ad-gradient-start': a.gradientStart || '#6366f1',
+    '--ad-gradient-end': a.gradientEnd || '#8b5cf6',
+
+    '--ad-cta-gap': `${ a.ctaGap ?? 16 }px`,
+    '--ad-cta-padding-v': `${ a.ctaPaddingV ?? 14 }px`,
+    '--ad-cta-padding-h': `${ a.ctaPaddingH ?? 32 }px`,
+    '--ad-cta-radius': `${ resolveSentinelV6( a.ctaBorderRadius, a.borderRadius ?? 12 ) }px`,
+    '--ad-cta-align': alignToFlexV6( a.ctaAlignment ),
+    '--ad-cta-text-align': a.ctaAlignment || 'center',
+
+    '--ad-media-radius': `${ resolveSentinelV6( a.mediaBorderRadius, a.borderRadius ?? 12 ) }px`,
+    '--ad-media-spacing': `${ a.mediaSpacing ?? 48 }px`,
+    '--ad-media-shadow': a.mediaShadow === false ? 'none' : '0 20px 60px rgba(0, 0, 0, 0.15)',
+
+    '--ad-effect-gradient-overlay': `linear-gradient(135deg, ${ a.effectGradientOverlayColor1 || '#6366f1' }, ${ a.effectGradientOverlayColor2 || '#8b5cf6' })`,
+    '--ad-effect-gradient-overlay-opacity': `${ ( a.effectGradientOverlayOpacity ?? 30 ) / 100 }`,
+    '--ad-effect-glow-color': a.effectGlowColor || '#6366f1',
+
+    '--ad-rating-align': alignToFlexV6( a.ratingBadgesAlignment ),
+  };
+
+  const hasTypographyAttrs = a.eyebrowFontSize || a.fontFamily || a.headingFontSize ||
+    a.bodyTextFontWeight || a.pillFontSize || a.buttonFontSize;
+
+  if ( hasTypographyAttrs ) {
+    styleVars['--ad-font-family'] = a.fontFamily !== undefined && a.fontFamily !== '' ? a.fontFamily : 'inherit';
+    styleVars['--ad-eyebrow-font-size'] = a.eyebrowFontSize || '14px';
+    styleVars['--ad-eyebrow-font-weight'] = a.eyebrowFontWeight || '600';
+    styleVars['--ad-eyebrow-line-height'] = a.eyebrowLineHeight || 'normal';
+    styleVars['--ad-eyebrow-letter-spacing'] = a.eyebrowLetterSpacing || '1px';
+    styleVars['--ad-eyebrow-text-transform'] = a.eyebrowTextTransform || 'uppercase';
+
+    styleVars['--ad-heading-font-size'] = a.headingFontSize || 'clamp(36px, 5vw, 64px)';
+    styleVars['--ad-heading-font-weight'] = a.headingFontWeight || '800';
+    styleVars['--ad-heading-line-height'] = a.headingLineHeight || '1.2';
+    styleVars['--ad-heading-letter-spacing'] = a.headingLetterSpacing || 'normal';
+    styleVars['--ad-heading-text-transform'] = a.headingTextTransform || 'none';
+
+    styleVars['--ad-body-text-font-weight'] = a.bodyTextFontWeight || '400';
+    styleVars['--ad-body-text-line-height'] = a.bodyTextLineHeight || '1.6';
+    styleVars['--ad-body-text-letter-spacing'] = a.bodyTextLetterSpacing || 'normal';
+    styleVars['--ad-body-text-text-transform'] = a.bodyTextTextTransform || 'none';
+
+    styleVars['--ad-pill-font-size'] = a.pillFontSize || '14px';
+    styleVars['--ad-pill-font-weight'] = a.pillFontWeight || '600';
+    styleVars['--ad-pill-line-height'] = a.pillLineHeight || 'normal';
+    styleVars['--ad-pill-letter-spacing'] = a.pillLetterSpacing || 'normal';
+    styleVars['--ad-pill-text-transform'] = a.pillTextTransform || 'none';
+
+    styleVars['--ad-button-font-size'] = a.buttonFontSize || '16px';
+    styleVars['--ad-button-font-weight'] = a.buttonFontWeight || '600';
+    styleVars['--ad-button-line-height'] = a.buttonLineHeight || 'normal';
+    styleVars['--ad-button-letter-spacing'] = a.buttonLetterSpacing || 'normal';
+    styleVars['--ad-button-text-transform'] = a.buttonTextTransform || 'none';
+
+    styleVars['--ad-micro-copy-font-size'] = a.microCopyFontSize || '14px';
+    styleVars['--ad-micro-copy-font-weight'] = a.microCopyFontWeight || '400';
+    styleVars['--ad-micro-copy-line-height'] = a.microCopyLineHeight || 'normal';
+    styleVars['--ad-micro-copy-letter-spacing'] = a.microCopyLetterSpacing || 'normal';
+    styleVars['--ad-micro-copy-text-transform'] = a.microCopyTextTransform || 'none';
+  }
+
+  return styleVars;
+}
+
+function resolveRatingIconV6( badge ) {
+  if ( badge.icon && badge.icon.indexOf( 'bi-' ) !== -1 ) {
+    return badge.icon;
+  }
+  if ( badge.iconType && LEGACY_RATING_ICON_MAP_V6[ badge.iconType ] ) {
+    return LEGACY_RATING_ICON_MAP_V6[ badge.iconType ];
+  }
+  return 'bi bi-star-fill';
+}
+
+const LEGACY_RATING_ICON_MAP_V6 = {
+  star: 'bi bi-star-fill',
+  badge: 'bi bi-trophy-fill',
+  appstore: 'bi bi-apple',
+  googleplay: 'bi bi-google-play',
+};
+
+function RatingBadgeViewV6( { badge } ) {
+  return (
+    <div className="adaire-saas-hero__rating-badge">
+      <span className="adaire-saas-hero__rating-icon" aria-hidden="true">
+        { badge.imageUrl
+          ? <img src={ badge.imageUrl } alt="" className="adaire-saas-hero__rating-icon-img" loading="lazy" />
+          : <i className={ resolveRatingIconV6( badge ) } /> }
+      </span>
+      <span className="adaire-saas-hero__rating-copy">
+        <strong>{ badge.text }</strong>
+        <small>{ badge.subtext }</small>
+      </span>
+    </div>
+  );
+}
+
+/**
+ * v6 — frozen copy of save() as it stood immediately before the Newsletter
+ * (email-form CTA) feature was removed from this block. Content saved with
+ * ctaType: 'email-form' (plus emailPlaceholder / submitButtonText) must keep
+ * validating against this exact shape — the live save() and block.json no
+ * longer know about that CTA type at all. `migrate` is a no-op: every
+ * attribute this entry needs (ctaType, emailPlaceholder, submitButtonText)
+ * is still present in its own frozen `attributes` block below, so nothing
+ * needs rewriting, it just stops being an available choice for new content.
+ */
+const vNewsletterCta = {
+  migrate( attributes ) {
+    return attributes;
+  },
+
+  attributes:
+  {
+    "eyebrow": {
+      "type": "string",
+      "default": "Scale faster"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Launch your SaaS faster"
+    },
+    "text": {
+      "type": "string",
+      "default": "A modern hero section for software products, startups, and landing pages."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Start free trial"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "heroImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid",
+      "enum": [
+        "solid",
+        "gradient",
+        "image"
+      ]
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageSize": {
+      "type": "string",
+      "default": "cover",
+      "enum": [
+        "cover",
+        "contain",
+        "auto"
+      ]
+    },
+    "backgroundImagePosition": {
+      "type": "string",
+      "default": "center",
+      "enum": [
+        "center",
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ]
+    },
+    "backgroundImageRepeat": {
+      "type": "string",
+      "default": "no-repeat"
+    },
+    "layoutStyle": {
+      "type": "string",
+      "default": "centered",
+      "enum": [
+        "centered",
+        "split-left",
+        "split-right"
+      ]
+    },
+    "showPill": {
+      "type": "boolean",
+      "default": true
+    },
+    "pillText": {
+      "type": "string",
+      "default": "New: v2.0 Release"
+    },
+    "pillBg": {
+      "type": "string",
+      "default": "#dbeafe"
+    },
+    "pillColor": {
+      "type": "string",
+      "default": "#1e40af"
+    },
+    "useGradientHeadline": {
+      "type": "boolean",
+      "default": true
+    },
+    "gradientStart": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "gradientEnd": {
+      "type": "string",
+      "default": "#8b5cf6"
+    },
+    "showCta": {
+      "type": "boolean",
+      "default": true
+    },
+    "ctaType": {
+      "type": "string",
+      "default": "dual-buttons",
+      "enum": [
+        "dual-buttons",
+        "email-form",
+        "single-button"
+      ]
+    },
+    "primaryButtonText": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "primaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "secondaryButtonText": {
+      "type": "string",
+      "default": "Book a Demo"
+    },
+    "secondaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "emailPlaceholder": {
+      "type": "string",
+      "default": "Enter your email"
+    },
+    "submitButtonText": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "singleButtonText": {
+      "type": "string",
+      "default": "Shop Collection"
+    },
+    "singleButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "microCopy": {
+      "type": "string",
+      "default": "Free shipping on orders over $50"
+    },
+    "buttonPrimaryColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonPrimaryBg": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "buttonSecondaryColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonSecondaryBg": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "ctaAlignment": {
+      "type": "string",
+      "default": "center",
+      "enum": [
+        "left",
+        "center",
+        "right"
+      ]
+    },
+    "ctaGap": {
+      "type": "number",
+      "default": 16
+    },
+    "ctaPaddingV": {
+      "type": "number",
+      "default": 14
+    },
+    "ctaPaddingH": {
+      "type": "number",
+      "default": 32
+    },
+    "ctaBorderRadius": {
+      "type": "number",
+      "default": -1
+    },
+    "showHeroImage": {
+      "type": "boolean",
+      "default": true
+    },
+    "imagePosition": {
+      "type": "string",
+      "default": "below",
+      "enum": [
+        "below",
+        "above"
+      ]
+    },
+    "mediaShadow": {
+      "type": "boolean",
+      "default": true
+    },
+    "mediaBorderRadius": {
+      "type": "number",
+      "default": -1
+    },
+    "mediaSpacing": {
+      "type": "number",
+      "default": 48
+    },
+    "effectsPreset": {
+      "type": "string",
+      "default": "none",
+      "enum": [
+        "none",
+        "sports",
+        "gym",
+        "ecommerce",
+        "business",
+        "medical",
+        "gaming",
+        "custom"
+      ]
+    },
+    "effectDotPattern": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectGradientOverlay": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectGradientOverlayColor1": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "effectGradientOverlayColor2": {
+      "type": "string",
+      "default": "#8b5cf6"
+    },
+    "effectGradientOverlayOpacity": {
+      "type": "number",
+      "default": 30
+    },
+    "effectAbstractShapes": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectGlow": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectGlowColor": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "effectBlur": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectFloatingElements": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectAnimatedAccents": {
+      "type": "boolean",
+      "default": false
+    },
+    "showRatingBadges": {
+      "type": "boolean",
+      "default": false
+    },
+    "ratingBadgesAlignment": {
+      "type": "string",
+      "default": "center"
+    },
+    "ratingBadges": {
+      "type": "array",
+      "default": [
+        {
+          "icon": "bi bi-star-fill",
+          "imageUrl": "",
+          "text": "5.0/5",
+          "subtext": "Average rating"
+        },
+        {
+          "icon": "bi bi-people-fill",
+          "imageUrl": "",
+          "text": "10,000+",
+          "subtext": "Happy customers"
+        }
+      ]
+    },
+    "fontSize": {
+      "type": "number",
+      "default": 16
+    },
+    "margin": {
+      "type": "object",
+      "default": {
+        "top": "0px",
+        "right": "0px",
+        "bottom": "0px",
+        "left": "0px"
+      }
+    },
+    "padding": {
+      "type": "number",
+      "default": 80
+    },
+    "responsivePadding": {
+      "type": "object",
+      "default": {}
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 12
+    },
+    "fontFamily": {
+      "type": "string",
+      "default": "inherit"
+    },
+    "eyebrowFontSize": {
+      "type": "string",
+      "default": "14px"
+    },
+    "eyebrowFontWeight": {
+      "type": "string",
+      "default": "600"
+    },
+    "eyebrowLineHeight": {
+      "type": "string",
+      "default": "normal"
+    },
+    "eyebrowLetterSpacing": {
+      "type": "string",
+      "default": "1px"
+    },
+    "eyebrowTextTransform": {
+      "type": "string",
+      "default": "uppercase"
+    },
+    "headingFontSize": {
+      "type": "string",
+      "default": "clamp(36px, 5vw, 64px)"
+    },
+    "headingFontWeight": {
+      "type": "string",
+      "default": "800"
+    },
+    "headingLineHeight": {
+      "type": "string",
+      "default": "1.2"
+    },
+    "headingLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "headingTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "bodyTextLineHeight": {
+      "type": "string",
+      "default": "1.6"
+    },
+    "bodyTextLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "bodyTextTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "bodyTextFontWeight": {
+      "type": "string",
+      "default": "400"
+    },
+    "pillFontSize": {
+      "type": "string",
+      "default": "14px"
+    },
+    "pillFontWeight": {
+      "type": "string",
+      "default": "600"
+    },
+    "pillLineHeight": {
+      "type": "string",
+      "default": "normal"
+    },
+    "pillLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "pillTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "buttonFontSize": {
+      "type": "string",
+      "default": "16px"
+    },
+    "buttonFontWeight": {
+      "type": "string",
+      "default": "600"
+    },
+    "buttonLineHeight": {
+      "type": "string",
+      "default": "normal"
+    },
+    "buttonLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "buttonTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "microCopyFontSize": {
+      "type": "string",
+      "default": "14px"
+    },
+    "microCopyFontWeight": {
+      "type": "string",
+      "default": "400"
+    },
+    "microCopyLineHeight": {
+      "type": "string",
+      "default": "normal"
+    },
+    "microCopyLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "microCopyTextTransform": {
+      "type": "string",
+      "default": "none"
+    }
+  },
+
+  save( { attributes: a } ) {
+    const blockProps = useBlockProps.save( {
+      className: [
+        'adaire-saas-hero',
+        `layout-${ a.layoutStyle || 'centered' }`,
+        getBgTypeClassV6( a ),
+        a.effectFloatingElements ? 'has-floating-elements' : '',
+      ].filter( Boolean ).join( ' ' ),
+      style: getStyleVarsV6( a ),
+    } );
+
+    return (
+      <section { ...blockProps }>
+        { a.effectDotPattern && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--dots" aria-hidden="true" /> }
+        { a.effectGradientOverlay && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--gradient-overlay" aria-hidden="true" /> }
+        { a.effectBlur && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--blur" aria-hidden="true" /> }
+        { a.effectGlow && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--glow" aria-hidden="true" /> }
+        { a.effectAbstractShapes && (
+          <div className="adaire-saas-hero__fx adaire-saas-hero__fx--shapes" aria-hidden="true">
+            <span className="shape shape-1" /><span className="shape shape-2" /><span className="shape shape-3" />
+          </div>
+        ) }
+        { a.effectFloatingElements && (
+          <div className="adaire-saas-hero__fx adaire-saas-hero__fx--floating" aria-hidden="true">
+            <span className="float float-1" /><span className="float float-2" /><span className="float float-3" />
+          </div>
+        ) }
+        { a.effectAnimatedAccents && <div className="adaire-saas-hero__fx adaire-saas-hero__fx--accent" aria-hidden="true" /> }
+
+        <div className="adaire-saas-hero__container">
+          { a.showPill && a.pillText && (
+            <div className="adaire-saas-hero__pill">
+              <RichText.Content tagName="span" value={ a.pillText } />
+            </div>
+          ) }
+
+          { a.showRatingBadges && (
+            <div className="adaire-saas-hero__ratings">
+              { ( a.ratingBadges || [] ).map( ( badge, i ) => <RatingBadgeViewV6 key={ i } badge={ badge } /> ) }
+            </div>
+          ) }
+
+          <div className="adaire-saas-hero__content">
+            <div className="adaire-saas-hero__text">
+              { a.eyebrow && (
+                <RichText.Content tagName="p" className="adaire-saas-hero__eyebrow" value={ a.eyebrow } />
+              ) }
+
+              <RichText.Content
+                tagName="h1"
+                className={ `adaire-saas-hero__heading ${ a.useGradientHeadline ? 'has-gradient' : '' }` }
+                value={ a.heading }
+              />
+
+              <RichText.Content tagName="p" className="adaire-saas-hero__text" value={ a.text } />
+
+              { a.showCta !== false && (
+                <div className="adaire-saas-hero__cta">
+                  { a.ctaType === 'dual-buttons' && (
+                    <>
+                      { a.primaryButtonText && (
+                        <a href={ a.primaryButtonUrl || '#' } className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                          { a.primaryButtonText }
+                        </a>
+                      ) }
+                      { a.secondaryButtonText && (
+                        <a href={ a.secondaryButtonUrl || '#' } className="adaire-saas-hero__button adaire-saas-hero__button--secondary">
+                          { a.secondaryButtonText }
+                        </a>
+                      ) }
+                    </>
+                  ) }
+
+                  { a.ctaType === 'email-form' && (
+                    <div className="adaire-saas-hero__email-form">
+                      <input type="email" placeholder={ a.emailPlaceholder || 'Enter your email' } aria-label={ a.emailPlaceholder || 'Enter your email' } />
+                      <button type="button">{ a.submitButtonText || 'Get Started' }</button>
+                    </div>
+                  ) }
+
+                  { a.ctaType === 'single-button' && (
+                    <>
+                      { a.singleButtonText && (
+                        <a href={ a.singleButtonUrl || '#' } className="adaire-saas-hero__button adaire-saas-hero__button--primary">
+                          { a.singleButtonText }
+                        </a>
+                      ) }
+                      { a.microCopy && <p className="adaire-saas-hero__micro-copy">{ a.microCopy }</p> }
+                    </>
+                  ) }
+                </div>
+              ) }
+            </div>
+
+            { a.showHeroImage && a.heroImageUrl && (
+              <div className={ `adaire-saas-hero__media adaire-saas-hero__media--${ a.imagePosition || 'below' }` }>
+                <img src={ a.heroImageUrl } alt="Hero" loading="lazy" />
+              </div>
+            ) }
+          </div>
+        </div>
+      </section>
+    );
+  },
+};
+
 /**
  * v5 — frozen copy of save() as it stood immediately before the CTA rework,
  * which:
@@ -1729,4 +2473,4 @@ const vCtaToggle = {
   },
 };
 
-export default [ vCtaToggle, v4, vRatingsExtraction, vTypography, v2, v1 ];
+export default [ vNewsletterCta, vCtaToggle, v4, vRatingsExtraction, vTypography, v2, v1 ];

@@ -13,7 +13,7 @@
     var(--ad-margin-right, 0px)
     var(--ad-margin-bottom, 0px)
     var(--ad-margin-left, 0px);
-  padding: var(--ad-padding, 80px) 20px;
+  padding: var(--ad-padding-desktop, 80px) 20px;
   background-color: var(--ad-bg-color, #ffffff);
   color: var(--ad-color);
   font-family: var(--ad-font-family, inherit);
@@ -595,7 +595,7 @@
 
   // ── Responsive ───────────────────────────────────────────────────────
   @media (max-width: 768px) {
-    padding: 60px 16px;
+    padding: var(--ad-padding-tablet, 60px) 16px;
 
     &__heading {
       font-size: clamp(28px, 8vw, 42px);
@@ -656,6 +656,13 @@
         order: 1 !important;
       }
     }
+  }
+
+  // Mobile — 600px and smaller: a distinct (usually smaller) padding tier
+  // from the 768px tablet breakpoint above, without touching the rest of
+  // that breakpoint's layout rules (heading size, CTA stacking, etc).
+  @media (max-width: 600px) {
+    padding: var(--ad-padding-mobile, 60px) 16px;
   }
 }
 

@@ -7,6 +7,8 @@ import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import { PANEL, LABEL } from '../components/inspector-vocabulary';
 import BootstrapIconPicker from './BootstrapIconPicker';
+import DeviceSwitcher, { BreakpointNote, THREE_TIERS } from '../components/DeviceSwitcher';
+import useEditorDevice, { hasCanvasPreset } from '../components/useEditorDevice';
 import {
   getStyleVars,
   getBgTypeClass,
@@ -134,7 +136,13 @@ function RepeaterField({ items, onChange, renderItem, addLabel, newItem }) {
 export default function Edit({ attributes, setAttributes, isSelected }) {
   const [activeZone, setActiveZone] = useState(null);
   const [ratingIconPickerIndex, setRatingIconPickerIndex] = useState(null);
+  const [deviceType, setDeviceType] = useState('desktop');
+  useEditorDevice(deviceType, setDeviceType);
   const a = attributes;
+  const responsivePadding = a.responsivePadding || {};
+  const updateResponsive = (attrName, value) => setAttributes({
+    [attrName]: { ...(a[attrName] || {}), [deviceType]: value },
+  });
 
   const blockProps = useBlockProps({
     className: [
@@ -233,7 +241,18 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
   // Section padding and the radius beside it are both Style (spec §4).
   const sectionSpacingControls = (
     <>
-      <RangeControl label={ LABEL.PADDING } value={a.padding || 80} onChange={set(setAttributes, 'padding')} min={0} max={200} />
+      <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+      <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+      {!hasCanvasPreset(deviceType) && (
+        <p className="components-base-control__help">{__('This breakpoint has no matching canvas preview width — the editor canvas will not resize to match while you edit it.', 'adaire-blocks')}</p>
+      )}
+      <RangeControl
+        label={ LABEL.PADDING }
+        value={responsivePadding[deviceType] ?? responsivePadding.desktop ?? a.padding ?? 80}
+        onChange={(v) => updateResponsive('responsivePadding', v)}
+        min={0}
+        max={200}
+      />
       <BoxControl
         label={ LABEL.MARGIN }
         values={a.margin}
@@ -344,7 +363,6 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
           value={a.ctaType || 'dual-buttons'}
           options={[
             { label: __('Dual Buttons', 'adaire-blocks'), value: 'dual-buttons' },
-            { label: __('Email Form', 'adaire-blocks'), value: 'email-form' },
             { label: __('Single Button', 'adaire-blocks'), value: 'single-button' },
           ]}
           onChange={set(setAttributes, 'ctaType')}
@@ -355,12 +373,6 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
             <URLInput label={__('Primary Button URL', 'adaire-blocks')} value={a.primaryButtonUrl || ''} onChange={set(setAttributes, 'primaryButtonUrl')} />
             <TextControl label={__('Secondary Button Text', 'adaire-blocks')} value={a.secondaryButtonText || ''} onChange={set(setAttributes, 'secondaryButtonText')} />
             <URLInput label={__('Secondary Button URL', 'adaire-blocks')} value={a.secondaryButtonUrl || ''} onChange={set(setAttributes, 'secondaryButtonUrl')} />
-          </>
-        )}
-        {a.ctaType === 'email-form' && (
-          <>
-            <TextControl label={__('Email Placeholder', 'adaire-blocks')} value={a.emailPlaceholder || ''} onChange={set(setAttributes, 'emailPlaceholder')} />
-            <TextControl label={__('Submit Button Text', 'adaire-blocks')} value={a.submitButtonText || ''} onChange={set(setAttributes, 'submitButtonText')} />
           </>
         )}
         {a.ctaType === 'single-button' && (
@@ -718,12 +730,6 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
                           </a>
                         )}
                       </>
-                    )}
-                    {a.ctaType === 'email-form' && (
-                      <div className="adaire-saas-hero__email-form">
-                        <input type="email" placeholder={a.emailPlaceholder || 'Enter your email'} readOnly />
-                        <button type="button">{a.submitButtonText || 'Get Started'}</button>
-                      </div>
                     )}
                     {a.ctaType === 'single-button' && (
                       <>
