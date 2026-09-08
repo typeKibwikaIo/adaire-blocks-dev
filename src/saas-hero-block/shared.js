@@ -117,6 +117,7 @@ export function buildPresetPatch(key) {
 // Single source of truth for every --ad-* var the stylesheet consumes.
 export function getStyleVars(a) {
 	const defaultGradient = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+	const responsivePadding = a.responsivePadding || {};
 
 	const styleVars = {
 		'--ad-accent': a.accentColor || '#6366f1',
@@ -142,7 +143,9 @@ export function getStyleVars(a) {
 		'--ad-button-hover-border': a.buttonHoverBorderColor || '#111827',
 
 		'--ad-radius': `${a.borderRadius ?? 12}px`,
-		'--ad-padding': `${a.padding ?? 80}px`,
+		'--ad-padding-desktop': `${responsivePadding.desktop ?? a.padding ?? 80}px`,
+		'--ad-padding-tablet': `${responsivePadding.tablet ?? responsivePadding.desktop ?? a.padding ?? 80}px`,
+		'--ad-padding-mobile': `${responsivePadding.mobile ?? responsivePadding.tablet ?? responsivePadding.desktop ?? a.padding ?? 80}px`,
 		// Block margin. Replaces the WordPress `supports.spacing` panel this
 		// block used to declare — that panel came with its own tab strip,
 		// which duplicated the plugin's own. See BLOCK_SETTINGS_SPEC.md §10.

@@ -3,7 +3,7 @@
     RichText,
     InspectorControls,
 } from "@wordpress/block-editor";
-import { useEffect, useRef } from "@wordpress/element";
+import { useEffect, useRef, useState } from "@wordpress/element";
 import {
 	PanelBody,
 	ColorPicker,
@@ -11,6 +11,8 @@ import {
 	SelectControl,
 	RangeControl,
 } from "@wordpress/components";
+import DeviceSwitcher, { BreakpointNote, THREE_TIERS } from "../components/DeviceSwitcher";
+import useEditorDevice, { hasCanvasPreset } from "../components/useEditorDevice";
 
 // Helper function to convert hex to RGB
 function hexToRgb(hex) {
@@ -46,9 +48,33 @@ export default function Edit({ attributes, setAttributes }) {
 		paddingBottom,
 		paddingLeft,
 		paddingRight,
+		responsiveFontSize,
+		responsivePaddingTop,
+		responsivePaddingBottom,
+		responsivePaddingLeft,
+		responsivePaddingRight,
 	} = attributes;
 
     const wrapperRef = useRef(null);
+
+	const [deviceType, setDeviceType] = useState("desktop");
+	useEditorDevice(deviceType, setDeviceType);
+
+	const updateResponsive = (attrName, value) => setAttributes({
+		[attrName]: { ...(attributes[attrName] || {}), [deviceType]: value },
+	});
+
+	const rFontSize = responsiveFontSize || {};
+	const rPaddingTop = responsivePaddingTop || {};
+	const rPaddingBottom = responsivePaddingBottom || {};
+	const rPaddingLeft = responsivePaddingLeft || {};
+	const rPaddingRight = responsivePaddingRight || {};
+
+	const currentFontSize = rFontSize[deviceType] ?? rFontSize.desktop ?? fontSize;
+	const currentPaddingTop = rPaddingTop[deviceType] ?? rPaddingTop.desktop ?? paddingTop;
+	const currentPaddingBottom = rPaddingBottom[deviceType] ?? rPaddingBottom.desktop ?? paddingBottom;
+	const currentPaddingLeft = rPaddingLeft[deviceType] ?? rPaddingLeft.desktop ?? paddingLeft;
+	const currentPaddingRight = rPaddingRight[deviceType] ?? rPaddingRight.desktop ?? paddingRight;
 
     const blockProps = useBlockProps({
 		className: 'ad-scroll-text-block-editor',
@@ -173,12 +199,20 @@ export default function Edit({ attributes, setAttributes }) {
 				</PanelBody>
 
 				<PanelBody title="Font Options" initialOpen={false}>
+					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+					{!hasCanvasPreset(deviceType) && (
+						<p className="components-base-control__help">This breakpoint has no matching canvas preview width — the editor canvas will not resize to match while you edit it.</p>
+					)}
 					<TextControl
 						label="Font Size"
-						value={fontSize}
+						value={currentFontSize}
 						type="number"
 						onChange={(value) => {
-							parseNum(value, "fontSize");
+							const num = Number(value);
+							if (!isNaN(num) && value !== "") {
+								updateResponsive("responsiveFontSize", num);
+							}
 						}}
 						min={1}
 					/>
@@ -242,36 +276,50 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 				<PanelBody title="Padding (px)" initialOpen={false}>
+					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 					<TextControl
 						label="Top Padding"
-						value={paddingTop}
+						value={currentPaddingTop}
 						type="number"
 						onChange={(value) => {
-							parseNum(value, "paddingTop");
+							const num = Number(value);
+							if (!isNaN(num) && value !== "") {
+								updateResponsive("responsivePaddingTop", num);
+							}
 						}}
 					/>
 					<TextControl
 						label="Bottom Padding"
-						value={paddingBottom}
+						value={currentPaddingBottom}
 						type="number"
 						onChange={(value) => {
-							parseNum(value, "paddingBottom");
+							const num = Number(value);
+							if (!isNaN(num) && value !== "") {
+								updateResponsive("responsivePaddingBottom", num);
+							}
 						}}
 					/>
 					<TextControl
 						label="Right Padding"
-						value={paddingRight}
+						value={currentPaddingRight}
 						type="number"
 						onChange={(value) => {
-							parseNum(value, "paddingRight");
+							const num = Number(value);
+							if (!isNaN(num) && value !== "") {
+								updateResponsive("responsivePaddingRight", num);
+							}
 						}}
 					/>
 					<TextControl
 						label="Left Padding"
-						value={paddingLeft}
+						value={currentPaddingLeft}
 						type="number"
 						onChange={(value) => {
-							parseNum(value, "paddingLeft");
+							const num = Number(value);
+							if (!isNaN(num) && value !== "") {
+								updateResponsive("responsivePaddingLeft", num);
+							}
 						}}
 					/>
 				</PanelBody>
@@ -343,12 +391,12 @@ export default function Edit({ attributes, setAttributes }) {
 						placeholder="Enter hero text..."
 						style={{
 							whiteSpace: "nowrap",
-							fontSize: fontSize + (fontSizeUnit || "px"),
+							fontSize: currentFontSize + (fontSizeUnit || "px"),
 							color: textColor || undefined,
-							paddingTop: paddingTop + "px",
-							paddingBottom: paddingBottom + "px",
-							paddingRight: paddingRight + "px",
-							paddingLeft: paddingLeft + "px",
+							paddingTop: currentPaddingTop + "px",
+							paddingBottom: currentPaddingBottom + "px",
+							paddingRight: currentPaddingRight + "px",
+							paddingLeft: currentPaddingLeft + "px",
 							marginTop: marginTop + "px",
 							marginBottom: marginBottom + "px",
 							marginRight: marginRight + "px",

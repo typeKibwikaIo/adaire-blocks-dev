@@ -82,16 +82,6 @@ export default function save({ attributes: a }) {
                   </>
                 )}
 
-                {/* A plain <div>, not a <form>: this markup is static (no action,
-                    no handler — save() can't carry one), so a real form would
-                    either do nothing or GET-submit the page back to itself. */}
-                {a.ctaType === 'email-form' && (
-                  <div className="adaire-saas-hero__email-form">
-                    <input type="email" placeholder={a.emailPlaceholder || 'Enter your email'} aria-label={a.emailPlaceholder || 'Enter your email'} />
-                    <button type="button">{a.submitButtonText || 'Get Started'}</button>
-                  </div>
-                )}
-
                 {a.ctaType === 'single-button' && (
                   <>
                     {a.singleButtonText && (

@@ -1,5 +1,7 @@
 .adaire-progress-bar {
 	box-sizing: border-box;
+	padding-top: var(--pb-padding-top-desktop);
+	padding-bottom: var(--pb-padding-bottom-desktop);
 
 	&__header {
 		margin-bottom: 2rem;
@@ -139,10 +141,19 @@
 		color: var(--pb-ring-label-color, #111827);
 	}
 
+	// Tablet — 601px to 782px
 	@media (max-width: 782px) {
+		padding-top: var(--pb-padding-top-tablet);
+		padding-bottom: var(--pb-padding-bottom-tablet);
 		&__grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
+	}
+
+	// Mobile — 600px and smaller
+	@media (max-width: 600px) {
+		padding-top: var(--pb-padding-top-mobile);
+		padding-bottom: var(--pb-padding-bottom-mobile);
 	}
 
 	@media (max-width: 480px) {

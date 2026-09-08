@@ -34,7 +34,19 @@ export default function save({ attributes }) {
 		paddingBottom,
 		paddingLeft,
 		paddingRight,
+		responsiveFontSize,
+		responsivePaddingTop,
+		responsivePaddingBottom,
+		responsivePaddingLeft,
+		responsivePaddingRight,
 	} = attributes;
+
+	const rFontSize = responsiveFontSize || {};
+	const rPaddingTop = responsivePaddingTop || {};
+	const rPaddingBottom = responsivePaddingBottom || {};
+	const rPaddingLeft = responsivePaddingLeft || {};
+	const rPaddingRight = responsivePaddingRight || {};
+	const unit = fontSizeUnit || "px";
 
   const blockProps = useBlockProps.save({
     className: "ad-scroll-text-block",
@@ -42,10 +54,21 @@ export default function save({ attributes }) {
       backgroundColor: backgroundColor ? `rgba(${hexToRgb(backgroundColor)}, ${backgroundColorOpacity !== undefined ? backgroundColorOpacity : 1})` : undefined,
       width: `${containerWidth || 100}${containerWidthUnit || "vw"}`,
       height: `${containerHeight || 100}${containerHeightUnit || "vh"}`,
-      "--padding-top": `${paddingTop}px`,
-      "--padding-bottom": `${paddingBottom}px`,
-      "--padding-left": `${paddingLeft}px`,
-      "--padding-right": `${paddingRight}px`,
+      "--font-size-desktop": `${rFontSize.desktop ?? fontSize}${unit}`,
+      "--font-size-tablet": `${rFontSize.tablet ?? rFontSize.desktop ?? fontSize}${unit}`,
+      "--font-size-mobile": `${rFontSize.mobile ?? rFontSize.tablet ?? rFontSize.desktop ?? fontSize}${unit}`,
+      "--padding-top-desktop": `${rPaddingTop.desktop ?? paddingTop}px`,
+      "--padding-top-tablet": `${rPaddingTop.tablet ?? rPaddingTop.desktop ?? paddingTop}px`,
+      "--padding-top-mobile": `${rPaddingTop.mobile ?? rPaddingTop.tablet ?? rPaddingTop.desktop ?? paddingTop}px`,
+      "--padding-bottom-desktop": `${rPaddingBottom.desktop ?? paddingBottom}px`,
+      "--padding-bottom-tablet": `${rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? paddingBottom}px`,
+      "--padding-bottom-mobile": `${rPaddingBottom.mobile ?? rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? paddingBottom}px`,
+      "--padding-left-desktop": `${rPaddingLeft.desktop ?? paddingLeft}px`,
+      "--padding-left-tablet": `${rPaddingLeft.tablet ?? rPaddingLeft.desktop ?? paddingLeft}px`,
+      "--padding-left-mobile": `${rPaddingLeft.mobile ?? rPaddingLeft.tablet ?? rPaddingLeft.desktop ?? paddingLeft}px`,
+      "--padding-right-desktop": `${rPaddingRight.desktop ?? paddingRight}px`,
+      "--padding-right-tablet": `${rPaddingRight.tablet ?? rPaddingRight.desktop ?? paddingRight}px`,
+      "--padding-right-mobile": `${rPaddingRight.mobile ?? rPaddingRight.tablet ?? rPaddingRight.desktop ?? paddingRight}px`,
       "--margin-top": `${marginTop}px`,
       "--margin-bottom": `${marginBottom}px`,
       "--margin-left": `${marginLeft}px`,
@@ -72,7 +95,6 @@ export default function save({ attributes }) {
 					value={heroText}
 					style={{
 						whiteSpace: "nowrap",
-						fontSize: fontSize + (fontSizeUnit || "px"),
 						color: textColor || undefined,
 					}}
 				/>

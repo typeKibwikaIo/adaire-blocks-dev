@@ -4,9 +4,9 @@
   background-position: center;
   background-size: cover;
   color: var(--ad-color, #fff);
-  border-radius: var(--ad-radius, 18px);
-  padding: var(--ad-padding, 28px);
-  font-size: var(--ad-font-size, 16px);
+  border-radius: var(--ad-radius-desktop, 18px);
+  padding: var(--ad-padding-desktop, 28px);
+  font-size: var(--ad-font-size-desktop, 16px);
   position: relative;
   overflow: hidden;
   display: grid;
@@ -36,7 +36,7 @@
 .adaire-live-streamer__image,
 .adaire-live-streamer__qr { height: auto; max-width: 100%; object-fit: cover; }
 .adaire-live-streamer__viewer,
-.adaire-live-streamer iframe { border: 1px solid #e5e7eb; border-radius: var(--ad-radius, 18px); width: 100%; }
+.adaire-live-streamer iframe { border: 1px solid #e5e7eb; border-radius: var(--ad-radius-desktop, 18px); width: 100%; }
 .adaire-live-streamer__layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 34%); gap: 1rem; }
 .adaire-live-streamer__player iframe { height: 100%; width: 100%; }
 .adaire-live-streamer__badge { background: var(--ad-accent, #d52940); border-radius: 999px; color: #fff; display: inline-flex; font-size: .75rem; font-weight: 900; padding: .35rem .6rem; }
@@ -61,6 +61,27 @@
 @media (max-width: 480px) {
   .adaire-live-streamer__actions { display: grid; gap: .75rem; }
   .adaire-live-streamer__viewer { min-height: 300px !important; }
+}
+
+/* Tablet — 601px to 782px */
+@media (max-width: 782px) {
+  .adaire-live-streamer {
+    border-radius: var(--ad-radius-tablet, 18px);
+    padding: var(--ad-padding-tablet, 28px);
+    font-size: var(--ad-font-size-tablet, 16px);
+  }
+  .adaire-live-streamer__viewer,
+  .adaire-live-streamer iframe { border-radius: var(--ad-radius-tablet, 18px); }
+}
+/* Mobile — 600px and smaller */
+@media (max-width: 600px) {
+  .adaire-live-streamer {
+    border-radius: var(--ad-radius-mobile, 18px);
+    padding: var(--ad-padding-mobile, 28px);
+    font-size: var(--ad-font-size-mobile, 16px);
+  }
+  .adaire-live-streamer__viewer,
+  .adaire-live-streamer iframe { border-radius: var(--ad-radius-mobile, 18px); }
 }
 
 .adaire-live-streamer__button,

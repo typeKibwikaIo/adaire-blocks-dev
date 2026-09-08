@@ -163,6 +163,18 @@
                 "gradient",
                 "image"
             ]
+        },
+        "responsivePadding": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveFontSize": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveBorderRadius": {
+            "type": "object",
+            "default": {}
         }
     }
 }

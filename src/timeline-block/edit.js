@@ -13,6 +13,8 @@ import InspectorTabs from '../components/InspectorTabs';
 import AdaireColorControl from '../components/AdaireColorControl';
 import QuickZone from '../components/QuickZone';
 import { ICON_SVGS, ICON_OPTIONS } from './icons';
+import DeviceSwitcher, { BreakpointNote, THREE_TIERS } from '../components/DeviceSwitcher';
+import useEditorDevice, { hasCanvasPreset } from '../components/useEditorDevice';
 
 function ColorPicker( { label, value, onChange } ) {
 	return (
@@ -104,13 +106,10 @@ function TextControlFontSize( { a, set, prefix } ) {
 // stringifies a React element to the literal text "[object Object]" instead
 // of rendering it. save.js never had this bug because it renders the icon
 // directly as a JSX child; doing the same here fixes it.
-function NodeIcon( { icon, nodeSize } ) {
+function NodeIcon( { icon } ) {
 	const svg = ICON_SVGS[ icon ] || ICON_SVGS.shield;
 	return (
-		<div
-			className="adaire-timeline__node"
-			style={ { width: nodeSize, height: nodeSize } }
-		>
+		<div className="adaire-timeline__node">
 			{ svg }
 		</div>
 	);
@@ -130,6 +129,17 @@ export default function Edit( { attributes, setAttributes } ) {
 	const nodeSize = a.nodeSize || 52;
 	const set = ( key ) => ( value ) => setAttributes( { [ key ]: value } );
 
+	const [ deviceType, setDeviceType ] = useState( 'desktop' );
+	useEditorDevice( deviceType, setDeviceType );
+
+	const updateResponsive = ( attrName, value ) => setAttributes( {
+		[ attrName ]: { ...( a[ attrName ] || {} ), [ deviceType ]: value },
+	} );
+
+	const rPaddingTop = a.responsivePaddingTop || {};
+	const rPaddingBottom = a.responsivePaddingBottom || {};
+	const rNodeSize = a.responsiveNodeSize || {};
+
 	// Kept 1:1 with save.js's style object — this used to also carry a pile of
 	// responsive padding/typography vars that referenced attributes which were
 	// never registered in block.json and CSS vars that style.scss never
@@ -143,10 +153,16 @@ export default function Edit( { attributes, setAttributes } ) {
 			'--tl-text'     : a.textColor        || '#ffffff',
 			'--tl-desc'     : a.descriptionColor || 'rgba(255,255,255,0.65)',
 			'--tl-line'     : a.lineColor        || '#1e3a5f',
-			'--tl-node-size': `${ nodeSize }px`,
+			'--tl-node-size-desktop': `${ rNodeSize.desktop ?? nodeSize }px`,
+			'--tl-node-size-tablet' : `${ rNodeSize.tablet ?? rNodeSize.desktop ?? nodeSize }px`,
+			'--tl-node-size-mobile' : `${ rNodeSize.mobile ?? rNodeSize.tablet ?? rNodeSize.desktop ?? nodeSize }px`,
 			backgroundColor : a.backgroundColor  || '#0a1628',
-			paddingTop      : `${ a.paddingTop    ?? 80 }px`,
-			paddingBottom   : `${ a.paddingBottom ?? 80 }px`,
+			'--tl-padding-top-desktop': `${ rPaddingTop.desktop ?? a.paddingTop ?? 80 }px`,
+			'--tl-padding-top-tablet': `${ rPaddingTop.tablet ?? rPaddingTop.desktop ?? a.paddingTop ?? 80 }px`,
+			'--tl-padding-top-mobile': `${ rPaddingTop.mobile ?? rPaddingTop.tablet ?? rPaddingTop.desktop ?? a.paddingTop ?? 80 }px`,
+			'--tl-padding-bottom-desktop': `${ rPaddingBottom.desktop ?? a.paddingBottom ?? 80 }px`,
+			'--tl-padding-bottom-tablet': `${ rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? a.paddingBottom ?? 80 }px`,
+			'--tl-padding-bottom-mobile': `${ rPaddingBottom.mobile ?? rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? a.paddingBottom ?? 80 }px`,
 			marginTop       : `${ a.marginTop     ?? 0  }px`,
 			marginBottom    : `${ a.marginBottom  ?? 0  }px`,
 			color           : a.textColor        || '#ffffff',
@@ -281,17 +297,22 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TypographySubsection title={ __( 'Milestone description' ) } a={ a } set={ set } prefix="itemDesc" />
 				</PanelBody>
 				<PanelBody section="style" priority="medium" title={ __( 'Spacing', 'adaire-blocks' ) } initialOpen={ false }>
+					<DeviceSwitcher deviceType={ deviceType } setDeviceType={ setDeviceType } tiers={ THREE_TIERS } />
+					<BreakpointNote deviceType={ deviceType } tiers={ THREE_TIERS } />
+					{ !hasCanvasPreset( deviceType ) && (
+						<p className="components-base-control__help">{ __( 'This breakpoint has no matching canvas preview width — the editor canvas will not resize to match while you edit it.', 'adaire-blocks' ) }</p>
+					) }
 					<RangeControl
 						label={ __( 'Padding top (px)', 'adaire-blocks' ) }
-						value={ a.paddingTop ?? 80 }
-						onChange={ ( v ) => setAttributes( { paddingTop: v } ) }
+						value={ rPaddingTop[ deviceType ] ?? rPaddingTop.desktop ?? a.paddingTop ?? 80 }
+						onChange={ ( v ) => updateResponsive( 'responsivePaddingTop', v ) }
 						min={ 0 }
 						max={ 200 }
 					/>
 					<RangeControl
 						label={ __( 'Padding bottom (px)', 'adaire-blocks' ) }
-						value={ a.paddingBottom ?? 80 }
-						onChange={ ( v ) => setAttributes( { paddingBottom: v } ) }
+						value={ rPaddingBottom[ deviceType ] ?? rPaddingBottom.desktop ?? a.paddingBottom ?? 80 }
+						onChange={ ( v ) => updateResponsive( 'responsivePaddingBottom', v ) }
 						min={ 0 }
 						max={ 200 }
 					/>
@@ -392,7 +413,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									</>
 								}
 							>
-								<NodeIcon icon={ item.icon } nodeSize={ nodeSize } />
+								<NodeIcon icon={ item.icon } />
 							</QuickZone>
 						);
 

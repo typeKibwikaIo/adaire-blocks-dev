@@ -4,9 +4,13 @@ import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
+import DeviceSwitcher, { BreakpointNote, THREE_TIERS } from '../components/DeviceSwitcher';
+import useEditorDevice, { hasCanvasPreset } from '../components/useEditorDevice';
 
 export default function Edit({ attributes, setAttributes }) {
     const [activeZone, setActiveZone] = useState(null);
+    const [deviceType, setDeviceType] = useState('desktop');
+    useEditorDevice(deviceType, setDeviceType);
     const {
         maxWidth,
         alignContainer,
@@ -25,8 +29,25 @@ export default function Edit({ attributes, setAttributes }) {
         borderColor,
         boxShadow,
         minHeight,
-        overflow
+        overflow,
+        responsivePaddingTop,
+        responsivePaddingBottom,
+        responsivePaddingLeft,
+        responsivePaddingRight,
+        responsiveMarginTop,
+        responsiveMarginBottom
     } = attributes;
+
+    const rPaddingTop = responsivePaddingTop || {};
+    const rPaddingBottom = responsivePaddingBottom || {};
+    const rPaddingLeft = responsivePaddingLeft || {};
+    const rPaddingRight = responsivePaddingRight || {};
+    const rMarginTop = responsiveMarginTop || {};
+    const rMarginBottom = responsiveMarginBottom || {};
+
+    const updateResponsive = (attrName, value) => setAttributes({
+        [attrName]: { ...(attributes[attrName] || {}), [deviceType]: value },
+    });
 
     const blockProps = useBlockProps({
         className: 'container-block',
@@ -34,12 +55,24 @@ export default function Edit({ attributes, setAttributes }) {
             maxWidth: maxWidth || '1200px',
             marginLeft: alignContainer === 'center' ? 'auto' : alignContainer === 'left' ? '0' : alignContainer === 'right' ? 'auto' : 'auto',
             marginRight: alignContainer === 'center' ? 'auto' : alignContainer === 'right' ? '0' : alignContainer === 'left' ? 'auto' : 'auto',
-            paddingTop: `${paddingTop}px`,
-            paddingBottom: `${paddingBottom}px`,
-            paddingLeft: `${paddingLeft}px`,
-            paddingRight: `${paddingRight}px`,
-            marginTop: `${marginTop}px`,
-            marginBottom: `${marginBottom}px`,
+            '--container-padding-top-desktop': `${rPaddingTop.desktop ?? paddingTop}px`,
+            '--container-padding-top-tablet': `${rPaddingTop.tablet ?? rPaddingTop.desktop ?? paddingTop}px`,
+            '--container-padding-top-mobile': `${rPaddingTop.mobile ?? rPaddingTop.tablet ?? rPaddingTop.desktop ?? paddingTop}px`,
+            '--container-padding-bottom-desktop': `${rPaddingBottom.desktop ?? paddingBottom}px`,
+            '--container-padding-bottom-tablet': `${rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? paddingBottom}px`,
+            '--container-padding-bottom-mobile': `${rPaddingBottom.mobile ?? rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? paddingBottom}px`,
+            '--container-padding-left-desktop': `${rPaddingLeft.desktop ?? paddingLeft}px`,
+            '--container-padding-left-tablet': `${rPaddingLeft.tablet ?? rPaddingLeft.desktop ?? paddingLeft}px`,
+            '--container-padding-left-mobile': `${rPaddingLeft.mobile ?? rPaddingLeft.tablet ?? rPaddingLeft.desktop ?? paddingLeft}px`,
+            '--container-padding-right-desktop': `${rPaddingRight.desktop ?? paddingRight}px`,
+            '--container-padding-right-tablet': `${rPaddingRight.tablet ?? rPaddingRight.desktop ?? paddingRight}px`,
+            '--container-padding-right-mobile': `${rPaddingRight.mobile ?? rPaddingRight.tablet ?? rPaddingRight.desktop ?? paddingRight}px`,
+            '--container-margin-top-desktop': `${rMarginTop.desktop ?? marginTop}px`,
+            '--container-margin-top-tablet': `${rMarginTop.tablet ?? rMarginTop.desktop ?? marginTop}px`,
+            '--container-margin-top-mobile': `${rMarginTop.mobile ?? rMarginTop.tablet ?? rMarginTop.desktop ?? marginTop}px`,
+            '--container-margin-bottom-desktop': `${rMarginBottom.desktop ?? marginBottom}px`,
+            '--container-margin-bottom-tablet': `${rMarginBottom.tablet ?? rMarginBottom.desktop ?? marginBottom}px`,
+            '--container-margin-bottom-mobile': `${rMarginBottom.mobile ?? rMarginBottom.tablet ?? rMarginBottom.desktop ?? marginBottom}px`,
             backgroundColor: backgroundType === 'solid' ? (backgroundColor || 'transparent') : backgroundType === 'gradient' ? backgroundGradient : 'transparent',
             backgroundImage: backgroundType === 'image' ? `url(${backgroundImage})` : 'none',
             backgroundSize: backgroundType === 'image' ? 'cover' : 'auto',
@@ -96,48 +129,55 @@ export default function Edit({ attributes, setAttributes }) {
                 </PanelBody>
 
                 <PanelBody section="style" priority="medium" title={__('Padding', 'adaire-blocks')} initialOpen={false}>
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+                    {!hasCanvasPreset(deviceType) && (
+                        <p className="components-base-control__help">{__('This breakpoint has no matching canvas preview width — the editor canvas will not resize to match while you edit it.', 'adaire-blocks')}</p>
+                    )}
                     <RangeControl
                         label={__('Padding Top (px)', 'adaire-blocks')}
-                        value={paddingTop}
-                        onChange={(value) => setAttributes({ paddingTop: value })}
+                        value={rPaddingTop[deviceType] ?? rPaddingTop.desktop ?? paddingTop}
+                        onChange={(value) => updateResponsive('responsivePaddingTop', value)}
                         min={0}
                         max={200}
                     />
                     <RangeControl
                         label={__('Padding Bottom (px)', 'adaire-blocks')}
-                        value={paddingBottom}
-                        onChange={(value) => setAttributes({ paddingBottom: value })}
+                        value={rPaddingBottom[deviceType] ?? rPaddingBottom.desktop ?? paddingBottom}
+                        onChange={(value) => updateResponsive('responsivePaddingBottom', value)}
                         min={0}
                         max={200}
                     />
                     <RangeControl
                         label={__('Padding Left (px)', 'adaire-blocks')}
-                        value={paddingLeft}
-                        onChange={(value) => setAttributes({ paddingLeft: value })}
+                        value={rPaddingLeft[deviceType] ?? rPaddingLeft.desktop ?? paddingLeft}
+                        onChange={(value) => updateResponsive('responsivePaddingLeft', value)}
                         min={0}
                         max={200}
                     />
                     <RangeControl
                         label={__('Padding Right (px)', 'adaire-blocks')}
-                        value={paddingRight}
-                        onChange={(value) => setAttributes({ paddingRight: value })}
+                        value={rPaddingRight[deviceType] ?? rPaddingRight.desktop ?? paddingRight}
+                        onChange={(value) => updateResponsive('responsivePaddingRight', value)}
                         min={0}
                         max={200}
                     />
                 </PanelBody>
 
                 <PanelBody section="style" priority="medium" title={__('Margin', 'adaire-blocks')} initialOpen={false}>
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
                     <RangeControl
                         label={__('Margin Top (px)', 'adaire-blocks')}
-                        value={marginTop}
-                        onChange={(value) => setAttributes({ marginTop: value })}
+                        value={rMarginTop[deviceType] ?? rMarginTop.desktop ?? marginTop}
+                        onChange={(value) => updateResponsive('responsiveMarginTop', value)}
                         min={0}
                         max={200}
                     />
                     <RangeControl
                         label={__('Margin Bottom (px)', 'adaire-blocks')}
-                        value={marginBottom}
-                        onChange={(value) => setAttributes({ marginBottom: value })}
+                        value={rMarginBottom[deviceType] ?? rMarginBottom.desktop ?? marginBottom}
+                        onChange={(value) => updateResponsive('responsiveMarginBottom', value)}
                         min={0}
                         max={200}
                     />
