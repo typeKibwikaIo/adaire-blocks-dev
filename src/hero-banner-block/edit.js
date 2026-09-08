@@ -1,5 +1,5 @@
 ﻿import { __ } from "@wordpress/i18n";
-import { useState, useEffect, createElement } from "@wordpress/element";
+import { useState, useEffect, useRef, createElement } from "@wordpress/element";
 import {
 	useBlockProps,
 	MediaUpload,
@@ -29,9 +29,6 @@ import {
 	alignLeft,
 	alignCenter,
 	alignRight,
-	desktop,
-	tablet,
-	mobile,
 } from "@wordpress/icons";
 import { getBlockType } from "@wordpress/blocks";
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS, BreakpointNote } from '../components/DeviceSwitcher';
@@ -73,25 +70,35 @@ const CTA_TEMPLATE = [["create-block/button-block", { buttonText: "Get Started" 
 // The block's one and only breakpoint set — every responsive control in this
 // block reads/writes the same `deviceType` state, so there is a single
 // switcher (in the Layout tab's "Responsive" panel) rather than one per panel.
-// Updated with specific breakpoint descriptions per requirements:
-// Desktop/Laptop — 783px and wider
-// Tablet — 601px to 782px
-// Mobile — 600px and smaller
-const BREAKPOINTS = ["mobile", "tablet", "desktop"];
-const BREAKPOINT_LABELS = {
-	mobile: __("Mobile", "adaire-blocks"),
-	tablet: __("Tablet", "adaire-blocks"),
-	desktop: __("Desktop", "adaire-blocks"),
-};
-const THREE_TIERS = [
-	{ key: "mobile", label: BREAKPOINT_LABELS.mobile, icon: mobile },
-	{ key: "tablet", label: BREAKPOINT_LABELS.tablet, icon: tablet },
-	{ key: "desktop", label: BREAKPOINT_LABELS.desktop, icon: desktop },
-];
+// THREE_TIERS itself comes from the shared DeviceSwitcher import above.
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const [deviceType, setDeviceType] = useState("desktop");
 	const [activeZone, setActiveZone] = useState(null);
+
+	// GradientPicker's onChange fires on every pixel of a stop drag. Committing
+	// straight to setAttributes() on each of those re-renders this block's
+	// entire (very large) Edit() tree every frame, and the resulting lag makes
+	// the dragged stop visually lose track of the pointer ("moves around").
+	// Fix: keep the picker's displayed value in cheap local state that updates
+	// immediately, and only commit to attributes (the expensive, undo-history
+	// path) after the user pauses for a beat.
+	const [liveBackgroundGradient, setLiveBackgroundGradient] = useState(null);
+	const [liveOverlayGradient, setLiveOverlayGradient] = useState(null);
+	const backgroundGradientCommitTimer = useRef(null);
+	const overlayGradientCommitTimer = useRef(null);
+
+	// A local override from one device tab must not leak into another.
+	useEffect(() => {
+		setLiveBackgroundGradient(null);
+	}, [deviceType]);
+
+	useEffect(() => {
+		return () => {
+			clearTimeout(backgroundGradientCommitTimer.current);
+			clearTimeout(overlayGradientCommitTimer.current);
+		};
+	}, []);
 
     const {
         blockId,
@@ -254,7 +261,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	};
 
 	const getBackgroundGradientForBreakpoint = (bp) => {
+		// While the user is mid-drag on the gradient picker, the attribute
+		// commit is debounced (see liveBackgroundGradient above) — but the
+		// currently-edited breakpoint's own preview should still track the
+		// drag live, otherwise the picker and the canvas visibly disagree.
 		const g =
+			(bp === deviceType && liveBackgroundGradient) ||
 			responsiveBackgroundGradient?.[bp] ||
 			backgroundGradient ||
 			"linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%)";
@@ -814,7 +826,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			"--hero-overlay-bg-solid": overlayColor || "transparent",
 			"--hero-overlay-opacity":
 				overlayOpacity !== undefined ? overlayOpacity : 0.5,
-			"--hero-overlay-bg-gradient": overlayGradient || "none",
+			"--hero-overlay-bg-gradient": liveOverlayGradient ?? (overlayGradient || "none"),
 
             // Text Alignment
 			"--hero-text-alignment-mobile": responsiveTextAlignment?.mobile || "left",
@@ -1880,19 +1892,24 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
 					<BaseControl label={__("Background Gradient", "adaire-blocks")}>
 					    <GradientPicker
-					        value={currentBackgroundGradient || backgroundGradient}
-					        onChange={(value) =>
-					            setResponsiveValue(
-					                "responsiveBackgroundGradient",
-					                deviceType,
-					                withRadialCenter(
-					                    value ||
-					                        "linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)",
-					                    currentRadialCenterX ?? 50,
-					                    currentRadialCenterY ?? 50,
-					                ),
-					            )
-					        }
+					        value={liveBackgroundGradient ?? (currentBackgroundGradient || backgroundGradient)}
+					        onChange={(value) => {
+					            setLiveBackgroundGradient(value);
+					            clearTimeout(backgroundGradientCommitTimer.current);
+					            backgroundGradientCommitTimer.current = setTimeout(() => {
+					                setResponsiveValue(
+					                    "responsiveBackgroundGradient",
+					                    deviceType,
+					                    withRadialCenter(
+					                        value ||
+					                            "linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)",
+					                        currentRadialCenterX ?? 50,
+					                        currentRadialCenterY ?? 50,
+					                    ),
+					                );
+					                setLiveBackgroundGradient(null);
+					            }, 120);
+					        }}
 					    />
 					</BaseControl>
 					{isRadialGradient(currentBackgroundGradient) && (
@@ -2105,8 +2122,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					{overlayType === "gradient" && (
 					    <BaseControl label={__("Overlay Gradient", "adaire-blocks")}>
 					        <GradientPicker
-					            value={overlayGradient}
-					            onChange={(value) => setAttributes({ overlayGradient: value })}
+					            value={liveOverlayGradient ?? overlayGradient}
+					            onChange={(value) => {
+					                setLiveOverlayGradient(value);
+					                clearTimeout(overlayGradientCommitTimer.current);
+					                overlayGradientCommitTimer.current = setTimeout(() => {
+					                    setAttributes({ overlayGradient: value });
+					                    setLiveOverlayGradient(null);
+					                }, 120);
+					            }}
 					        />
 					    </BaseControl>
 					)}
