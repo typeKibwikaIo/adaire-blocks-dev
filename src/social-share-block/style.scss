@@ -29,13 +29,13 @@
         padding: var(--share-button-padding-top, 12px) var(--share-button-padding-right, 12px) var(--share-button-padding-bottom, 12px) var(--share-button-padding-left, 12px);
         cursor: pointer;
         transition: all 0.3s ease;
-        font-size: var(--share-icon-size, 24px);
+        font-size: var(--share-icon-size-desktop, 24px);
         line-height: 1;
         text-decoration: none;
         box-sizing: border-box;
 
         i {
-            font-size: var(--share-icon-size, 24px);
+            font-size: var(--share-icon-size-desktop, 24px);
             color: var(--share-icon-color, #333333);
             transition: color 0.3s ease;
         }
@@ -140,7 +140,7 @@
         text-decoration: none;
         color: #333333;
         transition: background-color 0.2s ease;
-        font-size: var(--share-platform-font-size, 14px);
+        font-size: var(--share-platform-font-size-desktop, 14px);
         font-weight: var(--share-platform-font-weight, 400);
         line-height: var(--share-platform-line-height, 1.4);
         letter-spacing: var(--share-platform-letter-spacing, normal);
@@ -199,6 +199,27 @@
             min-width: 160px;
             max-width: calc(100vw - 32px);
         }
+    }
+}
+
+// Tablet — 601px to 782px
+@media (max-width: 782px) {
+    .adaire-social-share__button,
+    .adaire-social-share__button i {
+        font-size: var(--share-icon-size-tablet, 24px);
+    }
+    .adaire-social-share__platform {
+        font-size: var(--share-platform-font-size-tablet, 14px);
+    }
+}
+// Mobile — 600px and smaller
+@media (max-width: 600px) {
+    .adaire-social-share__button,
+    .adaire-social-share__button i {
+        font-size: var(--share-icon-size-mobile, 24px);
+    }
+    .adaire-social-share__platform {
+        font-size: var(--share-platform-font-size-mobile, 14px);
     }
 }
 

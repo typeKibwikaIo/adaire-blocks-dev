@@ -8,8 +8,11 @@ import {
 	TextControl,
 	Button,
 } from "@wordpress/components";
+import { useState } from "@wordpress/element";
 import InspectorTabs from "../components/InspectorTabs";
 import AdaireColorControl from "../components/AdaireColorControl";
+import DeviceSwitcher, { BreakpointNote, THREE_TIERS } from "../components/DeviceSwitcher";
+import useEditorDevice, { hasCanvasPreset } from "../components/useEditorDevice";
 import "./editor.scss";
 
 const RING_RADIUS = 45;
@@ -44,9 +47,21 @@ export default function Edit({ attributes, setAttributes }) {
 		animationDuration,
 		paddingTop,
 		paddingBottom,
+		responsivePaddingTop,
+		responsivePaddingBottom,
 	} = attributes;
 
 	const set = (key) => (value) => setAttributes({ [key]: value });
+
+	const [deviceType, setDeviceType] = useState("desktop");
+	useEditorDevice(deviceType, setDeviceType);
+
+	const updateResponsive = (attrName, value) => setAttributes({
+		[attrName]: { ...(attributes[attrName] || {}), [deviceType]: value },
+	});
+
+	const rPaddingTop = responsivePaddingTop || {};
+	const rPaddingBottom = responsivePaddingBottom || {};
 
 	const addItem = () => {
 		setAttributes({
@@ -95,9 +110,13 @@ export default function Edit({ attributes, setAttributes }) {
 			"--pb-heading-color": headingColor,
 			"--pb-subheading-color": subheadingColor,
 			"--pb-columns": columns,
+			"--pb-padding-top-desktop": `${rPaddingTop.desktop ?? paddingTop}px`,
+			"--pb-padding-top-tablet": `${rPaddingTop.tablet ?? rPaddingTop.desktop ?? paddingTop}px`,
+			"--pb-padding-top-mobile": `${rPaddingTop.mobile ?? rPaddingTop.tablet ?? rPaddingTop.desktop ?? paddingTop}px`,
+			"--pb-padding-bottom-desktop": `${rPaddingBottom.desktop ?? paddingBottom}px`,
+			"--pb-padding-bottom-tablet": `${rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? paddingBottom}px`,
+			"--pb-padding-bottom-mobile": `${rPaddingBottom.mobile ?? rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? paddingBottom}px`,
 			backgroundColor: backgroundColor || undefined,
-			paddingTop: `${paddingTop}px`,
-			paddingBottom: `${paddingBottom}px`,
 		},
 	});
 
@@ -313,19 +332,24 @@ export default function Edit({ attributes, setAttributes }) {
 				)}
 
 				<PanelBody title={__("Spacing", "adaire-blocks")} initialOpen={false}>
+					<DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+					{!hasCanvasPreset(deviceType) && (
+						<p className="components-base-control__help">{__("This breakpoint has no matching canvas preview width — the editor canvas will not resize to match while you edit it.", "adaire-blocks")}</p>
+					)}
 					<RangeControl
 						label={__("Top Padding", "adaire-blocks")}
-						value={paddingTop}
+						value={rPaddingTop[deviceType] ?? rPaddingTop.desktop ?? paddingTop}
 						min={0}
 						max={160}
-						onChange={set("paddingTop")}
+						onChange={(value) => updateResponsive("responsivePaddingTop", value)}
 					/>
 					<RangeControl
 						label={__("Bottom Padding", "adaire-blocks")}
-						value={paddingBottom}
+						value={rPaddingBottom[deviceType] ?? rPaddingBottom.desktop ?? paddingBottom}
 						min={0}
 						max={160}
-						onChange={set("paddingBottom")}
+						onChange={(value) => updateResponsive("responsivePaddingBottom", value)}
 					/>
 				</PanelBody>
 			</InspectorTabs>

@@ -32,7 +32,12 @@ export default function save({ attributes }) {
 		animationDuration,
 		paddingTop,
 		paddingBottom,
+		responsivePaddingTop,
+		responsivePaddingBottom,
 	} = attributes;
+
+	const rPaddingTop = responsivePaddingTop || {};
+	const rPaddingBottom = responsivePaddingBottom || {};
 
 	const blockProps = useBlockProps.save({
 		className: `adaire-progress-bar is-layout-${layout}`,
@@ -52,9 +57,13 @@ export default function save({ attributes }) {
 			"--pb-heading-color": headingColor,
 			"--pb-subheading-color": subheadingColor,
 			"--pb-columns": columns,
+			"--pb-padding-top-desktop": `${rPaddingTop.desktop ?? paddingTop}px`,
+			"--pb-padding-top-tablet": `${rPaddingTop.tablet ?? rPaddingTop.desktop ?? paddingTop}px`,
+			"--pb-padding-top-mobile": `${rPaddingTop.mobile ?? rPaddingTop.tablet ?? rPaddingTop.desktop ?? paddingTop}px`,
+			"--pb-padding-bottom-desktop": `${rPaddingBottom.desktop ?? paddingBottom}px`,
+			"--pb-padding-bottom-tablet": `${rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? paddingBottom}px`,
+			"--pb-padding-bottom-mobile": `${rPaddingBottom.mobile ?? rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? paddingBottom}px`,
 			backgroundColor: backgroundColor || undefined,
-			paddingTop: `${paddingTop}px`,
-			paddingBottom: `${paddingBottom}px`,
 		},
 		"data-animation-duration": animationDuration,
 	});

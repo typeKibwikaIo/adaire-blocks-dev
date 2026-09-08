@@ -116,6 +116,30 @@
                 "auto",
                 "scroll"
             ]
+        },
+        "responsivePaddingTop": {
+            "type": "object",
+            "default": {}
+        },
+        "responsivePaddingBottom": {
+            "type": "object",
+            "default": {}
+        },
+        "responsivePaddingLeft": {
+            "type": "object",
+            "default": {}
+        },
+        "responsivePaddingRight": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveMarginTop": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveMarginBottom": {
+            "type": "object",
+            "default": {}
         }
     }
 }

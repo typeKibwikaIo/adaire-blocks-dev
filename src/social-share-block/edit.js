@@ -17,6 +17,8 @@ import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import './editor.scss';
 import BoundColorPalette from '../components/BoundColorPalette';
+import DeviceSwitcher, { BreakpointNote, THREE_TIERS } from '../components/DeviceSwitcher';
+import useEditorDevice, { hasCanvasPreset } from '../components/useEditorDevice';
 
 const FONT_FAMILY_OPTIONS = [
     { label: 'Default (inherit theme)', value: '' },
@@ -45,6 +47,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     const [isButtonIconPickerOpen, setIsButtonIconPickerOpen] = useState(false);
     const [platformIconPickerOpen, setPlatformIconPickerOpen] = useState(null);
     const [activeZone, setActiveZone] = useState(null);
+    const [deviceType, setDeviceType] = useState('desktop');
+    useEditorDevice(deviceType, setDeviceType);
 
     const {
         blockId,
@@ -68,16 +72,27 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         platformLineHeight,
         platformLetterSpacing,
         platformTextTransform,
+        responsiveIconSize,
+        responsivePlatformFontSize,
     } = attributes;
 
     if (!blockId) {
         setAttributes({ blockId: clientId });
     }
 
+    const updateResponsive = (attrName, value) => setAttributes({
+        [attrName]: { ...(attributes[attrName] || {}), [deviceType]: value },
+    });
+
+    const rIconSize = responsiveIconSize || {};
+    const rPlatformFontSize = responsivePlatformFontSize || {};
+
     const blockProps = useBlockProps({
         className: `adaire-social-share adaire-social-share--align-${alignment}`,
         style: {
-            '--share-icon-size': `${iconSize}px`,
+            '--share-icon-size-desktop': `${rIconSize.desktop ?? iconSize}px`,
+            '--share-icon-size-tablet': `${rIconSize.tablet ?? rIconSize.desktop ?? iconSize}px`,
+            '--share-icon-size-mobile': `${rIconSize.mobile ?? rIconSize.tablet ?? rIconSize.desktop ?? iconSize}px`,
             '--share-icon-color': iconColor,
             '--share-button-bg': buttonBackgroundColor,
             '--share-button-bg-hover': buttonHoverBackgroundColor,
@@ -89,7 +104,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             '--share-border-width': `${borderWidth}px`,
             '--share-border-color': borderColor,
             '--share-font-family': fontFamily || '',
-            '--share-platform-font-size': `${platformFontSize ?? 14}px`,
+            '--share-platform-font-size-desktop': `${rPlatformFontSize.desktop ?? platformFontSize ?? 14}px`,
+            '--share-platform-font-size-tablet': `${rPlatformFontSize.tablet ?? rPlatformFontSize.desktop ?? platformFontSize ?? 14}px`,
+            '--share-platform-font-size-mobile': `${rPlatformFontSize.mobile ?? rPlatformFontSize.tablet ?? rPlatformFontSize.desktop ?? platformFontSize ?? 14}px`,
             '--share-platform-font-weight': platformFontWeight || '400',
             '--share-platform-line-height': platformLineHeight || '1.4',
             '--share-platform-letter-spacing': platformLetterSpacing || 'normal',
@@ -156,10 +173,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         )}
                     </BaseControl>
 
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+                    {!hasCanvasPreset(deviceType) && (
+                        <p className="components-base-control__help">{__('This breakpoint has no matching canvas preview width — the editor canvas will not resize to match while you edit it.', 'adaire-blocks')}</p>
+                    )}
                     <RangeControl
                         label={__('Icon Size', 'adaire-blocks')}
-                        value={iconSize}
-                        onChange={(value) => setAttributes({ iconSize: value })}
+                        value={rIconSize[deviceType] ?? rIconSize.desktop ?? iconSize}
+                        onChange={(value) => updateResponsive('responsiveIconSize', value)}
                         min={16}
                         max={64}
                     />
@@ -236,10 +258,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 <PanelBody section="style" priority="high" title={__('Typography', 'adaire-blocks')} initialOpen={false}>
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
                     <RangeControl
                         label={__('Platform Label Font Size (px)', 'adaire-blocks')}
-                        value={platformFontSize}
-                        onChange={(value) => setAttributes({ platformFontSize: value })}
+                        value={rPlatformFontSize[deviceType] ?? rPlatformFontSize.desktop ?? platformFontSize}
+                        onChange={(value) => updateResponsive('responsivePlatformFontSize', value)}
                         min={8}
                         max={32}
                         step={1}

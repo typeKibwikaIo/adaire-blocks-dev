@@ -10,6 +10,9 @@ export default function save( { attributes: a } ) {
 	} = a;
 
 	const nodeSize = a.nodeSize || 52;
+	const rPaddingTop = a.responsivePaddingTop || {};
+	const rPaddingBottom = a.responsivePaddingBottom || {};
+	const rNodeSize = a.responsiveNodeSize || {};
 
 	const blockProps = useBlockProps.save( {
 		className: `adaire-timeline is-${ orientation }`,
@@ -20,10 +23,16 @@ export default function save( { attributes: a } ) {
 			'--tl-text'     : a.textColor        || '#ffffff',
 			'--tl-desc'     : a.descriptionColor || 'rgba(255,255,255,0.65)',
 			'--tl-line'     : a.lineColor        || '#1e3a5f',
-			'--tl-node-size': `${ nodeSize }px`,
+			'--tl-node-size-desktop': `${ rNodeSize.desktop ?? nodeSize }px`,
+			'--tl-node-size-tablet' : `${ rNodeSize.tablet ?? rNodeSize.desktop ?? nodeSize }px`,
+			'--tl-node-size-mobile' : `${ rNodeSize.mobile ?? rNodeSize.tablet ?? rNodeSize.desktop ?? nodeSize }px`,
 			backgroundColor : a.backgroundColor  || '#0a1628',
-			paddingTop      : `${ a.paddingTop    ?? 80 }px`,
-			paddingBottom   : `${ a.paddingBottom ?? 80 }px`,
+			'--tl-padding-top-desktop': `${ rPaddingTop.desktop ?? a.paddingTop ?? 80 }px`,
+			'--tl-padding-top-tablet': `${ rPaddingTop.tablet ?? rPaddingTop.desktop ?? a.paddingTop ?? 80 }px`,
+			'--tl-padding-top-mobile': `${ rPaddingTop.mobile ?? rPaddingTop.tablet ?? rPaddingTop.desktop ?? a.paddingTop ?? 80 }px`,
+			'--tl-padding-bottom-desktop': `${ rPaddingBottom.desktop ?? a.paddingBottom ?? 80 }px`,
+			'--tl-padding-bottom-tablet': `${ rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? a.paddingBottom ?? 80 }px`,
+			'--tl-padding-bottom-mobile': `${ rPaddingBottom.mobile ?? rPaddingBottom.tablet ?? rPaddingBottom.desktop ?? a.paddingBottom ?? 80 }px`,
 			marginTop       : `${ a.marginTop     ?? 0  }px`,
 			marginBottom    : `${ a.marginBottom  ?? 0  }px`,
 			color           : a.textColor        || '#ffffff',
@@ -97,10 +106,7 @@ export default function save( { attributes: a } ) {
 						: 'bottom';
 
 					const nodeEl = (
-						<div
-							className="adaire-timeline__node"
-							style={ { width: nodeSize, height: nodeSize } }
-						>
+						<div className="adaire-timeline__node">
 							{ ICON_SVGS[ item.icon ] || ICON_SVGS.shield }
 						</div>
 					);

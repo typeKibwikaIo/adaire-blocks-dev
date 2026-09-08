@@ -3,6 +3,8 @@ import { RichText, useBlockProps } from '@wordpress/block-editor';
 
 export default function save({ attributes: a }) {
     const hasPdf = !!a.pdfUrl;
+    const radius = a.responsiveBorderRadius || {};
+    const viewerHeight = a.responsiveViewerHeight || {};
 
     const blockProps = useBlockProps.save({
         className: `adaire-pdf-reader${a.shadow ? ' has-shadow' : ''}`,
@@ -18,7 +20,12 @@ export default function save({ attributes: a }) {
             '--ad-button-hover-bg': a.buttonHoverBackgroundColor || '#111827',
             '--ad-button-hover-border': a.buttonHoverBorderColor || '#111827',
             '--ad-frame-border': a.frameBorderColor || '#e5e7eb',
-            '--ad-radius': (a.borderRadius || 18) + 'px',
+            '--ad-radius-desktop': (radius.desktop ?? a.borderRadius ?? 18) + 'px',
+            '--ad-radius-tablet': (radius.tablet ?? radius.desktop ?? a.borderRadius ?? 18) + 'px',
+            '--ad-radius-mobile': (radius.mobile ?? radius.tablet ?? radius.desktop ?? a.borderRadius ?? 18) + 'px',
+            '--ad-viewer-height-desktop': (viewerHeight.desktop ?? a.viewerHeight ?? 640) + 'px',
+            '--ad-viewer-height-tablet': (viewerHeight.tablet ?? viewerHeight.desktop ?? a.viewerHeight ?? 640) + 'px',
+            '--ad-viewer-height-mobile': (viewerHeight.mobile ?? viewerHeight.tablet ?? viewerHeight.desktop ?? a.viewerHeight ?? 640) + 'px',
         },
     });
 
@@ -35,7 +42,6 @@ export default function save({ attributes: a }) {
                         src={a.pdfUrl}
                         title={a.fileName || 'PDF document'}
                         loading="lazy"
-                        style={{ minHeight: (a.viewerHeight || 640) + 'px' }}
                     />
                     {(a.fileName || a.fileSize || a.pageCount) && (
                         <p className="adaire-pdf-reader__meta">

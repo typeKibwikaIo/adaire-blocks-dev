@@ -4,9 +4,9 @@
   background-position: center;
   background-size: cover;
   color: var(--ad-color, #fff);
-  border-radius: var(--ad-radius, 18px);
-  padding: var(--ad-padding, 28px);
-  font-size: var(--ad-font-size, 16px);
+  border-radius: var(--ad-radius-desktop, 18px);
+  padding: var(--ad-padding-desktop, 28px);
+  font-size: var(--ad-font-size-desktop, 16px);
   position: relative;
   overflow: hidden;
   display: grid;
@@ -36,7 +36,7 @@
 .adaire-app-download__image,
 .adaire-app-download__qr { height: auto; max-width: 100%; object-fit: cover; }
 .adaire-app-download__viewer,
-.adaire-app-download iframe { border: 1px solid #e5e7eb; border-radius: var(--ad-radius, 18px); width: 100%; }
+.adaire-app-download iframe { border: 1px solid #e5e7eb; border-radius: var(--ad-radius-desktop, 18px); width: 100%; }
 .adaire-app-download__layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 34%); gap: 1rem; }
 .adaire-app-download__player iframe { height: 100%; width: 100%; }
 .adaire-app-download__badge { background: var(--ad-accent, #d52940); border-radius: 999px; color: #fff; display: inline-flex; font-size: .75rem; font-weight: 900; padding: .35rem .6rem; }
@@ -61,6 +61,27 @@
 @media (max-width: 480px) {
   .adaire-app-download__actions { display: grid; gap: .75rem; }
   .adaire-app-download__viewer { min-height: 300px !important; }
+}
+
+/* Tablet — 601px to 782px */
+@media (max-width: 782px) {
+  .adaire-app-download {
+    border-radius: var(--ad-radius-tablet, 18px);
+    padding: var(--ad-padding-tablet, 28px);
+    font-size: var(--ad-font-size-tablet, 16px);
+  }
+  .adaire-app-download__viewer,
+  .adaire-app-download iframe { border-radius: var(--ad-radius-tablet, 18px); }
+}
+/* Mobile — 600px and smaller */
+@media (max-width: 600px) {
+  .adaire-app-download {
+    border-radius: var(--ad-radius-mobile, 18px);
+    padding: var(--ad-padding-mobile, 28px);
+    font-size: var(--ad-font-size-mobile, 16px);
+  }
+  .adaire-app-download__viewer,
+  .adaire-app-download iframe { border-radius: var(--ad-radius-mobile, 18px); }
 }
 
 .adaire-app-download__button,

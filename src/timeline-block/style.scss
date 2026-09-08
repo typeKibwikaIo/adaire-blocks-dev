@@ -7,6 +7,8 @@
 	font-family: var( --tl-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif );
 	width: 100%;
 	overflow: hidden;
+	padding-top: var( --tl-padding-top-desktop, 80px );
+	padding-bottom: var( --tl-padding-bottom-desktop, 80px );
 
 	*,
 	*::before,
@@ -65,8 +67,8 @@
 		flex-shrink: 0;
 		z-index: 2;
 		color: var( --tl-accent, #ffffff );
-		width: var( --tl-node-size, 52px );
-		height: var( --tl-node-size, 52px );
+		width: var( --tl-node-size-desktop, 52px );
+		height: var( --tl-node-size-desktop, 52px );
 		box-shadow: 0 0 0 6px rgba( 255, 255, 255, 0.12 );
 		transition: box-shadow 0.25s ease;
 
@@ -223,7 +225,7 @@
 		// Horizontal line — sits at vertical center of the nodes
 		.adaire-timeline__line {
 			position: absolute;
-			top: calc( var( --tl-node-size, 52px ) / 2 );
+			top: calc( var( --tl-node-size-desktop, 52px ) / 2 );
 			left: 0;
 			right: 0;
 			height: 2px;
@@ -273,6 +275,39 @@
 				text-align: left;
 				padding-top: 8px;
 			}
+		}
+	}
+}
+
+// Tablet — 601px to 782px
+@media ( max-width: 782px ) {
+	.adaire-timeline {
+		padding-top: var( --tl-padding-top-tablet, 80px );
+		padding-bottom: var( --tl-padding-bottom-tablet, 80px );
+
+		.adaire-timeline__node {
+			width: var( --tl-node-size-tablet, 52px );
+			height: var( --tl-node-size-tablet, 52px );
+		}
+
+		.adaire-timeline__line {
+			top: calc( var( --tl-node-size-tablet, 52px ) / 2 );
+		}
+	}
+}
+// Mobile — 600px and smaller
+@media ( max-width: 600px ) {
+	.adaire-timeline {
+		padding-top: var( --tl-padding-top-mobile, 80px );
+		padding-bottom: var( --tl-padding-bottom-mobile, 80px );
+
+		.adaire-timeline__node {
+			width: var( --tl-node-size-mobile, 52px );
+			height: var( --tl-node-size-mobile, 52px );
+		}
+
+		.adaire-timeline__line {
+			top: calc( var( --tl-node-size-mobile, 52px ) / 2 );
 		}
 	}
 }

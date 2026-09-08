@@ -159,6 +159,14 @@
             "type": "string",
             "default": "linear-gradient(135deg,#111827,#3b0764)"
         },
+        "responsivePadding": {
+            "type": "object",
+            "default": { "desktop": 28, "tablet": 28, "mobile": 28 }
+        },
+        "responsiveBorderRadius": {
+            "type": "object",
+            "default": { "desktop": 18, "tablet": 18, "mobile": 18 }
+        },
         "fields": {
             "type": "object",
             "default": [

@@ -166,6 +166,14 @@
         "AdaireBlocksPadding": {
             "type": "object",
             "default": {}
+        },
+        "responsivePaddingTop": {
+            "type": "object",
+            "default": {}
+        },
+        "responsivePaddingBottom": {
+            "type": "object",
+            "default": {}
         }
     }
 }

@@ -23,13 +23,20 @@ export default function save({ attributes }) {
         platformLineHeight,
         platformLetterSpacing,
         platformTextTransform,
+        responsiveIconSize,
+        responsivePlatformFontSize,
     } = attributes;
+
+    const rIconSize = responsiveIconSize || {};
+    const rPlatformFontSize = responsivePlatformFontSize || {};
 
     const blockProps = useBlockProps.save({
         className: `adaire-social-share adaire-social-share--align-${alignment} adaire-social-share--tooltip-${tooltipPosition}`,
         id: blockId || undefined,
         style: {
-            '--share-icon-size': `${iconSize}px`,
+            '--share-icon-size-desktop': `${rIconSize.desktop ?? iconSize}px`,
+            '--share-icon-size-tablet': `${rIconSize.tablet ?? rIconSize.desktop ?? iconSize}px`,
+            '--share-icon-size-mobile': `${rIconSize.mobile ?? rIconSize.tablet ?? rIconSize.desktop ?? iconSize}px`,
             '--share-icon-color': iconColor,
             '--share-button-bg': buttonBackgroundColor,
             '--share-button-bg-hover': buttonHoverBackgroundColor,
@@ -41,7 +48,9 @@ export default function save({ attributes }) {
             '--share-border-width': `${borderWidth}px`,
             '--share-border-color': borderColor,
             '--share-font-family': fontFamily || '',
-            '--share-platform-font-size': `${platformFontSize ?? 14}px`,
+            '--share-platform-font-size-desktop': `${rPlatformFontSize.desktop ?? platformFontSize ?? 14}px`,
+            '--share-platform-font-size-tablet': `${rPlatformFontSize.tablet ?? rPlatformFontSize.desktop ?? platformFontSize ?? 14}px`,
+            '--share-platform-font-size-mobile': `${rPlatformFontSize.mobile ?? rPlatformFontSize.tablet ?? rPlatformFontSize.desktop ?? platformFontSize ?? 14}px`,
             '--share-platform-font-weight': platformFontWeight || '400',
             '--share-platform-line-height': platformLineHeight || '1.4',
             '--share-platform-letter-spacing': platformLetterSpacing || 'normal',

@@ -18,10 +18,22 @@ import {
 } from '@wordpress/components';
 import InspectorTabs from '../components/InspectorTabs';
 import './editor.scss';
+import { useState } from '@wordpress/element';
+import DeviceSwitcher, { BreakpointNote, THREE_TIERS } from '../components/DeviceSwitcher';
+import useEditorDevice, { hasCanvasPreset } from '../components/useEditorDevice';
 
 export default function Edit({ attributes, setAttributes }) {
     const a = attributes;
     const hasPdf = !!a.pdfUrl;
+    const [deviceType, setDeviceType] = useState('desktop');
+    useEditorDevice(deviceType, setDeviceType);
+
+    const updateResponsive = (attrName, value) => setAttributes({
+        [attrName]: { ...(a[attrName] || {}), [deviceType]: value },
+    });
+
+    const radius = a.responsiveBorderRadius || {};
+    const viewerHeight = a.responsiveViewerHeight || {};
 
     const blockProps = useBlockProps({
         className: `adaire-pdf-reader${a.shadow ? ' has-shadow' : ''}`,
@@ -37,7 +49,12 @@ export default function Edit({ attributes, setAttributes }) {
             '--ad-button-hover-bg': a.buttonHoverBackgroundColor || '#111827',
             '--ad-button-hover-border': a.buttonHoverBorderColor || '#111827',
             '--ad-frame-border': a.frameBorderColor || '#e5e7eb',
-            '--ad-radius': (a.borderRadius || 18) + 'px',
+            '--ad-radius-desktop': (radius.desktop ?? a.borderRadius ?? 18) + 'px',
+            '--ad-radius-tablet': (radius.tablet ?? radius.desktop ?? a.borderRadius ?? 18) + 'px',
+            '--ad-radius-mobile': (radius.mobile ?? radius.tablet ?? radius.desktop ?? a.borderRadius ?? 18) + 'px',
+            '--ad-viewer-height-desktop': (viewerHeight.desktop ?? a.viewerHeight ?? 640) + 'px',
+            '--ad-viewer-height-tablet': (viewerHeight.tablet ?? viewerHeight.desktop ?? a.viewerHeight ?? 640) + 'px',
+            '--ad-viewer-height-mobile': (viewerHeight.mobile ?? viewerHeight.tablet ?? viewerHeight.desktop ?? a.viewerHeight ?? 640) + 'px',
         },
     });
 
@@ -92,9 +109,17 @@ export default function Edit({ attributes, setAttributes }) {
                 </PanelBody>
 
                 <PanelBody section="layout" title={__('Viewer', 'adaire-blocks')} initialOpen={false}>
-                    <RangeControl label={__('Viewer height', 'adaire-blocks')} value={a.viewerHeight || 640} onChange={(v) => setAttributes({ viewerHeight: v })} min={240} max={1200} />
-                    <RangeControl label={__('Corner radius', 'adaire-blocks')} value={a.borderRadius || 18} onChange={(v) => setAttributes({ borderRadius: v })} min={0} max={80} />
                     <ToggleControl label={__('Shadow', 'adaire-blocks')} checked={!!a.shadow} onChange={(v) => setAttributes({ shadow: v })} />
+                </PanelBody>
+
+                <PanelBody section="layout" title={__('Responsive', 'adaire-blocks')} initialOpen={false}>
+                    <DeviceSwitcher deviceType={deviceType} setDeviceType={setDeviceType} tiers={THREE_TIERS} />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+                    {!hasCanvasPreset(deviceType) && (
+                        <p className="components-base-control__help">{__('This breakpoint has no matching canvas preview width — the editor canvas will not resize to match while you edit it.', 'adaire-blocks')}</p>
+                    )}
+                    <RangeControl label={__('Viewer height', 'adaire-blocks')} value={viewerHeight[deviceType] ?? viewerHeight.desktop ?? a.viewerHeight ?? 640} onChange={(v) => updateResponsive('responsiveViewerHeight', v)} min={240} max={1200} />
+                    <RangeControl label={__('Corner radius', 'adaire-blocks')} value={radius[deviceType] ?? radius.desktop ?? a.borderRadius ?? 18} onChange={(v) => updateResponsive('responsiveBorderRadius', v)} min={0} max={80} />
                 </PanelBody>
 
                 <PanelBody section="layout" title={__('Button Size', 'adaire-blocks')} initialOpen={false}>
@@ -192,7 +217,6 @@ export default function Edit({ attributes, setAttributes }) {
                             className="adaire-pdf-reader__viewer"
                             src={a.pdfUrl}
                             title={a.fileName || __('PDF document', 'adaire-blocks')}
-                            style={{ minHeight: (a.viewerHeight || 640) + 'px' }}
                         />
                         {(a.fileName || a.fileSize || a.pageCount) && (
                             <p className="adaire-pdf-reader__meta">

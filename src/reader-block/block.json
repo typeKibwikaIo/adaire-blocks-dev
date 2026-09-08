@@ -141,6 +141,18 @@
         "backgroundGradient": {
             "type": "string",
             "default": "linear-gradient(135deg,#111827,#3b0764)"
+        },
+        "responsivePadding": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveFontSize": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveBorderRadius": {
+            "type": "object",
+            "default": {}
         }
     }
 }
