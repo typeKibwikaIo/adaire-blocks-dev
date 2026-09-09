@@ -40,6 +40,9 @@ export default function save( { attributes } ) {
     responsiveGap,
     responsivePadding,
     responsiveMargin,
+    responsiveLayout = {},
+    responsiveColumnWidths = {},
+    responsiveDirection = {},
   } = attributes;
 
   // Mirrors edit.js: padding/margin are converted from the BoxControl-shaped
@@ -66,6 +69,9 @@ export default function save( { attributes } ) {
   const gridTemplateColumns = columnWidths.length
     ? columnWidths.map( ( w ) => `${ w }fr` ).join( ' ' )
     : '1fr';
+  const gridFor = ( device ) => ( responsiveColumnWidths?.[ device ] || columnWidths ).length
+    ? ( responsiveColumnWidths?.[ device ] || columnWidths ).map( ( w ) => `${ w }fr` ).join( ' ' )
+    : gridTemplateColumns;
 
   // Only emit border-related inline styles when the user has actually turned
   // the border on — keeps this attribute set 100% backward compatible with
@@ -123,6 +129,9 @@ export default function save( { attributes } ) {
   const rowClassName = [
     'adaire-row',
     `adaire-row--cols-${ columnWidths.length }`,
+    responsiveDirection?.desktop === 'vertical' ? 'adaire-row--direction-desktop-vertical' : '',
+    responsiveDirection?.tablet === 'vertical' ? 'adaire-row--direction-tablet-vertical' : '',
+    responsiveDirection?.mobile === 'vertical' ? 'adaire-row--direction-mobile-vertical' : '',
     getRowWidthClass( align ),
     verticalAlign ? `adaire-row--valign-${ verticalAlign }` : '',
     mobileColumns ? `adaire-row--mobile-cols-${ mobileColumns }` : '',
@@ -133,6 +142,11 @@ export default function save( { attributes } ) {
     className: rowClassName,
     style: {
       gridTemplateColumns,
+      '--row-grid-columns-tablet': gridFor( 'tablet' ),
+      '--row-grid-columns-mobile': gridFor( 'mobile' ),
+      '--row-direction-desktop': responsiveDirection?.desktop || 'horizontal',
+      '--row-direction-tablet': responsiveDirection?.tablet || responsiveDirection?.desktop || 'horizontal',
+      '--row-direction-mobile': responsiveDirection?.mobile || responsiveDirection?.tablet || responsiveDirection?.desktop || 'horizontal',
       gap: `${ desktopGap }px`,
       '--row-gap-tablet': `${ tabletGap }px`,
       '--row-gap-mobile': `${ mobileGap }px`,

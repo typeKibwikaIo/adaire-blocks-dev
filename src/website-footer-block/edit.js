@@ -7,6 +7,7 @@ import { useState, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import BoundColorPalette from '../components/BoundColorPalette';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS, BreakpointNote } from '../components/DeviceSwitcher';
+import useEditorDevice from '../components/useEditorDevice';
 
 // ── helpers ──────────────────────────────────────────────────────────────
 
@@ -178,6 +179,7 @@ const widgetAreaOptions = [
 
 export default function Edit({ attributes, setAttributes }) {
     const [deviceType, setDeviceType] = useState('desktop');
+    useEditorDevice(deviceType, setDeviceType);
     const {
         backgroundColor, backgroundImage, backgroundGradient, backgroundType,
         textColor, accentColor, fontFamily,
@@ -201,10 +203,12 @@ export default function Edit({ attributes, setAttributes }) {
             backgroundPosition: backgroundType === 'image' ? 'center'   : 'auto',
             backgroundRepeat:   backgroundType === 'image' ? 'no-repeat': 'repeat',
             color: textColor || '#ffffff',
-            paddingTop: `${paddingTop}px`, paddingBottom: `${paddingBottom}px`,
-            marginTop:  `${marginTop}px`,  marginBottom:  `${marginBottom}px`,
+            paddingTop: getResponsivePadding().top || `${paddingTop}px`,
+            paddingBottom: getResponsivePadding().bottom || `${paddingBottom}px`,
+            marginTop: getResponsiveMargin().top || `${marginTop}px`,
+            marginBottom: getResponsiveMargin().bottom || `${marginBottom}px`,
             '--footer-accent-color': accentColor || '#503AA8',
-            '--footer-max-width': `${maxWidth}px`,
+            '--footer-max-width': `${getResponsiveMaxWidth()}px`,
             '--footer-font-family': fontFamily || 'inherit',
         },
     });
@@ -555,6 +559,15 @@ export default function Edit({ attributes, setAttributes }) {
     return (
         <>
             <InspectorTabs attributes={attributes} setAttributes={setAttributes}>
+                <PanelBody section="layout" title={__('Responsive', 'website-footer-block')} initialOpen={true}>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        label={__('Breakpoint', 'website-footer-block')}
+                        tiers={THREE_TIERS}
+                    />
+                    <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+                </PanelBody>
 
                 {/* ── Footer Styling ──────────────────────────────────── */}
                 <PanelBody section="style" priority="high" title={__('Footer Styling', 'adaire-blocks')} initialOpen={true}>
@@ -578,11 +591,11 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* ── Footer Layout (spacing/structure) ───────────────── */}
                 <PanelBody section="layout" title={__('Footer Layout', 'adaire-blocks')} initialOpen={false}>
-                    <RangeControl label="Max Width (px)"        value={maxWidth}      onChange={(v) => setAttributes({ maxWidth: v })}      min={800} max={1600} />
-                    <RangeControl label="Padding Top (px)"      value={paddingTop}    onChange={(v) => setAttributes({ paddingTop: v })}    min={0} max={120} />
-                    <RangeControl label="Padding Bottom (px)"   value={paddingBottom} onChange={(v) => setAttributes({ paddingBottom: v })} min={0} max={120} />
-                    <RangeControl label="Margin Top (px)"       value={marginTop}     onChange={(v) => setAttributes({ marginTop: v })}     min={0} max={100} />
-                    <RangeControl label="Margin Bottom (px)"    value={marginBottom}  onChange={(v) => setAttributes({ marginBottom: v })}  min={0} max={100} />
+                    <RangeControl label="Max Width (px)" value={getResponsiveMaxWidth()} onChange={(v) => setAttributes({ responsiveMaxWidth: updateDeviceAttribute(responsiveMaxWidth, deviceType, v) })} min={320} max={1600} />
+                    <RangeControl label="Padding Top (px)" value={parseInt(getResponsivePadding().top, 10) || 0} onChange={(v) => setAttributes({ responsivePadding: { ...(responsivePadding || {}), [deviceType]: { ...getResponsivePadding(), top: `${v}px` } } })} min={0} max={120} />
+                    <RangeControl label="Padding Bottom (px)" value={parseInt(getResponsivePadding().bottom, 10) || 0} onChange={(v) => setAttributes({ responsivePadding: { ...(responsivePadding || {}), [deviceType]: { ...getResponsivePadding(), bottom: `${v}px` } } })} min={0} max={120} />
+                    <RangeControl label="Margin Top (px)" value={parseInt(getResponsiveMargin().top, 10) || 0} onChange={(v) => setAttributes({ responsiveMargin: { ...(responsiveMargin || {}), [deviceType]: { ...getResponsiveMargin(), top: `${v}px` } } })} min={0} max={100} />
+                    <RangeControl label="Margin Bottom (px)" value={parseInt(getResponsiveMargin().bottom, 10) || 0} onChange={(v) => setAttributes({ responsiveMargin: { ...(responsiveMargin || {}), [deviceType]: { ...getResponsiveMargin(), bottom: `${v}px` } } })} min={0} max={100} />
                 </PanelBody>
 
                 {/* ── Zone Visibility ─────────────────────────────────── */}

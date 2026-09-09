@@ -1,13 +1,14 @@
 ﻿import { __ } from '@wordpress/i18n';
 import { useBlockProps, useInnerBlocksProps, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, SelectControl, ButtonGroup, Button, TextControl, BaseControl, ColorPicker } from '@wordpress/components';
-import { desktop, tablet, mobile } from '@wordpress/icons';
 import { useEffect, useState } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
 import AnimationSettings from '../components/AnimationSettings';
+import DeviceSwitcher, { THREE_TIERS } from '../components/DeviceSwitcher';
+import useEditorDevice from '../components/useEditorDevice';
 import { FLIPCARD_PRESETS } from './flipcard-presets';
 import './editor.scss';
 
@@ -20,6 +21,7 @@ const TEMPLATE = [
 
 export default function Edit({ attributes, setAttributes, clientId }) {
     const [deviceType, setDeviceType] = useState('desktop');
+    useEditorDevice(deviceType, setDeviceType);
     const [activeZone, setActiveZone] = useState(null);
     const { 
         blockId, 
@@ -156,6 +158,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     return (
         <>
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
+                <PanelBody section="layout" title={__('Responsive', 'adaire-blocks')} initialOpen={true}>
+                    <DeviceSwitcher
+                        deviceType={deviceType}
+                        setDeviceType={setDeviceType}
+                        tiers={THREE_TIERS}
+                        label={__('Breakpoint', 'adaire-blocks')}
+                    />
+                </PanelBody>
                 <PanelBody section="content" title={__('Starter Templates', 'adaire-blocks')} initialOpen={true}>
                     <p className="adaire-flipcard-presets__intro">
                         {__('Pick a starting point to fill both faces. You can freely edit, add or remove blocks on each face afterward.', 'adaire-blocks')}
@@ -228,30 +238,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </PanelBody>
 
                 <PanelBody section="layout" title={__('Card Dimensions', 'adaire-blocks')} initialOpen={true}>
-                    <p style={{ marginBottom: '8px', fontWeight: 600 }}>
-                        {__('Device', 'adaire-blocks')}
-                    </p>
-                    <ButtonGroup style={{ marginBottom: '16px' }}>
-                        <Button
-                            icon={desktop}
-                            isPrimary={deviceType === 'desktop'}
-                            onClick={() => setDeviceType('desktop')}
-                            label={__('Desktop', 'adaire-blocks')}
-                        />
-                        <Button
-                            icon={tablet}
-                            isPrimary={deviceType === 'tablet'}
-                            onClick={() => setDeviceType('tablet')}
-                            label={__('Tablet', 'adaire-blocks')}
-                        />
-                        <Button
-                            icon={mobile}
-                            isPrimary={deviceType === 'mobile'}
-                            onClick={() => setDeviceType('mobile')}
-                            label={__('Mobile', 'adaire-blocks')}
-                        />
-                    </ButtonGroup>
-
                     <p style={{ marginBottom: '8px', fontWeight: 600 }}>
                         {__('Card Width', 'adaire-blocks')}
                     </p>

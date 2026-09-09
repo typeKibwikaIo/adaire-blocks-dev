@@ -125,6 +125,21 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 		$topbar_justify     = isset( $topbar_justify_map[ $attributes['topBarLayout'] ] )
 			? $topbar_justify_map[ $attributes['topBarLayout'] ]
 			: 'space-between';
+		$responsive_value = static function ( $name, $device, $fallback ) use ( $attributes ) {
+			return isset( $attributes[ $name ] ) && is_array( $attributes[ $name ] ) && isset( $attributes[ $name ][ $device ] )
+				? $attributes[ $name ][ $device ]
+				: $fallback;
+		};
+		$desktop_padding_top    = $responsive_value( 'responsivePaddingTop', 'desktop', $attributes['paddingTop'] );
+		$desktop_padding_bottom = $responsive_value( 'responsivePaddingBottom', 'desktop', $attributes['paddingBottom'] );
+		$desktop_max_width      = $responsive_value( 'responsiveMaxWidth', 'desktop', $attributes['maxWidth'] );
+		$desktop_nav_spacing    = $responsive_value( 'responsiveNavSpacing', 'desktop', $attributes['navSpacing'] );
+		$desktop_nav_font_size  = $responsive_value( 'responsiveNavFontSize', 'desktop', $attributes['navFontSize'] );
+		$desktop_logo_width     = $responsive_value( 'responsiveLogoWidth', 'desktop', $attributes['logoWidth'] );
+		$desktop_mobile_logo    = $responsive_value( 'responsiveMobileLogoWidth', 'desktop', $attributes['mobileLogoWidth'] );
+		$desktop_topbar_size    = $responsive_value( 'responsiveTopBarFontSize', 'desktop', ! empty( $attributes['topBarFontSize'] ) ? $attributes['topBarFontSize'] : 13 );
+		$desktop_social_size    = $responsive_value( 'responsiveSocialIconSize', 'desktop', $attributes['socialIconSize'] );
+		$desktop_hamburger_size = $responsive_value( 'responsiveHamburgerSize', 'desktop', ! empty( $attributes['hamburgerSize'] ) ? $attributes['hamburgerSize'] : 42 );
 
 		$styles = array(
 			'--adaire-header-font-family'             => ! empty( $attributes['fontFamily'] ) ? $attributes['fontFamily'] : 'inherit',
@@ -133,22 +148,22 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 			'--adaire-header-hover-color'             => $attributes['hoverColor'],
 			'--adaire-header-border-color'            => $attributes['borderColor'],
 			'--adaire-header-border-width'            => ! empty( $attributes['borderBottom'] ) ? $attributes['borderThickness'] . 'px' : '0px',
-			'--adaire-header-padding-top'             => $attributes['paddingTop'] . 'px',
-			'--adaire-header-padding-bottom'          => $attributes['paddingBottom'] . 'px',
-			'--adaire-header-max-width'               => ( 'contained' === $attributes['maxWidthMode'] ) ? $attributes['maxWidth'] . 'px' : '100%',
-			'--adaire-header-nav-gap'                 => $attributes['navSpacing'] . 'px',
-			'--adaire-header-nav-font-size'           => $attributes['navFontSize'] . 'px',
+			'--adaire-header-padding-top'             => $desktop_padding_top . 'px',
+			'--adaire-header-padding-bottom'          => $desktop_padding_bottom . 'px',
+			'--adaire-header-max-width'               => ( 'contained' === $attributes['maxWidthMode'] ) ? $desktop_max_width . 'px' : '100%',
+			'--adaire-header-nav-gap'                 => $desktop_nav_spacing . 'px',
+			'--adaire-header-nav-font-size'           => $desktop_nav_font_size . 'px',
 			'--adaire-header-nav-font-weight'         => $attributes['navFontWeight'],
 			'--adaire-header-letter-spacing'          => $attributes['letterSpacing'] . 'px',
 			'--adaire-header-text-transform'          => $attributes['textTransform'],
-			'--adaire-header-logo-width'              => $attributes['logoWidth'] . 'px',
-			'--adaire-header-mobile-logo-width'       => $attributes['mobileLogoWidth'] . 'px',
+			'--adaire-header-logo-width'              => $desktop_logo_width . 'px',
+			'--adaire-header-mobile-logo-width'       => $desktop_mobile_logo . 'px',
 			'--adaire-header-topbar-bg'               => $attributes['topBarBackgroundColor'],
 			'--adaire-header-topbar-color'            => $attributes['topBarTextColor'],
-			'--adaire-header-topbar-font-size'        => ( ! empty( $attributes['topBarFontSize'] ) ? $attributes['topBarFontSize'] : 13 ) . 'px',
+			'--adaire-header-topbar-font-size'        => $desktop_topbar_size . 'px',
 			'--adaire-header-topbar-justify'          => $topbar_justify,
 			'--adaire-header-topbar-gap'              => ( 'space-between' === $attributes['topBarLayout'] ) ? '24px' : '12px',
-			'--adaire-header-social-size'             => $attributes['socialIconSize'] . 'px',
+			'--adaire-header-social-size'             => $desktop_social_size . 'px',
 			'--adaire-header-social-color'            => $attributes['socialIconColor'],
 			'--adaire-header-cart-size'               => ( ! empty( $attributes['cartIconSize'] ) ? $attributes['cartIconSize'] : 18 ) . 'px',
 			'--adaire-header-payment-size'            => ( ! empty( $attributes['paymentIconSize'] ) ? $attributes['paymentIconSize'] : 22 ) . 'px',
@@ -159,11 +174,23 @@ if ( ! function_exists( 'adaire_header_get_style_vars' ) ) {
 				: adaire_header_get_action_radius( $attributes['buttonShape'] ),
 			'--adaire-header-hamburger-border'        => ! empty( $attributes['hamburgerBorder'] ) ? ( '1px solid ' . $attributes['hamburgerBorderColor'] ) : 'none',
 			'--adaire-header-hamburger-border-radius' => $attributes['hamburgerBorderRadius'] . 'px',
-			'--adaire-header-hamburger-size'          => ( ! empty( $attributes['hamburgerSize'] ) ? (int) $attributes['hamburgerSize'] : 42 ) . 'px',
+			'--adaire-header-hamburger-size'          => $desktop_hamburger_size . 'px',
 			'--adaire-header-hamburger-order'         => ( isset( $attributes['hamburgerPosition'] ) && 'right' === $attributes['hamburgerPosition'] ) ? '1' : '0',
 			'--adaire-header-search-icon-size'        => ( ! empty( $attributes['searchIconSize'] ) ? $attributes['searchIconSize'] : 18 ) . 'px',
 			'--adaire-header-search-btn-size'         => ( ! empty( $attributes['searchButtonSize'] ) ? $attributes['searchButtonSize'] : 38 ) . 'px',
 		);
+		foreach ( array( 'tablet', 'mobile' ) as $device ) {
+			$styles[ '--adaire-header-padding-top-' . $device ] = $responsive_value( 'responsivePaddingTop', $device, $attributes['paddingTop'] ) . 'px';
+			$styles[ '--adaire-header-padding-bottom-' . $device ] = $responsive_value( 'responsivePaddingBottom', $device, $attributes['paddingBottom'] ) . 'px';
+			$styles[ '--adaire-header-max-width-' . $device ] = ( 'contained' === $attributes['maxWidthMode'] ? $responsive_value( 'responsiveMaxWidth', $device, $attributes['maxWidth'] ) . 'px' : '100%' );
+			$styles[ '--adaire-header-nav-gap-' . $device ] = $responsive_value( 'responsiveNavSpacing', $device, $attributes['navSpacing'] ) . 'px';
+			$styles[ '--adaire-header-nav-font-size-' . $device ] = $responsive_value( 'responsiveNavFontSize', $device, $attributes['navFontSize'] ) . 'px';
+			$styles[ '--adaire-header-logo-width-' . $device ] = $responsive_value( 'responsiveLogoWidth', $device, $attributes['logoWidth'] ) . 'px';
+			$styles[ '--adaire-header-mobile-logo-width-' . $device ] = $responsive_value( 'responsiveMobileLogoWidth', $device, $attributes['mobileLogoWidth'] ) . 'px';
+			$styles[ '--adaire-header-topbar-font-size-' . $device ] = $responsive_value( 'responsiveTopBarFontSize', $device, ! empty( $attributes['topBarFontSize'] ) ? $attributes['topBarFontSize'] : 13 ) . 'px';
+			$styles[ '--adaire-header-social-size-' . $device ] = $responsive_value( 'responsiveSocialIconSize', $device, $attributes['socialIconSize'] ) . 'px';
+			$styles[ '--adaire-header-hamburger-size-' . $device ] = $responsive_value( 'responsiveHamburgerSize', $device, ! empty( $attributes['hamburgerSize'] ) ? $attributes['hamburgerSize'] : 42 ) . 'px';
+		}
 
 		if ( ! empty( $attributes['searchIconColor'] ) ) {
 			$styles['--adaire-header-search-icon-color'] = $attributes['searchIconColor'];
@@ -989,6 +1016,12 @@ if ( ! function_exists( 'adaire_header_render_mobile_toggle' ) ) {
 // Render.
 // ---------------------------------------------------------------------
 
+// Responsive layout settings are stored independently by breakpoint. The
+// frontend keeps the base desktop class for backward compatibility and adds
+// breakpoint-specific classes consumed by the Header stylesheet.
+$responsive_layout       = isset( $attributes['responsiveLayout'] ) && is_array( $attributes['responsiveLayout'] ) ? $attributes['responsiveLayout'] : array();
+$responsive_orientation  = isset( $attributes['responsiveNavOrientation'] ) && is_array( $attributes['responsiveNavOrientation'] ) ? $attributes['responsiveNavOrientation'] : array();
+
 $style_string     = adaire_header_style_vars_to_string( adaire_header_get_style_vars( $attributes ) );
 $box_shadow_class = ! empty( $attributes['boxShadow'] ) ? ' has-shadow' : '';
 $slide_class      = '';
@@ -996,6 +1029,14 @@ if ( 'slide-in' === $attributes['mobileMenuStyle'] && isset( $attributes['mobile
 	$slide_class = ' mobile-slide-left';
 }
 $classes = trim( 'adaire-header-block is-' . $attributes['stickyBehavior'] . ' mobile-' . $attributes['mobileMenuStyle'] . $slide_class . $box_shadow_class );
+foreach ( array( 'desktop', 'tablet', 'mobile' ) as $device ) {
+	if ( ! empty( $responsive_layout[ $device ] ) ) {
+		$classes .= ' layout-' . $device . '-' . sanitize_html_class( $responsive_layout[ $device ] );
+	}
+	if ( ! empty( $responsive_orientation[ $device ] ) ) {
+		$classes .= ' nav-orientation-' . $device . '-' . sanitize_html_class( $responsive_orientation[ $device ] );
+	}
+}
 
 $resolved   = adaire_header_resolve_nav( $attributes );
 $nav_dom_id = wp_unique_id( 'adaire-header-nav-' );

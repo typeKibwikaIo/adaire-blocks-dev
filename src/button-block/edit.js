@@ -3,6 +3,7 @@ import { PanelBody, TextControl, ToggleControl, SelectControl, RangeControl, Bas
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS, BreakpointNote } from '../components/DeviceSwitcher';
+import useEditorDevice from '../components/useEditorDevice';
 import QuickZone from '../components/QuickZone';
 import InspectorTabs from '../components/InspectorTabs';
 import { PANEL, LABEL } from '../components/inspector-vocabulary';
@@ -23,6 +24,7 @@ const FONT_FAMILY_OPTIONS = [
 
 export default function Edit({ attributes, setAttributes }) {
   const [deviceType, setDeviceType] = useState('desktop');
+  useEditorDevice(deviceType, setDeviceType);
   const [activeZone, setActiveZone] = useState(null);
 
   const {

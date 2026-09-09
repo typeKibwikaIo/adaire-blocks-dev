@@ -117,6 +117,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         iconPosition,
         iconVerticalPosition,
         backgroundGradient,
+		responsiveBackgroundType,
+		responsiveBackgroundColor,
         breadcrumbsColor,
         responsiveBreadcrumbTopOffset,
         responsiveBreadcrumbLeftOffset,
@@ -347,6 +349,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const currentBackgroundGradient =
 		getResponsiveValue(responsiveBackgroundGradient, deviceType) ||
 		backgroundGradient;
+	const currentBackgroundType = getResponsiveValue(responsiveBackgroundType, deviceType) || "gradient";
+	const currentBackgroundColor = getResponsiveValue(responsiveBackgroundColor, deviceType) || "#03002e";
 	const currentRadialCenterX = getResponsiveValue(
 		responsiveRadialGradientCenterX,
 		deviceType,
@@ -441,12 +445,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		className: "adaire-hero-banner-container",
         style: {
             // Background (responsive)
-			"--hero-bg-gradient-mobile":
-				getBackgroundGradientForBreakpoint("mobile"),
-			"--hero-bg-gradient-tablet":
-				getBackgroundGradientForBreakpoint("tablet"),
 			"--hero-bg-gradient-desktop":
-				getBackgroundGradientForBreakpoint("desktop"),
+				currentBackgroundType === "solid" ? "none" : getBackgroundGradientForBreakpoint("desktop"),
+			"--hero-bg-color-desktop": currentBackgroundType === "solid" ? currentBackgroundColor : "transparent",
+			"--hero-bg-gradient-tablet": currentBackgroundType === "solid" ? "none" : getBackgroundGradientForBreakpoint("tablet"),
+			"--hero-bg-color-tablet": currentBackgroundType === "solid" ? currentBackgroundColor : "transparent",
+			"--hero-bg-gradient-mobile": currentBackgroundType === "solid" ? "none" : getBackgroundGradientForBreakpoint("mobile"),
+			"--hero-bg-color-mobile": currentBackgroundType === "solid" ? currentBackgroundColor : "transparent",
 
             // Colors
 			"--hero-breadcrumbs-color": breadcrumbsColor || "#ffffff",
@@ -939,6 +944,25 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         <>
 			<InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody
+					section="layout"
+					title={ PANEL.RESPONSIVE }
+					initialOpen={true}
+				>
+					<DeviceSwitcher
+						deviceType={deviceType}
+						setDeviceType={setDeviceType}
+						label={ LABEL.BREAKPOINT }
+						tiers={THREE_TIERS}
+						onReset={resetResponsiveDefaults}
+					/>
+					<p style={{ marginTop: "8px", fontSize: "12px", color: "#757575" }}>
+						{__(
+							"Select Desktop, Tablet, or Mobile to edit and preview that breakpoint.",
+							"adaire-blocks",
+						)}
+					</p>
+				</PanelBody>
+				<PanelBody
 					section="content"
 					title={ PANEL.CONTENT }
 					initialOpen={true}
@@ -1257,25 +1281,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					        "adaire-blocks",
 					    )}
 					/>
-				</PanelBody>
-				<PanelBody
-					section="layout"
-					title={ PANEL.RESPONSIVE }
-					initialOpen={true}
-				>
-					<DeviceSwitcher
-					    deviceType={deviceType}
-					    setDeviceType={setDeviceType}
-					    label={ LABEL.BREAKPOINT }
-					    tiers={THREE_TIERS}
-					    onReset={resetResponsiveDefaults}
-					/>
-					    <p style={{ marginTop: "8px", fontSize: "12px", color: "#757575" }}>
-					        {__(
-					            "Select a breakpoint to configure its settings. The editor preview shows desktop view.",
-					            "adaire-blocks",
-					        )}
-					    </p>
 				</PanelBody>
 				<PanelBody
 					section="layout"
@@ -1872,6 +1877,27 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					initialOpen={false}
 				>
 					<BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
+					<SelectControl
+						label={__("Background Type", "adaire-blocks")}
+						value={currentBackgroundType}
+						options={[
+							{ label: __("Gradient", "adaire-blocks"), value: "gradient" },
+							{ label: __("Solid Color", "adaire-blocks"), value: "solid" },
+						]}
+						onChange={(value) => setResponsiveValue("responsiveBackgroundType", deviceType, value)}
+					/>
+					{currentBackgroundType === "solid" && (
+						<PanelColorSettings
+							title={__("Background Color", "adaire-blocks")}
+							initialOpen={true}
+							colorSettings={[{
+								value: currentBackgroundColor,
+								onChange: (value) => setResponsiveValue("responsiveBackgroundColor", deviceType, value || "#03002e"),
+								label: __("Solid Color", "adaire-blocks"),
+							}]}
+						/>
+					)}
+					{currentBackgroundType === "gradient" && (
 					<BaseControl label={__("Background Gradient", "adaire-blocks")}>
 					    <GradientPicker
 					        value={liveBackgroundGradient ?? (currentBackgroundGradient || backgroundGradient)}
@@ -1894,6 +1920,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					        }}
 					    />
 					</BaseControl>
+					)}
 					{isRadialGradient(currentBackgroundGradient) && (
 					    <>
 					        <RangeControl

@@ -41,6 +41,18 @@
       "type": "array",
       "default": []
     },
+    "responsiveLayout": {
+      "type": "object",
+      "default": {}
+    },
+    "responsiveColumnWidths": {
+      "type": "object",
+      "default": {}
+    },
+    "responsiveDirection": {
+      "type": "object",
+      "default": {}
+    },
     "align": {
       "type": "string",
       "default": "",

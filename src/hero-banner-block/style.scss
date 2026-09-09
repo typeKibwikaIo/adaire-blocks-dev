@@ -34,6 +34,7 @@
 }
 
 .adaire-hero-banner-container {
+    background-color: var(--hero-bg-color-desktop, transparent);
     background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-desktop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
     background-size: var(--hero-bg-size, cover), auto;
     background-position: var(--hero-bg-position, center), center;
@@ -53,6 +54,7 @@
     overflow: hidden;
 
     @include big-desktop {
+		background-color: var(--hero-bg-color-big-desktop, transparent);
         background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-big-desktop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
         min-height: var(--hero-min-height-big-desktop, 100vh);
         width: var(--hero-width-big-desktop, 100vw);
@@ -66,6 +68,7 @@
     }
 
     @include desktop {
+		background-color: var(--hero-bg-color-desktop, transparent);
         background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-desktop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
         min-height: var(--hero-min-height-desktop, 100vh);
         width: var(--hero-width-desktop, 100vw);
@@ -79,6 +82,7 @@
     }
 
     @include small-laptop {
+		background-color: var(--hero-bg-color-small-laptop, transparent);
         background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-small-laptop, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
         min-height: var(--hero-min-height-small-laptop, auto);
         width: var(--hero-width-small-laptop, 100%);
@@ -92,6 +96,7 @@
     }
 
     @include tablet {
+		background-color: var(--hero-bg-color-tablet, transparent);
         background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-tablet, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
         min-height: var(--hero-min-height-tablet, auto);
         width: var(--hero-width-tablet, 100%);
@@ -105,6 +110,7 @@
     }
 
     @include phone {
+		background-color: var(--hero-bg-color-mobile, transparent);
         background-image: var(--hero-bg-image, none), var(--hero-bg-gradient-mobile, linear-gradient(90deg, rgb(3, 0, 46) 0%, rgb(31, 0, 87) 100%));
         min-height: var(--hero-min-height-mobile, auto);
         width: var(--hero-width-mobile, 100%);

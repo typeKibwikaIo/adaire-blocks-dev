@@ -103,6 +103,22 @@
             "type": "string",
             "default": "linear-gradient(90deg,rgb(3,0,46) 0%,rgb(31,0,87) 100%)"
         },
+        "responsiveBackgroundType": {
+            "type": "object",
+            "default": {
+                "desktop": "gradient",
+                "tablet": "gradient",
+                "mobile": "gradient"
+            }
+        },
+        "responsiveBackgroundColor": {
+            "type": "object",
+            "default": {
+                "desktop": "#03002e",
+                "tablet": "#03002e",
+                "mobile": "#03002e"
+            }
+        },
         "responsiveBackgroundGradient": {
             "type": "object",
             "default": {

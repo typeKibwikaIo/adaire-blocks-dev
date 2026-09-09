@@ -21,6 +21,7 @@ import BoundColorPalette from '../components/BoundColorPalette';
 import { boxToCss, normalizeBoxUnits } from '../components/spacing-utils';
 import AnimationSettings from '../components/AnimationSettings';
 import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS, BreakpointNote } from '../components/DeviceSwitcher';
+import useEditorDevice from '../components/useEditorDevice';
 
 /**
  * Evenly distributes 100% across `count` columns as whole numbers, putting
@@ -113,6 +114,7 @@ const PRESETS = [
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
   const [deviceType, setDeviceType] = useState('desktop');
+  useEditorDevice(deviceType, setDeviceType);
   const { layout: layoutAttr, align } = attributes;
 
   const {
@@ -152,6 +154,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     responsivePadding,
     responsiveMargin,
   } = attributes;
+
+  const selectedLayout = getDeviceValue(attributes.responsiveLayout, deviceType, layoutAttr || 'manual');
+  const selectedWidths = attributes.responsiveColumnWidths?.[deviceType] || columnWidths;
+  const selectedDirection = getDeviceValue(attributes.responsiveDirection, deviceType, 'horizontal');
 
   // Padding/Margin are still stored at the same `style.spacing` attribute
   // path WordPress core's native "spacing" block support (declared in
@@ -220,8 +226,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     } );
   };
 
-  const gridTemplateColumns = columnWidths.length
-    ? columnWidths.map( ( w ) => `${ w }fr` ).join( ' ' )
+  const gridTemplateColumns = selectedWidths.length
+    ? selectedWidths.map( ( w ) => `${ w }fr` ).join( ' ' )
     : '1fr';
 
   // Only emit border-related inline styles when the user has actually turned
@@ -240,8 +246,41 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
   // ─── Row Layout (functional / positional — tagged "layout" per the
   // AdaireBlocks free-tier InspectorTabs reorg) ──
+  const responsivePanel = (
+    <PanelBody section="layout" title={ __( 'Responsive', 'adaire-blocks' ) } initialOpen={ true }>
+      <DeviceSwitcher
+        deviceType={ deviceType }
+        setDeviceType={ setDeviceType }
+        label={ __( 'Breakpoint', 'adaire-blocks' ) }
+        tiers={ THREE_TIERS }
+      />
+      <BreakpointNote deviceType={ deviceType } tiers={ THREE_TIERS } />
+    </PanelBody>
+  );
+
   const rowLayoutPanel = (
     <PanelBody section="layout" title={ __( 'Row Layout', 'adaire-blocks' ) } initialOpen={ true }>
+      <SelectControl
+        label={ __( 'Columns at this breakpoint', 'adaire-blocks' ) }
+        value={ selectedLayout }
+        options={ PRESETS.map( ( preset ) => ( { label: preset.label, value: preset.id } ) ) }
+        onChange={ ( value ) => {
+          const preset = PRESETS.find( ( item ) => item.id === value );
+          setAttributes( {
+            responsiveLayout: { ...( attributes.responsiveLayout || {} ), [ deviceType ]: value },
+            responsiveColumnWidths: { ...( attributes.responsiveColumnWidths || {} ), [ deviceType ]: preset?.widths || selectedWidths },
+          } );
+        } }
+      />
+      <ToggleGroupControl
+        label={ __( 'Column Direction', 'adaire-blocks' ) }
+        value={ selectedDirection }
+        isBlock
+        onChange={ ( value ) => setAttributes( { responsiveDirection: { ...( attributes.responsiveDirection || {} ), [ deviceType ]: value } } ) }
+      >
+        <ToggleGroupControlOption value="horizontal" label={ __( 'Horizontal', 'adaire-blocks' ) } />
+        <ToggleGroupControlOption value="vertical" label={ __( 'Vertical', 'adaire-blocks' ) } />
+      </ToggleGroupControl>
       <ToggleGroupControl
         label={ __( 'Row Width', 'adaire-blocks' ) }
         value={ align || '' }
@@ -289,12 +328,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
   // free-tier InspectorTabs reorg) ──
   const spacingPanel = (
     <PanelBody section="layout" title={ __( 'Spacing', 'adaire-blocks' ) } initialOpen={ false }>
-      <DeviceSwitcher
-        deviceType={deviceType}
-        setDeviceType={setDeviceType}
-        label={ __( 'Breakpoint', 'adaire-blocks' ) }
-        tiers={THREE_TIERS}
-      />
       <BreakpointNote deviceType={deviceType} tiers={THREE_TIERS} />
       <RangeControl
         label={ __( 'Gap Between Columns (px)', 'adaire-blocks' ) }
@@ -607,7 +640,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
   const rowClassName = [
     'adaire-row',
-    `adaire-row--cols-${ columnWidths.length }`,
+    `adaire-row--cols-${ selectedWidths.length }`,
+    selectedDirection === 'vertical' ? `adaire-row--direction-${ deviceType }-vertical` : '',
     getRowWidthClass( align ),
     verticalAlign ? `adaire-row--valign-${ verticalAlign }` : '',
     mobileColumns ? `adaire-row--mobile-cols-${ mobileColumns }` : '',
@@ -618,6 +652,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     className: rowClassName,
     style: {
       gridTemplateColumns,
+      display: selectedDirection === 'vertical' ? 'flex' : undefined,
+      flexDirection: selectedDirection === 'vertical' ? 'column' : undefined,
       gap: `${ getResponsiveGap() }px`,
       ...borderStyleVars,
       backgroundColor: backgroundColor || undefined,
@@ -801,6 +837,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     return (
       <>
         <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
+          { responsivePanel }
           { rowLayoutPanel }
           { backgroundColorPanel }
           { backgroundMediaPanel }
@@ -845,6 +882,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
   return (
     <>
       <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
+        { responsivePanel }
         { rowLayoutPanel }
         { columnsPanel }
         { backgroundColorPanel }

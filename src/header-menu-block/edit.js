@@ -11,6 +11,8 @@ import { __ } from '@wordpress/i18n';
 import HeaderIcon, { iconOptions, SocialIcon, CartIcon, PaymentIcon, paymentMethodOptions } from './icon-utils';
 import InspectorTabs from '../components/InspectorTabs';
 import { boxToCss } from '../components/spacing-utils';
+import DeviceSwitcher, { THREE_TIERS, getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import useEditorDevice from '../components/useEditorDevice';
 
 // --- Option maps ----------------------------------------------------------
 
@@ -191,7 +193,8 @@ export function getEffectiveBackgroundType( attributes ) {
     return 'color';
 }
 
-function getHeaderStyle( attributes ) {
+function getHeaderStyle( attributes, deviceType = 'desktop' ) {
+    const responsive = ( name, fallback ) => getDeviceValue( attributes[name], deviceType, fallback );
     const bgType = getEffectiveBackgroundType( attributes );
     const background = attributes.transparentHeader
         ? 'transparent'
@@ -210,29 +213,29 @@ function getHeaderStyle( attributes ) {
         '--adaire-header-hover-color':       attributes.hoverColor,
         '--adaire-header-border-color':      attributes.borderColor,
         '--adaire-header-border-width':      attributes.borderBottom ? `${ attributes.borderThickness }px` : '0px',
-        '--adaire-header-padding-top':       `${ attributes.paddingTop }px`,
-        '--adaire-header-padding-bottom':    `${ attributes.paddingBottom }px`,
-        '--adaire-header-max-width':         attributes.maxWidthMode === 'contained' ? `${ attributes.maxWidth }px` : '100%',
-        '--adaire-header-nav-gap':           `${ attributes.navSpacing }px`,
-        '--adaire-header-nav-font-size':     `${ attributes.navFontSize }px`,
+        '--adaire-header-padding-top':       `${ responsive('responsivePaddingTop', attributes.paddingTop) }px`,
+        '--adaire-header-padding-bottom':    `${ responsive('responsivePaddingBottom', attributes.paddingBottom) }px`,
+        '--adaire-header-max-width':         attributes.maxWidthMode === 'contained' ? `${ responsive('responsiveMaxWidth', attributes.maxWidth) }px` : '100%',
+        '--adaire-header-nav-gap':           `${ responsive('responsiveNavSpacing', attributes.navSpacing) }px`,
+        '--adaire-header-nav-font-size':     `${ responsive('responsiveNavFontSize', attributes.navFontSize) }px`,
         '--adaire-header-nav-font-weight':   attributes.navFontWeight,
         '--adaire-header-letter-spacing':    `${ attributes.letterSpacing }px`,
         '--adaire-header-text-transform':    attributes.textTransform,
-        '--adaire-header-logo-width':        `${ attributes.logoWidth }px`,
-        '--adaire-header-mobile-logo-width': `${ attributes.mobileLogoWidth }px`,
+        '--adaire-header-logo-width':        `${ responsive('responsiveLogoWidth', attributes.logoWidth) }px`,
+        '--adaire-header-mobile-logo-width': `${ responsive('responsiveMobileLogoWidth', attributes.mobileLogoWidth) }px`,
         '--adaire-header-topbar-bg':         attributes.topBarBackgroundColor,
         '--adaire-header-topbar-color':      attributes.topBarTextColor,
-        '--adaire-header-topbar-font-size':  `${ attributes.topBarFontSize || 13 }px`,
+        '--adaire-header-topbar-font-size':  `${ responsive('responsiveTopBarFontSize', attributes.topBarFontSize || 13) }px`,
         '--adaire-header-topbar-justify':    topBarJustify,
         '--adaire-header-topbar-gap':        attributes.topBarLayout === 'space-between' ? '24px' : '12px',
-        '--adaire-header-social-size':       `${ attributes.socialIconSize }px`,
+        '--adaire-header-social-size':       `${ responsive('responsiveSocialIconSize', attributes.socialIconSize) }px`,
         '--adaire-header-social-color':      attributes.socialIconColor,
         '--adaire-header-nav-icon-color':    attributes.navIconColor,
         '--adaire-header-z-index':           attributes.zIndex,
         '--adaire-header-action-radius':     ( attributes.buttonBorderRadius != null && attributes.buttonBorderRadius >= 0 ) ? `${ attributes.buttonBorderRadius }px` : getActionRadius( attributes.buttonShape ),
         '--adaire-header-hamburger-border':       attributes.hamburgerBorder ? '1px solid ' + attributes.hamburgerBorderColor : 'none',
         '--adaire-header-hamburger-border-radius': `${ attributes.hamburgerBorderRadius }px`,
-        '--adaire-header-hamburger-size':    `${ attributes.hamburgerSize || 42 }px`,
+        '--adaire-header-hamburger-size':    `${ responsive('responsiveHamburgerSize', attributes.hamburgerSize || 42) }px`,
         '--adaire-header-hamburger-order':   attributes.hamburgerPosition === 'right' ? '1' : '0',
         '--adaire-header-search-icon-size':  `${ attributes.searchIconSize || 18 }px`,
         '--adaire-header-search-btn-size':   `${ attributes.searchButtonSize || 38 }px`,
@@ -798,12 +801,10 @@ function PaymentZone({ attributes, setAttributes, activeZone, setActiveZone }) {
 
 function LogoPreview({ attributes }) {
     const logoContent = attributes.logoType === 'image' && attributes.logoImageUrl ? (
-        // Apply width directly so the slider is live in the editor (CSS vars may not cascade
-        // immediately inside the block sandbox � inline style is always reactive).
         <img
             src={ attributes.logoImageUrl }
             alt={ attributes.logoImageAlt || attributes.logoText }
-            style={{ width: `${ attributes.logoWidth || 160 }px`, maxWidth: '100%', height: 'auto' }}
+            style={{ maxWidth: '100%', height: 'auto' }}
         />
     ) : (
         <span className="adaire-header-logo-text">{ attributes.logoText }</span>
@@ -1510,13 +1511,53 @@ function LayoutZone({ attributes, setAttributes, activeZone, setActiveZone }) {
 
 // --- Main Edit component -------------------------------------------------
 
-export default function Edit({ attributes, setAttributes }) {
+export default function Edit({ attributes, setAttributes, clientId }) {
     const { bindColor, resolveColor } = useColorBinding();
     const [ activeZone, setActiveZone ] = useState( null );
+    const [ deviceType, setDeviceType ] = useState( 'desktop' );
+    useEditorDevice( deviceType, setDeviceType );
+    const responsiveValue = ( name, fallback ) => getDeviceValue( attributes[name], deviceType, fallback );
+    const setResponsiveValue = ( name, value ) => setAttributes({ [name]: updateDeviceAttribute( attributes[name], deviceType, value ) });
+    const previewAttributes = {
+        ...attributes,
+        layout: responsiveValue('responsiveLayout', attributes.layout),
+        navOrientation: responsiveValue('responsiveNavOrientation', attributes.navOrientation),
+        showNav: responsiveValue('responsiveShowNav', attributes.showNav),
+        navFontWeight: responsiveValue('responsiveNavFontWeight', attributes.navFontWeight),
+        letterSpacing: responsiveValue('responsiveLetterSpacing', attributes.letterSpacing),
+        textTransform: responsiveValue('responsiveTextTransform', attributes.textTransform),
+    };
+
+    const editorStyle = useMemo(() => {
+        const scope = `[data-block="${ clientId }"]`;
+        const value = ( name, fallback ) => responsiveValue(name, fallback);
+        const layout = previewAttributes.layout || 'horizontal';
+        const layoutRule = layout === 'split'
+            ? `${ scope } .adaire-header-inner{display:grid !important;grid-template-columns:1fr auto 1fr auto !important;}`
+            : layout === 'centered' || layout === 'stacked'
+                ? `${ scope } .adaire-header-inner{flex-direction:column !important;justify-content:center !important;text-align:center !important;}`
+                : layout === 'minimal'
+                    ? `${ scope } .adaire-header-inner{justify-content:center !important;}`
+                    : '';
+        const orientationRule = previewAttributes.navOrientation === 'vertical'
+            ? `${ scope } .adaire-header-nav{flex-direction:column !important;align-items:flex-start !important;}`
+            : '';
+        return `${ scope } .adaire-header-inner{width:min(100% - 40px,${ value('responsiveMaxWidth', attributes.maxWidth || 1200) }px) !important;padding-top:${ value('responsivePaddingTop', attributes.paddingTop || 18) }px !important;padding-bottom:${ value('responsivePaddingBottom', attributes.paddingBottom || 18) }px !important;gap:${ value('responsiveNavSpacing', attributes.navSpacing || 28) }px !important;}` +
+            `${ scope } .adaire-header-logo img{width:${ value('responsiveLogoWidth', attributes.logoWidth || 160) }px !important;}` +
+            `${ scope } .adaire-header-nav{gap:${ value('responsiveNavSpacing', attributes.navSpacing || 28) }px !important;font-size:${ value('responsiveNavFontSize', attributes.navFontSize || 16) }px !important;}` +
+            `${ scope } .adaire-header-nav{font-weight:${ value('responsiveNavFontWeight', attributes.navFontWeight || 500) } !important;letter-spacing:${ value('responsiveLetterSpacing', attributes.letterSpacing || 0) }px !important;text-transform:${ value('responsiveTextTransform', attributes.textTransform || 'none') } !important;}` +
+            `${ scope } .adaire-header-topbar{font-size:${ value('responsiveTopBarFontSize', attributes.topBarFontSize || 13) }px !important;}` +
+            `${ scope } .adaire-header-socials{font-size:${ value('responsiveSocialIconSize', attributes.socialIconSize || 18) }px !important;}` +
+            `${ scope } .adaire-header-mobile-toggle{width:${ value('responsiveHamburgerSize', attributes.hamburgerSize || 42) }px !important;height:${ value('responsiveHamburgerSize', attributes.hamburgerSize || 42) }px !important;}` +
+            layoutRule + orientationRule +
+            ( deviceType === 'mobile' ? `${ scope } .adaire-header-inner{display:grid !important;grid-template-columns:auto 1fr auto !important;}` +
+                `${ scope } .adaire-header-mobile-toggle{display:flex !important;}` +
+                `${ scope } .adaire-header-nav{display:none !important;grid-column:1 / -1 !important;}` : '' );
+    }, [ clientId, deviceType, attributes, previewAttributes.layout, previewAttributes.navOrientation ]);
 
     const blockProps = useBlockProps({
         className: `adaire-header-block is-${ attributes.stickyBehavior } mobile-${ attributes.mobileMenuStyle } ${ attributes.boxShadow ? 'has-shadow' : '' }`,
-        style: getHeaderStyle( attributes ),
+        style: getHeaderStyle( attributes, deviceType ),
     });
 
     const updateNavItem = ( index, key, value ) => {
@@ -1667,7 +1708,7 @@ export default function Edit({ attributes, setAttributes }) {
                         onChange={ v => setAttributes({ fontFamily: v }) }
                         help="Applies to the entire header block unless overridden by theme styles."
                     />
-                    <RangeControl label="Nav font size"   value={ attributes.navFontSize }   min={ 10 } max={ 32 } onChange={ v => setAttributes({ navFontSize: v }) } />
+                    <RangeControl label="Nav font size"   value={ responsiveValue('responsiveNavFontSize', attributes.navFontSize) }   min={ 10 } max={ 32 } onChange={ v => setResponsiveValue('responsiveNavFontSize', v) } />
                     <SelectControl label="Nav font weight" value={ attributes.navFontWeight } options={ [{ label: 'Regular', value: '400' }, { label: 'Medium', value: '500' }, { label: 'Semi Bold', value: '600' }, { label: 'Bold', value: '700' }] } onChange={ v => setAttributes({ navFontWeight: v }) } />
                     <RangeControl label="Letter spacing"  value={ attributes.letterSpacing }  min={ -2 } max={ 8 } step={ 0.1 } onChange={ v => setAttributes({ letterSpacing: v }) } />
                     <SelectControl label="Text transform"  value={ attributes.textTransform }  options={ [{ label: 'None', value: 'none' }, { label: 'Uppercase', value: 'uppercase' }, { label: 'Capitalize', value: 'capitalize' }] } onChange={ v => setAttributes({ textTransform: v }) } />
@@ -1692,11 +1733,11 @@ export default function Edit({ attributes, setAttributes }) {
             priority: 'medium',
             content: (
                 <>
-                    <RangeControl label="Padding top"    value={ attributes.paddingTop }    min={ 0 } max={ 80 } onChange={ v => setAttributes({ paddingTop: v }) } />
-                    <RangeControl label="Padding bottom" value={ attributes.paddingBottom } min={ 0 } max={ 80 } onChange={ v => setAttributes({ paddingBottom: v }) } />
+                    <RangeControl label="Padding top"    value={ responsiveValue('responsivePaddingTop', attributes.paddingTop) }    min={ 0 } max={ 80 } onChange={ v => setResponsiveValue('responsivePaddingTop', v) } />
+                    <RangeControl label="Padding bottom" value={ responsiveValue('responsivePaddingBottom', attributes.paddingBottom) } min={ 0 } max={ 80 } onChange={ v => setResponsiveValue('responsivePaddingBottom', v) } />
                     <SelectControl label="Max width" value={ attributes.maxWidthMode } options={ [{ label: 'Contained', value: 'contained' }, { label: 'Full width', value: 'full' }] } onChange={ v => setAttributes({ maxWidthMode: v }) } />
                     { attributes.maxWidthMode === 'contained' && (
-                        <RangeControl label="Contained width" value={ attributes.maxWidth } min={ 720 } max={ 1800 } onChange={ v => setAttributes({ maxWidth: v }) } />
+                        <RangeControl label="Contained width" value={ responsiveValue('responsiveMaxWidth', attributes.maxWidth) } min={ 320 } max={ 1800 } onChange={ v => setResponsiveValue('responsiveMaxWidth', v) } />
                     ) }
                 </>
             ),
@@ -1717,7 +1758,13 @@ export default function Edit({ attributes, setAttributes }) {
 
                 {/* -- Layout tab panels ------------------------------------ */}
                 <PanelBody section="layout" title={ __( 'Layout', 'adaire-blocks' ) } initialOpen={ true }>
-                    <SelectControl label="Layout"          value={ attributes.layout }         options={ layoutOptions } onChange={ v => setAttributes({ layout: v }) } />
+                    <DeviceSwitcher
+                        deviceType={ deviceType }
+                        setDeviceType={ setDeviceType }
+                        tiers={ THREE_TIERS }
+                        label={ __( 'Device', 'adaire-blocks' ) }
+                    />
+                    <SelectControl label="Layout"          value={ responsiveValue('responsiveLayout', attributes.layout) }         options={ layoutOptions } onChange={ v => setResponsiveValue('responsiveLayout', v) } />
                     <SelectControl label="Sticky behavior" value={ attributes.stickyBehavior } options={ stickyOptions } onChange={ v => setAttributes({ stickyBehavior: v }) } />
                 </PanelBody>
 
@@ -1736,15 +1783,15 @@ export default function Edit({ attributes, setAttributes }) {
                     <TextControl label="Logo text"             value={ attributes.logoText }       onChange={ v => setAttributes({ logoText: v }) } />
                     <ToggleControl label="Show tagline"        checked={ attributes.showTagline }  onChange={ v => setAttributes({ showTagline: v }) } />
                     { attributes.showTagline && <TextControl label="Tagline" value={ attributes.tagline } onChange={ v => setAttributes({ tagline: v }) } /> }
-                    <RangeControl  label="Logo width"          value={ attributes.logoWidth }       min={ 40 } max={ 360 } onChange={ v => setAttributes({ logoWidth: v }) } />
+                    <RangeControl  label="Logo width"          value={ responsiveValue('responsiveLogoWidth', attributes.logoWidth) }       min={ 40 } max={ 360 } onChange={ v => setResponsiveValue('responsiveLogoWidth', v) } />
                     <ToggleControl label="Link logo to homepage" checked={ attributes.linkLogoHome } onChange={ v => setAttributes({ linkLogoHome: v }) } />
                     { attributes.linkLogoHome && <TextControl label="Logo URL" value={ attributes.logoUrl } onChange={ v => setAttributes({ logoUrl: v }) } /> }
                 </PanelBody>
 
                 <PanelBody section="layout" title={ __( 'Navigation', 'adaire-blocks' ) } initialOpen={ false }>
                     <ToggleControl label="Show navigation" checked={ attributes.showNav }         onChange={ v => setAttributes({ showNav: v }) } />
-                    <SelectControl label="Orientation"     value={ attributes.navOrientation }    options={ [{ label: 'Horizontal', value: 'horizontal' }, { label: 'Vertical', value: 'vertical' }] } onChange={ v => setAttributes({ navOrientation: v }) } />
-                    <RangeControl  label="Item spacing"    value={ attributes.navSpacing }         min={ 0 } max={ 80 } onChange={ v => setAttributes({ navSpacing: v }) } />
+                    <SelectControl label="Orientation"     value={ responsiveValue('responsiveNavOrientation', attributes.navOrientation) }    options={ [{ label: 'Horizontal', value: 'horizontal' }, { label: 'Vertical', value: 'vertical' }] } onChange={ v => setResponsiveValue('responsiveNavOrientation', v) } />
+                    <RangeControl  label="Item spacing"    value={ responsiveValue('responsiveNavSpacing', attributes.navSpacing) }         min={ 0 } max={ 80 } onChange={ v => setResponsiveValue('responsiveNavSpacing', v) } />
                     <ToggleControl
                         label="Show nav icons"
                         checked={ attributes.showNavIcons !== false }
@@ -1960,7 +2007,7 @@ export default function Edit({ attributes, setAttributes }) {
                 </PanelBody>
 
                 <PanelBody section="layout" title={ __( 'Mobile', 'adaire-blocks' ) } initialOpen={ false }>
-                    <RangeControl  label="Mobile logo width"   value={ attributes.mobileLogoWidth } min={ 40 } max={ 260 } onChange={ v => setAttributes({ mobileLogoWidth: v }) } />
+                    <RangeControl  label="Mobile logo width"   value={ responsiveValue('responsiveMobileLogoWidth', attributes.mobileLogoWidth) } min={ 40 } max={ 260 } onChange={ v => setResponsiveValue('responsiveMobileLogoWidth', v) } />
                     <SelectControl label="Mobile menu style"    value={ attributes.mobileMenuStyle }     options={ mobileStyleOptions } onChange={ v => setAttributes({ mobileMenuStyle: v }) } />
                     { attributes.mobileMenuStyle === 'slide-in' && (
                         <SelectControl
@@ -1993,9 +2040,9 @@ export default function Edit({ attributes, setAttributes }) {
                     />
                     <RangeControl
                         label="Hamburger size"
-                        value={ attributes.hamburgerSize || 42 }
+                        value={ responsiveValue('responsiveHamburgerSize', attributes.hamburgerSize || 42) }
                         min={ 28 } max={ 64 }
-                        onChange={ v => setAttributes({ hamburgerSize: v }) }
+                        onChange={ v => setResponsiveValue('responsiveHamburgerSize', v) }
                     />
                     <ToggleControl
                         label="Close on outside click"
@@ -2095,7 +2142,7 @@ export default function Edit({ attributes, setAttributes }) {
                         ] }
                         onChange={ v => setAttributes({ socialHoverEffect: v }) }
                     />
-                    <RangeControl label="Icon size"  value={ attributes.socialIconSize }  min={ 12 } max={ 40 } onChange={ v => setAttributes({ socialIconSize: v }) } />
+                    <RangeControl label="Icon size"  value={ responsiveValue('responsiveSocialIconSize', attributes.socialIconSize) }  min={ 12 } max={ 40 } onChange={ v => setResponsiveValue('responsiveSocialIconSize', v) } />
                 </PanelBody>
 
                 <PanelBody section="content" title={ __( 'Social Links', 'adaire-blocks' ) } initialOpen={ false }>
@@ -2303,7 +2350,7 @@ export default function Edit({ attributes, setAttributes }) {
                 </PanelBody>
 
                 <PanelBody section="style" priority="medium" title={ __( 'Top Bar Style', 'adaire-blocks' ) } initialOpen={ false }>
-                    <RangeControl label="Font size"     value={ attributes.topBarFontSize } min={ 10 } max={ 24 } onChange={ v => setAttributes({ topBarFontSize: v }) } />
+                    <RangeControl label="Font size"     value={ responsiveValue('responsiveTopBarFontSize', attributes.topBarFontSize) } min={ 10 } max={ 24 } onChange={ v => setResponsiveValue('responsiveTopBarFontSize', v) } />
                     <p style={{ marginBottom: 8 }}>Background color</p>
                     <ColorPicker color={ attributes.topBarBackgroundColor } onChange={ v => setAttributes({ topBarBackgroundColor: v }) } enableAlpha />
                     <p style={{ marginBottom: 8 }}>Text color</p>                    <ColorPicker color={ attributes.topBarTextColor } onChange={ v => setAttributes({ topBarTextColor: v }) } enableAlpha />
@@ -2313,8 +2360,9 @@ export default function Edit({ attributes, setAttributes }) {
             </InspectorTabs>
 
             <div {...blockProps}>
+            <style>{ editorStyle }</style>
             <HeaderPreview
-                attributes={ attributes }
+                attributes={ previewAttributes }
                 setAttributes={ setAttributes }
                 activeZone={ activeZone }
                 setActiveZone={ setActiveZone }

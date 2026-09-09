@@ -14,6 +14,8 @@ export default function Save({ attributes }) {
         iconPosition,
         iconVerticalPosition,
         backgroundGradient,
+        responsiveBackgroundType,
+        responsiveBackgroundColor,
         breadcrumbsColor,
         headingColor,
         textColor,
@@ -98,6 +100,7 @@ export default function Save({ attributes }) {
 	};
 
 	const getBackgroundGradientForBreakpoint = (bp) => {
+        if (responsiveBackgroundType?.[bp] === 'solid') return 'none';
 		const g =
 			responsiveBackgroundGradient?.[bp] ||
 			backgroundGradient ||
@@ -149,6 +152,11 @@ export default function Save({ attributes }) {
             '--hero-bg-gradient-small-laptop': getBackgroundGradientForBreakpoint('smallLaptop'),
             '--hero-bg-gradient-desktop': getBackgroundGradientForBreakpoint('desktop'),
             '--hero-bg-gradient-big-desktop': getBackgroundGradientForBreakpoint('bigDesktop'),
+            '--hero-bg-color-mobile': responsiveBackgroundType?.mobile === 'solid' ? (responsiveBackgroundColor?.mobile || '#03002e') : 'transparent',
+            '--hero-bg-color-tablet': responsiveBackgroundType?.tablet === 'solid' ? (responsiveBackgroundColor?.tablet || '#03002e') : 'transparent',
+            '--hero-bg-color-small-laptop': responsiveBackgroundType?.smallLaptop === 'solid' ? (responsiveBackgroundColor?.smallLaptop || responsiveBackgroundColor?.desktop || '#03002e') : 'transparent',
+            '--hero-bg-color-desktop': responsiveBackgroundType?.desktop === 'solid' ? (responsiveBackgroundColor?.desktop || '#03002e') : 'transparent',
+            '--hero-bg-color-big-desktop': responsiveBackgroundType?.bigDesktop === 'solid' ? (responsiveBackgroundColor?.bigDesktop || responsiveBackgroundColor?.desktop || '#03002e') : 'transparent',
             '--hero-breadcrumbs-color': breadcrumbsColor || '#ffffff',
             '--hero-heading-color': headingColor || '#ffffff',
             '--hero-text-color': textColor || '#ffffff',

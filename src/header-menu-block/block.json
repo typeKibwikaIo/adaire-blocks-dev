@@ -37,6 +37,30 @@
                 "minimal"
             ]
         },
+        "responsiveLayout": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveNavOrientation": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveShowNav": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveNavFontWeight": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveLetterSpacing": {
+            "type": "object",
+            "default": {}
+        },
+        "responsiveTextTransform": {
+            "type": "object",
+            "default": {}
+        },
         "showTopBar": {
             "type": "boolean",
             "default": false
@@ -60,6 +84,10 @@
         "topBarFontSize": {
             "type": "number",
             "default": 13
+        },
+        "responsiveTopBarFontSize": {
+            "type": "object",
+            "default": {}
         },
         "topBarLayout": {
             "type": "string",
@@ -103,9 +131,17 @@
             "type": "number",
             "default": 160
         },
+        "responsiveLogoWidth": {
+            "type": "object",
+            "default": {}
+        },
         "mobileLogoWidth": {
             "type": "number",
             "default": 120
+        },
+        "responsiveMobileLogoWidth": {
+            "type": "object",
+            "default": {}
         },
         "linkLogoHome": {
             "type": "boolean",
@@ -173,6 +209,10 @@
         "navSpacing": {
             "type": "number",
             "default": 28
+        },
+        "responsiveNavSpacing": {
+            "type": "object",
+            "default": {}
         },
         "mobileMenuStyle": {
             "type": "string",
@@ -371,6 +411,10 @@
             "type": "number",
             "default": 18
         },
+        "responsiveSocialIconSize": {
+            "type": "object",
+            "default": {}
+        },
         "socialIconColor": {
             "type": "string",
             "default": "#111827"
@@ -442,6 +486,14 @@
             "type": "number",
             "default": 18
         },
+        "responsivePaddingTop": {
+            "type": "object",
+            "default": {}
+        },
+        "responsivePaddingBottom": {
+            "type": "object",
+            "default": {}
+        },
         "maxWidthMode": {
             "type": "string",
             "default": "contained",
@@ -454,9 +506,17 @@
             "type": "number",
             "default": 1200
         },
+        "responsiveMaxWidth": {
+            "type": "object",
+            "default": {}
+        },
         "navFontSize": {
             "type": "number",
             "default": 16
+        },
+        "responsiveNavFontSize": {
+            "type": "object",
+            "default": {}
         },
         "navFontWeight": {
             "type": "string",
@@ -512,6 +572,10 @@
         "hamburgerSize": {
             "type": "number",
             "default": 42
+        },
+        "responsiveHamburgerSize": {
+            "type": "object",
+            "default": {}
         },
         "signInBgColor": {
             "type": "string",

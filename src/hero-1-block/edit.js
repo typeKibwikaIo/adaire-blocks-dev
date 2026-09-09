@@ -1,5 +1,5 @@
 ﻿import { __ } from "@wordpress/i18n";
-import { useState, useEffect, createElement } from "@wordpress/element";
+import { useState, useEffect } from "@wordpress/element";
 import {
 	useBlockProps,
 	MediaUpload,
@@ -29,63 +29,28 @@ import {
 	alignLeft,
 	alignCenter,
 	alignRight,
-	desktop,
-	tablet,
-	mobile,
 } from "@wordpress/icons";
 import { getBlockType } from "@wordpress/blocks";
-import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute } from '../components/DeviceSwitcher';
+import DeviceSwitcher, { getDeviceValue, updateDeviceAttribute, THREE_TIERS } from '../components/DeviceSwitcher';
+import useEditorDevice from '../components/useEditorDevice';
 import InspectorTabs from '../components/InspectorTabs';
 import QuickZone from '../components/QuickZone';
 import { FLUID } from './fluid-defaults';
 import "./editor.scss";
 
-// 'laptop' is not exported by @wordpress/icons — custom icon for the
-// "Small Laptop" breakpoint button (same shape used in infogrid-block/edit.js).
-const laptop = createElement('svg', {
-	width: 24,
-	height: 24,
-	viewBox: '0 0 24 24',
-	fill: 'none',
-	xmlns: 'http://www.w3.org/2000/svg'
-},
-	createElement('path', {
-		d: 'M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V15C20 16.1046 19.1046 17 18 17H6C4.89543 17 4 16.1046 4 15V6Z',
-		stroke: 'currentColor',
-		strokeWidth: '1.5',
-		fill: 'none'
-	}),
-	createElement('path', {
-		d: 'M2 19H22',
-		stroke: 'currentColor',
-		strokeWidth: '1.5',
-		strokeLinecap: 'round'
-	})
-);
-
 const ALLOWED_BLOCKS = ["create-block/button-block"];
 
 // The block's one and only breakpoint set — every responsive control in this
 // block reads/writes the same `deviceType` state, so there is a single
-// switcher (in the "Responsive Settings" panel) rather than one per panel.
-const BREAKPOINTS = ["mobile", "tablet", "smallLaptop", "desktop", "bigDesktop"];
+// switcher (in the "Responsive" panel) rather than one per panel.
 const BREAKPOINT_LABELS = {
 	mobile: __("Mobile", "adaire-blocks"),
 	tablet: __("Tablet", "adaire-blocks"),
-	smallLaptop: __("Small Laptop", "adaire-blocks"),
 	desktop: __("Desktop", "adaire-blocks"),
-	bigDesktop: __("Big Desktop", "adaire-blocks"),
 };
-const FIVE_TIERS = [
-	{ key: "mobile", label: BREAKPOINT_LABELS.mobile, icon: mobile },
-	{ key: "tablet", label: BREAKPOINT_LABELS.tablet, icon: tablet },
-	{ key: "smallLaptop", label: BREAKPOINT_LABELS.smallLaptop, icon: laptop },
-	{ key: "desktop", label: BREAKPOINT_LABELS.desktop, icon: desktop },
-	{ key: "bigDesktop", label: BREAKPOINT_LABELS.bigDesktop, icon: desktop },
-];
-
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const [deviceType, setDeviceType] = useState("desktop");
+	useEditorDevice(deviceType, setDeviceType);
 	const [activeZone, setActiveZone] = useState(null);
 
     const {
@@ -953,19 +918,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             <InspectorTabs attributes={ attributes } setAttributes={ setAttributes }>
 				<PanelBody
 					section="layout"
-					title={__("Responsive Settings", "adaire-blocks")}
+					title={__("Responsive", "adaire-blocks")}
 					initialOpen={true}
 				>
 					<DeviceSwitcher
 						deviceType={deviceType}
 						setDeviceType={setDeviceType}
 						label={__("Breakpoint", "adaire-blocks")}
-						tiers={FIVE_TIERS}
+						tiers={THREE_TIERS}
 						onReset={resetResponsiveDefaults}
 					/>
 						<p style={{ marginTop: "8px", fontSize: "12px", color: "#757575" }}>
 							{__(
-								"Select a breakpoint to configure its settings. The editor preview shows desktop view.",
+								"Select Desktop, Tablet, or Mobile to edit and preview that breakpoint.",
 								"hero-1-block",
 							)}
                         </p>

@@ -103,9 +103,9 @@ const bigDesktopIcon = createElement('svg', {
 );
 
 const BREAKPOINTS = [
-    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') },
+    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') },
     { name: 'tablet', icon: tablet, label: __('Tablet', 'adaire-blocks') },
-    { name: 'desktop', icon: desktop, label: __('Desktop', 'adaire-blocks') }
+    { name: 'mobile', icon: mobile, label: __('Mobile', 'adaire-blocks') }
 ];
 
 // Shared DeviceSwitcher tiers, derived from the same BREAKPOINTS list above.
