@@ -1,0 +1,13 @@
+{
+    "name": "Adaire Blocks",
+    "version": "1.2.3",
+    "download_url": "https://github.com/typeKibwikaIo/adaire-blocks-dev/raw/refs/heads/Dev-Release-Zip/plugin-zips/Dev-zip/1.2.3/adaire-blocks-pro.zip",
+    "details_url": "https://github.com/typeKibwikaIo/adaire-blocks-dev/releases",
+    "requires": "6.0",
+    "tested": "6.9",
+    "requires_php": "7.4",
+    "sections": {
+        "description": "Adaire Blocks Pro",
+        "changelog": "<h4>1.2.3</h4><ul><li>Bug fixes and improvements.</li></ul>"
+    }
+}
