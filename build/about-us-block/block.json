@@ -1,0 +1,227 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/about-us-block",
+  "version": "0.1.0",
+  "title": "About Us (Free)",
+  "category": "adaire-business",
+  "description": "Editorial-style About Us section with hero heading, large statement, asymmetric image grid, body copy, and closing CTA.",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "customClassName": true,
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "textdomain": "adaire-blocks",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "About us."
+    },
+    "tagline": {
+      "type": "string",
+      "default": "Based in the vibrant heart of Sydney, Australia, KreativyLab is not just a digital agency; we're your partners in creativity."
+    },
+    "mission": {
+      "type": "string",
+      "default": "Our mission is to turn your dreams into reality, one pixel at a time. With a diverse team of designers, developers, and innovators, we're constantly pushing the boundaries of what's possible in the digital world."
+    },
+    "statement": {
+      "type": "string",
+      "default": "Founded with a vision to redefine design through a modern and friendly lens, we've become more than just a design agency; we're a community of kindred spirits who share a passion for artistry and innovation."
+    },
+    "imageUrl1": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt1": {
+      "type": "string",
+      "default": ""
+    },
+    "imageUrl2": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt2": {
+      "type": "string",
+      "default": ""
+    },
+    "caption": {
+      "type": "string",
+      "default": "We're the designers who believe in the power of a warm smile and a friendly chat."
+    },
+    "bodyText": {
+      "type": "string",
+      "default": "We thrive on turning your wildest design aspirations into stunning realities. At ArtistryLab, every project is a collaboration, every client is a friend, and every design is a work of art crafted with care and enthusiasm."
+    },
+    "closingStatement": {
+      "type": "string",
+      "default": "We're here to make your design dreams come true."
+    },
+    "showMediaGrid": {
+      "type": "boolean",
+      "default": true
+    },
+    "showUpperSection": {
+      "type": "boolean",
+      "default": true
+    },
+    "showLowerSection": {
+      "type": "boolean",
+      "default": true
+    },
+    "upperSectionAlign": {
+      "type": "string",
+      "default": "left",
+      "enum": [
+        "left",
+        "center",
+        "right"
+      ]
+    },
+    "lowerSectionAlign": {
+      "type": "string",
+      "default": "left",
+      "enum": [
+        "left",
+        "center",
+        "right"
+      ]
+    },
+    "showScrollButton": {
+      "type": "boolean",
+      "default": true
+    },
+    "scrollButtonText": {
+      "type": "string",
+      "default": "Scroll"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "mutedColor": {
+      "type": "string",
+      "default": "rgba(99,102,241,0.65)"
+    },
+    "dividerColor": {
+      "type": "string",
+      "default": "rgba(99,102,241,0.15)"
+    },
+    "paddingTop": {
+      "type": "number",
+      "default": 64
+    },
+    "paddingBottom": {
+      "type": "number",
+      "default": 64
+    },
+    "contentWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "fontFamily": {
+      "type": "string",
+      "default": ""
+    },
+    "headingLineHeight": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "headingLetterSpacing": {
+      "type": "string",
+      "default": "-0.03em"
+    },
+    "headingTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "taglineLineHeight": {
+      "type": "string",
+      "default": "1.65"
+    },
+    "taglineLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "taglineTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "missionLineHeight": {
+      "type": "string",
+      "default": "1.75"
+    },
+    "missionLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "missionTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "statementLineHeight": {
+      "type": "string",
+      "default": "1.38"
+    },
+    "statementLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "statementTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "captionLineHeight": {
+      "type": "string",
+      "default": "1.72"
+    },
+    "captionLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "captionTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "bodyLineHeight": {
+      "type": "string",
+      "default": "1.8"
+    },
+    "bodyLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "bodyTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "closingLineHeight": {
+      "type": "string",
+      "default": "1.12"
+    },
+    "closingLetterSpacing": {
+      "type": "string",
+      "default": "-0.02em"
+    },
+    "closingTextTransform": {
+      "type": "string",
+      "default": "none"
+    }
+  },
+  "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#F0F0F1\"/>\n<circle cx=\"12\" cy=\"9.2\" r=\"3.2\" fill=\"#D52940\"/>\n<path d=\"M5.5 19.2C5.5 15.66 8.42 13 12 13C15.58 13 18.5 15.66 18.5 19.2C18.5 19.63 18.16 19.9 17.75 19.9H6.25C5.84 19.9 5.5 19.63 5.5 19.2Z\" fill=\"#D52940\"/>\n</svg>"
+}

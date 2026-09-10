@@ -1,0 +1,417 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/cookie-consent-block",
+  "version": "0.2.0",
+  "title": "Cookie Banner",
+  "category": "adaire-business",
+  "description": "GDPR/CCPA-ready cookie consent banner with category-based preferences, multiple layouts, and full style controls.",
+  "keywords": [
+    "cookie",
+    "consent",
+    "gdpr",
+    "privacy",
+    "banner"
+  ],
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "customClassName": true,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "textdomain": "adaire-blocks",
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "bannerTitle": {
+      "type": "string",
+      "default": "We Value Your Privacy"
+    },
+    "description": {
+      "type": "string",
+      "default": "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking “Accept All”, you consent to our use of cookies. You can manage your preferences at any time."
+    },
+    "additionalInfo": {
+      "type": "string",
+      "default": ""
+    },
+    "showIcon": {
+      "type": "boolean",
+      "default": true
+    },
+    "categories": {
+      "type": "array",
+      "default": [
+        {
+          "key": "necessary",
+          "label": "Strictly Necessary",
+          "description": "Required for the website to function properly. These cannot be disabled.",
+          "required": true,
+          "defaultChecked": true
+        },
+        {
+          "key": "functional",
+          "label": "Functional",
+          "description": "Enable enhanced functionality and personalization.",
+          "required": false,
+          "defaultChecked": true
+        },
+        {
+          "key": "preferences",
+          "label": "Preferences",
+          "description": "Remember your settings and preferences across visits.",
+          "required": false,
+          "defaultChecked": true
+        },
+        {
+          "key": "analytics",
+          "label": "Analytics",
+          "description": "Help us understand how visitors interact with our website.",
+          "required": false,
+          "defaultChecked": true
+        },
+        {
+          "key": "marketing",
+          "label": "Marketing",
+          "description": "Used to deliver relevant ads and marketing campaigns.",
+          "required": false,
+          "defaultChecked": false
+        },
+        {
+          "key": "advertising",
+          "label": "Advertising",
+          "description": "Used by advertising partners to build a profile of your interests.",
+          "required": false,
+          "defaultChecked": false
+        },
+        {
+          "key": "performance",
+          "label": "Performance",
+          "description": "Help us measure and improve site speed and performance.",
+          "required": false,
+          "defaultChecked": true
+        },
+        {
+          "key": "social",
+          "label": "Social Media",
+          "description": "Enable social media features, embeds, and sharing.",
+          "required": false,
+          "defaultChecked": false
+        }
+      ]
+    },
+    "acceptAllText": {
+      "type": "string",
+      "default": "Accept All"
+    },
+    "rejectAllText": {
+      "type": "string",
+      "default": "Reject All"
+    },
+    "manageText": {
+      "type": "string",
+      "default": "Manage Preferences"
+    },
+    "savePreferencesText": {
+      "type": "string",
+      "default": "Save Preferences"
+    },
+    "learnMoreText": {
+      "type": "string",
+      "default": "Learn More"
+    },
+    "closeButtonEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "cookiePolicyText": {
+      "type": "string",
+      "default": "Cookie Policy"
+    },
+    "cookiePolicyUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "privacyPolicyText": {
+      "type": "string",
+      "default": "Privacy Policy"
+    },
+    "privacyPolicyUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "termsText": {
+      "type": "string",
+      "default": "Terms & Conditions"
+    },
+    "termsUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "layoutType": {
+      "type": "string",
+      "default": "floating-bottom-right",
+      "enum": [
+        "bar-bottom",
+        "bar-top",
+        "floating-bottom-right",
+        "floating-bottom-left",
+        "floating-top-right",
+        "floating-top-left",
+        "center-modal",
+        "slide-in-bottom",
+        "slide-in-right"
+      ]
+    },
+    "displayDensity": {
+      "type": "string",
+      "default": "expanded",
+      "enum": [
+        "expanded",
+        "compact"
+      ]
+    },
+    "bannerWidth": {
+      "type": "string",
+      "default": "contained",
+      "enum": [
+        "full",
+        "contained"
+      ]
+    },
+    "maxWidth": {
+      "type": "number",
+      "default": 480
+    },
+    "alignment": {
+      "type": "string",
+      "default": "center",
+      "enum": [
+        "left",
+        "center",
+        "right"
+      ]
+    },
+    "showOverlay": {
+      "type": "boolean",
+      "default": false
+    },
+    "overlayColor": {
+      "type": "string",
+      "default": "rgba(15,23,42,0.55)"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#f9fafb"
+    },
+    "headingColor": {
+      "type": "string",
+      "default": "#f9fafb"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "primaryButtonTextColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "secondaryButtonBg": {
+      "type": "string",
+      "default": "transparent"
+    },
+    "secondaryButtonTextColor": {
+      "type": "string",
+      "default": "#a5b4fc"
+    },
+    "borderColor": {
+      "type": "string",
+      "default": "#e5e7eb"
+    },
+    "fontFamily": {
+      "type": "string",
+      "default": ""
+    },
+    "fontWeight": {
+      "type": "string",
+      "default": "400"
+    },
+    "lineHeight": {
+      "type": "string",
+      "default": "1.5"
+    },
+    "headingFontSize": {
+      "type": "object",
+      "default": {
+        "desktop": {
+          "value": 18,
+          "unit": "px"
+        },
+        "tablet": {
+          "value": 17,
+          "unit": "px"
+        },
+        "mobile": {
+          "value": 16,
+          "unit": "px"
+        }
+      }
+    },
+    "bodyFontSize": {
+      "type": "object",
+      "default": {
+        "desktop": {
+          "value": 14,
+          "unit": "px"
+        },
+        "tablet": {
+          "value": 14,
+          "unit": "px"
+        },
+        "mobile": {
+          "value": 13,
+          "unit": "px"
+        }
+      }
+    },
+    "padding": {
+      "type": "object",
+      "default": {
+        "desktop": {
+          "value": 22,
+          "unit": "px"
+        },
+        "tablet": {
+          "value": 22,
+          "unit": "px"
+        },
+        "mobile": {
+          "value": 18,
+          "unit": "px"
+        }
+      }
+    },
+    "showBorder": {
+      "type": "boolean",
+      "default": false
+    },
+    "borderWidth": {
+      "type": "number",
+      "default": 1
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 14
+    },
+    "showShadow": {
+      "type": "boolean",
+      "default": true
+    },
+    "shadowIntensity": {
+      "type": "string",
+      "default": "strong",
+      "enum": [
+        "soft",
+        "medium",
+        "strong"
+      ]
+    },
+    "gap": {
+      "type": "number",
+      "default": 12
+    },
+    "buttonShape": {
+      "type": "string",
+      "default": "rounded",
+      "enum": [
+        "pill",
+        "rounded",
+        "square"
+      ]
+    },
+    "buttonSize": {
+      "type": "string",
+      "default": "md",
+      "enum": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    "entranceAnimation": {
+      "type": "string",
+      "default": "slide-up",
+      "enum": [
+        "none",
+        "fade",
+        "slide-up",
+        "slide-down",
+        "slide-left",
+        "slide-right"
+      ]
+    },
+    "animationDuration": {
+      "type": "number",
+      "default": 400
+    },
+    "autoHide": {
+      "type": "boolean",
+      "default": false
+    },
+    "autoHideDelay": {
+      "type": "number",
+      "default": 300
+    },
+    "consentExpirationDays": {
+      "type": "number",
+      "default": 180
+    },
+    "consentVersion": {
+      "type": "string",
+      "default": "1"
+    },
+    "reopenButtonEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "reopenButtonPosition": {
+      "type": "string",
+      "default": "bottom-left",
+      "enum": [
+        "bottom-left",
+        "bottom-right"
+      ]
+    },
+    "reopenButtonText": {
+      "type": "string",
+      "default": "Cookie Settings"
+    },
+    "googleConsentMode": {
+      "type": "boolean",
+      "default": false
+    },
+    "blockScriptsUntilConsent": {
+      "type": "boolean",
+      "default": true
+    },
+    "zIndex": {
+      "type": "number",
+      "default": 999999
+    }
+  },
+  "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#6366F1\"/><path d=\"M12 4C9 7 7 9.8 7 12.5A5 5 0 0 0 12 17.5A5 5 0 0 0 17 12.5C17 9.8 15 7 12 4Z\" fill=\"white\"/><circle cx=\"10.5\" cy=\"11.5\" r=\"0.9\" fill=\"#6366F1\"/><circle cx=\"13\" cy=\"14\" r=\"0.7\" fill=\"#6366F1\"/></svg>"
+}

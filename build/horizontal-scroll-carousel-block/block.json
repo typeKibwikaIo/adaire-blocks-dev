@@ -1,0 +1,114 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/horizontal-scroll-carousel-block",
+  "version": "0.1.0",
+  "title": "Horizontal Scroll Carousel",
+  "category": "adaire-effects-interactions",
+  "description": "A scroll-driven horizontal carousel. Scroll down to slide cards left, scroll up to reverse. Powered by GSAP ScrollTrigger.",
+  "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#7C3AED\"/><rect x=\"3\" y=\"8\" width=\"7\" height=\"8\" rx=\"1.5\" fill=\"white\"/><rect x=\"12\" y=\"8\" width=\"7\" height=\"8\" rx=\"1.5\" fill=\"white\" opacity=\"0.5\"/><path d=\"M4 12H1.5\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><path d=\"M3 10.5L1.5 12L3 13.5\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M20 12H22.5\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><path d=\"M21.5 10.5L23 12L21.5 13.5\" stroke=\"white\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "attributes": {
+    "sectionBackground": {
+      "type": "string",
+      "default": "#f8f8f8"
+    },
+    "scrubSpeed": {
+      "type": "number",
+      "default": 1
+    },
+    "responsivePadding": {
+      "type": "object",
+      "default": {
+        "mobile": {
+          "top": "40px",
+          "right": "0px",
+          "bottom": "40px",
+          "left": "0px"
+        },
+        "tablet": {
+          "top": "60px",
+          "right": "0px",
+          "bottom": "60px",
+          "left": "0px"
+        },
+        "smallLaptop": {
+          "top": "80px",
+          "right": "0px",
+          "bottom": "80px",
+          "left": "0px"
+        },
+        "desktop": {
+          "top": "80px",
+          "right": "0px",
+          "bottom": "80px",
+          "left": "0px"
+        },
+        "bigDesktop": {
+          "top": "80px",
+          "right": "0px",
+          "bottom": "80px",
+          "left": "0px"
+        }
+      }
+    },
+    "responsiveCardWidth": {
+      "type": "object",
+      "default": {
+        "mobile": "85vw",
+        "tablet": "60vw",
+        "smallLaptop": "480px",
+        "desktop": "560px",
+        "bigDesktop": "600px"
+      }
+    },
+    "responsiveCardGap": {
+      "type": "object",
+      "default": {
+        "mobile": "16px",
+        "tablet": "20px",
+        "smallLaptop": "24px",
+        "desktop": "24px",
+        "bigDesktop": "32px"
+      }
+    },
+    "responsiveTrackPaddingX": {
+      "type": "object",
+      "default": {
+        "mobile": "16px",
+        "tablet": "30px",
+        "smallLaptop": "60px",
+        "desktop": "80px",
+        "bigDesktop": "80px"
+      }
+    },
+    "headingText": {
+      "type": "string",
+      "default": "Our Features"
+    },
+    "headingFontSize": {
+      "type": "string",
+      "default": "2.5rem"
+    },
+    "headingColor": {
+      "type": "string",
+      "default": "#111111"
+    },
+    "headingFontWeight": {
+      "type": "string",
+      "default": "700"
+    }
+  },
+  "textdomain": "adaire-blocks",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js"
+}

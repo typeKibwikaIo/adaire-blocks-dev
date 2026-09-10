@@ -210,7 +210,7 @@ add_action(
 // End of version rollback code
 
 // Define plugin constants
-define('ADAIRE_BLOCKS_VERSION', '1.3.4');
+define('ADAIRE_BLOCKS_VERSION', '1.3.4Yes');
 define('ADAIRE_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('ADAIRE_BLOCKS_PLUGIN_FILE', __FILE__);

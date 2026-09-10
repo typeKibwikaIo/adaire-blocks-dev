@@ -1,0 +1,156 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "adaire/mega-menu-item",
+  "version": "0.1.0",
+  "title": "GutenBlocks Mega Menu Item",
+  "category": "adaire-layout-navigation",
+  "parent": [
+    "core/navigation"
+  ],
+  "description": "Attaches a centrally managed GutenBlocks mega panel to a Core Navigation block. Content lives in the Mega Menu dashboard — this block only controls placement and presentation.",
+  "supports": {
+    "html": false,
+    "reusable": false,
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    },
+    "color": {
+      "text": true,
+      "background": false,
+      "link": true
+    }
+  },
+  "usesContext": [
+    "textColor",
+    "backgroundColor",
+    "overlayTextColor",
+    "overlayBackgroundColor",
+    "showSubmenuIcon",
+    "style"
+  ],
+  "textdomain": "adaire-blocks",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "attributes": {
+    "menuId": {
+      "type": "number",
+      "default": 0
+    },
+    "menuItemId": {
+      "type": "number",
+      "default": 0
+    },
+    "panelId": {
+      "type": "number",
+      "default": 0
+    },
+    "layout": {
+      "type": "string",
+      "default": "contained",
+      "enum": [
+        "contained",
+        "wide",
+        "full"
+      ]
+    },
+    "maxWidth": {
+      "type": "number",
+      "default": 960
+    },
+    "alignment": {
+      "type": "string",
+      "default": "left",
+      "enum": [
+        "left",
+        "center",
+        "right",
+        "stretch"
+      ]
+    },
+    "trigger": {
+      "type": "string",
+      "default": "hover",
+      "enum": [
+        "hover",
+        "click",
+        "hover-focus"
+      ]
+    },
+    "breakpoint": {
+      "type": "number",
+      "default": 1024
+    },
+    "animation": {
+      "type": "string",
+      "default": "fade-slide",
+      "enum": [
+        "none",
+        "fade",
+        "fade-slide",
+        "scale"
+      ]
+    },
+    "animationDuration": {
+      "type": "number",
+      "default": 200
+    },
+    "openDelay": {
+      "type": "number",
+      "default": 100
+    },
+    "closeDelay": {
+      "type": "number",
+      "default": 200
+    },
+    "panelPadding": {
+      "type": "number",
+      "default": 24
+    },
+    "closeOnOutsideClick": {
+      "type": "boolean",
+      "default": true
+    },
+    "closeOnEscape": {
+      "type": "boolean",
+      "default": true
+    },
+    "closeOnLinkSelect": {
+      "type": "boolean",
+      "default": true
+    },
+    "keepOnlyOneOpen": {
+      "type": "boolean",
+      "default": true
+    },
+    "mobileMode": {
+      "type": "string",
+      "default": "accordion",
+      "enum": [
+        "accordion",
+        "drilldown",
+        "drawer"
+      ]
+    },
+    "mobilePanelPadding": {
+      "type": "number",
+      "default": 16
+    },
+    "mobileSubmenuIndent": {
+      "type": "number",
+      "default": 16
+    },
+    "lockBodyScroll": {
+      "type": "boolean",
+      "default": true
+    },
+    "mobileLabel": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}

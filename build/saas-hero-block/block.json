@@ -1,0 +1,484 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/saas-hero-block",
+  "version": "0.2.0",
+  "title": "Hero Block (Pro)",
+  "category": "adaire-layout-hero",
+  "description": "Hero block for Adaire Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "customClassName": true
+  },
+  "textdomain": "adaire-blocks",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "Scale faster"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Launch your SaaS faster"
+    },
+    "text": {
+      "type": "string",
+      "default": "A modern hero section for software products, startups, and landing pages."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Start free trial"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "heroImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid",
+      "enum": [
+        "solid",
+        "gradient",
+        "image"
+      ]
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageSize": {
+      "type": "string",
+      "default": "cover",
+      "enum": [
+        "cover",
+        "contain",
+        "auto"
+      ]
+    },
+    "backgroundImagePosition": {
+      "type": "string",
+      "default": "center",
+      "enum": [
+        "center",
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ]
+    },
+    "backgroundImageRepeat": {
+      "type": "string",
+      "default": "no-repeat"
+    },
+    "layoutStyle": {
+      "type": "string",
+      "default": "centered",
+      "enum": [
+        "centered",
+        "split-left",
+        "split-right"
+      ]
+    },
+    "showPill": {
+      "type": "boolean",
+      "default": true
+    },
+    "pillText": {
+      "type": "string",
+      "default": "New: v2.0 Release"
+    },
+    "pillBg": {
+      "type": "string",
+      "default": "#dbeafe"
+    },
+    "pillColor": {
+      "type": "string",
+      "default": "#1e40af"
+    },
+    "useGradientHeadline": {
+      "type": "boolean",
+      "default": true
+    },
+    "gradientStart": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "gradientEnd": {
+      "type": "string",
+      "default": "#8b5cf6"
+    },
+    "showCta": {
+      "type": "boolean",
+      "default": true
+    },
+    "ctaType": {
+      "type": "string",
+      "default": "dual-buttons",
+      "enum": [
+        "dual-buttons",
+        "single-button"
+      ]
+    },
+    "primaryButtonText": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "primaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "secondaryButtonText": {
+      "type": "string",
+      "default": "Book a Demo"
+    },
+    "secondaryButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "singleButtonText": {
+      "type": "string",
+      "default": "Shop Collection"
+    },
+    "singleButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "microCopy": {
+      "type": "string",
+      "default": "Free shipping on orders over $50"
+    },
+    "buttonPrimaryColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonPrimaryBg": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "buttonSecondaryColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonSecondaryBg": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift"
+    },
+    "ctaAlignment": {
+      "type": "string",
+      "default": "center",
+      "enum": [
+        "left",
+        "center",
+        "right"
+      ]
+    },
+    "ctaGap": {
+      "type": "number",
+      "default": 16
+    },
+    "ctaPaddingV": {
+      "type": "number",
+      "default": 14
+    },
+    "ctaPaddingH": {
+      "type": "number",
+      "default": 32
+    },
+    "ctaBorderRadius": {
+      "type": "number",
+      "default": -1
+    },
+    "showHeroImage": {
+      "type": "boolean",
+      "default": true
+    },
+    "imagePosition": {
+      "type": "string",
+      "default": "below",
+      "enum": [
+        "below",
+        "above"
+      ]
+    },
+    "mediaShadow": {
+      "type": "boolean",
+      "default": true
+    },
+    "mediaBorderRadius": {
+      "type": "number",
+      "default": -1
+    },
+    "mediaSpacing": {
+      "type": "number",
+      "default": 48
+    },
+    "effectsPreset": {
+      "type": "string",
+      "default": "none",
+      "enum": [
+        "none",
+        "sports",
+        "gym",
+        "ecommerce",
+        "business",
+        "medical",
+        "gaming",
+        "custom"
+      ]
+    },
+    "effectDotPattern": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectGradientOverlay": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectGradientOverlayColor1": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "effectGradientOverlayColor2": {
+      "type": "string",
+      "default": "#8b5cf6"
+    },
+    "effectGradientOverlayOpacity": {
+      "type": "number",
+      "default": 30
+    },
+    "effectAbstractShapes": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectGlow": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectGlowColor": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "effectBlur": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectFloatingElements": {
+      "type": "boolean",
+      "default": false
+    },
+    "effectAnimatedAccents": {
+      "type": "boolean",
+      "default": false
+    },
+    "showRatingBadges": {
+      "type": "boolean",
+      "default": false
+    },
+    "ratingBadgesAlignment": {
+      "type": "string",
+      "default": "center"
+    },
+    "ratingBadges": {
+      "type": "array",
+      "default": [
+        {
+          "icon": "bi bi-star-fill",
+          "imageUrl": "",
+          "text": "5.0/5",
+          "subtext": "Average rating"
+        },
+        {
+          "icon": "bi bi-people-fill",
+          "imageUrl": "",
+          "text": "10,000+",
+          "subtext": "Happy customers"
+        }
+      ]
+    },
+    "fontSize": {
+      "type": "number",
+      "default": 16
+    },
+    "margin": {
+      "type": "object",
+      "default": {
+        "top": "0px",
+        "right": "0px",
+        "bottom": "0px",
+        "left": "0px"
+      }
+    },
+    "padding": {
+      "type": "number",
+      "default": 80
+    },
+    "responsivePadding": {
+      "type": "object",
+      "default": {}
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 12
+    },
+    "fontFamily": {
+      "type": "string",
+      "default": "inherit"
+    },
+    "eyebrowFontSize": {
+      "type": "string",
+      "default": "14px"
+    },
+    "eyebrowFontWeight": {
+      "type": "string",
+      "default": "600"
+    },
+    "eyebrowLineHeight": {
+      "type": "string",
+      "default": "normal"
+    },
+    "eyebrowLetterSpacing": {
+      "type": "string",
+      "default": "1px"
+    },
+    "eyebrowTextTransform": {
+      "type": "string",
+      "default": "uppercase"
+    },
+    "headingFontSize": {
+      "type": "string",
+      "default": "clamp(36px, 5vw, 64px)"
+    },
+    "headingFontWeight": {
+      "type": "string",
+      "default": "800"
+    },
+    "headingLineHeight": {
+      "type": "string",
+      "default": "1.2"
+    },
+    "headingLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "headingTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "bodyTextLineHeight": {
+      "type": "string",
+      "default": "1.6"
+    },
+    "bodyTextLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "bodyTextTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "bodyTextFontWeight": {
+      "type": "string",
+      "default": "400"
+    },
+    "pillFontSize": {
+      "type": "string",
+      "default": "14px"
+    },
+    "pillFontWeight": {
+      "type": "string",
+      "default": "600"
+    },
+    "pillLineHeight": {
+      "type": "string",
+      "default": "normal"
+    },
+    "pillLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "pillTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "buttonFontSize": {
+      "type": "string",
+      "default": "16px"
+    },
+    "buttonFontWeight": {
+      "type": "string",
+      "default": "600"
+    },
+    "buttonLineHeight": {
+      "type": "string",
+      "default": "normal"
+    },
+    "buttonLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "buttonTextTransform": {
+      "type": "string",
+      "default": "none"
+    },
+    "microCopyFontSize": {
+      "type": "string",
+      "default": "14px"
+    },
+    "microCopyFontWeight": {
+      "type": "string",
+      "default": "400"
+    },
+    "microCopyLineHeight": {
+      "type": "string",
+      "default": "normal"
+    },
+    "microCopyLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "microCopyTextTransform": {
+      "type": "string",
+      "default": "none"
+    }
+  },
+  "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#F0F0F1\"/>\n<rect x=\"5\" y=\"6\" width=\"14\" height=\"2.4\" rx=\"1.2\" fill=\"#D52940\"/>\n<rect x=\"7\" y=\"10\" width=\"10\" height=\"1.6\" rx=\"0.8\" fill=\"#D52940\"/>\n<rect x=\"8.5\" y=\"14.2\" width=\"7\" height=\"3.6\" rx=\"1.8\" fill=\"#D52940\"/>\n</svg>"
+}

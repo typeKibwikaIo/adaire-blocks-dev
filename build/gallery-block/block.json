@@ -1,0 +1,158 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/gallery-block",
+  "version": "0.1.0",
+  "title": "Gallery (Free)",
+  "category": "adaire-media-images",
+  "description": "Add one to many images and arrange them in a flexible grid or masonry layout.",
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": true,
+    "alignWide": true,
+    "anchor": true,
+    "customClassName": true,
+    "reusable": true,
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "textdomain": "adaire-blocks",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "images": {
+      "type": "array",
+      "default": []
+    },
+    "layoutMode": {
+      "type": "string",
+      "default": "grid",
+      "enum": [
+        "grid",
+        "masonry"
+      ]
+    },
+    "columns": {
+      "type": "object",
+      "default": {
+        "desktop": 4,
+        "tablet": 3,
+        "mobile": 2,
+        "smartwatch": 1
+      }
+    },
+    "gap": {
+      "type": "number",
+      "default": 16
+    },
+    "aspectRatio": {
+      "type": "string",
+      "default": "1/1",
+      "enum": [
+        "1/1",
+        "4/3",
+        "3/4",
+        "16/9",
+        "auto"
+      ]
+    },
+    "imageBorderRadius": {
+      "type": "number",
+      "default": 8
+    },
+    "hoverEffect": {
+      "type": "string",
+      "default": "zoom",
+      "enum": [
+        "zoom",
+        "fade",
+        "lift",
+        "none"
+      ]
+    },
+    "lightboxEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "captionsEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "containerMode": {
+      "type": "string",
+      "default": "full",
+      "enum": [
+        "constrained",
+        "full"
+      ]
+    },
+    "containerMaxWidth": {
+      "type": "object",
+      "default": {
+        "desktop": {
+          "value": 1200,
+          "unit": "px"
+        },
+        "tablet": {
+          "value": 100,
+          "unit": "%"
+        },
+        "mobile": {
+          "value": 100,
+          "unit": "%"
+        }
+      }
+    },
+    "fontFamily": {
+      "type": "string",
+      "default": ""
+    },
+    "captionFontSize": {
+      "type": "number",
+      "default": 13
+    },
+    "captionFontWeight": {
+      "type": "string",
+      "default": "400",
+      "enum": [
+        "100",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900"
+      ]
+    },
+    "captionLineHeight": {
+      "type": "string",
+      "default": "normal"
+    },
+    "captionLetterSpacing": {
+      "type": "string",
+      "default": "normal"
+    },
+    "captionTextTransform": {
+      "type": "string",
+      "default": "none",
+      "enum": [
+        "none",
+        "uppercase",
+        "lowercase",
+        "capitalize"
+      ]
+    }
+  },
+  "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#F0F0F1\"/>\n<rect x=\"4\" y=\"4\" width=\"11\" height=\"9\" rx=\"1.2\" fill=\"none\" stroke=\"#D52940\" stroke-width=\"1.3\"/>\n<rect x=\"8\" y=\"9\" width=\"12\" height=\"10\" rx=\"1.2\" fill=\"#D52940\"/>\n<circle cx=\"11.3\" cy=\"12.4\" r=\"1\" fill=\"#F0F0F1\"/>\n<path d=\"M8.8 16.6L11.6 13.6L13.6 15.4L16 12.6L19.2 16.6\" stroke=\"#F0F0F1\" stroke-width=\"1.3\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>"
+}

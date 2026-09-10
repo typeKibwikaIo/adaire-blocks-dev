@@ -1,0 +1,140 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/cookie-notice-block",
+  "version": "0.1.0",
+  "title": "Cookie Notice (Free)",
+  "category": "adaire-free",
+  "description": "A simple floating cookie consent notice with Accept All / Decline buttons and a Privacy Policy link. Remembers the visitor's choice in their browser.",
+  "example": {},
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "customClassName": true
+  },
+  "textdomain": "adaire-blocks",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "message": {
+      "type": "string",
+      "default": "We use cookies to give you the best experience on our website. By continuing to browse, you agree to our use of cookies."
+    },
+    "acceptText": {
+      "type": "string",
+      "default": "Accept All"
+    },
+    "declineText": {
+      "type": "string",
+      "default": "Decline"
+    },
+    "showPrivacyLink": {
+      "type": "boolean",
+      "default": true
+    },
+    "privacyPolicyText": {
+      "type": "string",
+      "default": "Privacy Policy"
+    },
+    "privacyPolicyUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "showTermsLink": {
+      "type": "boolean",
+      "default": true
+    },
+    "termsText": {
+      "type": "string",
+      "default": "Terms & Conditions"
+    },
+    "termsUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "position": {
+      "type": "string",
+      "default": "floating-bottom-right",
+      "enum": [
+        "floating-bottom-right",
+        "floating-bottom-left",
+        "floating-bottom-center"
+      ]
+    },
+    "expirationDays": {
+      "type": "number",
+      "default": 365
+    },
+    "consentVersion": {
+      "type": "string",
+      "default": "1"
+    },
+    "showCustomize": {
+      "type": "boolean",
+      "default": true
+    },
+    "customizeText": {
+      "type": "string",
+      "default": "Customize"
+    },
+    "necessaryLabel": {
+      "type": "string",
+      "default": "Strictly Necessary"
+    },
+    "preferencesLabel": {
+      "type": "string",
+      "default": "Preferences"
+    },
+    "analyticsLabel": {
+      "type": "string",
+      "default": "Analytics"
+    },
+    "marketingLabel": {
+      "type": "string",
+      "default": "Marketing"
+    },
+    "savePreferencesText": {
+      "type": "string",
+      "default": "Save Preferences"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#f9fafb"
+    },
+    "acceptButtonColor": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "acceptButtonTextColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "declineButtonColor": {
+      "type": "string",
+      "default": "transparent"
+    },
+    "declineButtonTextColor": {
+      "type": "string",
+      "default": "#f9fafb"
+    },
+    "linkColor": {
+      "type": "string",
+      "default": "#a5b4fc"
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 14
+    }
+  },
+  "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#F0F0F1\"/>\n<circle cx=\"12\" cy=\"12\" r=\"7.5\" fill=\"#D52940\"/>\n<circle cx=\"9\" cy=\"9\" r=\"1.1\" fill=\"#F0F0F1\"/>\n<circle cx=\"14.6\" cy=\"8.6\" r=\"1\" fill=\"#F0F0F1\"/>\n<circle cx=\"15.6\" cy=\"13.6\" r=\"1.2\" fill=\"#F0F0F1\"/>\n<circle cx=\"10\" cy=\"15.2\" r=\"0.9\" fill=\"#F0F0F1\"/>\n<circle cx=\"12.6\" cy=\"11.6\" r=\"0.8\" fill=\"#F0F0F1\"/>\n</svg>"
+}

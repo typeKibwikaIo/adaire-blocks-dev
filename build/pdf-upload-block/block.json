@@ -1,0 +1,178 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/pdf-upload-block",
+  "version": "0.1.0",
+  "title": "PDF Upload",
+  "category": "adaire-media",
+  "description": "PDF Upload block for Adaire Blocks.",
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "textdomain": "adaire-blocks",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "PDF"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Download the PDF"
+    },
+    "text": {
+      "type": "string",
+      "default": "Share a PDF resource, brochure, guide, or document."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Download PDF"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "pdfUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "fileName": {
+      "type": "string",
+      "default": "Document.pdf"
+    },
+    "fileSize": {
+      "type": "string",
+      "default": ""
+    },
+    "pageCount": {
+      "type": "string",
+      "default": ""
+    },
+    "passwordHint": {
+      "type": "string",
+      "default": ""
+    },
+    "fallbackMessage": {
+      "type": "string",
+      "default": "PDF preview is unavailable. Please download the file."
+    },
+    "thumbnailUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "viewerHeight": {
+      "type": "number",
+      "default": 640
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 18
+    },
+    "shadow": {
+      "type": "boolean",
+      "default": true
+    },
+    "showDownload": {
+      "type": "boolean",
+      "default": true
+    },
+    "showOpen": {
+      "type": "boolean",
+      "default": true
+    },
+    "showIcon": {
+      "type": "boolean",
+      "default": true
+    },
+    "buttonColor": {
+      "type": "string",
+      "default": "#d52940"
+    },
+    "frameBorderColor": {
+      "type": "string",
+      "default": "#e5e7eb"
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHeight": {
+      "type": "string",
+      "default": "auto"
+    },
+    "buttonHoverColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "buttonHoverBackgroundColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverBorderColor": {
+      "type": "string",
+      "default": "#111827"
+    },
+    "buttonHoverEffect": {
+      "type": "string",
+      "default": "lift",
+      "enum": [
+        "lift",
+        "glow",
+        "darken",
+        "none"
+      ]
+    },
+    "backgroundType": {
+      "type": "string",
+      "default": "solid",
+      "enum": [
+        "solid",
+        "gradient",
+        "image"
+      ]
+    },
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundGradient": {
+      "type": "string",
+      "default": "linear-gradient(135deg,#111827,#3b0764)"
+    },
+    "responsivePadding": {
+      "type": "object",
+      "default": {
+        "desktop": 28,
+        "tablet": 28,
+        "mobile": 28
+      }
+    },
+    "responsiveFontSize": {
+      "type": "object",
+      "default": {
+        "desktop": 16,
+        "tablet": 16,
+        "mobile": 16
+      }
+    },
+    "responsiveBorderRadius": {
+      "type": "object",
+      "default": {}
+    }
+  }
+}

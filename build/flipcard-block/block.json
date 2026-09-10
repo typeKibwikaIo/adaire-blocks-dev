@@ -1,0 +1,223 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/flipcard-block",
+  "version": "0.1.0",
+  "title": "Flip Card",
+  "category": "adaire-interactive",
+  "description": "Interactive card that flips to reveal additional information.",
+  "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_77_2)\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"#D52940\"/>\n<g clip-path=\"url(#clip1_77_2)\">\n<rect x=\"3.5\" y=\"3.5\" width=\"11\" height=\"13\" stroke=\"white\"/>\n<rect x=\"9.5\" y=\"8.5\" width=\"11\" height=\"13\" stroke=\"white\"/>\n</g>\n</g>\n<defs>\n<clipPath id=\"clip0_77_2\">\n<rect width=\"24\" height=\"24\" rx=\"5\" fill=\"white\"/>\n</clipPath>\n<clipPath id=\"clip1_77_2\">\n<rect width=\"24\" height=\"24\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>",
+  "example": {},
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "customClassName": true,
+    "color": false,
+    "typography": false,
+    "spacing": false,
+    "border": false,
+    "dimensions": false,
+    "shadow": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "textdomain": "adaire-blocks",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "contentPreset": {
+      "type": "string",
+      "default": ""
+    },
+    "width": {
+      "type": "object",
+      "default": {
+        "desktop": {
+          "value": 300,
+          "unit": "px"
+        },
+        "tablet": {
+          "value": 100,
+          "unit": "%"
+        },
+        "mobile": {
+          "value": 100,
+          "unit": "%"
+        }
+      }
+    },
+    "height": {
+      "type": "object",
+      "default": {
+        "desktop": {
+          "value": 300,
+          "unit": "px"
+        },
+        "tablet": {
+          "value": 300,
+          "unit": "px"
+        },
+        "mobile": {
+          "value": 250,
+          "unit": "px"
+        }
+      }
+    },
+    "cardBehaviour": {
+      "type": "string",
+      "default": "flip",
+      "enum": [
+        "flip",
+        "static"
+      ]
+    },
+    "flipDirection": {
+      "type": "string",
+      "default": "horizontal",
+      "enum": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    "animationDuration": {
+      "type": "number",
+      "default": 0.6
+    },
+    "animationEasing": {
+      "type": "string",
+      "default": "ease-in-out",
+      "enum": [
+        "ease-in-out",
+        "ease-in",
+        "ease-out",
+        "linear"
+      ]
+    },
+    "frontBackgroundColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "backBackgroundColor": {
+      "type": "string",
+      "default": "#f5f5f5"
+    },
+    "frontBorderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "frontBorderWidth": {
+      "type": "number",
+      "default": null
+    },
+    "backBorderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "backBorderWidth": {
+      "type": "number",
+      "default": null
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 8
+    },
+    "padding": {
+      "type": "number",
+      "default": 20
+    },
+    "shadowIntensity": {
+      "type": "number",
+      "default": 0.1
+    },
+    "cardAlignment": {
+      "type": "string",
+      "default": "center",
+      "enum": [
+        "left",
+        "center",
+        "right"
+      ]
+    },
+    "frontBackgroundImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "frontBackgroundImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "backBackgroundImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backBackgroundImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "entranceAnimationEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "entranceAnimationType": {
+      "type": "string",
+      "default": "fade-in",
+      "enum": [
+        "fade-in",
+        "fade-left",
+        "fade-right",
+        "fly-up",
+        "fly-down",
+        "fly-left",
+        "fly-right",
+        "grow",
+        "shrink",
+        "bounce",
+        "blur-in"
+      ]
+    },
+    "entranceAnimationDuration": {
+      "type": "number",
+      "default": 1000
+    },
+    "entranceAnimationDelay": {
+      "type": "number",
+      "default": 0
+    },
+    "entranceAnimationEasing": {
+      "type": "string",
+      "default": "ease-out",
+      "enum": [
+        "ease-out",
+        "ease-in",
+        "ease-in-out",
+        "linear",
+        "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "cubic-bezier(0.25, 1, 0.5, 1)"
+      ]
+    },
+    "entranceAnimationDistance": {
+      "type": "number",
+      "default": 50
+    },
+    "entranceAnimationThreshold": {
+      "type": "number",
+      "default": 0.2
+    },
+    "entranceAnimationOnce": {
+      "type": "boolean",
+      "default": false
+    },
+    "entranceAnimationReverseOnScrollOut": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

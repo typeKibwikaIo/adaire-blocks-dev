@@ -1,0 +1,293 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "adaire/row-block",
+  "title": "Row (Free)",
+  "description": "A row container with configurable column layouts.",
+  "category": "adaire-layout-sections",
+  "icon": "layout",
+  "editorScript": "file:./index.js",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "anchor": true,
+    "customClassName": true,
+    "color": false,
+    "typography": false,
+    "spacing": false,
+    "border": false,
+    "dimensions": false,
+    "shadow": false
+  },
+  "attributes": {
+    "layout": {
+      "type": "string",
+      "default": "",
+      "enum": [
+        "",
+        "manual",
+        "1-col",
+        "2-col-50-50",
+        "2-col-66-33",
+        "2-col-33-66",
+        "3-col-33-33-33",
+        "3-col-25-50-25",
+        "4-col-25-25-25-25"
+      ]
+    },
+    "columnWidths": {
+      "type": "array",
+      "default": []
+    },
+    "responsiveLayout": {
+      "type": "object",
+      "default": {}
+    },
+    "responsiveColumnWidths": {
+      "type": "object",
+      "default": {}
+    },
+    "responsiveDirection": {
+      "type": "object",
+      "default": {}
+    },
+    "align": {
+      "type": "string",
+      "default": "",
+      "enum": [
+        "",
+        "wide",
+        "full"
+      ]
+    },
+    "gap": {
+      "type": "number",
+      "default": 16
+    },
+    "verticalAlign": {
+      "type": "string",
+      "default": "",
+      "enum": [
+        "",
+        "top",
+        "center",
+        "bottom"
+      ]
+    },
+    "mobileColumns": {
+      "type": "string",
+      "default": "",
+      "enum": [
+        "",
+        "1",
+        "2"
+      ]
+    },
+    "responsiveGap": {
+      "type": "object",
+      "default": {
+        "desktop": 16,
+        "tablet": 16,
+        "mobile": 16
+      }
+    },
+    "responsivePadding": {
+      "type": "object",
+      "default": {
+        "desktop": {
+          "top": "0px",
+          "right": "0px",
+          "bottom": "0px",
+          "left": "0px"
+        },
+        "tablet": {
+          "top": "0px",
+          "right": "0px",
+          "bottom": "0px",
+          "left": "0px"
+        },
+        "mobile": {
+          "top": "0px",
+          "right": "0px",
+          "bottom": "0px",
+          "left": "0px"
+        }
+      }
+    },
+    "responsiveMargin": {
+      "type": "object",
+      "default": {
+        "desktop": {
+          "top": "0px",
+          "right": "0px",
+          "bottom": "0px",
+          "left": "0px"
+        },
+        "tablet": {
+          "top": "0px",
+          "right": "0px",
+          "bottom": "0px",
+          "left": "0px"
+        },
+        "mobile": {
+          "top": "0px",
+          "right": "0px",
+          "bottom": "0px",
+          "left": "0px"
+        }
+      }
+    },
+    "borderEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "borderWidth": {
+      "type": "number",
+      "default": 1
+    },
+    "borderStyle": {
+      "type": "string",
+      "default": "solid",
+      "enum": [
+        "solid",
+        "dashed",
+        "dotted",
+        "double",
+        "groove"
+      ]
+    },
+    "borderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 0
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "backgroundImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImagePosition": {
+      "type": "string",
+      "default": "center center"
+    },
+    "backgroundImageSize": {
+      "type": "string",
+      "default": "cover",
+      "enum": [
+        "cover",
+        "contain",
+        "auto"
+      ]
+    },
+    "backgroundImageRepeat": {
+      "type": "string",
+      "default": "no-repeat",
+      "enum": [
+        "no-repeat",
+        "repeat",
+        "repeat-x",
+        "repeat-y"
+      ]
+    },
+    "shadowEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "shadowColor": {
+      "type": "string",
+      "default": "rgba(0, 0, 0, 0.15)"
+    },
+    "shadowX": {
+      "type": "number",
+      "default": 0
+    },
+    "shadowY": {
+      "type": "number",
+      "default": 4
+    },
+    "shadowBlur": {
+      "type": "number",
+      "default": 12
+    },
+    "shadowSpread": {
+      "type": "number",
+      "default": 0
+    },
+    "animationEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "animationType": {
+      "type": "string",
+      "default": "fade-in",
+      "enum": [
+        "fade-in",
+        "fade-left",
+        "fade-right",
+        "fly-up",
+        "fly-down",
+        "fly-left",
+        "fly-right",
+        "grow",
+        "shrink",
+        "bounce",
+        "blur-in"
+      ]
+    },
+    "animationDuration": {
+      "type": "number",
+      "default": 1000
+    },
+    "animationDelay": {
+      "type": "number",
+      "default": 0
+    },
+    "animationEasing": {
+      "type": "string",
+      "default": "ease-out",
+      "enum": [
+        "ease-out",
+        "ease-in",
+        "ease-in-out",
+        "linear",
+        "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "cubic-bezier(0.25, 1, 0.5, 1)"
+      ]
+    },
+    "animationDistance": {
+      "type": "number",
+      "default": 50
+    },
+    "animationThreshold": {
+      "type": "number",
+      "default": 0.2
+    },
+    "animationOnce": {
+      "type": "boolean",
+      "default": false
+    },
+    "animationReverseOnScrollOut": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
